@@ -145,8 +145,7 @@
             <label class="form-label" for="idSocioComercial">ID socio comercial
               @if (solicitudState.socioComercial) {*}:</label>
             <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
-              type="text"
-              (change)="onIdSocioComercialChange()" />
+              type="text" (change)="onIdSocioComercialChange()" />
           </div>
         </div>
       </div>
@@ -299,15 +298,9 @@
           <div>
             <label for="">Nombre del recinto:</label>
           </div>
-          <select 
-            class="form-control"
-            formControlName="nombreRecinto"
-            (change)="changeRecinto()"
-            [required]="false"
+          <select class="form-control" formControlName="nombreRecinto" (change)="changeRecinto()" [required]="false"
             [disabled]="desactivarSelectRecinto">
-            <option
-              *ngFor="let recinto of recintoCatalogo"
-              [value]="recinto">
+            <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
               {{ recinto.descripcion }}
             </option>
           </select>
@@ -443,6 +436,7 @@
     }
 
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
+
     <agrega-personas />
 
     <ng-titulo titulo="Pagos" />
@@ -521,3 +515,10 @@
     </div>
   </div>
 </div>
+
+@if(nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+}

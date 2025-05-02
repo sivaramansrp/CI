@@ -17,6 +17,6 @@ export interface ResponsableGafeteResponse {
 export interface ResponsableGafete {
     gafete: string;
     nombre: string;
-    apellido_patern: string;
+    apellido_paterno: string;
     apellido_materno: string
 }

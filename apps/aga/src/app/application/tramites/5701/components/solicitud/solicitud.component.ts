@@ -14,13 +14,15 @@ import {
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
   ALFANUMERICO_ESPACIO,
+  Catalogo,
+  CatalogoPaises,
   CATALOGOS_ID,
   CatalogosService,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
   ICatalogo,
-  ParametroMontoService,
+  Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   REGEX_RFC,
@@ -32,10 +34,8 @@ import {
   TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
-  ValidaLineaPagoService,
   ValidaRfcService,
 } from '@ng-mf/data-access-user';
-import { Catalogo, CatalogoPaises } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -45,7 +45,6 @@ import {
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { AduanaService } from '../../../../core/services/5701/aduana.service';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
-import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
 import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
@@ -53,7 +52,6 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/tramite57
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
-import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 import { Patente } from '../../../../core/models/5701/patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
@@ -69,6 +67,8 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
+import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 
 @Component({
   selector: 'app-solicitud',
@@ -272,6 +272,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   private usuarioState!: UsuarioState;
 
   /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * Bandera para saber el tipo de persona del usuario. 
    * Por el momento esta bandera está hardcodeada, la información se deberá tomar del store de la aplicación,
    * en cuanto esa implementación esté realizada, esta línea deberá borrarse.
@@ -306,8 +311,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionIndustriaAutomotrizService: IndustriaAutomotrizService,
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
-    private readonly validaLineaPagoService: ValidaLineaPagoService,
-    private readonly parametroMontoService: ParametroMontoService
   ) { }
 
   ngOnInit(): void {
@@ -362,7 +365,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  private validaTipoPersona(){
+  private validaTipoPersona() {
     // TODO: Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
@@ -946,7 +949,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               );
               this.tramite5701Store.setNombre(RFC_GENERICO);
               return EMPTY;
-            } 
+            }
             return this.idcService.getInformacionContribuyente(RFC_IMP_EXP).pipe(tap());
           } else {
             // TODO: Implementar mensaje de error para RFC no encontrado.
@@ -961,7 +964,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         })
       ).subscribe();
 
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);      
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
     }
   }
 
@@ -1545,7 +1548,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.desactivarSelectRecinto = true;
 
       this.seccionAduanaService.getListaSeccionesAduanas(ADUANA.clave).pipe(
-        takeUntil(this.destroyNotifier$),
         switchMap(response => {
           this.seccionAduanera = response?.datos;
           return this.recintoService.getListaRecintos(ADUANA.clave);
@@ -1553,6 +1555,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         tap(responseRecinto => {
           this.recintoCatalogo = responseRecinto?.datos;
         }),
+        takeUntil(this.destroyNotifier$),
       ).subscribe();
 
       this.setValoresStore(
@@ -1642,41 +1645,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       first(response => {
         this.tramite5701Store.setBlnOEA(response.datos);
         return response.datos;
-      }),
-    ).subscribe();
-  }
-
-  /**
-   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
-   */
-  public consultarLineaCaptura(): void {
-    const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
-    const MONTO: number = this.pagoCaptura.get('monto')?.value;
-
-    this.validaLineaPagoService.getLineaPagoValidacion(LINEA_PAGO).pipe(
-      takeUntil(this.destroyNotifier$),
-      switchMap(responseValidaPago => {
-        if (responseValidaPago.codigo !== '00') {
-          // TODO: Implementar mensaje de error para línea de captura no válida.
-          return EMPTY;
-        }
-        return this.parametroMontoService.getParametroMonto();
-      }),
-      tap(montoResponse => {
-        // TODO:Implementar lógica para agregar información a tabla de pagos
-        if(montoResponse) {
-          let numeroDias: number = 0;
-          if(this.tipoSolicitudSeleccionada === 2 || this.tipoSolicitudSeleccionada === 3) {
-            numeroDias = this.fechasSeleccionadas.length;
-          }
-          if(montoResponse.datos) {
-            const MONTO_TOTAL: number = numeroDias > 0 
-                  ? montoResponse.datos * numeroDias 
-                  : montoResponse.datos;
-            const VALIDACION_MONTO: boolean = MONTO >= MONTO_TOTAL ? true : false;
-            this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-          }
-        }
       }),
     ).subscribe();
   }
