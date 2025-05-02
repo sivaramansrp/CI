@@ -9,7 +9,7 @@ describe('AcuseCerorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, TablaDinamicaComponent,AcuseCerorComponent],
+      imports: [CommonModule, TablaDinamicaComponent, AcuseCerorComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcuseCerorComponent);

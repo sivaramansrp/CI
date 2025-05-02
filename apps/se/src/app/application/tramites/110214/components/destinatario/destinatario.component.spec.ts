@@ -54,7 +54,7 @@ describe('DestinatarioComponent', () => {
           nombreExportador: 'Exportador Ejemplo',
           empresa: 'Empresa Ejemplo',
           cargo: 'Cargo Ejemplo',
-        }       
+        }
       }),
     };
 

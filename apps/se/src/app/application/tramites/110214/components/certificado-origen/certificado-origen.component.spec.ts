@@ -44,7 +44,7 @@ describe('CertificadoOrigenComponent', () => {
     mercanciaSeleccionadasTablaDatos =
     {
       "id": 0,
-      "rfcProductor":"",
+      "rfcProductor": "",
       "fraccionArancelaria": "08888888",
       "cantidad": "100.00",
       "unidadMedida": "Caja",
@@ -192,29 +192,29 @@ describe('CertificadoOrigenComponent', () => {
     expect(spyDestroyComplete).toHaveBeenCalled();
   });
   it('should set estaDeshabilitado to true on onClick', () => {
-      component.onClick();
-      expect(component.estaDeshabilitado).toBe(true);
+    component.onClick();
+    expect(component.estaDeshabilitado).toBe(true);
+  });
+
+  it('should call cerrarModal on enviar', () => {
+    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+    component.enviar();
+    expect(cerrarModalSpy).toHaveBeenCalled();
+  });
+
+  it('should set nuevaNotificacion correctly on abrirModal', () => {
+    component.abrirModal();
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/ acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     });
-  
-    it('should call cerrarModal on enviar', () => {
-      const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
-      component.enviar();
-      expect(cerrarModalSpy).toHaveBeenCalled();
-    });
-  
-    it('should set nuevaNotificacion correctly on abrirModal', () => {
-      component.abrirModal();
-      expect(component.nuevaNotificacion).toEqual({
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:
-          'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/ acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      });
-    });
+  });
 });

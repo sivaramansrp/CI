@@ -263,11 +263,11 @@ export const ACUSE_ENCABEZADOS = [
     clave: (ele: AcuseLista): string => ele.documento,
     orden: 2,
   }];
-  /**
- * Datos de ejemplo para la tabla de acuses.
- * 
- * Contiene un ejemplo de acuse con su identificador, nombre del documento y enlace de descarga.
- */
+/**
+* Datos de ejemplo para la tabla de acuses.
+* 
+* Contiene un ejemplo de acuse con su identificador, nombre del documento y enlace de descarga.
+*/
 export const ACUSE_DATOS = [
   {
     id: 1,

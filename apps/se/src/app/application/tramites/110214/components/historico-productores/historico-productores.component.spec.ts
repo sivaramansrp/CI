@@ -9,7 +9,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { CommonModule } from '@angular/common';
 import { TituloComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { HistoricoColumnas } from '../../models/validar-inicialmente-certificado.model';
+import { HistoricoColumnas, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
 
 describe('HistoricoProductoresComponent', () => {
   let component: HistoricoProductoresComponent;
@@ -19,18 +19,21 @@ describe('HistoricoProductoresComponent', () => {
   let tramiteQueryMock: any;
   let validacionesServiceMock: any;
   let mockEvento: HistoricoColumnas[];
+  let mockSeleccionadasEvento: SeleccionadasTabla[];
+
 
   beforeEach(async () => {
     validarInicialmenteCertificadoServiceMock = {
       obtenerProductorPorExportador: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombreProductor: 'Productor 1' }] })),
       obtenerMercanciasSeleccionadas: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Seleccionada' }])),
-        };
+    };
 
     tramiteStoreMock = {
       setDatosConfidencialesProductor: jest.fn(),
       setProductorMismoExportador: jest.fn(),
       setAgregarDatosProductorNumeroRegistroFiscal: jest.fn(),
-      setAgregarDatosProductorFax: jest.fn()
+      setAgregarDatosProductorFax: jest.fn(),
+      setAsignarProductor: jest.fn(),
     };
 
     tramiteQueryMock = {
@@ -57,6 +60,20 @@ describe('HistoricoProductoresComponent', () => {
         correoElectronico: 'laura2992@hotmail.com',
         telefono: '044-6182999535',
         fax: '6182999535'
+      }
+    ];
+    mockSeleccionadasEvento = [
+      {
+        id: 0,
+        rfcProductor: "",
+        fraccionArancelaria: "08888888",
+        cantidad: "100.00",
+        unidadMedida: "Caja",
+        valorMercancia: "100.00",
+        tipoFactura: "Manual",
+        numFactura: "1122232",
+        complementoDescripcion: "CAJA ROJA GRANDE",
+        fechaFactura: "2015-03-01"
       }
     ];
     await TestBed.configureTestingModule({
@@ -198,5 +215,24 @@ describe('HistoricoProductoresComponent', () => {
   it('should update seleccionadoAgregarProductoresExportador when obtenerAnadirProductosSeleccionados is called', () => {
     component.obtenerAnadirProductosSeleccionados(mockEvento);
     expect(component.seleccionadoAgregarProductoresExportador).toEqual(mockEvento);
+  });
+  it('should update mercanciaSeleccionadasFila on seleccionDeFilas', () => {
+    component.seleccionDeFilas(mockSeleccionadasEvento);
+    expect(component.mercanciaSeleccionadasFila).toEqual(mockSeleccionadasEvento);
+  });
+
+  it('should call abrirModal and setAsignarProductor with selected rows on asignarProductor', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.mercanciaSeleccionadasFila = mockSeleccionadasEvento;
+    component.asignarProductor();
+    expect(abrirModalSpy).toHaveBeenCalledWith('Debe seleccionar un productor para asignarle la mercancía');
+  });
+
+  it('should call abrirModal and setAsignarProductor with all rows if no selection on asignarProductor', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.mercanciaSeleccionadasTablaDatos = mockSeleccionadasEvento;
+    component.mercanciaSeleccionadasFila = null;
+    component.asignarProductor();
+    expect(abrirModalSpy).toHaveBeenCalledWith('Debe seleccionar un productor para asignarle la mercancía');
   });
 });

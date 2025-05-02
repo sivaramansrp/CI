@@ -79,31 +79,31 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
  * Esta propiedad contiene un mensaje de alerta que puede ser mostrado al usuario
  * en situaciones específicas relacionadas con el trámite.
  */
-TEXTO_DE_ALERTA = TEXTO_DE_ALERTA;
+  TEXTO_DE_ALERTA = TEXTO_DE_ALERTA;
 
-/**
- * Texto de peligro para notificaciones.
- * 
- * Esta propiedad contiene un mensaje de advertencia o peligro que puede ser mostrado
- * al usuario en situaciones críticas relacionadas con el trámite.
- */
-TEXTO_DE_PELIGRO = TEXTO_DE_PELIGRO;
+  /**
+   * Texto de peligro para notificaciones.
+   * 
+   * Esta propiedad contiene un mensaje de advertencia o peligro que puede ser mostrado
+   * al usuario en situaciones críticas relacionadas con el trámite.
+   */
+  TEXTO_DE_PELIGRO = TEXTO_DE_PELIGRO;
 
-/**
- * Indica si se debe mostrar una alerta.
- * 
- * Esta propiedad es un indicador booleano que determina si se debe mostrar
- * un mensaje de alerta al usuario.
- */
-isAlerta: boolean = false;
+  /**
+   * Indica si se debe mostrar una alerta.
+   * 
+   * Esta propiedad es un indicador booleano que determina si se debe mostrar
+   * un mensaje de alerta al usuario.
+   */
+  isAlerta: boolean = false;
 
-/**
- * Indica si se debe mostrar un mensaje de peligro.
- * 
- * Esta propiedad es un indicador booleano que determina si se debe mostrar
- * un mensaje de advertencia o peligro al usuario.
- */
-isPeligro: boolean = false;
+  /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   * 
+   * Esta propiedad es un indicador booleano que determina si se debe mostrar
+   * un mensaje de advertencia o peligro al usuario.
+   */
+  isPeligro: boolean = false;
   /**
    * Constructor del componente.
    * 
