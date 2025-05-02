@@ -78,6 +78,12 @@ export class Tramite240123Query extends Query<Tramite240123State> {
     (state) => state.merccancialTablaDatos
   );
 
+  /**
+   * Observable que emite los datos de los destinatarios y proveedores que se deben modificar.
+   * Retorna los datos del destinatario final o proveedor si alguno de ellos está siendo modificado.
+   *
+   * @property {Observable<DestinoFinal | Proveedor | null>} obtenerTercerosDatos$
+   */
   public obtenerTercerosDatos$ = this.select((state) => {
     return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
   });

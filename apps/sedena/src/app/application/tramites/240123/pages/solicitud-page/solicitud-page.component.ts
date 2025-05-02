@@ -1,6 +1,6 @@
-import{ CategoriaMensaje, Notificacion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, Notificacion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { AccionBoton, } from '@ng-mf/data-access-user';
+import { AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -122,7 +122,7 @@ export class SolicitudPageComponent {
     }
   }
 
-/**
+  /**
    * @description
    * Configuración de la notificación de privacidad que se muestra como un banner informativo.
    * Esta notificación contiene información sobre el aviso de privacidad y no permite ser cerrada.
@@ -136,14 +136,14 @@ export class SolicitudPageComponent {
    * @property {string} txtBtnAceptar - Texto del botón de aceptar (vacío en este caso).
    * @property {string} txtBtnCancelar - Texto del botón de cancelar (vacío en este caso).
    */
-public notificacionPrivacidad: Notificacion = {
-  tipoNotificacion: TipoNotificacionEnum.BANNER, 
-  categoria: CategoriaMensaje.INFORMACION, 
-  modo: '', 
-  titulo: '',
-  mensaje: AVISO.Aviso,
-  cerrar: false,
-  txtBtnAceptar: '',
-  txtBtnCancelar: ''
-};
+  public notificacionPrivacidad: Notificacion = {
+    tipoNotificacion: TipoNotificacionEnum.BANNER, 
+    categoria: CategoriaMensaje.INFORMACION, 
+    modo: '', 
+    titulo: '',
+    mensaje: AVISO.Aviso,
+    cerrar: false,
+    txtBtnAceptar: '',
+    txtBtnCancelar: ''
+  };
 }

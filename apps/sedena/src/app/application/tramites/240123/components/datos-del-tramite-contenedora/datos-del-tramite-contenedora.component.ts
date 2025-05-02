@@ -12,12 +12,12 @@ import { Subject } from 'rxjs';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
 import { takeUntil } from 'rxjs';
+
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
  * @summary Maneja la suscripción al estado y propaga los cambios a través del store.
  */
-
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
@@ -27,12 +27,12 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   
-/**
- * @property
- * @name idProcedimiento
- * @type {number}
- * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
- */
+  /**
+   * @property
+   * @name idProcedimiento
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
   idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
@@ -54,36 +54,36 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
   /**
- * @property
- * @name selectedColumns
- * @type {string[]}
- * @description Arreglo que contiene los encabezados de las columnas seleccionadas para la tabla de mercancías.
- * Este valor se utiliza para filtrar y mostrar únicamente las columnas especificadas en la tabla dinámica.
- */
-    public selectedColumns: string[] = [
-      'Fracción arancelaria',
-      'Descripción de la fracción',
-      'Unidad de medida de tarifa (UMT)',
-      'Cantidad en UMT',
-      'Valor comercial',
-      'Tipo moneda'
-    ];
+   * @property
+   * @name selectedColumns
+   * @type {string[]}
+   * @description Arreglo que contiene los encabezados de las columnas seleccionadas para la tabla de mercancías.
+   * Este valor se utiliza para filtrar y mostrar únicamente las columnas especificadas en la tabla dinámica.
+   */
+  public selectedColumns: string[] = [
+    'Fracción arancelaria',
+    'Descripción de la fracción',
+    'Unidad de medida de tarifa (UMT)',
+    'Cantidad en UMT',
+    'Valor comercial',
+    'Tipo moneda'
+  ];
   
   /**
- * @property
- * @name configuracionTablaFiltrada
- * @type {ConfiguracionColumna<MercanciaDetalle>[]}
- * @description Configuración filtrada de las columnas de la tabla de mercancías.
- * Este arreglo contiene únicamente las columnas seleccionadas para ser mostradas en la tabla dinámica.
- */
-    public configuracionTablaFiltrada: ConfiguracionColumna<MercanciaDetalle>[] = [];
+   * @property
+   * @name configuracionTablaFiltrada
+   * @type {ConfiguracionColumna<MercanciaDetalle>[]}
+   * @description Configuración filtrada de las columnas de la tabla de mercancías.
+   * Este arreglo contiene únicamente las columnas seleccionadas para ser mostradas en la tabla dinámica.
+   */
+  public configuracionTablaFiltrada: ConfiguracionColumna<MercanciaDetalle>[] = [];
 
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240123Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240123Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
@@ -112,9 +112,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
 
-      this.configuracionTablaFiltrada = MERCANCIA_ENCABEZADO_DE_TABLA.filter((col) => {
+    this.configuracionTablaFiltrada = MERCANCIA_ENCABEZADO_DE_TABLA.filter((col) => {
       return this.selectedColumns.includes(col.encabezado)
-      });
+    });
   }
 
   /**

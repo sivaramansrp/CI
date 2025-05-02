@@ -18,23 +18,20 @@ import { Tramite240123Store } from '../../estados/tramite240123Store.store';
  * @description Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.
  * @summary Actúa como puente entre el componente de datos de mercancía y el store de Akita.
  */
-
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, DatosMercanciaComponent, ReactiveFormsModule, TituloComponent
-
-  ],
+  imports: [CommonModule, CatalogoSelectComponent, DatosMercanciaComponent, ReactiveFormsModule, TituloComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
 
-   /**
-     * Observable para controlar el ciclo de vida de las suscripciones.
-     * @property {Subject<void>} unsubscribe$
-     */
-    private unsubscribe$ = new Subject<void>();
+  /**
+   * Observable para controlar el ciclo de vida de las suscripciones.
+   * @property {Subject<void>} unsubscribe$
+   */
+  private unsubscribe$ = new Subject<void>();
 
   /**
    * Lista de mercancías registradas.
@@ -43,18 +40,18 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   datosMercancias: MercanciaDetalle[] = [];
 
   /**
- * @property
- * @name idProcedimiento
- * @type {number}
- * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
- */
-    idProcedimiento = ID_PROCEDIMIENTO;
+   * @property
+   * @name idProcedimiento
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
+  idProcedimiento = ID_PROCEDIMIENTO;
 
-    /**
-       * Formulario reactivo para capturar los datos de la mercancía.
-       * @property {FormGroup} datosMercancia
-       */
-      datosMercancia!: FormGroup;
+  /**
+   * Formulario reactivo para capturar los datos de la mercancía.
+   * @property {FormGroup} datosMercancia
+   */
+  datosMercancia!: FormGroup;
 
   /**
    * Catálogo de fracciones arancelarias.
@@ -88,39 +85,37 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     private datosSolicitudService: DatosSolicitudService,  
     private tramiteStore: Tramite240123Store,
     private ubicaccion: Location,
-
   ) {}
 
-   /**
-     * Carga los catálogos necesarios para llenar los selectores del formulario.
-     * @method cargarDatos
-     * @returns {void}
-     */
-    cargarDatos(): void {
-      this.datosSolicitudService
-        .obtenerFraccionesCatalogo()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.fraccionesCatalogo = data;
-        });
-  
-      this.datosSolicitudService
-        .obtenerMonedaCatalogo()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.monedaCatalogo = data;
-        });
-    }
+  /**
+   * Carga los catálogos necesarios para llenar los selectores del formulario.
+   * @method cargarDatos
+   * @returns {void}
+   */
+  cargarDatos(): void {
+    this.datosSolicitudService
+      .obtenerFraccionesCatalogo()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.fraccionesCatalogo = data;
+      });
 
-      /**
+    this.datosSolicitudService
+      .obtenerMonedaCatalogo()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.monedaCatalogo = data;
+      });
+  }
+
+  /**
    * Guarda los datos de la mercancía actual, los emite al componente padre y resetea el formulario.
    * @method guardar
    * @returns {void}
    */
   guardar(): void {
     const DATOS_MERCANCIA: MercanciaDetalle = {
-      fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')
-        ?.value,
+      fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')?.value,
       descripcionFraccion: this.datosMercancia.get('descFraccion')?.value,
       unidadMedidaTarifa: this.datosMercancia.get('umt')?.value,
       cantidadUMT: this.datosMercancia.get('cantidadUMT')?.value,
@@ -135,9 +130,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     this.ubicaccion.back();
   }
 
-ngOnInit(): void {
-  this.crearFormaulario();
-  this.cargarDatos();
+  /**
+   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Llama a la creación del formulario y carga los datos necesarios.
+   * @method ngOnInit
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
   }
 
   /**
@@ -152,11 +153,12 @@ ngOnInit(): void {
   }
 
   /**
-   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Crea el formulario reactivo `datosMercancia` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
-   *
+   * @method crearFormaulario
+   * @returns {void}
    */
- crearFormaulario(): void {
+  crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['PRUEBA QA', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
@@ -170,34 +172,34 @@ ngOnInit(): void {
       cantidadUMT: [null, Validators.required],
       umt: [{ value: 'Kilogramo', disabled: true }, Validators.required],
       valorComercial: [null, Validators.required],
-       umc: [null, Validators.required],
+      umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
     });
     this.cargarDatos();
   }
-    /**
+
+  /**
    * Limpia todos los campos del formulario.
    * @method limpiarFormulario
    * @returns {void}
    */
-    limpiarFormulario(): void {
-      this.datosMercancia.reset({
-        descripcion: null,   
-        fraccionArancelaria: null,   
-        cantidadUMT: null,   
-        umc: null,
-        valorComercial: null,  
-        tipoMoneda: null,   
-      });
-    }
-    
+  limpiarFormulario(): void {
+    this.datosMercancia.reset({
+      descripcion: null,   
+      fraccionArancelaria: null,   
+      cantidadUMT: null,   
+      umc: null,
+      valorComercial: null,  
+      tipoMoneda: null,   
+    });
+  }
 
-   /**
+  /**
    * @method cancelar
    * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
    * @returns {void}
    */
-   cancelar(): void {
+  cancelar(): void {
     this.ubicaccion.back();
   }
 }

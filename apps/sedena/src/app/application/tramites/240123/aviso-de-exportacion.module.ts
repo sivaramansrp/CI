@@ -10,7 +10,6 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelTramiteContenedoraComponent } from './components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
-import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosContenedoraComponent } from './components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -34,7 +33,6 @@ import { AvisoDeExportacionRoutingModule } from './aviso-de-exportacion-routing.
       SolicitanteComponent,
       DatosDelTramiteContenedoraComponent,
       TercerosRelacionadosContenedoraComponent,
-      PagoDeDerechosContenedoraComponent,
       AlertComponent,
       TituloComponent,
       AnexarDocumentosComponent,

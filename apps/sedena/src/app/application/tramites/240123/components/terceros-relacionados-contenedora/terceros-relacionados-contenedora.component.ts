@@ -16,7 +16,6 @@ import { takeUntil } from 'rxjs';
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
  * @summary Conecta el estado global del store con el componente visual de terceros relacionados.
  */
-
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
@@ -24,17 +23,16 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent
-  implements OnInit
-{
+export class TercerosRelacionadosContenedoraComponent implements OnInit {
+
   /**
- * @property
- * @name idProcedimiento
- * @type {number}
- * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
- */
-    idProcedimiento = ID_PROCEDIMIENTO;
-  
+   * @property
+   * @name idProcedimiento
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
+  idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -59,6 +57,8 @@ export class TercerosRelacionadosContenedoraComponent
    * @method constructor
    * @param {Tramite240123Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240123Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Router} router - Servicio para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Servicio para acceder a rutas activas.
    * @returns {void}
    */
   constructor(
@@ -67,7 +67,7 @@ export class TercerosRelacionadosContenedoraComponent
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-  
+
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables de destinatarios y proveedores para mostrarlos en la vista.
@@ -82,50 +82,64 @@ export class TercerosRelacionadosContenedoraComponent
         this.destinatarioFinalTablaDatos = data;
       });
       
-      this.proveedorTablaDatos = DATOS_ESTATICOS;
-
+    this.proveedorTablaDatos = DATOS_ESTATICOS;
   }
-  
+
+  /**
+   * Modifica los datos de un destinatario final y redirige a la vista de modificación.
+   * @method modificarDestinarioDatos
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones('../agregar-destino-final');
   }
 
+  /**
+   * Modifica los datos de un proveedor y redirige a la vista de modificación.
+   * @method modificarProveedorDatos
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
     this.irAAcciones('../agregar-proveedor');
   }
 
-    /**
-* @method eliminarDestinatarioFinal
-* @description Elimina el primer DestinoFinal final de la tabla de datos.
-* Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
-*/
-eliminarDestinatarioFinal(datos: DestinoFinal): void {
-  if (datos) {
-    this.tramiteStore.eliminarDestinatarioFinal(datos);
-    
-  }
-}
-/**
-* @method eliminarProveedor
-* @description Elimina el primer Proveedor final de la tabla de datos.
-* Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
-*/
-eliminarProveedor(datos: Proveedor): void {
-  if (datos) {
-    this.tramiteStore.eliminareliminarProveedorFinal(datos);
-  }
-}  
   /**
-* Navega a una ruta relativa dentro del flujo actual.
-* @method irAAcciones
-* @param {string} accionesPath - Ruta relativa a la que se desea navegar.
-* @returns {void}
-*/
-irAAcciones(url: string): void {
-  this.router.navigate([url], {
-    relativeTo: this.activatedRoute,
-  });
-}
+   * Elimina el primer DestinoFinal de la tabla de datos. Si no hay destinatarios finales seleccionados, no realiza ninguna acción.
+   * @method eliminarDestinatarioFinal
+   * @param {DestinoFinal} datos - Datos del destinatario final a eliminar.
+   * @returns {void}
+   */
+  eliminarDestinatarioFinal(datos: DestinoFinal): void {
+    if (datos) {
+      this.tramiteStore.eliminarDestinatarioFinal(datos);
+    }
+  }
+
+  /**
+   * Elimina el primer Proveedor de la tabla de datos. Si no hay proveedores seleccionados, no realiza ninguna acción.
+   * @method eliminarProveedor
+   * @param {Proveedor} datos - Datos del proveedor a eliminar.
+   * @returns {void}
+   */
+  eliminarProveedor(datos: Proveedor): void {
+    if (datos) {
+      this.tramiteStore.eliminareliminarProveedorFinal(datos);
+    }
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(url: string): void {
+    this.router.navigate([url], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 }
