@@ -8,7 +8,7 @@ import {
   FormularioDatos,
   Plantas,
 } from '../../modelos/registro-expansion.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import {
   Tramite80211Store,
   Tramites80211State,
@@ -177,7 +177,12 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     } else {
       if(this.empresasForm.valid) {
       this.registroSolicitudService.obtenerPlantasDatos()
-        .pipe(takeUntil(this.destoryNotification$))
+        .pipe(
+          tap((plantas) => {
+            this.tramite80211Store.setPlantasDisponibles(plantas?.datos);
+          }),
+          takeUntil(this.destoryNotification$)
+        )
         .subscribe((plantas) => {
           this.plantasDisponibles = plantas?.datos;
         });

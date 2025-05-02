@@ -3,18 +3,11 @@ import { EmpresasTerciarizadasComponent } from './empresas-terciarizadas.compone
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite80211Store } from '../../estados/tramites80211.store';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
-import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
+import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
 import { of } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { mock } from 'node:test';
-import { Plantas } from '../../modelos/registro-solicitud-immex.model';
-
-@Component({
-  selector: 'app-catalogo-select',
-  template: '<div></div>',
-})
-class MockCatalogoSelectComponent {}
+import { Plantas } from '../../modelos/registro-expansion.model';
 
 describe('EmpresasTerciarizadasComponent', () => {
   let componente: EmpresasTerciarizadasComponent;
@@ -122,7 +115,7 @@ describe('EmpresasTerciarizadasComponent', () => {
     expect(tramite80211StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([]);
     expect(tramite80211StoreMock.setShowPlantas).toHaveBeenCalledWith(true);
     expect(componente.empresasForm.get('rfc')?.value).toBeNull();
-    expect(componente.empresasForm.get('estado')?.value).toBe('1');
+    expect(componente.empresasForm.get('estado')?.value).toBe('');
   });
 
   it('debería segregar plantas disponibles y seleccionadas', () => {
