@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class BooleanoSiNoPipe implements PipeTransform {
+  // eslint-disable-next-line class-methods-use-this
   transform(value: boolean): string {
-    return value ? 'SI' : 'NO';
+    return value ? 'Sí' : 'No';
   }
 }
