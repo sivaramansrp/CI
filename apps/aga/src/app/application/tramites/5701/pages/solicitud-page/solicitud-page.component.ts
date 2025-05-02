@@ -8,6 +8,7 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { SolicitudResult } from '../../../../core/models/5701/solicitud-result.model';
 
 interface AccionBoton {
   accion: string;
@@ -82,6 +83,10 @@ export class SolicitudPageComponent implements OnInit {
    * Si la acción no es 'cont', retrocede al paso anterior del wizard.
    */
   getValorIndice(e: AccionBoton): void {
+    // Nos encontramos en el paso 1, se guarda parcialmente la información.
+    if(e.valor === 1) {
+      this.enviaSolicitudRequest();
+    }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -90,6 +95,11 @@ export class SolicitudPageComponent implements OnInit {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  private enviaSolicitudRequest(): Observable<SolicitudResult> {
+    const CONSTRUYE_SOLICITUD_PAYLOAD = 
+
   }
 
   /**

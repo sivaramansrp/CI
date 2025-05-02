@@ -159,3 +159,8 @@ export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
  * API para obtener el monto del trámite
  */
 export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
+/**
+ * API para guardar la solicitud
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
+ */
+export const API_POST_SOLICITUD = 'sat-t5701/guardar';
