@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(  
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  }
   
 ];
 

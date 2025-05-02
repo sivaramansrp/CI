@@ -1,15 +1,17 @@
 import { BtnContinuarComponent, InicioSesionService, SubirDocumentoService } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
+import { CancelacionDeAutorizacionesComponent } from './components/Cancelacion-de-autorizaciones/Cancelacion-de-autorizaciones.component';
+import { CancelacionDeAutorizacionesService } from './services/cancelacion-de-autorizaciones.service';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { ModificacionDelPermisoRoutingModule } from './registro-de-solicitud-routing.module';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { RegistroDeSolicitudRoutingModule } from './registro-de-solicitud-routing.module';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
@@ -24,10 +26,10 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
   ],
   imports: [
     CommonModule,
-    ModificacionDelPermisoRoutingModule,
+    RegistroDeSolicitudRoutingModule,
     BtnContinuarComponent,
     WizardComponent,
-   
+    CancelacionDeAutorizacionesComponent,
     SolicitanteComponent,
     InputCheckComponent,
     TituloComponent,
@@ -39,6 +41,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     ToastrService,
     InicioSesionService,
     SubirDocumentoService,
+    CancelacionDeAutorizacionesService
   ],
 })
-export class ModificacionDelPermisoModule { }
+export class RegistroDeSolicitudModule { }
