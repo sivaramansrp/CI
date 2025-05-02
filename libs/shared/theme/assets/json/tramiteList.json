@@ -3131,8 +3131,8 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/acta-de-hechos/acta-de-hechos",
+    "linkDepartment": "/pago/acta-de-hechos/acta-de-hechos",
     "department": "agace"
   },
   {

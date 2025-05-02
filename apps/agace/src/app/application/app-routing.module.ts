@@ -115,6 +115,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule
+      ),
+  },
 ];
 
 @NgModule({

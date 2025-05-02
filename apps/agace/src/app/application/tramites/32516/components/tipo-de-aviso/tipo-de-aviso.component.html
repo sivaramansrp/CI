@@ -1,0 +1,23 @@
+<div class="container mt-4">
+    <ng-titulo titulo="Datos del aviso del que procede el acta"></ng-titulo>
+    <form [formGroup]="solicitudForm">
+        <div class="row">
+                <div class="col-md-10">
+                  <div class="form-group">
+                    <app-catalogo-select
+                    [label]="'Aviso del que procede el acta de hechos'"
+                    [catalogo]="actaDeHechos"
+                    formControlName="actaDeHechos"
+                    [required]="true"
+                    name="actaDeHechos"
+                  ></app-catalogo-select>
+                  </div>
+                </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </div>
+    </form>
+</div>
