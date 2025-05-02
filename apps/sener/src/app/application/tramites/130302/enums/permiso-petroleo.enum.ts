@@ -207,4 +207,9 @@ export const PANTA_PASOS = [
       habilitado: true
     },
   ]
+  export const AVISO_PRIVACIDAD = 
+     
+
+'Acepto expresamente que todas las notificaciones relacionadas con la presente solicitud y/o el permiso que, en su caso, deriven de la misma, se realizarán a través del correo electrónico registrado en la Ventanilla Digital Mexicana de Comercio Exterior (V U CE M) en relación con esta solicitud, y/o por medio de las cuentas de correo electrónico que señale como medios de comunicación oficial con la SEN ER en relación con este trámite; en el entendido de que dichas notificaciones, con independencia de lo establecido en cualquier otra regla, siempre surtirán sus efectos al día siguiente de que hayan sido cargadas en V U CEM y notificadas a través de los correos electrónicos antes señalados Por lo que manifiesto, bajo protesta de decir verdad, que acepto que prevalezcan para esta solicitud y lo relacionado con la misma, las reglas de notificación descritas en el párrafo que antecede, y me comprometo a revisar continuamente los avisos que emita la VU CE M, así como las notificaciones recibidas en los correos electrónicos señalados como medios de comunicación oficial con la SEN ER, a fin de proceder con oportunidad conforme a derecho corresponda'
+
   
