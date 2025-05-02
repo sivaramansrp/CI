@@ -413,7 +413,7 @@
       <div class="row">
         <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"
           (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
-          [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
+          [tablaTransporte]="solicitudState.transporte"></lib-agregar-transporte>
       </div>
       }
     </div>
@@ -430,7 +430,7 @@
       </div>
       @if (transporteArriboSalida.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"
+        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value" [tablaTransporte]="solicitudState.transporteArriboDatos"
           (datosTabla)="changeAgregarVehiculo($event, 'transporte')"></lib-agregar-transporte>
       </div>
       }
