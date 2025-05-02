@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ENLACE_OPERATIVO_CONFIGURACION } from '../../constants/solicitud.enum';
 import { EnlaceOperativo } from '../../models/solicitud.model';
@@ -24,6 +24,7 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
+import { Modal } from 'bootstrap';
 /**
  * Componente encargado de mostrar la lista de terceros relacionados
  * que pueden recibir notificaciones. Utiliza una tabla dinámica para
@@ -38,7 +39,7 @@ import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agr
     TituloComponent,
     TablaDinamicaComponent,
     HttpClientModule,
-    AgregarEnlaceOperativoComponent
+    AgregarEnlaceOperativoComponent,
   ],
   providers: [SolicitudService],
   templateUrl: './terceros-relacionados.component.html',
@@ -56,10 +57,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   enlaceOperativoTabla = TablaSeleccion.CHECKBOX;
 
+  seleccionEnlaceOperativoDatos: EnlaceOperativo[] = [] as EnlaceOperativo[];
+
   enlaceOperativoConfiguracionColumnas: ConfiguracionColumna<EnlaceOperativo>[] =
     ENLACE_OPERATIVO_CONFIGURACION;
 
   enlaceOperativosLista: EnlaceOperativo[] = [] as EnlaceOperativo[];
+
+  @ViewChild('agregarEnlaceOperativo', { static: false })
+  modificacionEnlaceOperativoElement!: ElementRef;
 
   /**
    * Configuración de columnas que se mostrarán en la tabla.
@@ -187,11 +193,35 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
   }
 
-  guardarDatosEnlaceOperativo(): void {}
+  guardarDatosEnlaceOperativo(): void {
+    if (this.modificacionEnlaceOperativoElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modificacionEnlaceOperativoElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
 
-  guardarModificacionEnlaceOperativo(): void {}
+  guardarModificacionEnlaceOperativo(): void {
+    if (this.modificacionEnlaceOperativoElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modificacionEnlaceOperativoElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
 
-  cerrarDialogoEnlaceOperativo(): void {}
+  seleccionEnlaceOperativo(evento: EnlaceOperativo[]): void {
+    this.seleccionEnlaceOperativoDatos = evento;
+  }
+
+  cerrarDialogoEnlaceOperativo(): void {
+    if (this.seleccionEnlaceOperativoDatos.length > 0) {
+      this.enlaceOperativosLista = this.enlaceOperativosLista.filter(
+        (element) => element.rfc !== this.seleccionEnlaceOperativoDatos[0].rfc
+      );
+    }
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

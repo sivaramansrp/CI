@@ -52,8 +52,13 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
       agregarEnlaceApellidoMaterno: [
         { value: this.solicitud32605State.apellidoMaterno, disabled: true },
       ],
-      agregarEnlaceCiudadEstado: [{ value: '', disabled: true }],
-      agregarEnlaceCargo: [''],
+      agregarEnlaceCiudadEstado: [
+        {
+          value: this.solicitud32605State.agregarEnlaceCiudadEstado,
+          disabled: true,
+        },
+      ],
+      agregarEnlaceCargo: [this.solicitud32605State.agregarEnlaceCargo],
       agregarEnlaceTelefono: [
         this.solicitud32605State.telefono,
         [Validators.required, Validators.pattern(/^\d{10}$/)],
@@ -62,7 +67,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
         this.solicitud32605State.correoElectronico,
         [Validators.required, Validators.email],
       ],
-      agregarEnlaceSuplente: [false],
+      agregarEnlaceSuplente: [this.solicitud32605State.agregarEnlaceSuplente],
     });
 
     this.solicitud32605Query.selectSolicitud$
@@ -78,9 +83,14 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
               this.solicitud32605State.apellidoPaterno,
             agregarEnlaceApellidoMaterno:
               this.solicitud32605State.apellidoMaterno,
+            agregarEnlaceCiudadEstado:
+              this.solicitud32605State.agregarEnlaceCiudadEstado,
+            agregarEnlaceCargo: this.solicitud32605State.agregarEnlaceCargo,
             agregarEnlaceTelefono: this.solicitud32605State.telefono,
             agregarEnlaceCorreoElectronico:
               this.solicitud32605State.correoElectronico,
+            agregarEnlaceSuplente:
+              this.solicitud32605State.agregarEnlaceSuplente,
           });
         })
       )
@@ -122,6 +132,16 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
+  }
+
+  agregarEnlaceCargo(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32605Store.actualizarEnlaceCargo(VALOR);
+  }
+
+  actualizarEnlaceSuplente(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.solicitud32605Store.actualizarEnlaceSuplente(VALOR);
   }
 
   ngOnDestroy(): void {

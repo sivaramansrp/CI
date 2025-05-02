@@ -55,7 +55,9 @@
         />
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="apellidoPaterno">Apellido Paterno:</label>
+        <label class="form-label text-start" for="apellidoPaterno"
+          >Apellido Paterno:</label
+        >
         <input
           class="form-control"
           type="text"
@@ -66,7 +68,9 @@
         />
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="apellidoMaterno">Apellido Materno:</label>
+        <label class="form-label text-start" for="apellidoMaterno"
+          >Apellido Materno:</label
+        >
         <input
           class="form-control"
           type="text"
@@ -113,6 +117,7 @@
           [tipoSeleccionTabla]="enlaceOperativoTabla"
           [configuracionTabla]="enlaceOperativoConfiguracionColumnas"
           [datos]="enlaceOperativosLista"
+          (listaDeFilaSeleccionada)="seleccionEnlaceOperativo($event)"
         >
         </app-tabla-dinamica>
       </div>
@@ -122,6 +127,8 @@
           name="btnAceptarEnlace"
           id="btnAceptarEnlace"
           class="btn btn-primary me-2"
+          data-bs-toggle="modal"
+          data-bs-target="#agregarEnlaceOperativo"
           (click)="guardarDatosEnlaceOperativo()"
         >
           Aceptar
@@ -131,6 +138,8 @@
           name="btnModificarEnlace"
           id="btnModificarEnlace"
           class="btn btn-secondary me-2"
+          data-bs-toggle="modal"
+          data-bs-target="#agregarEnlaceOperativo"
           (click)="guardarModificacionEnlaceOperativo()"
         >
           Modificar
@@ -142,7 +151,7 @@
           class="btn btn-danger"
           (click)="cerrarDialogoEnlaceOperativo()"
         >
-          Cancelar
+          Eliminar
         </button>
       </div>
       <div class="col-md-12">
@@ -162,4 +171,17 @@
     </div>
   </form>
 </div>
-<app-agregar-enlace-operativo></app-agregar-enlace-operativo>
+
+<div
+  class="modal fade"
+  id="agregarEnlaceOperativo"
+  tabindex="-1"
+  aria-labelledby="modalAgregarEnlaceOperativo"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-agregar-enlace-operativo></app-agregar-enlace-operativo>
+    </div>
+  </div>
+</div>

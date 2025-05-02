@@ -21,7 +21,7 @@ export interface Solicitud32605State {
   agregarEnlaceCargo: string;
   agregarEnlaceTelefono: string;
   agregarEnlaceCorreoElectronico: string;
-  agregarEnlaceSuplente: string;
+  agregarEnlaceSuplente: boolean;
 }
 
 export function createInitialSolicitudState(): Solicitud32605State {
@@ -44,7 +44,7 @@ export function createInitialSolicitudState(): Solicitud32605State {
     agregarEnlaceCargo: '',
     agregarEnlaceTelefono: '',
     agregarEnlaceCorreoElectronico: '',
-    agregarEnlaceSuplente: '',
+    agregarEnlaceSuplente: false,
   };
 }
 @Injectable({
@@ -127,7 +127,7 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
     this.update((state) => ({ ...state, agregarEnlaceCorreoElectronico: valor }));
   }
   
-  actualizarEnlaceSuplente(valor: string): void {
+  actualizarEnlaceSuplente(valor: boolean): void {
     this.update((state) => ({ ...state, agregarEnlaceSuplente: valor }));
   }
   
