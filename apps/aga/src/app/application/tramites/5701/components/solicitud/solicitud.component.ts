@@ -36,7 +36,7 @@ import {
   ValidaRfcService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { delay, EMPTY, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud5701State,
@@ -66,6 +66,8 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
+import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 
 @Component({
   selector: 'app-solicitud',
@@ -302,6 +304,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionService: CertificacionService,
     private readonly certificacionIndustriaAutomotrizService: IndustriaAutomotrizService,
     private readonly certificacionOrigenService: CertificacionOrigenService,
+    private readonly certificacionOeaService: CertificacionOeaService,
   ) { }
 
   ngOnInit(): void {
@@ -1528,7 +1531,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * 
+   * Obtiene la selección realizada por el usuario dentro del campo aduana,
+   * filtra las listas secciones y recintos con base a la selección
+   * y actualiza el estado del componente.
    */
   public changeAduana(): void {
     const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
@@ -1556,7 +1561,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Cambia el valor del campo idSocioComercial y actualiza el store correspondiente.
    * 
+   * @returns {void} No retorna ningún valor.
    */
   public onIdSocioComercialChange(): void {
     const ID_SOCIO_COMERCIAL: string = this.datosImportadorExportador.get('idSocioComercial')?.value;
@@ -1569,6 +1576,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')
   }
 
+  /**
+   * Obtiene las certificaciones del RFC proporcionado y actualiza el store correspondiente.
+   * 
+   * @param rfc - RFC del importador/exportador.
+   * @returns {void} No retorna ningún valor.
+   */
   private getCertificaciones(rfc: string): void {
     this.certificacionService.getCertificacion(rfc, PROGRAMA_IMMEX).pipe(
       takeUntil(this.destroyNotifier$),
@@ -1600,6 +1613,33 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
     ).subscribe();
 
-    this.certificacionOrigenService.getCertificacionOrigen(rfc).subscribe();
+    this.certificacionOrigenService.getCertificacionOrigen(rfc).pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        this.tramite5701Store.setBlnRevisionOrigen(response.datos);
+      })
+    ).subscribe();
+
+    const VALIDACION_OEA_IMPEXP$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+    const VALIDACION_OEA_CTRL$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+    const VALIDACION_OEA_AEREO$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+    const VALIDACION_OEA_SECIIT$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+    const VALIDACION_OEA_TEXTIL$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+    const VALIDACION_OEA_RFESTRATEGICO$ = this.certificacionOeaService.getValidacionCertificacion(MODALIDAD_OEA_IMPEXP, rfc);
+
+    merge(
+      VALIDACION_OEA_IMPEXP$,
+      VALIDACION_OEA_CTRL$,
+      VALIDACION_OEA_AEREO$,
+      VALIDACION_OEA_SECIIT$,
+      VALIDACION_OEA_TEXTIL$,
+      VALIDACION_OEA_RFESTRATEGICO$
+    ).pipe(
+      takeUntil(this.destroyNotifier$),
+      first(response => {
+        this.tramite5701Store.setBlnOEA(response.datos);
+        return response.datos;
+      }),
+    ).subscribe();
   }
 }

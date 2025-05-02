@@ -130,3 +130,14 @@ export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
  * * @param RFC_QUERY El RFC del contribuyente
  */
 export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;
+/**
+ * El tipo de trámite por el que se filtrará la información.
+ */
+export const TIPO_TRAMITE_QUERY = '{tipoTramite}';
+/**
+ * API para validar si un RFC tiene certificaciones vigentes.
+ * @param TIPO_TRAMITE_QUERY El tipo de trámite
+ * @param RFC_QUERY El RFC del solicitante
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
+ */
+export const API_GET_VALIDA_CERTIFICACIONES = `catalogo/valida-certificaciones/${TIPO_TRAMITE_QUERY}/${RFC_QUERY}`;

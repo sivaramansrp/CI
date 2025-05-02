@@ -42,11 +42,11 @@ export interface Solicitud5701State {
   blnSocioComercial: boolean;
   certificacionOEA: boolean;
   revision: boolean;
-  blnRevisionOrigen: string;
+  blnRevisionOrigen: boolean;
   blnCertificacionA: string;
   blnCertificacionAA: string;
   blnCertificacionAAA: string;
-  blnOEA: string;
+  blnOEA: boolean;
 
   fechaInicio: string;
   horaInicio: string;
@@ -139,11 +139,11 @@ export function createInitialState(): Solicitud5701State {
     blnSocioComercial: false,
     certificacionOEA: false,
     revision: false,
-    blnRevisionOrigen: '',
+    blnRevisionOrigen: false,
     blnCertificacionA: '',
     blnCertificacionAA: '',
     blnCertificacionAAA: '',
-    blnOEA: '',
+    blnOEA: false,
     fechaInicio: '',
     horaInicio: '',
     fechaFinal: '',
@@ -359,7 +359,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setBlnRevisionOrigen(blnRevisionOrigen: string): void {
+  public setBlnRevisionOrigen(blnRevisionOrigen: boolean): void {
     this.update((state) => ({
       ...state,
       blnRevisionOrigen,
@@ -383,7 +383,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
       blnCertificacionAAA,
     }));
   }
-  public setBlnOEA(blnOEA: string): void {
+  public setBlnOEA(blnOEA: boolean): void {
     this.update((state) => ({
       ...state,
       blnOEA,

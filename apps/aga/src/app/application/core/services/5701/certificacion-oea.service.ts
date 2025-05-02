@@ -1,4 +1,4 @@
-import { API_GET_RFC_ORIGEN, CatalogosBooleanResponse, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_VALIDA_CERTIFICACIONES, CatalogosBooleanResponse, enviroment, RFC_QUERY, TIPO_TRAMITE_QUERY } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class CertificacionOrigenService {
+export class CertificacionOeaService {
 
   private readonly host: string;
 
@@ -17,11 +17,10 @@ export class CertificacionOrigenService {
   }
 
   /**
-   * Método para obtener la validación de un RFC (Registro Federal de Contribuyentes)
-   * para saber si está certificado para la revisión de origen.
+   * 
    */
-  getCertificacionOrigen(rfc: string): Observable<CatalogosBooleanResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_RFC_ORIGEN.replace(RFC_QUERY, rfc);
+  getValidacionCertificacion(tipoTramite: string, rfc: string): Observable<CatalogosBooleanResponse> {
+    const ENDPOINT = `${this.host}`+ API_GET_VALIDA_CERTIFICACIONES.replace(TIPO_TRAMITE_QUERY, tipoTramite).replace(RFC_QUERY, rfc);
 
     return this.http.get<CatalogosBooleanResponse>(ENDPOINT).pipe(
       map((response) => {
