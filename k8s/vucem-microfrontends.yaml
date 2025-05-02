@@ -24,23 +24,23 @@ metadata:
 data:
   module-federation.manifest.json: |
     {
-      "login": "https://front.v30.ultrasist.net/login",
-      "aga": "https://front.v30.ultrasist.net/aga", 
-      "agriculture": "https://front.v30.ultrasist.net/agriculture",
-      "se": "https://front.v30.ultrasist.net/se",
-      "semarnat": "https://front.v30.ultrasist.net/semarnat",
-      "agace": "https://front.v30.ultrasist.net/agace",
-      "funcionario": "https://front.v30.ultrasist.net/funcionario",
-      "cofepris": "https://front.v30.ultrasist.net/cofepris",
-      "amecafe": "https://front.v30.ultrasist.net/amecafe",
-      "sener": "https://front.v30.ultrasist.net/sener",
-      "inbal": "https://front.v30.ultrasist.net/inbal",
-      "sedena": "https://front.v30.ultrasist.net/sedena",
-      "profepa": "https://front.v30.ultrasist.net/profepa",
-      "crt": "https://front.v30.ultrasist.net/crt",
-      "inah": "https://front.v30.ultrasist.net/inah",
-      "bandejas": "https://front.v30.ultrasist.net/bandejas",
-      "stps": "https://front.v30.ultrasist.net/stps"
+      "login": "http://localhost:4201/login",
+      "aga": "http://localhost/aga", 
+      "agriculture": "http://localhost/agriculture",
+      "se": "http://localhost/se",
+      "semarnat": "http://localhost/semarnat",
+      "agace": "http://localhost/agace",
+      "funcionario": "http://localhost/funcionario",
+      "cofepris": "http://localhost/cofepris",
+      "amecafe": "http://localhost/amecafe",
+      "sener": "http://localhost/sener",
+      "inbal": "http://localhost/inbal",
+      "sedena": "http://localhost/sedena",
+      "profepa": "http://localhost/profepa",
+      "crt": "http://localhost/crt",
+      "inah": "http://localhost/inah",
+      "bandejas": "http://localhost/bandejas",
+      "stps": "http://localhost/stps"
     }
 ---
 # Deployment for dashboard
