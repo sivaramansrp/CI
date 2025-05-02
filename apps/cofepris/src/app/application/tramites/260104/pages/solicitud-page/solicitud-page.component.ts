@@ -1,7 +1,13 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/260104/certificado.enum';
+import { CompleteForm } from '@libs/shared/data-access-user/src/core/models/260104/domicilo.model';
+import { PermisoSanitarioProductosService } from '../../services/permiso-sanitario-productos.service';
 
+/**
+ * Componente que representa la página principal de la solicitud en el trámite 260104.
+ * Este componente gestiona la navegación entre los pasos del wizard y la recopilación de datos del formulario.
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
@@ -12,7 +18,7 @@ export class SolicitudPageComponent {
    * Utiliza la configuración predefinida en el objeto `PASOS`.
    */
   pasos: ListaPasosWizard[] = PASOS;
-  
+
   /**
    * Constante de alerta utilizada en el componente.
    * @type {typeof ALERTA_COM}
@@ -43,10 +49,19 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Objeto que almacena los datos recopilados del formulario.
+   * Contiene los datos de la solicitud en formato `CompleteForm[]`.
+   */
+  payload: {
+    datosSolicitud?: CompleteForm[];
+  } = {};
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
+   * @param service - Servicio para gestionar los datos de permisos sanitarios.
    */
-  constructor() {
+  constructor(public service: PermisoSanitarioProductosService) {
     // Constructor vacío, no requiere inicialización adicional.
   }
 
@@ -56,6 +71,12 @@ export class SolicitudPageComponent {
    * @param e - Objeto de tipo `AccionBoton` que contiene la acción ('cont' o 'atras') y el índice al que navegar.
    */
   getValorIndice(e: AccionBoton): void {
+    this.payload = this.service.collectFormValues(); // Recopila los valores del formulario.
+    if (this.payload) {
+      console.log('payload', this.payload); // Muestra el payload en la consola.
+    } else {
+      console.error('payload is not initialized.'); // Muestra un error si el payload no está inicializado.
+    }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor; // Actualiza el índice activo.
       if (e.accion === 'cont') {

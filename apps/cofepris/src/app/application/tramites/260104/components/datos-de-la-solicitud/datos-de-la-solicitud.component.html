@@ -24,6 +24,7 @@
               placeholder=""
               type="text"
               formControlName="razonSocial"
+              (change)="setValoresStore(solicitudForm,'razonSocial', 'setRazonSocial')"
             />
             @if(solicitudForm.controls['razonSocial'].invalid && solicitudForm.controls['razonSocial'].touched){
                 <div class="d-grid">
@@ -45,6 +46,7 @@
               placeholder=""
               type="text"
               formControlName="correoElectronico"
+              (change)="setValoresStore(solicitudForm,'correoElectronico', 'setCorreoElectronico')"
             />
             @if(solicitudForm.controls['correoElectronico'].invalid && solicitudForm.controls['correoElectronico'].touched){
                 <div class="d-grid">
@@ -69,6 +71,7 @@
               placeholder=""
               type="number"
               formControlName="codigoPostal"
+              (change)="setValoresStore(solicitudForm,'codigoPostal', 'setCodigoPostal')"
             />
             @if(solicitudForm.controls['codigoPostal'].invalid && solicitudForm.controls['codigoPostal'].touched){
                 <div class="d-grid">
@@ -86,7 +89,7 @@
               [placeholder]="estadoCatalogo.primerOpcion"
               [required]="estadoCatalogo.required"
               formControlName="estado"
-              (selectionChange)="setEstado($event)"
+              (change)="setValoresStore(solicitudForm,'estado', 'setEstado')"
             >
             </app-catalogo-select>
         </div>
@@ -98,6 +101,7 @@
               placeholder=""
               type="text"
               formControlName="municipio"
+              (change)="setValoresStore(solicitudForm,'municipio', 'setMunicipio')"
             />
             @if(solicitudForm.controls['municipio'].invalid && solicitudForm.controls['municipio'].touched){
                 <div class="d-grid">
@@ -117,6 +121,7 @@
               placeholder=""
               type="text"
               formControlName="localidad"
+              (change)="setValoresStore(solicitudForm,'localidad', 'setLocalidad')"
             />
         </div>
         <div class="col-md-4">
@@ -127,6 +132,7 @@
               placeholder=""
               type="text"
               formControlName="colonia"
+              (change)="setValoresStore(solicitudForm,'colonia', 'setColonia')"
             />
             
         </div>
@@ -140,6 +146,7 @@
               placeholder=""
               type="text"
               formControlName="calle"
+              (change)="setValoresStore(solicitudForm,'calle', 'setCalle')"
             />
             @if(solicitudForm.controls['calle'].invalid && solicitudForm.controls['calle'].touched){
                 <div class="d-grid">
@@ -159,6 +166,7 @@
             placeholder=""
             type="number"
             formControlName="lada"
+            (change)="setValoresStore(solicitudForm,'lada', 'setLada')"
           />
         </div>
         <div class="col-md-3">
@@ -169,6 +177,7 @@
             placeholder=""
             type="number"
             formControlName="telefono"
+            (change)="setValoresStore(solicitudForm,'telefono', 'setTelefono')"
           />
           @if(solicitudForm.controls['telefono'].invalid && solicitudForm.controls['telefono'].touched){
             <div class="d-grid">
@@ -195,7 +204,7 @@
     <div class="row align-item-center">
         <div class="col-md-4">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox">
+                <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="setValoresStore(solicitudForm,'avisoCheckbox', 'setAvisoCheckbox')">
                 <label class="form-check-label" for="avisoCheckbox">
                     <span>Aviso de funcionamiento:</span>
                 </label>
@@ -210,6 +219,7 @@
                     placeholder=""
                     type="text"
                     formControlName="licenciaSanitaria"
+                    (change)="setValoresStore(solicitudForm,'licenciaSanitaria', 'setLicenciaSanitaria')"
                 />
             </div>
         </div>
@@ -222,6 +232,7 @@
                 [label]="'Régimen al que se destinará la mercancía'"
                 [required]="true"
                 name="regimen"
+                (change)="setValoresStore(solicitudForm,'regimen', 'setRegimen')"
             ></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -231,6 +242,7 @@
                 [label]="'Aduana'"
                 [required]="true"
                 name="aduana"
+                (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
             ></app-catalogo-select>
         </div>
     </div>
@@ -261,6 +273,7 @@
                     class="mt-5"
                     formControlName="manifesto"
                     id="manifesto"
+                    (change)="setValoresStore(solicitudForm,'manifesto', 'setManifesto')"
                   />
                   <b> *</b>
                 </div>
@@ -279,7 +292,7 @@
     <div class="row">
         <div class="col-md-12">
             <label for="hacerlosPublicos">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="hacerlosPublicos"></app-input-radio>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="hacerlosPublicos" (change)="setValoresStore(solicitudForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
         </div>
     </div>
 </form>
@@ -299,6 +312,7 @@
                             [label]="'Clave S.C.I.A.N.'"
                             [required]="true"
                             name="claveScianModal"
+                            (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -308,6 +322,7 @@
                             [label]="'Descripción del S.C.I.A.N.'"
                             [required]="false"
                             name="claveDescripcionModal"
+                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
                         ></app-catalogo-select>
                     </div>
                 </form>
@@ -337,6 +352,7 @@
                                 [label]="'Clasificación del producto'"
                                 [required]="true"
                                 name="clasificacion"
+                                (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
                             ></app-catalogo-select>
                         </div>
                     </div>
@@ -348,7 +364,7 @@
                                 [label]="'Especificar clasificación del producto'"
                                 [required]="true"
                                 name="especificarClasificacionProducto"
-                                (change)="habilitarEspecifique()"
+                                (change)="habilitarEspecifique(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"
                             ></app-catalogo-select>
                         </div>
                     </div>
@@ -356,7 +372,7 @@
                         <div class="row mt-3">
                             <div class="col-md-8">
                                 <label for="especifique">Especifique*:</label>
-                                <input type="text" id="especifique" formControlName="especifique" class="form-control">
+                                <input type="text" id="especifique" formControlName="especifique" class="form-control" (change)="habilitarEspecifique(formMercancias,'especifique', 'setEspecifique')">
                                 @if(formMercancias.controls['especifique'].invalid && formMercancias.controls['especifique'].touched){
                                     <div class="d-grid">
                                         @if(formMercancias.controls['especifique'].errors?.['required']) {
@@ -371,7 +387,7 @@
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <label for="denominacionEspecifica">Denominación específica del producto*:</label>
-                            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" class="form-control">
+                            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" class="form-control" (change)="setValoresStore(formMercancias,'denominacionEspecifica', 'setDenominacionEspecifica')">
                             @if(formMercancias.controls['denominacionEspecifica'].invalid && formMercancias.controls['denominacionEspecifica'].touched){
                                 <div class="d-grid">
                                     @if(formMercancias.controls['denominacionEspecifica'].errors?.['required']) {
@@ -385,7 +401,7 @@
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <label for="marca">Marca*:</label>
-                            <input type="text" id="marca" formControlName="marca" class="form-control" >
+                            <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancias,'marca', 'setMarca')">
                             @if(formMercancias.controls['marca'].invalid && formMercancias.controls['marca'].touched){
                                 <div class="d-grid">
                                     @if(formMercancias.controls['marca'].errors?.['required']) {
@@ -403,7 +419,7 @@
                                 [label]="'Tipo de producto'"
                                 [required]="true"
                                 name="tipoDeProducto"
-                                (change)="habilitarEspecifiqueTipo()"
+                                (change)="habilitarEspecifiqueTipo(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
                             ></app-catalogo-select>
                         </div>
                     </div>
@@ -411,7 +427,7 @@
                         <div class="row mt-3">
                             <div class="col-md-8">
                                 <label for="especifiqueTipo">Especifique*:</label>
-                                <input type="text" id="especifiqueTipo" formControlName="especifiqueTipo" class="form-control">
+                                <input type="text" id="especifiqueTipo" formControlName="especifiqueTipo" class="form-control" (change)="setValoresStore(formMercancias,'especifiqueTipo', 'setEspecifiqueTipo')">
                                 @if(formMercancias.controls['especifiqueTipo'].invalid && formMercancias.controls['especifiqueTipo'].touched){
                                     <div class="d-grid">
                                         @if(formMercancias.controls['especifiqueTipo'].errors?.['required']) {
@@ -426,29 +442,29 @@
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <label for="fraccionArancelaria">Fracción arancelaria*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
-                            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" >
+                            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <label for="descripcionFraccion">Descripción de la fracción*:</label>
-                            <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" >
+                            <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="cantidadUMT">Cantidad UMT*:</label>
-                            <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" >
+                            <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')">
                         </div>
                         <div class="col-md-4">
                             <label for="UMT">UMT*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
-                            <input type="text" id="UMT" formControlName="UMT" class="form-control" >
+                            <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label for="cantidadUMC">Cantidad UMC*:</label>
-                            <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control">
+                            <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')">
                         </div>
                         <div class="col-md-4">
                             <app-catalogo-select
@@ -457,7 +473,7 @@
                                 [label]="'UMC'"
                                 [required]="true"
                                 name="UMC"
-                                
+                                (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
                             ></app-catalogo-select>
                         </div>
                     </div>
@@ -516,7 +532,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <label for="claveDeLosLotes">Clave de los lotes*:</label>
-                            <input type="text" id="claveDeLosLotes" formControlName="claveDeLosLotes" class="form-control">
+                            <input type="text" id="claveDeLosLotes" formControlName="claveDeLosLotes" class="form-control" (change)="setValoresStore(formMercancias,'claveDeLosLotes', 'setClaveDeLosLotes')">
                             @if(formMercancias.controls['claveDeLosLotes'].invalid && formMercancias.controls['claveDeLosLotes'].touched){
                                 <div class="d-grid">
                                     @if(formMercancias.controls['claveDeLosLotes'].errors?.['required']) {
@@ -528,10 +544,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaFabricacion')?.value" (valorCambiado)="cambioFechaFabricacion($event)"></input-fecha>
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaFabricacion')?.value" (valorCambiado)="cambioFechaFabricacion($event)" (change)="setValoresStore(formMercancias,'fechaFabricacion', 'setFechaFabricacion')"></input-fecha>
                         </div>
                         <div class="col-md-4">
-                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)" (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')"></input-fecha>
                         </div>
                     </div>
                     <div class="row mt-5">

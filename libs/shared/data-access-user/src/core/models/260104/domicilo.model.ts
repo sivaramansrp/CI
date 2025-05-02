@@ -220,4 +220,53 @@ export interface NicoInfo {
       orden: 20,
     },
   ];
+
+  export interface CompleteForm {
+    solicitudForm: DomicilioEstablecimiento;
+    formAgente: AgenteForm;
+    formMercancias: MercanciasForm;
+  }
+
+  export interface DomicilioEstablecimiento {
+    razonSocial: string;
+    correoElectronico: string;
+    codigoPostal: string;
+    estado:string;
+    municipio:string;
+    localidad:string;
+    colonia:string;
+    calle:string;
+    lada:string;
+    telefono: string;
+    avisoCheckbox:string;
+    licenciaSanitaria:string;
+    regimen:string;
+    aduana:string;
+    manifesto:string;
+    hacerlosPublicos:string;
+  }
+
+  export interface AgenteForm {
+    claveScianModal:string;
+    claveDescripcionModal:string;
+  }
+
+  export interface MercanciasForm {
+    clasificacion: string;
+    especificarClasificacionProducto: string;
+    especifique: string;
+    denominacionEspecifica: string;
+    marca: string;
+    especifiqueTipo: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    cantidadUMT: string;
+    UMT: string;
+    cantidadUMC: string;
+    UMC: string;
+    claveDeLosLotes: string;
+    fechaCaducidad: string;
+    fechaFabricacion: string;
+    tipoDeProducto: string;
+  }
    
