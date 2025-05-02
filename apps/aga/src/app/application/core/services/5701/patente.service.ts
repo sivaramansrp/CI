@@ -1,5 +1,6 @@
-import { API_GET_PATENTE, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_PATENTE, RFC_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PatenteResponse } from '../../models/5701/patente.model';
@@ -29,14 +30,14 @@ export class PatenteService {
    * @returns Observable con la lista de patentes asociadas.
    */
   getListaPatente(rfcSolicitante: string): Observable<PatenteResponse> {
-    const ENDPOINT = `${this.host}`+API_GET_PATENTE.replace(RFC_QUERY, rfcSolicitante);
+    const ENDPOINT = `${this.host}` + API_GET_PATENTE.replace(RFC_QUERY, rfcSolicitante);
 
     return this.http.get<PatenteResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
-      }), 
+      }),
       catchError(() => {
-        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `); 
+        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
         return throwError(() => ERROR);
       })
     );
