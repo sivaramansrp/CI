@@ -1,4 +1,5 @@
 import { DatosDelTramiteFormState, MERCANCIA_ENCABEZADO_DE_TABLA } from '../../../../shared/models/datos-del-tramite.model';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -87,7 +88,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240123Query,
-    private tramiteStore: Tramite240123Store
+    private tramiteStore: Tramite240123Store,
+    public activatedRoute: ActivatedRoute
   ) {}
 
   /**

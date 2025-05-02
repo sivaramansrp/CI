@@ -1,117 +1,181 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
-import { Router, ActivatedRoute } from '@angular/router';
-
-@Injectable()
-class MockTramite240123Store {}
-
-@Injectable()
-class MockTramite240123Query {}
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
-
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { Observable, of } from 'rxjs';
+import { DATOS_ESTATICOS } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let component: TercerosRelacionadosContenedoraComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
+  let tramiteStoreMock: Partial<Tramite240123Store>;
+  let tramiteQueryMock: Partial<Tramite240123Query>;
+  let routerMock: Partial<Router>;
+  let activatedRouteMock: Partial<ActivatedRoute>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ TercerosRelacionadosContenedoraComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  const DESTINATARIOS_FINAL = [
+    { nombreRazonSocial: 'Juan Pérez', rfc: 'JUAP123456', telefono: '123456789', correoElectronico: 'juan.perez@example.com' },
+    { nombreRazonSocial: 'Carlos Sánchez', rfc: 'CARS987654', telefono: '987654321', correoElectronico: 'carlos.sanchez@example.com' },
+  ];
+
+  const PROVEEDORES = [
+    { nombreRazonSocial: 'Proveedor 1', rfc: 'PROV123456', telefono: '555123456', correoElectronico: 'proveedor1@example.com' },
+    { nombreRazonSocial: 'Proveedor 2', rfc: 'PROV987654', telefono: '555987654', correoElectronico: 'proveedor2@example.com' },
+  ];
+
+  beforeEach(async () => {
+    tramiteStoreMock = {
+      actualizarDatosDestinatario: jest.fn(),
+      actualizarDatosProveedor: jest.fn(),
+      eliminarDestinatarioFinal: jest.fn(),
+      eliminareliminarProveedorFinal: jest.fn(),
+    };
+
+    tramiteQueryMock = {
+      getDestinatarioFinalTablaDatos$: of(DESTINATARIOS_FINAL) as unknown as Observable<DestinoFinal[]>,
+    };
+
+    routerMock = {
+      navigate: jest.fn(),
+    };
+
+    activatedRouteMock = {};
+
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, TercerosRelacionadosComponent, TercerosRelacionadosContenedoraComponent],
       providers: [
-        { provide: Tramite240123Store, useClass: MockTramite240123Store },
-        { provide: Tramite240123Query, useClass: MockTramite240123Query },
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        }
-      ]
-    }).overrideComponent(TercerosRelacionadosContenedoraComponent, {
-
+        { provide: Tramite240123Store, useValue: tramiteStoreMock },
+        { provide: Tramite240123Query, useValue: tramiteQueryMock },
+        { provide: Router, useValue: routerMock },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
   });
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-
-  it('should run #constructor()', async () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
-    component.tramiteQuery.getProveedorTablaDatos$ = observableOf({});
+  it('debería cargar los datos de destinatarios finales correctamente', () => {
     component.ngOnInit();
-
+    expect(component.destinatarioFinalTablaDatos.length).toBeGreaterThan(0);
+    expect(component.destinatarioFinalTablaDatos).toEqual(DESTINATARIOS_FINAL);
   });
 
-  it('should run #modificarDestinarioDatos()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.actualizarDatosDestinatario = jest.fn();
-    component.irAAcciones = jest.fn();
-    component.modificarDestinarioDatos({});
-    expect(component.tramiteStore.actualizarDatosDestinatario).toHaveBeenCalled();
-    // expect(component.irAAcciones).toHaveBeenCalled();
+  it('debería cargar los datos de proveedores desde los datos estáticos', () => {
+    component.ngOnInit();
+    expect(component.proveedorTablaDatos.length).toBeGreaterThan(0);
+    expect(component.proveedorTablaDatos).toEqual(DATOS_ESTATICOS);
   });
 
-  it('should run #modificarProveedorDatos()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.actualizarDatosProveedor = jest.fn();
-    component.irAAcciones = jest.fn();
-    component.modificarProveedorDatos({});
-    // expect(component.tramiteStore.actualizarDatosProveedor).toHaveBeenCalled();
-    // expect(component.irAAcciones).toHaveBeenCalled();
+  it('debería actualizar los datos del destinatario final', () => {
+    const DESTINATARIO: DestinoFinal = { 
+      nombreRazonSocial: 'Juan Pérez', 
+      rfc: 'JUAP123456', 
+      telefono: '123456789', 
+      correoElectronico: 'juan.perez@example.com',
+      curp: 'JUAP890123HDFRRL01',
+      calle: 'Calle Falsa',
+      numeroExterior: '123',
+      numeroInterior: 'A',
+      colonia: 'Centro',
+      municipioAlcaldia: 'Ciudad',
+      estadoLocalidad: 'Estado', 
+      codigoPostal: '12345',
+      pais: 'México',
+      localidad: 'Localidad Ejemplo',
+      entidadFederativa: 'Entidad Ejemplo'
+    };
+    component.modificarDestinarioDatos(DESTINATARIO);
+    expect(tramiteStoreMock.actualizarDatosDestinatario).toHaveBeenCalledWith(DESTINATARIO);
   });
 
-  it('should run #eliminarDestinatarioFinal()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.eliminarDestinatarioFinal = jest.fn();
-    component.eliminarDestinatarioFinal({});
-    // expect(component.tramiteStore.eliminarDestinatarioFinal).toHaveBeenCalled();
+  it('debería actualizar los datos del proveedor', () => {
+    const PROVEEDOR: Proveedor = { 
+      nombreRazonSocial: 'Proveedor 1', 
+      rfc: 'PROV123456', 
+      telefono: '555123456', 
+      correoElectronico: 'proveedor1@example.com',
+      curp: 'PROV890123HDFRRL01',
+      calle: 'Calle Ejemplo',
+      numeroExterior: '123',
+      numeroInterior: 'B',
+      colonia: 'Colonia Ejemplo',
+      municipioAlcaldia: 'Municipio Ejemplo',
+      estadoLocalidad: 'Estado Ejemplo',
+      codigoPostal: '54321',
+      pais: 'México',
+      localidad: 'Localidad Ejemplo',
+      entidadFederativa: 'Entidad Ejemplo'
+    };
+    component.modificarProveedorDatos(PROVEEDOR);
+    expect(tramiteStoreMock.actualizarDatosProveedor).toHaveBeenCalledWith(PROVEEDOR);
   });
 
-  it('should run #eliminarProveedor()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.eliminareliminarProveedorFinal = jest.fn();
-    component.eliminarProveedor({});
-    // expect(component.tramiteStore.eliminareliminarProveedorFinal).toHaveBeenCalled();
+  it('debería eliminar el destinatario final', () => {
+    const DESTINATARIO: DestinoFinal = { 
+      nombreRazonSocial: 'Juan Pérez', 
+      rfc: 'JUAP123456', 
+      telefono: '123456789', 
+      correoElectronico: 'juan.perez@example.com',
+      curp: 'JUAP890123HDFRRL01',
+      calle: 'Calle Falsa',
+      numeroExterior: '123',
+      numeroInterior: 'A',
+      colonia: 'Centro',
+      municipioAlcaldia: 'Ciudad',
+      estadoLocalidad: 'Estado', 
+      codigoPostal: '12345',
+      pais: 'México',
+      localidad: 'Localidad Ejemplo',
+      entidadFederativa: 'Entidad Ejemplo'
+    };
+    component.eliminarDestinatarioFinal(DESTINATARIO);
+    expect(tramiteStoreMock.eliminarDestinatarioFinal).toHaveBeenCalledWith(DESTINATARIO);
   });
 
-  it('should run #irAAcciones()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.irAAcciones({});
-    // expect(component.router.navigate).toHaveBeenCalled();
+  it('debería eliminar el proveedor', () => {
+    const PROVEEDOR: Proveedor = { 
+      nombreRazonSocial: 'Proveedor 1', 
+      rfc: 'PROV123456', 
+      telefono: '555123456', 
+      correoElectronico: 'proveedor1@example.com',
+      curp: 'PROV890123HDFRRL01',
+      calle: 'Calle Ejemplo',
+      numeroExterior: '123',
+      numeroInterior: 'B',
+      colonia: 'Colonia Ejemplo',
+      municipioAlcaldia: 'Municipio Ejemplo',
+      estadoLocalidad: 'Estado Ejemplo',
+      codigoPostal: '54321',
+      pais: 'México',
+      localidad: 'Localidad Ejemplo',
+      entidadFederativa: 'Entidad Ejemplo'
+    };
+    component.eliminarProveedor(PROVEEDOR);
+    expect(tramiteStoreMock.eliminareliminarProveedorFinal).toHaveBeenCalledWith(PROVEEDOR);
   });
 
+  it('debería navegar a la ruta relativa para agregar un destinatario final', () => {
+    component.irAAcciones('../agregar-destino-final');
+    expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-destino-final'], { relativeTo: activatedRouteMock });
+  });
+
+  it('debería navegar a la ruta relativa para agregar un proveedor', () => {
+    component.irAAcciones('../agregar-proveedor');
+    expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-proveedor'], { relativeTo: activatedRouteMock });
+  });
 });

@@ -1,56 +1,84 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
-import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
+import { CatalogoSelectComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 import { Location } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { TIPO_PERSONA_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES } from '../../../../shared/constants/datos-solicitud.enum';
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
   let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
-  let datosSolicitudServiceMock: any;
-  let tramiteStoreMock: any;
-  let locationMock: any;
+  let datosSolicitudServiceMock: Partial<DatosSolicitudService>;
+  let tramiteStoreMock: Partial<Tramite240123Store>;
+  let tramiteQueryMock: Partial<Tramite240123Query>;
+  let locationMock: Partial<Location>;
 
-  // Constantes en mayúsculas
-  const CODIGOS_POSTALES = 'obtenerListaCodigosPostales';
-  const PAISES = 'obtenerListaPaises';
-  const ESTADOS = 'obtenerListaEstados';
-  const MUNICIPIOS = 'obtenerListaMunicipios';
-  const LOCALIDADES = 'obtenerListaLocalidades';
-  const COLONIAS = 'obtenerListaColonias';
+  const CODIGOS_POSTALES = [
+    { nombre: 'Código Postal 1', id: 1 },
+    { nombre: 'Código Postal 2', id: 2 },
+  ];
 
-  beforeEach(() => {
+  const PAISES = [
+    { nombre: 'México', id: 1 },
+    { nombre: 'Estados Unidos', id: 2 },
+  ];
+
+  const ESTADOS = [
+    { nombre: 'Jalisco', id: 1 },
+    { nombre: 'CDMX', id: 2 },
+  ];
+
+  const MUNICIPIOS = [
+    { nombre: 'Guadalajara', id: 1 },
+    { nombre: 'Tlaquepaque', id: 2 },
+  ];
+
+  const LOCALIDADES = [
+    { nombre: 'Centro', id: 1 },
+    { nombre: 'Sur', id: 2 },
+  ];
+
+  const COLONIAS = [
+    { nombre: 'Colonia 1', id: 1 },
+    { nombre: 'Colonia 2', id: 2 },
+  ];
+
+  beforeEach(async () => {
     datosSolicitudServiceMock = {
-      [CODIGOS_POSTALES]: jest.fn().mockReturnValue(of([])),
-      [PAISES]: jest.fn().mockReturnValue(of([])),
-      [ESTADOS]: jest.fn().mockReturnValue(of([])),
-      [MUNICIPIOS]: jest.fn().mockReturnValue(of([])),
-      [LOCALIDADES]: jest.fn().mockReturnValue(of([])),
-      [COLONIAS]: jest.fn().mockReturnValue(of([])),
+      obtenerListaCodigosPostales: jest.fn().mockReturnValue(of(CODIGOS_POSTALES)),
+      obtenerListaPaises: jest.fn().mockReturnValue(of(PAISES)),
+      obtenerListaEstados: jest.fn().mockReturnValue(of(ESTADOS)),
+      obtenerListaMunicipios: jest.fn().mockReturnValue(of(MUNICIPIOS)),
+      obtenerListaLocalidades: jest.fn().mockReturnValue(of(LOCALIDADES)),
+      obtenerListaColonias: jest.fn().mockReturnValue(of(COLONIAS)),
     };
 
     tramiteStoreMock = {
       updateDestinatarioFinalTablaDatos: jest.fn(),
     };
+    tramiteQueryMock = {};
 
     locationMock = {
       back: jest.fn(),
     };
 
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, AgregarDestinatarioFinalContenedoraComponent],
+    await TestBed.configureTestingModule({
+      imports: [AgregarDestinatarioFinalContenedoraComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent],
       providers: [
         { provide: DatosSolicitudService, useValue: datosSolicitudServiceMock },
         { provide: Tramite240123Store, useValue: tramiteStoreMock },
-        { provide: Tramite240123Query, useValue: {} },
+        { provide: Tramite240123Query, useValue: tramiteQueryMock },
         { provide: Location, useValue: locationMock },
+        FormBuilder,
       ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -61,76 +89,80 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
   });
 
   it('debería inicializar el formulario correctamente', () => {
-    component.crearFormaulario();
     expect(component.agregarDestinatarioFinal).toBeDefined();
-    expect(component.agregarDestinatarioFinal.get('tipoPersona')).toBeTruthy();
+    expect(component.agregarDestinatarioFinal.valid).toBeFalsy();
   });
 
-  it('debería cargar los datos de catálogos correctamente', fakeAsync(() => {
+  it('debería cargar los datos de los catálogos correctamente', () => {
     component.cargarDatos();
-    tick(); 
-    fixture.detectChanges();
+    expect(component.codigosPostalesDatos.length).toBeGreaterThan(0);
+    expect(component.paisesDatos.length).toBeGreaterThan(0);
+    expect(component.estadosDatos.length).toBeGreaterThan(0);
+    expect(component.municipiosDatos.length).toBeGreaterThan(0);
+    expect(component.localidadesDatos.length).toBeGreaterThan(0);
+    expect(component.coloniasDatos.length).toBeGreaterThan(0);
+  });
 
-    expect(datosSolicitudServiceMock[CODIGOS_POSTALES]).toHaveBeenCalledWith();
-    expect(datosSolicitudServiceMock[PAISES]).toHaveBeenCalled();
-    expect(datosSolicitudServiceMock[ESTADOS]).toHaveBeenCalled();
-    expect(datosSolicitudServiceMock[MUNICIPIOS]).toHaveBeenCalled();
-    expect(datosSolicitudServiceMock[LOCALIDADES]).toHaveBeenCalled();
-    expect(datosSolicitudServiceMock[COLONIAS]).toHaveBeenCalled();
-  }));
-
-  it('debería cambiar las validaciones de los campos según campoObligatorio', () => {
+  it('debería cambiar las validaciones del formulario cuando `campoObligatorio` es verdadero', () => {
     component.campoObligatorio = true;
     component.campoObligatorioChange();
-    const COLONIA = component.agregarDestinatarioFinal.get('colonia');
-    const CALLE = component.agregarDestinatarioFinal.get('calle');
-    const NUMEROEXTERIOR = component.agregarDestinatarioFinal.get('numeroExterior');
-    expect(COLONIA?.validator).toBeNull();
-    expect(CALLE?.validator).toBeTruthy();
-    expect(NUMEROEXTERIOR?.validator).toBeTruthy();
+    expect(component.agregarDestinatarioFinal.get('colonia')?.validator).toBeNull();
+    expect(component.agregarDestinatarioFinal.get('calle')?.hasValidator(Validators.required)).toBeTruthy();
+    expect(component.agregarDestinatarioFinal.get('numeroExterior')?.hasValidator(Validators.required)).toBeTruthy();
   });
 
-  it('debería guardar un nuevo destinatario y actualizar el store', () => {
+  it('debería cambiar las validaciones del formulario cuando `campoObligatorio` es falso', () => {
+    component.campoObligatorio = false;
+    component.campoObligatorioChange();
+    expect(component.agregarDestinatarioFinal.get('colonia')?.hasValidator(Validators.required)).toBeTruthy();
+    expect(component.agregarDestinatarioFinal.get('calle')?.validator).toBeNull();
+    expect(component.agregarDestinatarioFinal.get('numeroExterior')?.validator).toBeNull();
+  });
+
+  it('debería guardar un destinatario final correctamente', () => {
     component.agregarDestinatarioFinal.patchValue({
       nombres: 'Juan',
       primerApellido: 'Pérez',
-      segundoApellido: 'López',
-      lada: '55',
-      telefono: '12345678',
+      rfc: 'JUAP001122',
+      curp: 'JUAP901101HDFRRL08',
+      lada: '33',
+      telefono: '123456789',
       correoElectronico: 'juan.perez@example.com',
-      calle: 'Calle 1',
+      calle: 'Av. Reforma',
       numeroExterior: '123',
-      pais: 'México',
       colonia: 'Colonia 1',
-      municipio: 'Municipio 1',
-      localidad: 'Localidad 1',
-      estado: 'Estado 1',
+      municipio: 'Guadalajara',
+      localidad: 'Centro',
+      estado: 'Jalisco',
       codigoPostal: '12345',
     });
 
     component.guardarDestinatario();
+
     expect(component.destinatarios.length).toBe(1);
-    expect(tramiteStoreMock.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(component.destinatarios);
     expect(locationMock.back).toHaveBeenCalled();
+    expect(tramiteStoreMock.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(component.destinatarios);
   });
 
-  it('debería navegar hacia atrás al cancelar', () => {
+  it('debería cancelar y regresar correctamente', () => {
     component.cancelar();
     expect(locationMock.back).toHaveBeenCalled();
   });
 
-  it('debería actualizar el valor de tipoPersona en el formulario', () => {
-    component.tipoPersonaCambioDeValor('Fisica');
-    expect(component.agregarDestinatarioFinal.get('tipoPersona')?.value).toBe('Fisica');
+  it('debería manejar correctamente el cambio de tipo de persona', () => {
+    component.tipoPersonaCambioDeValor('Persona Física');
+    expect(component.agregarDestinatarioFinal.get('tipoPersona')?.value).toBe('Persona Física');
   });
 
   it('debería limpiar el formulario correctamente', () => {
-    component.agregarDestinatarioFinal.patchValue({ nombres: 'Juan' });
     component.limpiarFormulario();
-    expect(component.agregarDestinatarioFinal.get('nombres')?.value).toBeNull();
+    expect(component.agregarDestinatarioFinal.value).toEqual({
+      tipoPersona: null,
+      nacionalidad: null,
+    });
   });
 
-  it('debería actualizar el valor de nacionalidad en el formulario', () => {
+  it('debería manejar correctamente el cambio de nacionalidad de terceros', () => {
     component.terecerosNacionalidadCambioDeValor('Mexicana');
     expect(component.agregarDestinatarioFinal.get('nacionalidad')?.value).toBe('Mexicana');
   });

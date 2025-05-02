@@ -123,12 +123,10 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         ?.value,
       descripcionFraccion: this.datosMercancia.get('descFraccion')?.value,
       unidadMedidaTarifa: this.datosMercancia.get('umt')?.value,
-      // umc: this.datosMercancia.get('umc')?.value,
       cantidadUMT: this.datosMercancia.get('cantidadUMT')?.value,
       valorComercial: this.datosMercancia.get('valorComercial')?.value,
       tipoMoneda: this.datosMercancia.get('tipoMoneda')?.value,
       descripcion: this.datosMercancia.get('descripcion')?.value,
-      // paisOrigen: this.seleccionadasPaisDeOriginDatos.join(','),
     };
 
     this.datosMercancias.push(DATOS_MERCANCIA);
@@ -164,8 +162,7 @@ ngOnInit(): void {
       fraccionArancelaria: ['25030002', Validators.required],
       descFraccion: [
         {
-          value:
-            'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.',
+          value: 'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.',
           disabled: true,
         },
         Validators.required,
@@ -173,7 +170,7 @@ ngOnInit(): void {
       cantidadUMT: [null, Validators.required],
       umt: [{ value: 'Kilogramo', disabled: true }, Validators.required],
       valorComercial: [null, Validators.required],
-      // umc: [null, Validators.required],
+       umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
     });
     this.cargarDatos();
@@ -184,8 +181,16 @@ ngOnInit(): void {
    * @returns {void}
    */
     limpiarFormulario(): void {
-      this.datosMercancia.reset();
+      this.datosMercancia.reset({
+        descripcion: null,   
+        fraccionArancelaria: null,   
+        cantidadUMT: null,   
+        umc: null,
+        valorComercial: null,  
+        tipoMoneda: null,   
+      });
     }
+    
 
    /**
    * @method cancelar
