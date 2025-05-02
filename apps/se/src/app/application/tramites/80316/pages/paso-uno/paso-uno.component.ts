@@ -9,13 +9,14 @@ import { Input } from '@angular/core';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ViewChild } from '@angular/core';
+import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ModificacionComponent]
+  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent]
 })
 // , BitacoraComponent, AltaPlantaComponent
 export class PasoUnoComponent implements AfterViewInit {

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
+import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
+import { Tramite80316Query } from '../../estados/tramite80316.query';
 import { DatosDelModificacion } from '../../models/datos-tramite.model';
 
 @Component({
@@ -18,6 +18,7 @@ import { DatosDelModificacion } from '../../models/datos-tramite.model';
     FormsModule,
     TituloComponent,
     TablaDinamicaComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.scss',
@@ -26,8 +27,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudService,
-    private tramite80302Store: Tramite80302Store,
-    private tramite80302Query: Tramite80302Query
+    private tramite80316Store: Tramite80316Store,
+    private tramite80316Query: Tramite80316Query
   ) {}
 
   /**
@@ -45,33 +46,20 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Estado actual del trámite.
    * Contiene los datos relacionados con la modificación del trámite.
    */
-  public derechoState: Solicitud80302State = {} as Solicitud80302State;
-
-  /**
-   * Representa la tabla de selección utilizada en el componente de modificación.
-   * Esta tabla se utiliza para gestionar y mostrar los datos seleccionados
-   * en el contexto de los trámites específicos.
-   */
-  TablaSeleccion = TablaSeleccion;
-  
-
-  /**
-   * Configuración de las columnas de la tabla dinámica.
-   * Define las propiedades de cada columna, como encabezado, clave y orden.
-   */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] = CONFIGURACION_MODIFICACION;
+  public derechoState: Solicitud80316State = {} as Solicitud80316State;
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
   datosTabla: DatosDelModificacion[] = [];
+  actividadProductiva!: Catalogo[];
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
-    this.tramite80302Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
+    this.tramite80316Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.derechoState = {
             ...this.derechoState,
@@ -80,7 +68,61 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         })).subscribe();
     this.inicializarFormulario();
     this.loadDatosModificacion();
-    this.loadDatosTablaData();
+    this.inicializaCatalogos();
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los valores actuales del estado.
+   */
+  inicializarFormulario(): void {
+    this.modificacionForm = this.fb.group({
+      rfc: [this.derechoState?.datosModificacion?.rfc],
+      federal: [this.derechoState?.datosModificacion?.federal],
+      tipo: [this.derechoState?.datosModificacion?.tipo],
+      programa: [this.derechoState?.datosModificacion?.programa],
+      actividadActual: [this.derechoState?.datosModificacion?.actividadActual],
+      actividadProductiva: [this.derechoState?.datosModificacion?.actividadProductiva, Validators.required],
+    });
+  }
+
+  /**
+   * Carga los datos de modificación desde el servicio.
+   * Actualiza el estado del trámite y los valores del formulario.
+   */
+  loadDatosModificacion(): void {
+    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      (this.tramite80316Store.setDatosModificacion as (valor: unknown) => void)(datos);
+    });
+  }
+
+  private inicializaCatalogos(): void {
+    const ACTIVIDADPRODUCTIVA$ = this.solicitudService.getActividadProductiva().pipe(
+      map((resp) => {
+        this.actividadProductiva = resp.data;
+      })
+    );
+
+    merge(
+      ACTIVIDADPRODUCTIVA$
+    )
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe();
+  }
+
+  actividadProductivaSeleccion():void {
+    const ACTIVIDADPRODUCTIVA = this.modificacionForm.get('actividadProductiva')?.value;
+    this.tramite80316Store.setActividadProductiva(ACTIVIDADPRODUCTIVA);
+  }
+
+  /**
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80316Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite80316Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   /**
@@ -92,88 +134,4 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
   }
 
-  /**
-   * Inicializa el formulario reactivo con los valores actuales del estado.
-   */
-  inicializarFormulario(): void {
-    this.modificacionForm = this.fb.group({
-      rfc: [this.derechoState?.datosModificacion?.rfc, []],
-      federal: [this.derechoState?.datosModificacion?.federal, []],
-      tipo: [this.derechoState?.datosModificacion?.tipo, []],
-      programa: [this.derechoState?.datosModificacion?.programa, []],
-    });
-  }
-
-  /**
-   * Carga los datos de modificación desde el servicio.
-   * Actualiza el estado del trámite y los valores del formulario.
-   */
-  loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-        (this.tramite80302Store.setDatosModificacion as (valor: unknown) => void)(datos);
-        this.setFormValues();
-      });
-  }
-
-  /**
-   * Cargar datos de la tabla.
-   *
-   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
-   * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
-   * cuando el componente se destruye, evitando fugas de memoria.
-   *
-   * @example
-   * // Llamar al método para cargar los datos de la tabla
-   * this.loadDatosTablaData();
-   */
-  loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) =>
-    {
-      this.datosTabla = data;
-    });
-  }
-
-  /**
-   * Establece los valores del formulario utilizando los datos de modificación.
-   */
-  setFormValues(): void {
-    this.modificacionForm.get('rfc')?.setValue(this.derechoState?.datosModificacion?.rfc);
-    this.modificacionForm.get('federal')?.setValue(this.derechoState?.datosModificacion?.federal);
-    this.modificacionForm.get('tipo')?.setValue(this.derechoState?.datosModificacion?.tipo);
-    this.modificacionForm.get('programa')?.setValue(this.derechoState?.datosModificacion?.programa);
-  }
-
-  /**
-   * Establecer valores en el store del trámite.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo.
-   * @param metodoNombre Nombre del método en el store.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80302Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite80302Store[metodoNombre] as (valor: unknown) => void)(VALOR);
-  }
-
-  /**
-   * Alterna el estado de un registro en la tabla entre 'Baja' y 'Activada'.
-   *
-   * @param row - El registro de la tabla que se desea modificar. Debe contener un identificador único (`id`).
-   *
-   * @remarks
-   * Este método busca el índice del registro en la tabla `datosTabla` utilizando el identificador (`id`) del registro proporcionado.
-   * Luego, cambia el valor de la propiedad `desEstatus` del registro encontrado:
-   * - Si el estado actual es 'Baja', se cambia a 'Activada'.
-   * - Si el estado actual es diferente de 'Baja', se cambia a 'Baja'.
-   *
-   * @example
-   * ```typescript
-   * const registro = { id: 1, desEstatus: 'Baja' };
-   * this.valorDeAlternancia(registro);
-   * // Ahora, registro.desEstatus será 'Activada'.
-   * ```
-   */
-  valorDeAlternancia(row: any){
-    const INDEX = this.datosTabla.findIndex((x) => x.id === row.id);
-    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
-  }
 }
