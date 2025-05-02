@@ -47,12 +47,17 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="RFCImpExp">RFC*:</label>
-            <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text" formControlName="RFCImpExp"
+            <input 
+              class="form-control"
+              id="rfc"
+              placeholder="RFC"
+              type="text"
+              formControlName="RFCImpExp"
               [ngClass]="
                   isValid(datosImportadorExportador, 'RFCImpExp')
                     ? 'required'
                     : ''
-                " libUppercase (blur)="busquedaRfc()" />
+                " libUppercase (change)="validaRfc()" />
           </div>
         </div>
         <div class="col-md-8">
@@ -64,7 +69,7 @@
         </div>
       </div>
       }
-
+      <section id="seccion-certificaciones" *ngIf="">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -145,7 +150,7 @@
           </div>
         </div>
       </div>
-
+      </section>
     </div>
 
     <ng-titulo titulo="Datos del servicio" />

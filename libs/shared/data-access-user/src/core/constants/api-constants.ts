@@ -66,11 +66,11 @@ export const API_GET_SOCIO_COMERCIAL = `catalogo/certificacion/scc/valida/${ID_S
  */
 export const API_GET_INDUSTRIA_AUTOMOTRIZ = `programa-se/cert-automotriz/${RFC_QUERY}`;
 /**
- * API que permite validar si un RFC es genérico o no.
+ * API que permite verificar si el RFC proporcionado es válido.
  * @param RFC_QUERY EL RFC
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
  */
-export const API_GET_VALIDA_RFC_GENERICO = `sat-t5701/rfc/valida/${RFC_QUERY}`;
+export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
 /**
  * El número de gafete por el que se filtrará la información.
  */
@@ -118,5 +118,15 @@ export const API_GET_TIPO_EQUIPO = 'catalogo/busca/tipo-equipo';
  * Tipo de equipo, Iniciales de equipo y Npumero de equipo.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/privado/swagger-ui/index.html#/Privado%20Validaciones/validaFerro
  */
-export const API_CONSULTAR_FERRO = `privado/ferro/valida`
+export const API_CONSULTAR_FERRO = `privado/ferro/valida`;
 
+/**
+ * API que obtiene la información del contribuyente por RFC.
+ * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
+/**
+ * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
+ * * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;

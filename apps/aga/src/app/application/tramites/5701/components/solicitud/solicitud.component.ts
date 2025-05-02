@@ -1,3 +1,4 @@
+
 import {
   ADV_LIMPIA_CAMPOS,
   EMPRESAS_CERTIFICADAS,
@@ -21,7 +22,10 @@ import {
   FechasService,
   FormulariosService,
   ICatalogo,
+  PROGRAMA_FOMENTO,
+  PROGRAMA_IMMEX,
   REGEX_RFC,
+  RFC_GENERICO,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -29,9 +33,10 @@ import {
   TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
+  ValidaRfcService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { delay, EMPTY, filter, map, merge, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { delay, EMPTY, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud5701State,
@@ -39,26 +44,28 @@ import {
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { AduanaService } from '../../../../core/services/5701/aduana.service';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
+import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
+import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
+import { IdcService } from '../../../../core/services/5701/idc.service';
+import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
 import { Patente } from '../../../../core/models/5701/patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { Recinto } from '../../../../core/models/5701/recinto.model';
 import { RecintoService } from '../../../../core/services/5701/recinto.service';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 import { SeccionAduanaService } from '../../../../core/services/5701/seccion-aduanas.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
+import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
-
-import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
-
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 @Component({
   selector: 'app-solicitud',
@@ -268,6 +275,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   private tipoPersona: TipoPersona = TipoPersona.FISICA;
 
+  /**
+   * Bandera para mostrar u ocultar la sección de certificaciones.
+   */
+  public muestraCertificaciones: boolean = true;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -285,6 +297,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly seccionAduanaService: SeccionAduanaService,
     private readonly recintoService: RecintoService,
     private readonly socioComercial: SocioComercialService,
+    private readonly validaRfcService: ValidaRfcService,
+    private readonly idcService: IdcService,
+    private readonly certificacionService: CertificacionService,
+    private readonly certificacionIndustriaAutomotrizService: IndustriaAutomotrizService,
+    private readonly certificacionOrigenService: CertificacionOrigenService,
   ) { }
 
   ngOnInit(): void {
@@ -667,7 +684,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           if (empresaResponse.datos.length > 1) {
             this.masDeUnaEmpresa = true;
           } else {
-            this.tramite5701Store.setRFCImportadorExportador(empresaResponse.datos[0]); 
+            this.datosImportadorExportador.get('RFCImpExp')?.setValue(empresaResponse.datos[0]);
+            this.tramite5701Store.setRFCImportadorExportador(empresaResponse.datos[0]);
           }
         }
       }),
@@ -898,24 +916,46 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Realiza la búsqueda del RFC del importador/exportador y actualiza los campos relacionados.
+   * Realiza la validación del RFC del importador/exportador y actualiza los campos relacionados.
    * 
    * @returns {void} No retorna ningún valor.
    */
-  busquedaRfc(): void {
+  validaRfc(): void {
     if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
-      const RFC_IMP_EXP =
-        this.datosImportadorExportador.get('RFCImpExp')?.value;
-      // Aqui se hará la busqueda del rfc, para obtener el nombre
-      SolicitudComponent.llenarCamposDesactivados(
-        this.datosImportadorExportador,
-        'nombre'
-      );
+      const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
 
-      const NOMBRE =
-        this.datosImportadorExportador.get('nombre')?.value;
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
-      this.tramite5701Store.setNombre(NOMBRE);
+      this.validaRfcService.getValidacionRfc(RFC_IMP_EXP).pipe(
+        takeUntil(this.destroyNotifier$),
+        switchMap((validacionResponse) => {
+          if (validacionResponse) {
+            this.muestraCertificaciones = !validacionResponse.datos;
+            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+
+            if (validacionResponse.datos) {
+              // Aqui se hará la busqueda del rfc, para obtener el nombre
+              SolicitudComponent.llenarCamposDesactivados(
+                this.datosImportadorExportador,
+                'nombre',
+                RFC_GENERICO
+              );
+              this.tramite5701Store.setNombre(RFC_GENERICO);
+              return EMPTY;
+            } 
+            return this.idcService.getInformacionContribuyente(RFC_IMP_EXP).pipe(tap());
+          } else {
+            // TODO: Implementar mensaje de error para RFC no encontrado.
+          }
+          return EMPTY;
+        }),
+        tap((idcResponse) => {
+          if (idcResponse.datos?.nombre) {
+            this.datosImportadorExportador.get('nombre')?.setValue(idcResponse.datos?.nombre);
+            this.getCertificaciones(RFC_IMP_EXP);
+          }
+        })
+      ).subscribe();
+
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);      
     }
   }
 
@@ -926,9 +966,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param form - El grupo de formulario (`FormGroup`) que contiene el campo a modificar.
    * @param field - El nombre del campo dentro del formulario que será modificado.
    */
-  static llenarCamposDesactivados(form: FormGroup, field: string): void {
+  static llenarCamposDesactivados(form: FormGroup, field: string, value: string): void {
     form.get(field)?.enable();
-    form.get(field)?.setValue('JUAN PEREZ CRUZ');
+    form.get(field)?.setValue(value);
     form.get(field)?.disable();
   }
 
@@ -1518,13 +1558,48 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * 
    */
-  onIdSocioComercialChange(): void {
+  public onIdSocioComercialChange(): void {
     const ID_SOCIO_COMERCIAL: string = this.datosImportadorExportador.get('idSocioComercial')?.value;
     this.socioComercial.getSocioComercial(ID_SOCIO_COMERCIAL).pipe(
+      takeUntil(this.destroyNotifier$),
       map((response) => {
         this.tramite5701Store.setBlnSocioComercial(response.datos);
       })
     ).subscribe();
     this.setValoresStore(this.datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')
+  }
+
+  private getCertificaciones(rfc: string): void {
+    this.certificacionService.getCertificacion(rfc, PROGRAMA_IMMEX).pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        if (response) {
+          this.tramite5701Store.setBlnImmex(response.datos.immex);
+          this.tramite5701Store.setDescripcionImmex(response.datos.des_immex);
+        }
+      })
+    ).subscribe();
+
+    this.certificacionService.getCertificacion(rfc, PROGRAMA_FOMENTO).pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        if (response) {
+          this.tramite5701Store.setBlnProgramaFomento(response.datos.programa_fomento);
+          this.tramite5701Store.setDescripcionImmex(response.datos.des_programa_fomento);
+        }
+      })
+    ).subscribe();
+
+    this.certificacionIndustriaAutomotrizService.getCertificacionAutomotriz(rfc).pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        if (response) {
+          this.tramite5701Store.setBlnIndustriaAutomotriz(response.datos.industrial_automotriz);
+          this.tramite5701Store.setDescripcionIndustriaAutomotriz(response.datos.des_industrial_automotriz);
+        }
+      }),
+    ).subscribe();
+
+    this.certificacionOrigenService.getCertificacionOrigen(rfc).subscribe();
   }
 }

@@ -16,5 +16,5 @@ export interface IndustriaAutomotrizResponse {
  */
 export interface IndustriaAutomotriz {
     industrial_automotriz: boolean;
-    des_industrial_automotriz: number;
+    des_industrial_automotriz: string;
 }
