@@ -1,5 +1,3 @@
-
-
 import { API_GET_CONSULTA_RESPONSABLE, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { enviroment } from '@libs/shared/data-access-user/src';
@@ -22,7 +20,7 @@ export class ConsultaResponsableService {
   }
 
   /**
-   *Valida si el número de gafete de un responsable es correcto y devuelve la información del responsable.
+   * Valida si el número de gafete de un responsable es correcto y devuelve la información del responsable.
    * @param numeroGafete Número de gafete del responsable.
    * @param tipoGafete Tipo de gafete del responsable.
    * @returns Observable<ResponsableGafeteResponse> Información del responsable.

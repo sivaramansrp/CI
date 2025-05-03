@@ -43,7 +43,6 @@ export const MODALIDAD_AA = "31602";
  * (Impuesto al Valor Agregado) o el IEPS (Impuesto Especial sobre Producción y Servicios).
  */
 export const MODALIDAD_AAA = "31603";
-
 /**
  * Tipo de Gafete
  */

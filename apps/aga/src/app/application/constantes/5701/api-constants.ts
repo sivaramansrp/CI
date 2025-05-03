@@ -49,12 +49,6 @@ export const API_GET_SOCIO_COMERCIAL = `catalogo/certificacion/scc/valida/${ID_S
  */
 export const API_GET_INDUSTRIA_AUTOMOTRIZ = `programa-se/cert-automotriz/${RFC_QUERY}`;
 /**
- * API que permite verificar si el RFC proporcionado es válido.
- * @param RFC_QUERY EL RFC
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
- */
-export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
-/**
  * El número de gafete por el que se filtrará la información.
  */
 export const NUMERO_GAFETE_QUERY = '{numeroGafete}'

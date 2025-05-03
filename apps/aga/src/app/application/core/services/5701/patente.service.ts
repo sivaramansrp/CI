@@ -3,7 +3,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PatenteResponse } from '../../models/5701/patente.model';
+import { PatenteResponse } from '../../models/5701/Patente.model';
 
 @Injectable({
   providedIn: 'root',

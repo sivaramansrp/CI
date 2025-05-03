@@ -61,8 +61,6 @@ export * from './core/services/shared/formularios/formularios.service';
 export * from './core/services/shared/http/http.service';
 export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
 export * from './core/services/shared/modal-aviso/modal-aviso.service';
-export * from './core/services/shared/pago/parametro-monto.service';
-export * from './core/services/shared/pago/valida-linea-pago.service';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/shared/subir-documento/subir-documento.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
