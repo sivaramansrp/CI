@@ -77,7 +77,7 @@ export const appRoutes: Route[] = [
         remoteEntry: `${enviroment.WEB_HOST}:4217/sener/remoteAppEntry.js`,
         remoteName: 'sener',
         exposedModule: './Module'
-      }).then((m) => m.AppSemarnatModule)
+      }).then((m) => m.AppSenerModule)
   },
   
   {
@@ -123,7 +123,7 @@ export const appRoutes: Route[] = [
             remoteEntry: `${enviroment.WEB_HOST}:4211/cofepris/remoteAppEntry.js`,
             remoteName: 'cofepris',
             exposedModule: './Module'
-        }).then((m) => m.AppInbalModule)
+        }).then((m) => m.AppCofeprisModule)
   },
   {
     path: 'profepa',

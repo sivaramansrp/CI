@@ -30,7 +30,7 @@ data:
       "se": "https://front.v30.ultrasist.net:4205/se",
       "semarnat": "https://front.v30.ultrasist.net:4206/semarnat",
       "agace": "https://front.v30.ultrasist.net:4209/agace",
-      "funcionario": "https://front.v30.ultrasist.net4210/funcionario",
+      "funcionario": "https://front.v30.ultrasist.net:4210/funcionario",
       "cofepris": "https://front.v30.ultrasist.net:4211/cofepris",
       "amecafe": "https://front.v30.ultrasist.net:4212/amecafe",
       "sener": "https://front.v30.ultrasist.net:4217/sener",
