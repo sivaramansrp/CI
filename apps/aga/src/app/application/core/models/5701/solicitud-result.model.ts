@@ -187,9 +187,9 @@ export interface Despacho {
  nombre_recinto: string;
  domicilio: string;
  especifique: string;
- fecha_inicio: Date;
+ fecha_inicio: string;
  hora_inicio: string;
- fecha_final: Date;
+ fecha_final: string;
  hora_fin: string;
  tipo_operacion: string;
  encargo_conferido: boolean;
