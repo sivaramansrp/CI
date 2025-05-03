@@ -1,9 +1,8 @@
-import { API_GET_VALIDA_LINEA_PAGO, LINEA_PAGO_QUERY } from '../../../constants/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { enviroment } from '../../../../../src/enviroments/enviroment';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { API_GET_VALIDA_LINEA_PAGO, LINEA_PAGO_QUERY } from "../../../../constantes/5701/api-constants";
+import { CatalogosResponse, enviroment } from "@libs/shared/data-access-user/src";
+import { catchError, map, Observable, throwError } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: 'root',

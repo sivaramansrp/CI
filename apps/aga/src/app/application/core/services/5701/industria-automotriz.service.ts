@@ -5,8 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { IndustriaAutomotrizResponse } from '../../models/5701/certificacion-automotriz.model';
 import { Injectable } from '@angular/core';
 
-
-
 @Injectable({
   providedIn: 'root',
 })

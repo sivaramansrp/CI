@@ -4,8 +4,7 @@ import { CLAVE_PATENTE_QUERY, enviroment } from '@libs/shared/data-access-user/s
 import { EmpresaResponse } from '../../models/5701/empresa.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Patente } from '../../models/5701/patente.model';
-
+import { Patente } from '../../models/5701/Patente.model';
 
 @Injectable({
   providedIn: 'root',

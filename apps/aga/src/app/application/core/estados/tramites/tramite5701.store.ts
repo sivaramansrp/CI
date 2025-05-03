@@ -5,7 +5,7 @@ import {
 } from '../../models/5701/tramite5701.model';
 
 import { Injectable } from '@angular/core';
-import { Patente } from '../../models/5701/patente.model';
+import { Patente } from '../../models/5701/Patente.model';
 
 
 /**

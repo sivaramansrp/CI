@@ -277,7 +277,7 @@
             <span class="required">*</span>
           </div>
           <select class="form-control" formControlName="idAduanaDespacho" (change)="changeAduana()">
-            <option *ngFor="let aduana of aduanas" [value]="aduana">
+            <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
               {{ aduana.descripcion }}
             </option>
           </select>
@@ -287,7 +287,7 @@
             <label for="">Sección aduanera:</label>
           </div>
           <select class="form-control" formControlName="idSeccionDespacho" (change)="changeSeccionAduanera()"
-            [required]="false" [disabled]="desactivarSelectSeccionAduanera">
+            [required]="false" >
             <option *ngFor="let seccion of seccionAduanera" [value]="seccion.clave">
               {{ seccion.descripcion }}
             </option>
@@ -298,8 +298,7 @@
           <div>
             <label for="">Nombre del recinto:</label>
           </div>
-          <select class="form-control" formControlName="nombreRecinto" (change)="changeRecinto()" [required]="false"
-            [disabled]="desactivarSelectRecinto">
+          <select class="form-control" formControlName="nombreRecinto" (change)="changeRecinto()" [required]="false">
             <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
               {{ recinto.descripcion }}
             </option>

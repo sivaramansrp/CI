@@ -1,7 +1,6 @@
+import { CatalogosNumeroResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { API_GET_PARAMETRO_MONTO } from '../../../constants/api-constants';
-import { CatalogosNumeroResponse } from '../../../models/shared/catalogo.model';
-import { enviroment } from '../../../../../src/enviroments/enviroment';
+import { API_GET_PARAMETRO_MONTO } from '../../../../constantes/5701/api-constants';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
