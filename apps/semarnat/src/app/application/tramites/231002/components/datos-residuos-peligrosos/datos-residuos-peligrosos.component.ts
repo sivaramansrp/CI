@@ -1,12 +1,12 @@
-import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model'
 import { CommonModule } from '@angular/common';
+import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
+import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
-import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -16,202 +16,129 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
 
 /**
  * Componente encargado de manejar la sección de datos de residuos peligrosos.
- * Es un componente standalone que importa módulos y componentes necesarios para su funcionamiento.
  */
-
 @Component({
   selector: 'app-datos-residuos-peligrosos',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TituloComponent,
-    ReactiveFormsModule, InputRadioComponent, CatalogoSelectComponent, TableComponent],
+    ReactiveFormsModule,
+    InputRadioComponent,
+    CatalogoSelectComponent,
+    TableComponent
+  ],
   templateUrl: './datos-residuos-peligrosos.component.html',
-  styleUrl: './datos-residuos-peligrosos.component.scss',
+  styleUrl: './datos-residuos-peligrosos.component.scss'
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
-  /** 
-  * Formulario reactivo que contiene los datos generales del residuo. 
-  */
+  /** Formulario para los datos generales del residuo. */
   formularioDatos!: FormGroup;
 
-  /** 
-   * Formulario reactivo que contiene la información detallada del residuo peligroso.
-   */
+  /** Formulario para los detalles del residuo peligroso. */
   formularioResiduo!: FormGroup;
 
-
-  /**
-   * Opciones de radio generales utilizadas en el formulario de residuos peligrosos.
-   */
+  /** Opciones para el campo de selección de residuos peligrosos. */
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
-  /**
-   * Opciones de radio para la clasificación del residuo.
-   */
+  /** Opciones de clasificación del residuo. */
   clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES?.clasificacionRadioOptions;
 
-  /**
- * Opciones de radio utilizadas en el formulario para etiquetar residuos.
- */
-  public etiquetasForm = RADIO_OPCIONES;
-
+  /** Estructura de datos completa de etiquetas y opciones del JSON. */
+  etiquetasForm = RADIO_OPCIONES;
 
   /**
-   * Constructor del componente. Inicializa el formulario reactivo y conecta con el store y query de Akita.
+   * Constructor del componente.
    * 
-   * @param fb - Constructor del formulario reactivo.
-   * @param formularioStore - Store de Akita que gestiona el estado del formulario de residuos.
-   * @param formularioQuery - Query de Akita para obtener el estado actual del formulario.
+   * @param fb - Servicio para construir formularios reactivos.
+   * @param formularioStore - Store Akita que gestiona el estado del formulario.
+   * @param formularioQuery - Query Akita para consultar el estado del formulario.
    */
   constructor(
     public fb: FormBuilder,
     private formularioStore: FormularioResiduoStore,
     private formularioQuery: FormularioResiduoQuery
-  ) {
-    // Lógica del constructor si es necesaria
-  }
+  ) {}
 
   /**
-   * Método de inicialización del componente.
-   * Carga los catálogos desde el archivo JSON y configura los formularios.
+   * Inicializa el componente cargando formularios y recuperando datos del store.
    */
   ngOnInit(): void {
-
-    /** Inicializa el formulario con datos de materia prima */
     this.inicializarFormulario();
-
-    /** Crea el formulario para capturar los datos del residuo */
     this.crearFormularioResiduo();
-
-    /** Restaura valores guardados en el store de Akita */
     this.recuperarValoresDesdeStore();
   }
 
-
   /**
-   * Inicializa el formulario de datos de materia prima con validaciones y algunos campos deshabilitados por defecto.
+   * Inicializa el formulario de datos generales de la materia prima.
    */
   private inicializarFormulario(): void {
     this.formularioDatos = this.fb.group({
-      /** Número de la materia prima (campo obligatorio) */
       numero: ['', Validators.required],
-
-      /** Nombre de la materia prima (campo obligatorio) */
       nombreMateriaPrima: ['', Validators.required],
-
-      /** Cantidad (deshabilitado por defecto, se habilita automáticamente) */
       cantidad: [{ value: '', disabled: true }],
-
-      /** Cantidad en letra (deshabilitado por defecto) */
       cantidadLetra: [{ value: '', disabled: true }],
-
-      /** Unidad de medida (deshabilitado por defecto) */
       unidadDeMedida: [{ value: '', disabled: true }],
-
-      /** Fracción arancelaria (deshabilitado por defecto) */
       fraccionArancelaria: [{ value: '', disabled: true }]
     });
   }
 
-
-
   /**
-   * Crea el formulario para capturar los datos del residuo peligroso.
-   * Cada campo se inicializa con su valor por defecto y sus validaciones correspondientes.
+   * Crea el formulario de captura para datos del residuo peligroso.
    */
   private crearFormularioResiduo(): void {
     this.formularioResiduo = this.fb.group({
-      /** Fracción arancelaria del residuo (obligatorio) */
       fraccionArancelaria: ['', Validators.required],
-
-      /** NICO (Número de Identificación Comercial) (obligatorio) */
       nico: ['', Validators.required],
-
-      /** Acotación (campo deshabilitado por defecto, obligatorio) */
       acotacion: [{ value: '', disabled: true }, Validators.required],
-
-      /** Indicador si es residuo peligroso (obligatorio) */
       residuoPeligroso: ['', Validators.required],
-
-      /** Cantidad del residuo (obligatorio) */
       cantidad: ['', Validators.required],
-
-      /** Cantidad en letra (campo deshabilitado por defecto) */
       cantidadLetra: [{ value: '', disabled: true }],
-
-      /** Unidad de medida (obligatorio) */
       unidadMedida: ['', Validators.required],
-
-      /** Clasificación del residuo (obligatorio) */
       clasificacion: ['', Validators.required],
-
-      /** Clave del residuo (obligatorio) */
       claveResiduo: ['', Validators.required],
-
-      /** Nombre del residuo (obligatorio) */
       nombre: ['', Validators.required],
-
-      /** Descripción del residuo (obligatorio) */
       descripcion: ['', Validators.required],
-
-      /** CRETI (Corrosivo, Reactivo, Explosivo, Tóxico, Inflamable) (obligatorio) */
       creti: ['', Validators.required],
-
-      /** Estado físico del residuo (obligatorio) */
       estadoFisico: ['', Validators.required],
-
       manifiesto: ['', Validators.required],
-
-      /** Tipo de contenedor utilizado (obligatorio) */
       tipoContenedor: ['', Validators.required],
-
-      /** Capacidad del contenedor (obligatorio) */
       capacidad: ['', Validators.required]
     });
   }
 
-
   /**
-   * Recupera los valores almacenados en el estado (store) de Akita y los asigna
-   * a los formularios correspondientes sin emitir eventos de cambio.
+   * Restaura los valores de los formularios a partir del estado en el store.
    */
   private recuperarValoresDesdeStore(): void {
-    /** Obtiene el estado actual del store */
-    const ESTADO = this.formularioQuery.getValue();
-
-    /** Actualiza los valores del formulario de datos */
-    this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
-
-    /** Actualiza los valores del formulario del residuo */
-    this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
+    const estado = this.formularioQuery.getValue();
+    this.formularioDatos.patchValue(estado.formularioDatos, { emitEvent: false });
+    this.formularioResiduo.patchValue(estado.formularioResiduo, { emitEvent: false });
   }
 
-
   /**
-   * Actualiza un campo específico del formulario de datos de materia prima en el store.
+   * Actualiza un campo del formulario de datos generales en el store.
    *
-   * @param field - Nombre del campo del formulario de datos a actualizar.
+   * @param field - Campo del formulario a actualizar.
    */
   actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
     const VALOR = this.formularioDatos.get(field)?.value;
     this.formularioStore.actualizarFormularioDatos({
       ...this.formularioDatos.getRawValue(),
-      [field]: VALOR,
+      [field]: VALOR
     });
   }
 
   /**
-   * Actualiza un campo específico del formulario de residuos en el store.
+   * Actualiza un campo del formulario de residuos peligrosos en el store.
    *
-   * @param field - Nombre del campo del formulario de residuos a actualizar.
+   * @param field - Campo del formulario a actualizar.
    */
   actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
     const VALOR = this.formularioResiduo.get(field)?.value;
     this.formularioStore.actualizarFormularioResiduo({
       ...this.formularioResiduo.getRawValue(),
-      [field]: VALOR,
+      [field]: VALOR
     });
   }
-
-
 }

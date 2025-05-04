@@ -1,99 +1,81 @@
-import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
+import { REGEX_POSTAL, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
+import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
-import { Modal } from 'bootstrap';
-import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
-import { Subject, takeUntil } from 'rxjs';
 import { TEXTOS } from '../../constantes/aviso-retorno.enum';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
- * Se hace un cast del JSON importado al tipo `SolicitudJson`.
  */
 const RADIO_OPCIONES = rawData as SolicitudJson;
+
 /**
  * Componente que representa la sección de datos de la solicitud.
  */
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ReactiveFormsModule, TableComponent, InputRadioComponent, DatosResiduosPeligrososComponent],
+    ReactiveFormsModule,
+    TableComponent,
+    InputRadioComponent,
+    DatosResiduosPeligrososComponent
+  ],
   templateUrl: './datos-solicitud.component.html',
-  styleUrl: './datos-solicitud.component.scss',
+  styleUrl: './datos-solicitud.component.scss'
 })
-export class DatosSolicitudComponent implements OnInit {
-
-  /** 
-   * Referencia al elemento del DOM del modal para agregar mercancías.
-   */
+export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /** Referencia al modal de agregar mercancías */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
-  /** 
-   * Formulario principal de solicitud.
-   */
+  /** Formulario principal de solicitud */
   solicitudForm!: FormGroup;
 
-  /** 
-   * Formulario con datos de la empresa de reciclaje.
-   */
+  /** Formulario con los datos de la empresa recicladora */
   formularioEmpresaReciclaje!: FormGroup;
 
-  /** 
-   * Formulario con información del lugar de reciclaje.
-   */
+  /** Formulario con los datos del lugar de reciclaje */
   formularioLugarReciclaje!: FormGroup;
 
-  /** 
-   * Formulario con información de la empresa transportista.
-   */
+  /** Formulario con los datos de la empresa transportista */
   formularioEmpresaTransportista!: FormGroup;
 
-  /** 
-   * Formulario con las precauciones de manejo.
-   */
+  /** Formulario con las precauciones de manejo */
   formularioPrecaucionesManejo!: FormGroup;
 
-
-  /** 
-  * Opciones de radio generales para el formulario.
-  */
+  /** Opciones de radio generales */
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
-  /**
-   * Observable para manejar la destrucción de suscripciones.
-   */
+  /** Observable para destrucción de suscripciones */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * Opciones de radio para el tipo de aviso.
-   */
+  /** Opciones de radio para aviso */
   avisoOpcionesDeRadio: AvisoOpcionesDeRadio = {} as AvisoOpcionesDeRadio;
 
-  /**
-   * Tipo de aviso seleccionado.
-   */
+  /** Tipo de aviso actual */
   tipoAviso: string | number = 'por defecto';
 
+  /** Texto estático de la vista */
   TEXTOS = TEXTOS;
 
-  /**
-   * Opciones de radio utilizadas en el formulario para etiquetar residuos.
-   */
-  public etiquetasForm = RADIO_OPCIONES;
+  /** Datos del JSON usados en etiquetas */
+  etiquetasForm = RADIO_OPCIONES;
 
   /**
-   * Constructor del componente. Inyecta el FormBuilder, el store y el query de Akita.
+   * Constructor que inyecta dependencias necesarias.
    */
   constructor(
     public fb: FormBuilder,
@@ -104,139 +86,46 @@ export class DatosSolicitudComponent implements OnInit {
     this.obtenerAvisoOpcionesDeRadio();
   }
 
-
+  /**
+   * Inicializa los formularios al cargar el componente.
+   */
   ngOnInit(): void {
-    /** 
-     * Inicializa el formulario principal de solicitud.
-     */
     this.inicializarSolicitudForm();
-
-    /** 
-     * Inicializa el formulario con los datos de la empresa de reciclaje.
-     */
     this.inicializarFormularioEmpresaReciclaje();
-
-    /** 
-     * Inicializa el formulario con los datos del lugar de reciclaje.
-     */
     this.inicializarFormularioLugarReciclaje();
-
-    /** 
-     * Inicializa el formulario con los datos de la empresa transportista.
-     */
     this.inicializarFormularioEmpresaTransportista();
-
-    /** 
-     * Inicializa el formulario de precauciones de manejo.
-     */
     this.inicializarFormularioPrecaucionesManejo();
-
-    /** 
-     * Recupera valores almacenados en el store para rellenar los formularios.
-     */
     this.recuperarValoresDesdeStore();
   }
 
-  /** 
-   * Inicializa el formulario principal de solicitud con sus respectivos campos y validaciones.
+  /**
+   * Inicializa el formulario principal de solicitud.
    */
   private inicializarSolicitudForm(): void {
     this.solicitudForm = this.fb.group({
       ideGenerica1: ['', Validators.required],
-      /** Número de registro ambiental del residuo */
       numeroRegistroAmbiental: ['', Validators.required],
-
-      /** Descripción genérica del residuo */
       descripcionGenerica1: ['', Validators.required],
-
-      /** Número del programa IMMEX asociado */
       numeroProgramaImmex: ['', Validators.required],
-      domicilio:  ['', Validators.required]
+      domicilio: ['', Validators.required]
     });
   }
 
-  /** 
-   * Inicializa el formulario con los datos de la empresa de reciclaje,
-   * incluyendo campos obligatorios y validaciones.
+  /**
+   * Inicializa el formulario de empresa recicladora.
    */
   private inicializarFormularioEmpresaReciclaje(): void {
     this.formularioEmpresaReciclaje = this.fb.group({
-      /** Indica si se requiere empresa de reciclaje (valor por defecto: "Si") */
       requiereEmpresa: ['Si', Validators.required],
-
-      /** Nombre de la empresa recicladora */
       nombreEmpresa: ['', Validators.required],
-
-      /** Nombre del representante legal */
       representanteLegal: ['', Validators.required],
-
-      /** Teléfono de contacto de la empresa */
       telefono: ['', Validators.required],
-
-      /** Correo electrónico con validación de formato */
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      correoElectronico: ['', [Validators.required, Validators.email]]
     });
   }
-
-  /** 
-   * Inicializa el formulario con los datos de la empresa transportista de residuos,
-   * estableciendo validaciones requeridas para cada campo.
-   */
-  private inicializarFormularioEmpresaTransportista(): void {
-    this.formularioEmpresaTransportista = this.fb.group({
-      /** Nombre de la empresa que transporta los residuos */
-      nombreEmpresaTransportistaResiduos: ['', Validators.required],
-
-      /** Número de autorización otorgado por SEMARNAT */
-      numeroAutorizacionSemarnat: ['', Validators.required]
-    });
-  }
-
-  /** 
-   * Inicializa el formulario de precauciones de manejo,
-   * obligatorio para especificar medidas de seguridad o manejo especial del residuo.
-   */
-  private inicializarFormularioPrecaucionesManejo(): void {
-    this.formularioPrecaucionesManejo = this.fb.group({
-      clave:  ['', Validators.required],
-      /** Descripción de las precauciones de manejo del residuo */
-      precaucionesManejo: ['', Validators.required]
-    });
-  }
-
 
   /**
-   * Habilita o deshabilita los campos del formulario de empresa de reciclaje
-   * dependiendo del valor seleccionado en el campo "requiereEmpresa".
-   *
-   * @param valor Valor seleccionado, debe ser "Si" o "No".
-   */
-  onRequiereEmpresaChange(valor: string): void {
-    const DEBE_HABILITAR: boolean = valor === 'Si';
-
-    const CAMPOS_A_CONTROLAR: string[] = [
-      'nombreEmpresa',
-      'representanteLegal',
-      'telefono',
-      'correoElectronico'
-    ];
-
-    CAMPOS_A_CONTROLAR.forEach((campo: string): void => {
-      const CONTROL_CAMPO = this.formularioEmpresaReciclaje.get(campo);
-      if (CONTROL_CAMPO) {
-        if (DEBE_HABILITAR) {
-          CONTROL_CAMPO.enable();
-        } else {
-          CONTROL_CAMPO.disable();
-        }
-      }
-    });
-  }
-
-
-  /**
-   * Inicializa el formulario de lugar de reciclaje con sus respectivos campos y validaciones.
-   * 
+   * Inicializa el formulario de lugar de reciclaje.
    */
   private inicializarFormularioLugarReciclaje(): void {
     this.formularioLugarReciclaje = this.fb.group({
@@ -245,21 +134,49 @@ export class DatosSolicitudComponent implements OnInit {
       destinoDomicilio: ['', Validators.required],
       codigoPostal: [
         '',
-        [
-          Validators.required,
-          Validators.pattern(REGEX_POSTAL),
-          Validators.maxLength(8),
-        ]
+        [Validators.required, Validators.pattern(REGEX_POSTAL), Validators.maxLength(8)]
       ]
     });
   }
 
   /**
-   * Recupera los valores almacenados en el estado de Akita mediante el query
-   * y los aplica a los formularios correspondientes sin emitir eventos.
-   * 
-   * Esto permite repoblar los formularios cuando se recarga el componente
-   * o se navega entre pantallas sin perder la información ingresada.
+   * Inicializa el formulario de empresa transportista.
+   */
+  private inicializarFormularioEmpresaTransportista(): void {
+    this.formularioEmpresaTransportista = this.fb.group({
+      nombreEmpresaTransportistaResiduos: ['', Validators.required],
+      numeroAutorizacionSemarnat: ['', Validators.required]
+    });
+  }
+
+  /**
+   * Inicializa el formulario de precauciones de manejo.
+   */
+  private inicializarFormularioPrecaucionesManejo(): void {
+    this.formularioPrecaucionesManejo = this.fb.group({
+      clave: ['', Validators.required],
+      precaucionesManejo: ['', Validators.required]
+    });
+  }
+
+  /**
+   * Habilita o deshabilita campos dependiendo del valor seleccionado.
+   * @param valor Valor de la opción seleccionada ("Si" o "No")
+   */
+  onRequiereEmpresaChange(valor: string): void {
+    const DEBE_HABILITAR = valor === 'Si';
+    const CAMPOS = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
+
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.formularioEmpresaReciclaje.get(campo);
+      if (CONTROL) {
+        DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+      }
+    });
+  }
+
+  /**
+   * Recupera los valores almacenados en el store y los aplica a los formularios.
    */
   private recuperarValoresDesdeStore(): void {
     const ESTADO = this.datoSolicitudQuery.getValue();
@@ -272,110 +189,92 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
   /**
-   * Actualiza un campo específico del formulario de solicitud en el store.
-   *
-   * @param campo - Nombre del campo del formulario de solicitud a actualizar.
+   * Actualiza el campo del formulario principal en el store.
+   * @param campo Nombre del campo a actualizar
    */
   actualizarCampoSolicitudForm(campo: keyof EstadoDatoSolicitud['solicitudForm']): void {
     const VALOR = this.solicitudForm.get(campo)?.value;
     this.datoSolicitudStore.actualizarSolicitudForm({
       ...this.solicitudForm.getRawValue(),
-      [campo]: VALOR,
+      [campo]: VALOR
     });
   }
 
   /**
-   * Actualiza un campo específico del formulario de empresa de reciclaje en el store.
-   * Si el campo actualizado es 'requiereEmpresa', se habilitan o deshabilitan dinámicamente
-   * los campos relacionados según el valor seleccionado.
-   *
-   * @param campo - Nombre del campo del formulario de empresa reciclaje a actualizar.
+   * Actualiza el campo del formulario de empresa recicladora en el store.
+   * @param campo Nombre del campo a actualizar
    */
   actualizarCampoEmpresaReciclaje(campo: keyof EstadoDatoSolicitud['empresaReciclaje']): void {
     const VALOR = this.formularioEmpresaReciclaje.get(campo)?.value;
 
-    // Si el campo actualizado es 'requiereEmpresa', se evalúa si se deben habilitar o deshabilitar otros campos
     if (campo === 'requiereEmpresa') {
-      const DEBE_HABILITAR = VALOR === 'Si';
-      const CAMPOS = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
-
-      CAMPOS.forEach((campoExtra): void => {
-        const CONTROL = this.formularioEmpresaReciclaje.get(campoExtra);
-        if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
-        }
-      });
+      this.onRequiereEmpresaChange(VALOR);
     }
 
-    // Actualiza el estado del formulario de empresa reciclaje en el store
     this.datoSolicitudStore.actualizarEmpresaReciclaje({
       ...this.formularioEmpresaReciclaje.getRawValue(),
-      [campo]: VALOR,
+      [campo]: VALOR
     });
   }
 
   /**
-   * Actualiza un campo específico del formulario de empresa transportista en el store.
-   *
-   * @param campo - Nombre del campo del formulario de empresa transportista a actualizar.
+   * Actualiza el campo del formulario de empresa transportista en el store.
+   * @param campo Nombre del campo a actualizar
    */
   actualizarCampoEmpresaTransportista(campo: keyof EstadoDatoSolicitud['empresaTransportista']): void {
     const VALOR = this.formularioEmpresaTransportista.get(campo)?.value;
     this.datoSolicitudStore.actualizarEmpresaTransportista({
       ...this.formularioEmpresaTransportista.getRawValue(),
-      [campo]: VALOR,
+      [campo]: VALOR
     });
   }
 
   /**
-   * Actualiza un campo específico del formulario de precauciones de manejo en el store.
-   *
-   * @param campo - Nombre del campo del formulario de precauciones de manejo a actualizar.
+   * Actualiza el campo del formulario de precauciones de manejo en el store.
+   * @param campo Nombre del campo a actualizar
    */
   actualizarCampoPrecaucionesManejo(campo: keyof EstadoDatoSolicitud['precaucionesManejo']): void {
     const VALOR = this.formularioPrecaucionesManejo.get(campo)?.value;
     this.datoSolicitudStore.actualizarPrecaucionesManejo({
       ...this.formularioPrecaucionesManejo.getRawValue(),
-      [campo]: VALOR,
+      [campo]: VALOR
     });
   }
 
-
   /**
-   * Muestra el modal para agregar una operación de importación.
-   * Se utiliza el componente de Bootstrap Modal con una referencia al elemento del DOM.
+   * Muestra el modal de agregar operación de importación.
    */
   agregarOperacionImp(): void {
     if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement?.nativeElement);
-      MODAL_INSTANCE.show();
+      const modalInstance = new Modal(this.modalElement.nativeElement);
+      modalInstance.show();
     }
   }
 
   /**
-   * Establece el tipo de aviso basado en el evento proporcionado.
-   *
-   * @param evento - El evento que representa el tipo de aviso, puede ser una cadena o un número.
-   * @returns void
+   * Establece el tipo de aviso seleccionado.
+   * @param evento Valor del aviso seleccionado
    */
   setTipoDeAviso(evento: string | number): void {
     this.tipoAviso = evento;
   }
 
-    obtenerAvisoOpcionesDeRadio():void{
-      this.mercanciasDesmontadasOSinMontarService
-        .obtenerAvisoOpcionesDeRadio()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: (respuesta: AvisoOpcionesDeRadio) => {
-            this.avisoOpcionesDeRadio = respuesta;
-          },
-        });
-    }
+  /**
+   * Consulta opciones de aviso de radio desde el servicio.
+   */
+  obtenerAvisoOpcionesDeRadio(): void {
+    this.mercanciasDesmontadasOSinMontarService
+      .obtenerAvisoOpcionesDeRadio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: AvisoOpcionesDeRadio) => {
+          this.avisoOpcionesDeRadio = respuesta;
+        }
+      });
+  }
 
   /**
-   * Método de limpieza al destruir el componente.
-   * Cancela suscripciones para evitar fugas de memoria.
+   * Finaliza todas las suscripciones activas al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -383,8 +282,9 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
   /**
-   * Maneja la selección del país.
+   * Maneja la lógica cuando se selecciona un país.
    */
   paisSeleccion(): void {
+    // Implementar lógica si aplica
   }
 }

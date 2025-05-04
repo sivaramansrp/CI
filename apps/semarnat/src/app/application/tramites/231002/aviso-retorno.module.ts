@@ -1,10 +1,4 @@
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  FirmaElectronicaComponent,
-  SolicitanteComponent,
-  WizardComponent,
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';

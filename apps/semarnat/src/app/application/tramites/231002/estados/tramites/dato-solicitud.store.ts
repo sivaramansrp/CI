@@ -1,143 +1,122 @@
-import { Store, StoreConfig } from '@datorama/akita';
-import {EstadoDatoSolicitud} from '../../models/datos-solicitud.model';
 import { Injectable } from '@angular/core';
+import { Store, StoreConfig } from '@datorama/akita';
+import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
+
 /**
- * Función que retorna el estado inicial para el formulario de reciclaje.
+ * Retorna el estado inicial del formulario de reciclaje con valores por defecto.
+ *
+ * @returns {EstadoDatoSolicitud} Objeto con la estructura inicial del formulario de solicitud.
  */
 export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
-    return {
-        // Datos generales de la solicitud
-        solicitudForm: {
-            ideGenerica1: '',
-            // Número de registro ambiental proporcionado por SEMARNAT
-            numeroRegistroAmbiental: '',
-
-            // Descripción genérica del residuo
-            descripcionGenerica1: '',
-
-            // Número del programa IMMEX asociado a la empresa
-            numeroProgramaImmex: '',
-            domicilio: ''
-        },
-
-        // Información de la empresa recicladora
-        empresaReciclaje: {
-            // Indicador de si se requiere empresa recicladora (valor inicial: "Si")
-            requiereEmpresa: 'Si',
-
-            // Nombre de la empresa recicladora
-            nombreEmpresa: '',
-
-            // Representante legal de la empresa recicladora
-            representanteLegal: '',
-
-            // Teléfono de contacto de la empresa recicladora
-            telefono: '',
-
-            // Correo electrónico de la empresa recicladora
-            correoElectronico: '',
-        },
-
-        // Información sobre el lugar donde se realiza el reciclaje
-        lugarReciclaje: {
-
-            razonSocial: '',
-            pais: '',
-            destinoDomicilio: '',
-            codigoPostal: '',
-        },
-
-        // Datos de la empresa encargada del transporte de los residuos
-        empresaTransportista: {
-            // Nombre de la empresa transportista
-            nombreEmpresaTransportistaResiduos: '',
-
-            // Número de autorización de SEMARNAT para transportar residuos
-            numeroAutorizacionSemarnat: ''
-        },
-
-        // Descripción de las precauciones a tomar en el manejo del residuo
-        precaucionesManejo: {
-            clave: '',
-            precaucionesManejo: '',
-        }
-    };
+  return {
+    solicitudForm: {
+      ideGenerica1: '',
+      numeroRegistroAmbiental: '',
+      descripcionGenerica1: '',
+      numeroProgramaImmex: '',
+      domicilio: '',
+    },
+    empresaReciclaje: {
+      requiereEmpresa: 'Si',
+      nombreEmpresa: '',
+      representanteLegal: '',
+      telefono: '',
+      correoElectronico: '',
+    },
+    lugarReciclaje: {
+      razonSocial: '',
+      pais: '',
+      destinoDomicilio: '',
+      codigoPostal: '',
+    },
+    empresaTransportista: {
+      nombreEmpresaTransportistaResiduos: '',
+      numeroAutorizacionSemarnat: '',
+    },
+    precaucionesManejo: {
+      clave: '',
+      precaucionesManejo: '',
+    },
+  };
 }
 
-
+/**
+ * Store que gestiona el estado del formulario de solicitud de reciclaje.
+ */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'dato-solicitud', resettable: true })
 export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
-    /**
-    * Constructor del store que inicializa el estado con los valores predeterminados
-    * definidos en la función crearEstadoInicialFormularioReciclaje().
-    */
-    constructor() {
-        super(crearEstadoInicialFormularioReciclaje());
-    }
+  /**
+   * Inicializa el estado del store con los valores por defecto.
+   */
+  constructor() {
+    super(crearEstadoInicialFormularioReciclaje());
+  }
 
-    /**
-     * Actualiza los valores del formulario de solicitud en el estado.
-     * @param valores - Objeto con los nuevos valores del formulario de solicitud.
-     */
-    actualizarSolicitudForm(valores: EstadoDatoSolicitud['solicitudForm']): void {
-        this.update(state => ({
-            ...state,
-            solicitudForm: { ...valores }
-        }));
-    }
+  /**
+   * Actualiza los datos generales de la solicitud.
+   *
+   * @param valores - Objeto con los valores actualizados para `solicitudForm`.
+   */
+  actualizarSolicitudForm(valores: EstadoDatoSolicitud['solicitudForm']): void {
+    this.update((state) => ({
+      ...state,
+      solicitudForm: { ...valores },
+    }));
+  }
 
-    /**
-     * Actualiza los valores del formulario de la empresa recicladora en el estado.
-     * @param valores - Objeto con los nuevos valores del formulario de empresa reciclaje.
-     */
-    actualizarEmpresaReciclaje(valores: EstadoDatoSolicitud['empresaReciclaje']): void {
-        this.update(state => ({
-            ...state,
-            empresaReciclaje: { ...valores }
-        }));
-    }
+  /**
+   * Actualiza la información de la empresa recicladora.
+   *
+   * @param valores - Objeto con los valores actualizados para `empresaReciclaje`.
+   */
+  actualizarEmpresaReciclaje(valores: EstadoDatoSolicitud['empresaReciclaje']): void {
+    this.update((state) => ({
+      ...state,
+      empresaReciclaje: { ...valores },
+    }));
+  }
 
+  /**
+   * Actualiza los datos del lugar de reciclaje.
+   *
+   * @param valores - Objeto con los valores actualizados para `lugarReciclaje`.
+   */
+  actualizarLugarReciclaje(valores: EstadoDatoSolicitud['lugarReciclaje']): void {
+    this.update((state) => ({
+      ...state,
+      lugarReciclaje: { ...valores },
+    }));
+  }
 
-    /**
-  * Actualiza los valores del formulario del lugar de reciclaje en el estado.
-  * @param valores - Objeto con los nuevos valores del formulario de lugar de reciclaje.
-  */
-    actualizarLugarReciclaje(valores: EstadoDatoSolicitud['lugarReciclaje']): void {
-        this.update(state => ({
-            ...state,
-            lugarReciclaje: { ...valores }
-        }));
-    }
+  /**
+   * Actualiza la información de la empresa transportista de residuos.
+   *
+   * @param valores - Objeto con los valores actualizados para `empresaTransportista`.
+   */
+  actualizarEmpresaTransportista(valores: EstadoDatoSolicitud['empresaTransportista']): void {
+    this.update((state) => ({
+      ...state,
+      empresaTransportista: { ...valores },
+    }));
+  }
 
-    /**
-     * Actualiza los valores del formulario de la empresa transportista en el estado.
-     * @param valores - Objeto con los nuevos valores del formulario de empresa transportista.
-     */
-    actualizarEmpresaTransportista(valores: EstadoDatoSolicitud['empresaTransportista']): void {
-        this.update(state => ({
-            ...state,
-            empresaTransportista: { ...valores }
-        }));
-    }
+  /**
+   * Actualiza las precauciones para el manejo del residuo.
+   *
+   * @param valores - Objeto con los valores actualizados para `precaucionesManejo`.
+   */
+  actualizarPrecaucionesManejo(valores: EstadoDatoSolicitud['precaucionesManejo']): void {
+    this.update((state) => ({
+      ...state,
+      precaucionesManejo: { ...valores },
+    }));
+  }
 
-
-    /**
-  * Actualiza los valores del formulario de precauciones de manejo en el estado.
-  * @param valores - Objeto con los nuevos valores del formulario de precauciones de manejo.
-  */
-    actualizarPrecaucionesManejo(valores: EstadoDatoSolicitud['precaucionesManejo']): void {
-        this.update(state => ({
-            ...state,
-            precaucionesManejo: { ...valores }
-        }));
-    }
-
-    /**
-     * Restaura el estado del formulario al estado inicial.
-     */
-    limpiarFormulario(): void {
-        this.reset();
-    }
-
+  /**
+   * Restaura el estado del formulario al valor inicial definido.
+   */
+  limpiarFormulario(): void {
+    this.reset();
+  }
 }
