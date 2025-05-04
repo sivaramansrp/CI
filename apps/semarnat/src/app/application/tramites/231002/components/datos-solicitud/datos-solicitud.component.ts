@@ -1,18 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
-import { Modal } from 'bootstrap';
-import { REGEX_POSTAL, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
-import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
+import { Subject, takeUntil } from 'rxjs';
+import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
+import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
-import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
+import { Modal } from 'bootstrap';
 import { TEXTOS } from '../../constantes/aviso-retorno.enum';
+import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -170,7 +170,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     CAMPOS.forEach(campo => {
       const CONTROL = this.formularioEmpresaReciclaje.get(campo);
       if (CONTROL) {
-        DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+        if (DEBE_HABILITAR) {
+          CONTROL.enable();
+        } else {
+          CONTROL.disable();
+        }
       }
     });
   }
@@ -246,8 +250,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarOperacionImp(): void {
     if (this.modalElement) {
-      const modalInstance = new Modal(this.modalElement.nativeElement);
-      modalInstance.show();
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
     }
   }
 
@@ -279,12 +283,5 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
-  }
-
-  /**
-   * Maneja la lógica cuando se selecciona un país.
-   */
-  paisSeleccion(): void {
-    // Implementar lógica si aplica
   }
 }

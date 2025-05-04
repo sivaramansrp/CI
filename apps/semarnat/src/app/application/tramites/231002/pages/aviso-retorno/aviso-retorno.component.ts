@@ -66,10 +66,10 @@ export class AvisoRetornoComponent {
    * Objeto que contiene los datos relacionados con la navegación del wizard.
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,  // Número de pasos del wizard
-    indice: this.indice,  // Índice actual de la pestaña
-    txtBtnAnt: 'Anterior',  // Texto del botón "Anterior"
-    txtBtnSig: 'Continuar',  // Texto del botón "Continuar"
+    nroPasos: this.pasos.length, // Número de pasos del wizard
+    indice: this.indice, // Índice actual de la pestaña
+    txtBtnAnt: 'Anterior', // Texto del botón "Anterior"
+    txtBtnSig: 'Continuar', // Texto del botón "Continuar"
   };
 
   /**

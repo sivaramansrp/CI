@@ -1,7 +1,7 @@
+import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
+import { FormularioResiduoStore } from '../tramites/datos-residuos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { FormularioResiduoStore } from '../tramites/datos-residuos.store';
-import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 
 /**
  * Query para acceder al estado del formulario de residuos peligrosos.

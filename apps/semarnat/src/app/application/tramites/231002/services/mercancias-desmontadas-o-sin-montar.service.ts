@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { AvisoOpcionesDeRadio } from '../models/aviso-catalogo.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Servicio para gestionar la obtención de datos relacionados con

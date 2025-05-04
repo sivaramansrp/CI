@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Retorna el estado inicial del formulario de reciclaje con valores por defecto.

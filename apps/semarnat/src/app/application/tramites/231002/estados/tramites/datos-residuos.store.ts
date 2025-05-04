@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Crea y retorna el estado inicial para el formulario de residuo con valores por defecto.

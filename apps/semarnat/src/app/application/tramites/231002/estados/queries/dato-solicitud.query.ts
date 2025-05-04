@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
 import { DatoSolicitudStore } from '../tramites/dato-solicitud.store';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 /**
  * Query de Akita para observar y seleccionar el estado del formulario de solicitud.

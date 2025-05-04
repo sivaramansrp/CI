@@ -1,12 +1,12 @@
+import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
-import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
+import { CommonModule } from '@angular/common';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
+import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -111,9 +111,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Restaura los valores de los formularios a partir del estado en el store.
    */
   private recuperarValoresDesdeStore(): void {
-    const estado = this.formularioQuery.getValue();
-    this.formularioDatos.patchValue(estado.formularioDatos, { emitEvent: false });
-    this.formularioResiduo.patchValue(estado.formularioResiduo, { emitEvent: false });
+    const ESTADO = this.formularioQuery.getValue();
+    this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
+    this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
   }
 
   /**
