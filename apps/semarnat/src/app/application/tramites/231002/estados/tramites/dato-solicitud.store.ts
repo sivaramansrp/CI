@@ -8,6 +8,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
     return {
         // Datos generales de la solicitud
         solicitudForm: {
+            ideGenerica1: '',
             // Número de registro ambiental proporcionado por SEMARNAT
             numeroRegistroAmbiental: '',
 
@@ -16,6 +17,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
 
             // Número del programa IMMEX asociado a la empresa
             numeroProgramaImmex: '',
+            domicilio: ''
         },
 
         // Información de la empresa recicladora
@@ -38,14 +40,11 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
 
         // Información sobre el lugar donde se realiza el reciclaje
         lugarReciclaje: {
-            // Indicador si el reciclaje se realiza en las instalaciones del generador (valor inicial: "Si")
-            reciclajeInstalaciones: 'Si',
 
-            // Dirección o nombre del lugar de reciclaje
-            lugarReciclaje: '',
-
-            // Número de autorización de la empresa recicladora otorgado por la autoridad competente
-            numeroAutorizacionEmpresaReciclaje: '',
+            razonSocial: '',
+            pais: '',
+            destinoDomicilio: '',
+            codigoPostal: '',
         },
 
         // Datos de la empresa encargada del transporte de los residuos
@@ -59,6 +58,7 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
 
         // Descripción de las precauciones a tomar en el manejo del residuo
         precaucionesManejo: {
+            clave: '',
             precaucionesManejo: '',
         }
     };

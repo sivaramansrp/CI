@@ -102,6 +102,8 @@ export interface EstadoFormularioResiduo {
        * Estado físico del residuo (sólido, líquido, etc.).
        */
       estadoFisico: string;
+
+      manifiesto: string;
   
       /**
        * Tipo de contenedor usado para el residuo.

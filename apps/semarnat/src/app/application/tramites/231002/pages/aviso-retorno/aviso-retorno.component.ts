@@ -1,6 +1,6 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from '../../constantes/aviso-retorno.enum';
+import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
 /**
  * Componente que representa la sección de aviso de reciclaje.
  * - selector: Etiqueta personalizada para utilizar este componente en otras plantillas.

@@ -68,6 +68,8 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Evaluación CRETI del residuo (Corrosivo, Reactivo, Explosivo, Tóxico, Inflamable) */
       creti: '',
 
+      manifiesto: '',
+
       /** Estado físico del residuo (sólido, líquido, etc.) */
       estadoFisico: '',
 

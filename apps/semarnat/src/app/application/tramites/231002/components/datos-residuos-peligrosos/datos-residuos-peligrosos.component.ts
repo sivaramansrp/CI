@@ -160,6 +160,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       /** Estado físico del residuo (obligatorio) */
       estadoFisico: ['', Validators.required],
 
+      manifiesto: ['', Validators.required],
+
       /** Tipo de contenedor utilizado (obligatorio) */
       tipoContenedor: ['', Validators.required],
 

@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
@@ -9,6 +9,10 @@ import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/d
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
+import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
+import { Subject, takeUntil } from 'rxjs';
+import { TEXTOS } from '../../constantes/aviso-retorno.enum';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -67,6 +71,23 @@ export class DatosSolicitudComponent implements OnInit {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
   /**
+   * Observable para manejar la destrucción de suscripciones.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Opciones de radio para el tipo de aviso.
+   */
+  avisoOpcionesDeRadio: AvisoOpcionesDeRadio = {} as AvisoOpcionesDeRadio;
+
+  /**
+   * Tipo de aviso seleccionado.
+   */
+  tipoAviso: string | number = 'por defecto';
+
+  TEXTOS = TEXTOS;
+
+  /**
    * Opciones de radio utilizadas en el formulario para etiquetar residuos.
    */
   public etiquetasForm = RADIO_OPCIONES;
@@ -77,9 +98,10 @@ export class DatosSolicitudComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     private datoSolicitudStore: DatoSolicitudStore,
-    private datoSolicitudQuery: DatoSolicitudQuery
+    private datoSolicitudQuery: DatoSolicitudQuery,
+    public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService
   ) {
-    // Lógica del constructor si se necesita
+    this.obtenerAvisoOpcionesDeRadio();
   }
 
 
@@ -120,6 +142,7 @@ export class DatosSolicitudComponent implements OnInit {
    */
   private inicializarSolicitudForm(): void {
     this.solicitudForm = this.fb.group({
+      ideGenerica1: ['', Validators.required],
       /** Número de registro ambiental del residuo */
       numeroRegistroAmbiental: ['', Validators.required],
 
@@ -128,6 +151,7 @@ export class DatosSolicitudComponent implements OnInit {
 
       /** Número del programa IMMEX asociado */
       numeroProgramaImmex: ['', Validators.required],
+      domicilio:  ['', Validators.required]
     });
   }
 
@@ -174,6 +198,7 @@ export class DatosSolicitudComponent implements OnInit {
    */
   private inicializarFormularioPrecaucionesManejo(): void {
     this.formularioPrecaucionesManejo = this.fb.group({
+      clave:  ['', Validators.required],
       /** Descripción de las precauciones de manejo del residuo */
       precaucionesManejo: ['', Validators.required]
     });
@@ -212,16 +237,20 @@ export class DatosSolicitudComponent implements OnInit {
   /**
    * Inicializa el formulario de lugar de reciclaje con sus respectivos campos y validaciones.
    * 
-   * Campos:
-   * - reciclajeInstalaciones: Indica si el reciclaje se realiza en las instalaciones (valor por defecto: 'Si').
-   * - lugarReciclaje: Campo obligatorio para especificar el lugar de reciclaje.
-   * - numeroAutorizacionEmpresaReciclaje: Campo obligatorio para registrar el número de autorización de la empresa recicladora.
    */
   private inicializarFormularioLugarReciclaje(): void {
     this.formularioLugarReciclaje = this.fb.group({
-      reciclajeInstalaciones: ['Si', Validators.required],
-      lugarReciclaje: ['', Validators.required],
-      numeroAutorizacionEmpresaReciclaje: ['', Validators.required],
+      razonSocial: ['', Validators.required],
+      pais: ['', Validators.required],
+      destinoDomicilio: ['', Validators.required],
+      codigoPostal: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REGEX_POSTAL),
+          Validators.maxLength(8),
+        ]
+      ]
     });
   }
 
@@ -286,38 +315,6 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
   /**
-   * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
-   * Si el campo actualizado es 'reciclajeInstalaciones', se habilitan o deshabilitan dinámicamente
-   * los campos adicionales dependiendo de si se seleccionó "Sí" o "No".
-   *
-   * @param campo - Nombre del campo del formulario de lugar de reciclaje a actualizar.
-   */
-  actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
-    const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
-
-    // Si el campo actualizado es 'reciclajeInstalaciones', controla la habilitación de campos relacionados
-    if (campo === 'reciclajeInstalaciones') {
-      const DEBE_HABILITAR = VALOR === 'Si';
-      const CAMPOS_A_CONTROLAR = ['lugarReciclaje', 'numeroAutorizacionEmpresaReciclaje'];
-
-      CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
-        const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
-        if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
-        }
-      });
-    }
-
-    // Actualiza el estado del formulario de lugar de reciclaje en el store
-    this.datoSolicitudStore.actualizarLugarReciclaje({
-      ...this.formularioLugarReciclaje.getRawValue(),
-      [campo]: VALOR,
-    });
-  }
-
-
-
-  /**
    * Actualiza un campo específico del formulario de empresa transportista en el store.
    *
    * @param campo - Nombre del campo del formulario de empresa transportista a actualizar.
@@ -353,5 +350,41 @@ export class DatosSolicitudComponent implements OnInit {
       const MODAL_INSTANCE = new Modal(this.modalElement?.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+
+  /**
+   * Establece el tipo de aviso basado en el evento proporcionado.
+   *
+   * @param evento - El evento que representa el tipo de aviso, puede ser una cadena o un número.
+   * @returns void
+   */
+  setTipoDeAviso(evento: string | number): void {
+    this.tipoAviso = evento;
+  }
+
+    obtenerAvisoOpcionesDeRadio():void{
+      this.mercanciasDesmontadasOSinMontarService
+        .obtenerAvisoOpcionesDeRadio()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe({
+          next: (respuesta: AvisoOpcionesDeRadio) => {
+            this.avisoOpcionesDeRadio = respuesta;
+          },
+        });
+    }
+
+  /**
+   * Método de limpieza al destruir el componente.
+   * Cancela suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
+  /**
+   * Maneja la selección del país.
+   */
+  paisSeleccion(): void {
   }
 }

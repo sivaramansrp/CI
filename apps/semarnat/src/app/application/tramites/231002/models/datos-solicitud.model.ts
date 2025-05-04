@@ -5,6 +5,8 @@ export interface EstadoDatoSolicitud {
 
     /** Sección de datos de la solicitud */
     solicitudForm: {
+        /** Identificador genérico. */
+        ideGenerica1: string;
         /** Número de registro ambiental */
         numeroRegistroAmbiental: string;
 
@@ -13,6 +15,7 @@ export interface EstadoDatoSolicitud {
 
         /** Número de programa IMMEX asociado */
         numeroProgramaImmex: string;
+        domicilio: string
     };
 
     /** Información de la empresa recicladora */
@@ -35,14 +38,10 @@ export interface EstadoDatoSolicitud {
 
     /** Información del lugar de reciclaje */
     lugarReciclaje: {
-        /** Indicador si se realiza en instalaciones del generador */
-        reciclajeInstalaciones: string;
-
-        /** Ubicación del lugar de reciclaje */
-        lugarReciclaje: string;
-
-        /** Número de autorización de la empresa recicladora */
-        numeroAutorizacionEmpresaReciclaje: string;
+        razonSocial: string;
+        pais: string;
+        destinoDomicilio: string,
+        codigoPostal: string;
     };
 
     /** Datos de la empresa transportista */
@@ -56,6 +55,7 @@ export interface EstadoDatoSolicitud {
 
     /** Precauciones en el manejo del residuo */
     precaucionesManejo: {
+        clave: string;
         /** Descripción de las precauciones de manejo */
         precaucionesManejo: string;
     };
