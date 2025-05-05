@@ -583,8 +583,8 @@
   {
     "id": 84,
     "tramite": 231001,
-    "linkDashboard": "/semarnat/aviso-de-materiales/datos",
-    "linkDepartment": "/pago/aviso-de-materiales/datos",
+    "linkDashboard": "/aviso-de-materiales/datos",
+    "linkDepartment": "/aviso-de-materiales/datos",
     "department": "semarnat"
   },
   {
@@ -1291,7 +1291,7 @@
     "id": 185,
     "tramite": 231003,
     "linkDashboard": "/semarnat/aviso-de-reciclaje/datos",
-    "linkDepartment": "/pago/aviso-de-reciclaje/datos",
+    "linkDepartment": "/semarnat/aviso-de-reciclaje/datos",
     "department": "semarnat"
   },
   {

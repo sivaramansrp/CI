@@ -1,11 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { AvisoOpcionesDeRadio } from '../models/aviso-catalogo.model';
+import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
 import { MercanciasDesmontadasOSinMontarService } from './mercancias-desmontadas-o-sin-montar.service';
-import { AvisoCatalogo } from '../models/aviso-catalogo.model';
-import { OperacionDeImportacion } from '../models/aviso-catalogo.model';
 
 describe('MercanciasDesmontadasOSinMontarService', () => {
   let service: MercanciasDesmontadasOSinMontarService;
@@ -16,6 +14,7 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
       imports: [HttpClientTestingModule],
       providers: [MercanciasDesmontadasOSinMontarService],
     });
+
     service = TestBed.inject(MercanciasDesmontadasOSinMontarService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -28,189 +27,40 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch AvisoCatalogo data', () => {
-    const mockData: AvisoCatalogo = {
-      cveFraccionArancelaria: {
-        catalogos: [
-          {
-            id: 1,
-            descripcion: '01031001-Reproductors de raza..',
-          },
-          {
-            id: 2,
-            descripcion: '01031002-Reproductors de raza..',
-          },
-          {
-            id: 3,
-            descripcion: '01031003-Reproductors de raza..',
-          },
-        ],
-        labelNombre: 'Fracción arancelaria',
-        required: true,
-        primerOpcion: 'Seleccione un valor',
-      },
-      entidadFederativa: {
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'MEXICO-1',
-          },
-          {
-            id: 2,
-            descripcion: 'MEXICO-2',
-          },
-          {
-            id: 3,
-            descripcion: 'MEXICO-3',
-          },
-        ],
-        labelNombre: 'Entidad federativa',
-        required: true,
-        primerOpcion: 'Seleccione un valor',
-      },
-      delegacionMunicipio: {
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'ATENCO-1',
-          },
-          {
-            id: 2,
-            descripcion: 'ATENCO-2',
-          },
-          {
-            id: 3,
-            descripcion: 'ATENCO-3',
-          },
-        ],
-        labelNombre: 'Alcaldía o municipio',
-        required: true,
-        primerOpcion: 'Seleccione un valor',
-      },
-      colonia: {
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'LA NORIA-1',
-          },
-          {
-            id: 2,
-            descripcion: 'LA NORIA-2',
-          },
-          {
-            id: 3,
-            descripcion: 'LA NORIA-3',
-          },
-        ],
-        labelNombre: 'Colonia',
-        required: true,
-        primerOpcion: 'Seleccione un valor',
-      },
-      aduanaDeImportacion: {
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Test-1',
-          },
-          {
-            id: 2,
-            descripcion: 'Test-2',
-          },
-          {
-            id: 3,
-            descripcion: 'Test-3',
-          },
-        ],
-        labelNombre: 'Aduana de importación',
-        required: true,
-        primerOpcion: 'Seleccione un valor',
-      },
-      opcionTipoDeDocumento: {
-        labelNombre: 'Tipo de documento',
-        required: false,
-        primerOpcion: 'Seleccione un tipo de documento',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Manifiesto',
-          },
-          {
-            id: 2,
-            descripcion: 'ID Oficial',
-          },
-          {
-            id: 3,
-            descripcion: 'Actas',
-          },
-          {
-            id: 4,
-            descripcion: 'Poderes',
-          },
-          {
-            id: 5,
-            descripcion: 'Otros',
-          },
-        ],
-      },
+  it('should fetch options of radio from assets', () => {
+    const mockResponse: AvisoOpcionesDeRadio = {
+      opcionesDeRadio: [
+        { label: 'Option 1', value: '1' },
+        { label: 'Option 2', value: '2' },
+        { label: 'Option 3', value: '3' },
+      ],
+      required: true,
     };
-
-    service.obtenerAvisoDelCatalogo().subscribe((data) => {
-      expect(data).toEqual(mockData);
+  
+    service.obtenerAvisoOpcionesDeRadio().subscribe((data) => {
+      expect(data).toEqual(mockResponse);
     });
-
-    const req = httpMock.expectOne('assets/json/32501/aviso-catalogo.json');
+  
+    const req = httpMock.expectOne('assets/json/231002/aviso-opciones-de-radio.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(mockResponse);
   });
 
-  it('should fetch OperacionDeImportacion data', () => {
-    const mockData: OperacionDeImportacion[] = [
-      {
-        agenteAduanal: '1234',
-        rfc: 'LEQ18101314S7',
-        numeroDePedimento: '12345678',
-        aduanaDeImportacion: 'ENSENADA',
-      },
-    ];
+  it('should handle error when fetching options of radio', () => {
+    const mockError = { status: 500, statusText: 'Internal Server Error' };
 
-    service.obtenerOperacionDeImportacion().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.obtenerAvisoOpcionesDeRadio().subscribe({
+      next: () => {
+        fail('Expected error, but got success');
+      },
+      error: (error) => {
+        expect(error.status).toBe(500);
+        expect(error.statusText).toBe('Internal Server Error');
+      },
     });
 
-    const req = httpMock.expectOne(
-      'assets/json/32501/operacion-de-importacion.json'
-    );
+    const req = httpMock.expectOne('assets/json/231002/aviso-opciones-de-radio.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should handle errors when fetching AvisoCatalogo data', () => {
-    const mockError = new ErrorEvent('Network error');
-
-    service.obtenerAvisoDelCatalogo().subscribe({
-      next: () => fail('Expected an error, not data'),
-      error: (error) => {
-        expect(error).toBeTruthy();
-      },
-    });
-
-    const req = httpMock.expectOne('assets/json/32501/aviso-catalogo.json');
-    req.error(mockError);
-  });
-
-  it('should handle errors when fetching OperacionDeImportacion data', () => {
-    const mockError = new ErrorEvent('Network error');
-
-    service.obtenerOperacionDeImportacion().subscribe({
-      next: () => fail('Expected an error, not data'),
-      error: (error) => {
-        expect(error).toBeTruthy();
-      },
-    });
-
-    const req = httpMock.expectOne(
-      'assets/json/32501/operacion-de-importacion.json'
-    );
-    req.error(mockError);
+    req.flush('Error', mockError);
   });
 });

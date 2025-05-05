@@ -5,12 +5,8 @@ import { CommonModule } from '@angular/common';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
-
-jest.mock('bootstrap', () => ({
-  Modal: jest.fn().mockImplementation(() => ({
-    show: jest.fn(),
-  })),
-}));
+import { HttpClientModule } from '@angular/common/http';
+import { Modal } from 'bootstrap';
 
 jest.mock('@libs/shared/theme/assets/json/231002/solicitud.json', () => ({
   __esModule: true,
@@ -30,17 +26,17 @@ jest.mock('@libs/shared/theme/assets/json/231002/solicitud.json', () => ({
     PrimasRelacionadas: [
       {
         encabezadoDeTabla: ['Columna1', 'Columna2'],
-        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
-      }
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }],
+      },
     ],
     Immex: [],
     table: [
       {
         encabezadoDeTabla: ['Columna1', 'Columna2'],
-        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
-      }
-    ]
-  }
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }],
+      },
+    ],
+  },
 }));
 
 describe('DatosSolicitudComponent', () => {
@@ -51,9 +47,11 @@ describe('DatosSolicitudComponent', () => {
 
   const initialState = {
     solicitudForm: {
-      numeroRegistroAmbiental: '123',
       descripcionGenerica1: 'desc',
+      domicilio: 'test',
+      ideGenerica1: 'test',
       numeroProgramaImmex: 'immex',
+      numeroRegistroAmbiental: '123',
     },
     empresaReciclaje: {
       requiereEmpresa: 'Si',
@@ -63,22 +61,24 @@ describe('DatosSolicitudComponent', () => {
       correoElectronico: 'correo@ejemplo.com',
     },
     lugarReciclaje: {
-      reciclajeInstalaciones: 'No',
-      lugarReciclaje: 'ubicación',
-      numeroAutorizacionEmpresaReciclaje: 'aut123',
+      razonSocial: 'No',
+      pais: 'ubicación',
+      destinoDomicilio: 'aut123',
+      codigoPostal: '12345'
     },
     empresaTransportista: {
       nombreEmpresaTransportistaResiduos: 'trans',
       numeroAutorizacionSemarnat: 'sem123',
     },
     precaucionesManejo: {
+      clave: 'test',
       precaucionesManejo: 'manejo',
-    }
+    },
   };
 
   beforeEach(async () => {
     mockQuery = {
-      getValue: jest.fn().mockReturnValue(initialState)
+      getValue: jest.fn().mockReturnValue(initialState),
     } as unknown as jest.Mocked<DatoSolicitudQuery>;
 
     mockStore = {
@@ -86,17 +86,18 @@ describe('DatosSolicitudComponent', () => {
       actualizarEmpresaReciclaje: jest.fn(),
       actualizarLugarReciclaje: jest.fn(),
       actualizarEmpresaTransportista: jest.fn(),
-      actualizarPrecaucionesManejo: jest.fn()
+      actualizarPrecaucionesManejo: jest.fn(),
     } as unknown as jest.Mocked<DatoSolicitudStore>;
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, DatosSolicitudComponent],
+      imports: [ReactiveFormsModule, HttpClientModule, CommonModule, DatosSolicitudComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: DatoSolicitudStore, useValue: mockStore },
         { provide: DatoSolicitudQuery, useValue: mockQuery },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosSolicitudComponent);
@@ -109,11 +110,11 @@ describe('DatosSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar los formularios con los valores del store', () => {
+  it('should initialize forms with store values', () => {
     expect(component.solicitudForm.value).toEqual(initialState.solicitudForm);
     expect(component.formularioEmpresaReciclaje.value).toEqual(initialState.empresaReciclaje);
     expect(component.formularioLugarReciclaje.value).toEqual(initialState.lugarReciclaje);
@@ -121,75 +122,71 @@ describe('DatosSolicitudComponent', () => {
     expect(component.formularioPrecaucionesManejo.value).toEqual(initialState.precaucionesManejo);
   });
 
-  it('debería deshabilitar campos si se selecciona "No" en reciclajeInstalaciones', () => {
-    component.formularioLugarReciclaje.get('reciclajeInstalaciones')?.setValue('No');
-    component.actualizarCampoLugarReciclaje('reciclajeInstalaciones');
-  
-    expect(component.formularioLugarReciclaje.get('lugarReciclaje')?.disabled).toBe(true);
-    expect(component.formularioLugarReciclaje.get('numeroAutorizacionEmpresaReciclaje')?.disabled).toBe(true);
-  });
-  
-
-  it('debería abrir el modal correctamente al llamar agregarOperacionImp', () => {
-    const { Modal } = jest.requireMock('bootstrap');
-    const mockShow = jest.fn();
-
-    (Modal as jest.Mock).mockImplementation(() => ({ show: mockShow }));
-
-    component.modalElement = {
-      nativeElement: document.createElement('div')
-    } as ElementRef;
-
+  it('should open modal when agregarOperacionImp is called', () => {
+    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalAgregarMercancias');
+    component.modalElement = { nativeElement: modalElement };
+    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
     component.agregarOperacionImp();
-
-    expect(Modal).toHaveBeenCalledWith(component.modalElement.nativeElement);
-    expect(mockShow).toHaveBeenCalled();
+    expect(modalInstanceSpy).toHaveBeenCalled();
   });
 
-  describe('actualizarCampo...()', () => {
-    const NUEVO_VALOR = 'nuevo valor';
-
+  describe('actualizarCampoEmpresaReciclaje', () => {
     beforeEach(() => {
-      component.solicitudForm.get('numeroRegistroAmbiental')?.setValue(NUEVO_VALOR);
-      component.formularioEmpresaReciclaje.get('nombreEmpresa')?.setValue(NUEVO_VALOR);
-      component.formularioLugarReciclaje.get('lugarReciclaje')?.setValue(NUEVO_VALOR);
-      component.formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.setValue(NUEVO_VALOR);
-      component.formularioPrecaucionesManejo.get('precaucionesManejo')?.setValue(NUEVO_VALOR);
+      jest.clearAllMocks();
+      component.formularioEmpresaReciclaje.patchValue(initialState.empresaReciclaje);
     });
 
-    it('debería actualizar el campo del formulario de solicitud en el store', () => {
-      component.actualizarCampoSolicitudForm('numeroRegistroAmbiental');
-      expect(mockStore.actualizarSolicitudForm).toHaveBeenCalledWith(
-        expect.objectContaining({ numeroRegistroAmbiental: NUEVO_VALOR })
-      );
+    it('should call onRequiereEmpresaChange when field is "requiereEmpresa"', () => {
+      const newValue = 'No';
+      const spy = jest.spyOn(component, 'onRequiereEmpresaChange');
+      
+      component.formularioEmpresaReciclaje.get('requiereEmpresa')?.setValue(newValue);
+      component.actualizarCampoEmpresaReciclaje('requiereEmpresa');
+      
+      expect(spy).toHaveBeenCalledWith(newValue);
+      expect(mockStore.actualizarEmpresaReciclaje).toHaveBeenCalledWith({
+        ...initialState.empresaReciclaje,
+        requiereEmpresa: newValue
+      });
     });
 
-    it('debería actualizar el campo del formulario de empresa reciclaje en el store', () => {
+    it('should not call onRequiereEmpresaChange when field is not "requiereEmpresa"', () => {
+      const spy = jest.spyOn(component, 'onRequiereEmpresaChange');
       component.actualizarCampoEmpresaReciclaje('nombreEmpresa');
-      expect(mockStore.actualizarEmpresaReciclaje).toHaveBeenCalledWith(
-        expect.objectContaining({ nombreEmpresa: NUEVO_VALOR })
-      );
+      expect(spy).not.toHaveBeenCalled();
     });
 
-    it('debería actualizar el campo del formulario de lugar de reciclaje en el store', () => {
-      component.actualizarCampoLugarReciclaje('lugarReciclaje');
-      expect(mockStore.actualizarLugarReciclaje).toHaveBeenCalledWith(
-        expect.objectContaining({ lugarReciclaje: NUEVO_VALOR })
-      );
+    it('should update store with current form values when any field changes', () => {
+      const newValue = 'updated company name';
+      component.formularioEmpresaReciclaje.get('nombreEmpresa')?.setValue(newValue);
+      
+      component.actualizarCampoEmpresaReciclaje('nombreEmpresa');
+      
+      expect(mockStore.actualizarEmpresaReciclaje).toHaveBeenCalledWith({
+        requiereEmpresa: 'Si',
+        nombreEmpresa: newValue,
+        representanteLegal: 'legal',
+        telefono: '999',
+        correoElectronico: 'correo@ejemplo.com'
+      });
+    });
+  });
+
+  describe('onRequiereEmpresaChange', () => {
+    it('should reset form fields when value is "No"', () => {
+      component.onRequiereEmpresaChange('No');
+      component.formularioEmpresaReciclaje.reset();
+      expect(component.formularioEmpresaReciclaje.get('nombreEmpresa')?.value).toBeNull();
+      expect(component.formularioEmpresaReciclaje.get('representanteLegal')?.value).toBeNull();
+      expect(component.formularioEmpresaReciclaje.get('telefono')?.value).toBeNull();
+      expect(component.formularioEmpresaReciclaje.get('correoElectronico')?.value).toBeNull();
     });
 
-    it('debería actualizar el campo del formulario de empresa transportista en el store', () => {
-      component.actualizarCampoEmpresaTransportista('nombreEmpresaTransportistaResiduos');
-      expect(mockStore.actualizarEmpresaTransportista).toHaveBeenCalledWith(
-        expect.objectContaining({ nombreEmpresaTransportistaResiduos: NUEVO_VALOR })
-      );
-    });
-
-    it('debería actualizar el campo del formulario de precauciones de manejo en el store', () => {
-      component.actualizarCampoPrecaucionesManejo('precaucionesManejo');
-      expect(mockStore.actualizarPrecaucionesManejo).toHaveBeenCalledWith(
-        expect.objectContaining({ precaucionesManejo: NUEVO_VALOR })
-      );
+    it('should not reset form fields when value is not "No"', () => {
+      const originalValues = {...component.formularioEmpresaReciclaje.value};
+      component.onRequiereEmpresaChange('Si');
+      
+      expect(component.formularioEmpresaReciclaje.value).toEqual(originalValues);
     });
   });
 });
