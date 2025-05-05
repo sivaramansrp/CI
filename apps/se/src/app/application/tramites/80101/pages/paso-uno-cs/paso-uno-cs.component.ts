@@ -7,9 +7,23 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
   templateUrl: './paso-uno-cs.component.html',
 })
 export class PasoUnoCsComponent {
+
+  /**
+   * Índice utilizado para representar el número actual o posición en un flujo o proceso.
+   * 
+   * @type {number} - Valor inicializado en 1.
+   */
   indice: number = 1;
 
-
+  /**
+   * Constructor de la clase PasoUnoCsComponent.
+   * 
+   * @param seccionStore - Inyección de dependencia del servicio `SeccionLibStore` 
+   *                       utilizado para gestionar el estado de las secciones.
+   * 
+   * Este constructor inicializa el componente y llama al método `asignarSecciones` 
+   * para configurar las secciones necesarias al cargar el componente.
+   */
   constructor(private seccionStore: SeccionLibStore){
     this.asignarSecciones();
   }

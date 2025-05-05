@@ -15,11 +15,52 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   styleUrl: './aggregar-complimentos.component.scss',
 })
 export class AggregarComplimentosComponent {
+
+  /**
+   * Propiedad que almacena los datos relacionados con los cumplimientos.
+   * 
+   * @type {DatosComplimentos}
+   * @remarks
+   * Esta propiedad se utiliza para gestionar y manipular la información
+   * asociada a los cumplimientos dentro del componente.
+   */
   datosComplimentos!: DatosComplimentos;
+  /**
+   * Sujeto utilizado como notificador para la destrucción de observables.
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo
+   * cancelar suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Observable que representa los datos de la tabla de complementos.
+   * 
+   * @type {Observable<SociaoAccionistas[]>}
+   * @description Este observable contiene una lista de objetos de tipo `SociaoAccionistas`,
+   * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
+   * en la interfaz de usuario.
+   */
   tablaDatosComplimentos$: Observable<SociaoAccionistas[]>;
+  /**
+   * Observable que representa los datos de la tabla de complementos extranjeros.
+   * 
+   * @type {Observable<SociaoAccionistas[]>}
+   * @description Este observable emite una lista de objetos de tipo `SociaoAccionistas`,
+   * que contienen información relacionada con los complementos extranjeros.
+   * Es utilizado para mostrar y gestionar los datos en la tabla correspondiente
+   * dentro del componente.
+   */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
 
+  /**
+   * Constructor de la clase `AggregarComplimentosComponent`.
+   * 
+   * @param store - Instancia del estado `Tramite80101Store` utilizada para gestionar el estado de la aplicación.
+   * @param tramiteQuery - Instancia de `Tramite80101Query` utilizada para realizar consultas relacionadas con los datos del trámite.
+   * 
+   * Este constructor inicializa las propiedades observables `tablaDatosComplimentos$` y `tablaDatosComplimentosExtranjera$`
+   * con los valores seleccionados desde `tramiteQuery`. Además, suscribe al observable `selectDatosComplimento$` para
+   * actualizar la propiedad `datosComplimentos` con los datos emitidos, hasta que se complete el ciclo de vida del componente.
+   */
   constructor(
     private store: Tramite80101Store,
     private tramiteQuery: Tramite80101Query,

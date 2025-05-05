@@ -10,6 +10,12 @@ import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabrica
   providedIn: 'root',
 })
 export class NuevoProgramaIndustrialService {
+
+/**
+ * Constructor de la clase NuevoProgramaIndustrialService.
+ * 
+ * @param http - Cliente HTTP utilizado para realizar solicitudes HTTP al servidor.
+ */
  constructor(private readonly http: HttpClient) {
    // No se necesita lógica de inicialización adicional.
   }

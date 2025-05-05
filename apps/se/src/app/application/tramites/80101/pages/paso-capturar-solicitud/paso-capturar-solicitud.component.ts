@@ -33,6 +33,17 @@ export class PasoCapturarSolicitudComponent {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor de la clase PasoCapturarSolicitudComponent.
+   * 
+   * @param tramiteQuery - Servicio de consulta para Tramite80101 que proporciona acceso a observables y datos relacionados.
+   * @param seccion - Servicio de gestión de estado para manejar la sección y la validez del formulario.
+   * 
+   * Este constructor inicializa el componente y configura una suscripción al observable `FormaValida$` del servicio `Tramite80101Query`.
+   * Cuando se emite un valor desde el observable, se actualiza el estado de la sección y la validez del formulario
+   * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
+   * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
+   */
   constructor(
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore

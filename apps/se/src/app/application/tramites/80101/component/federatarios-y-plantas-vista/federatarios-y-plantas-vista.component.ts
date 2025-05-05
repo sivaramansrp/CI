@@ -78,8 +78,15 @@ export class FederatariosYPlantasVistaComponent {
    */
     public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
 
+  /**
+   * Constructor de la clase FederatariosYPlantasVistaComponent.
+   * 
+   * @param store - Inyección de dependencia del servicio `Tramite80101Store` para gestionar el estado de la aplicación.
+   * @param query - Inyección de dependencia del servicio `Tramite80101Query` para realizar consultas sobre el estado.
+   * 
+   * Inicializa la propiedad `federatariosTablaLista$` con un observable que selecciona los datos de federatarios.
+   */
   constructor(private store: Tramite80101Store, private query: Tramite80101Query) {
-
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
   }
 
