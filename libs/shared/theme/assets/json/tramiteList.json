@@ -220,7 +220,7 @@
     "id": 32,
     "tramite": 80302,
     "linkDashboard": "/se/solicitud-modificacion/solicitante",
-    "linkDepartment": "/pago/solicitud-modificacion/solicitante",
+    "linkDepartment": "/se/solicitud-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -4186,7 +4186,7 @@
     "department": "stps"
   },
   {
-    "id": 599,
+    "id": 600,
     "tramite": 80306,
     "linkDashboard": "/se/immex-modificacion/registro-modificacion",
     "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
