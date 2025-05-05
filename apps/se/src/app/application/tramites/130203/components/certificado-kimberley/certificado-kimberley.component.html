@@ -217,6 +217,14 @@
               aria-labelledby="numeroEnLetraDeLosLotes"
               (change) = "getNumeroEnLetraDeLosLotes()"
             />
+            <div *ngIf="esInvalido('numeroEnLetraDeLosLotes')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -237,6 +245,14 @@
               aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
               (change) = "getNumeroEnLetraDeLosLotesEnIngles()"
             />
+            <div *ngIf="esInvalido('numeroEnLetraDeLosLotesEnIngles')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -257,6 +273,14 @@
               aria-labelledby="numeroDeFactura"
               (change) = "getNumeroDeFactura()"
             />
+            <div *ngIf="esInvalido('numeroDeFactura')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
