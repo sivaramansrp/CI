@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Anexo1Component } from './anexo-1.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';

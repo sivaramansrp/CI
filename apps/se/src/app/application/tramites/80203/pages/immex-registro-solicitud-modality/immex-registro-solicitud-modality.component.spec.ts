@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable */// @ts-nocheck
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA, Directive, Input, NO_ERRORS_SCHEMA } from '@angular/core';

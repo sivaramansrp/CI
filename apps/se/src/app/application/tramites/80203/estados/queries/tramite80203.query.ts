@@ -16,6 +16,7 @@ export class ImmexRegistroQuery extends Query<ImmexRegistroState> {
 
     /**
      * @constructor
+     * @descripción Constructor que inicializa la consulta con el store correspondiente.
      * @param {ImmexRegistroStore} store - Inyección del store que maneja el estado de `ImmexRegistroState`.
      */
     constructor(protected override store: ImmexRegistroStore) {
@@ -23,7 +24,7 @@ export class ImmexRegistroQuery extends Query<ImmexRegistroState> {
     }
 
     /**
-     * @propiedad selectCambioModalidad$
+     * @propiedad selectImmexRegistro$
      * @tipo Observable<ImmexRegistroState>
      * @descripción Selector que permite obtener el estado completo de `ImmexRegistroState`.
      */

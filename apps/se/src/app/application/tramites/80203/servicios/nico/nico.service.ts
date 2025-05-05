@@ -16,12 +16,14 @@ import { map } from 'rxjs';
 })
 export class NicoService {
   /**
-   * @property {string} url - URL base para los archivos JSON.
+   * @property {string} url
+   * @description URL base para los archivos JSON que contienen los datos del menú desplegable.
    */
   url: string = '/assets/json/80203/';
 
   /**
    * @constructor
+   * @description Constructor que inicializa el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private readonly http: HttpClient) { }
