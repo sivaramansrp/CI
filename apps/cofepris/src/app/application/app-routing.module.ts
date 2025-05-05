@@ -467,7 +467,28 @@ const ROUTES: Routes = [
     import('./tramites/260104/permiso-sanitario-productos.module').then(
       (m) => m.PermisoSanitarioProductosModule
     ),
-}
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
 ];
 
 @NgModule({
