@@ -10,13 +10,14 @@ import { ModificacionComponent } from '../../components/modificacion/modificacio
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ViewChild } from '@angular/core';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
+import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent]
+  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent]
 })
 // , BitacoraComponent, AltaPlantaComponent
 export class PasoUnoComponent implements AfterViewInit {

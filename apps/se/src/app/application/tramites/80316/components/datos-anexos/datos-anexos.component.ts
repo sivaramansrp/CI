@@ -1,4 +1,4 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
+import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA, CONFIGURACION_FRACCION_SENSIBLE } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
@@ -6,6 +6,7 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Anexo } from '../../../80308/models/plantas-consulta.model';
+import { FraccionSensible } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-anexos',
@@ -39,6 +40,13 @@ export class DatosAnexosComponent implements OnDestroy {
     CONFIGURACION_ANEXOS_IMPORTACION;
 
   /**
+   * Configuración de las columnas de la tabla para los Fraccion Sensible.
+   * @type {ConfiguracionColumna<FraccionSensible>[]}
+   */
+  configuracionFraccionSensible: ConfiguracionColumna<FraccionSensible>[] =
+    CONFIGURACION_FRACCION_SENSIBLE;
+
+  /**
    * Datos de los anexos obtenidos desde el servicio.
    * @type {Anexo[]}
    */
@@ -50,11 +58,19 @@ export class DatosAnexosComponent implements OnDestroy {
    */
   datosImportacion: Anexo[] = [];
 
+  /**
+   * Datos de Fraccion Sensible.
+   * @type {Anexo[]}
+   */
+  datosFraccionSensible: FraccionSensible[] = [];
+
+
   constructor(
     public solicitudService: SolicitudService,
     private toastr: ToastrService 
   ) {
     this.obteneComplimentaria(); // Carga los anexos complementarios.
+    this.obteneFraccionSensible(); // Carga los anexos de fracción sensible.
   }
 
   /**
@@ -72,6 +88,24 @@ export class DatosAnexosComponent implements OnDestroy {
         },
         () => {
           this.toastr.error('Error al cargar los anexos'); // Manejo de errores.
+        }
+      );
+  }
+
+  /**
+   * Método que obtiene los anexos complementarios desde el servicio.
+   * Asigna los `datosFraccionSensible`.
+   */
+  obteneFraccionSensible(): void {
+    this.solicitudService
+      .obteneFraccionSensible() // Llama al servicio para obtener los anexos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: FraccionSensible[]) => {
+          this.datosFraccionSensible = [...data]; 
+        },
+        () => {
+          this.toastr.error('Error al cargar'); // Manejo de errores.
         }
       );
   }

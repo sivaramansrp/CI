@@ -1,6 +1,6 @@
 // import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../../80308/models/plantas-consulta.model";
-import { DatosDelModificacion, Empresas, Plantas } from "../models/datos-tramite.model";
+import { DatosDelModificacion, Empresas, FraccionSensible, Plantas, Servicios } from "../models/datos-tramite.model";
 
 export const PASOS = [
   {
@@ -444,3 +444,50 @@ export const CONFIGURACION_PLANTAS = [
     orden: 6,
   }
 ];
+
+export const CONFIGURACION_SERVICIOS = [
+  {
+    encabezado: 'Descripción del servicio',
+    clave: (ele: Servicios): string | undefined => ele.descripciondeservicio,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo de servicio',
+    clave: (ele: Servicios): string | undefined => ele.tipoServicio,
+    orden: 2,
+  },
+  {
+    encabezado: 'Testado',
+    clave: (ele: Servicios): string | undefined => ele.testado,
+    orden: 3,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Servicios): string | undefined => ele.estatus,
+    orden: 4,
+  }
+];
+
+export const CONFIGURACION_FRACCION_SENSIBLE = [
+  {
+    encabezado: 'Fracción arancelaria del producto de exportación',
+    clave: (ele: FraccionSensible): number | undefined => ele.fraccionArancelariaExportacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: FraccionSensible): number | undefined => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Valor',
+    clave: (ele: FraccionSensible): number | undefined => ele.valor,
+    orden: 3,
+  },
+  {
+    encabezado: 'Unidad de medida tarifaria',
+    clave: (ele: FraccionSensible): string | undefined => ele.unidadMedidaTarifaria,
+    orden: 4,
+  }
+];
+

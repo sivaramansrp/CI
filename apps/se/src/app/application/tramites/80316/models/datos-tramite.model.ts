@@ -55,3 +55,19 @@ export interface Plantas {
   colonia?: string;
   delegacionMunicipio?: string;
 }
+
+export interface Servicios {
+  id?: number;
+  descripciondeservicio?: string;
+  tipoServicio?: string;
+  testado?: string;
+  estatus?: string;
+}
+
+export interface FraccionSensible {
+  id?: number;
+  fraccionArancelariaExportacion?: number;
+  cantidad?: number;
+  valor?: number;
+  unidadMedidaTarifaria?: string;
+}

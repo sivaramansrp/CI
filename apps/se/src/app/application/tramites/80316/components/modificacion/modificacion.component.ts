@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
-import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
@@ -76,12 +75,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.modificacionForm = this.fb.group({
-      rfc: [this.derechoState?.datosModificacion?.rfc],
-      federal: [this.derechoState?.datosModificacion?.federal],
-      tipo: [this.derechoState?.datosModificacion?.tipo],
-      programa: [this.derechoState?.datosModificacion?.programa],
-      actividadActual: [this.derechoState?.datosModificacion?.actividadActual],
-      actividadProductiva: [this.derechoState?.datosModificacion?.actividadProductiva, Validators.required],
+      rfc: [this.derechoState?.rfc],
+      federal: [this.derechoState?.federal],
+      tipo: [this.derechoState?.tipo],
+      programa: [this.derechoState?.programa],
+      actividadActual: [this.derechoState?.actividadActual],
+      actividadProductiva: [this.derechoState?.actividadProductiva, Validators.required],
     });
   }
 

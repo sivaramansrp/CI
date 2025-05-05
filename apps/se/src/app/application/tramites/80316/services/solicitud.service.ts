@@ -3,7 +3,7 @@ import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { DatosDelModificacion, Empresas, Plantas } from '../models/datos-tramite.model';
+import { Empresas, FraccionSensible, Plantas, Servicios } from '../models/datos-tramite.model';
 import { Anexo, Complimentaria, Federetarios, Operacions } from '../../80308/models/plantas-consulta.model';
 
 @Injectable({
@@ -33,12 +33,6 @@ export class SolicitudService {
       `assets/json/80316/modificacion.json`
     );
   }
-
-  // getModificacion(): Observable<RespuestaCatalogos[]> {
-  //   return this.http.get<RespuestaCatalogos[]>(
-  //     `assets/json/80316/modificacion.json`
-  //   );
-  // }
 
   getActividadProductiva(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/80316/actividadProductiva.json`);
@@ -92,4 +86,13 @@ export class SolicitudService {
   obtenerPlantas(): Observable<Plantas[]> {
     return this.http.get<Plantas[]>(`assets/json/80316/plantas.json`).pipe(map((res: any) => res.data));
   }
+
+  obtenerServicios(): Observable<Servicios[]> {
+    return this.http.get<Servicios[]>(`assets/json/80316/servicios.json`).pipe(map((res: any) => res.data));
+  }
+
+  obteneFraccionSensible(): Observable<FraccionSensible[]> {
+    return this.http.get<FraccionSensible[]>('assets/json/80316/fraccionSensible.json').pipe(map((res: any) => res.data));
+  }
+  
 }

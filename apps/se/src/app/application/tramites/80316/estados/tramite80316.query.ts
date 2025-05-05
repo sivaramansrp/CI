@@ -12,27 +12,6 @@ export class Tramite80316Query extends Query<Solicitud80316State> {
     return state;
   });
 
-  selectEstado$ = this.select((state) => {
-    return state.estado;
-  });
-
-  FormaValida$ = this.select((state) => {
-   return Object.values(state.formaValida).every(value => value === true);
-  })
-
-  selectBuscarDomicilios$ = this.select((state) => {
-    return state.buscarDomicilios;
-  });
-
-  selectDomicilios$ = this.select((state) => {
-    return state.domicilios;
-  });
-
-  selectAltaPlanta$ = this.select((state) => {
-    return state.altaPlanta;
-  });
-
-
   /**Guarda el estado completo del formulario de la solicitud */
   constructor(
     protected override store: Tramite80316Store) {
