@@ -7,7 +7,7 @@ import {
   TablaScianConfig,
   TablaSeleccion,
 } from '../../../../shared/models/datos-solicitud.model';
-import { ID_PROCEDIMIENTO, PRODUCTO_TABLA_ESTUPEFACIENTES } from '../../constants/estupefacientes.enum';
+import { ELEMENTOS_ANADIDOS, ELEMENTOS_REQUERIDOS, ID_PROCEDIMIENTO, PRODUCTO_TABLA_ESTUPEFACIENTES } from '../../constants/estupefacientes.enum';
 import {
   OPCION_TABLA,
   SCIAN_TABLA,
@@ -131,6 +131,20 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Identificador del procedimiento.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
+
+  /**
+   * @property {string[]} elementosAnadidos
+   * @description
+   * Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
+   */
+  public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
 
   /**
    * @constructor
