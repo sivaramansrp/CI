@@ -25,17 +25,17 @@ export const INPUT_FECHA_FIN = {
   habilitado: true,
 };
 
-export const INPUT_FECHA_INICIO_CUPO = {
-  labelNombre: 'Fecha inicio vigencia del cupo',
-  required: false,
-  habilitado: true,
-};
+// export const INPUT_FECHA_INICIO_CUPO = {
+//   labelNombre: 'Fecha inicio vigencia del cupo',
+//   required: false,
+//   habilitado: true,
+// };
 
-export const INPUT_FECHA_FIN_CUPO = {
-  labelNombre: 'Fecha fin vigencia del cupo',
-  required: false,
-  habilitado: true,
-};
+// export const INPUT_FECHA_FIN_CUPO = {
+//   labelNombre: 'Fecha fin vigencia del cupo',
+//   required: false,
+//   habilitado: true,
+// };
 
 export const INFORMACION_DESCRPCION_CUPO = [
   {
@@ -84,9 +84,9 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: false,
+    soloLectura: true,
     validadores: [],
-  marcadorDePosicion: 'METROS CUADRADOS EQUIVALENTES',
+    marcadorDePosicion: 'METROS CUADRADOS EQUIVALENTES',
     valorPredeterminado: '',
     marginTop: 3,
   },
@@ -99,10 +99,10 @@ export const INFORMACION_DESCRPCION_CUPO = [
     desactivado: true,
     soloLectura: false,
     validadores: [],
-    marcadorDePosicion: 'PANTALONES Y FALDAS DE ALGODON',
+    marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 3,
-    habilitado: true
+    habilitado: true,
   },
   {
     id: 'fechaFinCupo',
@@ -111,12 +111,12 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'date',
     desactivado: true,
-    soloLectura: false,
+    soloLectura: true,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 3,
-    habilitado: true
+    habilitado: true,
   },
   {
     id: 'mecanismoAsignacion',
@@ -141,8 +141,9 @@ export const INFORMACION_DESCRPCION_CUPO = [
     soloLectura: false,
     validadores: [
       {
-        tipo: '', mensaje: ''
-      }
+        tipo: '',
+        mensaje: '',
+      },
     ],
     marcadorDePosicion: 'Tratado entre Mexico, Estados Unidad',
     valorPredeterminado: '',
@@ -152,24 +153,26 @@ export const INFORMACION_DESCRPCION_CUPO = [
     id: 'fraccionesArancelarias',
     labelNombre: 'Fracciones arancelarias',
     campo: 'fraccionesArancelarias',
-    clase: 'col-md-8',
+    clase: 'col-md-10',
     tipoInput: 'textarea',
     desactivado: true,
     soloLectura: false,
     validadores: [
       {
-        tipo: '', mensaje: ''
-      }
+        tipo: '',
+        mensaje: '',
+      },
     ],
     marcadorDePosicion: '',
-    valorPredeterminado: '26011101,26011201,26012001,26020002,26030001,26040001,26050001',
+    valorPredeterminado:
+      '26011101,26011201,26012001,26020002,26030001,26040001,26050001,26060001,26070001,26080001,26090001,26100001,26110001,26120001,26130001,26140001',
     marginTop: 3,
   },
   {
     id: 'paises',
     labelNombre: 'Países',
     campo: 'paises',
-    clase: 'col-md-8',
+    clase: 'col-md-10',
     tipoInput: 'textarea',
     desactivado: true,
     soloLectura: false,
@@ -182,7 +185,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     id: 'observaciones',
     labelNombre: 'Observaciones',
     campo: 'observaciones',
-    clase: 'col-md-8',
+    clase: 'col-md-10',
     tipoInput: 'textarea',
     desactivado: true,
     soloLectura: false,
@@ -195,7 +198,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     id: 'fundamento',
     labelNombre: 'Fundamento',
     campo: 'fundamento',
-    clase: 'col-md-8',
+    clase: 'col-md-10',
     tipoInput: 'textarea',
     desactivado: true,
     soloLectura: false,

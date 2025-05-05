@@ -1,11 +1,9 @@
 <div class="container">
     <div>
-        <form [formGroup]="descripcionCupoForm">
+        <form [formGroup]="forma">
             <div class="descripcion-cupo mt-5">
-                <div class="demo">
-                    <formas-dinamicas formularioTitulo="Descripción del cupo" [forma]="descripcionCupoForm"
-                        [formularioDatos]="informacionFormData"></formas-dinamicas>
-                </div>
+                    <formas-dinamicas formularioTitulo="Descripción del cupo" [forma]="ninoFormGroup"
+                        [formularioDatos]="informacionFormData" [estado]="solicitudState" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
             </div>
         </form>
     </div>

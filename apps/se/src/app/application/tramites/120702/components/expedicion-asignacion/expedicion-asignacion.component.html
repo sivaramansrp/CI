@@ -12,7 +12,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
-                    <input type="text" class="form-control" id="numeroOficio" formControlName="numeroOficio"
+                    <input type="number" class="form-control" id="numeroOficio" formControlName="numeroOficio"
                         name="numeroOficio" [required]="true">
                 </div>
             </div>
@@ -85,6 +85,15 @@
                 </div>
             </div>
         </div>
+<!-- 
+        <div>
+            <form [formGroup]="descripcionCupoForm">
+                <div class="descripcion-cupo mt-5">
+                        <formas-dinamicas formularioTitulo="Descripción del cupo" [forma]="descripcionCupoForm"
+                            [formularioDatos]="informacionFormData"></formas-dinamicas>
+                </div>
+            </form>
+        </div> -->
 
         <div>
             <app-descripcion-cupo></app-descripcion-cupo>
@@ -95,14 +104,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoADisponible">Monto disponible:</label>
-                    <input type="text" class="form-control" id="montoADisponible" formControlName="montoADisponible"
+                    <input type="number" class="form-control" id="montoADisponible" formControlName="montoADisponible"
                         name="montoADisponible">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
-                    <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
+                    <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
                         name="montoAExpedir" [required]="true">
                 </div>
             </div>
@@ -123,7 +132,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="form-label" for="totalAExpedir">Total a expedir:</label>
-                <input type="text" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
+                <input type="number" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
                     name="totalAExpedir">
             </div>
         </div>
