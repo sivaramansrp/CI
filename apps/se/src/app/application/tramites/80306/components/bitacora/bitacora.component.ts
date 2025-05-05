@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
-import { Bitacora } from '../../../80308/models/plantas-consulta.model';
-import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
+import { Bitacora } from '../../estados/models/plantas-consulta.model';
+import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
