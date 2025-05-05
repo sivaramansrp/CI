@@ -2,7 +2,8 @@
     <ng-titulo titulo="Certificación de la empresa" />
     <div class="row mb-3">
         <div class="col-auto d-flex align-items-center">
-            <input type="checkbox" id="manifesto" class="me-2" (change)="mostrarModalSiSeleccionado($event)" />
+            <lib-input-check [id]="'tieneCertificacion'" [label]="''" [required]="false"
+            (change)="mostrarModalSiSeleccionado($event)"></lib-input-check>
         </div>
         <div class="col-md-6">
             <input type="text" id="certificacionEmpresa" class="form-control" />
