@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent,SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CertificacionesComponent } from './components/certificaciones/certificaciones.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
