@@ -64,5 +64,83 @@
             "id": 2,
             "descripcion": "Por periodo"
         }
+    ],
+    "tipoMoneda": [
+        {
+            "id": 1,
+            "descripcion": "AFGANI-Afganistán"
+        },
+        {
+            "id": 2,
+            "descripcion": "ARIARY-Madagascar"
+        },
+        {
+            "id": 3,
+            "descripcion": "BAHT"
+        },
+        {
+            "id": 4,
+            "descripcion": "BALBOA"
+        },
+        {
+            "id": 5,
+            "descripcion": "BIRR-Etiopía"
+        },
+        {
+            "id": 6,
+            "descripcion": "BOLIVAR-Venezuela"
+        },
+        {
+            "id": 7,
+            "descripcion": "BOLIVIANO-Bolivia"
+        },
+        {
+            "id": 8,
+            "descripcion": "CEDI-Ghana"
+        },
+        {
+            "id": 9,
+            "descripcion": "CHELIN-Kenya"
+        },
+        {
+            "id": 10,
+            "descripcion": "CHELIN-Somalia"
+        },
+        {
+            "id": 11,
+            "descripcion": "CHELIN-Tanzania"
+        },
+        {
+            "id": 12,
+            "descripcion": "CHELIN-Uganda"
+        },
+        {
+            "id": 13,
+            "descripcion": "COLON-Costa Rica"
+        },
+        {
+            "id": 14,
+            "descripcion": "COLÓN-El Salvador"
+        },
+        {
+            "id": 15,
+            "descripcion": "CORDOBA-Nicaragua"
+        },
+        {
+            "id": 16,
+            "descripcion": "CORONA-Dinamarca"
+        },
+        {
+            "id": 17,
+            "descripcion": "CORONA-Eslovaquia"
+        },
+        {
+            "id": 18,
+            "descripcion": "CORONA-Estonia"
+        },
+        {
+            "id": 19,
+            "descripcion": "CORONA-Islandia"
+        }
     ]
 }

@@ -26,16 +26,47 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="motivoDespachoDomicilio">Motivo o justificación de despacho a domicilio</label>
+                <label class="form-label" for="motivoDespachoDomicilio">Motivo o justificación de despacho a
+                    domicilio</label>
                 <textarea class="form-control h-25" id="motivoDespachoDomicilio" rows="3"
                     formControlName="motivoDespachoDomicilio" id="motivoDespachoDomicilio" placeholder=""
                     title="motivoDespachoDomicilio"></textarea>
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="observaciones">Observaciones</label>
-                <textarea class="form-control h-25" id="observaciones" rows="3"
-                    formControlName="observaciones" id="observaciones" placeholder=""
-                    title="observaciones"></textarea>
+                <textarea class="form-control h-25" id="observaciones" rows="3" formControlName="observaciones"
+                    id="observaciones" placeholder="" title="observaciones"></textarea>
+            </div>
+        </div>
+    </div>
+</form>
+<ng-titulo titulo="Datos de la mercancía" />
+
+<form [formGroup]="formularioMercancia">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="valorMercancia" class="form-label">Valor de la mercancía</label>
+                <input class="form-control" type="text" id="valorMercancia" formControlName="valorMercancia" />
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="tipoMoneda" [label]="'Tipo de moneda'" [required]="true" formControlName="tipoMoneda">
+                </app-catalogo-select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="motivoDespachoDomicilio">Nombre o descripción comercial de la mercancía</label>
+                <textarea class="form-control h-25" id="descripcionMercancia" rows="3"
+                    formControlName="descripcionMercancia" id="descripcionMercancia" placeholder=""
+                    title="descripcionMercancia"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="observaciones">Descripción detallada y/o especificaciones técnicas de la
+                    mercancía</label>
+                <textarea class="form-control h-25" id="especificacionesMercancia" rows="3" formControlName="especificacionesMercancia"
+                 placeholder="" title="observaciones"></textarea>
             </div>
         </div>
     </div>
