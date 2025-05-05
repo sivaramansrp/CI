@@ -1,6 +1,7 @@
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CertificacionesComponent } from './components/certificaciones/certificaciones.component';
 import { CommonModule } from '@angular/common';
+import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -14,6 +15,6 @@ import { SolicitudDespachoExportacionRoutingModule } from './solicitud-despacho-
     PasoDosComponent,
     PasoTresComponent
   ],
-  imports: [CommonModule, SolicitudDespachoExportacionRoutingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent,CertificacionesComponent],
+  imports: [CommonModule, SolicitudDespachoExportacionRoutingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent,CertificacionesComponent,DatosSolicitudComponent],
 })
 export class SolicitudDespachoExportacionModule {}
