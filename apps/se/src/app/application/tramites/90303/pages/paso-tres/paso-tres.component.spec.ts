@@ -5,7 +5,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { PasoTresComponent } from './paso-tres.component';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 import { ToastrService } from 'ngx-toastr';
 
@@ -30,11 +29,11 @@ describe('PasoTresComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoTresComponent],
+      imports: [HttpClientTestingModule],
+      declarations: [PasoTresComponent],
       providers: [
         { provide: Router, useValue: mockRouter },
         {
-          provide: ServiciosExtraordinariosService,
           useValue: mockServiciosExtraordinariosService,
         },
         { provide: TramiteStore, useValue: mockTramiteStore },

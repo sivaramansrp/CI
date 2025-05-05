@@ -1,6 +1,7 @@
-import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component,Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PLANTAS } from '../../constantes/complementaria.enum';
 import { PlantasTabla } from '../../models/complementaria.model';
 
@@ -11,7 +12,7 @@ import { PlantasTabla } from '../../models/complementaria.model';
 @Component({
   selector: 'app-plantas',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent,TituloComponent],
+  imports: [CommonModule, TablaDinamicaComponent, TituloComponent],
   templateUrl: './plantas.component.html',
   styleUrl: './plantas.component.scss',
 })
@@ -20,7 +21,7 @@ export class PlantasComponent {
    * Enumeración que define las opciones de selección para la tabla.
    * Se utiliza para configurar el comportamiento de la tabla dinámica.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Constante que contiene los datos de configuración para la tabla de plantas.

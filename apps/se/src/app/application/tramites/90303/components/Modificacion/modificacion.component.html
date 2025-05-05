@@ -28,12 +28,7 @@
   </div>
   <!-- Lista de domicilios -->
   <ng-titulo titulo="Lista de domicilios" />
-  <ng-container *ngIf="isBaja">
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" (click)="onFilaClic($event)" [datos]="listaTablaDatos"></app-tabla-dinamica>
-  </ng-container>
-  <ng-container *ngIf="!isBaja">
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.BUTTON" [configuracionTabla]="listaTablaBaja" (click)="onFilaClic($event)" [datos]="listaTablaDatosBaja"></app-tabla-dinamica>
-  </ng-container>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" (click)="onFilaClic($event)" [datos]="listaTablaDatos" ></app-tabla-dinamica>
   <!-- Plantas -->
   <ul class="nav nav-tabs">
     <li class="nav-item">

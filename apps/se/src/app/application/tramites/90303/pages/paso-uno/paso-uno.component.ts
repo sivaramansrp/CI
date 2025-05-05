@@ -1,21 +1,15 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, TablaSeleccion, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-import { CatalogosService } from '../../service/catalogos.service';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormularioDinamico, TIPO_PERSONA, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
-
+import { CatalogosService } from '../../service/catalogos.service';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa el primer paso del trámite.
+ * Este paso incluye la configuración inicial y la obtención de datos necesarios para el trámite.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -23,24 +17,19 @@ import { Bitacora } from '../../../../shared/models/bitacora.model';
   styles: ``,
   standalone: false,
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
+  entidadFederativa!: unknown;
 
-  /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
-   */
-  
   /**
    * Referencia al componente de solicitante.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
-   * Tipo de persona seleccionada.
+   * Tipo de persona seleccionada (e.g., física o moral).
    */
   tipoPersona!: number;
 
@@ -55,26 +44,57 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   domicilioFiscal: FormularioDinamico[] = [];
 
   /**
-   * Índice del paso actual.
+   * Índice del paso actual en el asistente.
    */
   indice: number = 1;
 
-   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  
-    TablaSeleccion = TablaSeleccion;
-    listaPlantasTabla: PlantasTabla[] = [];
-    listaSectorTabla: SectorTabla[] = [];
-    listaTablaMercancia: Mercancias[] = [];
-    listaTablaProductor: ProductorIndirecto[] = [];
-    listaTablaBitacora: Bitacora[] = [];
-  
-    constructor(private catalogo: CatalogosService) { 
-      // El constructor se utiliza para la inyección de dependencias.
-      }
+  /**
+   * ReplaySubject utilizado para gestionar la destrucción de observables.
+   * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Enumeración que define las opciones de selección para las tablas dinámicas.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Lista de datos para la tabla de plantas.
+   */
+  listaPlantasTabla: PlantasTabla[] = [];
+
+  /**
+   * Lista de datos para la tabla de sectores.
+   */
+  listaSectorTabla: SectorTabla[] = [];
+
+  /**
+   * Lista de datos para la tabla de mercancías.
+   */
+  listaTablaMercancia: Mercancias[] = [];
+
+  /**
+   * Lista de datos para la tabla de productores indirectos.
+   */
+  listaTablaProductor: ProductorIndirecto[] = [];
+
+  /**
+   * Lista de datos para la tabla de bitácoras.
+   */
+  listaTablaBitacora: Bitacora[] = [];
+
+  /**
+   * Constructor del componente.
+   * @param catalogo Servicio para obtener datos de catálogos.
+   */
+  constructor(private catalogo: CatalogosService) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
+   * Obtiene los datos necesarios para las tablas de plantas, sectores, mercancías y productores.
    */
   ngOnInit(): void {
     this.obtenerTablaPlantas();
@@ -101,43 +121,60 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
     this.indice = i;
   }
 
+  /**
+   * Obtiene los datos de la tabla de plantas desde el servicio.
+   */
   public obtenerTablaPlantas(): void {
-      this.catalogo
-        .obtenerTablaPlantas()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          this.listaPlantasTabla = data;
-        });
-    }
-  
-    public obtenerTablaSector(): void {
-      this.catalogo
-        .obtenerTablaSector()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          this.listaSectorTabla = data;
-        });
-    }
-  
-    public obtenerTablaMercancia(): void {
-      this.catalogo
-        .obtenerTablaMercancia()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          this.listaTablaMercancia = data;
-        });
-    }
-  
-    public obtenerTablaProductor(): void {
-      this.catalogo
-        .obtenerTablaProductor()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          this.listaTablaProductor = data;
-        });
-    }
-    ngOnDestroy(): void {
-      this.destroyed$.next(true);
-      this.destroyed$.complete();
-    }
+    this.catalogo
+      .obtenerTablaPlantas()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.listaPlantasTabla = data;
+      });
+  }
+
+  /**
+   * Obtiene los datos de la tabla de sectores desde el servicio.
+   */
+  public obtenerTablaSector(): void {
+    this.catalogo
+      .obtenerTablaSector()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.listaSectorTabla = data;
+      });
+  }
+
+  /**
+   * Obtiene los datos de la tabla de mercancías desde el servicio.
+   */
+  public obtenerTablaMercancia(): void {
+    this.catalogo
+      .obtenerTablaMercancia()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.listaTablaMercancia = data;
+      });
+  }
+
+  /**
+   * Obtiene los datos de la tabla de productores indirectos desde el servicio.
+   */
+  public obtenerTablaProductor(): void {
+    this.catalogo
+      .obtenerTablaProductor()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.listaTablaProductor = data;
+      });
+  }
+
+  /**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   * Cancela las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 }

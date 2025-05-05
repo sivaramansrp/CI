@@ -43,6 +43,9 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
+  /**
+ * Texto de alerta para terceros.
+ */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.

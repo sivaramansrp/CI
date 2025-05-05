@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Bitacora } from '../../models/bitacora.model';
 import { TABLA_BITACORA } from '../../constantes/bitacora.enum';
@@ -33,5 +34,5 @@ export class BitacoraTablaComponent {
    * Tabla de selección de bitácoras
    * @type {TablaSeleccion}
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 }

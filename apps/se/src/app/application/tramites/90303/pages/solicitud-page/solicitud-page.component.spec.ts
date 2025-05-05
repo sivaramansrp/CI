@@ -1,92 +1,90 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, SolicitudPageComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SolicitudPageComponent],
       providers: [],
-    })
-      .overrideComponent(SolicitudPageComponent, {})
-      .compileComponents();
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA], 
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should initialize with default values', () => {
+    expect(component.TEXTO_DE_ALERTA).toBe(
+      'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.'
+    );
+    expect(component.pasos.length).toBeGreaterThan(0);
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {},
-    });
+  it('should update the indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
 
+  it('should handle getValorIndice with "cont" action', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
+    component.wizardComponent = mockWizardComponent;
+
+    const accionBoton = { accion: 'cont', valor: 2 };
+    component.getValorIndice(accionBoton);
+
+    expect(component.indice).toBe(2);
+    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should handle getValorIndice with "ant" action', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
+    component.wizardComponent = mockWizardComponent;
+
+    const accionBoton = { accion: 'ant', valor: 1 };
+    component.getValorIndice(accionBoton);
+
+    expect(component.indice).toBe(1);
+    expect(mockWizardComponent.atras).toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not update indice if valor is out of range in getValorIndice', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
+    component.wizardComponent = mockWizardComponent;
+
+    const accionBoton = { accion: 'cont', valor: 6 }; 
+    component.getValorIndice(accionBoton);
+
+    expect(component.indice).toBe(1);
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 });

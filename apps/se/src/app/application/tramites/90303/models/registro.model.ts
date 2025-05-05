@@ -1,57 +1,39 @@
-export interface ListaTabla{
-  estatus:string;
-  claveDeSector:string;
-  sector:string;
-  }
-  
-  export interface ListaTablaBaja{
-    estatus:string;
-    claveDeSector:string;
-    sector:string;
-    }
+/**
+ * Representa un registro de la tabla de sectores activos.
+ */
+export interface ListaTabla {
+  /**
+   * Estado actual del sector (e.g., "Activado").
+   */
+  estatus: string;
 
-// export interface ColumnasTabla {
-//   fraccionArancelaria: string;
-//   nombreTecnico: string;
-//   nombreComercial: string;
-//   numeroRegistroProductos: string;
-//   fechaExpedicion: string;
-//   fechaVencimiento: string;
-// }
+  /**
+   * Clave única que identifica al sector.
+   */
+  claveDeSector: string;
 
-// export interface SeleccionadasTabla {
-//   fraccionArancelaria: string;
-//   cantidad: string;
-//   unidadMedida: string;
-//   valorMercancia: string;
-//   tipoFactura: string;
-//   numFactura: string;
-//   complementoDescripcion: string;
-//   fechaFactura: string;
-// }
+  /**
+   * Nombre o descripción del sector.
+   */
+  sector: string;
+}
 
-// export const FECHAINICIAL = {
-//   labelNombre: 'Fecha inicio',
-//   required: false,
-//   habilitado: true,
-// };
+/**
+ * Representa un registro de la tabla de sectores en baja.
+ */
+export interface ListaTablaBaja {
+  /**
+   * Estado actual del sector (e.g., "Baja").
+   */
+  estatus: string;
 
-// export const FECHAFINAL = {
-//   labelNombre: 'Fecha fin',
-//   required: false,
-//   habilitado: true,
-// };
+  /**
+   * Clave única que identifica al sector.
+   */
+  claveDeSector: string;
 
-// export const FECHAFACTURA = {
-//   labelNombre: 'Fecha fin',
-//   required: true,
-//   habilitado: true,
-// };
-
-// export const DESPACHO_LDA = {
-//     labelNombre: 'Sí',
-//     maxlength: 10,
-//     minlenght: 0,
-//     required: false,
-//     alfanumerico: true,
-//   };
+  /**
+   * Nombre o descripción del sector.
+   */
+  sector: string;
+}

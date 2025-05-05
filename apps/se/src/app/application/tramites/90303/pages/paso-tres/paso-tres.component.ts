@@ -1,13 +1,12 @@
-import {
-  FirmaElectronicaComponent,
-  TramiteFolioService,
-} from '@ng-mf/data-access-user';
-import { catchError, map, Subscription } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
+
 /**
  * Componente que representa el paso tres del trámite.
+ * Este paso incluye la obtención de la firma y la navegación al acuse de pago.
  */
 @Component({
   selector: 'app-paso-tres',
@@ -15,16 +14,24 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   styleUrl: './paso-tres.component.scss',
   standalone: false,
 })
-export class PasoTresComponent {
-   /**
-   * Suscripción para obtener el trámite.
+export class PasoTresComponent implements OnDestroy {
+  /**
+   * ReplaySubject utilizado para gestionar la destrucción de observables.
+   * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
    */
-   obtienerTramiteSubscriber!: Subscription;
-   /**
-    * Tipo de persona.
-    */
-   tipoPersona!: number;
- 
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Tipo de persona (e.g., física o moral).
+   */
+  tipoPersona!: number;
+
+  /**
+   * Constructor del componente.
+   * @param router Servicio de enrutamiento para navegar entre páginas.
+   * @param serviciosExtraordinariosServices Servicio para obtener información del trámite.
+   * @param tramiteStore Almacén para gestionar el estado del trámite.
+   */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
@@ -32,13 +39,15 @@ export class PasoTresComponent {
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
+
   /**
-   * Obtiene el tipo de persona.
-   * @param tipo Tipo de persona.
+   * Obtiene el tipo de persona y lo almacena en la propiedad `tipoPersona`.
+   * @param tipo Tipo de persona (e.g., 1 para física, 2 para moral).
    */
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
   }
+
   /**
    * Maneja el evento para obtener la firma y realiza acciones adicionales.
    * @param ev - La cadena de texto que representa la firma obtenida.
@@ -50,24 +59,28 @@ export class PasoTresComponent {
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
+          takeUntil(this.destroyed$),
           map((tramite) => {
+            // Establece el trámite en el almacén con la firma obtenida
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            // Navega al acuse de pago
             this.router.navigate(['/pago/catalogos/acuse']);
           }),
           catchError((_error) => {
+            // Manejo de errores
             return _error;
           })
         )
         .subscribe();
     }
   }
-   /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-   ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
-  }
 
+  /**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   * Cancela las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 }

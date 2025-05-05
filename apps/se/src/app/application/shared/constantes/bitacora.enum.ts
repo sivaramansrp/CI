@@ -1,6 +1,11 @@
 import { Bitacora } from "../models/bitacora.model";
 import { ConfiguracionColumna } from "../models/modificacion.enum";
 
+/**
+ * Configuración de la tabla de bitácora.
+ * @type {ConfiguracionColumna<Bitacora>[]}
+ * @description Esta constante define la configuración de las columnas de la tabla de bitácora.
+ */
 export const TABLA_BITACORA: ConfiguracionColumna<Bitacora>[] = [
     {
         encabezado: 'Tipo modificación',

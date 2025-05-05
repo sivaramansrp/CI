@@ -11,7 +11,7 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 90303.
  */
 export interface Solicitud90303State {
- 
+  estatus: string;
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 90303.
@@ -19,7 +19,7 @@ export interface Solicitud90303State {
  */
 export function createInitialState(): Solicitud90303State {
   return {
-   
+    estatus:'',
   };
 }
 
