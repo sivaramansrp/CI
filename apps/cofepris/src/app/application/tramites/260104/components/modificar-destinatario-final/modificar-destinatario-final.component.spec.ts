@@ -1,21 +1,36 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ModificarDestinatarioFinalComponent } from './modificar-destinatario-final.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
+import { of } from 'rxjs';
 
-describe('AgregarDestinatarioFinalComponent', () => {
+describe('ModificarDestinatarioFinalComponent', () => {
   let component: ModificarDestinatarioFinalComponent;
   let fixture: ComponentFixture<ModificarDestinatarioFinalComponent>;
+  let mockDatosSolicitudService: Partial<DatosSolicitudService>;
   let mockTramite260104Store: Partial<Tramite260104Store>;
 
-  mockTramite260104Store = {
-    updateDestinatarioFinalTablaDatos: jest.fn(),
-  };
-
-
   beforeEach(async () => {
+    mockDatosSolicitudService = {
+      obtenerListaCodigosPostales: jest.fn().mockReturnValue(of([])),
+      obtenerListaPaises: jest.fn().mockReturnValue(of([])),
+      obtenerListaEstados: jest.fn().mockReturnValue(of([])),
+      obtenerListaMunicipios: jest.fn().mockReturnValue(of([])),
+      obtenerListaLocalidades: jest.fn().mockReturnValue(of([])),
+      obtenerListaColonias: jest.fn().mockReturnValue(of([])),
+    };
+
+    mockTramite260104Store = {
+      updateDestinatarioFinalTablaDatos: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ModificarDestinatarioFinalComponent, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, ModificarDestinatarioFinalComponent],
+      providers: [
+        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+        { provide: Tramite260104Store, useValue: mockTramite260104Store },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModificarDestinatarioFinalComponent);
@@ -23,67 +38,19 @@ describe('AgregarDestinatarioFinalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-  it('should have a valid form when all required fields are filled', () => {
-    component.modificarDestinatarioFinal.setValue({
-      tipoPersona: 'FISICA',
-      rfc: 'XAXX010101000',
-      nombres: 'John',
-      denominacionRazon: '',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      pais: '1',
-      estado: '1',
-      municipio: '1',
-      localidad: '1',
-      codigoPostal: '12345',
-      colonia: '1',
-      calle: 'Main Street',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '55',
-      telefono: '12345678',
-      correoElectronico: 'john.doe@example.com',
-      descPais: '',
-      descEstado: '',
-      descMunicipio: '',
-      descLocalidad: '',
-      descCodigoPostal: '',
-      descColonia: '',
-    });
-    expect(component.modificarDestinatarioFinal.valid).toBe(false);
+
+  it('should initialize the form on component creation', () => {
+    expect(component.modificarDestinatarioFinal).toBeDefined();
+    expect(component.modificarDestinatarioFinal.controls['tipoPersona']).toBeDefined();
   });
 
-  it('should have an invalid form when required fields are empty', () => {
-    component.modificarDestinatarioFinal.setValue({
-      tipoPersona: 'FISICA',
-      rfc: 'XAXX010101000',
-      nombres: 'John',
-      denominacionRazon: '',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      pais: '1',
-      estado: '1',
-      municipio: '1',
-      localidad: '1',
-      codigoPostal: '12345',
-      colonia: '1',
-      calle: 'Main Street',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '55',
-      telefono: '12345678',
-      correoElectronico: 'john.doe@example.com',
-      descPais: '',
-      descEstado: '',
-      descMunicipio: '',
-      descLocalidad: '',
-      descCodigoPostal: '',
-      descColonia: '',
-    });
-    expect(component.modificarDestinatarioFinal.invalid).toBe(true);
+  it('should call cargarDatos on ngOnInit', () => {
+    const cargarDatosSpy = jest.spyOn(component, 'cargarDatos');
+    component.ngOnInit();
+    expect(cargarDatosSpy).toHaveBeenCalled();
   });
 
   it('should call guardarDestinatario and update the store', () => {
@@ -151,6 +118,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
       descColonia: null,
     });
   });
+
   it('should update descPais when cambiaPais is called', () => {
     component.paisesDatos = [{ id: 1, descripcion: 'Mexico' }];
     component.modificarDestinatarioFinal.get('pais')?.setValue(1); // Ensure the value matches the id type

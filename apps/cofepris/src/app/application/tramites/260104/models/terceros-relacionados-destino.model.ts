@@ -2,15 +2,15 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 
 /**
- * Constante que define el mensaje para indicar que las tablas marcadas con asterisco
- * son obligatorias y deben contener al menos un registro.
+ * Mensaje que indica que las tablas marcadas con asterisco son obligatorias
+ * y que se debe agregar al menos un registro en ellas.
  */
 export const MENSAJE_TABLA_OBLIGATORIA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 
 /**
- * Representa un fabricante con información detallada sobre su identidad y ubicación.
+ * Interfaz que representa la información de un fabricante.
  */
 export interface Fabricante {
   /**
@@ -54,7 +54,7 @@ export interface Fabricante {
   numeroExterior: string;
 
   /**
-   * Número interior del domicilio del fabricante (si aplica).
+   * Número interior del domicilio del fabricante.
    */
   numeroInterior: string;
 
@@ -89,7 +89,7 @@ export interface Fabricante {
   estado: string;
 
   /**
-   * Colonia equivalente en caso de que aplique.
+   * Colonia equivalente del fabricante.
    */
   coloniaEquivalente: string;
 
@@ -97,27 +97,25 @@ export interface Fabricante {
    * Lada telefónica del fabricante.
    */
   lada: string;
+
   /**
-   * Descripción del país del domicilio del destinatario.
+   * Descripción del país donde se encuentra ubicado el fabricante.
    */
-  descPais:string;
+  descPais: string;
 }
+
 /**
  * Configuración de las columnas para la tabla de fabricantes.
  * 
- * Cada objeto en el arreglo representa una columna de la tabla, especificando
- * el encabezado, la clave para acceder al valor correspondiente en la fila,
- * y el orden en el que se debe mostrar la columna.
+ * Cada objeto en el arreglo representa una columna de la tabla, definiendo su encabezado,
+ * la clave para acceder al valor correspondiente en la fila, y el orden en el que se muestra.
  * 
- * @constant
  * @type {ConfiguracionColumna<Fabricante>[]}
  * 
  * @property {string} encabezado - El texto que se mostrará como encabezado de la columna.
- * @property {(fila: Fabricante) => any} clave - Una función que define cómo obtener el valor
- * correspondiente de la fila para esta columna.
- * @property {number} orden - El orden en el que se debe mostrar la columna en la tabla.
+ * @property {(fila: Fabricante) => any} clave - Una función que define cómo obtener el valor de la columna desde una fila.
+ * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
  */
-
 export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
   [
     {
@@ -171,6 +169,7 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
   ];
 
 
+
 /**
  * Interfaz que representa un destinatario con información detallada.
  */
@@ -186,17 +185,17 @@ export interface Destinatario {
   nombreRazonSocial: string;
 
   /**
-   * Nombres del destinatario (en caso de persona física).
+   * Nombres del destinatario.
    */
   nombres: string;
 
   /**
-   * Primer apellido del destinatario (en caso de persona física).
+   * Primer apellido del destinatario.
    */
   primerApellido: string;
 
   /**
-   * Segundo apellido del destinatario (en caso de persona física).
+   * Segundo apellido del destinatario.
    */
   segundoApellido: string;
 
@@ -211,7 +210,7 @@ export interface Destinatario {
   curp: string;
 
   /**
-   * Número de teléfono del destinatario.
+   * Teléfono de contacto del destinatario.
    */
   telefono: string;
 
@@ -309,15 +308,16 @@ export interface Destinatario {
 /**
  * Configuración de las columnas para la tabla de destinatarios.
  * 
- * Cada objeto en el arreglo representa una columna de la tabla con su respectivo encabezado,
- * clave para acceder al valor de la fila y el orden en el que se debe mostrar.
+ * Este arreglo define las columnas que se mostrarán en la tabla de destinatarios,
+ * incluyendo el encabezado, la clave para acceder a los datos de cada fila y el orden
+ * en el que se mostrarán las columnas.
  * 
- * @constant
  * @type {ConfiguracionColumna<Destinatario>[]}
  * 
  * @property {string} encabezado - El texto que se mostrará como encabezado de la columna.
- * @property {(fila: Destinatario) => any} clave - Función que define cómo obtener el valor de la columna desde una fila.
- * @property {number} orden - El orden en el que se debe mostrar la columna en la tabla.
+ * @property {(fila: Destinatario) => any} clave - Una función que define cómo obtener el valor
+ * del campo correspondiente de la fila.
+ * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
  * 
  * Columnas definidas:
  * - Nombre/Denominación o Razón Social
@@ -390,6 +390,7 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
 
 
 
+
 /**
  * Representa el estado del formulario de pago de derechos.
  */
@@ -400,7 +401,7 @@ export interface PagoDerechosFormState {
   claveReferencia: string;
 
   /**
-   * Cadena de la dependencia asociada al pago.
+   * Cadena que identifica a la dependencia relacionada con el pago.
    */
   cadenaDependencia: string;
 
@@ -410,7 +411,7 @@ export interface PagoDerechosFormState {
   estado: string;
 
   /**
-   * Llave única del pago.
+   * Llave única asociada al pago.
    */
   llavePago: string;
 
@@ -431,6 +432,7 @@ export interface PagoDerechosFormState {
 }
 
 
+
 /**
  * Constante que representa la configuración para el campo "Fecha de pago".
  * 
@@ -446,25 +448,17 @@ export const FECHA_DE_PAGO = {
 
 
 /**
- * @interface TercerosRelacionadosDatos
- * @description Representa los datos relacionados con terceros, incluyendo fabricantes y destinatarios finales.
- *
- * @property {Fabricante[]} fabricanteTablaDatos
- * Lista de datos de los fabricantes que se mostrarán en la tabla.
- *
- * @property {Destinatario[]} destinatarioFinalTablaDatos
- * Lista de datos de los destinatarios finales que se mostrarán en la tabla.
+ * Interfaz que representa los datos relacionados con terceros.
  */
 export interface TercerosRelacionadosDatos {
+ 
   /**
-   * @property fabricanteTablaDatos
-   * @description Lista de datos de los fabricantes que se mostrarán en la tabla.
+   * Lista de datos de los fabricantes asociados.
    */
   fabricanteTablaDatos: Fabricante[];
 
   /**
-   * @property destinatarioFinalTablaDatos
-   * @description Lista de datos de los destinatarios finales que se mostrarán en la tabla.
+   * Lista de datos de los destinatarios finales asociados.
    */
   destinatarioFinalTablaDatos: Destinatario[];
 }

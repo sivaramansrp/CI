@@ -41,7 +41,24 @@ describe('AgregarFabricanteComponent', () => {
   it('should initialize the form on component creation', () => {
     expect(component.agregarFabricante).toBeDefined();
     expect(component.agregarFabricante.controls['tipoPersona']).toBeDefined();
-    expect(component.agregarFabricante.controls['descPais']).toBeDefined(); // Ensure this test passes
+    expect(component.agregarFabricante.controls['descPais']).toBeDefined();
+    expect(component.agregarFabricante.controls['estado']).toBeDefined();
+    expect(component.agregarFabricante.controls['municipio']).toBeDefined(); 
+    expect(component.agregarFabricante.controls['localidad']).toBeDefined();
+    expect(component.agregarFabricante.controls['codigoPostal']).toBeDefined();
+    expect(component.agregarFabricante.controls['colonia']).toBeDefined();
+    expect(component.agregarFabricante.controls['calle']).toBeDefined();
+    expect(component.agregarFabricante.controls['numeroExterior']).toBeDefined();
+    expect(component.agregarFabricante.controls['numeroInterior']).toBeDefined();
+    expect(component.agregarFabricante.controls['lada']).toBeDefined();
+    expect(component.agregarFabricante.controls['telefono']).toBeDefined();
+    expect(component.agregarFabricante.controls['correoElectronico']).toBeDefined();
+    expect(component.agregarFabricante.controls['rfc']).toBeDefined();
+    expect(component.agregarFabricante.controls['nombres']).toBeDefined();
+    expect(component.agregarFabricante.controls['denominacionRazon']).toBeDefined();
+    expect(component.agregarFabricante.controls['primerApellido']).toBeDefined();
+    expect(component.agregarFabricante.controls['segundoApellido']).toBeDefined();
+    expect(component.agregarFabricante.controls['pais']).toBeDefined();
   });
 
   it('should call cargarDatos on ngOnInit', () => {
@@ -70,6 +87,7 @@ describe('AgregarFabricanteComponent', () => {
       lada: '55',
       telefono: '12345678',
       correoElectronico: 'john.doe@example.com',
+      descPais:'Mexico'
     });
 
     component.guardarFabricante();
@@ -98,6 +116,7 @@ describe('AgregarFabricanteComponent', () => {
       lada: '55',
       telefono: '12345678',
       correoElectronico: 'john.doe@example.com',
+      descPais:'Mexico'
     });
 
     component.limpiarFormulario();
@@ -122,6 +141,7 @@ describe('AgregarFabricanteComponent', () => {
       lada: '',
       telefono: '',
       correoElectronico: '',
+      descPais:'Mexico'
     });
   });
 
