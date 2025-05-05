@@ -183,7 +183,7 @@ export class DomicilioDelEstablecimiento260904Component
    crearFormulario(): void {
      this.form = this.fb.group({
        codigoPostal: ['', [Validators.required]],
-       estado: ['', [Validators.required]],
+       estado: [],
        municipioOAlcaldia: ['', [Validators.required]],
        localidad: [''],
        colonias: [''],

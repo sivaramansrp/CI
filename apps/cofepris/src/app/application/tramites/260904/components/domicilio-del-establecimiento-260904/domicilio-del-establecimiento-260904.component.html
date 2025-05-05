@@ -27,6 +27,7 @@
               [catalogo]="estado"
               [label]="'Estado*'"
               name="estado"
+              [required]="true"
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
             >
@@ -136,7 +137,7 @@
               aria-labelledby="lada"
               (change)="setValorStore(form, 'lada')"
             />
-            <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
+            <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
               Por favor, corrija la lada.
             </div>
           </div>
@@ -197,7 +198,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
-          (change)="setValorStore(form, 'avisoCheckbox')"
+          (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
       </div>
@@ -231,9 +232,9 @@
           [required]="true"
           name="regimen"
           [tooltipQuestionCircle]="true"
-          (change)="setValorStore(form, 'regimen')"
+          (change)="setValorStore(domicilio, 'regimen')"
         ></app-catalogo-select>
-        <div *ngIf="form.get('regimen')?.touched && form.get('regimen')?.hasError('required')" class="text-danger">
+        <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
         </div>
       </div>
@@ -244,9 +245,9 @@
           [label]="'Aduanas de entradas'"
           [required]="true"
           name="aduanasEntradas"
-          (change)="setValorStore(form, 'aduanasEntradas')"
+          (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
-        <div *ngIf="form.get('aduanasEntradas')?.touched && form.get('aduanasEntradas')?.hasError('required')" class="text-danger">
+        <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
         </div>
       </div>
@@ -261,7 +262,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
-          (change)="setValorStore(form, 'aifaCheckbox')"
+          (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
     </div>
@@ -302,7 +303,7 @@
           [label]="''"
           [required]="true"
           formControlName="manifests"
-          (change)="setValorStore(form, 'manifests')"
+          (change)="setValorStore(domicilio, 'manifests')"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
@@ -322,7 +323,7 @@
           [radioOptions]="opcionDeBotonDeRadio"
           [layout]="'horizontal'"
           formControlName="acuerdoPublico"
-          (change)="setValorStore(form, 'acuerdoPublico')"
+          (change)="setValorStore(representanteLegal, 'acuerdoPublico')"
         ></app-input-radio>
       </div>
       <ng-titulo titulo="Representante legal"></ng-titulo>
@@ -337,9 +338,9 @@
               formControlName="rfc"
               appUppercase
               aria-labelledby="rfc"
-              (change)="setValorStore(form, 'rfc')"
+              (change)="setValorStore(representanteLegal, 'rfc')"
             />
-            <div *ngIf="form.get('rfc')?.invalid && form.get('rfc')?.touched" class="text-danger">
+            <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
               El RFC es obligatorio.
             </div>
           </div>
