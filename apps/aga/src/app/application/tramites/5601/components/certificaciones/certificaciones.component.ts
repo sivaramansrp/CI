@@ -16,6 +16,7 @@ export class CertificacionesComponent {
   tituloModal!: string;
 
   mensajeModal!: string;
+  
 
   mostrarModalSiSeleccionado(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;

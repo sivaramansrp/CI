@@ -1,10 +1,27 @@
-<div class="container">
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'"
-                [required]="true"></app-catalogo-select>
+<form [formGroup]="formulario">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" formControlName="aduana">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="seccionAduanera" [label]="'Sección Aduanera'" [required]="true"
+                    formControlName="seccionAduanera">
+                </app-catalogo-select>
+            </div>
         </div>
-        <div class="col-md-6">
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="tipoOperacion" [label]="'Tipo de operación'" [required]="true"
+                    formControlName="tipoOperacion" (change)="alCambiarTipoOperacion()">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-6" *ngIf="mostrarFechaOperacion">
+                <label for="fechaOperacion" class="form-label">Fecha de operación</label>
+                <input class="form-control" type="date" id="fechaOperacion" formControlName="fechaOperacion" />
+            </div>
         </div>
     </div>
-</div>
+</form>

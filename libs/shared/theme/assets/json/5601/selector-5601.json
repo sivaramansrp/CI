@@ -1,53 +1,68 @@
 {
     "aduanas": [
-      {
-        "id": 1,
-        "descripcion": "010 - ACAPULCO, PUERTO Y AEROPUERTO"
-      },
-      {
-        "id": 2,
-        "descripcion": "020 - AGUA PRIETA"
-      },
-      {
-        "id": 3,
-        "descripcion": "050 - SUBTENIENTE LOPEZ"
-      },
-      {
-        "id": 4,
-        "descripcion": "060 - CD. DEL CARMEN"
-      },
-      {
-        "id": 5,
-        "descripcion": "070 CD. JUAREZ"
-      },
-      {
-        "id": 6,
-        "descripcion": "080-COATZACOALCOS"
-      },
-      {
-        "id": 7,
-        "descripcion": "110 - ENSENADA"
-      },
-      {
-        "id": 8,
-        "descripcion": "120 - GUAYMAS"
-      },
-      {
-        "id": 9,
-        "descripcion": "140 - LA PAZ"
-      },
-      {
-        "id": 10,
-        "descripcion": "160 - MANZANILLO"
-      },
-      {
-        "id": 11,
-        "descripcion": "170 - MATAMOROS"
-      },
-      {
-        "id": 12,
-        "descripcion": "180 - MAZATLAN"
-      }
+        {
+            "id": 1,
+            "descripcion": "010 - ACAPULCO, PUERTO Y AEROPUERTO"
+        },
+        {
+            "id": 2,
+            "descripcion": "020 - AGUA PRIETA"
+        },
+        {
+            "id": 3,
+            "descripcion": "050 - SUBTENIENTE LOPEZ"
+        },
+        {
+            "id": 4,
+            "descripcion": "060 - CD. DEL CARMEN"
+        },
+        {
+            "id": 5,
+            "descripcion": "070 CD. JUAREZ"
+        },
+        {
+            "id": 6,
+            "descripcion": "080-COATZACOALCOS"
+        },
+        {
+            "id": 7,
+            "descripcion": "110 - ENSENADA"
+        },
+        {
+            "id": 8,
+            "descripcion": "120 - GUAYMAS"
+        },
+        {
+            "id": 9,
+            "descripcion": "140 - LA PAZ"
+        },
+        {
+            "id": 10,
+            "descripcion": "160 - MANZANILLO"
+        },
+        {
+            "id": 11,
+            "descripcion": "170 - MATAMOROS"
+        },
+        {
+            "id": 12,
+            "descripcion": "180 - MAZATLAN"
+        }
+    ],
+    "seccionAduanera": [
+        {
+            "id": 1,
+            "descripcion": "2 - SUBTENIENTE LOPEZ II \"CHACTEMAL\", OTHON P. BLANCO, CHETUMAL, QUINTANA ROO."
+        }
+    ],
+    "tipoOperacion": [
+        {
+            "id": 1,
+            "descripcion": "Operación única"
+        },
+        {
+            "id": 2,
+            "descripcion": "Por periodo"
+        }
     ]
-  }
-  
+}
