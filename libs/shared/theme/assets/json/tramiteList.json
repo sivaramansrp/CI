@@ -4184,5 +4184,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 600,
+    "tramite": 80306,
+    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
+    "department": "se"
   }
 ]

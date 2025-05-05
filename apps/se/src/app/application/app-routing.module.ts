@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'immex-modificacion',
+    loadChildren: () =>
+      import('./tramites/80306/immexModification.module').then(
+        (m) => m.ImmexModificationModule
+      ),
+  },
   
 ];
 
