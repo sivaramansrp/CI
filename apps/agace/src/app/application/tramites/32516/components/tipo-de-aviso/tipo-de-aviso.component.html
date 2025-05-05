@@ -1,23 +1,103 @@
 <div class="container mt-4">
-    <ng-titulo titulo="Datos del aviso del que procede el acta"></ng-titulo>
-    <form [formGroup]="solicitudForm">
-        <div class="row">
-                <div class="col-md-10">
-                  <div class="form-group">
-                    <app-catalogo-select
-                    [label]="'Aviso del que procede el acta de hechos'"
-                    [catalogo]="actaDeHechos"
-                    formControlName="actaDeHechos"
-                    [required]="true"
-                    name="actaDeHechos"
-                  ></app-catalogo-select>
-                  </div>
-                </div>
+<ng-titulo titulo="Datos del aviso del que procede el acta"></ng-titulo>
+  <form [formGroup]="solicitudForm">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <app-catalogo-select [label]="'Aviso del que procede el acta de hechos'" [catalogo]="actaDeHechos"
+            formControlName="actaDeHechos" [required]="true" name="actaDeHechos"></app-catalogo-select>
         </div>
-        <div class="row mt-4">
-            <div class="col-md-12 text-right">
-                <button type="submit" class="btn btn-primary">Agregar</button>
-            </div>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Datos de la ADACE que asistió a la destrucción"></ng-titulo>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group d-flex align-items-center">
+          <label>&iquest;Acudió la ADACE?</label>
+          <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
+              id="acudioSi" value="1" required>
+            <label class="form-check-label" for="acudioSi">Si</label>
+          </div>
+          <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
+              id="acudioNo" value="0" required>
+            <label class="form-check-label" for="acudioNo">No</label>
+          </div>
         </div>
-    </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group text-left">
+          <app-catalogo-select [label]="'ADACE a la que le corresponde levantar el acta'" [catalogo]="levantarActa"
+          formControlName="descripcionGenerica2" [required]="true" name="levantarActa"></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Datos de la destrucción en relación con el Acta de Hechos -->
+    <div class="row">
+      <div class="col-md-12">
+        <ng-titulo
+          titulo="Datos de la destrucci&oacute;n en relaci&oacute;n con la cual se presenta el Acta de Hechos"></ng-titulo>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group d-flex align-items-center">
+          <label>&iquest;Cuenta con el ID de transacci&oacute;n de VUCEM por la presentaci&oacute;n del aviso de
+            destrucci&oacute;n?</label>
+          <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" formControlName="cantidadBienes" name="cantidadBienes" id="acudioSi"
+              value="1" required>
+            <label class="form-check-label" for="acudioSi">Si</label>
+          </div>
+          <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" formControlName="cantidadBienes" name="cantidadBienes" id="acudioNo"
+              value="0" required>
+            <label class="form-check-label" for="acudioNo">No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Condicional: Mostrar campo ID de transacción -->
+    <div id="dos" *ngIf="solicitudForm.get('cantidadBienes')?.value === '1'">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="numeroIMMEX">ID de transacci&oacute;n de VUCEM</label>
+          <span class="require">*</span>
+          <span class="glyphicon glyphicon-question-sign" data-bs-toggle="tooltip" data-bs-placement="top"
+            title="ID de transacci&oacute;n de VUCEM" for="numeroIMMEX" aria-hidden="true"></span>
+        </div>
+        <div class="col-md-4">
+          <input type="text" formControlName="descripcionGenerica3" id="numeroIMMEX" maxlength="250"
+            class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Entrega Act -->
+    <div class="row">
+      <div class="col-md-12 mt-4">
+        <div class="table-responsive">
+          <div class="table-container">
+            <app-tabla-dinamica *ngIf="hechosTableDatos.length > 0"
+                [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="hechosTabla"
+                [datos]="hechosTableDatos"></app-tabla-dinamica>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones Agregar -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary me-2" (click)="irAPaginaAgregar()">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>

@@ -19,7 +19,7 @@ export class CatalogosService {
    * @property {string} url - URL base para los archivos JSON.
    */
   url: string = '/assets/json/32516/';
-
+  urlLevantar: string = '/assets/json/32516/';
   /**
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
@@ -35,6 +35,33 @@ export class CatalogosService {
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
     const baseUrl = this.url + fileName;
     return this.http.get<RespuestaCatalogos>(baseUrl).pipe(
+      map(response => response.data)
+    );
+  }
+
+  /**
+   * @method obtenerLevantarActaDesplegable
+   * @description Obtiene la lista de opciones del obtenerLevantarActaDesplegable desplegable desde un archivo JSON.
+   * @param {string} fileName - Nombre del archivo JSON.
+   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del obtenerLevantarActaDesplegable desplegable.
+   */
+  obtenerLevantarActaDesplegable(fileName: string): Observable<Catalogo[]> {
+    const baseUrlLevantar = this.urlLevantar + fileName;
+    return this.http.get<RespuestaCatalogos>(baseUrlLevantar).pipe(
+      map(response => response.data)
+    );
+  }
+
+  
+  /**
+   * @method obtenerUnidadDesplegable
+   * @description Obtiene la lista de opciones del obtenerUnidadDesplegable desplegable desde un archivo JSON.
+   * @param {string} fileName - Nombre del archivo JSON.
+   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del obtenerUnidadDesplegable desplegable.
+   */
+  obtenerUnidadDesplegable(fileName: string): Observable<Catalogo[]> {
+    const baseUrlLevantar = this.urlLevantar + fileName;
+    return this.http.get<RespuestaCatalogos>(baseUrlLevantar).pipe(
       map(response => response.data)
     );
   }

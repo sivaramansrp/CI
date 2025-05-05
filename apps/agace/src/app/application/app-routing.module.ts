@@ -122,6 +122,7 @@ const ROUTES: Routes = [
         (m) => m.ActaDeHechosModule
       ),
   },
+  
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '../../modelos/exportacion-explosivo.model';
+import { ListaPasosWizard } from '../../modelos/acta-de-hechos.model';
 import { PASOS } from '../../constantes/exportacion-armas-explosivo.enum';
 import { TITULOMENSAJE } from '../../constantes/exportacion-armas-explosivo.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
