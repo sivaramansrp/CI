@@ -1,0 +1,74 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos del trámite'"> </ng-titulo>
+    <formas-dinamicas [forma]="datosDelTramiteFormulario" [formularioDatos]="formularioDatos"
+        [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    <div class="col-md-12 mt-4">
+        <ng-alert [CONTENIDO]="importante"></ng-alert>
+    </div>
+    <div class="col-md-12">
+        <label for="mercancias" class="form-label">mercancías*:</label>
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
+            [tipoSeleccionTabla]="seleccionTabla"
+            (listaDeFilaSeleccionada)="getMercanciasSeleccionadas($event)"></app-tabla-dinamica>
+    </div>
+
+    <div class="col-md-12 mt-4">
+        <div class="col-12 d-flex justify-content-end">
+            @if(1 > 0){
+            <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#modalMercancia" (click)="mercanciaModificar()">
+                Modificar
+            </button>
+            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarMercancia()">
+                Eliminar
+            </button>
+            }
+            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade test-modal" id="modalMercancia" tabindex="-1" aria-labelledby="modalMercancia">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>
+                                Solicitud de Requisitos de Sanidad Acuícola para Importación
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <ng-titulo titulo="Datos mercancía"> </ng-titulo>
+                        <formas-dinamicas [forma]="datosMercanciaFormulario"
+                            [formularioDatos]="mercanciaFormularioDatos" [estado]="estadoSeleccionado"
+                            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                    </div>
+                    <div class="row my-5">
+                        <div class="col-md-8">
+                            <p>* Campos obligatorios</p>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end">
+                            <button name="Limpiar" class="btn btn-primary me-2"
+                                (click)="datosMercanciaFormulario.reset()">
+                                Limpiar
+                            </button>
+                            <button name="Cancelar" class="btn btn btn-danger me-2" data-bs-dismiss="modal"
+                                data-bs-target="#modalMercancia">
+                                Cancelar
+                            </button>
+                            <button name="agregar" class="btn btn-primary" data-bs-dismiss="modal"
+                                data-bs-target="#modalMercancia" (click)="agregarMercancia()">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

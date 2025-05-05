@@ -12,8 +12,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { SanidadAcuicolaImportacionComponent } from './pages/sanidad-acuicola-importacion-page/sanidad-acuicola-importacion.component';
 
-
-
+import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 
 @NgModule({
   declarations: [PasoDosComponent,PasoUnoComponent,PasoTresComponent,SanidadAcuicolaImportacionComponent],
@@ -26,7 +25,8 @@ import { SanidadAcuicolaImportacionComponent } from './pages/sanidad-acuicola-im
     SolicitanteComponent,
     FirmaElectronicaComponent,
     BtnContinuarComponent,
-    WizardComponent
+    WizardComponent,
+    DatosDelTramiteComponent
 ]
 })
 export class SanidadAcuicolaImportacionModule { }

@@ -7,7 +7,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent],
+      declarations: [PasoDosComponent],
     }).compileComponents();
 
     FIXTURE = TestBed.createComponent(PasoDosComponent);
