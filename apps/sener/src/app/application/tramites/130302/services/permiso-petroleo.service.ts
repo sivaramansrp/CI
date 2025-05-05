@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PermisoModel } from '../models/permiso-importacion.model';
+
+import { AvisoValor, PermisoModel } from '../models/permiso-importacion.model';
  
 import { Observable } from 'rxjs';
 
@@ -21,4 +22,8 @@ export class PermisoPetroleoService {
     obtenerTabla(): Observable<PermisoModel[]> {
         return this.http.get<PermisoModel[]>('assets/json/130302/petroleo.json');
       }
+
+      getSolicitante(): Observable<AvisoValor> {
+        return this.http.get<AvisoValor>('assets/json/130302/permiso.json');
+        }
 }

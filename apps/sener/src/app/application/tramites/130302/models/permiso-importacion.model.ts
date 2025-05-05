@@ -57,3 +57,8 @@ export const FECHA_DE_PAGO = {
    */
   habilitado: true,
 };
+export interface AvisoValor {
+  saldoDisponible:number;
+  prorrogaDel:number;
+  prorrogaAl:number;
+}

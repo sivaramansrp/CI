@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { AlertComponent, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -10,7 +10,7 @@ import {ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { FECHA_DE_PAGO, NICO_TABLA, PermisoModel } from '../../models/permiso-importacion.model';
+import { AvisoValor, FECHA_DE_PAGO, NICO_TABLA, PermisoModel } from '../../models/permiso-importacion.model';
 import {PermisoPetroleoService} from '../../services/permiso-petroleo.service';
 
 import { map, takeUntil } from 'rxjs';
@@ -78,13 +78,26 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
     )
     .subscribe();
     this.form = new FormGroup({
-      saldoDisponible:   new FormControl(this.exportarIlustracionesState?.saldoDisponible),
-      prorrogaDel: new FormControl(this.exportarIlustracionesState?.prorrogaDel),
-      prorrogaAl: new FormControl(this.exportarIlustracionesState?.prorrogaAl),
+      saldoDisponible:   new FormControl({ value: '', disabled: true }),
+      prorrogaDel: new FormControl({ value: '', disabled: true }),
+      prorrogaAl: new FormControl({ value: '', disabled: true }),
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
       otrasDeclaraciones: new FormControl(this.exportarIlustracionesState?.otrasDeclaraciones),
     });
     this.loadMercancias();
+    this.loadAsignacionData();
+  }
+  loadAsignacionData(): void {
+    this.service.getSolicitante()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: AvisoValor) => {
+        this.form.patchValue({
+          saldoDisponible: data.saldoDisponible,
+          prorrogaDel: data.prorrogaDel,
+          prorrogaAl: data.prorrogaAl,
+          });
+        
+      });
   }
 
   loadMercancias(): void {
