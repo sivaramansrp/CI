@@ -57,6 +57,26 @@ export const FECHA_DE_PAGO = {
    */
   habilitado: true,
 };
+
+export const PRORROGA_DEL = {
+  /**
+   * @property {string} labelNombre
+   * @description Etiqueta que describe el campo de fecha de pago.
+   */
+  labelNombre: 'Prórroga Del',
+
+  /**
+   * @property {boolean} required
+   * @description Indica si el campo de fecha de pago es obligatorio.
+   */
+  required: false,
+
+  /**
+   * @property {boolean} habilitado
+   * @description Indica si el campo de fecha de pago está habilitado.
+   */
+  habilitado: true,
+};
 export interface AvisoValor {
   saldoDisponible:number;
   prorrogaDel:number;

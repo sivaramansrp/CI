@@ -27,28 +27,31 @@
         (change)="setValoresStore(form,'saldoDisponible', 'setsaldoDisponible')"/>
         
       </div>
-      <div>
-        <label for="prorrogaDel">Prórroga del:</label>
-        <input id="prorrogaDel" type="date" formControlName="prorrogaDel"
-        (change)="setValoresStore(form,'prorrogaDel', 'setprorrogaDel')" />
-      </div>
-      <div>
-        <label for="prorrogaAl">Prórroga al:</label>
-        <input id="prorrogaAl" type="date" formControlName="prorrogaAl"
-        (change)="setValoresStore(form,'prorrogaAl', 'setprorrogaAl')" />
-        <!-- <input-fecha [datos]="fechaInicioInput" formControlName="prorrogaAl"
+      <div class="row">
+      <div  class= "col-md-4">
+       
+        <input-fecha [datos]="fechaInicioOutput" formControlName="prorrogaDel"
                     (valorCambiado)="onFechaCambiada($event)"
-                    [setFecha]="form.get('prorrogaAl')?.value"></input-fecha> -->
+                    [setFecha]="form.get('prorrogaDel')?.value"></input-fecha>
       </div>
-      <div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+       
+        <input-fecha [datos]="fechaInicioInput" formControlName="prorrogaAl"
+                    (valorCambiado)="onFechaCambiada($event)"
+                    [setFecha]="form.get('prorrogaAl')?.value"></input-fecha>
+      </div>
+    </div>
+      <div class="col-md-12">
        
         <label for="motivoJustificacion">Motivo y/o Justificación*:</label>
         <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control"
         (change)="setValoresStore(form,'motivoJustificacion', 'setmotivoJustificacion')" ></textarea>
       </div>
-      <div>
-<label for="motivoJustificacion">Otras declaraciones:</label>
-        <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control " 
+      <div class="col-md-12">
+        <label for="motivoJustificacion">Otras declaraciones:</label>
+        <textarea  id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control " rows="6" cols="100" 
         (change)="setValoresStore(form,'otrasDeclaraciones', 'setotrasDeclaraciones')"></textarea>
       </div>
     </div>

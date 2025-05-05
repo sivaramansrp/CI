@@ -10,7 +10,7 @@ import {ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { AvisoValor, FECHA_DE_PAGO, NICO_TABLA, PermisoModel } from '../../models/permiso-importacion.model';
+import { AvisoValor, FECHA_DE_PAGO, NICO_TABLA, PRORROGA_DEL, PermisoModel } from '../../models/permiso-importacion.model';
 import {PermisoPetroleoService} from '../../services/permiso-petroleo.service';
 
 import { map, takeUntil } from 'rxjs';
@@ -34,6 +34,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
   private destroyed$ = new Subject<void>();
   public informacionFormData = INFORMACION_DE_LA_OBRA_ARTE;
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  fechaInicioOutput: InputFecha=PRORROGA_DEL ;
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({})
   });
