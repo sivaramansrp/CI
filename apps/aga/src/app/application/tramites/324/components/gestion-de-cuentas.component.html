@@ -1,1 +1,18 @@
-<p>gestion-de-cuentas works!</p>
+<ng-titulo titulo="Accesos"/>
+<!-- Accesos tabla -->
+<div class="table-container mt-5">
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+      [configuracionTabla]="headers"
+      [datos]="accesosTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination d-flex justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+    </ul>
+</nav>
+<div class="col-md-12 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary ms-3">Agregar</button>
+    <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+</div>
