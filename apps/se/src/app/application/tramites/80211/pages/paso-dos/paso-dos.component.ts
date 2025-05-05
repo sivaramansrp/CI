@@ -1,5 +1,6 @@
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 /**
  * Componente para gestionar el paso dos del trámite 80211.
  */
@@ -8,7 +9,7 @@ import { Component, Inject } from '@angular/core';
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnDestroy {
   /**
    * Objeto con los textos de los requisitos.
    * @property {object} TEXTOS_REQUISITOS - Textos para los requisitos del certificado zoosanitario. --220201
@@ -22,6 +23,11 @@ export class PasoDosComponent {
 
   /** Clase de estilo para mensajes de alerta informativa. */
   infoAlert = 'alert-info';
+
+  /**
+   * Notificación para destruir observables al destruir el componente.
+   */
+  destoryNotification$: Subject<void> = new Subject<void>();
 
     /**
    * Constructor del componente.
@@ -43,6 +49,7 @@ export class PasoDosComponent {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destoryNotification$))
       .subscribe({
         next: (resp): void => {
           // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
@@ -54,5 +61,13 @@ export class PasoDosComponent {
           // Manejo de errores, actualmente vacío pero puede ser implementado
         },
       });
+  }
+
+  /**
+   * Método de limpieza al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destoryNotification$.next();
+    this.destoryNotification$.complete();
   }
 }
