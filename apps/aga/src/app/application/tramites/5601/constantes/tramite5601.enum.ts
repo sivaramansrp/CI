@@ -1,0 +1,1 @@
+export const TITULO_MODAL = 'Aviso';
