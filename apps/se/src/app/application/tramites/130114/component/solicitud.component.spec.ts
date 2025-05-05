@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite130114Store } from '../../../estados/tramites/tramite130114.store';
 import { Tramite130114Query } from '../../../estados/queries/tramite130114.query';
 import { DiamanteBrutoService } from '../services/diamante-bruto.service';
@@ -127,7 +126,7 @@ describe('SolicitudComponent', () => {
         PaisProcendenciaStubComponent,
         RepresentacionStubComponent,
       ],
-      imports: [ReactiveFormsModule,HttpClientModule],
+      imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
         { provide: Tramite130114Store, useValue: mockStore },
