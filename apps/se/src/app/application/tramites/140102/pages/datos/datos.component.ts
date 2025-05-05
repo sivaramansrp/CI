@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
 
 /**
  * @description
@@ -26,5 +27,17 @@ export class DatosComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.pestanaCambiado.emit(this.indice);
+  }
+
+  @Input() pestanaDosFormularioValido!: boolean;
+  @Output() pestanaCambiado = new EventEmitter<number>();
+  public elementoDeTablaSeleccionado!: InstrumentoCupoTPLForm;
+
+   // eslint-disable-next-line class-methods-use-this
+   public archivoHagaClicControlador(event: InstrumentoCupoTPLForm): void {
+    if (event) {
+      this.elementoDeTablaSeleccionado = event;
+    }
   }
 }

@@ -1,8 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { Component, ViewChild, inject} from '@angular/core';
+import { AVISO, DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { WizardComponent, WizardService } from '@ng-mf/data-access-user';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
+import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
 
 /**
  * @description
@@ -49,21 +51,79 @@ export class PantallasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  public infoAlert = 'alert-info';
 
-  /**
+  TEXTOS = AVISO.Aviso;
+
+  public applicacionRegistradaAlerta = ALERTA_DE_APLICACION_REGISTRADA.message;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  public mostrarAplicacionRegistradaAlerta: boolean = false;
+
+  public esFormaValido!: boolean;
+  public subpestanaSeleccionada!: number;
+  public pestanaDosFormularioValido: boolean = false;
+  wizardService = inject(WizardService);
+  constructor(
+    public validacionDeFormularioService: ValidacionDeFormularioService
+  ) {
+    //
+  }
+
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      this.validacionDeFormularioService.isFormValid('programaSeleccionadoForm') ?? false
+    );
+  }
+
+  get programaSeleccionadoFormValid(): boolean {
+    return this.validacionDeFormularioService.isFormValid('programaSeleccionadoForm') ?? false;
+  }
+
+  public pestanaCambiado(event: number): void {
+    if (event) {
+      this.subpestanaSeleccionada = event;
+    }
+  }
+
+    /**
    * @description
    * Método que actualiza el índice del paso seleccionado en el wizard.
    * También controla la navegación hacia adelante o hacia atrás en el wizard.
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del paso.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+
+    getValorIndice(e: AccionBoton): void {
+      this.esFormaValido = this.verificarLaValidezDelFormulario();
+      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+          if (e.accion === 'cont') {
+              this.continuar(e);
+             console.log(this.validacionDeFormularioService.getFormValue('programaSeleccionadoForm'));
+          } else if (e.accion === 'ant' && this.esFormaValido) {
+              this.indice = e.valor - 1;
+              this.datosPasos.indice = e.valor - 1;
+              this.wizardComponent.atras();
+          } else if (!this.esFormaValido) {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+          }
       }
+  
+    }
+
+  public continuar(e: AccionBoton): void { 
+    if (this.subpestanaSeleccionada === 2 && this.programaSeleccionadoFormValid && !this.esFormaValido) {
+      this.mostrarAplicacionRegistradaAlerta = true;
+      this.pestanaDosFormularioValido = true;
+    } else if (this.esFormaValido) {
+      this.pestanaDosFormularioValido = true;
+      this.indice = e.valor + 1;
+      this.datosPasos.indice = e.valor + 1;
+      this.wizardService.cambio_indice(this.datosPasos.indice);
+      this.wizardComponent.siguiente();
+    } else {
+      this.mostrarAplicacionRegistradaAlerta = false;
     }
   }
 }

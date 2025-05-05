@@ -7,6 +7,7 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { PROGRAMA_SELECCIONADO } from '../../constants/programa-seleccionado.enum';
 import { map, Subject, takeUntil } from 'rxjs';
+import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
 
 @Component({
   selector: 'app-programa-seleccionado',
@@ -47,6 +48,7 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy{
 
   constructor( private cancelacionStore: CancelacionStore,
     private cancelacionQuery: CancelacionQuery,
+    public validacionDeFormularioService: ValidacionDeFormularioService
   ) {
     // Constructor vacío
   }
@@ -60,6 +62,8 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy{
       })
     )
     .subscribe();
+
+    this.validacionDeFormularioService.registerForm('programaSeleccionadoForm', this.ninoFormGroup);
   }
 
     /**

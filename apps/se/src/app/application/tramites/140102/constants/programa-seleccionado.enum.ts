@@ -7,7 +7,7 @@ export const PROGRAMA_SELECCIONADO = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        marcadorDePosicion: '',
+        marcadorDePosicion: '2024-9421',
         valorPredeterminado: '',
         marginTop: 0,
       },
@@ -19,7 +19,7 @@ export const PROGRAMA_SELECCIONADO = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        marcadorDePosicion: '',
+        marcadorDePosicion: 'PROGRAMA NUEVO PRODUCTOR DIRECTO',
         valorPredeterminado: '',
         marginTop: 0,
       },
@@ -31,7 +31,7 @@ export const PROGRAMA_SELECCIONADO = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        marcadorDePosicion: '',
+        marcadorDePosicion: 'CULIACAN',
         valorPredeterminado: '',
         marginTop: 0,
       },
@@ -43,7 +43,7 @@ export const PROGRAMA_SELECCIONADO = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        marcadorDePosicion: '',
+        marcadorDePosicion: 'PROSEC',
         valorPredeterminado: '',
         marginTop: 0,
       },
@@ -55,7 +55,7 @@ export const PROGRAMA_SELECCIONADO = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        marcadorDePosicion: '',
+        marcadorDePosicion: 'Vigente - Activo',
         valorPredeterminado: '',
         marginTop: 0,
       },
@@ -86,3 +86,11 @@ export const PROGRAMA_SELECCIONADO = [
         marginTop: 0,
       },
   ];
+
+  export const ALERTA_DE_APLICACION_REGISTRADA = {
+    message: `
+    <p>La solicitud ha quedado registrada con el número temporal 202770947. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial será asignado a la solicitud en el momento en que esta sea firmada.</a>`
+  };
+
+  export const ERROR_FORMA_ALERT =
+'<strong>¡Error de registro! </strong>Faltan campos por capturar.';
