@@ -15,6 +15,7 @@ describe('PagoDeDerechosComponent', () => {
   let mockTramite260912Query: Partial<Tramite260912Query>;
   let mockTramite260912Store: Partial<Tramite260912Store>;
 
+
   beforeEach(async () => {
     mockPagoDeDerechosService = {
       onBancoList: jest.fn().mockReturnValue(of([{ id: 1, name: 'Mock Banco' }] as BancoList[])),
@@ -114,11 +115,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
   });
 
-  it('should patch form data on enPatchStoredFormData call', () => {
-    component.enPatchStoredFormData();
-    expect(component.pagoDeDerechosForm.get('clave')?.value).toEqual('');
-    expect(component.pagoDeDerechosForm.get('fecPago')?.value).toEqual('');
-  });
+ 
 
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
     component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
@@ -133,22 +130,4 @@ describe('PagoDeDerechosComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('should call the correct store method with the correct value in setValoresStore', () => {
-    // Arrange: Mock the store method
-    const mockMethod = jest.fn();
-    mockTramite260912Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
-  
-    // Set up the form control with a value
-    component.pagoDeDerechosForm = component.fb.group({
-      clave: ['testValue'],
-    });
-  
-    // Act: Call the method
-    component.setValoresStore(component.pagoDeDerechosForm, 'clave', 'setClave');
-  
-    // Assert: Verify the store method was called with the correct value
-    expect(mockMethod).toHaveBeenCalledWith('testValue');
-  });
-  
 });

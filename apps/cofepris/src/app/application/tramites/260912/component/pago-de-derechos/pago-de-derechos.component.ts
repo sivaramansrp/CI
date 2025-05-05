@@ -8,10 +8,11 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
+
 
 /**
  * Selector del componente
@@ -42,6 +43,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public destroyed$ = new Subject<void>();
 
   /**
+       * Estado seleccionado del trámite 260911.
+       */
+      estadoSeleccionado!: Tramites260912State;
+
+  /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
   public bancoList!: Catalogo[];
@@ -67,6 +73,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearForm();
+    this.getValorStore();
     this.enPatchStoredFormData();
     this.obtenerBancoList();
   }
@@ -148,16 +155,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
-   */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260912Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite260912Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+  
 
   /**
    * Actualiza el formulario con datos obtenidos desde la tienda.
@@ -191,6 +189,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   * @param metodoNombre - El método en la tienda para actualizar el estado.
+   */
+  public setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite260912Store.setTramite260912State({
+      [campo]: VALOR
+    });
+  }
+  
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite260912Query.selectTramite260912$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
+  }
+
 
    /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
