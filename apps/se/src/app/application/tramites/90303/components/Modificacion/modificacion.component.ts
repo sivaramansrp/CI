@@ -37,7 +37,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Enumeración que define las opciones de selección para las tablas dinámicas.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Lista de datos para la tabla de sectores activos.

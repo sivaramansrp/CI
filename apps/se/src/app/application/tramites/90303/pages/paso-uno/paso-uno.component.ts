@@ -55,11 +55,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Enumeración que define las opciones de selección para las tablas dinámicas.
-   */
-  TablaSeleccion = TablaSeleccion;
-
-  /**
    * Lista de datos para la tabla de plantas.
    */
   listaPlantasTabla: PlantasTabla[] = [];

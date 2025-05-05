@@ -31,11 +31,6 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Enumeración que define las opciones de selección para las tablas.
-   */
-  TablaSeleccion = TablaSeleccion;
-
-  /**
    * Lista de datos para la tabla de plantas.
    */
   listaPlantasTabla: PlantasTabla[] = [];
