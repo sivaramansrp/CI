@@ -33,10 +33,6 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone: true,
-  imports:[AlertComponent,WizardComponent,CommonModule,BtnContinuarComponent,FormsModule,
-    //PasoDosComponent,
-    PasoUnoComponent, ReactiveFormsModule]
 })
 /**
  * Componente que representa la página de solicitud.

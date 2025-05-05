@@ -1,141 +1,140 @@
 import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrosslistComponent,
-  InputRadioComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TableComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+  CONFIGURACION_FECHA_FINAL,
+  CONFIGURACION_FECHA_INICIAL,
+  CONFIGURACION_TABLA,
+} from '../../enum/concluir-relacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { Tramite420103State, Tramite420103Store } from '../../estados/tramite420103.store';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
-import { DATOS_CONCLUIR_RELACION } from '../../constantes/concluir-relacion.enum';
 import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/420103/concluir-relacion.model';
 import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { Tramite420103Query } from '../../estados/tramite420103.query';
 
-
+/**
+ * Componente que gestiona la funcionalidad de concluir relación en el trámite 420103.
+ * Permite capturar datos como RFC, fecha inicial y fecha final, y muestra una tabla dinámica con los datos obtenidos.
+ */
 @Component({
   selector: 'app-concluir-relacion',
   templateUrl: './concluir-relacion.component.html',
   styleUrls: ['./concluir-relacion.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    CatalogoSelectComponent,
-    TituloComponent,
-    TableComponent,
-    AlertComponent,
-    CrosslistComponent,
-    InputRadioComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    TablaDinamicaComponent,
-    InputFechaComponent
-  ],
 })
 export class ConcluirRelacionComponent implements OnInit, OnDestroy {
+  /**
+   * Estado actual del trámite 420103.
+   */
+  estadoTramite420103!: Tramite420103State;
 
+  /**
+   * Formulario reactivo que gestiona los datos de la relación a concluir.
+   */
+  formularioConcluirRelacion!: FormGroup;
 
-  concluirRelacionForm!: FormGroup;
+  /**
+   * Configuración de la tabla dinámica para la selección de datos.
+   */
+  seleccionTabla = TablaSeleccion.RADIO;
 
+  /**
+   * Datos que se mostrarán en la tabla dinámica.
+   */
+  datosTabla: DetallesDelMercancia[] = [];
 
-  TablaSeleccion = TablaSeleccion;
+  /**
+   * Configuración de las columnas de la tabla dinámica.
+   */
+  configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = CONFIGURACION_TABLA;
 
+  /**
+   * Configuración para el campo de fecha inicial.
+   */
+  configuracionFechaInicial: InputFecha = CONFIGURACION_FECHA_INICIAL;
 
-  configuracionTablaDatos: DetallesDelMercancia[] = [];
+  /**
+   * Configuración para el campo de fecha final.
+   */
+  configuracionFechaFinal: InputFecha = CONFIGURACION_FECHA_FINAL;
 
-  configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = [
-    {
-      encabezado: DATOS_CONCLUIR_RELACION.REGISTRO_FEDERAL,
-      clave: (item: DetallesDelMercancia) => item.registroFederal,
-      orden: 1,
-    },
-    {
-      encabezado: DATOS_CONCLUIR_RELACION.DENOMINACION_RAZON_SOCIAL,
-      clave: (item: DetallesDelMercancia) => item.denominacionRazonSocial,
-      orden: 2,
-    },
-    {
-      encabezado: DATOS_CONCLUIR_RELACION.NORMA,
-      clave: (item: DetallesDelMercancia) => item.norma,
-      orden: 3,
-    },
-    {
-      encabezado: DATOS_CONCLUIR_RELACION.FECHA_INICIO_RELACION,
-      clave: (item: DetallesDelMercancia) => item.fechaInicioRelacion,
-      orden: 4,
-    },
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destruido$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  ];
-
-
-  configuracionFechaInicial: InputFecha = {
-    labelNombre: 'Fecha inicial',
-    required: false,
-    habilitado: false,
-  };
-  configuracionfechaFinal: InputFecha = {
-    labelNombre: 'Fecha inicial',
-    required: false,
-    habilitado: false,
-  };
-
-
-
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
+  /**
+   * Constructor del componente. Inicializa las dependencias necesarias.
+   *
+   * formBuilder - Servicio para construir formularios reactivos.
+   * servicioConcluirRelacion - Servicio que gestiona las operaciones relacionadas con concluir relación.
+   * consultaTramite420103 - Servicio para consultar el estado del trámite 420103.
+   * almacenamientoTramite420103 - Servicio para gestionar el estado del trámite 420103.
+   */
   constructor(
+    private formBuilder: FormBuilder,
+    private servicioConcluirRelacion: ConcluirRelacionService,
+    private consultaTramite420103: Tramite420103Query,
+    private almacenamientoTramite420103: Tramite420103Store
+  ) {}
 
-    private fb: FormBuilder,
-    private concluirRelacionService: ConcluirRelacionService,
-  ) {
-
-  }
-
-  fecha: FormControl = new FormControl('');
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y sus valores iniciales.
+   */
   ngOnInit(): void {
-    this.concluirRelacion();
-  }
-
-  concluirRelacion(): void {
-    this.concluirRelacionForm = this.fb.group({
-      rfc: new FormControl(''),
-      fechaInicial: new FormControl(''),
-      fechaFinal: new FormControl(''),
-    });
-  }
-
-  buscarConcluirRelacionDatos(): void {
-    this.concluirRelacionService
-      .getDetallesDelMercanciaDatos()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: DetallesDelMercancia) => {
-        this.configuracionTablaDatos = [datos];
+    this.consultaTramite420103.selectSeccionState$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estado: Tramite420103State) => {
+        this.estadoTramite420103 = estado;
       });
+    this.crearFormularioConcluirRelacion();
   }
 
-  onFechaFinVigenciaChange(date: string): void {
-    this.concluirRelacionForm.patchValue({
-      fechaInicioVigencia: date,
+  /**
+   * Crea el formulario reactivo para capturar los datos de la relación a concluir.
+   */
+  crearFormularioConcluirRelacion(): void {
+    this.formularioConcluirRelacion = this.formBuilder.group({
+      rfc: [this.estadoTramite420103.rfc],
+      fechaInicial: [''],
+      fechaFinal: [''],
     });
   }
 
+  /**
+   * Busca los datos relacionados con la relación a concluir y los muestra en la tabla dinámica.
+   */
+  buscarDatosRelacion(): void {
+    if (this.formularioConcluirRelacion.get('rfc')?.value) {
+      this.servicioConcluirRelacion
+        .getDetallesDelMercanciaDatos()
+        .pipe(takeUntil(this.destruido$))
+        .subscribe((datos: DetallesDelMercancia) => {
+          this.datosTabla = [datos];
+        });
+    }
+  }
 
+  /**
+   * Actualiza el valor del RFC en el formulario y en el estado del trámite.
+   *
+   * valor - Nuevo valor del RFC.
+   */
+  // actualizarFechaFinVigencia(event: Event): void {
+  //   const VALOR = (event.target as HTMLInputElement).value;
+  //   this.formularioConcluirRelacion.patchValue({
+  //     rfc: VALOR,
+  //   });
+  //   this.almacenamientoTramite420103.setRFC(VALOR);
+  // }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera los recursos y completa el Subject `destruido$`.
+   */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destruido$.next(true);
+    this.destruido$.complete();
   }
 }

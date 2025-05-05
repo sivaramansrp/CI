@@ -1,7 +1,4 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ConcluirRelacionComponent } from '../../components/concluir-relacion/concluir-relacion.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
@@ -13,9 +10,6 @@ import { TIPO_PERSONA } from '@ng-mf/data-access-user';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  standalone:true,
-  imports:[SolicitanteComponent,CommonModule,ConcluirRelacionComponent, FormsModule, ReactiveFormsModule]
-  
 })
 export class PasoUnoComponent implements AfterViewInit {
   /**

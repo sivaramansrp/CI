@@ -1,7 +1,7 @@
 <div class="container">
   <ng-titulo titulo="Concluir relación con industria automotriz" />
 
-  <form [formGroup]="concluirRelacionForm">
+  <form [formGroup]="formularioConcluirRelacion">
     <div class="row">
       <div class="">
         <div class="mb-3 row">
@@ -10,42 +10,29 @@
             <input type="text" class="form-control" id="rfc">
           </div>
         </div>
-        <button class="col-md-offset-2" (click)="buscarConcluirRelacionDatos()">BUSAR</button>
+        <button class="col-md-offset-2" (click)="buscarDatosRelacion()">BUSAR</button>
       </div>
     </div>
 
     <div class="row mt-5">
-      <div class="col-md-6">
-        <div class="mb-3 row">
-          <div class="col-sm-7">
-            <input-fecha
+      <div class="col-md-6"><input-fecha
         class="width"
-        [setFecha]="concluirRelacionForm.get('fechaInicial')?.value"
+        [setFecha]="formularioConcluirRelacion.get('fechaInicial')?.value"
         [datos]="configuracionFechaInicial"
-        (valorCambiado)="onFechaFinVigenciaChange($event)"
-      ></input-fecha>
-          </div>
-        </div>
-      </div>
-
+      ></input-fecha></div>
       <div class="col-md-6">
-        <div class="mb-3 row">
-          <div class="col-sm-7">
-            <input-fecha
+        <input-fecha
             class="width"
-            [setFecha]="concluirRelacionForm.get('fechaInicial')?.value"
-            [datos]="configuracionfechaFinal"
-            (valorCambiado)="onFechaFinVigenciaChange($event)"
+            [setFecha]="formularioConcluirRelacion.get('fechaInicial')?.value"
+            [datos]="configuracionFechaFinal"
           ></input-fecha>
-          </div>
-        </div>
       </div>
-    </div> 
+    </div>
   </form>
 
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="configuracionTabla"
-      [datos]="configuracionTablaDatos"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla" [configuracionTabla]="configuracionTabla"
+      [datos]="datosTabla"></app-tabla-dinamica>
   </div>
   <button class="col-md-offset-11">Limpiar</button>
 </div>
