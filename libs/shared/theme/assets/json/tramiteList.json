@@ -2921,8 +2921,8 @@
   {
     "id": 418,
     "tramite": 630103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/autorizacion-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/autorizacion-importacion-temporal/solicitud",
     "department": "aga"
   },
   {
