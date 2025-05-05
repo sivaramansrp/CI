@@ -11,7 +11,7 @@
               type="text"
               name="claveDeReferencia"
               formControlName="claveDeReferencia"
-              (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia','setClaveDeReferencia')"
+              (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
             />
             <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
@@ -27,7 +27,7 @@
               type="text"
               name="cadenaPagoDependencia"
               formControlName="cadenaPagoDependencia"
-              (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia','setCadenaPagoDependencia')"
+              (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
             />
             <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['cadenaPagoDependencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
@@ -37,7 +37,7 @@
         <div class="col-md-4">
             <div class="form-group">
               <label class="form-label">Banco:</label>
-               <select name="clave" class="form-control form-select" formControlName="clave" (change)="setValoresStore(pagoDeDerechosForm,'clave','setClave')">
+               <select name="clave" class="form-control form-select" formControlName="clave" (change)="setValoresStore(pagoDeDerechosForm,'clave')">
                 <option value="" selected>Seleccione un valor</option>
                 @for (banco of bancoList; track banco.name) {
                   <option value={{banco.name}}>{{banco.name}}</option>
@@ -61,7 +61,7 @@
               type="text"
               name="llaveDePago"
               formControlName="llaveDePago"
-              (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago','setLlaveDePago')"
+              (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago')"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Llave de pago es obligatoria.</small>
@@ -78,7 +78,7 @@
             type="date"
             name="fecPago"
             formControlName="fecPago"
-            (change)="setValoresStore(pagoDeDerechosForm,'fecPago','setFecPago'); validarFechaFutura('fecPago')"
+            (change)="setValoresStore(pagoDeDerechosForm,'fecPago'); validarFechaFutura('fecPago')"
           />
             <div *ngIf="esInvalido('fecPago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Fecha de pago es obligatoria.</small>
@@ -95,7 +95,7 @@
                 type="text"
                 name="impPago"
                 formControlName="impPago"
-                (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago'); validarSinComas('impPago')"
+                (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
               />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
                 <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>
