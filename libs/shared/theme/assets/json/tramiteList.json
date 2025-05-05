@@ -4184,5 +4184,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 231002,
+    "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
+    "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
+    "department": "semarnat"
   }
 ]
