@@ -17,7 +17,6 @@ export class DatosSolicitudService {
    */
   private jsonUrl = 'assets/json/sedena/exportacion-datos.json';
 
-  // eslint-disable-next-line no-empty-function
   constructor(public httpServicios: HttpClient) {}
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -32,16 +31,6 @@ export class DatosSolicitudService {
    * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
    * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obtenerRespuestaPorUrl(self: any, variable: string, url: string): void {
-    if (self && variable && url) {
-      this.httpServicios
-        .get<RespuestaCatalogos>(`assets/json${url}`)
-        .subscribe((resp): void => {
-          self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
-        });
-    }
-  }
 
   /**
    * Obtiene la lista de países desde el archivo JSON.
