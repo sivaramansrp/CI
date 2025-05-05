@@ -29,6 +29,7 @@ pre-operativa)"></ng-titulo>
     </div>
   </ng-container>
   <ng-container>
+    <h6>Datos de la inversión</h6>
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="configuracionTablaDatos" (filaSeleccionada)="onCheckboxClicked($event)"></app-tabla-dinamica>
     <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
       <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarFilaSeleccionada()">Modificar</button>
