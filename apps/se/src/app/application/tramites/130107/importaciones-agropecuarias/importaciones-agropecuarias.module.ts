@@ -6,7 +6,11 @@ import { TodosPasosComponent } from '../pages/todos-pasos/todos-pasos.component'
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
-import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { provideHttpClient } from '@angular/common/http';
+import { ImportacionesAgropecuariasService } from '../services/importaciones-agropecuarias.service';
+import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
 
 @NgModule({
@@ -15,7 +19,18 @@ import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access
     CommonModule,
     ImportacionesAgropecuariasRoutingModule,
     WizardComponent,
-    BtnContinuarComponent
-  ]
+    BtnContinuarComponent,
+    TituloComponent,
+    AlertComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
+    SolicitanteComponent,
+    DatosDeLaSolicitudComponent
+  ],
+  providers: [
+    provideHttpClient(),
+    BsModalService,
+    ImportacionesAgropecuariasService
+  ],
 })
 export class ImportacionesAgropecuariasModule { }
