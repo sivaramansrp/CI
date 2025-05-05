@@ -1,5 +1,5 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/260104/certificado.enum';
 import { CompleteForm } from '@libs/shared/data-access-user/src/core/models/260104/domicilo.model';
 import { PermisoSanitarioProductosService } from '../../services/permiso-sanitario-productos.service';
@@ -73,9 +73,9 @@ export class SolicitudPageComponent {
   getValorIndice(e: AccionBoton): void {
     this.payload = this.service.collectFormValues(); // Recopila los valores del formulario.
     if (this.payload) {
-      console.log('payload', this.payload); // Muestra el payload en la consola.
+       // Muestra el payload en la consola.
     } else {
-      console.error('payload is not initialized.'); // Muestra un error si el payload no está inicializado.
+       // Muestra un error si el payload no está inicializado.
     }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor; // Actualiza el índice activo.

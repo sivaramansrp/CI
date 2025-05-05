@@ -33,7 +33,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
    * Se utiliza en combinación con `takeUntil` para cancelar suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Grupo de formularios principal para el representante legal.
