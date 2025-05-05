@@ -5,7 +5,7 @@
       <div class="col-md-10">
         <div class="form-group">
           <app-catalogo-select [label]="'Aviso del que procede el acta de hechos'" [catalogo]="actaDeHechos"
-            formControlName="actaDeHechos" [required]="true" name="actaDeHechos"></app-catalogo-select>
+            formControlName="descripcionGenerica1" [required]="true" name="actaDeHechos"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -17,12 +17,12 @@
           <label>&iquest;Acudió la ADACE?</label>
           <div class="form-check ms-3">
             <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
-              id="acudioSi" value="1" required>
+              id="acudioSi" value="1">
             <label class="form-check-label" for="acudioSi">Si</label>
           </div>
           <div class="form-check ms-3">
             <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
-              id="acudioNo" value="0" required>
+              id="acudioNo" value="0">
             <label class="form-check-label" for="acudioNo">No</label>
           </div>
         </div>
@@ -73,7 +73,7 @@
         </div>
         <div class="col-md-4">
           <input type="text" formControlName="descripcionGenerica3" id="numeroIMMEX" maxlength="250"
-            class="form-control" />
+            class="form-control" [required]="true"/>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary me-2" (click)="irAPaginaAgregar()">Agregar</button>
+          <button type="button" class="btn btn-primary me-2" (click)="irAPaginaAgregar()" [disabled]="solicitudForm.invalid">Agregar</button>
         </div>
       </div>
     </div>

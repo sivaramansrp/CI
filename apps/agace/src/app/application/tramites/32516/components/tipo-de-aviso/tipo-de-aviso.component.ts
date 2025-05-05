@@ -103,23 +103,23 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       this.router.navigate([
         '/pago/acta-de-hechos/mercancias-destruidas-forma',
       ]);
+    }else{
+      this.router.navigate([
+        '/agace/acta-de-hechos/mercancias-destruidas-forma',
+      ]);
     }
   }
-  
-  
-
-  
-  
-  
-  
-  
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se utiliza para inicializar el formulario y cargar los datos necesarios.
+   */ 
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
-      actaDeHechos: [null, Validators.required],
-      capacidadAlmacenamiento: [null, Validators.required],
-      descripcionGenerica2: [null, Validators.required],
-      cantidadBienes: [null, Validators.required],
-      descripcionGenerica3: [''] 
+      cantidadBienes: ['', Validators.required],
+      descripcionGenerica1: ['', Validators.required],
+      descripcionGenerica2: ['', Validators.required],
+      descripcionGenerica3: ['', Validators.required],
+      capacidadAlmacenamiento: ['', Validators.required]
     });
 
     this.handleConditionalValidation();
