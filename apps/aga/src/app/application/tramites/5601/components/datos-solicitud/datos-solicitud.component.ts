@@ -17,6 +17,10 @@ export class DatosSolicitudComponent implements OnInit {
 
   formularioMercancia!: FormGroup;
 
+  formularioLogistica!: FormGroup;
+
+  formularioUbicacionMercancia!: FormGroup;
+
   aduanas!: Catalogo[];
 
   seccionAduanera!: Catalogo[];
@@ -49,6 +53,18 @@ export class DatosSolicitudComponent implements OnInit {
       descripcionMercancia: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
       valorMercancia: [null, Validators.required],
+    });
+
+    this.formularioLogistica = this.fb.group({
+      esquemasControlSeguridad: [null, Validators.required],
+      distanciaRutaTiempos: [null, Validators.required],
+    });
+
+    this.formularioUbicacionMercancia = this.fb.group({
+      direccion: [null, Validators.required],
+      telefono: [null, Validators.required],
+      distanciaAduana: [null, Validators.required],
+      referencias: [null, Validators.required],
     });
   }
 

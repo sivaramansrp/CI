@@ -71,3 +71,54 @@
         </div>
     </div>
 </form>
+
+<ng-titulo titulo="Logística de las operaciones" />
+
+<form [formGroup]="formularioLogistica">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="esquemasControlSeguridad
+                ">Señale los esquemas de control y seguridad de las operaciones</label>
+                <textarea class="form-control h-25" id="esquemasControlSeguridad" rows="3"
+                    formControlName="esquemasControlSeguridad" placeholder=""
+                    title="esquemasControlSeguridad"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las operaciones</label>
+                <textarea class="form-control h-25" id="distanciaRutaTiempos" rows="3" formControlName="distanciaRutaTiempos"
+                 placeholder="" title="distanciaRutaTiempos"></textarea>
+            </div>
+        </div>
+    </div>
+</form>
+
+<ng-titulo titulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante"/>
+<form [formGroup]="formularioUbicacionMercancia">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input class="form-control" type="text" id="direccion" formControlName="direccion" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input class="form-control" type="text" id="telefono" formControlName="telefono" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="distanciaAduana" class="form-label">Distancia a la aduana (km)</label>
+                <input class="form-control" type="text" id="distanciaAduana" formControlName="distanciaAduana" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="referencias" class="form-label">Referencias</label>
+                <input class="form-control" type="text" id="referencias" formControlName="referencias" />
+            </div>
+        </div>
+    </div>
+</form>
