@@ -9,7 +9,7 @@ import { DomicilioInfo } from '../../estados/models/plantas-consulta.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80306Query } from '../../estados/tramite80306.query';
-import { Tramite80306Store } from '../../estados/tramite80308.store';
+import { Tramite80306Store } from '../../estados/tramite80306.store';
 
 @Component({
   selector: 'app-alta-planta',
