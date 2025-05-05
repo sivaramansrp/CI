@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { PagoDeDerechosService } from '../../services/datos-de-la-solicitud/pago-de-derechos.service';
-import { Tramite260911Query } from '../../estados/queries/tramite260911.query';
-import { Tramite260911Store } from '../../estados/store/tramite260911.store';
+import { Tramite260911Query } from '../../estados/tramite260911.query';
+import { Tramite260911Store } from '../../estados/tramite260911.store';
 import { of, Subject } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../models/pago-de-derechos.model';
@@ -115,11 +115,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
   });
 
-  it('should patch form data on enPatchStoredFormData call', () => {
-    component.enPatchStoredFormData();
-    expect(component.pagoDeDerechosForm.get('clave')?.value).toEqual('');
-    expect(component.pagoDeDerechosForm.get('fecPago')?.value).toEqual('');
-  });
+ 
 
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
     component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
@@ -134,23 +130,5 @@ describe('PagoDeDerechosComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('should call the correct store method with the correct value in setValoresStore', () => {
-    // Arrange: Mock the store method
-    const mockMethod = jest.fn();
-    mockTramite260911Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
-  
-    // Set up the form control with a value
-    component.pagoDeDerechosForm = component.fb.group({
-      clave: ['testValue'],
-    });
-  
-    // Act: Call the method
-    component.setValoresStore(component.pagoDeDerechosForm, 'clave', 'setClave');
-  
-    // Assert: Verify the store method was called with the correct value
-    expect(mockMethod).toHaveBeenCalledWith('testValue');
-  });
-  
 });
 

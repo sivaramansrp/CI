@@ -1,6 +1,7 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -20,13 +21,11 @@ import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecim
 
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaTabla } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite260911Query } from '../../estados/queries/tramite260911.query';
-import { Tramite260911Store } from '../../estados/store/tramite260911.store';
+import { Tramite260911Query } from '../../estados/tramite260911.query';
+
 import { Validators } from '@angular/forms';
 
 /**
@@ -128,79 +127,13 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
    */
   representanteLegal!: FormGroup;
 
-  /**
-   * Observable para el código postal.
-   */
-  codigoPostal$: Observable<string | null> =
-    this.tramite260911Query.codigoPostal$;
-
-  /**
-   * Observable para el estado.
-   */
-  estado$: Observable<Catalogo | null> = this.tramite260911Query.estado$;
-
-  /**
-   * Observable para el municipio o alcaldía.
-   */
-  municipioOAlcaldia$: Observable<string | null> =
-    this.tramite260911Query.municipioOAlcaldia$;
-
-  /**
-   * Observable para las colonias.
-   */
-  colonias$: Observable<string | null> = this.tramite260911Query.colonias$;
-
-  /**
-   * Observable para la calle.
-   */
-  calle$: Observable<string | null> = this.tramite260911Query.calle$;
-
-  /**
-   * Observable para la lada.
-   */
-  lada$: Observable<string | null> = this.tramite260911Query.lada$;
-
-  /**
-   * Observable para el teléfono.
-   */
-  telefono$: Observable<string | null> = this.tramite260911Query.telefono$;
-
-  /**
-   * Observable para el checkbox de aviso.
-   */
-  avisoCheckbox$: Observable<string | null> = this.tramite260911Query.avisoCheckbox$;
-
-  /**
-   * Observable para el régimen.
-   */
-  regimen$: Observable<Catalogo | null> = this.tramite260911Query.regimen$;
-
-  /**
-   * Observable para las aduanas de entrada.
-   */
-  aduanasEntradas$: Observable<Catalogo | null> = this.tramite260911Query.aduanasEntradas$;
-
-  /**
-   * Observable para el checkbox de AIFA.
-   */
-  aifaCheckbox$: Observable<string | null> = this.tramite260911Query.aifaCheckbox$;
-
-  /**
-   * Observable para los manifiestos.
-   */
-  manifests$: Observable<string | null> = this.tramite260911Query.manifests$;
-
-  /**
-   * Observable para el acuerdo público.
-   */
-  acuerdoPublico$: Observable<string | null> = this.tramite260911Query.acuerdoPublico$;
-
-  /**
-   * Observable para el RFC.
-   */
-  rfc$: Observable<string | null> = this.tramite260911Query.rfc$;
-
   private destroy$ = new Subject<void>();
+
+  
+    /**
+     * Estado seleccionado del trámite 260911.
+     */
+    estadoSeleccionado!: Tramite260911State;
 
 
   /**
@@ -225,39 +158,13 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.getValorStore();
     this.crearFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
  
-    this.tramite260911Query.selectTramite260911$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.form.patchValue({
-        codigoPostal: data.codigoPostal,
-        estado: data.estado,
-        municipioOAlcaldia: data.municipioOAlcaldia,
-        localidad: data.localidad,
-        colonias: data.colonias,
-        calle: data.calle,
-        lada: data.lada,
-        telefono: data.telefono,
-      });
- 
-      this.domicilio.patchValue({
-        avisoCheckbox: data.avisoCheckbox,
-        regimen: data.regimen,
-        aduanasEntradas: data.aduanasEntradas,
-        aifaCheckbox: data.aifaCheckbox,
-        manifests: data.manifests,
-      });
- 
-      this.representanteLegal.patchValue({
-        acuerdoPublico: data.acuerdoPublico,
-        rfc: data.rfc,
-      });
-    });
-  }
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -270,7 +177,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
   crearFormulario(): void {
     this.form = this.fb.group({
       codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
+      estado: [],
       municipioOAlcaldia: ['', [Validators.required]],
       localidad: [''],
       colonias: [''],
@@ -335,122 +242,28 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
   }
 
   /**
-   * Método para obtener el valor del código postal.
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
    */
-  getCodigoPostal(): void {
-    const CODING_POSTAL = this.form.get('codigoPostal')?.value;
-    this.tramite260911Store.setCodigoPostal(CODING_POSTAL);
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite260911Store.setTramite260911State({
+      [control]: VALOR
+    });
   }
 
   /**
-   * Método para obtener el valor del estado.
+   * Obtiene el estado actual del trámite desde el store.
    */
-  getEstado(): void {
-    const ESTADO = this.form.get('estado')?.value;
-    this.tramite260911Store.setEstado(ESTADO);
+  getValorStore(): void {
+    this.tramite260911Query.selectTramite260911$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
   }
-
-  /**
-   * Método para obtener el valor del municipio o alcaldía.
-   */
-  getMunicipioOAlcaldia(): void {
-    const MUNICIPIO_OALCALDIA = this.form.get('municipioOAlcaldia')?.value;
-    this.tramite260911Store.setMunicipioOAlcaldia(MUNICIPIO_OALCALDIA);
   }
-
-  /**
-   * Método para obtener el valor de la localidad.
-   */
-  getLocalidad(): void {
-    const LOCALIDAD = this.form.get('localidad')?.value;
-    this.tramite260911Store.setLocalidad(LOCALIDAD);
-  }
-
-  /**
-   * Método para obtener el valor de las colonias.
-   */
-  getColonias(): void {
-    const COLONIAS = this.form.get('colonias')?.value;
-    this.tramite260911Store.setColonias(COLONIAS);
-  }
-
-  /**
-   * Método para obtener el valor de la calle.
-   */
-  getCalle(): void {
-    const CALLE = this.form.get('calle')?.value;
-    this.tramite260911Store.setCalle(CALLE);
-  }
-
-  /**
-   * Método para obtener el valor de la lada.
-   */
-  getLada(): void {
-    const LADA = this.form.get('lada')?.value;
-    this.tramite260911Store.setLada(LADA);
-  }
-
-  /**
-   * Método para obtener el valor del teléfono.
-   */
-  getTelefono(): void {
-    const TELEFONO = this.form.get('telefono')?.value;
-    this.tramite260911Store.setTelefono(TELEFONO);
-  }
-
-  /**
-   * Método para obtener el valor del checkbox de aviso.
-   */
-  getAvisoCheckbox(): void {
-    const AVISO_CHECKBOX = this.domicilio.get('avisoCheckbox')?.value;
-    this.tramite260911Store.setAvisoCheckbox(AVISO_CHECKBOX);
-  }
-
-  /**
-   * Método para obtener el valor del régimen.
-   */
-  getRegimen(): void {
-    const REGIMEN = this.domicilio.get('regimen')?.value;
-    this.tramite260911Store.setRegimen(REGIMEN);
-  }
-
-  /**
-   * Método para obtener el valor de las aduanas de entrada.
-   */
-  getAduanasEntradas(): void {
-    const ADUANAS_ENTRADAS = this.domicilio.get('aduanasEntradas')?.value;
-    this.tramite260911Store.setAduanasEntradas(ADUANAS_ENTRADAS);
-  }
-
-  /**
-   * Método para obtener el valor del checkbox de AIFA.
-   */
-  getAifaCheckbox(): void {
-    const AIFA_CHECKBOX = this.domicilio.get('aifaCheckbox')?.value;
-    this.tramite260911Store.setAifaCheckbox(AIFA_CHECKBOX);
-  }
-
-  /**
-   * Método para obtener el valor de los manifiestos.
-   */
-  getManifests(): void {
-    const MANIFESTS = this.domicilio.get('manifests')?.value;
-    this.tramite260911Store.setManifests(MANIFESTS);
-  }
-
-  /**
-   * Método para obtener el valor del acuerdo público.
-   */
-  getAcuerdoPublico(): void {
-    const ACUERDO_PUBLICO = this.representanteLegal.get('acuerdoPublico')?.value;
-    this.tramite260911Store.setAcuerdoPublico(ACUERDO_PUBLICO);
-  }
-
-  /**
-   * Método para obtener el valor del RFC.
-   */
-  getRfc(): void {
-    const RFC = this.representanteLegal.get('rfc')?.value;
-    this.tramite260911Store.setRFC(RFC);
-  }
-}

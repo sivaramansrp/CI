@@ -8,13 +8,14 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { BancoList } from '../../models/pago-de-derechos.model';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite260911State,Tramite260911Store } from '../../estados/tramite260911.store';
+
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/datos-de-la-solicitud/pago-de-derechos.service';
 
-import { Tramite260911Query } from '../../estados/queries/tramite260911.query'
-import { Tramite260911Store } from '../../estados/store/tramite260911.store';
+import { Tramite260911Query } from '../../estados/tramite260911.query'
+
 
 /**
  * Selector del componente
@@ -44,6 +45,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public destroyed$ = new Subject<void>();
 
+  
+      /**
+       * Estado seleccionado del trámite 260911.
+       */
+      estadoSeleccionado!: Tramite260911State;
+  
+
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
@@ -70,7 +78,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearForm();
-    this.enPatchStoredFormData();
+    this.getValorStore();
     this.obtenerBancoList();
   }
 
@@ -159,31 +167,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param campo - El nombre del campo en el formulario.
    * @param metodoNombre - El método en la tienda para actualizar el estado.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260911Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite260911Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  public setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite260911Store.setTramite260911State({
+      [control]: VALOR
+    });
   }
 
   /**
    * Actualiza el formulario con datos obtenidos desde la tienda.
    */
-  public enPatchStoredFormData(): void {
-    this.tramite260911Query.selectTramite260911$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
-  }
+  // public enPatchStoredFormData(): void {
+  //   this.tramite260911Query.selectTramite260911$
+  //     .pipe(
+  //       takeUntil(this.destroyed$),
+  //       map((seccionState) => {
+  //         this.pagoDeDerechosForm.patchValue({
+  //           claveDeReferencia: seccionState.claveDeReferencia,
+  //           cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
+  //           clave: seccionState.clave,
+  //           llaveDePago: seccionState.llaveDePago,
+  //           fecPago: seccionState.fecPago,
+  //           impPago: seccionState.impPago,
+  //         });
+  //       })
+  //     )
+  //     .subscribe();
+  // }
 
 
  
@@ -198,6 +208,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+ 
+
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite260911Query.selectTramite260911$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
   }
 
   /**
