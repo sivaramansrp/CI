@@ -45,6 +45,61 @@ export interface Solicitud32605State {
   transportistaIdRFC: string;
   transportistaIdRazonSocial: string;
   transportistaIdCaat: string;
+
+  /**
+   * Carácter del miembro en la solicitud.
+   */
+  miembroCaracterDe: string | number;
+
+  /**
+   * Indica si el miembro tiene obligación de tributar en México.
+   */
+  miembroTributarMexico: number | string;
+
+  /**
+   * Nacionalidad del miembro.
+   */
+  miembroNacionalidad: string | number;
+
+  /**
+   * Registro Federal de Contribuyentes (RFC) del miembro.
+   */
+  miembroRfc: string;
+
+  /**
+   * Registro federal del miembro ante autoridades pertinentes.
+   */
+  miembroRegistroFederal: string;
+
+  /**
+   * Nombre completo del miembro.
+   */
+  miembroNombreCompleto: string;
+
+  /**
+   * Tipo de persona muestra en la solicitud.
+   */
+  miembroTipoPersonaMuestra: string | number;
+
+  /**
+   * Nombre del miembro.
+   */
+  miembroNombre: string;
+
+  /**
+   * Apellido paterno del miembro.
+   */
+  miembroApellidoPaterno: string;
+
+  /**
+   * Apellido materno del miembro.
+   */
+  miembroApellidoMaterno: string;
+
+  /**
+   * Nombre de la empresa del miembro.
+   */
+  miembroNombreEmpresa: string;
 }
 
 export function createInitialSolicitudState(): Solicitud32605State {
@@ -91,6 +146,18 @@ export function createInitialSolicitudState(): Solicitud32605State {
     transportistaIdRFC: '',
     transportistaIdRazonSocial: '',
     transportistaIdCaat: '',
+
+    miembroCaracterDe: '',
+    miembroTributarMexico: 0,
+    miembroNacionalidad: '',
+    miembroRfc: '',
+    miembroRegistroFederal: '',
+    miembroNombreCompleto: '',
+    miembroTipoPersonaMuestra: '',
+    miembroNombre: '',
+    miembroApellidoPaterno: '',
+    miembroApellidoMaterno: '',
+    miembroNombreEmpresa: '',
   };
 }
 @Injectable({
@@ -258,6 +325,94 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
 
   actualizarTransportistaIdCaat(valor: string): void {
     this.update((state) => ({ ...state, transportistaIdCaat: valor }));
+  }
+
+  /**
+   * Actualiza el carácter del miembro.
+   * @param {string | number} valor - Valor del carácter del miembro.
+   */
+  actualizarMiembroCaracterDe(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroCaracterDe: valor }));
+  }
+
+  /**
+   * Actualiza la obligación de tributar en México.
+   * @param {number | string} valor - Valor de tributar en México.
+   */
+  actualizarMiembroTributarMexico(valor: number | string): void {
+    this.update((state) => ({ ...state, miembroTributarMexico: valor }));
+  }
+
+  /**
+   * Actualiza la nacionalidad del miembro.
+   * @param {string | number} valor - Valor de la nacionalidad.
+   */
+  actualizarMiembroNacionalidad(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroNacionalidad: valor }));
+  }
+
+  /**
+   * Actualiza el RFC del miembro.
+   * @param {string} valor - Valor del RFC.
+   */
+  actualizarMiembroRFC(valor: string): void {
+    this.update((state) => ({ ...state, miembroRfc: valor }));
+  }
+
+  /**
+   * Actualiza el registro federal del miembro.
+   * @param {string} valor - Valor del registro federal.
+   */
+  actualizarMiembroRegistroFederal(valor: string): void {
+    this.update((state) => ({ ...state, miembroRegistroFederal: valor }));
+  }
+
+  /**
+   * Actualiza el nombre completo del miembro.
+   * @param {string} valor - Nombre completo del miembro.
+   */
+  actualizarMiembroNombreCompleto(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombreCompleto: valor }));
+  }
+
+  /**
+   * Actualiza el tipo de persona muestra del miembro.
+   * @param {string | number} valor - Valor del tipo de persona muestra.
+   */
+  actualizarMiembroTipoPersonaMuestra(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroTipoPersonaMuestra: valor }));
+  }
+
+  /**
+   * Actualiza el nombre del miembro.
+   * @param {string} valor - Nombre del miembro.
+   */
+  actualizarMiembroNombre(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombre: valor }));
+  }
+
+  /**
+   * Actualiza el apellido paterno del miembro.
+   * @param {string} valor - Apellido paterno del miembro.
+   */
+  actualizarMiembroApellidoPaterno(valor: string): void {
+    this.update((state) => ({ ...state, miembroApellidoPaterno: valor }));
+  }
+
+  /**
+   * Actualiza el apellido materno del miembro.
+   * @param {string} valor - Apellido materno del miembro.
+   */
+  actualizarMiembroApellidoMaterno(valor: string): void {
+    this.update((state) => ({ ...state, miembroApellidoMaterno: valor }));
+  }
+
+  /**
+   * Actualiza el nombre de la empresa del miembro.
+   * @param {string} valor - Nombre de la empresa.
+   */
+  actualizarMiembroNombreEmpresa(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombreEmpresa: valor }));
   }
 
   /**

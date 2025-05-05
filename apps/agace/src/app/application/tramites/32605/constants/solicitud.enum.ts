@@ -3,8 +3,12 @@ import {
   InputFecha,
 } from '@libs/shared/data-access-user/src';
 import {
+  Domicilios,
   EnlaceOperativo,
+  Inventarios,
+  NumeroDeEmpleados,
   RecibirNotificaciones,
+  SeccionSociosIC,
   TransportistasTable,
 } from '../models/solicitud.model';
 
@@ -183,5 +187,193 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
       encabezado: 'Registro CAAT vigente',
       clave: (item: TransportistasTable) => item.caat,
       orden: 4,
+    },
+  ];
+
+export const NUMERO_DE_EMPLEADOS_CONFIGURACION: ConfiguracionColumna<NumeroDeEmpleados>[] =
+  [
+    {
+      encabezado: 'Denominacion Social',
+      clave: (item: NumeroDeEmpleados) => item.denominacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'RFC',
+      clave: (item: NumeroDeEmpleados) => item.RFC,
+      orden: 2,
+    },
+    {
+      encabezado: 'Numero de Empleados',
+      clave: (item: NumeroDeEmpleados) => item.numeroDeEmpleados,
+      orden: 3,
+    },
+    {
+      encabezado: 'Bimestre',
+      clave: (item: NumeroDeEmpleados) => item.Bimestre,
+      orden: 4,
+    },
+  ];
+
+export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>[] =
+  [
+    {
+      /** Instalaciones principales de la empresa */
+      encabezado: 'Instalaciones principales',
+      clave: (item: Domicilios) => item.instalacionPrincipal,
+      orden: 1,
+    },
+    {
+      /** Tipo de instalación */
+      encabezado: 'Tipo de instalación',
+      clave: (item: Domicilios) => item.tipoInstalacion,
+      orden: 1,
+    },
+    {
+      /** Entidad federativa donde está ubicada la instalación */
+      encabezado: 'Entidad federativa',
+      clave: (item: Domicilios) => item.entidadFederativa,
+      orden: 1,
+    },
+    {
+      /** Municipio o delegación donde está ubicada la instalación */
+      encabezado: 'Municipio o delegación',
+      clave: (item: Domicilios) => item.municipioDelegacion,
+      orden: 1,
+    },
+    {
+      /** Dirección completa: colonia, calle y número */
+      encabezado: 'Colonia, calle y número',
+      clave: (item: Domicilios) => item.direccion,
+      orden: 1,
+    },
+    {
+      /** Código postal del domicilio */
+      encabezado: 'Código postal',
+      clave: (item: Domicilios) => item.codigoPostal,
+      orden: 1,
+    },
+    {
+      /** Registro ante SE/SAT */
+      encabezado: 'Registro an SE/SAT',
+      clave: (item: Domicilios) => item.registroSESAT,
+      orden: 1,
+    },
+    {
+      /** Proceso productivo realizado en la instalación */
+      encabezado: 'Proceso Productivo',
+      clave: (item: Domicilios) => item.procesoProductivo,
+      orden: 1,
+    },
+    {
+      encabezado: 'Acredita el uso y Goce del Inmueble',
+      clave: (item: Domicilios) => item.acreditaInmueble,
+      orden: 1,
+    },
+    {
+      encabezado: 'Realiza operaciones de Comercio Exterior',
+      clave: (item: Domicilios) => item.operacionesCExt,
+      orden: 1,
+    },
+    {
+      encabezado: 'Reconocimiento Mutuo (Instalaci\u00F3n C-TPAT)',
+      clave: (item: Domicilios) => item.instalacionCtpat,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil de la empresa',
+      clave: (item: Domicilios) => item.instalacionPerfil,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil del Recinto Fiscalizado Estrategico',
+      clave: (item: Domicilios) => item.instalacionPerfilRFE,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil del Auto Transportista Terrestre',
+      clave: (item: Domicilios) => item.instalacionPerfilAuto,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil del Transportista Ferroviario',
+      clave: (item: Domicilios) => item.instalacionPerfilFerro,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil del Recinto Fiscalizado',
+      clave: (item: Domicilios) => item.instalacionPerfilRf,
+      orden: 1,
+    },
+    {
+      encabezado: 'Perfil de Mensajeria y Paqueteria',
+      clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
+      orden: 1,
+    },
+  ];
+
+export const INVENTARIOS_CONFIGURACION: ConfiguracionColumna<Inventarios>[] = [
+  {
+    encabezado: 'Nombre del sistema o datos para su identificación',
+    clave: (item: Inventarios) => item.nombre,
+    orden: 1,
+  },
+  {
+    encabezado: 'Lugar de radicación',
+    clave: (item: Inventarios) => item.lugarRadicacion,
+    orden: 2,
+  },
+  {
+    encabezado:
+      'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
+    clave: (item: Inventarios) => item.anexo24,
+    orden: 3,
+  },
+];
+
+/** Configuración de columnas para Sección de Socios IC */
+export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<SeccionSociosIC>[] =
+  [
+    {
+      /** Tipo de Persona */
+      encabezado: 'Tipo de Persona',
+      clave: (item: SeccionSociosIC) => item.tipoPersonaMuestra,
+      orden: 1,
+    },
+    {
+      /** Nombre completo */
+      encabezado: 'Nombre',
+      clave: (item: SeccionSociosIC) => item.nombreCompleto,
+      orden: 1,
+    },
+    {
+      /** RFC del Socio IC */
+      encabezado: 'RFC',
+      clave: (item: SeccionSociosIC) => item.rfc,
+      orden: 1,
+    },
+    {
+      /** Carácter en que actúa el Socio IC */
+      encabezado: 'En su carácter de',
+      clave: (item: SeccionSociosIC) => item.caracterDe,
+      orden: 1,
+    },
+    {
+      /** Carácter en que actúa el Socio IC */
+      encabezado: 'Nacionalidad',
+      clave: (item: SeccionSociosIC) => item.nacionalidad,
+      orden: 1,
+    },
+
+    {
+      /** ¿Obligado a tributar en México? */
+      encabezado: 'Obligado a tributar en México',
+      clave: (item: SeccionSociosIC) => item.tributarMexico,
+      orden: 1,
+    },
+    {
+      /** Nombre de la empresa */
+      encabezado: 'Nombre de la empresa',
+      clave: (item: SeccionSociosIC) => item.nombreEmpresa,
+      orden: 1,
     },
   ];

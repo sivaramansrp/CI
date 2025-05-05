@@ -1,6 +1,7 @@
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
@@ -21,6 +22,7 @@ import { ViewChild } from '@angular/core';
     ImportadorExportadorComponent,
     CTPATComponent,
     TercerosRelacionadosComponent,
+    DatosComunesComponent
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
@@ -36,7 +38,7 @@ export class PasoUnoComponent {
    * Índice utilizado para identificar la pestaña activa dentro del paso.
    * @type {number}
    */
-  indice: number = 4;
+  indice: number = 2;
 
 
   /**

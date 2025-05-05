@@ -5,6 +5,7 @@ import {
   EnlaceOperativo,
   RecibirNotificaciones,
   RepresentanteLegal,
+  SolicitudCatologoSelectLista,
   SolicitudRadioLista,
   TransportistasTable,
 } from '../models/solicitud.model';
@@ -58,4 +59,9 @@ export class SolicitudService {
     );
   }
 
+  conseguirSolicitudCatologoSelectLista(): Observable<SolicitudCatologoSelectLista> {
+    return this.http.get<SolicitudCatologoSelectLista>(
+      'assets/json/32605/solicitud-catologo-select-lista.json'
+    );
+  }
 }
