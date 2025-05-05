@@ -1,10 +1,10 @@
-import { Component, ViewChild, inject} from '@angular/core';
+import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
 import { AVISO, DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { Component, ViewChild, inject} from '@angular/core';
 import { WizardComponent, WizardService } from '@ng-mf/data-access-user';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
 import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
-import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
 
 /**
  * @description
@@ -94,12 +94,11 @@ export class PantallasComponent {
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del paso.
    */
 
-    getValorIndice(e: AccionBoton): void {
+    getValorIndice(e: AccionBoton): void { 
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
           if (e.accion === 'cont') {
               this.continuar(e);
-             console.log(this.validacionDeFormularioService.getFormValue('programaSeleccionadoForm'));
           } else if (e.accion === 'ant' && this.esFormaValido) {
               this.indice = e.valor - 1;
               this.datosPasos.indice = e.valor - 1;
@@ -122,6 +121,7 @@ export class PantallasComponent {
       this.datosPasos.indice = e.valor + 1;
       this.wizardService.cambio_indice(this.datosPasos.indice);
       this.wizardComponent.siguiente();
+      console.log('programaSeleccionadoForm value',this.validacionDeFormularioService.getFormValue('programaSeleccionadoForm'));
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }

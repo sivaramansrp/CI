@@ -1,12 +1,12 @@
 import { CancelacionState, CancelacionStore } from '../../estados/cancelacion-de-autorizaciones.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject,map, takeUntil} from 'rxjs';
 import { CancelacionQuery } from '../../estados/cancelacion-de-autorizaciones.query';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { PROGRAMA_SELECCIONADO } from '../../constants/programa-seleccionado.enum';
-import { map, Subject, takeUntil } from 'rxjs';
 import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
 
 @Component({
@@ -74,9 +74,9 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy{
     establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
       if (event) {
         this.cancelacionStore.setDynamicFieldValue(event.campo, event.valor);
-        // this.servicioDeFormularioService.setFormValue('insumosForm', {
-        //   [event.campo]: event.valor,
-        // });
+        this.validacionDeFormularioService.setFormValue('programaSeleccionadoForm', {
+          [event.campo]: event.valor,
+        });
       }
     }
     /**
