@@ -12,7 +12,7 @@
         <th>
           <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
             (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="filasSeleccionadas.length === datos.length" />
+            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " />
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->

@@ -451,6 +451,13 @@ const ROUTES: Routes = [
     import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
+},
+{
+  path: 'permiso-sanitario',
+  loadChildren: () =>
+    import('./tramites/260104/permiso-sanitario.module').then(
+      (m) => m.PermisoSanitarioModule
+    ),
 }
 ];
 
