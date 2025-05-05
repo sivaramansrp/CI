@@ -29,7 +29,7 @@ class PaisProcendenciaStubComponent {
 @Component({ selector: 'app-representacion', template: '' })
 class RepresentacionStubComponent {}
 
-const mockPartidasdelaTable = {
+const MOCK_PARTIDAS_TABLA = {
   cantidad :"10",
   unidadDeMedida :"kg",
   fraccionFrancelaria :"1234",
@@ -46,11 +46,11 @@ describe('SolicitudComponent', () => {
   let mockService: jest.Mocked<any>;
   let mockImportacionNeumaticosComercializarService: Partial<ImportacionNeumaticosComercializarService>;
 
-  const mockProductoOptions: ProductoOpción[] = [
+  const MOCK_PRODUCTO_OPTIONS: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
     { label: 'Usado', value: 'Usado' },
   ];
-  const mockCatalogo: Catalogo[] = [
+  const MOCK_CATALOGO: Catalogo[] = [
     { id: 1, descripcion: 'Option 1' },
     { id: 2, descripcion: 'Option 2' },
   ];
@@ -90,10 +90,10 @@ describe('SolicitudComponent', () => {
     } as any;
 
     mockService = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
     jest.spyOn(mockService, 'getEntidadFederativa');
 
@@ -118,19 +118,19 @@ describe('SolicitudComponent', () => {
 
   beforeEach(async () => {
     mockImportacionNeumaticosComercializarService = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getSolicitudeOptions: jest.fn().mockReturnValue(
         of({
-          options: mockProductoOptions,
+          options: MOCK_PRODUCTO_OPTIONS,
           defaultSelect: 'Inicial',
         })
       ),
       getProductoOptions: jest.fn().mockReturnValue(
         of({
-          options: mockProductoOptions,
+          options: MOCK_PRODUCTO_OPTIONS,
         })
       ),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])),
@@ -178,13 +178,13 @@ describe('SolicitudComponent', () => {
 
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+      const DESTROY_SPY = jest.spyOn(component['destroyed$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
 
       component.ngOnDestroy();
 
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
+      expect(DESTROY_SPY).toHaveBeenCalled();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
     });
   });
 });

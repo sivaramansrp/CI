@@ -129,11 +129,11 @@ describe('SolicitudComponent', () => {
 
   describe('setValoresStore', () => {
     it('debería actualizar el store con el valor proporcionado', () => {
-      const mockForm = TestBed.inject(FormBuilder).group({
+      const MOCK_FORM = TestBed.inject(FormBuilder).group({
         fraccion: ['1234'],
       });
 
-      component.setValoresStore({ form: mockForm, campo: 'fraccion' });
+      component.setValoresStore({ form: MOCK_FORM, campo: 'fraccion' });
 
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ fraccion: '1234' });
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ unidadMedida: '1' });
@@ -167,12 +167,12 @@ describe('SolicitudComponent', () => {
 
   describe('manejarlaFilaSeleccionada', () => {
     it('debería actualizar las filas seleccionadas en el store', () => {
-      const mockRows = [{ id: 1, descripcion: 'Test' }] as any;
+      const MOCK_ROWS = [{ id: 1, descripcion: 'Test' }] as any;
 
-      component.manejarlaFilaSeleccionada(mockRows);
+      component.manejarlaFilaSeleccionada(MOCK_ROWS);
 
-      expect(component.filaSeleccionada).toEqual(mockRows);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(mockRows);
+      expect(component.filaSeleccionada).toEqual(MOCK_ROWS);
+      expect(mockStore.storeTableValues).toHaveBeenCalledWith(MOCK_ROWS);
     });
   });
 
