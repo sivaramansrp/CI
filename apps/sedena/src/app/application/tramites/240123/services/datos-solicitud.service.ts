@@ -18,19 +18,6 @@ export class DatosSolicitudService {
   private jsonUrl = 'assets/json/240123/exportacion-datos.json';
 
   constructor(public httpServicios: HttpClient) {}
-  /**
-   * Obtiene una respuesta desde una URL y asigna los datos a una variable.
-   *
-   * @param {string} variable - El nombre de la variable donde se almacenarán los datos de la respuesta.
-   * @param {string} url - La URL desde la cual se obtendrá la respuesta.
-   * @param {Object} self - El objeto que contiene la variable donde se almacenarán los datos de la respuesta.
-   * @returns {void}
-   * @author Muneez
-   * @remarks
-   * Si la variable y la URL son válidas, se realiza una solicitud HTTP GET a la URL especificada.
-   * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
-   * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
-   */
 
   /**
    * Obtiene la lista de países desde el archivo JSON.
