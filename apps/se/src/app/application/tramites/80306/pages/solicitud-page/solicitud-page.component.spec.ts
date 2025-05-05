@@ -1,17 +1,11 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {Pipe,PipeTransform,Injectable,CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA,Directive,Input,Output} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
+  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

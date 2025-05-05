@@ -3,11 +3,11 @@ import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf, throwError } from 'rxjs';
 import { BitacoraComponent } from './bitacora.component';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 
 @Injectable()
-class MockModificacionSolicitudeService {}
+class MockImmerModificacionService {}
 
 @Injectable()
 class MockToastrService {
@@ -28,12 +28,12 @@ describe('BitacoraComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService },
+        { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
         ToastrService
       ]
     }).overrideComponent(BitacoraComponent, {
 
-      set: { providers: [{ provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService },
+      set: { providers: [{ provide: ImmerModificacionService, useClass: MockImmerModificacionService },
 { provide: ToastrService, useClass: MockToastrService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(BitacoraComponent);

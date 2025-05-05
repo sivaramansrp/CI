@@ -3,22 +3,22 @@ import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
-import { Tramite80308Query } from '../../../80308/estados/tramite80308.query';
 import { of as observableOf } from 'rxjs';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
+import { Tramite80306Store } from '../../../../estados/tramites/tramite80306.store';
+import { Tramite80306Query } from '../../../../estados/queries/tramite80306.query';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
 
 @Injectable()
-class MockTramite80308Store {
+class MockTramite80306Store {
   setFormValida = function() {};
 }
 
 @Injectable()
-class MockTramite80308Query {
+class MockTramite80306Query {
   selectEstado$ = observableOf({
     id: {}
   });
@@ -47,14 +47,14 @@ describe('AltaPlantaComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService },
+        { provide: ImmerModificacionService, useClass: MockModificacionSolicitudeService },
         ToastrService,
-        { provide: Tramite80308Store, useClass: MockTramite80308Store },
-        { provide: Tramite80308Query, useClass: MockTramite80308Query }
+        { provide: Tramite80306Store, useClass: MockTramite80306Store },
+        { provide: Tramite80306Query, useClass: MockTramite80306Query }
       ]
     }).overrideComponent(AltaPlantaComponent, {
 
-      set: { providers: [{ provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService },
+      set: { providers: [{ provide: ImmerModificacionService, useClass: MockModificacionSolicitudeService },
 { provide: ToastrService, useClass: MockToastrService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(AltaPlantaComponent);

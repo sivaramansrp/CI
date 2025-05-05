@@ -1,4 +1,4 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
+import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';

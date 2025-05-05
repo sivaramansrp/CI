@@ -1,18 +1,12 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: { ngOnDestroy: () => void; ngAfterViewInit: () => void; seleccionaTab: (arg0: {}) => void; continuarEvento: { emit?: any; }; continuar: () => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -55,7 +49,7 @@ describe('PasoUnoComponent', () => {
     component.continuarEvento = component.continuarEvento || {};
     component.continuarEvento.emit = jest.fn();
     component.continuar();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
+    expect(component.continuarEvento.emit).toHaveBeenCalled();
   });
 
 });

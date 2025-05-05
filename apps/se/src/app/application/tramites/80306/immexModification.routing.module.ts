@@ -1,9 +1,8 @@
-import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
+import { RegistroModificacionComponent } from './components/registro-modificacion/registro-modificacion.component';
 import { RouterModule, } from '@angular/router';
 import { Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { RegistroModificacionComponent } from './components/registro-modificacion/registro-modificacion.component';
 const ROUTES_CONTENEDOR: Routes = [
   {
     component: SolicitudPageComponent,

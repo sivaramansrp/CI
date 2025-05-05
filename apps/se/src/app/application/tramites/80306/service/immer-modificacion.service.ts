@@ -1,9 +1,9 @@
-import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
+import { Anexo, Bitacora, Complimentaria, DatosModificacion, DomicilioInfo, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -128,4 +128,29 @@ export class ImmerModificacionService {
     return this.http
       .get<Operacions[]>('assets/json/80306/servicios.json').pipe(map((res: any) => res.data));
   }
+
+  /**
+     * Obtiene la lista de estados.
+     * @method obtenerListaEstado
+     * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
+     */
+    obtenerListaEstado(): Observable<Catalogo[]> {
+      return this.http
+        .get<Catalogo[]>('./assets/json/80306/estado.json').pipe(map((res: any) => res.data));
+    }
+  
+    obtenerDomicilios(): Observable<DomicilioInfo[]> {
+      return this.http
+        .get<DomicilioInfo[]>('assets/json/80306/domicilio.json').pipe(map((res: any) => res.data));
+    }
+  
+    obtenerBitacora(): Observable<Bitacora[]> {
+      return this.http
+        .get<Bitacora[]>('assets/json/80306/bitacora.json').pipe(map((res: any) => res.data));
+    }
+  
+    obtenerDatosGenerales(): Observable<DatosModificacion> {
+      return this.http
+        .get<DatosModificacion>('assets/json/80306/datos-modificacion.json').pipe(map((res: any) => res.data));
+    }
 }

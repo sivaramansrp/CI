@@ -1,16 +1,15 @@
-import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { CONFIGURACION_DOMICILIOS } from '../../../80308/constantes/modificacion.enum';
+import { CONFIGURACION_DOMICILIOS } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import { DomicilioInfo } from '../../../80308/models/plantas-consulta.model';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
+import { DomicilioInfo } from '../../estados/models/plantas-consulta.model';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite80308Query } from '../../../80308/estados/tramite80308.query';
-import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
+import { Tramite80306Query } from '../../estados/tramite80306.query';
+import { Tramite80306Store } from '../../estados/tramite80308.store';
 
 @Component({
   selector: 'app-alta-planta',
@@ -22,7 +21,7 @@ import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [ImmerModificacionService, ToastrService],
 })
 export class AltaPlantaComponent implements OnInit, OnDestroy {
   /**
@@ -87,10 +86,10 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    public modificionService: ModificacionSolicitudeService,
+    public modificionService: ImmerModificacionService,
     private toastr: ToastrService,
-    private store: Tramite80308Store,
-    private tramiteQuery: Tramite80308Query
+    private store: Tramite80306Store,
+    private tramiteQuery: Tramite80306Query
   ) {
 
     // Inicialización del formulario para la entidad federativa.
@@ -134,15 +133,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * Realiza una llamada al servicio para obtener la lista de estados.
    */
   cargarEstados(): void {
-    this.modificionService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
+    this.modificionService.obtenerListaEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (data: Catalogo[]) => {
           this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }
@@ -155,10 +148,7 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
     const ENTIDAD = this.formularioControl?.value;
 
     if (ENTIDAD && ENTIDAD !== '-1') {
-      this.modificionService
-        .obtenerDomicilios()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
+      this.modificionService.obtenerDomicilios().pipe(takeUntil(this.destroyNotifier$)).subscribe(
           (data: DomicilioInfo[]) => {
             this.store.setbuscarDomicilios(data);
           },

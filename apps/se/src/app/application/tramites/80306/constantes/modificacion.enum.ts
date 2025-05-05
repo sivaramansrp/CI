@@ -389,12 +389,6 @@ export const CONFIGURACION_SERVICIOS = [
  * - `encabezado`: Nombre de la columna que se mostrará en la interfaz de usuario.
  * - `clave`: Función que toma un objeto `Operacions` y devuelve el valor correspondiente para la columna.
  * - `orden`: Número que indica la posición de la columna en la tabla.
- * 
- * Ejemplo de uso:
- * ```typescript
- * CONFIGURACION_PLANTA.forEach(config => {
- *   console.log(config.encabezado, config.clave(operacion), config.orden);
- * });
  * ```
  */
 export const CONFIGURACION_PLANTA = [
@@ -477,11 +471,6 @@ export const CONFIGURACION_PLANTA = [
  * @property {(ele: Operacions) => string | undefined} clave - Una función que toma un objeto de tipo `Operacions` y devuelve el valor correspondiente para la columna.
  * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
  * 
- * @example
- * // Ejemplo de uso:
- * CONFIGURACION_EMPRESAS.forEach(columna => {
- *   console.log(columna.encabezado); // Muestra el encabezado de cada columna
- * });
  */
 export const CONFIGURACION_EMPRESAS = [
   {

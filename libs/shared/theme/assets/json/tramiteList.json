@@ -224,13 +224,6 @@
     "department": "se"
   },
   {
-    "id": 32,
-    "tramite": 80306,
-    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
-    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
-    "department": "se"
-  },
-  {
     "id": 33,
     "tramite": 80308,
     "linkDashboard": "/se/modificacion/solicitud",
@@ -4191,5 +4184,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 80306,
+    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
+    "department": "se"
   }
 ]

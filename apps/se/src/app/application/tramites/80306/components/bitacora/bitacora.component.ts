@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../80308/models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,7 +18,7 @@ import { ToastrService } from 'ngx-toastr';
     TituloComponent,
     ComplementariaImmexComponent,
   ],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [ImmerModificacionService, ToastrService],
 })
 export class BitacoraComponent implements OnDestroy, OnInit {
   /**
@@ -50,11 +49,11 @@ export class BitacoraComponent implements OnDestroy, OnInit {
    * @param toastr - Servicio para mostrar notificaciones al usuario.
    *
    * Este constructor inicializa el componente y realiza una suscripción al método `obtenerBitacora` del servicio
-   * `ModificacionSolicitudeService`. Los datos obtenidos se almacenan en la variable `datos`. En caso de error,
+   * `ImmerModificacionService`. Los datos obtenidos se almacenan en la variable `datos`. En caso de error,
    * se muestra una notificación al usuario utilizando el servicio `ToastrService`.
    */
   constructor(
-    public modificionService: ModificacionSolicitudeService,
+    public modificionService: ImmerModificacionService,
     private toastr: ToastrService
   ) {}
 
