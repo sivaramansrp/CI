@@ -13,5 +13,15 @@
         <ng-titulo titulo="Datos de las plantas donde se realizarán las operaciones IMMEX" />
         <app-tabla-dinamica [configuracionTabla]="configuracionOperacion" [datos]="datosOperacions" ></app-tabla-dinamica>
     </div>
+
+    <div class="row">
+        <ng-titulo titulo="Empresas submanufactureras" />
+        <app-tabla-dinamica [configuracionTabla]="configuracionEmpresas" [datos]="datosEmpresas" ></app-tabla-dinamica>
+    </div>
+
+    <div class="row">
+        <ng-titulo titulo="Planatas manufactureras" />
+        <app-tabla-dinamica [configuracionTabla]="configuracionPlantas" [datos]="datosPlantas" ></app-tabla-dinamica>
+    </div>
 </div>
 <app-datos-certificacion></app-datos-certificacion>

@@ -1,6 +1,6 @@
 // import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../../80308/models/plantas-consulta.model";
-import { DatosDelModificacion } from "../models/datos-tramite.model";
+import { DatosDelModificacion, Empresas, Plantas } from "../models/datos-tramite.model";
 
 export const PASOS = [
   {
@@ -348,3 +348,99 @@ export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
+
+export const CONFIGURACION_EMPRESAS = [
+  {
+    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    clave: (ele: Empresas): string | undefined => ele.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'razón social',
+    clave: (ele: Empresas): string | undefined => ele.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'calle',
+    clave: (ele: Empresas): string | undefined => ele.calle,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Empresas): string | undefined => ele.numeroExterior,
+    orden: 4,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Empresas): string | undefined => ele.numeroInterior,
+    orden: 5,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Empresas): string | undefined => ele.codigoPostal,
+    orden: 6,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Empresas): string | undefined => ele.colonia,
+    orden: 7,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Empresas): string | undefined => ele.delegacionMunicipio,
+    orden: 8,
+  },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (ele: Empresas): string | undefined => ele.entidadFederativa,
+    orden: 9,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: Empresas): string | undefined => ele.pais,
+    orden: 10,
+  },
+  {
+    encabezado: 'Teléfono',
+    clave: (ele: Empresas): string | undefined => ele.telefono,
+    orden: 11,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Empresas): string | undefined => ele.estatus ? 'Activada' : 'Baja',
+    orden: 12,
+  }
+];
+
+export const CONFIGURACION_PLANTAS = [
+  {
+    encabezado: 'Calle',
+    clave: (ele: Plantas): string | undefined => ele.calle,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Plantas): string | undefined => ele.numeroExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Plantas): string | undefined => ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Plantas): string | undefined => ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Plantas): string | undefined => ele.colonia,
+    orden: 5,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Plantas): string | undefined => ele.delegacionMunicipio,
+    orden: 6,
+  }
+];

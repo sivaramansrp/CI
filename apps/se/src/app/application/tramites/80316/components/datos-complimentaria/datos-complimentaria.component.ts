@@ -1,4 +1,4 @@
-import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../constantes/modificacion.enum';
+import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_EMPRESAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES, CONFIGURACION_PLANTAS } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
 import { Complimentaria, Federetarios, Operacions } from '../../../80308/models/plantas-consulta.model';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Empresas, Plantas } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-complimentaria',
@@ -51,6 +52,20 @@ export class DatosComplimentariaComponent implements OnDestroy {
     CONFIGURACION_OPERACIONES;
 
   /**
+   * Configuración de las columnas de la tabla para las Empresas.
+   * @type {ConfiguracionColumna<Empresas>[]}
+   */
+  configuracionEmpresas: ConfiguracionColumna<Empresas>[] =
+  CONFIGURACION_EMPRESAS;
+
+  /**
+   * Configuración de las columnas de la tabla para las Plantas.
+   * @type {ConfiguracionColumna<Plantas>[]}
+   */
+  configuracionPlantas: ConfiguracionColumna<Plantas>[] =
+  CONFIGURACION_PLANTAS;
+
+  /**
    * Datos de los federetarios obtenidos desde el servicio.
    * @type {Federetarios[]}
    */
@@ -61,6 +76,18 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * @type {Operacions[]}
    */
   datosOperacions: Operacions[] = [];
+
+  /**
+   * Datos de las Empresas obtenidos desde el servicio.
+   * @type {Empresas[]}
+   */
+  datosEmpresas: Empresas[] = [];
+
+  /**
+   * Datos de las Plantas obtenidos desde el servicio.
+   * @type {Plantas[]}
+   */
+  datosPlantas: Plantas[] = [];
 
   /**
    * Datos de la complimentaria obtenidos desde el servicio.
@@ -131,6 +158,43 @@ export class DatosComplimentariaComponent implements OnDestroy {
         }
       );
   }
+
+  /**
+   * Método que obtiene los datos de Empresas desde el servicio.
+   * Asigna los datos obtenidos a la variable `datosEmpresas`.
+   */
+  obtenerEmpresas(): void {
+    this.solicitudService
+      .obtenerEmpresas() 
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: Empresas[]) => {
+          this.datosEmpresas = [...data]; 
+        },
+        () => {
+          this.toastr.error('Error al cargar las Empresas'); 
+        }
+      );
+  }
+
+  /**
+   * Método que obtiene los datos de Plantas desde el servicio.
+   * Asigna los datos obtenidos a la variable `datosPlantas`.
+   */
+  obtenerPlantas(): void {
+    this.solicitudService
+      .obtenerPlantas() 
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: Plantas[]) => {
+          this.datosPlantas = [...data]; 
+        },
+        () => {
+          this.toastr.error('Error al cargar las Empresas'); 
+        }
+      );
+  }
+
 
   /**
    * Método que se ejecuta cuando el componente es destruido.

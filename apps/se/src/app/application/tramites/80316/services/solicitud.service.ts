@@ -3,7 +3,7 @@ import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { DatosDelModificacion } from '../models/datos-tramite.model';
+import { DatosDelModificacion, Empresas, Plantas } from '../models/datos-tramite.model';
 import { Anexo, Complimentaria, Federetarios, Operacions } from '../../80308/models/plantas-consulta.model';
 
 @Injectable({
@@ -44,18 +44,6 @@ export class SolicitudService {
     return this.http.get<RespuestaCatalogos>(`assets/json/80316/actividadProductiva.json`);
   }
 
-
-  // /**
-  //  * Obtener datos de la tabla
-  //  *
-  //  * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos de la tabla.
-  //  */
-  // getDatosTableData(): Observable<DatosDelModificacion[]> {
-  //   return this.http.get<DatosDelModificacion[]>(
-  //     `assets/json/80316/datosTabla.json`
-  //   );
-  // }
-
     /**
      * Obtiene una lista de objetos de tipo `Complimentaria` desde un archivo JSON local.
      * 
@@ -95,5 +83,13 @@ export class SolicitudService {
   obtenerOperacion(): Observable<Operacions[]> {
     return this.http
       .get<Operacions[]>('assets/json/80316/operacion.json').pipe(map((res: any) => res.data));
+  }
+
+  obtenerEmpresas(): Observable<Empresas[]> {
+    return this.http.get<Empresas[]>(`assets/json/80316/empresas.json`).pipe(map((res: any) => res.data));
+  }
+
+  obtenerPlantas(): Observable<Plantas[]> {
+    return this.http.get<Plantas[]>(`assets/json/80316/plantas.json`).pipe(map((res: any) => res.data));
   }
 }
