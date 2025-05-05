@@ -48,9 +48,11 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  showAlert: boolean = false; // Control visibility of alert-danger
-  mostrarModal: boolean | undefined;
+  /** Controla la visibilidad de la alerta de tipo "danger". */
+  showAlert: boolean = false;
 
+  /** Controla la visibilidad del modal. */
+  mostrarModal: boolean | undefined;
 
   /**
    * Constructor del componente.
@@ -71,9 +73,13 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
     this.indice = i;
   }
 
-
+  /** Notificación nueva que se mostrará en el modal. */
   public nuevaNotificacion!: Notificacion;
+
+  /** Índice del elemento que se desea eliminar. */
   elementoParaEliminar!: number;
+
+  /** Lista de pedimentos asociados. */
   pedimentos: Array<Pedimento> = [];
 
   
@@ -91,18 +97,22 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
       )
       .subscribe();
   }
-  eliminarPedimento(event: any): void {
-    console.log('Event received:', event); // Debugging
-    const borrar = typeof event === 'boolean' ? event : false; // Ensure it's a boolean
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    /**
+   * Método para eliminar un pedimento de la lista.
+   * Verifica si se debe eliminar y lo elimina según el índice especificado.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   */
+    eliminarPedimento(borrar: boolean): void {
+      if (borrar) {
+        this.pedimentos.splice(this.elementoParaEliminar, 1);
+      } 
     }
-    
-  }
-
+    /**
+   * Método para abrir un modal con una notificación.
+   * Configura los datos de la notificación y establece el índice del elemento relacionado.
+   * @param i Índice del elemento relacionado con la notificación (por defecto es 0).
+   */
   abrirModal(i: number = 0): void {
-    console.log('abrirModal executed');
-
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -114,12 +124,8 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     }
-    this.mostrarModal = true; // Ensure the modal is shown
-
     this.elementoParaEliminar = i;
   }
-
-
 
   /**
    * Método para manejar el cambio de paso en el wizard.
@@ -129,9 +135,9 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont' && this.indice === 1 && e.valor === 2) {
-        console.log('Navigation to step 2 is restricted.');
         this.showAlert = true; // Show the alert
         return; // Stop further execution
+        
       }
   
       this.indice = e.valor;
@@ -139,33 +145,19 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
         this.showAlert = true; // Show the alert only on "Continuar"
-        console.log('ShowAlert set to:', this.showAlert); // Debugging
       } else if (e.accion === 'atras') {
         this.wizardComponent.atras();
         this.showAlert = false; // Hide the alert on "Atras"
       }
     }
   }
-
-  onAlertClick(){
-    console.log("hi")
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'La entidad federativa seleccionada no cuenta con sucursales asociadas a su RFC para tramitar el Registro como Empresa de la Frontera',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    }
-    this.mostrarModal = true; // Ensure the modal is shown
-
-    console.log(this.nuevaNotificacion); // Debugging
-
+  /**
+   * Método que se ejecuta al hacer clic en la alerta.
+   * Abre el modal correspondiente con la notificación configurada.
+   */
+  onAlertClick(): void {
+    this.abrirModal();
   }
-
   /**
    * Método que se ejecuta al destruir el componente.
    * Completa el sujeto `destroyed$` para liberar recursos.

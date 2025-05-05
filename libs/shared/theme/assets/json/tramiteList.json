@@ -848,9 +848,9 @@
   },
   {
     "id": 122,
-    "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "tramite": 120603,
+    "linkDashboard": "/se/registro-como-expresa/registro-empresa",
+    "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
     "department": "se"
   },
   {

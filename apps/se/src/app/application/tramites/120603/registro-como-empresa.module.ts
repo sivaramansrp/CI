@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, NotificacionesComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from './components/datos-empresa/datos-empresa.component';
@@ -30,7 +30,8 @@ import { ToastrService } from 'ngx-toastr';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NotificacionesComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [ToastrService, RegistroComoEmpresaService],

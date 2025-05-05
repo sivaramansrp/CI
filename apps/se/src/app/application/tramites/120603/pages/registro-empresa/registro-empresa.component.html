@@ -7,16 +7,15 @@
       <div *ngIf="showAlert && indice === 1" class="alert alert-danger" role="alert" (click)="onAlertClick()">
         Corrija los siguientes errores: <br>
      1.Domicilio donde se almacenaran las mercancias a importar es un campo requerido
-      </div>      
-      <!-- @if (nuevaNotificacion) { -->
+      </div>     
+      @if (nuevaNotificacion) { 
         <section>
-          <p>Debug: {{ nuevaNotificacion | json }}</p> <!-- Debugging -->
-        <lib-notificaciones
+        <lib-notificaciones  
         [notificacionInput]="nuevaNotificacion"
         (confirmacionModal)="eliminarPedimento($event)">
         </lib-notificaciones>
         </section>
-        <!-- } -->
+      }
       <app-wizard [listaPasos]="pasos"></app-wizard>
 
     </div>
