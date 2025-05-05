@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+
 /**
- * Componente `PasoUnoComponent`.
+ * Componente que representa el paso uno de un trámite.
  * 
- * Este componente representa la lógica para manejar las pestañas en el paso uno de un trámite.
+ * @selector app-paso-uno
+ * @templateUrl ./paso-uno.component.html
+ * @styleUrl ./paso-uno.component.scss
  */
 @Component({
   selector: 'app-paso-uno',

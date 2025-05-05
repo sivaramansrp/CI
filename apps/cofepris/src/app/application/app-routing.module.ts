@@ -461,33 +461,12 @@ const ROUTES: Routes = [
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
-{   
-  path: 'exportacion-materias-primas-estupefacientes',
-  loadChildren: () =>
-    import(
-      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
-    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
-},
-{
-  path: 'modificacion-permiso-lab',
-  loadChildren: () =>
-    import('./tramites/260918/modificacion-permiso-lab.module').then(
-      (m) => m.ModificacionPermisoLabModule
-    )
-},
-{
-  path: 'sustancias-permitidas',
-  loadChildren: () =>
-    import('./tramites/260515/permit-de-substances.module').then(
-      (m) => m.PermitDeSubstancesModule
-    )
-},
 {
   path: 'permiso-sanitario-productos',
   loadChildren: () =>
     import('./tramites/260104/permiso-sanitario-productos.module').then(
       (m) => m.PermisoSanitarioProductosModule
-    )
+    ),
 }
 ];
 
