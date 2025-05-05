@@ -1,11 +1,14 @@
-
 /**
  * @module SharedModule
+ * @description
+ * Módulo compartido que contiene interfaces y modelos utilizados en el trámite.
  */
 
 /**
- * Interfaz para representar un paso en un asistente (wizard).
  * @interface ListaPasosWizard
+ * @description
+ * Interfaz para representar un paso en un asistente (wizard).
+ *
  * @property {number} indice - El índice del paso.
  * @property {string} titulo - El título del paso.
  * @property {boolean} activo - Indica si el paso está activo.
@@ -19,8 +22,10 @@ export interface ListaPasosWizard {
 }
 
 /**
- * Interfaz genérica para representar la respuesta de una API.
  * @interface RespuestaAPI
+ * @description
+ * Interfaz genérica para representar la respuesta de una API.
+ *
  * @template T - El tipo de datos que se esperan en la respuesta.
  * @property {number} code - El código de respuesta de la API.
  * @property {T} data - Los datos de la respuesta.
@@ -33,8 +38,10 @@ export interface RespuestaAPI<T> {
 }
 
 /**
- * Interfaz para representar un banco.
  * @interface Banco
+ * @description
+ * Interfaz para representar un banco.
+ *
  * @property {number} id - El identificador único del banco.
  * @property {string} value - El nombre o valor del banco.
  */
@@ -44,8 +51,10 @@ export interface Banco {
 }
 
 /**
- * Interfaz para definir la acción y el valor del botón.
  * @interface AccionBoton
+ * @description
+ * Interfaz para definir la acción y el valor del botón.
+ *
  * @property {string} accion - La acción del botón ('cont' o 'atras').
  * @property {number} valor - El índice del paso al que se navega.
  */

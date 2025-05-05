@@ -16,6 +16,7 @@ export class CambioModalidadQuery extends Query<CambioModalidadState> {
 
     /**
      * @constructor
+     * @descripción Constructor que inicializa la consulta con el store correspondiente.
      * @param {CambioModalidadStore} store - Inyección del store que maneja el estado de `CambioModalidadState`.
      */
     constructor(protected override store: CambioModalidadStore) {

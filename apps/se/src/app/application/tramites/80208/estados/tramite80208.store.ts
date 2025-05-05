@@ -11,6 +11,10 @@ import { Injectable } from '@angular/core';
  * @interface CambioModalidadState
  * @description
  * Representa el estado de la modalidad de cambio.
+ *
+ * @property {CambioDeModalidadForm} cambioDeModalidad - Datos del formulario de cambio de modalidad.
+ * @property {string} cambioModalidad - Modalidad de cambio seleccionada.
+ * @property {string} serviciosImmx - Servicios IMMEX asociados.
  */
 export interface CambioModalidadState {
     cambioDeModalidad: CambioDeModalidadForm;
@@ -46,6 +50,11 @@ export function createInitialState(): CambioModalidadState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'cambio-modalidad' })
 export class CambioModalidadStore extends Store<CambioModalidadState> {
+    /**
+     * @constructor
+     * @description
+     * Constructor que inicializa el estado con valores predeterminados.
+     */
     constructor() {
         super(createInitialState());
     }

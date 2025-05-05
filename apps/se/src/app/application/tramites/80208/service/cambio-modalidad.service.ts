@@ -4,22 +4,27 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
+/**
+ * @service CambioModalidadService
+ * @description
+ * Servicio para gestionar las operaciones relacionadas con el cambio de modalidad.
+ * Proporciona métodos para obtener datos simulados, servicios IMMEX y cambios de modalidad desde archivos JSON.
+ */
 @Injectable({
   providedIn: 'root'
 })  
-
 export class CambioModalidadService {
 
   /**
-   * URL base para obtener los datos simulados desde archivos JSON.
+   * @property {string} datosSimuladosUrl
+   * @description URL base para obtener los datos simulados desde archivos JSON.
    * @private
-   * @type {string}
    */
   private datosSimuladosUrl = '/assets/json/80208/';
 
   /**
-   * Constructor del servicio.
-   * 
+   * @constructor
+   * @description Constructor del servicio.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
@@ -27,8 +32,8 @@ export class CambioModalidadService {
   }
 
   /**
-   * Obtiene los datos simulados para el formulario de cambio de modalidad.
-   * 
+   * @method getDatosSimulados
+   * @description Obtiene los datos simulados para el formulario de cambio de modalidad.
    * @returns {Observable<CambioDeModalidadForm>} Observable que emite los datos del formulario.
    */
   getDatosSimulados(): Observable<CambioDeModalidadForm> {
@@ -36,8 +41,8 @@ export class CambioModalidadService {
   }
 
   /**
-   * Obtiene los servicios IMMEX desde un archivo JSON simulado.
-   * 
+   * @method getServiciosImmx
+   * @description Obtiene los servicios IMMEX desde un archivo JSON simulado.
    * @returns {Observable<RespuestaCatalogos>} Observable que emite la respuesta de los catálogos.
    */
   getServiciosImmx(): Observable<RespuestaCatalogos> {
@@ -45,8 +50,8 @@ export class CambioModalidadService {
   }
 
   /**
-   * Obtiene la respuesta del cambio de modalidad desde un archivo JSON simulado.
-   * 
+   * @method getCambioDeModalidad
+   * @description Obtiene la respuesta del cambio de modalidad desde un archivo JSON simulado.
    * @returns {Observable<CambioModalidadResponse>} Observable que emite la respuesta del cambio de modalidad.
    */
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {

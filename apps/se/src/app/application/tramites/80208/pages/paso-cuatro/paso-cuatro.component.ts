@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 /**
- * Este componente se utiliza para mostrar el subtítulo del asistente
- * Establecer el índice del subtítulov
+ * @component PasoCuatroComponent
+ * @description
+ * Componente utilizado para mostrar el subtítulo del asistente.
+ * Establece el índice del subtítulo correspondiente.
  */
 @Component({
   selector: 'app-paso-cuatro',

@@ -1,4 +1,3 @@
-
 /**
  * @description Este componente es responsable de manejar el flujo de pasos para la elegibilidad de textiles.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
@@ -27,6 +26,10 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * @description Este componente es responsable de manejar el flujo de pasos para la elegibilidad de textiles.
+ * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
+ */
 @Component({
   selector: 'app-solicitud-modalidad-page',
   templateUrl: './solicitud-modalidad-page.component.html',
@@ -35,22 +38,26 @@ interface AccionBoton {
 export class SolicitudModalidadPageComponent {
 
   /**
-   * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
+   * @property {Array<ListaPasosWizard>} pasos
+   * @description Array de pasos del asistente (wizard).
    */
   pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
-   * @property {WizardComponent} wizardComponent - Componente de wizard.
+   * @property {WizardComponent} wizardComponent
+   * @description Referencia al componente del asistente (wizard).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property {number} indice - El índice del paso actual.
+   * @property {number} indice
+   * @description Índice del paso actual en el asistente.
    */
   indice: number = 1;
 
   /**
-   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   * @property {DatosPasos} datosPasos
+   * @description Datos relacionados con los pasos del asistente.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -60,11 +67,10 @@ export class SolicitudModalidadPageComponent {
   };
 
   /**
- * Notificador para destruir los observables y evitar posibles fugas de memoria.
- * @private
- * @type {Subject<void>}
- */
-
+   * @constructor
+   * @description Constructor que inicializa el componente y sus dependencias.
+   * @param {CambioModalidadQuery} cambioModalidadQuery - Servicio para consultar el estado del cambio de modalidad.
+   */
   constructor(
     public cambioModalidadQuery: CambioModalidadQuery,
     // eslint-disable-next-line no-empty-function
@@ -72,9 +78,9 @@ export class SolicitudModalidadPageComponent {
   }
 
   /**
-   * Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   *
-   * @param e - Objeto de acción que contiene la acción y el valor a manejar.
+   * @method getValorIndice
+   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (cont) o retroceder (atras).
    */
