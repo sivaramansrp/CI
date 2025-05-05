@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'autorizacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90102/autorizacion-prosec-productor.module').then(
+        (m) => m.AutorizacionProsecProductorModule
+      ),
+  },
   
 ];
 
