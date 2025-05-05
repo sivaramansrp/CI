@@ -489,6 +489,13 @@ const ROUTES: Routes = [
           (m) => m.ImportacionRetornoSanitarioModule
         ),
 },
+{
+  path: 'permiso-nutrientes-exportacion',
+  loadChildren: () =>
+    import('./tramites/260511/permiso-nutrientes-exportacion.module').then(
+      (m) => m.PermisoNutrientesExportacionModule
+    ),
+},
 ];
 
 @NgModule({
