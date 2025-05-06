@@ -19,7 +19,7 @@ describe('PasoTresComponent', () => {
       declarations: [PasoTresComponent],
       providers: [
         ToastrService,
-        { provide: TramiteFolioService, useClass: MockTramiteFolioService }, // Provide the mock service
+        { provide: TramiteFolioService, useClass: MockTramiteFolioService }, // Proporcionar el servicio simulado
     ]
     })
     .compileComponents();

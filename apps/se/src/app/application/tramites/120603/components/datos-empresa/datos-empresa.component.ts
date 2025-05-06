@@ -339,9 +339,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
 
         if (REPRESENTACION_FEDERAL) {
           REPRESENTACION_FEDERAL_CONTROL?.setValue(REPRESENTACION_FEDERAL.id);
-        } else {
-          console.warn('No matching representacionFederalData found for estadoValue:', estadoValue);
-        }
+        } 
         this.abrirModal();
       }
     });

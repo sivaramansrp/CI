@@ -8,7 +8,8 @@ describe('RegistroComoEmpresaService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule], // Add HttpClientModule here
+      imports: [HttpClientModule], // Agregue HttpClientModule aquí
+
 
     });
     

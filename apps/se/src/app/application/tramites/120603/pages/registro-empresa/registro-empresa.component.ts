@@ -135,8 +135,8 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont' && this.indice === 1 && e.valor === 2) {
-        this.showAlert = true; // Show the alert
-        return; // Stop further execution
+        this.showAlert = true; // Mostrar la alerta
+        return; // Detener más ejecución
         
       }
   
@@ -144,10 +144,10 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
   
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-        this.showAlert = true; // Show the alert only on "Continuar"
+        this.showAlert = true; // Mostrar la alerta solo en "Continuar"
       } else if (e.accion === 'atras') {
         this.wizardComponent.atras();
-        this.showAlert = false; // Hide the alert on "Atras"
+        this.showAlert = false; // Ocultar la alerta sobre "Atras"
       }
     }
   }
