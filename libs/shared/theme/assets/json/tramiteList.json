@@ -4184,5 +4184,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 260202,
+    "linkDashboard": "/cofepris/importacion-materias-primas",
+    "linkDepartment": "/pago/importacion-materias-primas",
+    "department": "cofepris"
   }
 ]

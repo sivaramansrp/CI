@@ -489,6 +489,13 @@ const ROUTES: Routes = [
           (m) => m.ImportacionRetornoSanitarioModule
         ),
 },
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+}
 ];
 
 @NgModule({
