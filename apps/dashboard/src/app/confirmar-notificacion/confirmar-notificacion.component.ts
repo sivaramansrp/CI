@@ -26,7 +26,7 @@ export class ConfirmarNotificacionComponent {
   alContinuar(): void {
     this.indiceDePaso = this.indiceDePaso + 1;
   }
-  obtieneFirma(): void {
-    this.indiceDePaso = this.indiceDePaso + 1;
+  obtieneFirma(ev: string): void {
+    this.indiceDePaso = 3;
   }
 }
