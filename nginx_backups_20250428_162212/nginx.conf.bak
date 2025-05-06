@@ -4,19 +4,16 @@ http {
     server {
         listen 80;
         server_name localhost;
-
-        # La raíz de la aplicación está en /usr/share/nginx/html
         root /usr/share/nginx/html;
         index index.html;
-	
-    add_header Access-Control-Allow-Origin *;
+	add_header Access-Control-Allow-Origin *;
  	types {
     text/html                                        html htm shtml;
-    text/css                                         css;
+    text/css                                         css scss;
     text/xml                                         xml;
     image/gif                                        gif;
     image/jpeg                                       jpeg jpg;
-    application/javascript                           js;
+    application/javascript                           js mjs;
     application/atom+xml                             atom;
     application/rss+xml                              rss;
 
@@ -109,22 +106,8 @@ http {
     video/x-msvideo                                  avi;
 }
 
-        # Configuración para archivos estáticos (puedes ajustarlo según el caso)
-        # Health check para Docker y Kubernetesn        location ~ ^/health(.txt)?$ {n            access_log off;n            add_header Content-Type text/plain;n            return 200 'OK';n        }n
         location / {
             try_files $uri $uri/ /index.html;
-        }
-
-        # Configuración para archivos estáticos (puedes ajustarlo según el caso)
-        location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|eot|ttf|svg|otf|webp)$ {
-            expires 6M;
-            access_log off;
-            add_header Cache-Control "public";
-        }
-
-        # Bloqueo de acceso a archivos ocultos
-        location ~ /\. {
-            deny all;
         }
     }
 }
