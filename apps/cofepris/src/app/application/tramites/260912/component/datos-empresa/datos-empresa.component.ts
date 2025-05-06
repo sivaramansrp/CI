@@ -78,34 +78,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   datosDelEstablecimiento!: FormGroup;
 
   /**
-   * Observable para el botón de radio.
-   */
-  // btonDeRadio$: Observable<string | null> =
-  //   this.Tramite260912Query.btonDeRadio$;
-
-  /**
-   * Observable para la justificacion.
-   */
-  // justificacion$: Observable<string | null> =
-  //   this.Tramite260912Query.justificacion$;
-
-  /**
-   * Observable para el RFC del establecimiento.
-   */
-  // rfcDel$: Observable<string | null> = this.Tramite260912Query.rfcDel$;
-
-  /**
-   * Observable para la denominación del establecimiento.
-   */
-  // denominacion$: Observable<string | null> =
-  //   this.Tramite260912Query.denominacion$;
-
-  /**
-   * Observable para el correo del establecimiento.
-   */
-  // correo$: Observable<string | null> = this.Tramite260912Query.correo$;
-
-  /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   public destroyed$ = new Subject<void>();
@@ -131,22 +103,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormulario();
     this.getValorStore();
-    // this.Tramite260912Query.selectTramite260912$
-    // .pipe(takeUntil(this.destroyed$))
-    // .subscribe((formData) => {
-    //   this.form.patchValue({
-    //     btonDeRadio: formData.btonDeRadio,
-    //     justificacion: formData.justificacion,
-    //   });
- 
-    //   this.datosDelEstablecimiento.patchValue({
-    //     rfcDel: formData.rfcDel,
-    //     denominacion: formData.denominacion,
-    //     correo: formData.correo,
-    //   });
-   // });
-   
-    }
+       }
 
   /**
    * Método para mostrar u ocultar el formulario colapsable.
@@ -185,47 +142,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Método para obtener el valor del botón de radio.
-   */
-  // getBtonDeRadio(): void {
-  //   const BTON_DE_RADIO = this.form.get('btonDeRadio')?.value;
-  //   this.Tramite260912Store.setBtonDeRadio(BTON_DE_RADIO);
-  // }
-
-  /**
-   * Método para obtener el valor de la justificación.
-   */
-  // getJustificacion(): void {
-  //   const JUSTIFICACION = this.form.get('justificacion')?.value;
-  //   this.Tramite260912Store.setJustificacion(JUSTIFICACION);
-  // }
-
-  /**
-   * Método para obtener el valor del RFC del establecimiento.
-   */
-  // getRfcDel(): void {
-  //   const RFC_DEL = this.datosDelEstablecimiento.get('rfcDel')?.value;
-  //   this.Tramite260912Store.setRfcDel(RFC_DEL);
-  // }
-
-  /**
-   * Método para obtener el valor de la denominación del establecimiento.
-   */
-  // getDenominacion(): void {
-  //   const DENOMINACION =
-  //     this.datosDelEstablecimiento.get('denominacion')?.value;
-  //   this.Tramite260912Store.setDenominacion(DENOMINACION);
-  // }
-
-  /**
-   * Método para obtener el valor del correo del establecimiento.
-   */
-  // getCorreo(): void {
-  //   const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
-  //   this.Tramite260912Store.setCorreo(CORREO);
-  // }
-
+  
   /**
    * Actualiza un valor específico en el store del trámite.
    * 

@@ -20,14 +20,13 @@
     height: 0% !important;
   }
   
-  ::ng-deep .form-label{
+  .datos-de-la-solicitud ::ng-deep .form-label{
     text-align: left !important;
   }
   
-  ::ng-deep .clasifi-regimen-catalogo .form-label{
+  .datos-de-la-solicitud ::ng-deep .clasifi-regimen-catalogo .form-label{
     margin-bottom: 30px;
   }
-  
   .rf-input {
     margin-top: 7px;
   }

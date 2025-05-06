@@ -5,8 +5,8 @@ import { TercerosRelacionadosComponent } from './terceros-relacionados.component
 import { CommonModule } from '@angular/common';
 import { TituloComponent, TablaDinamicaComponent, TableComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
+import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
 import { CapturarColumns } from '../../modelos/fabricante-datos.model';
 import { DestinatarioCapturarColumns } from '../../modelos/destinatario-datos.model';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
