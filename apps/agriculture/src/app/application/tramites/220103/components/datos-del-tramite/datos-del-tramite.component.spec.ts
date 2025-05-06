@@ -10,12 +10,12 @@ import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let MOCK_QUERY: jest.Mocked<Tramite220103Query>;
-  let MOCK_STORE: jest.Mocked<Tramite220103Store>;
-  let MOCK_SERVICE: jest.Mocked<SanidadAcuicolaImportacionService>;
+  let mockQuery: jest.Mocked<Tramite220103Query>;
+  let mockStore: jest.Mocked<Tramite220103Store>;
+  let mockService: jest.Mocked<SanidadAcuicolaImportacionService>;
 
   beforeEach(async () => {
-    MOCK_QUERY = {
+    mockQuery = {
       selectTramite220103State$: of({
         Tablamercancia: [
           { id: 1, descripcion: 'Mercancía 1' },
@@ -24,23 +24,24 @@ describe('DatosDelTramiteComponent', () => {
       }),
     } as unknown as jest.Mocked<Tramite220103Query>;
 
-    MOCK_STORE = {
+    mockStore = {
       setTramite220103State: jest.fn(),
       agregarMercancia: jest.fn(),
       eliminarMercancia: jest.fn(),
     } as unknown as jest.Mocked<Tramite220103Store>;
 
-    MOCK_SERVICE = {
+    mockService = {
       getMercancias: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Mercancía 1' }])),
     } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
 
     await TestBed.configureTestingModule({
+      declarations: [],
       imports: [ReactiveFormsModule,DatosDelTramiteComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite220103Query, useValue: MOCK_QUERY },
-        { provide: Tramite220103Store, useValue: MOCK_STORE },
-        { provide: SanidadAcuicolaImportacionService, useValue: MOCK_SERVICE },
+        { provide: Tramite220103Query, useValue: mockQuery },
+        { provide: Tramite220103Store, useValue: mockStore },
+        { provide: SanidadAcuicolaImportacionService, useValue: mockService },
       ],
     }).compileComponents();
 
@@ -69,26 +70,25 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('debería obtener la descripción de la fracción arancelaria y actualizar el formulario y el estado', () => {
-    component.getDescripcionFraccion();
+    component.obtenerDescripcionFraccion();
 
-    expect(component.datosMercanciaFormulario.value).toEqual({
-      descripcionFraccion: 'Los demas',
+    expect(component.formularioDatosMercancia.value).toEqual({
+      descripcionFraccion: 'Los demás',
       umt: 'kilogramo',
     });
-    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('descripcionFraccion', 'Los demas');
-    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('umt', 'kilogramo');
+    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
+    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('umt', 'kilogramo');
   });
 
   it('debería establecer un cambio de valor en el estado del trámite', () => {
-    const MOCK_EVENT = { campo: 'fraccionArancelaria', valor: '123456' };
-    component.establecerCambioDeValor(MOCK_EVENT);
+    const mockEvent = { campo: 'fraccionArancelaria', valor: '123456' };
+    component.establecerCambioDeValor(mockEvent);
 
-    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('fraccionArancelaria', '123456');
-    expect(component.datosMercanciaFormulario.value.descripcionFraccion).toBe('Los demas');
+    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('fraccionArancelaria', '123456');
   });
 
   it('debería obtener las mercancías seleccionadas en la tabla', () => {
-    const MOCK_MERCANCIAS: Mercancia[] = [{
+    const mockMercancias: Mercancia[] = [{
       id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
       descripcionFraccion: '',
@@ -105,13 +105,13 @@ describe('DatosDelTramiteComponent', () => {
       paisOrigen: '',
       paisProcedencia: ''
     }];
-    component.getMercanciasSeleccionadas(MOCK_MERCANCIAS);
+    component.obtenerMercanciasSeleccionadas(mockMercancias);
 
-    expect(component.mercanciasSeleccionadas).toEqual(MOCK_MERCANCIAS);
+    expect(component.mercanciasSeleccionadas).toEqual(mockMercancias);
   });
 
   it('debería agregar una mercancía al estado del trámite', () => {
-    component.datosMercanciaFormulario.setValue({ id: null, descripcion: 'Nueva Mercancía' });
+    component.formularioDatosMercancia.setValue({ descripcionFraccion: 'Nueva Mercancía', umt: 'kilogramo' });
     component.mercanciasSeleccionadas = [{
       id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
@@ -132,11 +132,12 @@ describe('DatosDelTramiteComponent', () => {
 
     component.agregarMercancia();
 
-    expect(MOCK_SERVICE.getMercancias).toHaveBeenCalled();
-    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('Tablamercancia', [
-      { id: 1, descripcion: 'Mercancía 1' },
-    ]);
-    expect(component.datosMercanciaFormulario.value).toEqual({});
+    expect(mockStore.setTramite220103State).toHaveBeenCalledWith({
+      descripcionFraccion: 'Nueva Mercancía',
+      umt: 'kilogramo',
+      id: 1,
+    });
+    expect(component.formularioDatosMercancia.value).toEqual({});
     expect(component.mercanciasSeleccionadas).toEqual([]);
   });
 
@@ -161,7 +162,7 @@ describe('DatosDelTramiteComponent', () => {
 
     component.eliminarMercancia();
 
-    expect(MOCK_STORE.eliminarMercancia).toHaveBeenCalledWith(1);
+    expect(mockStore.eliminarMercancia).toHaveBeenCalledWith(1);
     expect(component.mercanciasSeleccionadas).toEqual([]);
   });
 
@@ -184,18 +185,27 @@ describe('DatosDelTramiteComponent', () => {
       paisProcedencia: ''
     }];
 
-    component.mercanciaModificar();
+    component.modificarMercancia();
 
-    expect(component.datosMercanciaFormulario.value).toEqual({ id: 1, descripcion: 'Mercancía 1' });
+    expect(component.formularioDatosMercancia.value).toEqual({ id: 1, descripcion: 'Mercancía 1' });
+  });
+
+  it('debería obtener mercancías desde el servicio y actualizar el estado', () => {
+    component.obtenerMercancia();
+
+    expect(mockService.getMercancias).toHaveBeenCalled();
+    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('Tablamercancia', [
+      { id: 1, descripcion: 'Mercancía 1' },
+    ]);
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const DESTROY_NOTIFIER_SPY = jest.spyOn(component['destroyNotifier$'], 'next');
-    const DESTROY_NOTIFIER_COMPLETE_SPY = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(DESTROY_NOTIFIER_SPY).toHaveBeenCalled();
-    expect(DESTROY_NOTIFIER_COMPLETE_SPY).toHaveBeenCalled();
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });

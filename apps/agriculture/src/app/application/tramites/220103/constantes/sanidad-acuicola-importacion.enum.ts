@@ -524,10 +524,41 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
   }
 ];
 
-
+export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
+  {
+    id: 'numeroEstablecimiento',
+    labelNombre: 'Número de establecimiento aprobado o autorizado',
+    campo: 'numeroEstablecimiento',
+    clase: 'col-md-8',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 4,
+    mostrar: true,
+    habilitado: true,
+  },
+  {
+    id: 'coordenadasGeograficas',
+    labelNombre: 'Coordenadas geográficas',
+    campo: 'coordenadasGeograficas',
+    clase: 'col-md-8',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 4,
+    mostrar: true,
+    habilitado: true,
+  }
+];
 
 export const CONFIGURACION_MERCANCIAS = [
-
   {
     encabezado: 'Fracción arancelaria',
     clave: (ele: Mercancia): string => ele.fraccionArancelaria,

@@ -1,14 +1,14 @@
 /**
  * @componente
- * @nombre DatosDelTramiteComponent
+ * @nombre DatosDelTramiteComponente
  * @descripción
  * Componente que gestiona los datos del trámite 220103.
- * Proporciona funcionalidades para manejar formularios dinámicos, tablas de mercancías, y la interacción con el estado del trámite.
+ * Proporciona funcionalidades para manejar formularios dinámicos, tablas de mercancías y la interacción con el estado del trámite.
  */
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -22,7 +22,10 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/tramites220103.store';
-
+import { Modal } from 'bootstrap';
+/**
+ * Componente que gestiona los datos del trámite 220103.
+ */
 @Component({
   selector: 'app-datos-del-tramite',
   standalone: true,
@@ -32,9 +35,19 @@ import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/t
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
+   * Referencia al modal de mercancías.
+   */
+  @ViewChild('modalMercancia') elementoModal!: ElementRef;
+
+  /**
+   * Instancia del modal de Bootstrap.
+   */
+  private instanciaModal!: Modal;
+
+  /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
-  private destroyNotifier$ = new Subject<void>();
+  private notificadorDestruccion$ = new Subject<void>();
 
   /**
    * Lista de mercancías seleccionadas en la tabla.
@@ -44,27 +57,27 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Mensaje importante que se muestra en el componente.
    */
-  importante: string = IMPORTANTE.Importante;
+  mensajeImportante: string = IMPORTANTE.Importante;
 
   /**
    * Formulario dinámico para los datos del trámite.
    */
-  datosDelTramiteFormulario!: FormGroup;
+  formularioDatosTramite!: FormGroup;
 
   /**
    * Formulario dinámico para los datos de mercancías.
    */
-  datosMercanciaFormulario!: FormGroup;
+  formularioDatosMercancia!: FormGroup;
 
   /**
    * Configuración de los campos del formulario de datos del trámite.
    */
-  formularioDatos: ModeloDeFormaDinamica[] = CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE;
+  configuracionFormularioDatos: ModeloDeFormaDinamica[] = CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE;
 
   /**
    * Configuración de los campos del formulario de mercancías.
    */
-  mercanciaFormularioDatos: ModeloDeFormaDinamica[] = CAMPOS_FORMULARIO_MERCANCIAS;
+  configuracionFormularioMercancia: ModeloDeFormaDinamica[] = CAMPOS_FORMULARIO_MERCANCIAS;
 
   /**
    * Estado seleccionado del trámite.
@@ -89,19 +102,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * 
-   * @param fb - FormBuilder para inicializar los formularios.
-   * @param tramite220103Query - Query para obtener el estado del trámite.
-   * @param tramite220103Store - Store para gestionar el estado del trámite.
-   * @param service - Servicio para interactuar con la API de mercancías.
+   * @param formBuilder - FormBuilder para inicializar los formularios.
+   * @param consultaTramite - Consulta para obtener el estado del trámite.
+   * @param almacenTramite - Almacén para gestionar el estado del trámite.
+   * @param servicio - Servicio para interactuar con la API de mercancías.
    */
   constructor(
-    fb: FormBuilder,
-    private tramite220103Query: Tramite220103Query,
+    formBuilder: FormBuilder,
     private tramite220103Store: Tramite220103Store,
-    private service: SanidadAcuicolaImportacionService
+    private tramite220103Query: Tramite220103Query,
+    private servicio: SanidadAcuicolaImportacionService
   ) {
-    this.datosDelTramiteFormulario = fb.group({});
-    this.datosMercanciaFormulario = fb.group({});
+    this.formularioDatosTramite = formBuilder.group({});
+    this.formularioDatosMercancia = formBuilder.group({});
   }
 
   /**
@@ -110,39 +123,39 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite220103Query.selectTramite220103State$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((state) => {
-        this.estadoSeleccionado = state;
-        this.datosTabla = state['Tablamercancia'] as Mercancia[] || [];
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estado) => {
+        this.estadoSeleccionado = estado;
+        this.datosTabla = estado['Tablamercancia'] as Mercancia[] || [];
       });
   }
 
   /**
    * Obtiene la descripción de la fracción arancelaria y actualiza el formulario y el estado.
    */
-  getDescripcionFraccion(): void {
-    this.datosMercanciaFormulario.patchValue({
-      descripcionFraccion: 'Los demas',
+  obtenerDescripcionFraccion(): void {
+    this.formularioDatosMercancia.patchValue({
+      descripcionFraccion: 'Los demás',
       umt: 'kilogramo',
     });
-    this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demas');
+    this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demás');
     this.tramite220103Store.setTramite220103State('umt', 'kilogramo');
   }
 
   /**
    * Establece un cambio de valor en el estado del trámite.
    * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   * @param evento - Evento que contiene el campo y el valor a actualizar.
    */
-  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    this.tramite220103Store.setTramite220103State($event.campo, $event.valor);
-    if ($event.campo === 'fraccionArancelaria') {
-      this.getDescripcionFraccion();
+  establecerCambioDeValor(evento: { campo: string; valor: unknown }): void {
+    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor);
+    if (evento.campo === 'fraccionArancelaria') {
+      this.obtenerDescripcionFraccion();
     }
-    if ($event.campo === 'uso') {
-      const OTRO_USO_ITEM = this.mercanciaFormularioDatos.find((item) => item.campo === 'otroUso');
+    if (evento.campo === 'uso') {
+      const OTRO_USO_ITEM = this.configuracionFormularioMercancia.find((item) => item.campo === 'otroUso');
       if (OTRO_USO_ITEM) {
-        OTRO_USO_ITEM.mostrar = this.datosMercanciaFormulario.get('uso')?.value;
+        OTRO_USO_ITEM.mostrar = this.formularioDatosMercancia.get('uso')?.value;
       }
     }
   }
@@ -150,31 +163,38 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Obtiene las mercancías seleccionadas en la tabla.
    * 
-   * @param $event - Lista de mercancías seleccionadas.
+   * @param evento - Lista de mercancías seleccionadas.
    */
-  getMercanciasSeleccionadas($event: Mercancia[]): void {
-    this.mercanciasSeleccionadas = $event;
+  obtenerMercanciasSeleccionadas(evento: Mercancia[]): void {
+    this.mercanciasSeleccionadas = evento;
   }
 
   /**
    * Agrega una mercancía al estado del trámite.
    */
   agregarMercancia(): void {
-    if (this.datosMercanciaFormulario.valid) {
-      this.getMercancia();
-      this.datosMercanciaFormulario.reset();
+    if (this.formularioDatosMercancia.valid) {
+      this.obtenerMercancia();
+      const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
+      if (INSTANCIA) {
+        this.instanciaModal = INSTANCIA;
+      }
+      this.instanciaModal.hide();
+      this.formularioDatosMercancia.reset();
+    } else {
+      this.formularioDatosMercancia.markAllAsTouched();
     }
   }
 
   /**
    * Obtiene las mercancías desde el servicio y actualiza el estado.
    */
-  getMercancia(): void {
-    this.service.getMercancias()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: Mercancia[]) => {
-        if (response) {
-          this.tramite220103Store.setTramite220103State('Tablamercancia', response);
+  obtenerMercancia(): void {
+    this.servicio.getMercancias()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((respuesta: Mercancia[]) => {
+        if (respuesta) {
+          this.tramite220103Store.setTramite220103State('Tablamercancia', respuesta);
         }
       });
   }
@@ -192,8 +212,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Modifica una mercancía seleccionada en el formulario.
    */
-  mercanciaModificar(): void {
-    this.datosMercanciaFormulario.patchValue(this.mercanciasSeleccionadas[0]);
+  modificarMercancia(): void {
+    this.formularioDatosMercancia.patchValue(this.mercanciasSeleccionadas[0]);
   }
 
   /**
@@ -201,7 +221,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Limpia las suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }
