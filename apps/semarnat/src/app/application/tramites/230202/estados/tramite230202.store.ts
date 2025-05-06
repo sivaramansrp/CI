@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
 import { Injectable } from '@angular/core';
 
 /**
@@ -49,6 +50,11 @@ export interface Solicitud230202State {
   numeroInterior: string;
   colonia: string;
 
+
+  /**
+   * Lista de destinatarios configurados para el trámite.
+   */
+  destinatarios: DestinatarioConfiguracionItem[];
 
   /**
    * Clave de referencia del trámite.
@@ -118,7 +124,8 @@ export function createInitialState(): Solicitud230202State {
     banco: '',
     llaveDePago: '',
     fecPago: '',
-    impPago: ''
+    impPago: '',
+    destinatarios: [],
   };
 }
 
@@ -130,6 +137,7 @@ export function createInitialState(): Solicitud230202State {
 })
 @StoreConfig({ name: 'tramite230202', resettable: true })
 export class Tramite230202Store extends Store<Solicitud230202State> {
+
   /**
    * Constructor del store.
    * Inicializa el estado con los valores predeterminados.
@@ -421,6 +429,20 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       tercerosPopupState,
+    }));
+  }
+
+  
+  /**
+   * 
+   * Actualiza el estado con la lista de destinatarios.
+   *
+   * {DestinatarioConfiguracionItem[]} datosTabla - La lista de destinatarios.
+   */
+  setDatosDestinatario(datosTabla: DestinatarioConfiguracionItem[]) {
+    this.update((state) => ({
+      ...state,
+      destinatarios: datosTabla,
     }));
   }
   

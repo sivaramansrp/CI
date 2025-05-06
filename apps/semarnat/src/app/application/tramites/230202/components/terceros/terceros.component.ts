@@ -1,3 +1,4 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
 import {
   CatalogoSelectComponent,
@@ -7,9 +8,9 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DESTINARIO_INFO, DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../../230202/enum/destinatario-tabla.enum';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MetaInfo } from '../../models/datos-tramite.model';
@@ -28,14 +29,15 @@ import { Tramite230202Query } from '../../estados/tramite230202.query';
   styleUrl: './terceros.component.scss',
   standalone: true,
   imports: [
-      CommonModule, 
-      FormsModule, 
-      ReactiveFormsModule, 
-      TituloComponent, 
-      TablaDinamicaComponent,
-      InputRadioComponent,
-      CatalogoSelectComponent
-    ],
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent,
+    CatalogoSelectComponent
+  ],
+  providers: [BsModalService],
 })
 export class TercerosComponent implements OnInit, OnDestroy {
   /**
@@ -87,22 +89,32 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Indica si el botón de modificar está habilitado.
    */
   botonModificarHabilitado: boolean = false;
-  
-    /**
-     * Datos de catálogo de países.
-     * @property {Catalogo[]} paisesDatos
-     */
-    public paisesDatos: Catalogo[] = [];
-  
-    
-  @ViewChild('modalAgregarMercancias', { static: false }) modalRef!: ElementRef;
+
+  /**
+   * Datos de catálogo de países.
+   * @property {Catalogo[]} paisesDatos
+   */
+  public paisesDatos: Catalogo[] = [];
+
+  filaSeleccionada: DestinatarioConfiguracionItem[] = [];
 
 
-  tipoPersona1 = TIPO_PERSONA_OPCIONES;
+  /**
+   * Referencia al elemento del modal de Bootstrap.
+   * @property {ElementRef} modalRef
+   */
+  modalRef!: BsModalRef | null;
+
+  /**
+   * Referencia al elemento del modal de Bootstrap para agregar mercancías.
+   * @property {TemplateRef} agregarModal
+   */
+  @ViewChild('modalAgregarMercancias', { static: false }) agregarModal!: TemplateRef<Element>;
+
+  tipoPersona = TIPO_PERSONA_OPCIONES;
   nacionalidad = NACIONALIDAD_OPCIONES;
-  
-  metaInfo: MetaInfo = DESTINARIO_INFO;
 
+  metaInfo: MetaInfo = DESTINARIO_INFO;
 
   /**
    * Constructor del componente TercerosComponent.
@@ -113,6 +125,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
     private tramite230202Store: Tramite230202Store,
     private tramite230202Query: Tramite230202Query,
+    private modalService: BsModalService,
     private formBuilder: FormBuilder
   ) {
     // No se realiza ninguna acción aquí.
@@ -135,106 +148,56 @@ export class TercerosComponent implements OnInit, OnDestroy {
     // this.manejarCambioEntidadFederativa();
   }
 
-    /**
-   * Recupera varias listas de datos del servicio `materialesPeligrososService` y
-   * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
-   * destrucción usando `takeUntil(this.unsubscribe$)`.
-   * @method cargarDatos
-   * @returns {void}
-   */
-    cargarDatos(): void {
-      
-      this.phytosanitaryReexportacionService
+  /**
+ * Recupera varias listas de datos del servicio `materialesPeligrososService` y
+ * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
+ * destrucción usando `takeUntil(this.unsubscribe$)`.
+ * @method cargarDatos
+ * @returns {void}
+ */
+  cargarDatos(): void {
+
+    this.phytosanitaryReexportacionService
       .getMetaInfo()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((req) => {
         this.metaInfo = req.datos;
       });
-  
-      this.phytosanitaryReexportacionService
-        .getPais()
-        .pipe(takeUntil(this.notificadorDestruccion$))
-        .subscribe((req) => {
-          this.paisesDatos = req.data;
-        });
 
-      // this.phytosanitaryReexportacionService
-      //   .obtenerListaPaises()
-      //   .pipe(takeUntil(this.notificadorDestruccion$))
-      //   .subscribe((data) => {
-      //     this.paisesDatos = data;
-      //   });
-  
-      // this.materialesPeligrososService
-      //   .obtenerListaEstados()
-      //   .pipe(takeUntil(this.unsubscribe$))
-      //   .subscribe((data) => {
-      //     this.estadosDatos = data;
-      //   });
-  
-      // this.materialesPeligrososService
-      //   .obtenerListaMunicipios()
-      //   .pipe(takeUntil(this.unsubscribe$))
-      //   .subscribe((data) => {
-      //     this.municipiosDatos = data;
-      //   });
-  
-      // this.materialesPeligrososService
-      //   .obtenerListaLocalidades()
-      //   .pipe(takeUntil(this.unsubscribe$))
-      //   .subscribe((data) => {
-      //     this.localidadesDatos = data;
-      //   });
-  
-      // this.materialesPeligrososService
-      //   .obtenerListaColonias()
-      //   .pipe(takeUntil(this.unsubscribe$))
-      //   .subscribe((data) => {
-      //     this.coloniasDatos = data;
-      //   });
-    }
-
-
-  // personaMoral() {
-  //   this.formularioDestinatario.get('nacionalidad')?.setValue(this.destinatario.nacional);
-  //   this.formularioDestinatario.get('tipoPersona')?.setValue(this.tipoPersona.moral);
-  // }
-
-  // personaFisica() {
-  //   this.formularioDestinatario.get('nacionalidad')?.setValue(this.destinatario.nacional);
-  //   this.formularioDestinatario.get('tipoPersona')?.setValue(this.tipoPersona.fisica);
-  // }
+    this.phytosanitaryReexportacionService
+      .getPais()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((req) => {
+        this.paisesDatos = req.data;
+      });
+  }
 
   /**
    * Crea el formulario reactivo para capturar la entidad federativa del destinatario.
    * Inicializa el valor del formulario con el estado actual de la solicitud.
    */
   crearFormularioDestinatario(): void {
+    
     this.formularioDestinatario = this.formBuilder.group({
-
-      // entidadFederativa: [
-      //   this.estadoSolicitud.entidadFederativa,
-      //   Validators.required,
-      // ],
     });
 
     this.agregarMercanciasForm = this.formBuilder.group({
-        nacionalidad: [{ value: 'nacional', disabled: true }, Validators.required],
-        tipoPersona: ['', Validators.required],
-        razonSocial: ['', Validators.maxLength(250)],
-        nombre: ['', Validators.maxLength(200)],
-        apellidoPaterno: ['', Validators.maxLength(200)],
-        apellidoMaterno: ['', ],
-        codigoPostal: ['', [Validators.required, Validators.maxLength(15)]],
-        paisSinMexico: [''],
-        pais: [''],
-        descripcionPais: [''],
-        ciudad: ['', [Validators.required, Validators.maxLength(120)]],
-        domicilio: ['', Validators.required]
-      })
+      nacionalidad: [{ value: 'nacional', disabled: true }, Validators.required],
+      tipoPersona: ['', Validators.required],
+      razonSocial: ['', Validators.maxLength(250)],
+      nombre: ['', Validators.maxLength(200)],
+      apellidoPaterno: ['', Validators.maxLength(200)],
+      apellidoMaterno: ['',],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(15)]],
+      paisSinMexico: [''],
+      pais: ['', Validators.required],
+      descripcionPais: [''],
+      ciudad: ['', [Validators.required, Validators.maxLength(120)]],
+      domicilio: ['', Validators.required]
+    })
   }
 
-  
+
   onTipoPersonaChange(event: unknown) {
     const IS_FISICA = event === 'fisica';
     const NOMBRES = this.agregarMercanciasForm.get('nombre');
@@ -242,9 +205,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const SEGUNDO_APELLIDO = this.agregarMercanciasForm.get('segundoApellido');
     const DENOMINACION_RAZON = this.agregarMercanciasForm.get('razonSocial');
     if (IS_FISICA) {
-      NOMBRES?.setValidators([Validators.required,Validators.maxLength(200)]);
-      PRIMER_APELLIDO?.setValidators([Validators.required,Validators.maxLength(200)]);
-      SEGUNDO_APELLIDO?.setValidators([Validators.required,Validators.maxLength(200)]);
+      NOMBRES?.setValidators([Validators.required, Validators.maxLength(200)]);
+      PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
+      SEGUNDO_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
       DENOMINACION_RAZON?.clearValidators();
     } else {
       NOMBRES?.clearValidators();
@@ -259,25 +222,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
+
   /**
    * Maneja los cambios en la entidad federativa seleccionada.
    * Actualiza el estado del almacén y agrega una entrada a la tabla de datos
    * si la entidad federativa es válida y la tabla está vacía.
    */
   manejarCambioEntidadFederativa(): void {
-        // if (this.selectedRows && this.selectedRows.length > 0) {
-          // this.agregarMercanciasForm.patchValue(this.selectedRows);
-          if (this.modalRef) {
-            const MODEL = new Modal(this.modalRef.nativeElement);
-            MODEL.show();
-          }
-        // } else {
-        //   if (this.modalConfirmacion) {
-        //     const MODEL = new Modal(this.modalConfirmacion.nativeElement);
-        //     MODEL.show();
-        //   }
-        // }
-
+    if (this.modalRef) {
+      this.modalRef = this.modalService.show(this.agregarModal, { class: 'modal-lg' });
+    }
   }
 
   /**
@@ -286,6 +240,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   manejarFilaSeleccionada(filaSeleccionada: DestinatarioConfiguracionItem[]): void {
     this.botonModificarHabilitado = filaSeleccionada.length > 0;
+    this.filaSeleccionada = filaSeleccionada;
   }
 
   /**
@@ -299,16 +254,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el popup si el botón de modificar está habilitado.
-   */
-  addPopup(): void {
-    // if (this.botonModificarHabilitado) {
-      this.popupAbierto = true;
-      this.tramite230202Store.setTercerosPopupState(this.popupAbierto);
-    // }
-  }
-
-  /**
    * Cierra el popup.
    */
   cerrarPopup(): void {
@@ -318,21 +263,57 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.tramite230202Store.setTercerosPopupState(this.popupCerrado);
   }
 
-  cancelar() {
-   
-    //this.agregarMercanciasForm.reset();
+  abrirModal(template: TemplateRef<unknown>): void {
+    this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
   }
 
-  guardarDestinatario() {
+  editDataModal(template: TemplateRef<unknown>): void {
+    if (this.filaSeleccionada?.length > 0) {
+      this.agregarMercanciasForm.patchValue(this.filaSeleccionada[0]);
+      this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
+    }
+  }
+
+  cerrarModal(): void {
+    this.agregarMercanciasForm.markAsUntouched();
+    this.agregarMercanciasForm.updateValueAndValidity();
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+  }
+
+  eleminarSeleccionados(): void {
+    // this.datosTabla = this.datosTabla.filter((item) => !this.filaSeleccionada.includes(item));
+    this.datosTabla = [];
+    this.filaSeleccionada = [];
+    this.agregarMercanciasForm.reset();
+    this.formularioDestinatario.reset();
+    this.botonModificarHabilitado = false;
+  }
+
+  guardarDestinatario(): void {
     this.agregarMercanciasForm.markAllAsTouched();
     this.agregarMercanciasForm.updateValueAndValidity();
 
-    if(this.agregarMercanciasForm.valid) {
-      if(this.datosTabla.length === 0) {
-        this.datosTabla.push(this.agregarMercanciasForm.value)
+    if (this.agregarMercanciasForm.valid) {
+      const DATA = this.agregarMercanciasForm.value;
+      const TABLE_DATA = {...DATA, paisStr: this.paisesDatos.find((pais)=> pais.id === DATA.pais)?.descripcion}
+      if(this.datosTabla.length > 0 ) {
+        this.datosTabla.pop();
       }
+      this.datosTabla.push(TABLE_DATA);
+      this.tramite230202Store.setDatosDestinatario(this.datosTabla);
+      this.cerrarModal();
     }
-    
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(controlName: string): boolean | null {
+    const CONTROL = this.agregarMercanciasForm.get(controlName);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
   /**

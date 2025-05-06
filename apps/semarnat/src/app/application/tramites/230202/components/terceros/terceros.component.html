@@ -3,18 +3,21 @@
   <form [formGroup]="formularioDestinatario">
     <label class="row mt-5">Destinatarios*:</label>
     <div class="row mt-4">
-      <app-tabla-dinamica [configuracionTabla]="configuracionColumnas" [datos]="datosTabla"
+      <app-tabla-dinamica 
+        [configuracionTabla]="configuracionColumnas" 
+        [datos]="datosTabla"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
-        (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)">
+      </app-tabla-dinamica>
     </div>
 
     @if(datosTabla.length > 0){
     <div class="row" style="padding-bottom: 20px; text-align: right" *ngIf="datosTabla.length > 0">
       <div>
-        <button type="button" class="btn btn-default me-2">
+        <button type="button" class="btn btn-default me-2" [disabled]="!botonModificarHabilitado" (click)="eleminarSeleccionados()">
           Eliminar Seleccionados
         </button>
-        <button type="button" class="btn btn-primary me-2" (click)="abrirPopup()">
+        <button type="button" [disabled]="!botonModificarHabilitado" class="btn btn-primary me-2" (click)="editDataModal(modalAgregarMercancias)">
           Modificar
         </button>
       </div>
@@ -23,8 +26,8 @@
     @if(datosTabla.length ===0) {
     <div class="row justify-content-end" style="padding-bottom: 20px; text-align: right">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias">Agregar</button>
+        <button type="button" class="btn btn-primary" 
+           (click)="abrirModal(modalAgregarMercancias)">Agregar</button>
       </div>
     </div>
     }
@@ -48,136 +51,156 @@
   </form>
 </div>
 
-<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body mb-4">
-        <form [formGroup]="agregarMercanciasForm">
-
-          <ng-container>
-            <div class="row ">
-              <div class="col-md-12">
-                <ng-titulo titulo="Datos generales original"></ng-titulo>
-              </div>
+<ng-template #modalAgregarMercancias>
+  <div class="modal-header">
+    <h5 class="modal-title">Agregar Mercancías</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="agregarMercanciasForm">
+          <div class="row ">
+            <div class="col-md-12">
+              <ng-titulo titulo="Datos generales original"></ng-titulo>
             </div>
-            <div class="row ">
-              <div class="col-md-6">
-                <label class="form-label" for="nacionalidad">{{ metaInfo.nacionalidad }}</label>
-                <label for="puntos"></label>
-                <div class="form-check">
-                  <app-input-radio [description]="metaInfo.nacionalidad" [showDescription]="true"
-                    [radioOptions]="nacionalidad" id="modoCantidad" [layout]="'horizontal'"
-                    formControlName="nacionalidad" [isRequired]="true">
-                  </app-input-radio>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label for="tipoPersona">{{ metaInfo.tipoPersona }}</label>
-                <span class="require">*</span>
-                <label for="puntos"></label>
-                <app-input-radio 
-                  [radioOptions]="tipoPersona1" 
-                  id="modoCantidad" 
-                  [layout]="'horizontal'"
-                  formControlName="tipoPersona" 
-                  [isRequired]="true" 
-                  (valueChange)="onTipoPersonaChange($event)">
+          </div>
+          <div class="row ">
+            <div class="col-md-6">
+              <label class="form-label" for="nacionalidad">{{ metaInfo.nacionalidad }}</label>
+              <label for="puntos"></label>
+              <div class="form-check">
+                <app-input-radio [description]="metaInfo.nacionalidad" [showDescription]="true"
+                  [radioOptions]="nacionalidad" id="modoCantidad" [layout]="'horizontal'"
+                  formControlName="nacionalidad" [isRequired]="true">
                 </app-input-radio>
               </div>
             </div>
+            <div class="col-md-6">
+              <label for="tipoPersona">{{ metaInfo.tipoPersona }}</label>
+              <span class="require">*</span>
+              <label for="puntos"></label>
+              <app-input-radio 
+                [radioOptions]="tipoPersona" 
+                id="modoCantidad" 
+                [layout]="'horizontal'"
+                formControlName="tipoPersona" 
+                [isRequired]="true" 
+                (valueChange)="onTipoPersonaChange($event)">
+              </app-input-radio>
 
-            @if(agregarMercanciasForm.get('tipoPersona')?.value === 'moral'){
-            <div class="row mt-2">
-              <div class="col-md-12">
-                <label for="razonSocial">{{ metaInfo.denominacion }}</label>
+              <div *ngIf="isInvalid('tipoPersona')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+
+          @if(agregarMercanciasForm.get('tipoPersona')?.value === 'moral'){
+          <div class="row mt-2">
+            <div class="col-md-12">
+              <label for="razonSocial">{{ metaInfo.denominacion }}</label>
+              <span class="require">*</span>
+              <label for="puntos"></label><br>
+              <input type="text" formControlName="razonSocial" id="razonSocial" maxlength="250"
+                class="form-control" />
+
+              <div *ngIf="isInvalid('razonSocial')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          </div>
+          }
+
+          @if(agregarMercanciasForm.get('tipoPersona')?.value === 'fisica'){
+          <div class="row mt-2">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="nombre">{{ metaInfo.nombre }}</label>
                 <span class="require">*</span>
-                <label for="puntos"></label><br>
-                <input type="text" formControlName="razonSocial" id="razonSocial" maxlength="250"
+                <label for="puntos"></label>
+                <input type="text" formControlName="nombre" id="nombre" maxlength="200" class="form-control" />
+
+                <div *ngIf="isInvalid('nombre')" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="apellidoPaterno">{{ metaInfo.apellidoPaterno }}</label>
+                <span class="require">*</span>
+                <label for="puntos"></label>
+                <input type="text" formControlName="apellidoPaterno" id="apellidoPaterno" maxlength="200"
+                  class="form-control" />
+                <div *ngIf="isInvalid('apellidoPaterno')" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="apellidoMaterno">{{ metaInfo.apellidoMaterno }}</label>
+                <label for="puntos"></label>
+                <input type="text" formControlName="apellidoMaterno" id="apellidoMaterno" maxlength="200"
                   class="form-control" />
               </div>
             </div>
-            }
+          </div>
+          }
 
-            @if(agregarMercanciasForm.get('tipoPersona')?.value === 'fisica'){
-            <div class="row mt-2">
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="nombre">{{ metaInfo.nombre }}</label>
-                  <span class="require">*</span>
-                  <label for="puntos"></label>
-                  <input type="text" formControlName="nombre" id="nombre" maxlength="200" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                  <label for="apellidoPaterno">{{ metaInfo.apellidoPaterno }}</label>
-                  <span class="require">*</span>
-                  <label for="puntos"></label>
-                  <input type="text" formControlName="apellidoPaterno" id="apellidoPaterno" maxlength="200"
-                    class="form-control" />
-                </div>
-                <div class="col-md-4">
-                  <label for="apellidoMaterno">{{ metaInfo.apellidoMaterno }}</label>
-                  <label for="puntos"></label>
-                  <input type="text" formControlName="apellidoMaterno" id="apellidoMaterno" maxlength="200"
-                    class="form-control" />
-                </div>
+          <div class="row mt-2">
+            <div class="col-md-4">
+              <label for="codigoPostal">{{ metaInfo.codigoPostal }}</label>
+              <span class="require">*</span>
+              <label for="puntos"></label>
+              <input type="text" formControlName="codigoPostal" id="codigoPostal" maxlength="15"
+                class="form-control" />
+              <div *ngIf="isInvalid('codigoPostal')" class="mensaje-error">
+                Este campo es obligatorio.
               </div>
             </div>
-            }
 
-            <div class="row mt-2">
-              <div class="col-md-4">
-                <label for="codigoPostal">{{ metaInfo.codigoPostal }}</label>
+            <div class="col-md-4 px-5">
+              <app-catalogo-select 
+                [catalogo]="paisesDatos" 
+                formControlName="pais" 
+                [label]="'País'" 
+                [required]="true">
+              </app-catalogo-select>
+              <div *ngIf="isInvalid('pais')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="ciudadExp">
+                <label for="ciudad">{{ metaInfo.ciudad }}</label>
                 <span class="require">*</span>
                 <label for="puntos"></label>
-                <input type="text" formControlName="codigoPostal" id="codigoPostal" maxlength="15"
-                  class="form-control" />
-              </div>
-
-              <div class="col-md-4 px-5">
-                <app-catalogo-select 
-                  [catalogo]="paisesDatos" 
-                  formControlName="pais" 
-                  [label]="'País'" 
-                  [required]="true">
-                </app-catalogo-select>
-
-              </div>
-              <div class="col-md-4">
-                <div class="ciudadExp">
-                  <label for="ciudad">{{ metaInfo.ciudad }}</label>
-                  <span class="require">*</span>
-                  <label for="puntos"></label>
-                  <input type="text" 
-                    formControlName="ciudad" 
-                    id="ciudad" 
-                    class="form-control" />
+                <input type="text" formControlName="ciudad" id="ciudad" class="form-control" />
+                <div *ngIf="isInvalid('ciudad')" class="mensaje-error">
+                  Este campo es obligatorio.
                 </div>
               </div>
             </div>
-            <div class="row mt-4">
-              <div class="col-md-12">
-                <label for="domicilio">{{ metaInfo.domicilio }}</label>
-                <span class="require">*</span>
-                <label for="puntos"></label>
-                <br>
-                <textarea formControlName="domicilio" id="domicilio" class="form-control"></textarea>
-              </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <label for="domicilio">{{ metaInfo.domicilio }}</label>
+              <span class="require">*</span>
+              <label for="puntos"></label>
+              <br>
+              <textarea formControlName="domicilio" id="domicilio" class="form-control"></textarea>
             </div>
-
-            <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal
-                (click)="cancelar()">
-                Cancelar
-              </button>
-              <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="model" #closeModal
-                (click)="guardarDestinatario()">
-                Agregar
-              </button>
+            <div *ngIf="isInvalid('domicilio')" class="mensaje-error">
+              Este campo es obligatorio.
             </div>
-          </ng-container>
-        </form>
-      </div>
+          </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-danger ms-3" 
+        (click)="cerrarModal()">
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-primary ms-3" 
+        (click)="guardarDestinatario()">
+        Agregar
+      </button>
     </div>
   </div>
-</div>
+</ng-template>

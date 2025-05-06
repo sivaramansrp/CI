@@ -1,4 +1,4 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 /**
  * Representa la configuración de un destinatario con información detallada.
@@ -16,29 +16,48 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
  * - `entidadFederativa` (comentado): Representa la entidad federativa del destinatario.
  */
 export interface DestinatarioConfiguracionItem {
-
+  /**
+   * First name of the recipient.
+   */
   nombre: string;
+
+  /**
+   * Last name (paternal) of the recipient.
+   */
   apellidoPaterno: string;
+
+  /**
+   * Last name (maternal) of the recipient.
+   */
   apellidoMaterno: string;
+
+  /**
+   * Legal or business name of the recipient.
+   */
   razonSocial: string;
 
   /**
-   * País del destinatario.
+   * Country of the recipient.
    */
-  pais: string;
+  pais: number | null;
 
   /**
-   * Ciudad del destinatario.
+   * Country of the recipient.
+   */
+  paisStr: string ;
+
+  /**
+   * City of the recipient.
    */
   ciudad: string;
 
   /**
-   * Domicilio del destinatario.
+   * Address of the recipient.
    */
   domicilio: string;
 
   /**
-   * Código postal o equivalente del destinatario.
+   * Postal code or equivalent of the recipient.
    */
   codigoPostal: number;
 }
@@ -87,7 +106,7 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
     /**
      * Clave que define cómo obtener el valor del país de un elemento.
      */
-    clave: (item: DestinatarioConfiguracionItem) => item.pais,
+    clave: (item: DestinatarioConfiguracionItem) => item.paisStr,
     /**
      * Orden de la columna en la tabla.
      */
