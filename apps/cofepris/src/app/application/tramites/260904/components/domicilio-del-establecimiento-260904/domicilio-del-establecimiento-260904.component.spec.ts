@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomicilioDelEstablecimiento260904Component } from './domicilio-del-establecimiento-260904.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
@@ -26,7 +26,7 @@ const mockTramiteQuery = {
     manifests: 'true',
     acuerdoPublico: 'Acuerdo',
     rfc: 'RFC123',
-  }), // Ensure this is an observable
+  }),
 };
 
 const mockDomicilioService = {
@@ -101,7 +101,7 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
   it('should retrieve values from the store on getValorStore', () => {
     const spy = jest.spyOn(mockTramiteQuery.selectTramite260904$, 'subscribe');
     component.getValorStore();
-    expect(spy).toBeDefined(); // Ensures subscription was created
+    expect(spy).toBeDefined();
   });
 
   it('should unsubscribe on destroy', () => {

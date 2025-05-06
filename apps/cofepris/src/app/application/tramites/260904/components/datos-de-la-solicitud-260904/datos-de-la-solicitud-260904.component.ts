@@ -77,6 +77,10 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
     */
    datosDelEstablecimiento!: FormGroup;
  
+   /** 
+ * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+ * Se emite un valor y se completa cuando el componente se destruye.
+ */
  
    private destroy$ = new Subject<void>();
  

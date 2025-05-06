@@ -131,7 +131,10 @@ export class DomicilioDelEstablecimiento260904Component
     */
    representanteLegal!: FormGroup;
 
-
+/** 
+ * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+ * Se emite un valor y se completa cuando el componente se destruye.
+ */
  
    private destroy$ = new Subject<void>();
  

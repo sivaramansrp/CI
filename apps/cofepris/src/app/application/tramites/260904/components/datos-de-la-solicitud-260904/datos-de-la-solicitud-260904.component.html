@@ -96,11 +96,6 @@
               formControlName="rfcDel"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
-            <div
-            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched"
-            class="text-danger">
-            El RFC es obligatorio.
-          </div>
           </div>
         </div>
         <div class="col-md-8">

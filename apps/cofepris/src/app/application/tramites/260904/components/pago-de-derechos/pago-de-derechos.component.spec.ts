@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../modelos/pago-de-derechos.model';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
@@ -103,17 +103,16 @@ it('should fetch bancoList on obtenerBancoList call', () => {
     
   const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 
-    // Ensure the mock is set up before the component is initialized
+    
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
-    // Recreate the component to trigger ngOnInit
+    
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     component.bancoList = mockBancoList;
     component.ngOnInit();
-    // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
-    fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
+    fixture.detectChanges(); 
+    expect(component.bancoList).toEqual(mockBancoList); 
   });
 
  

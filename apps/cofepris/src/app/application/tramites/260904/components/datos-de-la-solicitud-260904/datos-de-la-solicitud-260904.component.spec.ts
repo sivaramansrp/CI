@@ -46,8 +46,8 @@ describe('DatosDeLaSolicitud260904Component', () => {
         llaveDePago: '',
         fecPago: '',
         impPago: '',
-        // ... Add remaining required properties here
-      } as Tramite260904State) // force casting if necessary
+       
+      } as Tramite260904State)
     };
     
 
