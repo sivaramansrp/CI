@@ -148,13 +148,27 @@
 
       <div class="col-md-12 mt-3">
         <div class="d-flex justify-content-end mt-4">
-          <button type="button" id="agregar" class="btn btn-primary ms-3">
+          <button
+            type="button"
+            id="agregar"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modalSeccionSubcontratados"
+            (click)="agregarSubcontratados()"
+          >
             Agregar
           </button>
-          <button type="button" id="modificar" class="btn btn-secondary ms-3">
+          <button
+            type="button"
+            id="modificar"
+            class="btn btn-secondary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalSeccionSubcontratados"
+            (click)="agregarSubcontratados()"
+          >
             Modificar
           </button>
-          <button type="button" id="eliminar" class="btn btn-danger">
+          <button type="button" id="eliminar" class="btn btn-danger ms-3">
             Eliminar
           </button>
         </div>
@@ -264,13 +278,27 @@
         </div>
         <div class="col-md-12 mt-5">
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" id="modificar" class="btn btn-secondary">
+            <button
+              type="button"
+              id="modificar"
+              class="btn btn-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalInstalacionesPrincipales"
+              (click)="agregarInstalacionesPrincipales('modificar')"
+            >
               Modificar
             </button>
             <button type="button" id="eliminar" class="btn btn-danger ms-3">
               Eliminar
             </button>
-            <button type="button" id="agregar" class="btn btn-primary ms-3">
+            <button
+              type="button"
+              id="agregar"
+              class="btn btn-primary ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#modalInstalacionesPrincipales"
+              (click)="agregarInstalacionesPrincipales('modificar')"
+            >
               Agregar
             </button>
           </div>
@@ -520,9 +548,9 @@
 
         <div class="col-md-12 mt-4">
           <label class="form-label text-start"
-            >* Señale si ingresa mensualmente su información contable a través
-            del portal del SAT, de conformidad con el artículo 28, fracción IV,
-            del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.</label
+            >Señale si ingresa mensualmente su información contable a través del
+            portal del SAT, de conformidad con el artículo 28, fracción IV, del
+            CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. *</label
           >
           <app-input-radio
             [radioOptions]="sinoOpcion.radioOptions"
@@ -648,6 +676,36 @@
       <app-miembro-de-la-empresa
         (eventoActualizarMiembro)="eventoActualizarMiembro($event)"
       ></app-miembro-de-la-empresa>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modalSeccionSubcontratados"
+  tabindex="-1"
+  aria-labelledby="modalSeccionSubcontratadosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-seccion-subcontratados
+        (seccionSubcontratados)="seccionSubcontratados($event)"
+      ></app-seccion-subcontratados>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modalInstalacionesPrincipales"
+  tabindex="-1"
+  aria-labelledby="modalInstalacionesPrincipalesLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-instalaciones-principales (instalacionesPrincipales)="instalacionesPrincipales($event)"></app-instalaciones-principales>
     </div>
   </div>
 </div>

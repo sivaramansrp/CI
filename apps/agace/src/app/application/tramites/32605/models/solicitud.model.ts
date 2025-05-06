@@ -103,13 +103,15 @@ export interface SolicitudCatologoSelectLista {
    * Catálogo del tipo de persona en la solicitud.
    */
   tipoDePersona: CatalogosSelect;
+
+  tipoDeInstalacion: CatalogosSelect;
 }
 
 export interface NumeroDeEmpleados {
   denominacion: string;
   RFC: string;
   numeroDeEmpleados: string;
-  Bimestre: string;
+  bimestre: string;
 }
 
 export interface Domicilios {
@@ -231,4 +233,12 @@ export interface SeccionSociosIC {
 
   /** Razón social (si aplica) */
   razonSocial?: string;
+}
+
+export interface SeccionSubcontratados{
+  subcontrataRFCBusqueda?: string;
+  subcontrataRFC: string;
+  subcontrataRazonSocial: string;
+  subcontrataEmpleados?: string;
+  subcontrataBimestre?: string;
 }

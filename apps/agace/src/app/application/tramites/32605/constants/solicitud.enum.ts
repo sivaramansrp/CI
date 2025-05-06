@@ -209,7 +209,7 @@ export const NUMERO_DE_EMPLEADOS_CONFIGURACION: ConfiguracionColumna<NumeroDeEmp
     },
     {
       encabezado: 'Bimestre',
-      clave: (item: NumeroDeEmpleados) => item.Bimestre,
+      clave: (item: NumeroDeEmpleados) => item.bimestre,
       orden: 4,
     },
   ];

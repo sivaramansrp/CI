@@ -100,6 +100,25 @@ export interface Solicitud32605State {
    * Nombre de la empresa del miembro.
    */
   miembroNombreEmpresa: string;
+
+  subcontrataRFCBusqueda: string;
+  subcontrataRFC: string;
+  subcontrataRazonSocial: string;
+  subcontrataEmpleados: string;
+  subcontrataBimestre: number;
+
+  principales: string | number;
+  municipio: string;
+  tipoDeInstalacion: string | number;
+  entidadFederativa: string;
+  registroSESAT: string;
+  descripcion: string;
+  codigoPostal: string;
+  procesoProductivo: string | number;
+  goceDelInmueble: string | number;
+  empresa: string | number;
+  comercioExterior: string | number;
+  mutuo: string | number;
 }
 
 export function createInitialSolicitudState(): Solicitud32605State {
@@ -158,6 +177,25 @@ export function createInitialSolicitudState(): Solicitud32605State {
     miembroApellidoPaterno: '',
     miembroApellidoMaterno: '',
     miembroNombreEmpresa: '',
+
+    subcontrataRFCBusqueda: '',
+    subcontrataRFC: '',
+    subcontrataRazonSocial: '',
+    subcontrataEmpleados: '',
+    subcontrataBimestre: 0,
+
+    principales: 0,
+    municipio: '',
+    tipoDeInstalacion: 0,
+    entidadFederativa: '',
+    registroSESAT: '',
+    descripcion: '',
+    codigoPostal: '',
+    procesoProductivo: 0,
+    goceDelInmueble: 0,
+    empresa: 0,
+    comercioExterior: 0,
+    mutuo: 0,
   };
 }
 @Injectable({
@@ -413,6 +451,74 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
    */
   actualizarMiembroNombreEmpresa(valor: string): void {
     this.update((state) => ({ ...state, miembroNombreEmpresa: valor }));
+  }
+
+  actualizarSubcontrataRFCBusqueda(valor: string): void {
+    this.update((state) => ({ ...state, subcontrataRFCBusqueda: valor }));
+  }
+
+  actualizarSubcontrataRFC(valor: string): void {
+    this.update((state) => ({ ...state, subcontrataRFC: valor }));
+  }
+
+  actualizarSubcontrataRazonSocial(valor: string): void {
+    this.update((state) => ({ ...state, subcontrataRazonSocial: valor }));
+  }
+
+  actualizarSubcontrataEmpleados(valor: string): void {
+    this.update((state) => ({ ...state, subcontrataEmpleados: valor }));
+  }
+
+  actualizarSubcontrataBimestre(valor: number): void {
+    this.update((state) => ({ ...state, subcontrataBimestre: valor }));
+  }
+
+  actualizarPrincipales(valor: string | number): void {
+    this.update((state) => ({ ...state, principales: valor }));
+  }
+
+  actualizarMunicipio(valor: string): void {
+    this.update((state) => ({ ...state, municipio: valor }));
+  }
+
+  actualizarTipoDeInstalacion(valor: string | number): void {
+    this.update((state) => ({ ...state, tipoDeInstalacion: valor }));
+  }
+
+  actualizarEntidadFederativa(valor: string): void {
+    this.update((state) => ({ ...state, entidadFederativa: valor }));
+  }
+
+  actualizarRegistroSESAT(valor: string): void {
+    this.update((state) => ({ ...state, registroSESAT: valor }));
+  }
+
+  actualizarDescripcion(valor: string): void {
+    this.update((state) => ({ ...state, descripcion: valor }));
+  }
+
+  actualizarCodigoPostal(valor: string): void {
+    this.update((state) => ({ ...state, codigoPostal: valor }));
+  }
+
+  actualizarProcesoProductivo(valor: string | number): void {
+    this.update((state) => ({ ...state, procesoProductivo: valor }));
+  }
+
+  actualizarGoceDelInmueble(valor: string | number): void {
+    this.update((state) => ({ ...state, goceDelInmueble: valor }));
+  }
+
+  actualizarEmpresa(valor: string | number): void {
+    this.update((state) => ({ ...state, empresa: valor }));
+  }
+
+  actualizarComercioExterior(valor: string | number): void {
+    this.update((state) => ({ ...state, comercioExterior: valor }));
+  }
+
+  actualizarMutuo(valor: string | number): void {
+    this.update((state) => ({ ...state, mutuo: valor }));
   }
 
   /**

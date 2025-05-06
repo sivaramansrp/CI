@@ -5,6 +5,7 @@ import {
   EnlaceOperativo,
   RecibirNotificaciones,
   RepresentanteLegal,
+  SeccionSubcontratados,
   SolicitudCatologoSelectLista,
   SolicitudRadioLista,
   TransportistasTable,
@@ -62,6 +63,12 @@ export class SolicitudService {
   conseguirSolicitudCatologoSelectLista(): Observable<SolicitudCatologoSelectLista> {
     return this.http.get<SolicitudCatologoSelectLista>(
       'assets/json/32605/solicitud-catologo-select-lista.json'
+    );
+  }
+
+  conseguirSeccionSubcontratados(): Observable<SeccionSubcontratados> {
+    return this.http.get<SeccionSubcontratados>(
+      'assets/json/32605/seccion-subcontratados.json'
     );
   }
 }

@@ -37,6 +37,8 @@ import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enu
 import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
 import { Modal } from 'bootstrap';
+import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
+import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
 
 @Component({
   selector: 'app-datos-comunes',
@@ -50,6 +52,8 @@ import { Modal } from 'bootstrap';
     TablaDinamicaComponent,
     MiembroDeLaEmpresaComponent,
     NotificacionesComponent,
+    SeccionSubcontratadosComponent,
+    InstalacionesPrincipalesComponent
   ],
   providers: [SolicitudService],
   templateUrl: './datos-comunes.component.html',
@@ -92,6 +96,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
   modalElement!: ElementRef;
+
+  @ViewChild('modalSeccionSubcontratados', { static: false })
+  modalSeccionSubcontratadosElement!: ElementRef;
+
+  @ViewChild('modalInstalacionesPrincipales', { static: false })
+  modalInstalacionesPrincipalesElement!: ElementRef;
+  
 
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -163,6 +174,24 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  agregarSubcontratados(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modalSeccionSubcontratadosElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  agregarInstalacionesPrincipales(valor: string): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modalInstalacionesPrincipalesElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
   /** Actualiza los datos de un miembro de la empresa */
   eventoActualizarMiembro(evento: SeccionSociosIC): void {
     this.listaSeccionSociosIC.push(evento);
@@ -203,6 +232,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     };
 
     this.elementoParaEliminar = i;
+  }
+
+  seccionSubcontratados(evento: NumeroDeEmpleados): void {
+    this.numeroDeEmpleadosLista.push(evento);
+  }
+
+  instalacionesPrincipales(evento: Domicilios): void{
+    this.domiciliosDatos.push(evento);
   }
 
   ngOnDestroy(): void {
