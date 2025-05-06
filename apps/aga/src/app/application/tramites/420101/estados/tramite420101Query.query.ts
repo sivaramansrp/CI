@@ -35,14 +35,16 @@ export class Tramite420101Query extends Query<Tramite420101State> {
     return state;
   });
 
-  /**
-   * @property {Observable<Fabricante[]>} getdestinatarioTablaDatos$
-   * @description
-   * Selecciona la lista de fabricantes del estado.
-   */
-  public getdestinatarioTablaDatos$ = this.select(
-    (state) => state.destinatarioTableDatos
-  );
+  public getDatosProveedoresManual$ = this.select (
+    (state) => state.datosProveedoresManual
+  )
+  public getNormaDatos$ = this.select (
+    (state) => state.usoNormaDatos
+  )
+
+  public getProgramaImmexDatos$ = this.select (
+    (state) => state.usoProgramaImmexDatos
+  )
 
   /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
@@ -50,4 +52,5 @@ export class Tramite420101Query extends Query<Tramite420101State> {
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
+
 }

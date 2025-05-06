@@ -94,3 +94,22 @@ export interface ConfiguracionColumna<T> {
   orden: number;
   hiperenlace?: boolean;
 }
+
+export const CROSLISTA_DE_NORMA: string[] = [
+  'AFGANISTÁN (EMIRATO ISLÁMICO)',
+  'ALBANIA (REPÚBLICA DE)',
+  'ALEMANIA (REPÚBLICA FEDERAL DE)',
+  'ANDORRA (PRINCIPADO DE)',
+];
+
+export const USO_PROGRAMA_IMMEX_DATOS: string[] = [
+  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO'
+];
+
+export const USO_PROGRAMA_PROSEC_DATOS: string[] = [
+  'ALEMANIA (REPÚBLICA FEDERAL DE)',
+];
+
+export const USO_ADUANA_DATOS: string[] = [
+  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO'
+];
