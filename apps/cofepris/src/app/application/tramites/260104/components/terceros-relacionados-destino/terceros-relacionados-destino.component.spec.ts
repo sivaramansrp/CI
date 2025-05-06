@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { TercerosRelacionadosDestinoService } from '../../services/tereceros-relacionados-destino.service';
 import { Tramite260104Query } from '../../estados/queries/tramite260104.query';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
-import { Fabricante,Destinatario } from '../../models/terceros-relacionados-destino.model';
+import { Fabricante, Destinatario } from '../../models/terceros-relacionados-destino.model';
+import { of } from 'rxjs';
 
 describe('TercerosRelacionadosDestinoComponent', () => {
   let component: TercerosRelacionadosDestinoComponent;
@@ -17,6 +18,10 @@ describe('TercerosRelacionadosDestinoComponent', () => {
   beforeEach(async () => {
     const routerMock = { navigate: jest.fn() };
     const tercerosDataServiceMock = { setFabricante: jest.fn() };
+    const tramite260104QueryMock = {
+      getFabricanteTablaDatos$: of([]),
+      getDestinatarioFinalTablaDatos$: of([]),
+    };
 
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosDestinoComponent, HttpClientTestingModule],
@@ -32,7 +37,7 @@ describe('TercerosRelacionadosDestinoComponent', () => {
         },
         { provide: Router, useValue: routerMock },
         { provide: TercerosRelacionadosDestinoService, useValue: tercerosDataServiceMock },
-        { provide: Tramite260104Query, useValue: {} },
+        { provide: Tramite260104Query, useValue: tramite260104QueryMock },
         { provide: Tramite260104Store, useValue: {} },
       ],
     }).compileComponents();
@@ -58,25 +63,24 @@ describe('TercerosRelacionadosDestinoComponent', () => {
 
   it('should call setFabricante and update selectedFabricante in getFabricanteDatos', () => {
     const mockFabricantes = [{
-      tipoPersona:'Moral',
-      nombreRazonSocial:'test',
-      rfc:"test",
+      tipoPersona: 'Moral',
+      nombreRazonSocial: 'test',
+      rfc: "test",
       curp: '',
-      telefono:'',
-       
+      telefono: '',
       correoElectronico: '',
       calle: '',
       numeroExterior: '',
       numeroInterior: '',
       pais: '',
       colonia: '',
-      municipioAlcaldia:'',
+      municipioAlcaldia: '',
       localidad: '',
       estadoLocalidad: '',
       estado: '',
       coloniaEquivalente: '',
-      lada:'',
-      descPais:'',
+      lada: '',
+      descPais: '',
     }];
 
     component.fabricanteTablaDatos = mockFabricantes;
@@ -90,7 +94,7 @@ describe('TercerosRelacionadosDestinoComponent', () => {
 
   it('should navigate to modify destinatarios route if selectedDestinario is not empty', () => {
     component.selectedDestinario = [{
-      tipoPersona:'FISICA',
+      tipoPersona: 'FISICA',
       rfc: 'XAXX010101000',
       nombres: 'John',
       nombreRazonSocial: '',
@@ -98,8 +102,8 @@ describe('TercerosRelacionadosDestinoComponent', () => {
       segundoApellido: 'Smith',
       pais: '1',
       estadoLocalidad: '1',
-      estado:'',
-      curp:'',
+      estado: '',
+      curp: '',
       municipioAlcaldia: '1',
       localidad: '1',
       codigoPostal: '12345',
@@ -115,7 +119,8 @@ describe('TercerosRelacionadosDestinoComponent', () => {
       descMunicipio: '',
       descLocalidad: '',
       descCodigoPostal: '',
-      descColonia: ''}]
+      descColonia: ''
+    }];
 
     component.modifySelectedDestinatarios();
 
