@@ -5,8 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Anexo } from '../../../80308/models/plantas-consulta.model';
-import { FraccionSensible } from '../../models/datos-tramite.model';
+import { Anexo, FraccionSensible } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-anexos',

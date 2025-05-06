@@ -1,4 +1,3 @@
-// import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../../80308/models/plantas-consulta.model";
 import { DatosDelModificacion, Empresas, FraccionSensible, Plantas, Servicios } from "../models/datos-tramite.model";
 

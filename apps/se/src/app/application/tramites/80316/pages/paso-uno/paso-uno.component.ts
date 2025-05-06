@@ -1,7 +1,5 @@
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-// import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
-// import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
@@ -11,13 +9,14 @@ import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramit
 import { ViewChild } from '@angular/core';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
+import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
 
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent]
+  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
 })
 // , BitacoraComponent, AltaPlantaComponent
 export class PasoUnoComponent implements AfterViewInit {

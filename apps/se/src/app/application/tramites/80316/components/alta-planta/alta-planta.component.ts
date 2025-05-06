@@ -1,19 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { CONFIGURACION_DOMICILIOS } from '../../constantes/modificacion.enum';
+import { ReactiveFormsModule} from '@angular/forms';
+import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-// import { ConfiguracionColumna } from '../../';
-// import { DomicilioInfo } from '../../models/plantas-consulta.model';
-// import { ModificacionSolicitudeService } from '../../services/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite80316Query } from '../../../80316/estados/tramite80316.query';
-import { Tramite80316Store } from '../../../80316/estados/tramite80316.store';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { DomicilioInfo } from '../../../80308/models/plantas-consulta.model';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
 
 @Component({
   selector: 'app-alta-planta',
@@ -25,7 +15,7 @@ import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [ToastrService],
 })
 export class AltaPlantaComponent implements OnInit, OnDestroy {
 

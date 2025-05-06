@@ -9,20 +9,14 @@ import {
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import {
+  ConfiguracionColumna,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { ToastrService } from 'ngx-toastr';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import {
-  Complimentaria,
-  Federetarios,
-  Operacions,
-} from '../../../80308/models/plantas-consulta.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Empresas, Plantas, Servicios } from '../../models/datos-tramite.model';
-import { CONFIGURACION_SERVICIO } from '../../../80208/modelos/cambio-de-modalidad.model';
+import { Complimentaria, Empresas, Federetarios, Operacions, Plantas, Servicios } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-complimentaria',

@@ -6,12 +6,6 @@ import {
   DatosSolicitante,
 } from '../models/datos-tramite.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DomicilioInfo } from '../../80308/models/plantas-consulta.model';
-
-/**
- * Creacion del estado inicial para la interfaz de tramite 80316
- * @returns Solicitud80316
- */
 
 /**
  * Representa el estado de la solicitud 80316.
@@ -25,8 +19,6 @@ export interface Solicitud80316State {
   altaPlanta: Catalogo[];
   estado: Catalogo;
   formaValida: { [key: string]: boolean };
-  domicilios: DomicilioInfo[];
-  buscarDomicilios: DomicilioInfo[];
   rfc: string;
   federal: string;
   tipo: string;
@@ -58,8 +50,6 @@ export function createInitialState(): Solicitud80316State {
     formaValida: {
       entidadFederativa: false,
     },
-    domicilios: [],
-    buscarDomicilios: [],
     
   };
 }
@@ -123,20 +113,6 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
         formaValida: IS_VALID,
       };
     });
-  }
-
-  /**
-   * Establece la lista de domicilios en el almacén.
-   *
-   * @param {DomicilioInfo[]} domicilios - Un array de objetos `DomicilioInfo` que representa la lista de domicilios.
-   *
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setDomicilios(domicilios: DomicilioInfo[]): void {
-    this.update((state) => ({
-      ...state,
-      domicilios,
-    }));
   }
 
   /**

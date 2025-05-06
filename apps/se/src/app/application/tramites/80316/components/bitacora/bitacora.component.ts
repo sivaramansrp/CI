@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../80308/models/plantas-consulta.model';
-import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
+import { SolicitudService } from '../../services/solicitud.service';
 
 @Component({
   selector: 'app-bitacora',
@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
     TituloComponent,
     ComplementariaImmexComponent,
   ],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [ToastrService],
 })
 export class BitacoraComponent implements OnDestroy {
   /**
@@ -43,8 +43,8 @@ export class BitacoraComponent implements OnDestroy {
    */
   datos: Bitacora[] = [];
 
-  constructor( public modificionService: ModificacionSolicitudeService, private toastr: ToastrService ) {
-    this.modificionService
+  constructor( public solicitudService: SolicitudService, private toastr: ToastrService ) {
+    this.solicitudService
       .obtenerBitacora()
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
       .subscribe(

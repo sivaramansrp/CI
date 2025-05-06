@@ -41,6 +41,11 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante (continuarEvento)="continuar()"></solicitante>
+      <div class="altaPlant col-md-12 mt-5">
+        <div class="row mt-5">
+          <app-complementaria-immex></app-complementaria-immex>
+        </div>
+      </div>
       } @case (2) {
       <app-modificacion (continuarEvento)="continuar()"></app-modificacion>
       <app-alta-planta (continuarEvento)="continuar()"></app-alta-planta>
