@@ -121,7 +121,6 @@ export class PantallasComponent {
       this.datosPasos.indice = e.valor + 1;
       this.wizardService.cambio_indice(this.datosPasos.indice);
       this.wizardComponent.siguiente();
-      console.log('programaSeleccionadoForm value',this.validacionDeFormularioService.getFormValue('programaSeleccionadoForm'));
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }
