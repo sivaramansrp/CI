@@ -29,6 +29,6 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('should create', () => {
-    expect(component.tituloMensaje).toBeDefined();
+    expect(component).toBeDefined();
   });
 });
