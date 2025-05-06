@@ -9,8 +9,8 @@ import { TituloComponent, TablaDinamicaComponent, TableComponent } from '@ng-mf/
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CapturarColumns } from '../../models/fabricante-datos.model';
 import { DestinatarioCapturarColumns } from '../../models/destinatario-datos.model';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
+import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;

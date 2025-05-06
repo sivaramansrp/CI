@@ -7,7 +7,7 @@ describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
 
-  // Mock ToastrService
+  // Servicio de tostado simulado
   const mockToastrService = {
     success: jest.fn(),
     error: jest.fn(),
@@ -22,7 +22,7 @@ describe('PasoTresComponent', () => {
        providers: [
               { provide: ToastrService, useValue: mockToastrService },
               { provide: TOAST_CONFIG, useValue: {} }, 
-              provideHttpClient()// Provide a mock configuration
+              provideHttpClient()// Proporcionar una configuración simulada
             ],
     }).compileComponents();
 

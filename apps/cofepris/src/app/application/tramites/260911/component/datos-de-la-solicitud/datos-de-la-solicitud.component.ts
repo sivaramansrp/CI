@@ -75,33 +75,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   datosDelEstablecimiento!: FormGroup;
 
-  // /**
-  //  * Observable para el botón de radio.
-  //  */
-  // btonDeRadio$: Observable<string | null> =
-  //   this.tramite260911Query.btonDeRadio$;
-
-  // /**
-  //  * Observable para la justificación.
-  //  */
-  // justificacion$: Observable<string | null> =
-  //   this.tramite260911Query.justificacion$;
-
-  // /**
-  //  * Observable para el RFC del establecimiento.
-  //  */
-  // rfcDel$: Observable<string | null> = this.tramite260911Query.rfcDel$;
-
-  // /**
-  //  * Observable para la denominación del establecimiento.
-  //  */
-  // denominacion$: Observable<string | null> =
-  //   this.tramite260911Query.denominacion$;
-
-  // /**
-  //  * Observable para el correo del establecimiento.
-  //  */
-  // correo$: Observable<string | null> = this.tramite260911Query.correo$;
+/** 
+ * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+ * Se emite un valor y se completa cuando el componente se destruye.
+ */  
 
   private destroy$ = new Subject<void>();
 
@@ -170,47 +147,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  /**
-   * Método para obtener el valor del botón de radio.
-   */
-  // getBtonDeRadio(): void {
-  //   const BTON_DE_RADIO = this.form.get('btonDeRadio')?.value;
-  //   this.tramite260911Store.setBtonDeRadio(BTON_DE_RADIO);
-  // }
-
-  /**
-   * Método para obtener el valor de la justificación.
-   */
-  // getJustificacion(): void {
-  //   const JUSTIFICACION = this.form.get('justificacion')?.value;
-  //   this.tramite260911Store.setJustificacion(JUSTIFICACION);
-  // }
-
-  /**
-   * Método para obtener el valor del RFC del establecimiento.
-   */
-  // getRfcDel(): void {
-  //   const RFC_DEL = this.datosDelEstablecimiento.get('rfcDel')?.value;
-  //   this.tramite260911Store.setRfcDel(RFC_DEL);
-  // }
-
-  /**
-   * Método para obtener el valor de la denominación del establecimiento.
-   */
-  // getDenominacion(): void {
-  //   const DENOMINACION =
-  //     this.datosDelEstablecimiento.get('denominacion')?.value;
-  //   this.tramite260911Store;
-  // }
-
-  // /**
-  //  * Método para obtener el valor del correo del establecimiento.
-  //  */
-  // getCorreo(): void {
-  //   const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
-  //   this.tramite260911Store.setCorreo(CORREO);
-  // }
 
    /**
    * Actualiza un valor específico en el store del trámite.
