@@ -13,7 +13,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'exportacion-mineralesDe-hierro'
+    redirectTo: 'exportación-de-diamantes-en-bruto'
   }
 ];
 

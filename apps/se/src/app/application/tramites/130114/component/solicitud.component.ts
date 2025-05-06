@@ -281,6 +281,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.min(1),
         ],
       ],
+ 
       valorFacturaUSD: [
         '',
         [
@@ -289,6 +290,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.min(0.01),
         ],
       ],
+ 
       unidadMedida: ['', Validators.required],
     });
 
@@ -356,7 +358,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           descripcion: seccionState.descripcion,
           fraccion: seccionState.fraccion,
           cantidad: seccionState.cantidad,
-          valorFacturaUSD: seccionState.valorPartidaUSD?.toString() || '',
+          valorFacturaUSD: seccionState.valorFacturaUSD,
           unidadMedida: seccionState.unidadMedida,
         }, { emitEvent: false });
 
@@ -397,7 +399,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.Tramite130114Store.updateState({
+          this.Tramite130114Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
           });
@@ -410,7 +412,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.Tramite130114Store.updateState({
+          this.Tramite130114Store.actualizarEstado({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
@@ -525,77 +527,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchPaisesPorBloque(bloqueId);
   }
 
-  /**
-   * Actualiza el store con los valores del formulario según el evento recibido.
-   * @param {Object} event - Objeto con información del evento
-   * @param {FormGroup} event.form - Formulario que generó el evento
-   * @param {string} event.campo - Nombre del campo que cambió
-   * @param {string} event.metodoNombre - Nombre del método del store a llamar
+    /**
+   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
+   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
    */
-  setValoresStore(event: {
-    form: FormGroup;
-    campo: string;
-    metodoNombre: string;
-  }): void {
-    const VALOR = event.form.get(event.campo)?.value;
-    switch (event.metodoNombre) {
-      case 'updateSolicitud':
-        this.Tramite130114Store.updateSolicitud(VALOR);
-        break;
-      case 'setDescripcionPartidasDeLaMercancia':
-        this.Tramite130114Store.setDescripcionPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setCantidadPartidasDeLaMercancia':
-        this.Tramite130114Store.setCantidadPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setValorPartidaUSDPartidasDeLaMercancia':
-        this.Tramite130114Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setregimen':
-        this.Tramite130114Store.setregimen(VALOR);
-        break;
-      case 'setclasificacion':
-        this.Tramite130114Store.setclasificacion(VALOR);
-        break;
-      case 'setProducto':
-        this.Tramite130114Store.setProducto(VALOR);
-        break;
-      case 'setDescripcion':
-        this.Tramite130114Store.setDescripcion(VALOR);
-        break;
-      case 'setCantidad':
-        this.Tramite130114Store.setCantidad(VALOR);
-        break;
-      case 'setValorPartidaUSD':
-        this.Tramite130114Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
-        break;
-      case 'setUnidadMedida':
-        this.Tramite130114Store.setUnidadMedida(VALOR);
-        break;
-        case 'setBloque':
-        this.Tramite130114Store.setBloque(VALOR);
-        break;
-      case 'setUsoEspecifico':
-        this.Tramite130114Store.setUsoEspecifico(VALOR);
-        break;
-      case 'setJustificacionImportacionExportacion':
-        this.Tramite130114Store.setJustificacionImportacionExportacion(VALOR);
-        break;
-      case 'setObservaciones':
-        this.Tramite130114Store.setObservaciones(VALOR);
-        break;
-      case 'setEntidad':
-        this.Tramite130114Store.setEntidad(VALOR);
-        break;
-      case 'setRepresentacion':
-        this.Tramite130114Store.setRepresentacion(VALOR);
-        break;
-      default:
-        console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130114Store`
-        );
+    setValoresStore($event: { form: FormGroup; campo: string }): void {
+      const VALOR = $event.form.get($event.campo)?.value;
+      this.Tramite130114Store.actualizarEstado({ [$event.campo]: VALOR });
+      if($event.campo === 'fraccion'){
+        this.Tramite130114Store.actualizarEstado({'unidadMedida': '1'});
+      }
     }
-  }
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
  * Este método verifica si no hay filas seleccionadas en la tabla dinámica.

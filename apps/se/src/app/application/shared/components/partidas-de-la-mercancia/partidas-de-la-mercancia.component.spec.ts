@@ -9,16 +9,16 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], // Import standalone component
+      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], 
     }).compileComponents();
   
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
     component.partidasDelaMercanciaForm = new FormGroup({
       cantidadPartidasDeLaMercancia: new FormControl(''),
-      nombrePartida: new FormControl(''), // Add the missing 'bloque' control
-      descripcionPartidasDeLaMercancia: new FormControl(''), // Add the missing 'usoEspecifico' control
-      valorPartidaUSDPartidasDeLaMercancia: new FormControl(''), // Add the missing 'justificacionImportacionExportacion' control
+      nombrePartida: new FormControl(''),
+      descripcionPartidasDeLaMercancia: new FormControl(''), 
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl(''),
         });
 
         component.formForTotalCount = new FormGroup({
@@ -86,12 +86,12 @@ describe('PartidasDeLaMercanciaComponent', () => {
     const testCampo = 'testCampo';
     const testMetodoNombre = 'testMetodoNombre';
 
-    component.setValoresStore(testForm, testCampo, testMetodoNombre);
+    component.setValoresStore(testForm, testCampo);
 
     expect(emitSpy).toHaveBeenCalledWith({
       form: testForm,
-      campo: testCampo,
-      metodoNombre: testMetodoNombre,
+      campo: testCampo
+     
     });
   });
 });

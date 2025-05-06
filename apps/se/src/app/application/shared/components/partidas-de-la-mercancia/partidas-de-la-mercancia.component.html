@@ -8,7 +8,7 @@
             <label class="form-label" for="cantidadPartidasDeLaMercancia">Cantidad*:</label>
             <input class="form-control" type="text" id="cantidad" formControlName="cantidadPartidasDeLaMercancia"
               appUppercase aria-labelledby="cantidad"
-              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia', 'setCantidadPartidasDeLaMercancia')" />
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
             <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
@@ -27,7 +27,7 @@
             <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
             <input class="form-control" type="number" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
-                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia', 'setValorPartidaUSDPartidasDeLaMercancia')
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
               " />
             <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
               <small
@@ -52,7 +52,7 @@
             <label class="form-label" for="descripcion">Descripción*:</label>
             <textarea class="form-control height" rows="3" id="descripcion"
               formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"
-              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia', 'setDescripcionPartidasDeLaMercancia')"></textarea>
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia')"></textarea>
             <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción

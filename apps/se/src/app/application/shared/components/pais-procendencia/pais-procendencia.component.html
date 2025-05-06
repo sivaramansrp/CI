@@ -11,7 +11,7 @@
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
-          (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque', 'setBloque')"
+          (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
         ></app-catalogo-select>       
       </div>
       <div
@@ -41,7 +41,7 @@
           id="usoEspecifico"
           placeholder="Uso(s) especÍfico de la mercancÍa*:"
           formControlName="usoEspecifico"
-          (change)="setValoresStore(paisForm,'usoEspecifico', 'setUsoEspecifico')"
+          (change)="setValoresStore(paisForm,'usoEspecifico')"
         ></textarea>
         <div
         *ngIf="
@@ -70,7 +70,7 @@
           id="justificacionImportacionExportacion"
           placeholder="Justificación y beneficio que se obtiene"
           formControlName="justificacionImportacionExportacion"
-          (change)="setValoresStore(paisForm,'justificacionImportacionExportacion', 'setJustificacionImportacionExportacion')"
+          (change)="setValoresStore(paisForm,'justificacionImportacionExportacion')"
         ></textarea>
         <div
         *ngIf="
@@ -97,7 +97,7 @@
           id="Observaciones"
           placeholder="Observaciones"
           formControlName="observaciones"
-          (change)="setValoresStore(paisForm,'observaciones', 'setObservaciones')"
+          (change)="setValoresStore(paisForm,'observaciones')"
         ></textarea>
       </div>
     </div>

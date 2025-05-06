@@ -1,56 +1,56 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CertificadoKimberleyComponent } from './certificado-kimberley.component';
-import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
 import { Tramite130203Store } from '../../estados/tramites/tramites130203.store';
 import { Tramite130203Query } from '../../estados/queries/tramite130203.query';
+import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
+import { of, Subject } from 'rxjs';
 
 describe('CertificadoKimberleyComponent', () => {
   let component: CertificadoKimberleyComponent;
   let fixture: ComponentFixture<CertificadoKimberleyComponent>;
-  let mockStore: jest.Mocked<Tramite130203Store>;
-  let mockQuery: jest.Mocked<Tramite130203Query>;
-  let mockService: jest.Mocked<ExportacionDeDiamantesEnBrutoService>;
+  let MOCK_STORE: jest.Mocked<Tramite130203Store>;
+  let MOCK_QUERY: jest.Mocked<Tramite130203Query>;
+  let MOCK_SERVICE: jest.Mocked<ExportacionDeDiamantesEnBrutoService>;
 
   beforeEach(async () => {
-    mockStore = {
-      setNombreExportador: jest.fn(),
-      setDireccionExportador: jest.fn(),
-      setNombreImportador: jest.fn(),
-      setDireccionImportador: jest.fn(),
-      setNumeroEnLetraDeLosLotes: jest.fn(),
-      setNumeroEnLetraDeLosLotesEnIngles: jest.fn(),
-      setNumeroDeFactura: jest.fn(),
-      setCantidadEnQuilates: jest.fn(),
-      setValorDeLosDiamantes: jest.fn(),
+    MOCK_STORE = {
+      actualizarEstado: jest.fn(),
     } as any;
 
-    mockQuery = {
-      nombreExportador$: of('Test Exporter'),
-      direccionExportador$: of('Test Address'),
-      nombreImportador$: of('Test Importer'),
-      direccionImportador$: of('Importer Address'),
-      numeroEnLetraDeLosLotes$: of('One'),
-      numeroEnLetraDeLosLotesEnIngles$: of('One (English)'),
-      numeroDeFactura$: of('12345'),
-      cantidadEnQuilates$: of('100'),
-      valorDeLosDiamantes$: of('5000'),
-      select: jest.fn((selector: any) => of(selector)),
+    MOCK_QUERY = {
+      selectSolicitud$: of({
+        especifique: 'Test',
+        numero: '12345',
+        nombre: 'Empresa Test',
+        tipoEmpresa: '1',
+        paisOrigen: 'MX',
+        lineaCheckbox: true,
+        direccionExportador: 'Dirección Test',
+        nombreImportador: 'Importador Test',
+        direccionImportador: 'Dirección Importador',
+        numeroEnLetraDeLosLotes: 'Uno',
+        numeroEnLetraDeLosLotesEnIngles: 'One',
+        numeroDeFactura: 'F12345',
+        cantidadEnQuilates: '100',
+        valorDeLosDiamantes: '5000',
+      }),
     } as any;
 
-    mockService = {
-      getPaisesEmisores: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Country1' }])),
-      getNombresIngles: jest.fn().mockReturnValue(of([{ codigo: '1', nombre: 'Country1' }])),
+    MOCK_SERVICE = {
+      getPaisesEmisores: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'México' }])),
+      getNombresIngles: jest.fn().mockReturnValue(of([{ idDelPais: 1, name: 'Mexico' }])),
+      getNombreExporter: jest.fn().mockReturnValue(of('Empresa Exportadora Test')),
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CertificadoKimberleyComponent],
       declarations: [],
+      imports: [ReactiveFormsModule, CertificadoKimberleyComponent],
       providers: [
-        { provide: Tramite130203Store, useValue: mockStore },
-        { provide: Tramite130203Query, useValue: mockQuery },
-        { provide: ExportacionDeDiamantesEnBrutoService, useValue: mockService },
+        FormBuilder,
+        { provide: Tramite130203Store, useValue: MOCK_STORE },
+        { provide: Tramite130203Query, useValue: MOCK_QUERY },
+        { provide: ExportacionDeDiamantesEnBrutoService, useValue: MOCK_SERVICE },
       ],
     }).compileComponents();
   });
@@ -61,62 +61,113 @@ describe('CertificadoKimberleyComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should initialize forms and load data', fakeAsync(() => {
-      expect(component.formularioEmpresa).toBeDefined();
-      tick();
-      expect(mockService.getPaisesEmisores).toHaveBeenCalled();
-      expect(mockService.getNombresIngles).toHaveBeenCalled();
-      expect(component.paisesEmisores.length).toBe(1);
-      expect(component.nombresIngles.length).toBe(1);
-    }));
+    it('debería llamar a loadData y subscribeToState', () => {
+      jest.spyOn(component, 'loadData');
+      jest.spyOn(component, 'subscribeToState');
 
-    it('should subscribe to observables and update form values', () => {
-      expect(component.datosDelExportador.get('nombreExportador')?.value).toBe('Test Exporter');
-      expect(component.datosDelExportador.get('direccionExportador')?.value).toBe('Test Address');
+      component.ngOnInit();
+
+      expect(component.loadData).toHaveBeenCalled();
+      expect(component.subscribeToState).toHaveBeenCalled();
     });
   });
 
-  describe('updateNombreIngles', () => {
-    it('should update the nombre field based on the selected country', () => {
-      component.nombresIngles = [{ idDelPais: 1, name: 'Country1' }];
-      component.updateNombreIngles(1);
-      expect(component.formularioEmpresa.get('nombre')?.value).toBe('Country1');
+  describe('loadData', () => {
+    it('debería cargar paisesEmisores desde el servicio', () => {
+      component.loadData();
+      expect(MOCK_SERVICE.getPaisesEmisores).toHaveBeenCalled();
+      expect(component.paisesEmisores).toEqual([{ id: 1, descripcion: 'México' }]);
     });
 
-    it('should handle empty nombresIngles gracefully', () => {
-      component.nombresIngles = [];
-      component.updateNombreIngles(1);
-      expect(component.formularioEmpresa.get('nombre')?.value).toBe('');
+    it('debería cargar nombresIngles desde el servicio', () => {
+      component.loadData();
+      expect(MOCK_SERVICE.getNombresIngles).toHaveBeenCalled();
+      expect(component.nombresIngles).toEqual([{ idDelPais: 1, name: 'Mexico' }]);
+    });
+
+    it('debería cargar nombreExportador desde el servicio y actualizar el formulario', () => {
+      component.loadData();
+      expect(MOCK_SERVICE.getNombreExporter).toHaveBeenCalled();
+      expect(component.datosDelExportador.get('nombreExportador')?.value).toBe('Empresa Exportadora Test');
+    });
+  });
+
+  describe('subscribeToState', () => {
+    it('debería actualizar los formularios con los valores del estado', () => {
+      component.subscribeToState();
+
+      expect(component.formularioEmpresa.get('numero')?.value).toBe('12345');
+      expect(component.datosDelExportador.get('direccionExportador')?.value).toBe('Dirección Test');
+      expect(component.datosDelImportador.get('nombreImportador')?.value).toBe('Importador Test');
+      expect(component.datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.value).toBe('Uno');
+      expect(component.datosDeLosDiamantes.get('cantidadEnQuilates')?.value).toBe('100');
     });
   });
 
   describe('setValoresStore', () => {
-    it('should call the appropriate store method with the correct value', () => {
-      component.formularioEmpresa.get('nombre')?.setValue('Test Name');
-      component.setValoresStore(component.formularioEmpresa, 'nombre', 'setNombreExportador');
-      expect(mockStore.setNombreExportador).toHaveBeenCalledWith('Test Name');
+    it('debería actualizar el store con el valor del formulario', () => {
+      component.formularioEmpresa.get('nombre')?.setValue('Nuevo Nombre');
+      component.setValoresStore(component.formularioEmpresa, 'nombre');
+
+      expect(MOCK_STORE.actualizarEstado).toHaveBeenCalledWith({ nombre: 'Nuevo Nombre' });
+    });
+
+    it('debería llamar a updateNombreIngles si el campo es tipoEmpresa', () => {
+      jest.spyOn(component, 'updateNombreIngles');
+      component.formularioEmpresa.get('tipoEmpresa')?.setValue('1');
+      component.setValoresStore(component.formularioEmpresa, 'tipoEmpresa');
+
+      expect(component.updateNombreIngles).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('updateNombreIngles', () => {
+    it('debería actualizar el campo nombre basado en paisId', () => {
+      component.nombresIngles = [{ idDelPais: 1, name: 'Mexico' }];
+      component.updateNombreIngles(1);
+
+      expect(component.formularioEmpresa.get('nombre')?.value).toBe('Mexico');
+    });
+
+    it('debería establecer nombre como una cadena vacía si no se encuentra coincidencia', () => {
+      component.nombresIngles = [{ idDelPais: 2, name: 'USA' }];
+      component.updateNombreIngles(1);
+
+      expect(component.formularioEmpresa.get('nombre')?.value).toBe('');
     });
   });
 
   describe('isInvalid', () => {
-    it('should return true for invalid form controls', () => {
-      component.formularioEmpresa.get('numero')?.setValue('');
+    it('debería devolver true si el control es inválido, sucio o tocado', () => {
+      const CONTROL = component.formularioEmpresa.get('numero');
+      CONTROL?.setErrors({ required: true });
+      CONTROL?.markAsTouched();
+
       expect(component.isInvalid('numero')).toBe(true);
+    });
+
+    it('debería devolver false si el control es válido', () => {
+      const CONTROL = component.formularioEmpresa.get('numero');
+      CONTROL?.setValue('12345');
+
+      expect(component.isInvalid('numero')).toBe(false);
     });
   });
 
   describe('ngOnDestroy', () => {
-    it('should clean up subscriptions', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    it('debería completar el subject destroyed$', () => {
+      const SPY_NEXT = jest.spyOn(component['destroyed$'], 'next');
+      const SPY_COMPLETE = jest.spyOn(component['destroyed$'], 'complete');
+
       component.ngOnDestroy();
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
+
+      expect(SPY_NEXT).toHaveBeenCalled();
+      expect(SPY_COMPLETE).toHaveBeenCalled();
     });
   });
 });

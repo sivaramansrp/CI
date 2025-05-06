@@ -1,12 +1,15 @@
-import { Catalogo, REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
+import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-material-de-investigacion-cientifica.service';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130112/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130112Query } from '../../estados/queries/tramite130112.query';
@@ -14,8 +17,6 @@ import { Tramite130112Store } from '../../estados/tramites/tramites130112.store'
 import fractionValues from '@libs/shared/theme/assets/json/130112/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130112/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130112/unidad_da.json';
-import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 
 /**
  * Componente para gestionar la solicitud de mercancías.
@@ -369,7 +370,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130112Store.updateState({
+          this.tramite130112Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
           });
@@ -384,7 +385,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.tramite130112Store.updateState({
+          this.tramite130112Store.actualizarEstado({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
@@ -520,55 +521,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Mapping object for store methods.
- */
-  private mapaDeMetodosDelStore: { [key: string]: (valor: any) => void } = {
-    updateSolicitud: (valor) => this.tramite130112Store.updateSolicitud(valor),
-    setDescripcionPartidasDeLaMercancia: (valor) =>
-      this.tramite130112Store.setDescripcionPartidasDeLaMercancia(valor),
-    setCantidadPartidasDeLaMercancia: (valor) =>
-      this.tramite130112Store.setCantidadPartidasDeLaMercancia(valor),
-    setFraccionTigiePartidasDeLaMercancia: (valor) =>
-      this.tramite130112Store.setFraccionTigiePartidasDeLaMercancia(valor),
-    setFraccionDescripcionPartidasDeLaMercancia: (valor) =>
-      this.tramite130112Store.setFraccionDescripcionPartidasDeLaMercancia(valor),
-    setValorPartidaUSDPartidasDeLaMercancia: (valor) =>
-      this.tramite130112Store.setValorPartidaUSDPartidasDeLaMercancia(valor),
-    setregimen: (valor) => this.tramite130112Store.setRegimen(valor),
-    setclasificacion: (valor) => this.tramite130112Store.setClasificacion(valor),
-    setProducto: (valor) => this.tramite130112Store.setProducto(valor),
-    setDescripcion: (valor) => this.tramite130112Store.setDescripcion(valor),
-    setCantidad: (valor) => this.tramite130112Store.setCantidad(valor),
-    setValorPartidaUSD: (valor) =>
-      this.tramite130112Store.setValorPartidaUSD(parseFloat(valor) || 0),
-    setUnidadMedida: (valor) => this.tramite130112Store.setUnidadMedida(valor),
-    setBloque: (valor) => this.tramite130112Store.setBloque(valor),
-    setUsoEspecifico: (valor) =>
-      this.tramite130112Store.setUsoEspecifico(valor),
-    setJustificacionImportacionExportacion: (valor) =>
-      this.tramite130112Store.setJustificacionImportacionExportacion(valor),
-    setObservaciones: (valor) =>
-      this.tramite130112Store.setObservaciones(valor),
-    setFraccion: (valor) => this.tramite130112Store.setFraccion(valor),
-    setValorFacturaUSD: (valor) =>
-      this.tramite130112Store.setValorFacturaUSD(valor),
-    setEntidad: (valor) => this.tramite130112Store.setEntidad(valor),
-    setRepresentacion: (valor) =>
-      this.tramite130112Store.setRepresentacion(valor),
-  };
-
-  /**
    * setValoresStore
    * Establece valores en el store.
    */
-  setValoresStore(event: { form: FormGroup; campo: string; metodoNombre: string }): void {
-    const valorCampo = event.form.get(event.campo)?.value;
-    const funcionMetodoStore = this.mapaDeMetodosDelStore[event.metodoNombre];
-
-    if (funcionMetodoStore) {
-      funcionMetodoStore(valorCampo);
-    } else {
-      console.error(`Método ${event.metodoNombre} no existe en Tramite130112Store`);
+  setValoresStore($event: { form: FormGroup; campo: string }): void {
+    const VALOR = $event.form.get($event.campo)?.value;
+    this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
+    if($event.campo === 'fraccion'){
+      this.tramite130112Store.actualizarEstado({'unidadMedida': '1'});
     }
   }
 

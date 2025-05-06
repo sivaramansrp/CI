@@ -9,7 +9,7 @@
             [radioOptions]="productoOpciones"
             formControlName="producto"
             [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'producto', 'setProducto')"
+            (valueChange)="setValoresStore(form, 'producto')"
             [layout]="'vertical'"
           ></app-input-radio>
         </div>
@@ -22,7 +22,7 @@
           placeholder="Descripción de la mercancía"
           rows="8"
           formControlName="descripcion"
-          (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
+          (change)="setValoresStore(form, 'descripcion')"
         ></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
@@ -44,7 +44,7 @@
         [required]="true"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccion"
-        (change)="setValoresStore(form, 'fraccion', 'setFraccion')"
+        (change)="setValoresStore(form, 'fraccion')"
       ></app-catalogo-select>
       <div *ngIf="esInvalido('fraccion')" class="text-danger">
         <small *ngIf="form.controls['fraccion'].errors?.['required']">
@@ -61,7 +61,7 @@
           placeholder=""
           type="text"
           formControlName="cantidad"
-          (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
+          (change)="setValoresStore(form, 'cantidad')"
         />
         <div *ngIf="esInvalido('cantidad')" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
@@ -83,7 +83,7 @@
           placeholder=""
           type="text"
           formControlName="valorFacturaUSD"
-          (change)="setValoresStore(form, 'valorFacturaUSD', 'setValorFacturaUSD')"
+          (change)="setValoresStore(form, 'valorFacturaUSD')"
         />
         <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
@@ -104,7 +104,7 @@
           [required]="true"
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
-          (change)="setValoresStore(form, 'unidadMedida', 'setUnidadMedida')"
+          (change)="setValoresStore(form, 'unidadMedida')"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
           <small *ngIf="form.controls['unidadMedida'].errors?.['required']">

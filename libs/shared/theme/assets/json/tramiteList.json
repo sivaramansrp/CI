@@ -416,7 +416,7 @@
     "id": 60,
     "tramite": 130111,
     "linkDashboard": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
-    "linkDepartment": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+    "linkDepartment": "/pago/importacion-de-vehiculos-usados/importacion-de-vehiculos",
     "department": "se"
   },
   {
@@ -444,7 +444,7 @@
     "id": 64,
     "tramite": 130202,
     "linkDashboard": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
-    "linkDepartment": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
+    "linkDepartment": "/pago/exportacion-minerales/exportacion-mineralesde-hierro",
     "department": "se"
   },
   {
@@ -878,14 +878,14 @@
     "id": 126,
     "tramite": 130109,
     "linkDashboard": "/se/importacion-de/vehiculos-usados-adaptados",
-    "linkDepartment": "/se/importacion-de/vehiculos-usados-adaptados",
+    "linkDepartment": "/pago/importacion-de/vehiculos-usados-adaptados",
     "department": "se"
   },
   {
     "id": 127,
     "tramite": 130110,
     "linkDashboard": "/se/pago/importacion/neumaticos-comercializar",
-    "linkDepartment": "/se/pago/importacion/neumaticos-comercializar",
+    "linkDepartment": "/pago/importacion/neumaticos-comercializar",
     "department": "se"
   },
   {
@@ -1109,35 +1109,35 @@
     "id": 159,
     "tramite": 130112,
     "linkDashboard": "/se/importacion-material-de-investigacion-cientifica",
-    "linkDepartment": "/se/importacion-material-de-investigacion-cientifica",
+    "linkDepartment": "/pago/importacion-material-de-investigacion-cientifica",
     "department": "se"
   },
   {
     "id": 160,
     "tramite": 130114,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/diamante-bruto/diamante",
+    "linkDepartment": "/pago/diamante-bruto/diamante",
     "department": "se"
   },
   {
     "id": 161,
     "tramite": 130115,
     "linkDashboard": "/se/importacion-vehiculos-nuevos/solicitud",
-    "linkDepartment": "/se/importacion-vehiculos-nuevos/solicitud",
+    "linkDepartment": "/pago/importacion-vehiculos-nuevos/solicitud",
     "department": "se"
   },
   {
     "id": 162,
     "tramite": 130203,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/exportar-diamantes/exportación-de-diamantes-en-bruto",
+    "linkDepartment": "/pago/exportar-diamantes/exportación-de-diamantes-en-bruto",
     "department": "se"
   },
   {
     "id": 163,
     "tramite": 130217,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/previos-exportacion/control-permisos-previos-exportacion",
+    "linkDepartment": "/pago/previos-exportacion/control-permisos-previos-exportacion",
     "department": "se"
   },
   {
@@ -1725,28 +1725,28 @@
     "id": 247,
     "tramite": 130104,
     "linkDashboard": "/se/importacion-otros-vehiculos-usados/solicitud",
-    "linkDepartment": "/se/importacion-otros-vehiculos-usados/solicitud",
+    "linkDepartment": "/pago/importacion-otros-vehiculos-usados/solicitud",
     "department": "se"
   },
   {
     "id": 248,
     "tramite": 130105,
     "linkDashboard": "/se/importacion-vehiculos-usados-donacion/solicitud",
-    "linkDepartment": "/se/importacion-vehiculos-usados-donacion/solicitud",
+    "linkDepartment": "/pago/importacion-vehiculos-usados-donacion/solicitud",
     "department": "se"
   },
   {
     "id": 249,
     "tramite": 130113,
     "linkDashboard": "/se/importacion/equipo-anticontaminante",
-    "linkDepartment": "/se/importacion/equipo-anticontaminante",
+    "linkDepartment": "/pago/importacion/equipo-anticontaminante",
     "department": "se"
   },
   {
     "id": 250,
     "tramite": 130116,
     "linkDashboard": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
-    "linkDepartment": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
+    "linkDepartment": "/pago/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
     "department": "se"
   },
   {
