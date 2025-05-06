@@ -6,7 +6,7 @@
                 </app-catalogo-select>
             </div>
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="seccionAduanera" [label]="'Sección Aduanera'" [required]="true"
+                <app-catalogo-select [catalogo]="seccionAduanera" [label]="'Sección Aduanera'"
                     formControlName="seccionAduanera">
                 </app-catalogo-select>
             </div>
@@ -19,18 +19,25 @@
                 </app-catalogo-select>
             </div>
             <div class="col-md-6" *ngIf="mostrarFechaOperacion">
-                <label for="fechaOperacion" class="form-label">Fecha de operación</label>
+                <label for="fechaOperacion" class="form-label">Fecha de operación*:</label>
                 <input class="form-control" type="date" id="fechaOperacion" formControlName="fechaOperacion" />
+                @if(formulario.controls['fechaOperacion'].invalid && formulario.controls['fechaOperacion'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label" for="motivoDespachoDomicilio">Motivo o justificación de despacho a
-                    domicilio</label>
+                    domicilio*:</label>
                 <textarea class="form-control h-25" id="motivoDespachoDomicilio" rows="3"
                     formControlName="motivoDespachoDomicilio" id="motivoDespachoDomicilio" placeholder=""
                     title="motivoDespachoDomicilio"></textarea>
+                @if(formulario.controls['motivoDespachoDomicilio'].invalid &&
+                formulario.controls['motivoDespachoDomicilio'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="observaciones">Observaciones</label>
@@ -40,84 +47,121 @@
         </div>
     </div>
 </form>
-<ng-titulo titulo="Datos de la mercancía" />
-
 <form [formGroup]="formularioMercancia">
     <div class="container">
+        <ng-titulo titulo="Datos de la mercancía" />
+
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="valorMercancia" class="form-label">Valor de la mercancía</label>
+                <label for="valorMercancia" class="form-label">Valor de la mercancía*:</label>
                 <input class="form-control" type="text" id="valorMercancia" formControlName="valorMercancia" />
+                @if(formularioMercancia.controls['valorMercancia'].invalid &&
+                formularioMercancia.controls['valorMercancia'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="tipoMoneda" [label]="'Tipo de moneda'" [required]="true" formControlName="tipoMoneda">
+                <app-catalogo-select [catalogo]="tipoMoneda" [label]="'Tipo de moneda'" [required]="true"
+                    formControlName="tipoMoneda">
                 </app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="motivoDespachoDomicilio">Nombre o descripción comercial de la mercancía</label>
+                <label class="form-label" for="motivoDespachoDomicilio">Nombre o descripción comercial de la
+                    mercancía*:</label>
                 <textarea class="form-control h-25" id="descripcionMercancia" rows="3"
                     formControlName="descripcionMercancia" id="descripcionMercancia" placeholder=""
                     title="descripcionMercancia"></textarea>
+                @if(formularioMercancia.controls['descripcionMercancia'].invalid &&
+                formularioMercancia.controls['descripcionMercancia'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="observaciones">Descripción detallada y/o especificaciones técnicas de la
-                    mercancía</label>
-                <textarea class="form-control h-25" id="especificacionesMercancia" rows="3" formControlName="especificacionesMercancia"
-                 placeholder="" title="observaciones"></textarea>
+                    mercancía*:</label>
+                <textarea class="form-control h-25" id="especificacionesMercancia" rows="3"
+                    formControlName="especificacionesMercancia" placeholder="" title="observaciones"></textarea>
+                @if(formularioMercancia.controls['especificacionesMercancia'].invalid &&
+                formularioMercancia.controls['especificacionesMercancia'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
     </div>
 </form>
-
-<ng-titulo titulo="Logística de las operaciones" />
-
 <form [formGroup]="formularioLogistica">
     <div class="container">
+        <ng-titulo titulo="Logística de las operaciones" />
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label" for="esquemasControlSeguridad
-                ">Señale los esquemas de control y seguridad de las operaciones</label>
+                ">Señale los esquemas de control y seguridad de las operaciones*:</label>
                 <textarea class="form-control h-25" id="esquemasControlSeguridad" rows="3"
                     formControlName="esquemasControlSeguridad" placeholder=""
                     title="esquemasControlSeguridad"></textarea>
+                @if(formularioLogistica.controls['esquemasControlSeguridad'].invalid &&
+                formularioLogistica.controls['esquemasControlSeguridad'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las operaciones</label>
-                <textarea class="form-control h-25" id="distanciaRutaTiempos" rows="3" formControlName="distanciaRutaTiempos"
-                 placeholder="" title="distanciaRutaTiempos"></textarea>
+                <label class="form-label" for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las
+                    operaciones*:</label>
+                <textarea class="form-control h-25" id="distanciaRutaTiempos" rows="3"
+                    formControlName="distanciaRutaTiempos" placeholder="" title="distanciaRutaTiempos"></textarea>
+                @if(formularioLogistica.controls['distanciaRutaTiempos'].invalid &&
+                formularioLogistica.controls['distanciaRutaTiempos'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
     </div>
 </form>
-
-<ng-titulo titulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante"/>
 <form [formGroup]="formularioUbicacionMercancia">
     <div class="container">
+        <ng-titulo titulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante" />
+
         <div class="row mb-3">
             <div class="col-md-12">
-                <label for="direccion" class="form-label">Dirección</label>
+                <label for="direccion" class="form-label">Dirección*:</label>
                 <input class="form-control" type="text" id="direccion" formControlName="direccion" />
+                @if(formularioUbicacionMercancia.controls['direccion'].invalid &&
+                formularioUbicacionMercancia.controls['direccion'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="telefono" class="form-label">Teléfono</label>
+            <div class="col-md-4">
+                <label for="telefono" class="form-label">Teléfono*:</label>
                 <input class="form-control" type="text" id="telefono" formControlName="telefono" />
+                @if(formularioUbicacionMercancia.controls['telefono'].invalid &&
+                formularioUbicacionMercancia.controls['telefono'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="distanciaAduana" class="form-label">Distancia a la aduana (km)</label>
+            <div class="col-md-4">
+                <label for="distanciaAduana" class="form-label">Distancia a la aduana (km):*</label>
                 <input class="form-control" type="text" id="distanciaAduana" formControlName="distanciaAduana" />
+                @if(formularioUbicacionMercancia.controls['distanciaAduana'].invalid &&
+                formularioUbicacionMercancia.controls['distanciaAduana'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-12">
-                <label for="referencias" class="form-label">Referencias</label>
+                <label for="referencias" class="form-label">Referencias*:</label>
                 <input class="form-control" type="text" id="referencias" formControlName="referencias" />
+                @if(formularioUbicacionMercancia.controls['referencias'].invalid &&
+                formularioUbicacionMercancia.controls['referencias'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
             </div>
         </div>
     </div>

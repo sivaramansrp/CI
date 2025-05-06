@@ -41,10 +41,10 @@ export class DatosSolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.formulario = this.fb.group({
       aduana: [null, Validators.required],
-      seccionAduanera: [null, Validators.required],
+      seccionAduanera: [null],
       tipoOperacion: [null, Validators.required],
-      fechaOperacion: [null],
-      motivoDespachoDomicilio: [null],
+      fechaOperacion: [null, Validators.required],
+      motivoDespachoDomicilio: [null, Validators.required],
       observaciones: [null]
     });
 
