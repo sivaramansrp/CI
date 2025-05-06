@@ -70,6 +70,16 @@ export const appRoutes: Route[] = [
       }).then((m) => m.AppSemarnatModule)
   },
   {
+    path: 'sener',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.sener}/remoteAppEntry.js`,
+        remoteName: 'sener',
+        exposedModule: './Module'
+      }).then((m) => m.AppSenerModule)
+  },
+  
+  {
     path: 'funcionario',
     loadChildren: () =>
         loadRemoteModule({
@@ -104,6 +114,15 @@ export const appRoutes: Route[] = [
             remoteName: 'inbal',
             exposedModule: './Module'
         }).then((m) => m.AppInbalModule)
+  },
+  {
+    path: 'cofepris',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.cofepris}/remoteAppEntry.js`,
+            remoteName: 'cofepris',
+            exposedModule: './Module'
+        }).then((m) => m.AppCofeprisModule)
   },
   {
     path: 'profepa',
