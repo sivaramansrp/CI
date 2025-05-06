@@ -4,9 +4,8 @@
  * Este componente es independiente (standalone) y utiliza varios componentes compartidos
  * para mostrar información y permitir la interacción del usuario.
  */
-import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
 
 /**
  * @nombre PasoDosComponent

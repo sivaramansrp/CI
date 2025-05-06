@@ -1,6 +1,6 @@
 import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
 import { AVISO, DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild, inject} from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { WizardComponent, WizardService } from '@ng-mf/data-access-user';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
@@ -51,67 +51,133 @@ export class PantallasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * @description
+   * Clase CSS para mostrar alertas de información.
+   */
   public infoAlert = 'alert-info';
 
+  /**
+   * @description
+   * Texto de aviso cargado desde una constante.
+   */
   TEXTOS = AVISO.Aviso;
 
+  /**
+   * @description
+   * Mensaje de alerta para una aplicación registrada.
+   */
   public applicacionRegistradaAlerta = ALERTA_DE_APLICACION_REGISTRADA.message;
 
+  /**
+   * @description
+   * Mensaje de error para formularios incompletos.
+   */
   public formErrorAlert = ERROR_FORMA_ALERT;
 
+  /**
+   * @description
+   * Indica si se debe mostrar la alerta de aplicación registrada.
+   */
   public mostrarAplicacionRegistradaAlerta: boolean = false;
 
+  /**
+   * @description
+   * Indica si el formulario es válido.
+   */
   public esFormaValido!: boolean;
+
+  /**
+   * @description
+   * Índice de la subpestaña seleccionada.
+   */
   public subpestanaSeleccionada!: number;
+
+  /**
+   * @description
+   * Indica si el formulario de la pestaña dos es válido.
+   */
   public pestanaDosFormularioValido: boolean = false;
+
+  /**
+   * @description
+   * Servicio del wizard para manejar cambios de índice.
+   */
   wizardService = inject(WizardService);
+
+  /**
+   * @description
+   * Constructor del componente.
+   * Inyecta el servicio de validación de formularios.
+   * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
+   */
   constructor(
     public validacionDeFormularioService: ValidacionDeFormularioService
   ) {
     //
   }
 
+  /**
+   * @description
+   * Método que verifica la validez del formulario.
+   * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
   verificarLaValidezDelFormulario(): boolean {
     return (
       this.validacionDeFormularioService.isFormValid('programaSeleccionadoForm') ?? false
     );
   }
 
+  /**
+   * @description
+   * Getter que verifica si el formulario del programa seleccionado es válido.
+   * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
   get programaSeleccionadoFormValid(): boolean {
     return this.validacionDeFormularioService.isFormValid('programaSeleccionadoForm') ?? false;
   }
 
+  /**
+   * @description
+   * Método que actualiza el índice de la subpestaña seleccionada.
+   * @param {number} event Índice de la subpestaña seleccionada.
+   */
   public pestanaCambiado(event: number): void {
     if (event) {
       this.subpestanaSeleccionada = event;
     }
   }
 
-    /**
+  /**
    * @description
    * Método que actualiza el índice del paso seleccionado en el wizard.
    * También controla la navegación hacia adelante o hacia atrás en el wizard.
-   * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del paso.
+   * @param {AccionBoton} e Objeto que contiene la acción (`cont` o `ant`) y el valor del paso.
    */
-
-    getValorIndice(e: AccionBoton): void { 
-      this.esFormaValido = this.verificarLaValidezDelFormulario();
-      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-          if (e.accion === 'cont') {
-              this.continuar(e);
-          } else if (e.accion === 'ant' && this.esFormaValido) {
-              this.indice = e.valor - 1;
-              this.datosPasos.indice = e.valor - 1;
-              this.wizardComponent.atras();
-          } else if (!this.esFormaValido) {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-          }
+  getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = this.verificarLaValidezDelFormulario();
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      if (e.accion === 'cont') {
+        this.continuar(e);
+      } else if (e.accion === 'ant' && this.esFormaValido) {
+        this.indice = e.valor - 1;
+        this.datosPasos.indice = e.valor - 1;
+        this.wizardComponent.atras();
+      } else if (!this.esFormaValido) {
+        this.indice = e.valor;
+        this.datosPasos.indice = e.valor;
       }
-  
     }
+  }
 
-  public continuar(e: AccionBoton): void { 
+  /**
+   * @description
+   * Método que controla la acción de continuar en el wizard.
+   * Actualiza el índice y muestra alertas según la validez del formulario.
+   * @param {AccionBoton} e Objeto que contiene la acción y el valor del paso.
+   */
+  public continuar(e: AccionBoton): void {
     if (this.subpestanaSeleccionada === 2 && this.programaSeleccionadoFormValid && !this.esFormaValido) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;

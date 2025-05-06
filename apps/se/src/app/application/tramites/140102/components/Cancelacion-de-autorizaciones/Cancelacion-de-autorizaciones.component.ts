@@ -7,7 +7,10 @@ import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ProgramaSeleccionadoComponent } from '../programa-seleccionado/programa-seleccionado.component';
 
-
+/**
+ * Componente que gestiona la funcionalidad de cancelación de autorizaciones.
+ * Este componente incluye la lógica para manejar tablas dinámicas y datos relacionados con la cancelación de autorizaciones.
+ */
 @Component({
   selector: 'app-cancelacion-de-autorizaciones',
   standalone: true,
@@ -15,21 +18,25 @@ import { ProgramaSeleccionadoComponent } from '../programa-seleccionado/programa
   templateUrl: './Cancelacion-de-autorizaciones.component.html',
   styleUrl: './Cancelacion-de-autorizaciones.component.scss',
 })
-export class CancelacionDeAutorizacionesComponent implements OnInit,OnDestroy{
+export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Sujeto utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
   private destroy$ = new Subject<void>();
-  
+
+  /**
+   * Lista de datos que se mostrarán en la tabla de cancelación de autorizaciones.
+   */
   CancelacionTabladatos: CancelacionTabla[] = [];
-    /**
-   * Tipo de selección para la tabla de insumos.
+
+  /**
+   * Tipo de selección para la tabla de cancelación de autorizaciones.
    * Por defecto, se utiliza la selección por checkbox.
    */
-    public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
-    
+  public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
-   * Configuración de las columnas para la tabla de extranjeros.
+   * Configuración de las columnas para la tabla de cancelación de autorizaciones.
    */
   public tableHeaderExtranjeros: ConfiguracionColumna<CancelacionTabla>[] = [
     { encabezado: 'Folio de programa', clave: (item) => item.folioDePrograma, orden: 1 },
@@ -38,18 +45,28 @@ export class CancelacionDeAutorizacionesComponent implements OnInit,OnDestroy{
     { encabezado: 'Tipo programa', clave: (item) => item.tipoPrograma, orden: 4 },
     { encabezado: 'Estatus', clave: (item) => item.estatus, orden: 5 },
   ];
-  constructor( private cancelacionDeAutorizacionesService: CancelacionDeAutorizacionesService)
-  {
+
+  /**
+   * Constructor del componente.
+   * Inyecta el servicio necesario para manejar los datos de cancelación de autorizaciones.
+   * @param cancelacionDeAutorizacionesService Servicio para manejar los datos de cancelación de autorizaciones.
+   */
+  constructor(private cancelacionDeAutorizacionesService: CancelacionDeAutorizacionesService) {
     // Constructor vacío
   }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura las suscripciones y carga los datos iniciales.
+   */
   ngOnInit(): void {
-    // Método de inicialización
     this.obtenerDatosCancelacionTabla();
   }
-   /**  
-   * Método que obtiene los datos de la tabla de insumos desde el servicio.
+
+  /**
+   * Método que obtiene los datos de la tabla de cancelación de autorizaciones desde el servicio.
    */
-   obtenerDatosCancelacionTabla(): void {
+  obtenerDatosCancelacionTabla(): void {
     this.cancelacionDeAutorizacionesService
       .getCancelacionTabla()
       .pipe(takeUntil(this.destroy$))
@@ -58,11 +75,11 @@ export class CancelacionDeAutorizacionesComponent implements OnInit,OnDestroy{
       });
   }
 
-    /**
+  /**
    * Método que destruye las suscripciones para evitar fugas de memoria.
    */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
