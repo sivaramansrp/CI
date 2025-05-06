@@ -1,4 +1,3 @@
-import { ALERTA_COM, FLORA_FAUNA_ALERT } from '../../constantes/flora-fauna.enum';
 import { Component, ViewChild } from '@angular/core';
 import {
   DatosPasos,
@@ -6,6 +5,7 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 
+import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FLORA_FAUNA } from '../../constantes/flora-fauna.enum';
 
 /**
@@ -41,7 +41,7 @@ export class FloraFaunaComponent {
   pantallasPasos: ListaPasosWizard[] = FLORA_FAUNA;
   
   /** Mensaje de alerta que se muestra al usuario sobre la solicitud registrada. */
-  TEXTO_FLORA_FAUNA_ALERT = FLORA_FAUNA_ALERT;
+  TEXTO_FLORA_FAUNA_ALERT = ''; // Placeholder or alternative value
 
   /** Constantes relacionadas con las alertas, importadas desde ALERTA_COM. */
   TEXTOS = ALERTA_COM;
