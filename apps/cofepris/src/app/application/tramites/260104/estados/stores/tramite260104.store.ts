@@ -56,30 +56,45 @@ export function createInitialState(): Tramite260104State {
 }
 
 
-
-
 /**
  * @fileoverview
- * Este archivo contiene la definición del store `Tramite260104Store` para gestionar el estado
- * relacionado con el trámite 260104. Proporciona métodos para actualizar y modificar
- * diferentes partes del estado, como fabricantes, destinatarios finales y pagos de derechos.
+ * Este archivo contiene la definición de la clase `Tramite260104Store`, que extiende la funcionalidad
+ * de la clase `Store` para gestionar el estado de un trámite específico en la aplicación.
+ * 
+ * Proporciona métodos para actualizar y modificar diferentes partes del estado, como listas de fabricantes,
+ * destinatarios finales y el estado del formulario de pago de derechos. También incluye métodos para eliminar
+ * elementos específicos de las listas en el estado.
+ * 
+ * @remarks
+ * La clase utiliza decoradores de Angular y Akita para configurar el store y definir su comportamiento.
  */
 @Injectable({
   providedIn: 'root',
 })
 
-// Configuración del store con el nombre 'Tramite260104' y habilitando la opción de reinicio.
+
 @StoreConfig({ name: 'Tramite260104', resettable: true })
 
 export class Tramite260104Store extends Store<Tramite260104State> {
+  
+  
+  /**
+   * Constructor de la clase `Tramite260104Store`.
+   * 
+   * Inicializa el estado del store utilizando el estado inicial definido
+   * mediante la función `createInitialState`.
+   */
   constructor() {
     // Inicializa el estado del store con el estado inicial definido.
     super(createInitialState());
   }
 
+  
   /**
-   * Actualiza la lista de fabricantes en la tabla de datos agregando nuevos fabricantes.
-   * @param newFabricantes - Lista de nuevos fabricantes a agregar.
+   * Actualiza la lista de fabricantes en la tabla de datos del estado.
+   * 
+   * @param newFabricantes - Un arreglo de objetos de tipo `Fabricante` que se agregarán
+   *                         a la lista existente de `fabricanteTablaDatos`.
    */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
@@ -88,9 +103,15 @@ export class Tramite260104Store extends Store<Tramite260104State> {
     }));
   }
 
+ 
   /**
-   * Actualiza la lista de destinatarios finales en la tabla de datos agregando nuevos destinatarios.
-   * @param newDestinatarios - Lista de nuevos destinatarios a agregar.
+   * Actualiza la lista de destinatarios finales en la tabla de datos.
+   * 
+   * Este método agrega nuevos destinatarios a la lista existente de 
+   * `destinatarioFinalTablaDatos` en el estado actual de la tienda.
+   * 
+   * @param newDestinatarios - Un arreglo de objetos `Destinatario` que 
+   * se agregarán a la lista existente de destinatarios finales.
    */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: Destinatario[]
@@ -104,9 +125,12 @@ export class Tramite260104Store extends Store<Tramite260104State> {
     }));
   }
 
+ 
   /**
-   * Actualiza la información del formulario de pago de derechos.
-   * @param nuevoPagoDerechos - Nueva información del pago de derechos.
+   * Actualiza el estado de `pagoDerechos` con un nuevo valor proporcionado.
+   *
+   * @param nuevoPagoDerechos - El nuevo estado del formulario de pago de derechos 
+   * que se utilizará para actualizar el estado actual.
    */
   public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
@@ -115,9 +139,12 @@ export class Tramite260104Store extends Store<Tramite260104State> {
     }));
   }
 
+ 
   /**
-   * Modifica la lista completa de destinatarios finales en la tabla de datos.
-   * @param Destinatarios - Nueva lista de destinatarios finales.
+   * Modifica la lista de destinatarios finales en la tabla de datos.
+   *
+   * @param Destinatarios - Un arreglo de objetos de tipo `Destinatario` que representa
+   * los destinatarios finales que se establecerán en el estado.
    */
   public modifyDestinatarioFinalTablaDatos(Destinatarios: Destinatario[]): void {
     this.update((state) => ({
@@ -125,24 +152,17 @@ export class Tramite260104Store extends Store<Tramite260104State> {
       destinatarioFinalTablaDatos: Destinatarios,
     }));
   }
-/**
-   * @method eliminarDestino
-   * @description Elimina un destinatario específico de la lista `destinatarioFinalTablaDatos` en el estado de la tienda.
-   * 
-   * @param {Destinatario} destino - El destinatario que se desea eliminar de la lista. 
-   * Se compara cada propiedad del objeto `destino` con los elementos de la lista para encontrar una coincidencia exacta.
-   * 
-   * @returns {void}
-   * 
-   * @example
-   * const destinatario: Destinatario = { id: 1, nombre: 'Juan Pérez' };
-   * tramite260104Store.eliminarDestino(destinatario);
-   * 
-   * @remarks
-   * Si no se encuentra el destinatario en la lista, no se realiza ninguna modificación.
+
+  /**
+   * Elimina un destinatario específico de la lista `destinatarioFinalTablaDatos` en el estado.
    *
+   * @param destino - El objeto `Destinatario` que se desea eliminar de la lista.
+   *
+   * El método busca el índice del destinatario en la lista comparando todas las propiedades
+   * del objeto proporcionado con los elementos existentes. Si encuentra una coincidencia,
+   * elimina el destinatario de la lista y actualiza el estado con una nueva referencia
+   * para garantizar la reactividad.
    */
-  
   eliminarDestino(destino: Destinatario): void {
     this.update((state) => {
       const INDICE_BORROR = state.destinatarioFinalTablaDatos.findIndex((ele) =>
@@ -162,22 +182,17 @@ export class Tramite260104Store extends Store<Tramite260104State> {
 
   
   /**
-   * @method eliminarFabricante
-   * @description Elimina un fabricante específico de la lista `fabricanteTablaDatos` en el estado de la tienda.
+   * Elimina un fabricante de la lista `fabricanteTablaDatos` en el estado del store.
    * 
-   * @param {Fabricante} fabricante - El objeto fabricante que se desea eliminar de la lista.
-   * 
-   * @example
-   * const fabricanteAEliminar = { id: 1, nombre: 'Fabricante A' };
-   * tramite260104Store.eliminarFabricante(fabricanteAEliminar);
+   * @param fabricante - El objeto `Fabricante` que se desea eliminar. 
+   *                     Se compara cada propiedad del objeto para encontrar una coincidencia exacta en la lista.
    * 
    * @remarks
-   * Este método busca el índice del fabricante en la lista `fabricanteTablaDatos` comparando todas las propiedades
-   * del objeto `fabricante` proporcionado. Si encuentra una coincidencia, elimina el fabricante de la lista.
-   * 
-   * @returns {void}
+   * Si se encuentra un fabricante que coincide con todas las propiedades del objeto proporcionado,
+   * se elimina de la lista `fabricanteTablaDatos`. Posteriormente, se actualiza el estado con una nueva
+   * referencia de la lista para garantizar la reactividad.
    */
-  eliminarFabricante(fabricante: Fabricante): void {
+   eliminarFabricante(fabricante: Fabricante): void {
     this.update((state) => {
       const INDICE_BORROR = state.fabricanteTablaDatos.findIndex((ele) =>
         Object.entries(fabricante).every(([key, value]) => ele[key as keyof Fabricante] === value)

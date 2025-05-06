@@ -24,36 +24,21 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
 
 /**
- * @component
- * @name AgregarDestinatarioFinalComponent
- * @description
- * Este componente es responsable de gestionar la funcionalidad para agregar un destinatario final 
- * en el trámite "260104". Proporciona un formulario reactivo para recopilar información del destinatario 
- * y permite guardar los datos en un estado centralizado utilizando un store.
+ * Componente para agregar un destinatario final en el trámite 260104.
+ * Este componente permite gestionar un formulario reactivo para capturar
+ * y validar los datos de un destinatario final, así como realizar operaciones
+ * relacionadas como guardar, limpiar y cancelar la operación.
  * 
- * @selector app-agregar-destinatario-final
- * @standalone true
- * @imports
- * - CommonModule
- * - ReactiveFormsModule
- * - CatalogoSelectComponent
- * - TituloComponent
- * 
- * @templateUrl ./agregar-destinatario-final.component.html
- * @styleUrl ./agregar-destinatario-final.component.scss
- * 
- * @implements
- * - OnDestroy
- * - OnInit
+ * @remarks
+ * - Utiliza servicios para cargar datos de catálogos como países, estados, municipios, etc.
+ * - Implementa validaciones específicas para los campos del formulario.
+ * - Maneja la desuscripción de observables para evitar fugas de memoria.
  * 
  * @example
  * <app-agregar-destinatario-final></app-agregar-destinatario-final>
  * 
- * @dependencies
- * - FormBuilder: Servicio para crear formularios reactivos.
- * - Location: Servicio de Angular para manejar la navegación en el historial.
- * - DatosSolicitudService: Servicio para obtener listas de datos de catálogos.
- * - Tramite260104Store: Servicio para manejar el estado del trámite "260104".
+ * @implements OnDestroy
+ * @implements OnInit
  */
 @Component({
   selector: 'app-agregar-destinatario-final',
@@ -71,77 +56,90 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
 export class AgregarDestinatarioFinalComponent
   implements OnDestroy, OnInit {
+
   /**
-   * Subject utilizado para gestionar la desuscripción de observables.
-   * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
-   * @property {Subject<void>} unsubscribe$
-   * @private
+   * Sujeto utilizado para manejar la desuscripción de observables en el componente.
+   * Se emite un valor `void` para completar los observables y evitar fugas de memoria.
    */
   private unsubscribe$ = new Subject<void>();
 
   /**
-   * Grupo de formulario reactivo para recopilar los datos del destinatario final.
-   * @property {FormGroup} agregarDestinatarioFinal
+   * Representa el formulario reactivo para agregar un destinatario final.
+   * Este formulario se utiliza para capturar y validar los datos necesarios
+   * relacionados con el destinatario final en el trámite.
    */
-  agregarDestinatarioFinal!: FormGroup;
+  public agregarDestinatarioFinal!: FormGroup;
 
+  
   /**
-   * Datos de catálogo de países.
-   * @property {Catalogo[]} paisesDatos
+   * Arreglo que contiene los datos del catálogo de países.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
    */
   public paisesDatos: Catalogo[] = [];
 
+  
   /**
-   * Datos de catálogo de estados.
-   * @property {Catalogo[]} estadosDatos
+   * Arreglo que contiene los datos del catálogo de estados.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
    */
   public estadosDatos: Catalogo[] = [];
 
+  
   /**
-   * Datos de catálogo de municipios.
-   * @property {Catalogo[]} municipiosDatos
+   * Arreglo que almacena los datos de los municipios.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
    */
   public municipiosDatos: Catalogo[] = [];
 
   /**
-   * Datos de catálogo de localidades.
-   * @property {Catalogo[]} localidadesDatos
+   * Arreglo que almacena los datos de las localidades.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
    */
   public localidadesDatos: Catalogo[] = [];
 
+
   /**
-   * Datos de catálogo de colonias.
-   * @property {Catalogo[]} coloniasDatos
+   * Arreglo que almacena los datos de las colonias.
+   * Cada elemento es de tipo `Catalogo`, que representa un catálogo de información.
    */
   public coloniasDatos: Catalogo[] = [];
 
+ 
   /**
-   * Datos de catálogo de códigos postales.
-   * @property {Catalogo[]} codigosPostalesDatos
+   * Arreglo que contiene los datos del catálogo de códigos postales.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
    */
   public codigosPostalesDatos: Catalogo[] = [];
 
+
   /**
-   * @property tipoPersona
-   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-   * @type {TipoPersona}
+   * Representa el tipo de persona asociado a la funcionalidad del componente.
+   * Utiliza la enumeración `TipoPersona` para definir los valores posibles.
    */
   public tipoPersona = TipoPersona;
 
   /**
-   * Arreglo que almacena la lista de destinatarios.
-   * @property {Destinatario[]} destinatarios
+   * Arreglo que contiene los destinatarios finales.
+   * Cada elemento del arreglo es una instancia de la clase `Destinatario`.
    */
-  destinatarios: Destinatario[] = [];
+  public destinatarios: Destinatario[] = [];
 
 
   /**
-   * Crea el componente e inicializa el grupo de formulario.
-   *
-   * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
-   * @param {Tramite260104Store} tramiteStore - Servicio que maneja las actualizaciones de estado para "Tramite260204".
-   * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
-   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
+   * Constructor de la clase AgregarDestinatarioFinalComponent.
+   * 
+   * @param fb - Servicio de FormBuilder para la creación y manejo de formularios reactivos.
+   * @param ubicaccion - Servicio de Location para manejar la navegación y ubicación actual.
+   * @param datosSolicitudService - Servicio para gestionar los datos de la solicitud.
+   * @param tramiteStore - Almacén específico para el manejo del estado del trámite 260104.
    */
   constructor(
     private fb: FormBuilder,
@@ -152,10 +150,19 @@ export class AgregarDestinatarioFinalComponent
     //constructor necesario para el servicio
   }
 
-  /**
-   * Guarda un nuevo destinatario en el arreglo local `destinatarios`
-   * y actualiza la información en el store. Finalmente, resetea el formulario
-   * y navega hacia atrás en el historial.
+ 
+   /**
+   * Guarda un nuevo destinatario final basado en los datos ingresados en el formulario
+   * y lo agrega a la lista de destinatarios existentes. Luego, actualiza la tabla de datos
+   * de destinatarios finales en el store y reinicia el formulario.
+   *
+   * @remarks
+   * - Si el tipo de persona es "MORAL", se utiliza el campo `denominacionRazon` como nombre o razón social.
+   * - Si el tipo de persona es "FISICA", se construye el nombre completo concatenando nombres y apellidos.
+   * - Si el tipo de persona no es reconocido, se asigna un valor vacío como nombre o razón social.
+   *
+   * @throws Puede lanzar errores si el formulario no está correctamente inicializado o si hay problemas
+   * al actualizar el store.
    */
   guardarDestinatario(): void {
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
@@ -208,19 +215,36 @@ export class AgregarDestinatarioFinalComponent
     this.ubicaccion.back();
   }
 
+ 
   /**
-   * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
-   * Llama al método `cargarDatos()`.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se realizan las siguientes acciones:
+   * - Carga de datos necesarios para el componente mediante `cargarDatos`.
+   * - Creación y configuración del formulario reactivo para agregar un destinatario final
+   *   mediante `crearAgregarFormularioAgregarDestinatarioFinal`.
    */
   ngOnInit(): void {
     this.cargarDatos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
   }
 
+ 
   /**
-   * Recupera varias listas de datos del servicio `DatosSolicitudService` y
-   * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
-   * destrucción usando `takeUntil(this.unsubscribe$)`.
+   * Método encargado de cargar los datos necesarios para el componente.
+   * Realiza múltiples solicitudes a servicios para obtener listas de datos
+   * como códigos postales, países, estados, municipios, localidades y colonias.
+   * 
+   * Cada solicitud se gestiona utilizando el operador `takeUntil` para evitar
+   * fugas de memoria al desuscribirse automáticamente cuando el componente
+   * se destruye.
+   * 
+   * Los datos obtenidos se asignan a las propiedades correspondientes del componente:
+   * - `codigosPostalesDatos`: Lista de códigos postales.
+   * - `paisesDatos`: Lista de países.
+   * - `estadosDatos`: Lista de estados.
+   * - `municipiosDatos`: Lista de municipios.
+   * - `localidadesDatos`: Lista de localidades.
+   * - `coloniasDatos`: Lista de colonias.
    */
   cargarDatos(): void {
     this.datosSolicitudService
@@ -267,13 +291,41 @@ export class AgregarDestinatarioFinalComponent
   }
 
 
-  /**
-   * @method crearAgregarFormularioAgregarDestinatarioFinal
-   * @description
-   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
-   * It sets up the form controls with their default values, validation rules, and disabled states 
-   * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
-   * @returns {void} This method does not return any value.
+ 
+   /**
+   * Crea y configura el formulario reactivo para agregar un destinatario final.
+   * 
+   * Este formulario incluye validaciones específicas para cada campo, como 
+   * requisitos de longitud, formato de correo electrónico, y campos obligatorios.
+   * Algunos campos están predefinidos o deshabilitados por defecto.
+   * 
+   * Campos del formulario:
+   * - `tipoPersona`: Tipo de persona (obligatorio).
+   * - `rfc`: Registro Federal de Contribuyentes (obligatorio, longitud mínima de 12 y máxima de 13 caracteres).
+   * - `nombres`: Nombre(s) del destinatario (obligatorio, máximo 200 caracteres).
+   * - `denominacionRazon`: Denominación o razón social (obligatorio).
+   * - `primerApellido`: Primer apellido (obligatorio).
+   * - `segundoApellido`: Segundo apellido (opcional).
+   * - `pais`: País (predefinido como "1" y deshabilitado, obligatorio).
+   * - `estado`: Estado (obligatorio).
+   * - `municipio`: Municipio (obligatorio).
+   * - `localidad`: Localidad (obligatorio).
+   * - `codigoPostal`: Código postal (obligatorio).
+   * - `colonia`: Colonia (obligatorio).
+   * - `calle`: Calle (obligatorio).
+   * - `numeroExterior`: Número exterior (obligatorio).
+   * - `numeroInterior`: Número interior (opcional).
+   * - `lada`: Lada telefónica (obligatorio).
+   * - `telefono`: Teléfono (opcional).
+   * - `correoElectronico`: Correo electrónico (obligatorio, debe ser un correo válido).
+   * - `descPais`: Descripción del país (opcional).
+   * - `descEstado`: Descripción del estado (opcional).
+   * - `descMunicipio`: Descripción del municipio (opcional).
+   * - `descLocalidad`: Descripción de la localidad (opcional).
+   * - `descCodigoPostal`: Descripción del código postal (opcional).
+   * - `descColonia`: Descripción de la colonia (opcional).
+   * 
+   * @returns {void} No retorna ningún valor.
    */
   crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarDestinatarioFinal = this.fb.group({
@@ -328,32 +380,30 @@ export class AgregarDestinatarioFinalComponent
   }
 
 
+  
   /**
-   * @method limpiarFormulario
-   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
-   *
-   * @returns {void} Este método no retorna ningún valor.
+   * Restablece el formulario de agregar destinatario final a su estado inicial.
+   * 
+   * Este método utiliza el método `reset` del formulario reactivo para limpiar
+   * todos los campos y devolverlos a sus valores predeterminados.
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
   }
+  
   /**
-   * @method cancelar
-   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
-   *
-   * @returns {void} Este método no retorna ningún valor.
+   * Cancela la operación actual y navega de regreso a la ubicación anterior.
+   * Utiliza el servicio de navegación para retroceder en el historial.
    */
   cancelar(): void {
     this.ubicaccion.back();
   }
 
+ 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se utiliza para completar y limpiar el Subject `unsubscribe$`, evitando fugas de memoria
+   * al desuscribirse de observables.
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -362,6 +412,7 @@ export class AgregarDestinatarioFinalComponent
 
   
 
+ 
   /**
    * Actualiza el campo `descPais` del formulario `agregarDestinatarioFinal` 
    * basado en el valor seleccionado en el campo `pais`.
@@ -379,13 +430,15 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
+  
   /**
    * Actualiza el valor del campo `descEstado` en el formulario `agregarDestinatarioFinal`
    * basado en el valor seleccionado del campo `estado`.
    *
-   * Busca en la lista `estadosDatos` un objeto cuyo `id` coincida con el valor actual
-   * del campo `estado` y utiliza su propiedad `descripcion` para actualizar el campo
-   * `descEstado`. Si no se encuentra una coincidencia, se asigna una cadena vacía.
+   * Busca en la lista `estadosDatos` un estado cuyo `id` coincida con el valor actual
+   * del campo `estado` en el formulario. Si encuentra una coincidencia, asigna la
+   * descripción del estado al campo `descEstado`. Si no encuentra coincidencias, 
+   * asigna una cadena vacía.
    *
    * @returns {void} No retorna ningún valor.
    */
@@ -396,13 +449,14 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
-  /**
+ 
+   /**
    * Actualiza el campo `descMunicipio` del formulario `agregarDestinatarioFinal`
    * basado en el valor seleccionado en el campo `municipio`.
    *
    * Busca la descripción del municipio correspondiente en la lista `municipiosDatos`
-   * utilizando el identificador seleccionado en el formulario. Si no se encuentra
-   * un municipio coincidente, se asigna una cadena vacía.
+   * utilizando el identificador seleccionado y la asigna al campo `descMunicipio`.
+   * Si no se encuentra un municipio coincidente, se asigna una cadena vacía.
    *
    * @returns {void} No retorna ningún valor.
    */
@@ -413,14 +467,16 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
-  /**
+  
+ 
+   /**
    * Actualiza el campo `descLocalidad` del formulario `agregarDestinatarioFinal`
    * basado en el valor seleccionado en el campo `localidad`.
    *
    * - Obtiene el valor actual del campo `localidad`.
-   * - Busca en la lista `localidadesDatos` un objeto `Catalogo` cuyo `id` coincida con el valor seleccionado.
+   * - Busca en la lista `localidadesDatos` un objeto que coincida con el ID seleccionado.
    * - Si encuentra una coincidencia, establece la descripción correspondiente en el campo `descLocalidad`.
-   * - Si no encuentra una coincidencia, establece el campo `descLocalidad` como una cadena vacía.
+   * - Si no encuentra una coincidencia, establece una cadena vacía.
    *
    * @returns {void} No retorna ningún valor.
    */
@@ -431,16 +487,19 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
+  
   /**
-   * Actualiza el campo `descCodigoPostal` del formulario `agregarDestinatarioFinal`
-   * basado en el valor seleccionado en el campo `codigoPostal`.
+   * Actualiza el campo `descCodigoPostal` en el formulario `agregarDestinatarioFinal`
+   * basado en el valor del código postal seleccionado.
    *
-   * Busca en la lista `codigosPostalesDatos` un elemento cuyo `id` coincida con
-   * el valor actual del campo `codigoPostal`. Si encuentra una coincidencia, 
-   * establece la descripción correspondiente en el campo `descCodigoPostal`.
-   * Si no encuentra coincidencias, establece una cadena vacía.
+   * - Obtiene el valor del campo `codigoPostal` del formulario.
+   * - Busca en la lista `codigosPostalesDatos` un elemento cuyo `id` coincida con el valor del código postal.
+   * - Si encuentra una coincidencia, actualiza el campo `descCodigoPostal` con la descripción correspondiente.
+   * - Si no encuentra una coincidencia, establece el campo `descCodigoPostal` como una cadena vacía.
    *
-   * @returns {void} No retorna ningún valor.
+   * @remarks
+   * Este método se utiliza para sincronizar la descripción del código postal
+   * con el valor seleccionado en el formulario.
    */
   cambiaCodigoPostal(): void {
     const POSTAL_VALUE = this.agregarDestinatarioFinal.get('codigoPostal')?.value;
@@ -450,14 +509,14 @@ export class AgregarDestinatarioFinalComponent
   }
 
 
+  
   /**
    * Actualiza el campo `descColonia` del formulario `agregarDestinatarioFinal` 
    * basado en el valor seleccionado en el campo `colonia`.
    * 
-   * - Obtiene el valor actual del campo `colonia`.
-   * - Busca en la lista `coloniasDatos` el objeto que coincide con el ID seleccionado.
-   * - Si encuentra una coincidencia, establece la descripción de la colonia en el campo `descColonia`.
-   * - Si no encuentra una coincidencia, establece una cadena vacía en el campo `descColonia`.
+   * Busca la descripción de la colonia seleccionada en la lista `coloniasDatos` 
+   * y la asigna al campo `descColonia`. Si no se encuentra una coincidencia, 
+   * se asigna una cadena vacía.
    * 
    * @returns {void} No retorna ningún valor.
    */

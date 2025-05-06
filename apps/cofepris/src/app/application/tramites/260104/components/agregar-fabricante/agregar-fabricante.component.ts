@@ -1,15 +1,6 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { Component,OnDestroy,OnInit } from '@angular/core';
 
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 
 import { CommonModule,Location } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,29 +13,25 @@ import { Fabricante } from '../../models/terceros-relacionados-destino.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
-
-
 /**
- * @module AgregarFabricanteComponent
+ * @component
+ * @name AgregarFabricanteComponent
  * @description
- * Este componente es responsable de gestionar la funcionalidad para agregar fabricantes en el trámite 260104.
- * Proporciona un formulario reactivo para capturar los datos del fabricante, maneja la lógica de validación,
- * y actualiza el estado del store con los datos ingresados. También permite la navegación hacia la vista anterior.
+ * Componente encargado de gestionar el formulario para agregar un fabricante en el trámite 260104.
+ * Permite capturar los datos del fabricante, validarlos y almacenarlos en el estado de la aplicación.
  * 
  * @selector app-agregar-fabricante
  * @standalone true
  * @imports
- * - CommonModule: Módulo común de Angular.
- * - ReactiveFormsModule: Módulo para trabajar con formularios reactivos.
- * - CatalogoSelectComponent: Componente para seleccionar elementos de un catálogo.
- * - TituloComponent: Componente para mostrar títulos en la interfaz.
+ * - CommonModule
+ * - ReactiveFormsModule
+ * - CatalogoSelectComponent
+ * - TituloComponent
  * 
  * @templateUrl ./agregar-fabricante.component.html
  * @styleUrl ./agregar-fabricante.component.scss
  * 
- * @implements
- * - OnDestroy: Interfaz para manejar la lógica de destrucción del componente.
- * - OnInit: Interfaz para manejar la inicialización del componente.
+ * @implements OnDestroy, OnInit
  */
 @Component({
   selector: 'app-agregar-fabricante',
@@ -59,56 +46,54 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
   styleUrl: './agregar-fabricante.component.scss',
 })
 
-export class AgregarFabricanteComponent
-  implements OnDestroy, OnInit
-{
+ export class AgregarFabricanteComponent implements OnDestroy, OnInit{
 
   /**
- * @property unsubscribe$
- * @description Observable utilizado para manejar la desuscripción de los observables y evitar fugas de memoria.
- * @type {Subject<void>}
- */
+   * Sujeto utilizado para manejar la desuscripción de observables.
+   * Se emite un valor `void` para completar los observables y evitar fugas de memoria.
+   * Este patrón es comúnmente utilizado en el ciclo de vida de componentes en Angular.
+   */
   private unsubscribe$ = new Subject<void>();
 
- /**
- * @property agregarFabricante
- * @description Formulario reactivo utilizado para capturar los datos del fabricante.
- * @type {FormGroup}
- */
-  agregarFabricante!: FormGroup;
+ 
+  /**
+   * Formulario reactivo utilizado para agregar un fabricante.
+   * Este formulario contiene los controles necesarios para capturar
+   * y validar la información del fabricante en el componente.
+   */
+  public agregarFabricante!: FormGroup;
+
 
   /**
- * @property fabricantes
- * @description Arreglo que almacena los fabricantes agregados.
- * @type {Fabricante[]}
- */
-
-  fabricantes:Fabricante[] = [];
-/**
- * @property paisesDatos
- * @description Lista de países obtenida del servicio `DatosSolicitudService`.
- * @type {Catalogo[]}
- */
+   * Lista de fabricantes asociados al componente.
+   * 
+   * @type {Fabricante[]}
+   */
+  public fabricantes:Fabricante[] = [];
  
+  /**
+   * Arreglo que contiene los datos del catálogo de países.
+   * Cada elemento del arreglo es de tipo `Catalogo`.
+   */
   public paisesDatos: Catalogo[] = [];
 
  
+ 
   /**
-   * @property tipoPersona
-   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-   * @type {TipoPersona}
+   * Representa el tipo de persona asociado a la aplicación.
+   * Utiliza la enumeración `TipoPersona` para definir si es una persona física o moral.
    */
   public tipoPersona = TipoPersona;
 
-/**
- * @constructor
- * @description Constructor del componente que inicializa los servicios necesarios.
- * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
- * @param {Location} ubicaccion - Servicio para manejar la navegación.
- * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener datos relacionados con la solicitud.
- * @param {Tramite260104Store} tramiteStore - Servicio para gestionar el estado del trámite.
- */
 
+  /**
+   * Constructor de la clase AgregarFabricanteComponent.
+   * 
+   * @param fb - Servicio de FormBuilder para la creación y manejo de formularios reactivos.
+   * @param ubicaccion - Servicio de Location para manejar la navegación y ubicación en la aplicación.
+   * @param datosSolicitudService - Servicio para gestionar los datos de la solicitud.
+   * @param tramiteStore - Almacén específico para manejar el estado del trámite 260104.
+   */
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
@@ -118,13 +103,19 @@ export class AgregarFabricanteComponent
     //constructor necesario para el servicio
   }
 
- /**
- * @method guardarFabricante
- * @description Método que guarda los datos del fabricante en el arreglo `fabricantes` y actualiza el estado en el store.
- * También resetea el formulario y navega a la vista anterior.
- * @returns {void}
- */
- 
+   /**
+   * Guarda un nuevo fabricante basado en los datos proporcionados en el formulario
+   * y lo agrega a la lista de fabricantes. Posteriormente, actualiza la tabla de datos
+   * del trámite y reinicia el formulario.
+   *
+   * @remarks
+   * - Si el tipo de persona es "MORAL", se utiliza la denominación o razón social.
+   * - Si el tipo de persona es "FISICA", se construye el nombre completo utilizando
+   *   nombres, primer apellido y segundo apellido (si está disponible).
+   * - Si no se especifica un tipo de persona válido, el nombre o razón social queda vacío.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   guardarFabricante(): void {
     const VALOR_FORMULARIO = this.agregarFabricante.getRawValue();
 
@@ -167,24 +158,29 @@ export class AgregarFabricanteComponent
     this.ubicaccion.back();
   }
 
- /**
- * @method ngOnInit
- * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
- * Llama a los métodos `cargarDatos` y `crearAgregarFormularioAgregarDestinatarioFinal`.
- * @returns {void}
- */
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se realizan las siguientes acciones:
+   * - Carga de datos necesarios para el componente mediante `cargarDatos`.
+   * - Creación del formulario para agregar un destinatario final mediante `crearAgregarFormularioAgregarDestinatarioFinal`.
+   */
   ngOnInit(): void {
     this.cargarDatos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
   }
 
-  /**
- * @method cargarDatos
- * @description Método que obtiene la lista de países desde el servicio `DatosSolicitudService` y la asigna a `paisesDatos`.
- * Utiliza `takeUntil` para manejar la desuscripción.
- * @returns {void}
- */
+ 
 
+    /**
+     * Carga los datos necesarios para el componente.
+     * 
+     * Este método obtiene la lista de países desde el servicio `datosSolicitudService`
+     * y la asigna a la propiedad `paisesDatos`. Utiliza un operador `takeUntil` para
+     * gestionar la suscripción y evitar fugas de memoria.
+     * 
+     * @returns {void} No retorna ningún valor.
+     */
     cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaPaises()
@@ -195,18 +191,35 @@ export class AgregarFabricanteComponent
 
     }
  
-
-  
-  
-
-
   /**
-   * @method crearAgregarFormularioAgregarDestinatarioFinal
-   * @description
-   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
-   * It sets up the form controls with their default values, validation rules, and disabled states 
-   * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
-   * @returns {void} This method does not return any value.
+   * Crea y configura un formulario reactivo para agregar un destinatario final.
+   * 
+   * Este formulario incluye validaciones para los campos requeridos, como tipo de persona,
+   * RFC, nombres, dirección, y datos de contacto. Algunos campos tienen valores predeterminados
+   * o están deshabilitados por defecto.
+   * 
+   * Campos del formulario:
+   * - `tipoPersona`: Tipo de persona (requerido).
+   * - `rfc`: Registro Federal de Contribuyentes (requerido, longitud mínima de 12 y máxima de 13).
+   * - `nombres`: Nombres del destinatario (requerido, longitud máxima de 200).
+   * - `denominacionRazon`: Denominación o razón social (requerido).
+   * - `primerApellido`: Primer apellido (requerido).
+   * - `segundoApellido`: Segundo apellido (opcional).
+   * - `pais`: País (valor predeterminado "1", deshabilitado, requerido).
+   * - `descPais`: Descripción del país (opcional).
+   * - `estado`: Estado (requerido).
+   * - `municipio`: Municipio (requerido).
+   * - `localidad`: Localidad (requerido).
+   * - `codigoPostal`: Código postal (requerido).
+   * - `colonia`: Colonia (requerido).
+   * - `calle`: Calle (requerido).
+   * - `numeroExterior`: Número exterior (requerido).
+   * - `numeroInterior`: Número interior (opcional).
+   * - `lada`: LADA (requerido).
+   * - `telefono`: Teléfono (opcional).
+   * - `correoElectronico`: Correo electrónico (requerido, debe ser un email válido).
+   * 
+   * @returns {void} No retorna ningún valor.
    */
   crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarFabricante = this.fb.group({
@@ -255,30 +268,30 @@ export class AgregarFabricanteComponent
     });
   }
 
-/**
- * @method limpiarFormulario
- * @description Resetea el formulario `agregarFabricante` para limpiar todos los campos.
- * @returns {void}
- */ 
+
+  /**
+   * Restablece el formulario de agregar fabricante a su estado inicial.
+   * Esta función utiliza el método `reset` del formulario reactivo
+   * para limpiar todos los campos y devolverlos a sus valores predeterminados.
+   */
   limpiarFormulario(): void {
     this.agregarFabricante.reset();
   }
+ 
   /**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio `Location`.
- * @returns {void}
- */
+   * Cancela la operación actual y navega de regreso a la ubicación anterior.
+   * Utiliza el servicio de navegación para retroceder en el historial.
+   */
   cancelar(): void {
     this.ubicaccion.back();
   }
 
 
-/**
- * @method ngOnDestroy
- * @description Hook del ciclo de vida que se ejecuta justo antes de destruir el componente.
- * Emite un valor en `unsubscribe$` para notificar a los suscriptores y completa el observable.
- * @returns {void}
- */
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor al Subject `unsubscribe$` y completar su flujo,
+   * asegurando que se liberen los recursos y se eviten fugas de memoria en suscripciones activas.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
