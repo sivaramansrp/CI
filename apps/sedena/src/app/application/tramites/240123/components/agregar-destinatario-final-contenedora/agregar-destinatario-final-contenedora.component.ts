@@ -299,8 +299,8 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    */
   guardarDestinatario(): void {
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
-        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres } ${this.agregarDestinatarioFinal.value.denominacionRazon} ${this.agregarDestinatarioFinal.value.primerApellido} 
+      ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: this.agregarDestinatarioFinal.value.curp,
       telefono:
