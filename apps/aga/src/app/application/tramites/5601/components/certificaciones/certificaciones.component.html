@@ -1,23 +1,41 @@
-<div class="container">
-  <ng-titulo titulo="Certificación de la empresa" />
-  <div class="row mb-3">
-    <div class="col-auto d-flex align-items-center">
-      <lib-input-check [id]="'tieneCertificacion'" [label]="''" [required]="false"
-        (change)="mostrarModalSiSeleccionado($event)"></lib-input-check>
+<form [formGroup]="formularioCertificacion">
+  <div class="container">
+    <ng-titulo titulo="Certificación de la empresa" />
+    
+    <div class="row mb-3">
+      <div class="col-auto d-flex align-items-center">
+        <lib-input-check
+          [id]="'tieneCertificacion'"
+          [label]="''"
+          [required]="false"
+          formControlName="tieneCertificacion"
+          (change)="mostrarModalSiSeleccionado($event)">
+        </lib-input-check>
+      </div>
+      <div class="col-md-6">
+        <input
+          type="text"
+          id="certificacionEmpresa"
+          class="form-control"
+          formControlName="certificacionEmpresa" />
+      </div>
     </div>
-    <div class="col-md-6">
-      <input type="text" id="certificacionEmpresa" class="form-control" />
+
+    <div class="row">
+      <div class="col-auto d-flex align-items-center">
+        <label for="otraCertificacion">Especifique otra certificación:</label>
+      </div>
+      <div class="col-md-6">
+        <input
+          type="text"
+          id="otraCertificacion"
+          class="form-control"
+          formControlName="otraCertificacion" />
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-auto d-flex align-items-center">
-      <label for="otraCertificacion">Especifique otra certificación:</label>
-    </div>
-    <div class="col-md-6">
-      <input type="text" id="otraCertificacion" class="form-control" />
-    </div>
-  </div>
-</div>
+</form>
+
 
 <div class="modal fade" [ngClass]="{ show: modal === 'show' }" [style.display]="modal === 'show' ? 'block' : 'none'"
   id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true" data-bs-backdrop="static">
