@@ -443,28 +443,63 @@
                         <div class="col-md-8">
                             <label for="fraccionArancelaria">Fracción arancelaria*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
+                            @if(formMercancias.controls['fraccionArancelaria'].invalid && formMercancias.controls['fraccionArancelaria'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['fraccionArancelaria'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <label for="descripcionFraccion">Descripción de la fracción*:</label>
                             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
+                            @if(formMercancias.controls['descripcionFraccion'].invalid && formMercancias.controls['descripcionFraccion'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['descripcionFraccion'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="cantidadUMT">Cantidad UMT*:</label>
                             <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')">
+                            @if(formMercancias.controls['cantidadUMT'].invalid && formMercancias.controls['cantidadUMT'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['cantidadUMT'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
                         </div>
                         <div class="col-md-4">
                             <label for="UMT">UMT*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                             <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
+                            @if(formMercancias.controls['UMT'].invalid && formMercancias.controls['UMT'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['UMT'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label for="cantidadUMC">Cantidad UMC*:</label>
                             <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')">
+                            @if(formMercancias.controls['cantidadUMC'].invalid && formMercancias.controls['cantidadUMC'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['cantidadUMC'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
                         </div>
                         <div class="col-md-4">
                             <app-catalogo-select
