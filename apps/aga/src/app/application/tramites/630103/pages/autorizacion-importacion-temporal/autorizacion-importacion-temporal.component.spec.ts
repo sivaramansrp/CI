@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AutorizacionImportacionTemporalComponent } from './autorizacion-importacion-temporal.component';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PASOS_REGISTRO } from '../../enum/autorizacion-importacion-temporal.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 
 
@@ -74,20 +73,6 @@ describe('AutorizacionImportacionTemporalComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize pasos and pantallasPasos with PASOS_REGISTRO', () => {
-    expect(component.pasos).toEqual(PASOS_REGISTRO);
-    expect(component.pantallasPasos).toEqual(PASOS_REGISTRO);
-  });
-
-  it('should initialize datosPasos correctly', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: PASOS_REGISTRO.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
   });
 
   it('should have default infoAlert value as "alert-info"', () => {

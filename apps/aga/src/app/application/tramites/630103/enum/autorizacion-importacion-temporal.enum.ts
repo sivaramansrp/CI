@@ -8,31 +8,6 @@ import {
     REGEX_POSTAL, 
     REGEX_TELEFONO 
   } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
-/**
- * PASOS_REGISTRO
- * Define los pasos del registro para el trámite 630303.
- * Cada paso contiene un índice, un título, y estados de actividad y completitud.
- */
-export const PASOS_REGISTRO = [
-    {
-        indice: 1,
-        titulo: 'Capturar solicitud',
-        activo: true,
-        completado: true,
-    },
-    {
-        indice: 2,
-        titulo: 'Anexar necesarios',
-        activo: false,
-        completado: false,
-    },
-    {
-        indice: 3,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-    }
-];
 
 /**
  * FORMULARIO_DATOS_MERCANCIA
