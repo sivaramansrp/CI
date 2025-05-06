@@ -368,7 +368,7 @@ export class AgregarDestinatarioFinalComponent
       telefono: [''
       ],
       correoElectronico: [
-        '', [Validators.required, Validators.email],
+        '', [Validators.email],
       ],
       descPais: [''],
       descEstado: [''],

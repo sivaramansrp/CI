@@ -114,9 +114,6 @@
           class="form-control"
           formControlName="segundoApellido"
         />
-        <div *ngIf="agregarDestinatarioFinal.get('segundoApellido')?.errors?.['required'] && (agregarDestinatarioFinal.get('segundoApellido')?.touched || agregarDestinatarioFinal.get('segundoApellido')?.dirty)">
-          <small class="text-danger">El campo Fracción es obligatorio.</small>
-        </div>
       </div>
     </div>
     } 
@@ -129,6 +126,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [disabled]="true"
           (change)="cambiaPais()"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('pais')?.errors?.['required'] && (agregarDestinatarioFinal.get('pais')?.touched || agregarDestinatarioFinal.get('pais')?.dirty)">
@@ -240,23 +238,14 @@
           class="form-control"
           formControlName="numeroInterior"
         />
-        <div *ngIf="agregarDestinatarioFinal.get('numeroInterior')?.errors?.['required'] && (agregarDestinatarioFinal.get('numeroInterior')?.touched || agregarDestinatarioFinal.get('numeroInterior')?.dirty)">
-          <small class="text-danger">El campo Fracción es obligatorio.</small>
-        </div>
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
         <input type="text" class="form-control" formControlName="lada" />
-        <div *ngIf="agregarDestinatarioFinal.get('lada')?.errors?.['required'] && (agregarDestinatarioFinal.get('lada')?.touched || agregarDestinatarioFinal.get('lada')?.dirty)">
-          <small class="text-danger">El campo Fracción es obligatorio.</small>
-        </div>
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
         <input type="text" class="form-control" formControlName="telefono" />
-        <div *ngIf="agregarDestinatarioFinal.get('telefono')?.errors?.['required'] && (agregarDestinatarioFinal.get('telefono')?.touched || agregarDestinatarioFinal.get('telefono')?.dirty)">
-          <small class="text-danger">El campo Fracción es obligatorio.</small>
-        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:</label>
@@ -270,9 +259,6 @@
           class="form-control"
           formControlName="correoElectronico"
         />
-        <div *ngIf="agregarDestinatarioFinal.get('correoElectronico')?.errors?.['required'] && (agregarDestinatarioFinal.get('correoElectronico')?.touched || agregarDestinatarioFinal.get('correoElectronico')?.dirty)">
-          <small class="text-danger">El campo Fracción es obligatorio.</small>
-        </div>
       </div>
     </div>
 
