@@ -1,46 +1,26 @@
 import {
-Catalogo,
-Solicitud230202State,
-Tramite230202Store,
-} from '../../estados/tramite230202.store';
-import { 
-  CatalogoSelectComponent, 
-  ConfiguracionColumna, 
-  CrossListLable, 
-  CrosslistComponent, 
-  TablaDinamicaComponent, 
-  TablaSeleccion, 
-  TituloComponent } from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import { 
-  DatosDetalle, 
-  DatosSolicitud } from '../../models/datos-tramite.model';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { 
-  Subject, 
-  map, 
-  merge, 
-  takeUntil } from 'rxjs';
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  CrosslistComponent,
+  CrossListLable,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
-import { Modal } from 'bootstrap';
 
+/**
+ * Componente principal para gestionar los datos de la solicitud del trámite 230202.
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -62,6 +42,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   solicitudForm!: FormGroup;
 
+  /**
+   * Formulario para agregar mercancías.
+   */
   agregarMercanciasForm!: FormGroup;
 
   /**
@@ -75,47 +58,169 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Lista de numeroDeCertificado disponibles.
-   * @type {Catalogo[]}
+   * Lista de catálogos disponibles para el número de certificado.
    */
   numeroDeCertificado!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para aduanas.
+   */
   aduana!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para países.
+   */
   pais!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para entidades.
+   */
   entidades!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para la descripción del producto.
+   */
   descripcionProducto!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para fracciones arancelarias.
+   */
   fraccionArancelaria!: Catalogo[];
+
+  /**
+   * Lista de rangos de días seleccionados.
+   */
   selectRangoDias: string[] = [];
+
+  /**
+   * Lista de entidades seleccionadas.
+   */
   selectEntidades: string[] = [];
+
+  /**
+   * Lista de fechas seleccionadas.
+   */
   fechasSeleccionadas: Catalogo[] = [];
+
+  /**
+   * Lista de datos de fechas.
+   */
   fechasDatos: Catalogo[] = [];
+
+  /**
+   * Lista de catálogos disponibles para géneros.
+   */
   genero!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para especies.
+   */
   especie!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para nombres comunes.
+   */
   nombreComun!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para unidades de medida.
+   */
   unidadDeMedida!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para medios de transporte.
+   */
   medioDeTransporte!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para estados.
+   */
   estado!: Catalogo[];
+
+  /**
+   * Control de formulario para la fecha.
+   */
   fecha: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para la fecha seleccionada.
+   */
   fechaSeleccionada: FormControl = new FormControl('');
+
+  /**
+   * Referencia a los componentes Crosslist en la vista.
+   */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+  /**
+   * Referencia al modal para agregar mercancías.
+   */
   @ViewChild('modalAgregarMercancias', { static: false }) modalRef!: ElementRef;
+
+  /**
+   * Referencia al modal de confirmación.
+   */
   @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
   @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Botones para gestionar la lista de países de origen.
+   */
   public paisDeOrigenBotons = this.getCrossListBtn(0);
+
+  /**
+   * Botones para gestionar la lista de entidades.
+   */
   public entidadesBotons = this.getCrossListBtn(1);
+
+  /**
+   * Etiquetas para la lista de países de origen.
+   */
   public paisDeOrigenLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
   };
+
+  /**
+   * Etiquetas para la lista de entidades.
+   */
   public entidadesLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Entidades disponsibles:',
     derecha: 'Entidades seleccionadas*:',
   };
+
+  /**
+   * Lista de datos de la solicitud.
+   */
   public datosSolicitud: DatosSolicitud[] = [];
-  selectedRows:number[] = [];
-  selectedRowsDetalle:number[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de solicitudes.
+   */
+  selectedRows: number[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de detalles.
+   */
+  selectedRowsDetalle: number[] = [];
+
+  /**
+   * Lista de datos de detalle.
+   */
   public datosDetalle: DatosDetalle[] = [];
+
+  /**
+   * Configuración de la tabla de selección.
+   */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * Configuración de las columnas de la tabla de solicitudes.
+   */
   public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     {
@@ -135,6 +240,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Configuración de las columnas de la tabla de detalles.
+   */
   public encabezadoDeTablaDetalle: ConfiguracionColumna<DatosDetalle>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     {
@@ -149,6 +257,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Constructor del componente.
+   * @param phytosanitaryReexportacionService Servicio para gestionar datos fitosanitarios.
+   * @param store Almacén del estado del trámite.
+   * @param query Consulta del estado del trámite.
+   * @param fb Constructor de formularios reactivos.
+   */
   constructor(
     public phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
     public store: Tramite230202Store,
@@ -170,6 +285,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -374,10 +498,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Obtiene el grupo de formulario relacionado con los datos de mercancía.
+   * @returns El grupo de formulario `datosMercancia`.
+   */
   get datosMercancia(): FormGroup {
     return this.solicitudForm.get('datosMercancia') as FormGroup;
   }
 
+  /**
+   * Maneja la selección del número de certificado.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
   numeroDeCertificadoSeleccion(): void {
     const NUMERODECERTIFICADO = this.solicitudForm.get(
       'reexportacionForm.numeroDeCertificado'
@@ -385,16 +517,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setNumeroDeCertificado(NUMERODECERTIFICADO);
   }
 
+  /**
+   * Maneja la selección de la aduana.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
   aduanaSeleccion(): void {
     const ADUANA = this.solicitudForm.get('reexportacionForm.aduana')?.value;
     this.store.setAduana(ADUANA);
   }
 
+  /**
+   * Maneja la selección del país.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
   paisSeleccion(): void {
     const PAIS = this.solicitudForm.get('reexportacionForm.pais')?.value;
     this.store.setPais(PAIS);
   }
 
+  /**
+   * Maneja la selección de las entidades.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
   entidadesSeleccion(): void {
     const ENTIDADES = this.solicitudForm.get(
       'reexportacionForm.entidades'
@@ -402,52 +546,84 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEntidades(ENTIDADES);
   }
 
-  descripcionProductoSeleccion() {
+  /**
+   * Maneja la selección de la descripción del producto.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  descripcionProductoSeleccion(): void {
     const DESCRIPCIONPRODUCTO = this.solicitudForm.get(
       'reexportacionForm.descripcionProducto'
     )?.value;
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
-  fraccionArancelariaSeleccion() {
+  /**
+   * Maneja la selección de la fracción arancelaria.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  fraccionArancelariaSeleccion(): void {
     const FRACCION = this.solicitudForm.get(
       'datosMercancia.fraccionArancelaria'
     )?.value;
     this.store.setFraccionArancelaria(FRACCION);
   }
 
-  generoSeleccion() {
+  /**
+   * Maneja la selección del género.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  generoSeleccion(): void {
     const GENERO = this.solicitudForm.get('datosMercancia.genero')?.value;
     this.store.setGenero(GENERO);
   }
 
-  especieSeleccion() {
+  /**
+   * Maneja la selección de la especie.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  especieSeleccion(): void {
     const ESPECIE = this.solicitudForm.get('datosMercancia.especie')?.value;
     this.store.setEspecie(ESPECIE);
   }
 
-  nombreComunSeleccion() {
+  /**
+   * Maneja la selección del nombre común.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  nombreComunSeleccion(): void {
     const NOMBRECOMUN = this.solicitudForm.get(
       'datosMercancia.nombreComun'
     )?.value;
     this.store.setNombreComun(NOMBRECOMUN);
   }
 
-  unidadDeMedidaSeleccion() {
+  /**
+   * Maneja la selección de la unidad de medida.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  unidadDeMedidaSeleccion(): void {
     const UNIDADDEMEDIDA = this.solicitudForm.get(
       'reexportacionForm.unidadDeMedida'
     )?.value;
     this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
   }
 
-  medioDeTransporteSeleccion() {
+  /**
+   * Maneja la selección del medio de transporte.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  medioDeTransporteSeleccion(): void {
     const MEDIODETRANSPORTE = this.solicitudForm.get(
       'reexportacionForm.medioDeTransporte'
     )?.value;
     this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
   }
 
-  estadoSeleccion() {
+  /**
+   * Maneja la selección del estado.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  estadoSeleccion(): void {
     const ESTADO = this.solicitudForm.get('reexportacionForm.estado')?.value;
     this.store.setEstado(ESTADO);
   }
@@ -477,6 +653,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     ];
   }
 
+  /**
+   * Agrega un nuevo detalle a la lista de detalles.
+   * Obtiene los datos del servicio y los agrega a la lista local y al store.
+   */
   agregarDetalle() {
     this.phytosanitaryReexportacionService
       .agregarDetalle()
@@ -494,6 +674,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Agrega una nueva solicitud a la lista de solicitudes.
+   * Obtiene los datos del servicio y los agrega a la lista local y al store.
+   * También reinicia el formulario de la solicitud.
+   */
   agregarSolicitud() {
     this.phytosanitaryReexportacionService
       .agregarSolicitud()
@@ -519,10 +704,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja el cambio de filas seleccionadas en la tabla de solicitudes.
+   * @param selectedRows Lista de filas seleccionadas en la tabla de solicitudes.
+   */
   onSelectedRowsChange(selectedRows: DatosSolicitud[]): void {
     this.selectedRows = selectedRows.map(row => row.id);
   }
 
+  /**
+   * Elimina las filas seleccionadas de la tabla de solicitudes.
+   */
   eliminar(): void {
     if (this.selectedRows && this.selectedRows.length > 0) {
       this.datosSolicitud = this.datosSolicitud.filter(row => !this.selectedRows.includes(row.id));
@@ -536,6 +728,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modifica las filas seleccionadas en la tabla de solicitudes.
+   * Abre un modal para realizar los cambios.
+   */
   modificar(): void {
     if (this.selectedRows && this.selectedRows.length > 0) {
       this.agregarMercanciasForm.patchValue(this.selectedRows);
@@ -551,10 +747,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Maneja el cambio de filas seleccionadas en la tabla de detalles.
+   * @param selectedRowsDetalle Lista de filas seleccionadas en la tabla de detalles.
+   */
   onSelectedRows(selectedRowsDetalle: DatosDetalle[]): void {
     this.selectedRowsDetalle = selectedRowsDetalle.map(row => row.id);
   }
 
+  /**
+   * Elimina las filas seleccionadas de la tabla de detalles.
+   */
   eliminarDetalle(): void {
     if (this.selectedRowsDetalle && this.selectedRowsDetalle.length > 0) { 
       this.datosDetalle = this.datosDetalle.filter(row => !this.selectedRowsDetalle.includes(row.id));
@@ -566,7 +769,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Cierra el modal actual.
    */
-  cerrarModal() {
+  cerrarModal(): void {
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
@@ -585,14 +788,5 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
-
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * Se utiliza para limpiar las suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }
