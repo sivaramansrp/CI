@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class PasoTresComponent {
   /**
    * Constructor del componente.
+   * 
    * @constructor
    * @param {Router} router - Servicio de enrutamiento de Angular para redirigir al usuario.
    */
@@ -27,8 +28,10 @@ export class PasoTresComponent {
 
   /**
    * Maneja la firma electrónica obtenida y redirige al usuario a la página de acuse.
+   * 
    * @method obtieneFirma
    * @param {string} ev - Firma electrónica obtenida.
+   * @returns {void} Este método no retorna ningún valor.
    */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;

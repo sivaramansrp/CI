@@ -18,12 +18,17 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 export class PasoDosComponent {
   /**
    * Textos constantes utilizados en el componente.
+   * 
+   * Estos textos son importados desde `TEXTOS` y se utilizan para mostrar información
+   * en la interfaz de usuario del segundo paso del trámite.
+   * 
    * @property {any} TEXTOS
    */
   TEXTOS = TEXTOS;
 
   /**
    * Constructor del componente.
+   * 
    * @constructor
    */
   constructor() {

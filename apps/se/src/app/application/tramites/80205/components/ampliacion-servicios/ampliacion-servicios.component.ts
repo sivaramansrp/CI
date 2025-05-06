@@ -117,6 +117,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     this.suscribirseAFields();
     
   }
+  /**
+   * Maneja los cambios en los campos de entrada y actualiza el estado correspondiente
+   * en el store de ampliación de servicios.
+   *
+   * @param fieldName - El nombre del campo que ha cambiado.
+   * @param newValue - El nuevo valor asignado al campo.
+   */
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
       case 'rfcEmpresa':
@@ -145,6 +152,17 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       })
     );
   }
+  /**
+   * Suscribe a los campos seleccionados del estado de `ampliacionServiciosQuery` 
+   * y actualiza las propiedades locales del componente con los valores obtenidos.
+   * 
+   * @remarks
+   * Este método agrega una suscripción al objeto `subscription` del componente, 
+   * lo que asegura que los valores de `rfcEmpresa`, `numeroPrograma` y `tiempoPrograma` 
+   * se mantengan sincronizados con el estado de la consulta.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
   suscribirseAFields(): void {
     
     this.subscription.add(
@@ -162,6 +180,19 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   
   }
   
+  /**
+   * Obtiene los datos necesarios desde el servicio `ampliacionServiciosService`
+   * y los almacena en el store `ampliacionServiciosStore`. Además, inicializa
+   * el formulario con la información obtenida del store.
+   *
+   * @remarks
+   * - Suscribe al observable proporcionado por `getDatos` del servicio.
+   * - Convierte la respuesta en un objeto de tipo `ApiResponse`.
+   * - Almacena la información de servicios en el store mediante `setInfoRegistro`.
+   * - Llama a `initializeFormFromStore` para inicializar el formulario con los datos del store.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   getDatos(): void { this.subscription.add(
     this.ampliacionServiciosService.getDatos().subscribe((respuesta) => {
       const RESPONSE = respuesta as unknown as ApiResponse;
@@ -173,12 +204,35 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     })
   );
   }
+  /**
+   * Se suscribe al observable `selectDatosImmex$` del store para obtener los datos de IMMEX
+   * de forma reactiva y mantener el componente actualizado con los cambios.
+   * 
+   * @remarks
+   * Este método actualiza la variable local `datosImmex` con los datos más recientes
+   * proporcionados por el store.
+   */
   suscribirseADatosImmex(): void {
     // Subscribe to `datosImmex` from the store to keep the component updated reactively
     this.ampliacionServiciosQuery.selectDatosImmex$.subscribe((datosImmex) => {
       this.datosImmex = datosImmex; // Update local variable with the latest data from the store
     });
   }
+  /**
+   * Inicializa el formulario `formularioInfoRegistro` con los datos obtenidos del store.
+   * 
+   * Este método se suscribe al observable `selectInfoRegistro$` del query `ampliacionServiciosQuery`.
+   * Cuando se emiten datos desde el store, se crea un formulario reactivo (`FormGroup`) con los valores
+   * proporcionados y los campos se configuran como deshabilitados.
+   * 
+   * @remarks
+   * - Los campos inicializados en el formulario son:
+   *   - `seleccionaLaModalidad`: Modalidad seleccionada, deshabilitada.
+   *   - `folio`: Folio del registro, deshabilitado.
+   *   - `ano`: Año del registro, deshabilitado.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
   initializeFormFromStore(): void {
     this.ampliacionServiciosQuery.selectInfoRegistro$.subscribe((infoRegistro) => {
       // If the store has data, initialize the form
