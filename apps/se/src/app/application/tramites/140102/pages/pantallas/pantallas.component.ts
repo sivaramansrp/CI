@@ -106,6 +106,15 @@ export class PantallasComponent {
    */
   wizardService = inject(WizardService);
 
+     /**
+  * compo doc
+  * Mensaje relacionado con el aviso de privacidad simplificado.
+  * 
+  * @type {string}
+  * @memberof PantallasComponent
+  */
+  public avisoPrivacidadAlert: string = AVISO.Aviso;
+
   /**
    * @description
    * Constructor del componente.

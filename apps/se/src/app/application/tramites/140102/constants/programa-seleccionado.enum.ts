@@ -89,6 +89,19 @@ export const PROGRAMA_SELECCIONADO = [
     valorPredeterminado: '',
     marginTop: 0,
   },
+  {
+    id: 'Confirmo',
+    labelNombre: 'Confirmo estar de acuerdo con la cancelación del Programa IMMEX/PROSEC *',
+    campo: 'Confirmo',
+    clase: 'col-md-12',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
 ];
 
 /**

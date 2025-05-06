@@ -33,7 +33,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    * Tipo de selección para la tabla de cancelación de autorizaciones.
    * Por defecto, se utiliza la selección por checkbox.
    */
-  public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.RADIO;
 
   /**
    * Configuración de las columnas para la tabla de cancelación de autorizaciones.
