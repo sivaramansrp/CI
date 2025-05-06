@@ -69,12 +69,43 @@
           "vendorChunk": true,
           "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/aga/webpack.prod.config.ts"
+            "path": "apps/aga/webpack.config.ts"
           },
           "fileReplacements": [
             {
               "replace": "apps/aga/src/app/environments/environment.ts",
               "with": "apps/aga/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/aga/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/aga/src/app/environments/environment.ts",
+              "with": "apps/aga/src/app/environments/environment.qa.ts"
             }
           ]
         },
@@ -102,6 +133,9 @@
         },
         "development": {
           "buildTarget": "aga:build:development"
+        },
+        "qa": {
+          "buildTarget": "aga:build:qa"
         }
       },
       "defaultConfiguration": "development"

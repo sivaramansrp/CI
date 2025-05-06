@@ -2,7 +2,7 @@ import {Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from 'apps/aga/src/app/environments/environment';
-import { APP_CONFIG } from 'apps/aga/src/app/app.inject';
+import { APPINJECT } from 'apps/aga/src/app/app.inject';
 
 /**
  * Representa la estructura de una respuesta JSON.
@@ -29,7 +29,7 @@ export class ServiciosExtraordinariosService {
   /**
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */
-  private readonly appConfig = inject(APP_CONFIG);
+  private readonly appConfig = inject(APPINJECT);
   /**
    * La URL del servidor JSON auxiliar utilizado para manejar servicios extraordinarios.
    * Este valor se obtiene de la configuración del entorno.

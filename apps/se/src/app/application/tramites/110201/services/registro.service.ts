@@ -1,10 +1,10 @@
-import { enviroment } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core'; 
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import { APPINJECT } from 'apps/se/src/app/app.inject';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.
@@ -14,14 +14,18 @@ import { Observable, catchError, throwError } from 'rxjs';
 })
 export class RegistroService {
   /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  private readonly appConfig = inject(APPINJECT);
+  /**
    * URL base del servidor principal.
    */
-  urlServer = enviroment.URL_SERVER;
+  urlServer = this.appConfig.URL_SERVER;
 
   /**
    * URL base del servidor de catálogos auxiliares.
    */
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Constructor del servicio.

@@ -1,24 +1,21 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { appRoutes } from './app.routes';
+import { APP_ROUTES } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { ENVIRONMENT } from './environments/environment';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const appConfig: ApplicationConfig = {
+import { APPINJECT } from './app.inject';
+
+/**
+ * Esta es la configuración principal de la aplicación Agace.
+ * Aquí se definen los proveedores y la configuración de la aplicación.
+ * Se utiliza para establecer la detección de cambios, las rutas y el cliente HTTP. 
+ */
+export const APPCONFIG: ApplicationConfig = {
   providers: [
-    /**
-     * Proveedor para la detección de cambios en la zona.
-     * 
-     * @type {Provider}
-     */
     provideZoneChangeDetection({ eventCoalescing: true }),
-
-    /**
-     * Proveedor para las rutas de la aplicación.
-     * 
-     * @type {Provider}
-     */
-    provideRouter(appRoutes),
-    provideHttpClient()
+    provideRouter(APP_ROUTES),
+    provideHttpClient(),
+    { provide: APPINJECT, useValue: ENVIRONMENT },
   ],
 };
