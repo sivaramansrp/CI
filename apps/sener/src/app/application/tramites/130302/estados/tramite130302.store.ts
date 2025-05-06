@@ -1,75 +1,89 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
 
 /**
- * Representa el estado de ExportarIlustraciones130302.
- * Es un objeto dinámico donde las claves son cadenas y los valores pueden ser de cualquier tipo.
- * 
  * @interface ExportarIlustraciones130302State
- * @property {string} [key] - Las claves son cadenas que representan los nombres de los campos.
- * @property {any} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
+ * @description Representa el estado de ExportarIlustraciones130302.
+ * Contiene las propiedades necesarias para gestionar el estado del trámite.
  */
 export interface ExportarIlustraciones130302State {
-    [key: string]: any;
-    saldoDisponible:string;
-    prorrogaDel:string;
-    prorrogaAl:string;
-    motivoJustificacion:string;
-    otrasDeclaraciones:string;
+  /**
+   * @property {string} saldoDisponible - Saldo disponible para el trámite.
+   */
+  saldoDisponible: string;
+
+  /**
+   * @property {string} prorrogaDel - Fecha de inicio de la prórroga.
+   */
+  prorrogaDel: string;
+
+  /**
+   * @property {string} prorrogaAl - Fecha de fin de la prórroga.
+   */
+  prorrogaAl: string;
+
+  /**
+   * @property {string} motivoJustificacion - Motivo de justificación del trámite.
+   */
+  motivoJustificacion: string;
+
+  /**
+   * @property {string} otrasDeclaraciones - Declaraciones adicionales relacionadas con el trámite.
+   */
+  otrasDeclaraciones: string;
+
+  /**
+   * @property {any} [key] - Propiedades dinámicas adicionales.
+   */
+  [key: string]: any;
 }
 
 /**
- * Crea el estado inicial para ExportarIlustraciones130302.
- * @returns {ExportarIlustraciones261702State} Un objeto vacío que representa el estado inicial del estado de ExportarIlustraciones130302.
+ * @function createInitialState
+ * @description Crea el estado inicial para ExportarIlustraciones130302.
+ * @returns {ExportarIlustraciones130302State} Estado inicial con valores vacíos.
  */
 export function createInitialState(): ExportarIlustraciones130302State {
-    return {
-        saldoDisponible: '',
-        prorrogaDel: '',
-        prorrogaAl: '',
-        motivoJustificacion: '',
-        otrasDeclaraciones: '',
-    };
+  return {
+    saldoDisponible: '',
+    prorrogaDel: '',
+    prorrogaAl: '',
+    motivoJustificacion: '',
+    otrasDeclaraciones: '',
+  };
 }
 
 /**
- * Marca esta clase como un servicio inyectable en Angular.
- * 
  * @decorator Injectable
- * @property {string} providedIn - Define el alcance del servicio. 
- * En este caso, el servicio está disponible en toda la aplicación ('root').
+ * @description Marca esta clase como un servicio inyectable en Angular.
+ * @property {string} providedIn - Define el alcance del servicio (disponible en toda la aplicación).
  */
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 
 /**
- * Configuración del store para Tramite130302.
- * 
  * @decorator StoreConfig
- * @property {string} name - Nombre del store, utilizado para identificarlo.
- * @property {boolean} resettable - Indica si el estado del store puede ser reiniciado.
+ * @description Configuración del store para Tramite130302.
+ * @property {string} name - Nombre del store.
+ * @property {boolean} resettable - Indica si el estado puede ser reiniciado.
  */
 @StoreConfig({ name: 'tramite130302', resettable: true })
-
 export class Tramite130302Store extends Store<ExportarIlustraciones130302State> {
+  /**
+   * @constructor
+   * @description Inicializa el estado del store con valores iniciales.
+   */
+  constructor() {
+    super(createInitialState());
+  }
 
-    /**
-     * Constructor de la clase Tramite130302Store.
-     * 
-     * Este constructor inicializa el estado del store utilizando la función `createInitialState`.
-     * La función `createInitialState` devuelve un objeto vacío que representa el estado inicial.
-     */
-    constructor() {
-        super(createInitialState());
-    }
-
-    /**
-   * Set a value dynamically in the store by field name.
-   * @param fieldName The name of the field to update.
-   * @param value The value to set.
+  /**
+   * @method setDynamicFieldValue
+   * @description Establece dinámicamente un valor en el store por nombre de campo.
+   * @param {string} fieldName - Nombre del campo a actualizar.
+   * @param {any} value - Valor a establecer.
    */
   public setDynamicFieldValue(fieldName: string, value: any): void {
     this.update((state) => ({
@@ -78,14 +92,23 @@ export class Tramite130302Store extends Store<ExportarIlustraciones130302State> 
     }));
   }
 
+  /**
+   * @method setsaldoDisponible
+   * @description Actualiza el saldo disponible en el estado.
+   * @param {string} saldoDisponible - Nuevo saldo disponible.
+   */
   public setsaldoDisponible(saldoDisponible: string): void {
     this.update((state) => ({
       ...state,
       saldoDisponible,
     }));
   }
-  
 
+  /**
+   * @method setprorrogaDel
+   * @description Actualiza la fecha de inicio de la prórroga en el estado.
+   * @param {string} prorrogaDel - Nueva fecha de inicio de la prórroga.
+   */
   public setprorrogaDel(prorrogaDel: string): void {
     this.update((state) => ({
       ...state,
@@ -93,6 +116,11 @@ export class Tramite130302Store extends Store<ExportarIlustraciones130302State> 
     }));
   }
 
+  /**
+   * @method setprorrogaAl
+   * @description Actualiza la fecha de fin de la prórroga en el estado.
+   * @param {string} prorrogaAl - Nueva fecha de fin de la prórroga.
+   */
   public setprorrogaAl(prorrogaAl: string): void {
     this.update((state) => ({
       ...state,
@@ -100,17 +128,27 @@ export class Tramite130302Store extends Store<ExportarIlustraciones130302State> 
     }));
   }
 
-    public setmotivoJustificacion(motivoJustificacion: string): void {
-        this.update((state) => ({
-        ...state,
-        motivoJustificacion,
-        }));
+  /**
+   * @method setmotivoJustificacion
+   * @description Actualiza el motivo de justificación en el estado.
+   * @param {string} motivoJustificacion - Nuevo motivo de justificación.
+   */
+  public setmotivoJustificacion(motivoJustificacion: string): void {
+    this.update((state) => ({
+      ...state,
+      motivoJustificacion,
+    }));
   }
- 
-public setotrasDeclaraciones(otrasDeclaraciones: string): void {
-        this.update((state) => ({
-        ...state,
-        otrasDeclaraciones,
-        }));
-    }
+
+  /**
+   * @method setotrasDeclaraciones
+   * @description Actualiza las declaraciones adicionales en el estado.
+   * @param {string} otrasDeclaraciones - Nuevas declaraciones adicionales.
+   */
+  public setotrasDeclaraciones(otrasDeclaraciones: string): void {
+    this.update((state) => ({
+      ...state,
+      otrasDeclaraciones,
+    }));
+  }
 }

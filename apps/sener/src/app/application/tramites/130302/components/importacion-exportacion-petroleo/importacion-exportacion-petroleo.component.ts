@@ -22,64 +22,138 @@ import { AVISO_PRIVACIDAD, INFORMACION_DE_LA_OBRA_ARTE } from '../../enums/permi
 import { ExportarIlustraciones130302State, Tramite130302Store } from '../../estados/tramite130302.store';
 import { Tramite130302Query } from '../../estados/queries/tramite130302.query';
 
+/**
+ * component ImportacionExportacionPetroleoComponent
+ * description Componente para gestionar la importación y exportación de petróleo.
+ * Proporciona formularios y tablas dinámicas para la gestión de datos relacionados.
+ */
 @Component({
   selector: 'app-importacion-exportacion-petroleo',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,TituloComponent,TablaDinamicaComponent,FormasDinamicasComponent, AlertComponent,InputFechaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, FormasDinamicasComponent, AlertComponent, InputFechaComponent],
   templateUrl: './importacion-exportacion-petroleo.component.html',
-  styleUrls: ['./importacion-exportacion-petroleo.component.css']
+  styleUrls: ['./importacion-exportacion-petroleo.component.scss']
 })
 export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestroy {
+  /**
+   * property form
+   * description Formulario reactivo principal del componente.
+   */
   form!: FormGroup;
+
+  /**
+   * property destroyed$
+   * description Subject para manejar la destrucción de suscripciones.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * property informacionFormData
+   * description Información relacionada con la obra de arte.
+   */
   public informacionFormData = INFORMACION_DE_LA_OBRA_ARTE;
+
+  /**
+   * property fechaInicioInput
+   * description Fecha inicial de pago.
+   */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
-  fechaInicioOutput: InputFecha=PRORROGA_DEL ;
+
+  /**
+   * property fechaInicioOutput
+   * description Fecha de prórroga.
+   */
+  fechaInicioOutput: InputFecha = PRORROGA_DEL;
+
+  /**
+   * property forma
+   * description Formulario reactivo para datos dinámicos.
+   */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({})
   });
+
+  /**
+   * property destroy$
+   * description Subject para manejar la destrucción de suscripciones.
+   */
   public destroy$ = new Subject<void>();
+
+  /**
+   * property aduanaAlert
+   * description Mensaje de aviso de privacidad.
+   */
   public aduanaAlert = AVISO_PRIVACIDAD;
 
+  /**
+   * property exportarIlustracionesState
+   * description Estado relacionado con la exportación de ilustraciones.
+   */
   public exportarIlustracionesState!: ExportarIlustraciones130302State;
 
+  /**
+   * property ninoFormGroup
+   * description Getter para acceder al grupo de formularios de niños.
+   */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
+  /**
+   * method onFechaCambiada
+   * description Maneja el cambio de fecha en el formulario.
+   * param nuevo_valor Nueva fecha seleccionada.
+   */
   public onFechaCambiada(nuevo_valor: string): void {
     this.form.get('fechaPago')?.setValue(nuevo_valor);
     this.form.get('fechaPago')?.markAsUntouched();
     this.tramite130302Store.setprorrogaAl(nuevo_valor);
   }
+
   /**
-   * property TablaSeleccion
-   * description Configuración de la tabla de selección.
+   * property tipoSeleccionTabla
+   * description Tipo de selección para la tabla dinámica.
    */
   tipoSeleccionTabla = TablaSeleccion;
 
   /**
    * property tercerosProd
-   * description Lista de productos de terceros.
+   * description Lista de modelos de permisos.
    */
   tercerosProd: PermisoModel[] = [];
 
-  constructor(private fb: FormBuilder, private service:PermisoPetroleoService,private tramite130302Store: Tramite130302Store,
+  /**
+   * constructor
+   * description Constructor del componente.
+   * param fb FormBuilder para la creación de formularios.
+   * param service Servicio para gestionar permisos de petróleo.
+   * param tramite130302Store Almacén de estado del trámite.
+   * param tramite130302Query Consultas relacionadas con el trámite.
+   */
+  constructor(private fb: FormBuilder, private service: PermisoPetroleoService, private tramite130302Store: Tramite130302Store,
     private tramite130302Query: Tramite130302Query) {}
 
+  /**
+   * property configuracionTabla
+   * description Configuración de columnas para la tabla dinámica.
+   */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = NICO_TABLA;
 
+  /**
+   * method ngOnInit
+   * description Inicializa el componente y carga datos iniciales.
+   */
   ngOnInit(): void {
     this.tramite130302Query.selectExportarIlustraciones$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState) => {
-        this.exportarIlustracionesState = seccionState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.exportarIlustracionesState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = new FormGroup({
-      saldoDisponible:   new FormControl({ value: '', disabled: true }),
+      saldoDisponible: new FormControl({ value: '', disabled: true }),
       prorrogaDel: new FormControl({ value: '', disabled: true }),
       prorrogaAl: new FormControl({ value: '', disabled: true }),
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
@@ -88,6 +162,11 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
     this.loadMercancias();
     this.loadAsignacionData();
   }
+
+  /**
+   * method loadAsignacionData
+   * description Carga datos del solicitante y los asigna al formulario.
+   */
   loadAsignacionData(): void {
     this.service.getSolicitante()
       .pipe(takeUntil(this.destroyed$))
@@ -96,11 +175,14 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
           saldoDisponible: data.saldoDisponible,
           prorrogaDel: data.prorrogaDel,
           prorrogaAl: data.prorrogaAl,
-          });
-        
+        });
       });
   }
 
+  /**
+   * method loadMercancias
+   * description Carga datos de mercancías y los asigna a la lista de productos.
+   */
   loadMercancias(): void {
     this.service.obtenerTabla()
       .pipe(takeUntil(this.destroyed$))
@@ -108,21 +190,36 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
         this.tercerosProd = resp;
       });
   }
-  
-establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+
+  /**
+   * method establecerCambioDeValor
+   * description Establece un cambio de valor dinámico en el almacén.
+   * param event Evento con el campo y valor a cambiar.
+   */
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.tramite130302Store.setDynamicFieldValue(event.campo, event.valor);
-    
     }
   }
-  
+
+  /**
+   * method setValoresStore
+   * description Establece valores en el almacén desde el formulario.
+   * param form Formulario reactivo.
+   * param campo Nombre del campo en el formulario.
+   * param metodoNombre Método del almacén para establecer el valor.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130302Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite130302Store[metodoNombre] as (value: string) => void)(VALOR);
   }
+
+  /**
+   * method ngOnDestroy
+   * description Limpia las suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
- 
 }
