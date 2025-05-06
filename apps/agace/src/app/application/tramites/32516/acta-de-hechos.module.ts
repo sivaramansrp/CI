@@ -24,14 +24,27 @@ import { TipoDeAvisoComponent } from './components/tipo-de-aviso/tipo-de-aviso.c
 
 import { ActaDeHechosRoutingModule } from './acta-de-hechos-routing.module';
 
-
+/**
+ * Módulo para el manejo del Acta de Hechos.
+ * Este módulo incluye componentes, servicios y configuraciones necesarias
+ * para gestionar el flujo del trámite de Acta de Hechos.
+ */
 @NgModule({
+  /**
+   * Declaraciones de los componentes utilizados en este módulo.
+   * Incluye las páginas y componentes específicos del flujo del Acta de Hechos.
+   */
   declarations: [
     PasoDosComponent,
     PasoTresComponent,  
     PasoUnoComponent,
     SolicitudPageComponent,
   ],
+
+  /**
+   * Módulos importados necesarios para el funcionamiento del módulo.
+   * Incluye módulos compartidos, enrutamiento y componentes reutilizables.
+   */
   imports: [
     CommonModule,
     ActaDeHechosRoutingModule,
@@ -49,7 +62,17 @@ import { ActaDeHechosRoutingModule } from './acta-de-hechos-routing.module';
     TipoDeAvisoComponent,
     MercanciasDestruidasFormaComponent
   ],
+
+  /**
+   * Exportaciones del módulo.
+   * Incluye el módulo de enrutamiento para que pueda ser utilizado en otros módulos.
+   */
   exports:[RouterModule],
+
+  /**
+   * Proveedores de servicios utilizados en este módulo.
+   * Incluye servicios como ToastrService para notificaciones.
+   */
   providers: [ToastrService],
 })
 export class ActaDeHechosModule { }

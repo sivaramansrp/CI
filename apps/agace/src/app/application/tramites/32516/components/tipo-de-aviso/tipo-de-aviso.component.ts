@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -16,21 +15,33 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { SolicitudForm } from '../../modelos/acta-de-hechos.model';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-// import { Tramite32516Query } from '../../estados/tramite32516Query.query';
-// import { Tramite32516Store } from '../../estados/tramite32516Store.store';
-import { takeUntil } from 'rxjs';
+import { TramiteState } from '../../estados/tramite32516Store.store';
+import { TramiteStore } from '../../estados/tramite32516Store.store';
+import { TramiteStoreQuery } from '../../estados/tramite32516Query.query';
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
+import { Validators } from '@angular/forms';
+/**
+ * Componente para manejar el tipo de aviso en el trámite.
+ * Proporciona funcionalidad para gestionar formularios, tablas y datos relacionados.
+ */
 @Component({
   selector: 'tipo-de-aviso',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, // Ensure ReactiveFormsModule is included for FormGroup
+    ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent
@@ -39,7 +50,18 @@ import { takeUntil } from 'rxjs';
   styleUrls: ['./tipo-de-aviso.component.scss'],
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para manejar los datos de la solicitud.
+   * @type {FormGroup}
+   */
   solicitudForm!: FormGroup;
+
+  /**
+   * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
+   * Contiene la información manejada dentro del componente.
+   * @type {SolicitudForm}
+   */
+    solicitudState!: SolicitudForm;
 
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
@@ -51,36 +73,59 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración para el select de unidad de medida.
-   * @property {CatalogosSelect} actaDeHechos
+   * @property {Catalogo[]} actaDeHechos
    */
   actaDeHechos: Catalogo[] = [];
+
   /**
-   * Configuración para el select de unidad de medida.
-   * @property {CatalogosSelect} levantarActa
+   * Configuración para el select de levantar acta.
+   * @property {Catalogo[]} levantarActa
    */
   levantarActa: Catalogo[] = [];
 
-    /**
+  /**
    * Tipo de selección de la tabla utilizando checkbox.
    * @type {TablaSeleccion}
    */
     tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-    /**
-     * Configuración de las columnas de la tabla para la lista de regiones.
-     * Define las propiedades y formato de las columnas en la tabla de regiones.
-     * @type {ConfiguracionColumna<HechosInfo>[]}
-     */
+  /**
+   * Configuración de las columnas de la tabla para la lista de hechos.
+   * Define las propiedades y formato de las columnas en la tabla de hechos.
+   * @type {ConfiguracionColumna<HechosInfo>[]}
+   */
     hechosTabla: ConfiguracionColumna<HechosInfo>[] = HECHOS_SERVICIO;
 
-      /**  
-   * Datos procesados para la tabla de regiones.  
-   * Contiene la información de las regiones asociadas al trámite,  
-   * listos para su visualización en la interfaz de usuario.  
-   * @type {HechosInfo[]}  
+  /**
+   * Datos procesados para la tabla de hechos.
+   * Contiene la información de las hechos asociadas al trámite,
+   * listos para su visualización en la interfaz de usuario.
+   * @type {HechosInfo[]}
    */
   hechosTableDatos: HechosInfo[] = [];
 
+  /**
+   * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
+   * @private
+   */
+    private seccion!: SeccionLibState;
+
+  /**
+   * Constructor del componente.
+   * Inicializa servicios y el formulario reactivo.
+   * @param {FormBuilder} fb - Constructor para formularios reactivos.
+   * @param {HttpClient} httpServicios - Servicio HTTP para realizar solicitudes.
+   * @param {CatalogosService} catalogosService - Servicio para obtener catálogos.
+   * @param {HechosTablaServicios} hechosTablaServicios - Servicio para obtener datos de la tabla.
+   * @param {Router} router - Servicio para navegación.
+   * @param {ActivatedRoute} route - Ruta activa del componente.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Query para el estado del trámite.
+   * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
+   */
   constructor(
     private fb: FormBuilder,
     private readonly httpServicios: HttpClient,
@@ -88,6 +133,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private readonly hechosTablaServicios: HechosTablaServicios,
     private router: Router,
     private route: ActivatedRoute,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) {
     
     this.solicitudForm = this.fb.group({
@@ -96,8 +145,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     });
     
   }
+
+  /**
+   * Método para navegar a la página de agregar.
+   * Redirige a diferentes rutas según la URL actual.
+   */
   irAPaginaAgregar(): void {
-    console.log('Navigating to mercancias-destruidas-forma');
     const CURRENT_URL = this.router.url;
     if (CURRENT_URL.includes('pago')) {
       this.router.navigate([
@@ -109,11 +162,19 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       ]);
     }
   }
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Se utiliza para inicializar el formulario y cargar los datos necesarios.
-   */ 
+   */
   ngOnInit(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.solicitudState = seccionState.SolicitudState;
+      })
+    ).subscribe();
+
     this.solicitudForm = this.fb.group({
       cantidadBienes: ['', Validators.required],
       descripcionGenerica1: ['', Validators.required],
@@ -125,9 +186,60 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.handleConditionalValidation();
     this.obtenerListasDesplegables();
     this.obtenerLevantarActaDesplegables();
+
+        /**
+ * Se suscribe a los cambios en el estado de la solicitud de trámite.
+ * Actualiza el formulario con los datos obtenidos del estado.
+ */
+        this.tramiteStoreQuery.selectSolicitudTramite$
+        .pipe(
+          takeUntil(this.unsubscribe$),
+          map((seccionState: TramiteState) => {
+            if (seccionState) {
+              this.solicitudState = seccionState?.SolicitudState;
+              this.solicitudForm.patchValue(this.solicitudState);
+            }
+          })
+        ).subscribe();
+    /**
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
+      this.solicitudForm.statusChanges
+        .pipe(
+          takeUntil(this.unsubscribe$),
+          delay(10),
+          tap(() => {
+            const ACTIVE_STATE = { ...this.solicitudForm.value };
+            this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+          })
+        )
+        .subscribe();
+
+
     this.buscarDatos();
+
+          /**
+   * Se suscribe a los cambios en el estado de la sección.
+   * Almacena la información de la sección en la propiedad `seccion`.
+   * Para el botón de validación Continuar
+   */
+
+          this.seccionQuery.selectSeccionState$
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            map((seccionState) => {
+              this.seccion = seccionState;
+            })
+          )
+          .subscribe();
   }
   
+  /**
+   * Maneja la validación condicional en el formulario.
+   * Agrega o elimina validadores según el valor de `cantidadBienes`.
+   * @private
+   */
   private handleConditionalValidation(): void {
     this.solicitudForm.get('cantidadBienes')?.valueChanges.subscribe(value => {
       const DESCRIPCION_GENERICA_3 = this.solicitudForm.get('descripcionGenerica3');
@@ -139,7 +251,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       DESCRIPCION_GENERICA_3?.updateValueAndValidity();
     });
   }
-  /**
+
+    /**
    * Obtiene las listas desplegables.
    * @method obtenerListasDesplegables
    */
@@ -159,18 +272,18 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
-   * Obtiene las listas desplegables.
+  /**
+   * Obtiene las listas desplegables para levantar acta.
    * @method obtenerLevantarActaDesplegables
    */
     obtenerLevantarActaDesplegables(): void {
       this.obtenerLevantarActaSelectList();
     }
   
-    /**
-     * Obtiene la lista para el select de unidad de medida.
-     * @method obtenerLevantarActaSelectList
-     */
+  /**
+   * Obtiene la lista para el select de levantar acta.
+   * @method obtenerLevantarActaSelectList
+   */
     obtenerLevantarActaSelectList(): void {
       this.catalogosService
         .obtenerLevantarActaDesplegable('levantar.json')
@@ -180,9 +293,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     }
  
 
-    /**
+  /**
    * Método para buscar y cargar los datos de las tablas.
-   * Realiza una llamada al servicio para obtener los datos de regiones, beneficios, bodegas y café de exportación.
+   * Realiza una llamada al servicio para obtener los datos de hechos.
    */
     buscarDatos(): void {
       this.hechosTablaServicios.obtenerDatos()
@@ -202,8 +315,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     }
   
   /**
+   * Maneja la limpieza de recursos antes de destruir el componente.
+   * Completa el Subject `unsubscribe$` para evitar fugas de memoria.
    * @method ngOnDestroy
-   * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();

@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-empty-function */
 /**
  * @Injectable
- * @description Servicio para obtener los datos del menú desplegable de NICO.
+ * @description Servicio para obtener los datos de los catálogos desde archivos JSON.
+ * Este servicio realiza solicitudes HTTP para cargar las opciones de menús desplegables.
  */
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
@@ -16,52 +15,64 @@ import { map } from 'rxjs';
 })
 export class CatalogosService {
   /**
-   * @property {string} url - URL base para los archivos JSON.
+   * URL base para los archivos JSON de catálogos.
+   * @type {string}
    */
   url: string = '/assets/json/32516/';
-  urlLevantar: string = '/assets/json/32516/';
+
   /**
-   * @constructor
+   * URL base para los archivos JSON de levantar acta.
+   * @type {string}
+   */
+  urlLevantar: string = '/assets/json/32516/';
+
+  
+  /**
+   * Constructor del servicio.
+   * Inicializa el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private readonly http: HttpClient) { }
 
   /**
+   * Obtiene la lista de opciones del menú desplegable desde un archivo JSON.
    * @method obtenerMenuDesplegable
-   * @description Obtiene la lista de opciones del menú desplegable desde un archivo JSON.
    * @param {string} fileName - Nombre del archivo JSON.
    * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del menú desplegable.
+   * @description Realiza una solicitud HTTP GET para cargar las opciones del menú desplegable.
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
-    const baseUrl = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(baseUrl).pipe(
+    const BASE_URL = this.url + fileName;
+    return this.http.get<RespuestaCatalogos>(BASE_URL).pipe(
       map(response => response.data)
     );
   }
 
   /**
+   * Obtiene la lista de opciones del menú desplegable para levantar acta desde un archivo JSON.
    * @method obtenerLevantarActaDesplegable
-   * @description Obtiene la lista de opciones del obtenerLevantarActaDesplegable desplegable desde un archivo JSON.
    * @param {string} fileName - Nombre del archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del obtenerLevantarActaDesplegable desplegable.
+   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del menú desplegable.
+   * @description Realiza una solicitud HTTP GET para cargar las opciones del menú desplegable para levantar acta.
    */
   obtenerLevantarActaDesplegable(fileName: string): Observable<Catalogo[]> {
-    const baseUrlLevantar = this.urlLevantar + fileName;
-    return this.http.get<RespuestaCatalogos>(baseUrlLevantar).pipe(
+    const BASE_URL_LEVANTAR = this.urlLevantar + fileName;
+    return this.http.get<RespuestaCatalogos>(BASE_URL_LEVANTAR).pipe(
       map(response => response.data)
     );
   }
 
   
   /**
+   * Obtiene la lista de opciones del menú desplegable para unidad de medida desde un archivo JSON.
    * @method obtenerUnidadDesplegable
-   * @description Obtiene la lista de opciones del obtenerUnidadDesplegable desplegable desde un archivo JSON.
    * @param {string} fileName - Nombre del archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del obtenerUnidadDesplegable desplegable.
+   * @returns {Observable<Catalogo[]>} Observable con la lista de opciones del menú desplegable.
+   * @description Realiza una solicitud HTTP GET para cargar las opciones del menú desplegable para unidad de medida.
    */
   obtenerUnidadDesplegable(fileName: string): Observable<Catalogo[]> {
-    const baseUrlLevantar = this.urlLevantar + fileName;
-    return this.http.get<RespuestaCatalogos>(baseUrlLevantar).pipe(
+    const BASE_URL_LEVANTAR = this.urlLevantar + fileName;
+    return this.http.get<RespuestaCatalogos>(BASE_URL_LEVANTAR).pipe(
       map(response => response.data)
     );
   }

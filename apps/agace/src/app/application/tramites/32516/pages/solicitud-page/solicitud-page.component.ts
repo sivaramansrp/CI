@@ -5,11 +5,28 @@ import { PASOS } from '../../constantes/exportacion-armas-explosivo.enum';
 import { TITULOMENSAJE } from '../../constantes/exportacion-armas-explosivo.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+/**
+ * Interfaz para manejar las acciones de los botones del wizard.
+ * @interface AccionBoton
+ */
 interface AccionBoton {
+  /**
+   * Acción a realizar ('cont' para continuar, 'atras' para retroceder).
+   * @type {string}
+   */
   accion: string;
+
+  /**
+   * Índice del paso al que se desea navegar.
+   * @type {number}
+   */
   valor: number;
 }
 
+/**
+ * Componente para la página de solicitud.
+ * Maneja el flujo del wizard y la navegación entre pasos.
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
@@ -18,24 +35,32 @@ interface AccionBoton {
 export class SolicitudPageComponent {
 
   /**
-   * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
+   * Array de pasos del wizard.
+   * @type {Array<ListaPasosWizard>}
    */
   pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
-   * @property {string | null} tituloMensaje - El título del mensaje.
+   * Título del mensaje mostrado en la página.
+   * @type {string | null}
    */
   tituloMensaje: string | null = 'Registro nacional de exportadores';
 
+  /**
+   * Referencia al componente del wizard.
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property {number} indice - El índice del paso actual.
+   * Índice del paso actual en el wizard.
+   * @type {number}
    */
   indice: number = 1;
 
   /**
-   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   * Datos de configuración de los pasos del wizard.
+   * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -47,9 +72,9 @@ export class SolicitudPageComponent {
   /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
    *
-   * @param e - Objeto de acción que contiene la acción y el valor a manejar.
+   * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
    * El `valor` representa el índice del paso al que ir.
-   * La `accion` determina si avanzar (cont) o retroceder (atras).
+   * La `accion` determina si avanzar ('cont') o retroceder ('atras').
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
@@ -63,9 +88,8 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * @method obtenerNombreDelTítulo
-   * @description Método estático que determina el título
-   * a mostrar de acuerdo al índice del paso actual.
+   * Método estático que determina el título a mostrar de acuerdo al índice del paso actual.
+   *
    * @param {number} valor - Índice del paso.
    * @returns {string} Título correspondiente al paso.
    */

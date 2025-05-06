@@ -18,7 +18,51 @@ export interface ListaPasosWizard {
 }
 
 /**
+ * Modelo de datos que representa el formulario de solicitud.
+ * Este modelo se utiliza para manejar los datos del formulario de solicitud.
+ * 
+ * @export
+ * @interface SolicitudForm
+ * 
+ * @property {string} descripcionGenerica1 - Descripción genérica 1.
+ * @property {string} descripcionGenerica2 - Descripción genérica 2.
+ * @property {string} descripcionGenerica3 - Descripción genérica 3.
+ * @property {string} capacidadAlmacenamiento - Capacidad de almacenamiento.
+ * @property {string} cantidadBienes - Cantidad de bienes.
+ */
+export interface SolicitudForm {
+  descripcionGenerica1: string;
+  descripcionGenerica2: string;
+  descripcionGenerica3: string;
+  capacidadAlmacenamiento: string;
+  cantidadBienes: string;
+}
+
+/**
+ * Modelo de datos que representa el formulario de mercancías.
+ * Este modelo se utiliza para manejar los datos relacionados con las mercancías.
+ * 
+ * @export
+ * @interface MercanciaForm
+ * 
+ * @property {null | number} consecutivo - Número consecutivo de la mercancía.
+ * @property {string} descripcion - Descripción de la mercancía.
+ * @property {null | number} cantidad - Cantidad de la mercancía.
+ * @property {string} unidadMedida - Unidad de medida de la mercancía.
+ * @property {null | number} peso - Peso de la mercancía.
+ */
+export interface MercanciaForm {
+  consecutivo: null | number;
+  descripcion: string;
+  cantidad: null | number;
+  unidadMedida: string; 
+  peso: null | number;
+}
+
+/**
  * Configuración de las columnas de la tabla para el servicio REGIONES.
+ * Define las propiedades y formato de las columnas en la tabla de regiones.
+ * 
  * @constant
  * @type {Array}
  */
@@ -52,8 +96,11 @@ export const HECHOS_SERVICIO = [
 
 /**
  * Interfaz para la información de REGIONES.
+ * Representa la estructura de los datos de las regiones en la tabla.
+ * 
  * @export
  * @interface HechosInfo
+ * 
  * @property {string} TABLA_Columna_1 - Información de la columna 1.
  * @property {string} TABLA_Columna_2 - Información de la columna 2.
  * @property {string} TABLA_Columna_3 - Información de la columna 3.

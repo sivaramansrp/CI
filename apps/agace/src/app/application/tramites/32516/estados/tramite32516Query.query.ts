@@ -1,94 +1,37 @@
-import {
-  Tramite32516State,
-  Tramite32516Store,
-} from './tramite32516Store.store';
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
-
 /**
- * Servicio que permite consultar (leer) el estado del Trámite 32516
- * usando el patrón de Akita para manejo de estado.
+ * @nombre TramiteStoreQuery
+ * @descripción Esta clase es una consulta (Query) de Akita que permite obtener el estado del store `TramiteStore`.
+ * Se utiliza para seleccionar y acceder a los datos del estado de la aplicación relacionados con `TramiteState`.
+ * 
+ * @autor [Tu Nombre]
+ * @fecha [Fecha de Creación]
  */
 
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
+import { TramiteState } from '../estados/tramite32516Store.store';
+import { TramiteStore } from '../estados/tramite32516Store.store';
+
 @Injectable({ providedIn: 'root' })
-export class Tramite32516Query extends Query<Tramite32516State> {
-  /**
-   * Constructor que inicializa el query con el store correspondiente.
-   *
-   * @param {Tramite32516Store} store - Instancia del store para el Trámite 32516.
-   */
-  constructor(protected override store: Tramite32516Store) {
-    super(store);
-  }
-
-  /**
-   * Observable que emite el estado completo del trámite.
-   *
-   * @property {Observable<Tramite32516State>} selectTramiteState$
-   */
-  public selectTramiteState$ = this.select((state) => {
-    return state;
-  });
-
-  /**
-   * Observable que emite la pestaña actualmente seleccionada por el usuario.
-   *
-   * @property {Observable<string>} getTabSeleccionado$
-   */
-  public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
-
-  /**
-   * Observable que emite el estado del formulario de datos del trámite.
-   *
-   * @property {Observable<DatosDelTramiteFormState>} getDatosDelTramite$
-   */
-  public getDatosDelTramite$ = this.select((state) => state.datosDelTramite);
-
-  /**
-   * Observable que emite el estado del formulario de pago de derechos.
-   *
-   * @property {Observable<PagoDerechosFormState>} getPagoDerechos$
-   */
-  public getPagoDerechos$ = this.select((state) => state.pagoDerechos);
-
-  /**
-   * Observable que emite los datos de la tabla de proveedores.
-   *
-   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
-   */
-  public getProveedorTablaDatos$ = this.select(
-    (state) => state.proveedorTablaDatos
-  );
-
-  /**
-   * Observable que emite los datos de la tabla de destinatarios finales.
-   *
-   * @property {Observable<DestinoFinal[]>} getDestinatarioFinalTablaDatos$
-   */
-  public getDestinatarioFinalTablaDatos$ = this.select(
-    (state) => state.destinatarioFinalTablaDatos
-  );
-
-  /**
-   * Observable que emite los datos de la tabla de mercancía.
-   *
-   * @property {Observable<MercanciaDetalle[]>} getMercanciaTablaDatos$
-   */
-  public getMercanciaTablaDatos$ = this.select(
-    (state) => state.merccancialTablaDatos
-  );
+export class TramiteStoreQuery extends Query<TramiteState> {
 
     /**
-   * Obtiene los datos de terceros desde el estado actual.
-   * 
-   * Este observable selecciona y devuelve los datos de `modificarDestinarioDatos` 
-   * o `modificarProveedorDatos` del estado. Si ninguno de estos valores está presente, 
-   * devuelve `null`.
-   * 
-   * @returns Los datos de terceros (`modificarDestinarioDatos` o `modificarProveedorDatos`) 
-   *          o `null` si no están disponibles.
-   */
-    public obtenerTercerosDatos$ = this.select((state) => {
-      return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+     * @constructor
+     * @descripción Constructor de la clase `TramiteStoreQuery`. Inicializa la consulta con el store inyectado.
+     * 
+     * @param {TramiteStore} store - Inyección del store que maneja el estado de `TramiteState`.
+     */
+    constructor(protected override store: TramiteStore) {
+        super(store);
+    }
+
+    /**
+     * @propiedad selectSolicitudTramite$
+     * @tipo Observable<TramiteState>
+     * @descripción Selector que permite obtener el estado completo de `TramiteState`.
+     * Este observable emite el estado actual del store cada vez que cambia.
+     */
+    selectSolicitudTramite$ = this.select((state) => {
+        return state;
     });
 }
