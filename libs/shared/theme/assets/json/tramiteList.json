@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "/se/modificaciones-immex-prosec/solicitud",
-    "linkDepartment": "/pago/modificaciones-immex-prosec/solicitud",
+    "linkDashboard": "/se/modificaciones-immex-prosec/registro-modificacion",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/registro-modificacion",
     "department": "se"
   },
   {

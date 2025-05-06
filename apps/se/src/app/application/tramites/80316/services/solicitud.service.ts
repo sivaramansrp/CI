@@ -99,4 +99,8 @@ export class SolicitudService {
     return this.http.get<FraccionSensible[]>('assets/json/80316/fraccionSensible.json').pipe(map((res: any) => res.data));
   }
 
+  getTablaData(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/80316/tablaLista.json`);
+  }
+
 }

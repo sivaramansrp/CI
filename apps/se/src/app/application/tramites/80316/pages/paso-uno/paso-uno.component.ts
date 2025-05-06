@@ -11,6 +11,9 @@ import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.co
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
 
+/**
+ * Componente que representa la página de solicitud.
+ */
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -18,7 +21,7 @@ import { ComplementariaImmexComponent } from '../../components/complementaria-im
   standalone: true,
   imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
 })
-// , BitacoraComponent, AltaPlantaComponent
+
 export class PasoUnoComponent implements AfterViewInit {
   /**
     * Referencia al componente `SolicitanteComponent`.

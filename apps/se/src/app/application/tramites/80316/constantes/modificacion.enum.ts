@@ -1,5 +1,4 @@
-import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../../80308/models/plantas-consulta.model";
-import { DatosDelModificacion, Empresas, FraccionSensible, Plantas, Servicios } from "../models/datos-tramite.model";
+import { Anexo, Bitacora, Complimentaria, DatosDelModificacion, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from "../models/datos-tramite.model";
 
 export const PASOS = [
   {
@@ -82,68 +81,6 @@ export const CONFIGURACION_MODIFICACION = [
     },
 ];
 
-export const CONFIGURACION_DOMICILIOS = [
-  {
-    encabezado: 'Calle',
-    clave: (ele: DomicilioInfo): string | undefined => ele.calle,
-    orden: 1,
-  },
-  {
-    encabezado: 'Número Exterior',
-    clave: (ele: DomicilioInfo) : string | undefined => ele.numeroExterior,
-    orden: 2,
-  },
-  {
-    encabezado: 'Número Interior',
-    clave: (ele: DomicilioInfo): string | undefined => ele.numeroInterior,
-    orden: 3,
-  },
-  {
-    encabezado: 'Código Postal',
-    clave: (ele: DomicilioInfo): string | undefined => ele.codigoPostal,
-    orden: 4,
-  },
-
-  {
-    encabezado: 'Colonia',
-    clave: (ele: DomicilioInfo): string | undefined => ele.colonia,
-    orden: 5,
-  },
-  {
-    encabezado: 'Localidad',
-    clave: (ele: DomicilioInfo): string | undefined => ele.localidad,
-    orden: 6,
-  },
-
-  {
-    encabezado: 'Municipio o alcaldía',
-    clave: (ele: DomicilioInfo): string | undefined => ele.delegacionMunicipio,
-    orden: 7,
-  },
-  {
-    encabezado: 'Entidad Federativa',
-    clave: (ele: DomicilioInfo): string | undefined => ele.entidadFederativa,
-    orden: 8,
-  },
-  {
-    encabezado: 'País',
-    clave: (ele: DomicilioInfo): string | undefined => ele.pais,
-    orden: 9,
-  },
-  {
-    encabezado: 'RFC',
-    clave: (ele: DomicilioInfo): string | undefined => ele.rfc,
-    orden: 10,
-  },
-  
-  {
-    encabezado: 'Razón Social',
-    clave: (ele: DomicilioInfo): string | undefined => ele.razonSocial,
-    orden: 13,
-  },
- 
-];
-
 export const CONFIGURACION_ACCIONISTAS = [
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
@@ -174,40 +111,20 @@ export const CONFIGURACION_FEDERETARIOS = [
     orden: 1,
   },
   {
-    encabezado: 'Primer apellido',
-    clave: (ele: Federetarios): string | undefined => ele.apellidoPrimer,
+    encabezado: 'Apellido Paterno',
+    clave: (ele: Federetarios): string | undefined => ele.apellidoPaterno,
     orden: 2,
   },
   {
-    encabezado: 'Segundo apellido',
-    clave: (ele: Federetarios): string | undefined => ele.apellidoSegundo,
+    encabezado: 'Apellido Materno',
+    clave: (ele: Federetarios): string | undefined => ele.apellidoMaterno,
     orden: 3,
   },
   {
     encabezado: 'Número acta',
     clave: (ele: Federetarios): string | undefined => ele.numeroActa,
     orden: 4,
-  },
-  {
-    encabezado: 'Fecha acta',
-    clave: (ele: Federetarios) : string | undefined => ele.fetchActa,
-    orden: 5,
-  },
-  {
-    encabezado: 'Número notaria',
-    clave: (ele: Federetarios) : string | undefined => ele.numeroNotaria,
-    orden: 6,
-  },
-  {
-    encabezado: 'Municipio o Delegación',
-    clave: (ele: Federetarios) : string | undefined => ele.municipioDelegacion,
-    orden: 7,
-  },
-  {
-    encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Federetarios) : string | undefined => ele.estado,
-    orden: 8,
-  },
+  }
 ];
 
 export const CONFIGURACION_OPERACIONES = [
@@ -240,43 +157,44 @@ export const CONFIGURACION_OPERACIONES = [
     encabezado: 'Localidad',
     clave: (ele: Operacions) : string | undefined => ele.localidad,
     orden: 6,
-  },
-  {
-    encabezado: 'Municipio o Delegación',
-    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
-    orden: 7,
-  },
-  {
-    encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Operacions) : string | undefined => ele.estado,
-    orden: 8,
-  },
-  {
-    encabezado: 'País',
-    clave: (ele: Operacions) : string | undefined => ele.pais,
-    orden: 9,
-  },
-  {
-    encabezado: 'Registro Federal de Contribuyente(RFC)',
-    clave: (ele: Operacions) : string | undefined => ele.rfc,
-    orden: 10,
-  },
-  {
-    encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
-    orden: 11,
-  },
-  {
-    encabezado: 'Denominación o razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
-    orden: 12,
-  },
+  }
+  // },
+  // {
+  //   encabezado: 'Municipio o Delegación',
+  //   clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+  //   orden: 7,
+  // },
+  // {
+  //   encabezado: 'Estado o Distrito Federal',
+  //   clave: (ele: Operacions) : string | undefined => ele.estado,
+  //   orden: 8,
+  // },
+  // {
+  //   encabezado: 'País',
+  //   clave: (ele: Operacions) : string | undefined => ele.pais,
+  //   orden: 9,
+  // },
+  // {
+  //   encabezado: 'Registro Federal de Contribuyente(RFC)',
+  //   clave: (ele: Operacions) : string | undefined => ele.rfc,
+  //   orden: 10,
+  // },
+  // {
+  //   encabezado: 'Domicilio fiscal del solicitante',
+  //   clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
+  //   orden: 11,
+  // },
+  // {
+  //   encabezado: 'Denominación o razón social',
+  //   clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+  //   orden: 12,
+  // },
 
-  {
-    encabezado: 'Estatus',
-    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
-    orden: 13,
-  },
+  // {
+  //   encabezado: 'Estatus',
+  //   clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+  //   orden: 13,
+  // },
 ];
 
 export const CONFIGURACION_BITACORA_TABLA = [
