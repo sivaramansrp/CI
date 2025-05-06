@@ -1,33 +1,42 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {  of as observableOf } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { CafeExportadoresComponent } from './cafe-exportadores.component';
+import { Component } from '@angular/core';
+import { RegistroEmpresaComponent } from './registro-empresa.component';
 import { SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
 
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom: any;
+}
 
-describe('CafeExportadoresComponent', () => {
-  let fixture: ComponentFixture<CafeExportadoresComponent>;
-  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; seccionQuery: { selectSeccionState$?: any; }; ngOnInit: () => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; destroyed$: { next?: any; complete?: any; }; };
+
+
+describe('RegistroEmpresaComponent', () => {
+  let fixture: ComponentFixture<RegistroEmpresaComponent>;
+  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; seccionQuery: { selectSeccionState$?: any; }; ngOnInit: () => void; pedimentos: { splice?: any; }; eliminarPedimento: (arg0: {}) => void; abrirModal: jest.Mock<any, any, any> | (() => void); wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; onAlertClick: () => void; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        CafeExportadoresComponent,
-        
+        RegistroEmpresaComponent,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         SeccionLibQuery,
         SeccionLibStore
       ]
-    }).overrideComponent(CafeExportadoresComponent, {
+    }).overrideComponent(RegistroEmpresaComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(CafeExportadoresComponent);
+    fixture = TestBed.createComponent(RegistroEmpresaComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -53,16 +62,44 @@ describe('CafeExportadoresComponent', () => {
 
   });
 
+  it('should run #eliminarPedimento()', async () => {
+    component.pedimentos = component.pedimentos || {};
+    component.pedimentos.splice = jest.fn();
+    component.eliminarPedimento({});
+    expect(component.pedimentos.splice).toHaveBeenCalled();
+  });
+
+  it('should run #abrirModal()', async () => {
+
+    component.abrirModal();
+
+  });
   it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+  
     component.getValorIndice({
       valor: {},
-      accion: {}
+      accion: 'siguiente',
     });
+  
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  
+    component.getValorIndice({
+      valor: {},
+      accion: 'atras',
+    });
+  
     expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should run #onAlertClick()', async () => {
+    component.abrirModal = jest.fn();
+    component.onAlertClick();
+    expect(component.abrirModal).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
