@@ -1,19 +1,29 @@
 <div class="container">
     <form [formGroup]="asignacionForm" class="form-container">
+        <!-- 1.Numero-de-oficio -->
         <div class="numero-oficio mt-5">
             <ng-titulo titulo="Número de oficio de asignación" />
-            <div class="col-md-4">
+            <div class="col-md-4 dropdown-field">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
-                        [required]="true" formControlName="anoDelOficio" for="anoDelOficio"
-                        id="anoDelOficio"></app-catalogo-select>
+                        [required]="true" formControlName="anoDelOficio" for="anoDelOficio" id="anoDelOficio"
+                        (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')"></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
                     <input type="number" class="form-control" id="numeroOficio" formControlName="numeroOficio"
-                        name="numeroOficio" [required]="true">
+                        name="numeroOficio" [required]="true"
+                        (change)="setValoresStore(asignacionForm,'numeroOficio', 'setNumeroOficio')">
+                    @if(asignacionForm.controls['numeroOficio'].invalid &&
+                    asignacionForm.controls['numeroOficio'].touched){
+                    <div class="d-grid">
+                        @if(asignacionForm.controls['numeroOficio'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
             <div class="col-md-8 mt-5 d-flex justify-content-end">
@@ -21,6 +31,7 @@
             </div>
         </div>
 
+        <!-- 2.Representación-federal -->
         <div class="representacion-federal mt-5">
             <ng-titulo titulo="Representación federal" />
             <div class="col-md-4">
@@ -38,6 +49,7 @@
             </div>
         </div>
 
+        <!-- 3.Control-de-montos -->
         <div class="control-motos mt-5">
             <ng-titulo titulo="Control de montos de la asignación" />
             <div class="col-md-4">
@@ -63,6 +75,7 @@
             </div>
         </div>
 
+        <!-- 4.Datos-de-la-asignacion -->
         <div class="datos-asignacion mt-5">
             <ng-titulo titulo="Datos de la asignación" />
             <div class="col-md-8">
@@ -74,31 +87,23 @@
             </div>
         </div>
 
+        <!-- 5.Vigencia-de-la-asignacion -->
         <div>
             <div class="datos-asignacion mt-5">
                 <ng-titulo titulo="Vigencia de la asignación" />
                 <div class="col-md-4">
-                    <input-fecha [datos]="fechaIncicioAsignacion" />
+                    <input-fecha [datos]="fechaIncicioAsignacion" [setFecha]="fechaInicioDate" />
                 </div>
                 <div class="col-md-4">
-                    <input-fecha [datos]="fechaFinAsignacion" />
+                    <input-fecha [datos]="fechaFinAsignacion" [setFecha]="fechaFinDate" />
                 </div>
             </div>
         </div>
-<!-- 
-        <div>
-            <form [formGroup]="descripcionCupoForm">
-                <div class="descripcion-cupo mt-5">
-                        <formas-dinamicas formularioTitulo="Descripción del cupo" [forma]="descripcionCupoForm"
-                            [formularioDatos]="informacionFormData"></formas-dinamicas>
-                </div>
-            </form>
-        </div> -->
 
-        <div>
-            <app-descripcion-cupo></app-descripcion-cupo>
-        </div>
+        <!-- 6.Descripción-del-cupo -->
+        <app-descripcion-cupo></app-descripcion-cupo>
 
+        <!-- 7.Distribución-de-saldo -->
         <div class="distribucion-saldo mt-5">
             <ng-titulo titulo="Distribución de saldo" />
             <div class="col-md-4">
@@ -112,7 +117,8 @@
                 <div class="form-group">
                     <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
                     <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
-                        name="montoAExpedir" [required]="true">
+                        name="montoAExpedir" [required]="true"
+                        (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
                 </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">

@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  // FormBuilder,
-  // FormControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -14,8 +12,6 @@ import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import {
   INFORMACION_DESCRPCION_CUPO,
-  // INPUT_FECHA_FIN_CUPO,
-  // INPUT_FECHA_INICIO_CUPO,
 } from '../../constantes/expedicion-certificados-frontera.enum';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 
@@ -82,16 +78,14 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
+  establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
     if (event) {
       this.cambioEnValoresStore(event.campo, event.valor);
     }
-    console.log(event.campo,event.valor)
   }
 
   cambioEnValoresStore(campo: string, valor: unknown): void {
       this.tramite120702Store.setDynamicFieldValue(campo,valor);
-      console.log(campo,valor)
     }
   
 

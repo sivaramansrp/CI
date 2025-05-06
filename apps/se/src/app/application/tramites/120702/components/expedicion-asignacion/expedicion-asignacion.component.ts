@@ -1,7 +1,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  InputFecha,
   InputFechaComponent,
   TableComponent,
   TituloComponent,
@@ -14,10 +13,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-// import {
-//   INPUT_FECHA_FIN,
-//   INPUT_FECHA_INICIO,
-// } from '../../constantes/expedicion-certificados-frontera.enum';
+import {
+  INFORMACION_DESCRPCION_CUPO,
+  INPUT_FECHA_FIN,
+  INPUT_FECHA_INICIO,
+} from '../../constantes/expedicion-certificados-frontera.enum';
 import {
   MontoExpedirTablaDatos,
   TablaDatos,
@@ -26,7 +26,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { INFORMACION_DESCRPCION_CUPO } from '../../constantes/expedicion-certificados-frontera.enum';
+import { Tramite120702Query } from '../../estados/tramite120702.query';
+import { Tramite120702Store } from '../../estados/tramite120702.store';
 
 @Component({
   selector: 'app-expedicion-asignacion',
@@ -44,45 +45,25 @@ import { INFORMACION_DESCRPCION_CUPO } from '../../constantes/expedicion-certifi
   styleUrl: './expedicion-asignacion.component.scss',
 })
 export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
- 
-  // FECHA_INICIO = INPUT_FECHA_INICIO;
-  // FECHA_FIN = INPUT_FECHA_FIN;
-
   public asignacionForm!: FormGroup;
-
-  // public descripcionCupoForm!: FormGroup;
 
   public informacionFormData = INFORMACION_DESCRPCION_CUPO;
 
   private destroy$ = new Subject<void>();
 
-  fechaIncicioAsignacion: InputFecha = {
-    labelNombre: 'Fecha inicio',
-    required: true,
-    habilitado: false,
-  };
-
-  fechaFinAsignacion: InputFecha = {
-    labelNombre: 'Fecha fin',
-    required: true,
-    habilitado: false,
-  };
+  fechaIncicioAsignacion = INPUT_FECHA_INICIO;
+  fechaFinAsignacion = INPUT_FECHA_FIN;
+  fechaInicioDate: string = '15/11/2024';
+  fechaFinDate: string = '15/11/2025';
 
   anoOficioDatos: Catalogo[] = [];
-  // numeroOficioDatos: Catalogo[] = [];
   montoTablaDatos: string[] = [];
   montoTablaFilaDatos: TablaDatos[] = [];
 
-  // public forma: FormGroup = new FormGroup({
-  //   ninoFormGroup: new FormGroup({})
-  // });
-
-  // get ninoFormGroup(): FormGroup {
-  //   return this.forma.get('ninoFormGroup') as FormGroup;
-  // }
-
   constructor(
     private fb: FormBuilder,
+    private tramite120702Store : Tramite120702Store,
+    private tramite120702Query: Tramite120702Query,
     private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService
   ) {
     //
@@ -104,7 +85,6 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       });
 
     this.establecerAsignacionFormGroup();
-    // this.establecerDescripcionCupoFormGroup();
   }
 
   establecerAsignacionFormGroup(): void {
@@ -126,22 +106,14 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  // establecerDescripcionCupoFormGroup(): void {
-  //   this.descripcionCupoForm = this.fb.group({
-  //     regimenAduanero: new FormControl({ value: '', disabled: true }),
-  //     descripcionProducto: new FormControl({ value: '', disabled: true }),
-  //     clasificacionSubProducto: new FormControl({ value: '', disabled: true }),
-  //     unidadMedida: new FormControl({ value: '', disabled: true }),
-  //     fechaInicioCupo: new FormControl({ value: '', disabled: true }),
-  //     fechaFinCupo: new FormControl({ value: '', disabled: true }),
-  //     mecanismoAsignacion: new FormControl({ value: '', disabled: true }),
-  //     tratadoAcuerdo: new FormControl({ value: '', disabled: true }),
-  //     fraccionesArancelarias: new FormControl({ value: '', disabled: true }),
-  //     paises: new FormControl({ value: '', disabled: true }),
-  //     observaciones: new FormControl({ value: '', disabled: true }),
-  //     fundamento: new FormControl({ value: '', disabled: true }),
-  //   });
-  // }
+  public setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite120702Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite120702Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 
   enviarMontoFormulario(): void {
     const MONTO_A_EXPEDIR_FILA = {
@@ -150,7 +122,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     this.montoTablaFilaDatos.push(MONTO_A_EXPEDIR_FILA);
 
     const MONTO_A_EXPEDIR = this.asignacionForm.get('montoAExpedir')?.value;
-    this.asignacionForm.get('totalAExpedir')?.setValue(MONTO_A_EXPEDIR)
+    this.asignacionForm.get('totalAExpedir')?.setValue(MONTO_A_EXPEDIR);
   }
 
   ngOnDestroy(): void {
