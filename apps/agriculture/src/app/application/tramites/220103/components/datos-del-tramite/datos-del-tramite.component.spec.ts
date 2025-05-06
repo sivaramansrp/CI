@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
+import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
 import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
 
 describe('DatosDelTramiteComponent', () => {
@@ -11,6 +12,7 @@ describe('DatosDelTramiteComponent', () => {
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
   let MOCK_QUERY: jest.Mocked<Tramite220103Query>;
   let MOCK_STORE: jest.Mocked<Tramite220103Store>;
+  let MOCK_SERVICE: jest.Mocked<SanidadAcuicolaImportacionService>;
 
   beforeEach(async () => {
     MOCK_QUERY = {
@@ -28,13 +30,17 @@ describe('DatosDelTramiteComponent', () => {
       eliminarMercancia: jest.fn(),
     } as unknown as jest.Mocked<Tramite220103Store>;
 
+    MOCK_SERVICE = {
+      getMercancias: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Mercancía 1' }])),
+    } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
+
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [ReactiveFormsModule,DatosDelTramiteComponent],
       providers: [
         FormBuilder,
         { provide: Tramite220103Query, useValue: MOCK_QUERY },
         { provide: Tramite220103Store, useValue: MOCK_STORE },
+        { provide: SanidadAcuicolaImportacionService, useValue: MOCK_SERVICE },
       ],
     }).compileComponents();
 
@@ -83,7 +89,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('debería obtener las mercancías seleccionadas en la tabla', () => {
     const MOCK_MERCANCIAS: Mercancia[] = [{
-      id: '1', descripcion: 'Mercancía 1',
+      id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
       descripcionFraccion: '',
       cantidadUMT: '',
@@ -107,7 +113,7 @@ describe('DatosDelTramiteComponent', () => {
   it('debería agregar una mercancía al estado del trámite', () => {
     component.datosMercanciaFormulario.setValue({ id: null, descripcion: 'Nueva Mercancía' });
     component.mercanciasSeleccionadas = [{
-      id: '1', descripcion: 'Mercancía 1',
+      id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
       descripcionFraccion: '',
       cantidadUMT: '',
@@ -126,18 +132,17 @@ describe('DatosDelTramiteComponent', () => {
 
     component.agregarMercancia();
 
-    expect(MOCK_STORE.agregarMercancia).toHaveBeenCalledWith({
-      id: 1,
-      descripcion: 'Nueva Mercancía',
-    });
+    expect(MOCK_SERVICE.getMercancias).toHaveBeenCalled();
+    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('Tablamercancia', [
+      { id: 1, descripcion: 'Mercancía 1' },
+    ]);
     expect(component.datosMercanciaFormulario.value).toEqual({});
     expect(component.mercanciasSeleccionadas).toEqual([]);
   });
 
   it('debería eliminar una mercancía seleccionada del estado del trámite', () => {
     component.mercanciasSeleccionadas = [{
-      id: '1',
-      descripcion: 'Mercancía 1',
+      id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
       descripcionFraccion: '',
       cantidadUMT: '',
@@ -162,7 +167,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('debería modificar una mercancía seleccionada en el formulario', () => {
     component.mercanciasSeleccionadas = [{
-      id: '1', descripcion: 'Mercancía 1',
+      id: "1", descripcion: 'Mercancía 1',
       fraccionArancelaria: '',
       descripcionFraccion: '',
       cantidadUMT: '',

@@ -16,16 +16,12 @@ import { AlertComponent, ModeloDeFormaDinamica, TablaSeleccion } from '@ng-mf/da
 import { CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE, CAMPOS_FORMULARIO_MERCANCIAS, CONFIGURACION_MERCANCIAS, IMPORTANTE } from '../../constantes/sanidad-acuicola-importacion.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
+import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/tramites220103.store';
-
-/**
- * Componente que gestiona los datos del trámite 220103.
- * Proporciona funcionalidades para manejar formularios dinámicos, tablas de mercancías, y la interacción con el estado del trámite.
- */
 
 @Component({
   selector: 'app-datos-del-tramite',
@@ -96,11 +92,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param fb - FormBuilder para inicializar los formularios.
    * @param tramite220103Query - Query para obtener el estado del trámite.
    * @param tramite220103Store - Store para gestionar el estado del trámite.
+   * @param service - Servicio para interactuar con la API de mercancías.
    */
   constructor(
     fb: FormBuilder,
     private tramite220103Query: Tramite220103Query,
     private tramite220103Store: Tramite220103Store,
+    private service: SanidadAcuicolaImportacionService
   ) {
     this.datosDelTramiteFormulario = fb.group({});
     this.datosMercanciaFormulario = fb.group({});
@@ -125,7 +123,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   getDescripcionFraccion(): void {
     this.datosMercanciaFormulario.patchValue({
       descripcionFraccion: 'Los demas',
-      umt: 'kilogramo'
+      umt: 'kilogramo',
     });
     this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demas');
     this.tramite220103Store.setTramite220103State('umt', 'kilogramo');
@@ -137,11 +135,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
-      this.tramite220103Store.setTramite220103State($event.campo, (($event.valor as { id: unknown }).id));
-    } else {
-      this.tramite220103Store.setTramite220103State($event.campo, $event.valor);
-    }
+    this.tramite220103Store.setTramite220103State($event.campo, $event.valor);
     if ($event.campo === 'fraccionArancelaria') {
       this.getDescripcionFraccion();
     }
@@ -166,13 +160,23 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Agrega una mercancía al estado del trámite.
    */
   agregarMercancia(): void {
-    const VALOR: Mercancia = this.datosMercanciaFormulario.value;
-    if (this.mercanciasSeleccionadas.length > 0) {
-      VALOR.id = this.mercanciasSeleccionadas[0].id;
-      this.mercanciasSeleccionadas = [];
+    if (this.datosMercanciaFormulario.valid) {
+      this.getMercancia();
+      this.datosMercanciaFormulario.reset();
     }
-    this.tramite220103Store.agregarMercancia(VALOR);
-    this.datosMercanciaFormulario.reset();
+  }
+
+  /**
+   * Obtiene las mercancías desde el servicio y actualiza el estado.
+   */
+  getMercancia(): void {
+    this.service.getMercancias()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response: Mercancia[]) => {
+        if (response) {
+          this.tramite220103Store.setTramite220103State('Tablamercancia', response);
+        }
+      });
   }
 
   /**

@@ -54,28 +54,6 @@ export class Tramite220103Store extends Store<Tramite220103State> {
         })));
     }
 
-    agregarMercancia(mercancia: Mercancia): void {
-        if (!mercancia.id) {
-        const MERCANCIA_ID = crypto.randomUUID();
-        mercancia.id = MERCANCIA_ID;
-        this.update((state) => ({
-            ...state,
-            Tablamercancia: [...(state.Tablamercancia || []), mercancia]
-        }));
-    }
-    else{
-        this.update((state) => ({
-            ...state,
-            Tablamercancia: state.Tablamercancia?.map((item) => {
-                if (item.id === mercancia.id) {
-                    return { ...item, ...mercancia };
-                }
-                return item;
-            })
-        }));
-    }
-
-    }
    eliminarMercancia(id: string): void {
         this.update((state) => ({
             ...state,
