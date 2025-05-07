@@ -571,9 +571,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void}
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  eliminarNuevo(item: any, adicional = false): void {
-    console.log('item', item);
-    
+  eliminarNuevo(item: any, adicional = false): void {   
     if (adicional) {
       const INDICE_ADICIONAL = item.item.adicionales.findIndex((adicional: CatalogoDocumento) => adicional.id === item.adicional.id);
       item.item.adicionales.splice(INDICE_ADICIONAL, 1);
