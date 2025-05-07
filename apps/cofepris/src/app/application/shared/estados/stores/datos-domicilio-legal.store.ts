@@ -198,6 +198,11 @@ export interface DatosDomicilioLegalState {
    * El valor de apellidoMaterno.
    */
   apellidoMaterno: string;
+
+  /**
+   * El valor de garantiasOfrecidas.
+   */
+  garantiasOfrecidas: string;
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -394,6 +399,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de apellidoMaterno.
      */
     apellidoMaterno: '',
+
+    /**
+     * El valor de garantiasOfrecidas.
+     */
+    garantiasOfrecidas: '',
   };
 }
 
@@ -902,6 +912,16 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
     this.update((state) => ({
       ...state,
       apellidoMaterno,
+    }));
+  }
+   /**
+   * Establece el estado de garantiasOfrecidas.
+   * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
+   */
+   public setGarantiasOfrecidas(garantiasOfrecidas: string): void {
+    this.update((state) => ({
+      ...state,
+      garantiasOfrecidas,
     }));
   }
 }
