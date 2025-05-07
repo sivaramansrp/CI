@@ -171,7 +171,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
      private seccionStore: SeccionLibStore
   ) {
     this.getOperacionList();
-    this.getPersonasTableeData();
+    this.getPersonasTablaData();
     this.getperiodoList();
   }
 
@@ -209,10 +209,10 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
   }
 
   /**
-   * @metodo getPersonasTableeData
+   * @metodo getPersonasTablaData
    * @descripcion Obtiene los datos de la tabla de personas desde el servicio `OperacionService`.
    */
-  getPersonasTableeData(): void {
+  getPersonasTablaData(): void {
     this.operacionService.obtenerTablerList('personas.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.cuerpoPersonasTablaFila = data;
     });
