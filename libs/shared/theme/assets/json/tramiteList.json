@@ -4032,7 +4032,13 @@
       "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "department": "cofepris"
-   }
+   },
+   {"id":288,
+      "tramite": 32515,
+      "linkDashboard": "/agace/aviso-opcion-seguro-global/solicitud",
+      "linkDepartment": "/pago/aviso-opcion-seguro-global/solicitud",
+      "department": "agace"
+    }
 
   
 ]

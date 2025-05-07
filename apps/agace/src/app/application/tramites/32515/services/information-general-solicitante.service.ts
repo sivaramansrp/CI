@@ -30,7 +30,7 @@ export class InformationGeneralSolicitanteService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de municipios.
    */
   getMunicipio(): Observable<Catalogo[]> { 
-    return this.http.get<Catalogo[]>('assets/json/32515/municipio.json');
+    return this.http.get<Catalogo[]>('assets/json/32515/municion.json');
   }
 
   /**

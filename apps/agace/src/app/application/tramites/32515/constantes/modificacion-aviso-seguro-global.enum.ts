@@ -35,7 +35,7 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'number', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
-    validadores: [{ tipo: '', mensaje: '' }], // Validadores asociados
+    validadores: [{ tipo: 'required', mensaje: '' }], // Validadores asociados
     marcadorDePosicion: '', // Texto de placeholder
     valorPredeterminado: '', // Valor inicial
     marginTop: 0, // Margen superior personalizado
@@ -48,7 +48,7 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'number',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: '', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
