@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+            (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Solicitante</a>
+        </li>
+        <li [ngClass]="indice === 2 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos de la solicitud</a>
+        </li>
+        <li [ngClass]="indice === 3 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+            (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Instalación de procedencia</a>
+        </li>
+        <li [ngClass]="indice === 4 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
+            (keydown.space)="seleccionaTab(4)" role="button" tabindex="4">Terceros relacionados</a>
+        </li>
+        
+      </ul>
+  
+      <ng-container>
+        @switch (indice) {
+        @case (1) {
+        <solicitante [tabindex]="1"></solicitante>
+        }
+        @case (2) {
+          <app-datos-del-tramite [tabIndex]="2"></app-datos-del-tramite>
+        }
+        @case (3) {
+          <app-datos-de-instalacion [tabIndex]="3"></app-datos-de-instalacion>
+        }
+        @case (4){
+          <app-datos-del-terceros [tabIndex]="4"></app-datos-del-terceros>
+        }
+        }
+      </ng-container>
+    </div>
+</div>
+  

@@ -1,0 +1,62 @@
+<div class="container">
+    <ng-titulo [titulo]="'Tereceros relacionados'"> </ng-titulo>
+    <div class="col-md-12 mt-4">
+        <ng-alert [CONTENIDO]="mensajeImportante"></ng-alert>
+    </div>
+    <div class="col-md-12">
+        <label for="destinatario" class="form-label">Destinatario (destino final)*:</label>
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
+            [tipoSeleccionTabla]="seleccionTabla"
+            (listaDeFilaSeleccionada)="obtenerDestinatarioSeleccionadas($event)"></app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link">1</a></li>
+                 </ul>
+        </nav>
+    </div>
+    
+    <div class="col-md-12 mt-4">
+        <div class="col-12 d-flex justify-content-end">
+            @if(datosTabla.length > 0) {
+            <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#modalDestinatario" (click)="modificarDestinatario()">
+                Modificar
+            </button>
+            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarDestinatario()">
+                Eliminar
+            </button>
+            }
+            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
+                Agregar
+            </button>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <label for="instalaci" class="form-label">Instalación de procedencia'*:</label>
+        <app-tabla-dinamica [configuracionTabla]="configuracionTablaInstalacion" [datos]="datosTabla"
+            [tipoSeleccionTabla]="seleccionTabla"
+            (listaDeFilaSeleccionada)="obtenerInstalaciSeleccionadas($event)"></app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link">1</a></li>
+                 </ul>
+        </nav>
+    </div>
+    
+    <div class="col-md-12 mt-4">
+        <div class="col-12 d-flex justify-content-end">
+            @if(datosTabla.length > 0) {
+            <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#modalInstalaci" (click)="modificarInstalaci()">
+                Modificar
+            </button>
+            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarInstalaci()">
+                Eliminar
+            </button>
+            }
+            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>
