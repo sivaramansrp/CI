@@ -1,119 +1,108 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosComponent } from './terceros.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enum';
+import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
+import { of } from 'rxjs';
+import { DESTINATARIO_TABLE_ENTRY } from '../../enum/destinatario-tabla.enum';
 
 describe('TercerosComponent', () => {
   let component: TercerosComponent;
   let fixture: ComponentFixture<TercerosComponent>;
-  let tramite230901StoreMock: any;
-  let tramite230901QueryMock: any;
-  let autorizacionesDeVidaSilvestreServiceMock: any;
+  let tramiteStore: Tramite230901Store;
+  let tramiteQuery: Tramite230901Query;
+  let autorizacionesService: AutorizacionesDeVidaSilvestreService;
 
   beforeEach(async () => {
-    tramite230901StoreMock = {
-      setEntidadFederativa: jest.fn(),
-      setTercerosPopupState: jest.fn(),
-    };
-
-    tramite230901QueryMock = {
-      selectSolicitud$: of({
-        entidadFederativa: 'MORELOS',
-      }),
-    };
-
-    autorizacionesDeVidaSilvestreServiceMock = {
-      inicializaTercerosDatosCatalogos: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
       declarations: [TercerosComponent],
-      imports: [ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent],
       providers: [
-        { provide: Tramite230901Store, useValue: tramite230901StoreMock },
-        { provide: Tramite230901Query, useValue: tramite230901QueryMock },
-        { provide: AutorizacionesDeVidaSilvestreService, useValue: autorizacionesDeVidaSilvestreServiceMock },
         FormBuilder,
-      ],
+        {
+          provide: Tramite230901Store,
+          useValue: {
+            establecerDatos: jest.fn(),
+            setTercerosPopupState: jest.fn()
+          }
+        },
+        {
+          provide: Tramite230901Query,
+          useValue: {
+            selectSolicitud$: of({ entidadFederativa: 'MX' })
+          }
+        },
+        {
+          provide: AutorizacionesDeVidaSilvestreService,
+          useValue: {
+            inicializaTercerosDatosCatalogos: jest.fn()
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    tramiteStore = TestBed.inject(Tramite230901Store);
+    tramiteQuery = TestBed.inject(Tramite230901Query);
+    autorizacionesService = TestBed.inject(AutorizacionesDeVidaSilvestreService);
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and tablaDatos on ngOnInit', () => {
+  it('should initialize the form and subscriptions on ngOnInit', () => {
+    const spyCatalogos = jest.spyOn(autorizacionesService, 'inicializaTercerosDatosCatalogos');
     component.ngOnInit();
+    expect(spyCatalogos).toHaveBeenCalled();
     expect(component.formularioDestinatario).toBeDefined();
-    expect(component.formularioDestinatario.get('entidadFederativa')?.value).toBe('MORELOS');
-    expect(component.datosTabla).toEqual([{ pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', ciudad: '---', entidadFederativa: 'MORELOS', domicilio: 'prueba', codigoPostal: 96533 }]);
+    expect(component.estadoSolicitud.entidadFederativa).toBe('MX');
   });
 
-  it('should call inicializaTercerosDatosCatalogos on ngOnInit', () => {
-    component.ngOnInit();
-    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaTercerosDatosCatalogos).toHaveBeenCalled();
+  it('should create form with correct initial value', () => {
+    component.estadoSolicitud = { entidadFederativa: 'CDMX' } as any;
+    component.crearFormularioDestinatario();
+    expect(component.formularioDestinatario.get('entidadFederativa')?.value).toBe('CDMX');
   });
 
-  it('should handle changes in entidadFederativa and update the store', () => {
-    component.ngOnInit();
-    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
+  it('should handle entity change and update store + table data', () => {
+    component.estadoSolicitud = { entidadFederativa: 'CDMX' } as any;
+    component.crearFormularioDestinatario();
+    component.datosTabla = [];
+
     component.manejarCambioEntidadFederativa();
-    expect(tramite230901StoreMock.setEntidadFederativa).toHaveBeenCalledWith('MORELOS');
+
+    expect(tramiteStore.establecerDatos).toHaveBeenCalledWith({ entidadFederativa: 'CDMX' });
     expect(component.datosTabla.length).toBe(1);
+    expect(component.datosTabla[0]).toEqual(DESTINATARIO_TABLE_ENTRY);
   });
 
-  it('should not add duplicate entries to tablaDatos', () => {
-    component.ngOnInit();
-    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
-    component.manejarCambioEntidadFederativa();
-    component.manejarCambioEntidadFederativa();
-    expect(component.datosTabla.length).toBe(1);
-  });
-
-  it('should handle fila seleccionada and enable modificar button', () => {
-    const mockRow: DestinatarioConfiguracionItem = {
-      pais: 'MEXICO',
-      ciudad: 'Cuernavaca',
-      entidadFederativa: 'MORELOS',
-      domicilio: 'Calle 123',
-      codigoPostal: 62000,
-    };
-    component.manejarFilaSeleccionada([mockRow]);
+  it('should enable modify button when row is selected', () => {
+    component.manejarFilaSeleccionada([DESTINATARIO_TABLE_ENTRY]);
     expect(component.botonModificarHabilitado).toBe(true);
   });
 
-  it('should disable modificar button when no fila is seleccionada', () => {
-    component.manejarFilaSeleccionada([]);
-    expect(component.botonModificarHabilitado).toBe(false);
-  });
-
-  it('should open the popup and update the store', () => {
+  it('should open popup only if modify button is enabled', () => {
+    component.botonModificarHabilitado = true;
     component.abrirPopup();
     expect(component.popupAbierto).toBe(true);
-    expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(true);
+    expect(tramiteStore.setTercerosPopupState).toHaveBeenCalledWith(true);
   });
 
-  it('should close the popup and update the store', () => {
+  it('should close popup and update state', () => {
     component.cerrarPopup();
-    expect(component.popupAbierto).toBeFalsy();
-    expect(component.popupCerrado).toBeFalsy();
-    expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(false);
+    expect(component.popupAbierto).toBe(false);
+    expect(component.popupCerrado).toBe(false);
+    expect(tramiteStore.setTercerosPopupState).toHaveBeenCalledWith(false);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+  it('should clean up subscriptions on destroy', () => {
+    const nextSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

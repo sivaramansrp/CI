@@ -236,8 +236,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.estadoSolicitud230901.tipoDeMovimiento,
         Validators.required,
       ],
-      tipoderegimen: [
-        this.estadoSolicitud230901.tipoderegimen,
+      tipoDeRegimen: [
+        this.estadoSolicitud230901.tipoDeRegimen,
         Validators.required,
       ],
     });

@@ -100,18 +100,6 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     }));
   }
 
-  // /**
-  //  * Establece el importe de pago en el estado.
-  //  * 
-  //  * {Date} impPago - Importe de pago proporcionado.
-  //  */
-  // public setimpPago(impPago: Date): void {
-  //   this.update((state) => ({
-  //     ...state,
-  //     impPago,
-  //   }));
-  // }
-
   /**
    * Establece el estado del popup como abierto.
    * 

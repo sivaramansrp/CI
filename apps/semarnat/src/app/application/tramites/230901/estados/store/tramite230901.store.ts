@@ -17,7 +17,7 @@ export interface Solicitud230901State {
   /**
    * Tipo de régimen seleccionado en el trámite.
    */
-  tipoderegimen: string;
+  tipoDeRegimen: string;
 
   /**
    * Datos de la tabla de mercancías asociadas al trámite.
@@ -75,7 +75,7 @@ export interface Solicitud230901State {
 export function createInitialState(): Solicitud230901State {
   return {
     tipoDeMovimiento: '',
-    tipoderegimen: '',
+    tipoDeRegimen: '',
     entidadFederativa: '',
     terecerosPopupState: false,
     mercanciaTablaDatos: [],

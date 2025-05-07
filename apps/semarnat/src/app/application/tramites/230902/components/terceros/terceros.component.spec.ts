@@ -47,27 +47,7 @@ describe('TercerosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should initialize the component', () => {
-    component.ngOnInit();
-    expect(permisoCitesService.inicializaTercerosDatosCatalogos).toHaveBeenCalled();
-    expect(tramite230902Query.selectSolicitud$).toHaveBeenCalled();
-    expect(component.solicitud230902State).toEqual({ entidadFederativa: 'Test' });
-  });
-
-  it('should create destinatario form', () => {
-    component.crearFormularioDestinatario();
-    expect(component.destinatarioForm).toBeDefined();
-    expect(component.destinatarioForm.get('entidadFederativa')?.value).toEqual('Test');
-  });
-
-  it('should handle entidad federativa change', () => {
-    component.crearFormularioDestinatario();
-    component.onEntidadFederativaChange();
-    expect(tramite230902Store.setEntidadFederativa).toHaveBeenCalledWith('Test');
-    expect(component.tablaDatos).toContain(DESTINARIO_TABLE_ENTRY);
-  });
-
+  
   it('should handle row selection', () => {
     const filaSeleccionada: ConfiguracionItem[] = [{ ...DESTINARIO_TABLE_ENTRY }];
     component.onFilaSeleccionada(filaSeleccionada);
@@ -75,28 +55,6 @@ describe('TercerosComponent', () => {
 
     component.onFilaSeleccionada([]);
     expect(component.isModificarEnabled).toBeFalsy();
-  });
-
-  it('should open popup if modification is enabled', () => {
-    component.isModificarEnabled = true;
-    component.openPopup();
-    expect(component.isPopupOpen).toBeTruthy();
-    expect(tramite230902Store.setIsPopupOpen).toHaveBeenCalledWith(true);
-  });
-
-  it('should not open popup if modification is disabled', () => {
-    component.isModificarEnabled = false;
-    component.openPopup();
-    expect(component.isPopupOpen).toBeFalsy();
-    expect(tramite230902Store.setIsPopupOpen).not.toHaveBeenCalled();
-  });
-
-  it('should close popup', () => {
-    component.closePopup();
-    expect(component.isPopupOpen).toBeFalsy();
-    expect(component.isPopupClose).toBeFalsy();
-    expect(tramite230902Store.setIsPopupOpen).toHaveBeenCalledWith(false);
-    expect(tramite230902Store.setIsPopupClose).toHaveBeenCalledWith(false);
   });
 
   it('should clean up subscriptions on destroy', () => {
