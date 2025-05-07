@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { DatosSolicitud } from '../models/datos-tramite.model';
 
 /**
  * Interfaz que representa un catálogo genérico.
@@ -29,7 +30,7 @@ export interface Solicitud230202State {
   pais: Catalogo[] | null;
   entidades: Catalogo[] | null;
   descripcionProducto: Catalogo[] | null;
-  datosSolicitud: Catalogo[] | null;
+  datosSolicitud: DatosSolicitud[];
   datosDetalle: Catalogo[] | null;
   fraccionArancelaria: string;
   descripcionFraccionArancelaria: string;
@@ -188,16 +189,16 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setDatosSolicitud(datosSolicitud: Catalogo[]) {
+  public setDatosSolicitud(datosSolicitud: DatosSolicitud[]) {
     this.update((state) => ({
-      ...this.getValue(),
+      ...state,
       datosSolicitud,
     }));
   }
   
   public setDatosDetalle(datosDetalle: Catalogo[]) {
     this.update((state) => ({
-      ...this.getValue(),
+      ...state,
       datosDetalle,
     }));
   }
