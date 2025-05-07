@@ -1,8 +1,8 @@
 <div class="container">
+  @if(indiceDePaso === 1 || indiceDePaso === 2) {
   <div class="row">
     <ng-titulo [titulo]="'Confirmar notificación'"></ng-titulo>
   </div>
-  @if(indiceDePaso === 1 || indiceDePaso === 2) {
   <app-detalles-folio></app-detalles-folio>
   } @if(indiceDePaso === 3){
   <app-acuse-recibo></app-acuse-recibo>
