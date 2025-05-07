@@ -9,7 +9,7 @@
           [label]="''"
           [required]="false"
           formControlName="tieneCertificacion"
-          (change)="mostrarModalSiSeleccionado($event)">
+          (change)="onTieneCertificacionChange($event)">
         </lib-input-check>
       </div>
       <div class="col-md-6">
@@ -17,7 +17,7 @@
           type="text"
           id="certificacionEmpresa"
           class="form-control"
-          formControlName="certificacionEmpresa" />
+          formControlName="certificacionEmpresa" (change)="setValoresStore(this.formularioCertificacion, 'certificacionEmpresa', 'setCertificacionEmpresa')"/>
       </div>
     </div>
 
@@ -30,7 +30,7 @@
           type="text"
           id="otraCertificacion"
           class="form-control"
-          formControlName="otraCertificacion" />
+          formControlName="otraCertificacion"  formControlName="certificacionEmpresa" (change)="setValoresStore(this.formularioCertificacion, 'certificacionEmpresa', 'setCertificacionEmpresa')" />
       </div>
     </div>
   </div>
