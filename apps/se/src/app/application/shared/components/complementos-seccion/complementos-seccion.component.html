@@ -1,0 +1,82 @@
+<p>complementos-seccion works!</p>
+
+<form [formGroup]="formaComplimentossolicitude">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Datos de la solicitude"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaComplimentossolicitudeFormData"
+    ></formas-dinamicas>
+  </div>
+</form>
+<form [formGroup]="formaComplimentosPrograma">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Programa Pre operativo"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaComplimentosProgramaFormData"
+    ></formas-dinamicas>
+  </div>
+</form>
+<form [formGroup]="DatosGenerales">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Datos generales"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="DatosGeneralesFormData"
+    ></formas-dinamicas>
+  </div>
+</form>
+<form [formGroup]="ObligacionesFiscales">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Obligaciones Fiscales"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="ObligacionesFiscalesFormData"
+    ></formas-dinamicas>
+  </div>
+  <div class="alert alert-info content-with-checkbox py-6 mt-5">
+    <input type="checkbox" id="manifiesto" />
+    <span class="fw-bold align-middle"> *</span>
+    <div>{{ manifiestosText }}</div>
+  </div>
+</form>
+<form [formGroup]="formaModificaciones">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Datos federatario(s) constitución y modificaciones de la sociedad"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaModificacionesFormData"
+    ></formas-dinamicas>
+  </div>
+</form>
+
+<ng-titulo titulo="Datos generales socios accionistas" />
+
+<div class="row">
+<div class="col-6">
+  <label>
+    Nacionalidad maxicana
+  </label>
+  <app-input-radio 
+  [radioOptions]="accionistasRadio"
+  [layout]="'horizontal'"
+  [gap]="'80%'"
+  [isBold]="true"
+  [labelMargin]="'10%'"
+  ></app-input-radio>
+</div>
+<div class="col-6">
+  <label>
+    Tipo de persona
+  </label>
+  <app-input-radio 
+  [radioOptions]="tipoPersonaRadio"
+  [layout]="'horizontal'"
+  [gap]="'800px'"
+  [isBold]="true"
+  [labelMargin]="'100px'"
+  
+  ></app-input-radio>
+</div>
+</div>
