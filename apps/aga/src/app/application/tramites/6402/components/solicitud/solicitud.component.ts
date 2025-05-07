@@ -771,13 +771,49 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosPedimento.get('checkProrroga')?.enable();
     }
   }
-
+  
   /**
    * @method cambiarCheckProrroga
-   * @description Cambia el estado del campo 'folioOficialProrroga' basado en el valor del checkbox 'checkProrroga'.
-   * Si el checkbox está marcado, habilita el campo 'folioOficialProrroga'. 
-   * Si el checkbox no está marcado, deshabilita el campo y limpia su valor.
+   * @description Método para manejar el cambio del estado del checkbox `checkProrroga`.
    * 
+   * - Si el checkbox está seleccionado (`true`), habilita el campo `folioOficialProrroga`.
+   * - Si el checkbox no está seleccionado (`false`), deshabilita el campo `folioOficialProrroga` y limpia su valor.
+   *
+   * @returns {void}
+   */
+  cambiarCheckProrroga(): void {
+    if (this.datosPedimento.get('checkProrroga')?.value === true) {
+      this.datosPedimento.get('folioOficialProrroga')?.enable();
+    } else {
+      this.datosPedimento.get('folioOficialProrroga')?.setValue('');
+      this.datosPedimento.get('folioOficialProrroga')?.disable();
+    }
+  }
+  
+
+  /**
+   * @method cambiarMedioDeTransporte
+   * @description Cambia el estado del medio de transporte basado en el valor del campo 'cveTipoDocumento'.
+   * Si el valor es 'Folio VUCEM', desactiva y limpia el campo 'checkProrroga'. 
+   * En caso contrario, habilita el campo 'checkProrroga'.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  cambiarMedioDeTransporte(): void {
+    if (this.datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM') {
+      this.datosPedimento.get('checkProrroga')?.setValue('');
+      this.datosPedimento.get('checkProrroga')?.disable();
+    } else {
+      this.datosPedimento.get('checkProrroga')?.enable();
+    }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * 
+   * - Completa el `Subject` `destroyNotifier$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   *
    * @returns {void}
    */
   ngOnDestroy(): void {
