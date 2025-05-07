@@ -84,7 +84,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Valores actuales del formulario de certificado.
    */
-  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formCertificadoValues!: { [key: string]: unknown };
 
   /**
    * @descripcion

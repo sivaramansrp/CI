@@ -205,7 +205,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Datos del formulario, recibidos a través de la propiedad `@Input()`.
    * @type {Object}
    */
-  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+  @Input() datosForm!: { [key: string]: unknown };
 
   /**
    * Datos de la mercancia seleccionada de la bitácora.

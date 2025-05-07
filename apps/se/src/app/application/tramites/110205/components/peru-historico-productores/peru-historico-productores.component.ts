@@ -34,14 +34,14 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
    * @command
    * Este objeto se utiliza para almacenar y gestionar el estado actual del trámite.
    */
-  public tramiteState!: { [key: string]: string | number | boolean | object | undefined };
+  public tramiteState!: {[key: string]: unknown};
   /**
    * @public
    * @property {Object} agregarDatosProductor - Objeto utilizado para agregar datos relacionados con un productor.
    * @description Este objeto puede contener claves con valores de diferentes tipos, incluyendo cadenas, números, booleanos, objetos o indefinidos.
    * @command Este objeto es utilizado para gestionar la información de los productores en el componente.
    */
-  public agregarDatosProductor!: { [key: string]: string | number | boolean | object | undefined };
+  public agregarDatosProductor!: {[key: string]: unknown};
 
   /**
    * Constructor del componente.

@@ -6,7 +6,7 @@ import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 interface FormValues {
-  [key: string]: string | number | boolean | object | undefined;
+  [key: string]: unknown;
 }
 /**
  * @descripcion
@@ -132,14 +132,6 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /**
-   * @descripcion
-   * Actualiza el almacén con los datos del destinatario.
-   * @param e - Los datos del destinatario a almacenar.
-   */
-  datosDelDestinatarioFunc(e: unknown): void {
-    this.store.setFormDatosDelDestinatario(e as FormValues);
-  }
 
   /**
  * @descripcion

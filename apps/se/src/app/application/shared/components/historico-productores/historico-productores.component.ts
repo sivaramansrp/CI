@@ -1,11 +1,12 @@
 import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
-import { CatalogoSelectComponent, InputFechaComponent } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent, InputFechaComponent, Notificacion } from "@ng-mf/data-access-user";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { NotificacionesComponent } from "@ng-mf/data-access-user";
 import { Subject } from 'rxjs';
 
 /**
@@ -18,7 +19,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-historico-productores',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, InputCheckComponent, CatalogoSelectComponent, InputFechaComponent],
+  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, InputCheckComponent, CatalogoSelectComponent, NotificacionesComponent],
   templateUrl: './historico-productores.component.html',
   styleUrl: './historico-productores.component.scss',
 })
@@ -60,6 +61,15 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   @Input() mercanciaDatos: MercanciaTabla[] = [];
 
+  /**
+   * @property {MercanciaTabla[]} mercanciaDatosSeleccionada
+   * 
+   * @description
+   * Arreglo que almacena los datos seleccionados de mercancías.
+   * 
+   * @command
+   * Utilizar este arreglo para gestionar la selección de mercancías en la tabla.
+   */
   mercanciaDatosSeleccionada:MercanciaTabla[] = [];
   /**
    * @method agregarDatosProductor
@@ -198,6 +208,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModalMercancia') closeModalMercancia!: ElementRef;
+  
+  public nuevaNotificacion!: Notificacion;
   /**
    * Formulario para agregar datos del productor.
    */
@@ -390,10 +402,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       }
     }
     else {
-      if (this.modalElements?.nativeElement) {
-        const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
-        MODAL_INSTANCE.show();
-      }
+    this.abrirModal();
     }
   }
   /**
@@ -426,6 +435,21 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       MODAL_INSTANCE.show();
     }
   }
+
+  public abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.mensajeDeAlerta,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
   /**
     * Método que se ejecuta al destruir el componente.
     * 

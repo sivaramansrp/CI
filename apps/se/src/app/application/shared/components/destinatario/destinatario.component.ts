@@ -75,9 +75,9 @@ export class DestinatarioComponent implements OnDestroy {
 
   /**
    * Datos del formulario completo
-   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @type { [key: string]: unknown }
    */
-  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+  @Input() datosForm!: { [key: string]: unknown };
 
   /**
    * FormGroup para el formulario de destinatario

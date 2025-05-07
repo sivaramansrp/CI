@@ -57,7 +57,7 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Almacena los valores del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formDatosCertificadoValues!: { [key: string]: unknown };
 
   /**
    * @descripcion

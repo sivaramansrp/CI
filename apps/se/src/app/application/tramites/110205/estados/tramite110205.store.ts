@@ -7,18 +7,54 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @descripcion
  * Interfaz que define el estado del certificado PERU.
  */
+/**
+ * @interface Tramite110205State
+ * @description Representa el estado de la aplicación para el trámite 110205.
+ * Contiene las propiedades necesarias para gestionar los datos del formulario,
+ * tablas, catálogos y otros elementos relacionados con el trámite.
+ * 
+ * @property { {[key: string]: unknown} } formCertificado - Datos del formulario de certificado.
+ * @property { Catalogo } estado - Estado actual del trámite.
+ * @property { Catalogo[] } paisBloques - Lista de países o bloques relacionados.
+ * @property { {[key: string]: unknown} } mercanciaForm - Datos del formulario de mercancía.
+ * @property { Mercancia[] } mercanciaTabla - Lista de mercancías en la tabla.
+ * @property { {[key: string]: unknown} } formDatosCertificado - Datos del formulario de certificado.
+ * @property { Catalogo } idiomaDatosSeleccion - Idioma seleccionado para los datos.
+ * @property { Catalogo } entidadFederativaSeleccion - Entidad federativa seleccionada.
+ * @property { Catalogo } representacionFederalSeleccion - Representación federal seleccionada.
+ * @property { {[key: string]: unknown} } formDatosDelDestinatario - Datos del formulario del destinatario.
+ * @property { {[key: string]: unknown} } formExportor - Datos del formulario del exportador.
+ * @property { string } fraccionArancelaria - Fracción arancelaria de la mercancía.
+ * @property { string } nombreComercialMercancia - Nombre comercial de la mercancía.
+ * @property { string } nombreTecnico - Nombre técnico de la mercancía.
+ * @property { string } nombreIngles - Nombre en inglés de la mercancía.
+ * @property { string } otrasInstancias - Información sobre otras instancias relacionadas.
+ * @property { string } criterioParaConferirOrigen - Criterio para conferir origen.
+ * @property { string } cantidad - Cantidad de la mercancía.
+ * @property { Catalogo[] } umc - Unidades de medida comercial.
+ * @property { string } valorMercancia - Valor de la mercancía.
+ * @property { string } complementoDescripcion - Descripción complementaria de la mercancía.
+ * @property { string } numeroFactura - Número de factura.
+ * @property { Catalogo[] } tipoFactura - Tipos de factura disponibles.
+ * @property { {[key: string]: boolean} } formaValida - Validación de la forma.
+ * @property { {[key: string]: unknown} } formDestinatario - Datos del formulario del destinatario.
+ * @property { boolean | undefined } datosConfidencialesProductor - Indica si los datos del productor son confidenciales.
+ * @property { boolean | undefined } productorMismoExportador - Indica si el productor es el mismo exportador.
+ * @property { {[key: string]: unknown} } agregarDatosProductorFormulario - Datos adicionales del productor.
+ * @property { {[key: string]: unknown} } formulario - Datos generales del formulario.
+ */
 export interface Tramite110205State {
-  formCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formCertificado: {[key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
-  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+  mercanciaForm: {[key: string]: unknown};
   mercanciaTabla: Mercancia[];
-  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formDatosCertificado: {[key: string]: unknown};
   idiomaDatosSeleccion: Catalogo;
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
-  formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
-  formExportor: { [key: string]: undefined | boolean | string | number | object };
+  formDatosDelDestinatario: {[key: string]: unknown};
+  formExportor: {[key: string]: unknown};
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -32,11 +68,11 @@ export interface Tramite110205State {
   numeroFactura: string;
   tipoFactura: Catalogo[];
   formaValida: { [key: string]: boolean };
-  formDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formDestinatario: {[key: string]: unknown};
   datosConfidencialesProductor?: boolean;
   productorMismoExportador?: boolean;
-  agregarDatosProductorFormulario: { [key: string]: undefined | boolean | string | number | object };
-  formulario: { [key: string]: undefined | boolean | string | number | object };
+  agregarDatosProductorFormulario: {[key: string]: unknown};
+  formulario: {[key: string]: unknown};
 }
 
 /**
@@ -157,7 +193,7 @@ export function createInitialState(): Tramite110205State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'perustore', resettable: true })
+@StoreConfig({ name: 'tramite-110205', resettable: true })
 export class Tramite110205Store extends Store<Tramite110205State> {
   /**
    * @descripcion
@@ -172,7 +208,7 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de certificado.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificado(values:{[key: string]: unknown}): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
