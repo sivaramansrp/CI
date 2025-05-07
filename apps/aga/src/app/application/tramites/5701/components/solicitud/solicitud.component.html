@@ -47,13 +47,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="RFCImpExp">RFC*:</label>
-            <input 
-              class="form-control"
-              id="rfc"
-              placeholder="RFC"
-              type="text"
-              formControlName="RFCImpExp"
-              [ngClass]="
+            <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="RFCImpExp" [ngClass]="
                   isValid(datosImportadorExportador, 'RFCImpExp')
                     ? 'required'
                     : ''
@@ -70,12 +64,12 @@
       </div>
       }
       <section id="seccion-certificaciones" *ngIf="">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="desNumeroRegistro">Número de registro o programa:</label>
-            <input class="form-control" id="desNumeroRegistro" placeholder="" type="text"
-              formControlName="desNumeroRegistro" [ngClass]="
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="desNumeroRegistro">Número de registro o programa:</label>
+              <input class="form-control" id="desNumeroRegistro" placeholder="" type="text"
+                formControlName="desNumeroRegistro" [ngClass]="
                 isValid(datosImportadorExportador, 'desNumeroRegistro')
                   ? 'required'
                   : ''
@@ -86,69 +80,69 @@
                   'setDescripcionNumeroRegistro'
                 )
               " />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-md-4">
-          <lib-check-input-text [checkboxValor]="solicitudState.programa"
-            [textoValor]="solicitudState.descripcionProgramaFomento" [idCheckbox]="'programa'"
-            [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento:'" [required]="false" [reverse]="true"
-            [hidden]="false" [maxLengthValidacion]="300"
-            (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
-        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <lib-check-input-text [checkboxValor]="solicitudState.programa"
+              [textoValor]="solicitudState.descripcionProgramaFomento" [idCheckbox]="'programa'"
+              [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento:'" [required]="false" [reverse]="true"
+              [hidden]="false" [maxLengthValidacion]="300"
+              (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
+          </div>
 
-        <div class="col-md-4">
-          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX"
-            [textoValor]="solicitudState.descripcionImmex" [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'"
-            [label]="'Immex (Número/aaaa):'" [required]="false" [reverse]="true" [hidden]="false"
-            [maxLengthValidacion]="300" (checkboxChange)="checkImmex($event)"></lib-check-input-text>
-        </div>
+          <div class="col-md-4">
+            <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX"
+              [textoValor]="solicitudState.descripcionImmex" [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'"
+              [label]="'Immex (Número/aaaa):'" [required]="false" [reverse]="true" [hidden]="false"
+              [maxLengthValidacion]="300" (checkboxChange)="checkImmex($event)"></lib-check-input-text>
+          </div>
 
-        <div class="col-md-4">
-          <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
-            [textoValor]="solicitudState.descripcionIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
-            [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz:'" [required]="false"
-            [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
-            (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
-        </div>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-md-12">
-          <label for="tipoEmpresa">Tipo de empresa certificada:</label>
-        </div>
-
-        <div class="col-md-6">
-          <app-input-radio [radioOptions]="radioOpciones"
-            (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
-            id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
-          </app-input-radio>
-        </div>
-
-        <div class="col-md-6">
-          <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false"
-            formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
-
-          <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false"
-            formControlName="certificacionOEA"
-            (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
-
-          <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false"
-            formControlName="revision"
-            (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
-        </div>
-
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="idSocioComercial">ID socio comercial
-              @if (solicitudState.socioComercial) {*}:</label>
-            <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
-              type="text" (change)="onIdSocioComercialChange()" />
+          <div class="col-md-4">
+            <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
+              [textoValor]="solicitudState.descripcionIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
+              [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz:'" [required]="false"
+              [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
+              (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
           </div>
         </div>
-      </div>
+
+        <div class="row mt-2">
+          <div class="col-md-12">
+            <label for="tipoEmpresa">Tipo de empresa certificada:</label>
+          </div>
+
+          <div class="col-md-6">
+            <app-input-radio [radioOptions]="radioOpciones"
+              (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
+              id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
+            </app-input-radio>
+          </div>
+
+          <div class="col-md-6">
+            <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false"
+              formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
+
+            <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false"
+              formControlName="certificacionOEA"
+              (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
+
+            <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false"
+              formControlName="revision"
+              (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="idSocioComercial">ID socio comercial
+                @if (solicitudState.socioComercial) {*}:</label>
+              <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
+                type="text" (change)="onIdSocioComercialChange()" />
+            </div>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -232,44 +226,57 @@
     </div>
 
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-    <div formGroupName="despachoSeleccion">
+    <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
 
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
+            <input class="form-check-input" type="checkbox" id="lda" (click)="showConfirmDialogLDA_DD('lda')"
               formControlName="lda">
             <label class="form-check-label" for="lda">Despacho LDA</label>
           </div>
 
         </div>
+
         <div class="col-md-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="dd" (change)="showConfirmDialogLDA_DD('dd')"
+            <input class="form-check-input" type="checkbox" id="dd" (click)="showConfirmDialogLDA_DD('dd')"
               formControlName="dd">
             <label class="form-check-label" for="dd">Despacho DD</label>
           </div>
         </div>
       </div>
 
-      <div class="row" *ngIf="tipoDespacho">
+      @if(despachoSeleccionado) {
+      <div class="row" *ngIf="despacho.get('lda')?.value || despacho.get('dd')?.value">
+        @if (despacho.get('lda')?.value) {
         <div class="col-md-4">
           <div class="form-group">
-            <label for="tipo" class="form-label">{{this.labelTipoDespacho}}*:</label>
-            <input type="text" [id]="idNameAutorizacion" class="form-control" [formControlName]="idNameAutorizacion"
-              placeholder="" (change)="setValoresStore(despachoSeleccion, idNameAutorizacion, funcionStoreAutorizacion)"
-              [ngClass]="
-            isValid(despachoSeleccion, idNameAutorizacion)
-              ? 'required'
-              : ''
-          " />
+            <label for="tipo" class="form-label">RFC autorización LDA*:</label>
+            <input type="text" id="rfcDespachoLDA" class="form-control" formControlName="rfcDespachoLDA" placeholder=""
+              (change)="setValoresStore(despacho, 'rfcDespachoLDA', 'setAutorizacionLDA')" [ngClass]="
+              isValid(despacho, 'rfcDespachoLDA')
+                ? 'required'
+                : ''
+            " />
           </div>
         </div>
+        } @else if (despacho.get('dd')?.value) {
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="tipo" class="form-label">Autorizacion DDEX*:</label>
+            <input type="text" id="folioDDEX" class="form-control" formControlName="folioDDEX" placeholder=""
+              (change)="setValoresStore(despacho, 'folioDDEX', 'setAutorizacionDDEX')" [ngClass]="
+              isValid(despacho, 'folioDDEX')
+                ? 'required'
+                : ''
+            " />
+          </div>
+        </div>
+        }
       </div>
+      }
 
-    </div>
-
-    <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
           <div>
@@ -293,13 +300,15 @@
             </option>
           </select>
         </div>
-        @if (!tipoDespacho) {
+        @if (!despachoSeleccionado) {
         <div class="col-md-4">
           <div>
             <label for="">Nombre del recinto:</label>
           </div>
           <select class="form-control" formControlName="nombreRecinto" (change)="changeRecinto()" [required]="false"
             [disabled]="desactivarSelectRecinto">
+            <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
+              {{ recinto.descripcion }}
             <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
               {{ recinto.descripcion }}
             </option>
@@ -337,7 +346,7 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="tipoDespacho">
+      <div class="row" *ngIf="despachoSeleccionado">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="domicilioDespacho">Indica el domicilio*:</label>
@@ -428,7 +437,8 @@
       </div>
       @if (transporteArriboSalida.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value" [tablaTransporte]="solicitudState.transporteArriboDatos"
+        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"
+          [tablaTransporte]="solicitudState.transporteArriboDatos"
           (datosTabla)="changeAgregarVehiculo($event, 'transporte')"></lib-agregar-transporte>
       </div>
       }
@@ -469,7 +479,8 @@
         <div class="col-md-8"></div>
         <div class="col-md-4">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button" (click)="consultarLineaCaptura()" [disabled]="!FormSolicitud.get('pagoCaptura')?.valid">
+            <button class="btn btn-primary me-2" type="button" (click)="consultarLineaCaptura()"
+              [disabled]="!FormSolicitud.get('pagoCaptura')?.valid">
               Consultar
             </button>
             <button class="btn btn-danger" type="button">Eliminar</button>
@@ -517,8 +528,8 @@
 </div>
 
 @if(nuevaNotificacion) {
-  <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-    </lib-notificaciones>
-  </section>
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmacionModal($event)">
+  </lib-notificaciones>
+</section>
 }

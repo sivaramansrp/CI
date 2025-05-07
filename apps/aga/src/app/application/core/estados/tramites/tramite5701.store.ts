@@ -96,10 +96,10 @@ export interface Solicitud5701State {
   personasResponsablesDespacho: ResponsablesDespacho[];
 
   tipoTransporte: string;
-  transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
+  transporte: TransporteCarretero[] | TransporteFerroviario[] | TransporteOtro[] | TransportePeatonal[];
 
   tipoTransporteArriboSalida: string;
-  transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
+  transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[];
 
   montoPagar: string;
   lineaCaptura: string;
@@ -646,7 +646,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTransporte(transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
+  public setTransporte(transporte: TransporteCarretero[] | TransporteFerroviario[] | TransporteOtro[] | TransportePeatonal[]): void {
     this.update((state) => ({
       ...state,
       transporte: Array.isArray(transporte) ? transporte : [transporte],
@@ -660,7 +660,9 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
+  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] 
+    
+  ): void {
     this.update((state) => ({
       ...state,
       transporteArriboDatos: Array.isArray(transporteArriboDatos) ? transporteArriboDatos : [transporteArriboDatos],

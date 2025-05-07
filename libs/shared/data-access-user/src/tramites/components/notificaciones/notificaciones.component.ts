@@ -1,5 +1,5 @@
-import { BsModalRef, BsModalService, ModalDirective, ModalModule, } from 'ngx-bootstrap/modal';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, } from '@angular/core';
+import { ModalDirective, ModalModule, } from 'ngx-bootstrap/modal';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -85,7 +85,6 @@ export enum CategoriaMensaje {
   imports: [CommonModule, AlertComponent, ModalModule],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
-  providers: [BsModalService]
 })
 export class NotificacionesComponent implements OnChanges {
   /**
@@ -111,11 +110,6 @@ export class NotificacionesComponent implements OnChanges {
    */
   public mostrarModal: boolean = false;
 
-  /**
-   * Referencia al modal de tipo `BsModalRef`.
-   * Utilizada para manejar el estado y las acciones del modal.
-   */
-  public modalRef!: BsModalRef;
 
   /**
    * Indica si el banner debe mostrarse.
@@ -203,6 +197,7 @@ export class NotificacionesComponent implements OnChanges {
    */
   declinarAccion(): void {
     this.modal?.hide();
+    this.confirmacionModal.emit(false);
   }
 
   /**

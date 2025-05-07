@@ -6,12 +6,15 @@ import {
   SECCIONES_TRAMITE_5701,
   SeccionLibQuery, SeccionLibState,
   SeccionLibStore,
+  TercerosQuery,
+  TercerosState,
+  TercerosStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
-import { SolicitudPayload } from '../../../../core/models/5701/solicitud-payload.model';
+import { Solicitud5701State, Tercero5701State } from '../../../../core/estados/tramites/tramite5701.store';
+import { ListPersonaNoti, PersonaResponsableDespacho, SolicitudPayload } from '../../../../core/models/5701/solicitud-payload.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 interface AccionBoton {
@@ -33,6 +36,7 @@ export class SolicitudPageComponent implements OnInit {
    * Estado de la solicitud utilizado en el componente.
    */
   public solicitudState!: Solicitud5701State;
+  public tercerosState!: TercerosState;
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
@@ -47,6 +51,8 @@ export class SolicitudPageComponent implements OnInit {
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite5701Query: Tramite5701Query,
+    private terceros5701Store: TercerosStore,
+    private tercerosQuery: TercerosQuery,
     private guardarSolicitudService: GuardaSolicitudService,
   ) {
 
@@ -76,6 +82,16 @@ export class SolicitudPageComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+
+    this.tercerosQuery.selectTerceros$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((tercerosState) => {
+          this.tercerosState = tercerosState;
         })
       )
       .subscribe();
@@ -117,6 +133,24 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   private enviaSolicitudRequest(): void {
+    const RESPONSABLES_DESPACHO: PersonaResponsableDespacho[] = this.solicitudState.personasResponsablesDespacho.map((persona) => {
+      return {
+        gafete: persona.gafeteRespoDespacho,
+        nombre: persona.nombre,
+        apellido_paterno: persona.primerApellido,
+        apellido_materno: persona.segundoApellido,
+      };
+    });
+
+    const PERSONAS_NOTIFICACION: ListPersonaNoti[] = this.tercerosState.terceros.map((persona, i) => {
+      return {
+        id_solicitud: parseInt(this.solicitudState.idSolicitud, 10),
+        id_persona_noti: i + 1,
+        correo_electronico: persona.nombre,
+        nombreTercero: persona.correo,
+      };
+    });
+
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
       id_solicitud: 1,
       datos_tramite: {
@@ -129,7 +163,6 @@ export class SolicitudPageComponent implements OnInit {
           desc_programa_fomento: this.solicitudState.descripcionProgramaFomento,
           immex: this.solicitudState.checkIMMEX,
           desc_inmex: this.solicitudState.descripcionImmex,
-          numero_registro: true,
           desc_numero_registro: this.solicitudState.descripcionNumeroRegistro,
           certificacion_a: this.solicitudState.tipoEmpresaCertificada === 'a' ? true : false,
           certificacion_aa: this.solicitudState.tipoEmpresaCertificada === 'aa' ? true : false,
@@ -142,14 +175,14 @@ export class SolicitudPageComponent implements OnInit {
         despacho: {
           aduana_despacho: this.solicitudState.aduanaDespacho,
           id_seccion_despacho: parseInt(this.solicitudState.idSeccionDespacho, 10),
-          bln_lda: this.solicitudState.lda,
-          rfc_despacho: this.solicitudState.autorizacionLDA,
-          bln_dd: this.solicitudState.dd,
+          lda: this.solicitudState.lda,
+          rfc_despacho_lda: this.solicitudState.autorizacionLDA,
+          dd: this.solicitudState.dd,
           folio_ddex: this.solicitudState.autorizacionDDEX,
           tipo_despacho: this.solicitudState.tipoDespacho,
           nombre_recinto: this.solicitudState.nombreRecinto,
           domicilio: this.solicitudState.domicilioDespacho,
-          especifique: '',
+          especifique_domicilio: '',
           fecha_inicio: this.solicitudState.fechaInicio,
           fecha_final: this.solicitudState.fechaFinal,
           hora_inicio: this.solicitudState.horaInicio,
@@ -157,7 +190,6 @@ export class SolicitudPageComponent implements OnInit {
           tipo_operacion: this.solicitudState.tipoOperacion,
           encargo_conferido: this.solicitudState.encargoConferido,
           relacion: this.solicitudState.relacionSociedad,
-          bln_despacho: true,
         },
         pedimentos:
           [
@@ -171,11 +203,10 @@ export class SolicitudPageComponent implements OnInit {
               tipo_pedimento: this.solicitudState.tipoPedimento,
               numeros: this.solicitudState.numero.toString(),
               cove: this.solicitudState.comprobanteValor,
-              bln_activo: true,
-              fecha_edo_ws_pedimento: '',
+              pedimento_validado: this.solicitudState.pedimentoValidado,
+              tipo_pedimento_por_evaluacion: '',
               estado_pedimento: 1,
               sub_estado_pedimento: 2,
-              bln_valido_pedimento: this.solicitudState.pedimentoValidado,
             }
           ],
         tipo_servicio: {
@@ -206,6 +237,12 @@ export class SolicitudPageComponent implements OnInit {
           justificacion: this.solicitudState.justificacion,
           pais_procedencia: this.solicitudState.paisProcedencia.toString(),
         },
+        tipo_transporte_despacho: this.solicitudState.tipoTransporte,
+        list_transporte_despacho: this.solicitudState.transporte,
+        tipo_transporte_arribo: this.solicitudState.tipoTransporteArriboSalida,
+        list_unidad_arribo: this.solicitudState.transporteArriboDatos,
+        persona_responsable: RESPONSABLES_DESPACHO,
+        list_persona_noti: PERSONAS_NOTIFICACION,
       }
     };
 

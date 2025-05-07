@@ -1,3 +1,5 @@
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from "@libs/shared/data-access-user/src";
+
 export interface SolicitudPayload {
     id_solicitud: number;
     datos_tramite: DatosTramite;
@@ -10,24 +12,25 @@ export interface DatosTramite {
     tipo_servicio: TipoServicio;
     lista_pagos: ListaPago[];
     mercancias: Mercancias;
-    list_transporte_despacho?: TransporteDespacho[];
-    list_unidad_arribo?: UnidadArribo[];
-    persona_responsable?: ListPersonaNoti[];
-    list_fechas_sevex?: ListFechasSevex[];
+    tipo_transporte_despacho: string;
+    list_transporte_despacho?: TransporteFerroviario[] | TransporteCarretero[] | TransportePeatonal[] | TransporteOtro[];
+    tipo_transporte_arribo: string;
+    list_unidad_arribo?: TransporteCarretero[] | TransporteFerroviario[] | TransporteAereo[] | TransporteMaritimo[] | TransporteOtro[];
+    persona_responsable?: PersonaResponsableDespacho[];
     list_persona_noti?: ListPersonaNoti[];
 }
 
 export interface Despacho {
     aduana_despacho: string;
     id_seccion_despacho: number;
-    bln_lda: boolean;
-    rfc_despacho: string;
-    bln_dd: boolean;
+    lda: boolean;
+    rfc_despacho_lda: string;
+    dd: boolean;
     folio_ddex: string;
     tipo_despacho: string;
     nombre_recinto: string;
     domicilio: string;
-    especifique: string;
+    especifique_domicilio: string;
     fecha_inicio: string;
     hora_inicio: string;
     fecha_final: string;
@@ -35,7 +38,6 @@ export interface Despacho {
     tipo_operacion: string;
     encargo_conferido: boolean;
     relacion: boolean;
-    bln_despacho: boolean;
 }
 
 export interface ImportadorExportador {
@@ -47,7 +49,6 @@ export interface ImportadorExportador {
     desc_programa_fomento: string;
     immex: boolean;
     desc_inmex: string;
-    numero_registro: boolean;
     desc_numero_registro: string;
     certificacion_a: boolean;
     certificacion_aa: boolean;
@@ -56,59 +57,6 @@ export interface ImportadorExportador {
     id_socio_comercial: string;
     oea: boolean;
     revision_origen: boolean;
-}
-
-export interface TransporteDespacho {
-    tipo_transporte: string;
-    emp_transportista: string;
-    numero_porte: string;
-    fecha_porte: Date;
-    marca_transporte: string;
-    modelo_transporte: string;
-    placas_transporte: string;
-    contenedor_transporte: string;
-    observaciones: string;
-    numero_bl: string;
-    tipo_equipo: string;
-    iniciales_equipo: string;
-    numero_equipo: string;
-    rfc_empresa: string;
-    nombre_transportista: string;
-    num_gafete: string;
-    tipo_transporte_des: string;
-    datos_transporte: string;
-    descripcion_equipo: string;
-}
-
-export interface UnidadArribo {
-    tipo_transporte: string;
-    emp_transportista: string;
-    numero_porte: string;
-    fecha_porte: Date;
-    marca_transporte: string;
-    modelo_transporte: string;
-    placas_transporte: string;
-    contenedor_transporte: string;
-    numero_bl: string;
-    tipo_equipo: string;
-    descripcion_equipo: string;
-    iniciales_equipo: string;
-    numero_equipo: string;
-    arribo_pendiente_aereo: boolean;
-    guia_master_aereo: string;
-    guia_house_aereo: string;
-    fecha_arribo_aereo: Date;
-    hora_arribo_aereo: string;
-    guia_valida: boolean;
-    guia_house_valida: boolean;
-    guia_master_valida: boolean;
-    guia_bl_Maritimo: string;
-    guia_house_maritimo: string;
-    nombre_buque_maritimo: string;
-    contenedor_maritimo: string;
-    datos_transporte: string;
-    observaciones: string;
-    mismosDatosTransporte: boolean;
 }
 
 export interface ListFechasSevex {
@@ -124,14 +72,17 @@ export interface ListFechasSevex {
     mismo_horario: number;
 }
 
-export interface ListPersonaNoti {
-    id_persona: number;
-    id_solicitud: number;
+export interface PersonaResponsableDespacho {
     gafete: string;
-    correo_electronico: string;
     nombre: string;
     apellido_paterno: string;
     apellido_materno: string;
+}
+export interface ListPersonaNoti {
+    id_solicitud: number;
+    id_persona_noti: number;
+    correo_electronico: string;
+    nombreTercero: string;
 }
 
 export interface ListaPago {
@@ -161,15 +112,13 @@ export interface Pedimento {
     tipo_pedimento: string;
     numeros: string;
     cove: string;
-    bln_activo: boolean;
-    fecha_edo_ws_pedimento: string;
+    pedimento_validado: boolean;
+    tipo_pedimento_por_evaluacion: string;
     estado_pedimento: number;
     sub_estado_pedimento: number;
-    bln_valido_pedimento: boolean;
 }
 
 export interface TipoServicio {
-    id_tipo_servicio?: number;
     id_solicitud: number;
     bln_activo: boolean;
     cve_tipo_servicio: number;
