@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
 import { Tramite319Store } from "./tramite319Store.store";
 
-import { FinalDataToSend, Solicitar } from "../models/personas.module";
+import { Solicitar } from "../models/personas.module";
+
+import { FinalDataToSend } from "../models/tramite319-state.model";
 
 /**
  * @descripcion
