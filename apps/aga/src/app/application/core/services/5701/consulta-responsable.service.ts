@@ -1,7 +1,6 @@
-
-
-import { API_GET_CONSULTA_RESPONSABLE, enviroment, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_CONSULTA_RESPONSABLE, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponsableGafeteResponse } from '../../models/5701/gafete-responsable.model';
@@ -21,7 +20,10 @@ export class ConsultaResponsableService {
   }
 
   /**
-   *
+   * Valida si el número de gafete de un responsable es correcto y devuelve la información del responsable.
+   * @param numeroGafete Número de gafete del responsable.
+   * @param tipoGafete Tipo de gafete del responsable.
+   * @returns Observable<ResponsableGafeteResponse> Información del responsable.
    */
   getGafeteResponsable(numeroGafete: string, tipoGafete: string): Observable<ResponsableGafeteResponse> {
     const ENDPOINT = `${this.host}`+ API_GET_CONSULTA_RESPONSABLE.replace(NUMERO_GAFETE_QUERY, numeroGafete).replace(TIPO_GAFETE_QUERY, tipoGafete);    

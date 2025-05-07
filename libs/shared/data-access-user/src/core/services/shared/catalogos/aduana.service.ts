@@ -1,14 +1,14 @@
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { API_GET_PARAMETRO_MONTO } from '../../../constants/api-constants';
-import { CatalogosNumeroResponse } from '../../../models/shared/catalogo.model';
-import { enviroment } from '../../../../../src/enviroments/enviroment';
+import { API_GET_ADUANA } from '../../../constants/api-constants';
+import { CatalogosResponse } from '../../../models/shared/catalogo.model';
+import { enviroment } from '../../../../enviroments/enviroment'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ParametroMontoService {
+export class AduanaService {
 
   private readonly host: string;
 
@@ -19,12 +19,12 @@ export class ParametroMontoService {
   }
 
   /**
-   * Método para obtener el monto de cobro del trámite.
+   *
    */
-  getParametroMonto(): Observable<CatalogosNumeroResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_PARAMETRO_MONTO;
+  getListaAduanas(): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}`+ API_GET_ADUANA;
 
-    return this.http.get<CatalogosNumeroResponse>(ENDPOINT).pipe(
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
       }),

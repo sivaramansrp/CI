@@ -14,6 +14,8 @@ import {
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
   ALFANUMERICO_ESPACIO,
+  AduanaService,
+  SeccionAduanaService,
   Catalogo,
   CatalogoPaises,
   CATALOGOS_ID,
@@ -26,6 +28,8 @@ import {
   ParametroMontoService,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
+  Recinto,
+  RecintoService,
   REGEX_RFC,
   RFC_GENERICO,
   SeccionLibQuery,
@@ -45,7 +49,6 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { AduanaService } from '../../../../core/services/5701/aduana.service';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
 import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
@@ -56,13 +59,10 @@ import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
 import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
-import { Patente } from '../../../../core/models/5701/patente.model';
+import { Patente } from '../../../../core/models/5701/Patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
 import { PatenteService } from '../../../../core/services/5701/patente.service';
-import { Recinto } from '../../../../core/models/5701/recinto.model';
-import { RecintoService } from '../../../../core/services/5701/recinto.service';
-import { SeccionAduanaService } from '../../../../core/services/5701/seccion-aduanas.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
@@ -360,9 +360,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    this.tipoSolicitudSeleccion();
-
-    this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
+    this.tipoSolicitudSeleccion();    
 
     this.verificarDatosExistentesStore();
   }
@@ -372,8 +370,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.FormSolicitud.get('folioSolicitud')?.setValue(this.folioSolicitud);
       // Se hace la peticion para obtener los datos de la solicitud
     }
-
-
   }
 
   private validaTipoPersona() {
@@ -574,7 +570,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
    */
   private inicializaCatalogos(): void {
-
     const CAT_TIPO_SOLICITUD$ = this.tipoSolicitudService.getListaTipoSolicitud().pipe(
       map((datos: CatalogoLista) => {
         this.tiposSolicitud = datos.datos;
@@ -840,6 +835,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
+    this.despacho.get('idSeccionDespacho')?.disable();
+    this.despacho.get('nombreRecinto')?.disable();
   }
 
   /**
@@ -1453,12 +1450,20 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public changeAduana(): void {
     const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
-
     if (ADUANA) {
       this.desactivarSelectRecinto = true;
 
       this.seccionAduanaService.getListaSeccionesAduanas(ADUANA.clave).pipe(
         switchMap(response => {
+          this.desactivarSelectSeccionAduanera = response && response.datos?.length === 0;
+          if (this.desactivarSelectSeccionAduanera) {
+            this.despacho.get('idSeccionDespacho')?.disable();
+            this.despacho.get('nombreRecinto')?.disable();
+          } else {
+            this.despacho.get('idSeccionDespacho')?.enable();
+            this.despacho.get('nombreRecinto')?.enable();
+          }
+
           this.seccionAduanera = response?.datos;
           return this.recintoService.getListaRecintos(ADUANA.clave);
         }),

@@ -1,9 +1,8 @@
-
-import { API_GET_SOCIO_COMERCIAL, CatalogosBooleanResponse, enviroment, ID_SOCIO_COMERCIAL_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_SOCIO_COMERCIAL, ID_SOCIO_COMERCIAL_QUERY } from '../../../constantes/5701/api-constants';
+import { CatalogosBooleanResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +19,11 @@ export class SocioComercialService {
 
   /**
    * Método para obtener la entidad o persona asociada a un proceso de comercio o negocio que interactúa con el sistema.
+   * @param claveSocioComercial Clave del socio comercial a consultar.
+   * @returns Observable<CatalogosBooleanResponse> Respuesta del servicio con la información del socio comercial.
    */
   getSocioComercial(claveSocioComercial: string): Observable<CatalogosBooleanResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_SOCIO_COMERCIAL.replace(ID_SOCIO_COMERCIAL_QUERY, claveSocioComercial);
+    const ENDPOINT = `${this.host}` + API_GET_SOCIO_COMERCIAL.replace(ID_SOCIO_COMERCIAL_QUERY, claveSocioComercial);
 
     return this.http.get<CatalogosBooleanResponse>(ENDPOINT).pipe(
       map((response) => {

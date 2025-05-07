@@ -1,5 +1,6 @@
-import { API_GET_RFC_IDC, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_RFC_IDC, RFC_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { IdcResponse } from '../../models/5701/idc.model';
 import { Injectable } from '@angular/core';
@@ -19,6 +20,8 @@ export class IdcService {
 
   /**
    * Obtiene la información del contribuyente por su RFC.
+   * @param rfc RFC del contribuyente.
+   * @returns Observable con la respuesta del servicio.
    */
   getInformacionContribuyente(rfc: string): Observable<IdcResponse> {
     const ENDPOINT = `${this.host}`+ API_GET_RFC_IDC.replace(RFC_QUERY, rfc);
