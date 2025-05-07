@@ -397,6 +397,13 @@ const ROUTES: Routes = [
   loadChildren: () =>
     import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},  
+{
+  path: 'importacion-de-insumos',
+  loadChildren: () =>
+    import('./tramites/260914/importacion-de-insumos.module').then(
+      (m) => m.ImportacionDeInsumosModule
+    ),
 },
 {
   path: 'solicitud-modificacion-permiso-internacion',
@@ -438,7 +445,14 @@ const ROUTES: Routes = [
       import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
         (m) => m.ModificacionPermisoImportacionModule
       ),
-},
+},  {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
+  },
+
 
 {
   path: 'exportacion-medicamentos-contengan',
@@ -481,6 +495,20 @@ const ROUTES: Routes = [
     import('./tramites/260515/permit-de-substances.module').then(
       (m) => m.PermitDeSubstancesModule
     )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
 }
 ];
 
