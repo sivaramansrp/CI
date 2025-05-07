@@ -1,21 +1,7 @@
 
 import {
-  ADV_LIMPIA_CAMPOS,
-  EMPRESAS_CERTIFICADAS,
-  FUNCION_STORE_DD,
-  FUNCION_STORE_LDA,
-  ID_NAME_DD,
-  ID_NAME_LDA,
-  LABEL_DESPACHO_DD,
-  LABEL_DESPACHO_LDA,
-  MSJ_ERROR_FECHA, PATENTES_ID, TITULO_MODAL_ERROR,
-  TRANSPORTE,
-  VEHICULO
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
-  ALFANUMERICO_ESPACIO,
   AduanaService,
-  SeccionAduanaService,
+  ALFANUMERICO_ESPACIO,
   Catalogo,
   CatalogoPaises,
   CATALOGOS_ID,
@@ -25,13 +11,13 @@ import {
   FormulariosService,
   ICatalogo,
   Notificacion,
-  ParametroMontoService,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   Recinto,
   RecintoService,
   REGEX_RFC,
   RFC_GENERICO,
+  SeccionAduanaService,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -39,9 +25,21 @@ import {
   TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
-  ValidaLineaPagoService,
   ValidaRfcService,
 } from '@ng-mf/data-access-user';
+import {
+  ADV_LIMPIA_CAMPOS,
+  EMPRESAS_CERTIFICADAS,
+  FUNCION_STORE_DD,
+  FUNCION_STORE_LDA,
+  ID_NAME_DD,
+  ID_NAME_LDA,
+  LABEL_DESPACHO_DD,
+  LABEL_DESPACHO_LDA,
+  MSJ_ERROR_FECHA, PATENTES_ID,
+  TRANSPORTE,
+  VEHICULO
+} from '../../../../core/enums/5701/tramite5701.enum';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -59,6 +57,7 @@ import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
 import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
+import { ParametroMontoService } from '../../../../core/services/5701/pago/parametro-monto.service';
 import { Patente } from '../../../../core/models/5701/Patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
@@ -71,6 +70,8 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
+import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
 @Component({
   selector: 'app-solicitud',
@@ -221,7 +222,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Variable que toma el valor true si el tipo de despacho LDA o DD ha sido seleccionado, de lo contrario es false.
    */
-  tipoDespacho: boolean = false;
+  despachoSeleccionado: boolean = false;
 
   /**
    * Variable que toma el valor de la etiqueta del tipo de despacho LDA o DD.
@@ -290,6 +291,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public muestraCertificaciones: boolean = true;
 
+  public tipoDespacho!: string;
+
+  public procesoModal!: string;
+
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -314,7 +320,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
     private readonly validaLineaPagoService: ValidaLineaPagoService,
-    private readonly parametroMontoService: ParametroMontoService
+    private readonly parametroMontoService: ParametroMontoService,
   ) { }
 
   ngOnInit(): void {
@@ -341,6 +347,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
 
     this.crearFormSolicitud();
+
 
     this.FormSolicitud.statusChanges.pipe(
       takeUntil(this.destroyNotifier$),
@@ -421,14 +428,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     return this.FormSolicitud?.get('datosServicio') as FormGroup;
   }
 
-  /**
- * Obtiene el grupo de formulario 'despachoSeleccion' del formulario principal 'FormSolicitud'.
- *
- * @returns {FormGroup} El grupo de formulario 'despachoSeleccion'.
- */
-  get despachoSeleccion(): FormGroup {
-    return this.FormSolicitud.get('despachoSeleccion') as FormGroup;
-  }
 
   /**
    * Obtiene el grupo de formulario 'despacho' del formulario principal 'FormSolicitud'.
@@ -764,15 +763,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         fechasSeleccionadas: this.fb.array([]),
       }),
 
-      despachoSeleccion: this.fb.group({
-        despacho: [this.solicitudState?.despacho],
-        lda: [this.solicitudState?.lda],
-        autorizacionLDA: [this.solicitudState?.autorizacionLDA],
-        dd: [this.solicitudState?.dd],
-        autorizacionDDEX: [this.solicitudState?.autorizacionDDEX],
-      }),
-
       despacho: this.fb.group({
+        lda: [{ value: this.solicitudState?.lda, disabled: false }],
+        rfcDespachoLDA: [this.solicitudState?.autorizacionLDA],
+        dd: [{ value: this.solicitudState?.dd, disabled: false }],
+        folioDDEX: [this.solicitudState?.autorizacionDDEX],
         idAduanaDespacho: [this.solicitudState?.idAduanaDespacho, [Validators.required]],
         aduanaDespacho: [
           this.solicitudState?.aduanaDespacho,
@@ -1206,102 +1201,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
  * Cierra el modal.
  */
   cerrarModal(tipo: string, acepta: boolean): void {
-    this.closeModal.nativeElement.click();
-    this.tituloModal = '';
-    this.mensajeModal = '';
 
-    if (tipo === 'aviso' && acepta) {
-      this.despacho.reset({
-        idAduanaDespacho: '',
-        aduanaDespacho: '',
-        idSeccionDespacho: '',
-        seccionAduanera: '',
-        nombreRecinto: '',
-        tipoOperacion: '',
-        patente: '',
-        relacionSociedad: '',
-        encargoConferido: '',
-        domicilioDespacho: '',
-      });
-
-      this.setValoresStore(this.despacho, 'idAduanaDespacho', 'setIdAduanaDespacho');
-      this.setValoresStore(this.despacho, 'aduanaDespacho', 'setAduanaDespacho');
-      this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
-      this.setValoresStore(this.despacho, 'seccionAduanera', 'setSeccionAduanera');
-      this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
-      this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
-      this.setValoresStore(this.mercancia, this.idNameAutorizacion, 'setAutorizacionDDEX')
-    }
 
 
 
     if (tipo === 'fecha') {
       this.datosServicio.reset();
     }
-  }
-
-  /**
-   * Muestra un cuadro de diálogo de confirmación para la selección de tipo de despacho (LDA o DD).
-   * 
-   * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
-   * 
-   * @returns {void} No retorna ningún valor.
-   */
-  showConfirmDialogLDA_DD(tipo: string): void {
-    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
-    const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
-    const RECINTO = this.despacho.get('nombreRecinto')?.value;
-
-
-    if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {
-      this.tituloModal = TITULO_MODAL_ERROR;
-      this.mensajeModal = ADV_LIMPIA_CAMPOS;
-      this.setValoresStore(this.despachoSeleccion, this.idNameAutorizacion, this.funcionStoreAutorizacion);
-      this.abrirModal();
-    }
-
-    this.tipoDespacho = !this.tipoDespacho;
-
-    if (!this.tipoDespacho) {
-      this.despachoSeleccion.get('lda')?.enable();
-      this.despachoSeleccion.get('dd')?.enable();
-
-      this.despachoSeleccion.get(this.idNameAutorizacion)?.clearValidators();
-      this.despachoSeleccion.get(this.idNameAutorizacion)?.updateValueAndValidity();
-      this.despachoSeleccion.get(this.idNameAutorizacion)?.reset();
-      if (this.funcionStoreAutorizacion) {
-        this.setValoresStore(this.despachoSeleccion, this.idNameAutorizacion, this.funcionStoreAutorizacion);
-      }
-
-      this.idNameAutorizacion = '';
-      this.labelTipoDespacho = '';
-    }
-
-    if (tipo === 'lda' && this.tipoDespacho) {
-      this.labelTipoDespacho = LABEL_DESPACHO_LDA;
-      this.idNameAutorizacion = ID_NAME_LDA
-      this.funcionStoreAutorizacion = FUNCION_STORE_LDA;
-
-      this.despachoSeleccion.get('dd')?.reset();
-      this.despachoSeleccion.get('dd')?.disable();
-      this.setValoresStore(this.despachoSeleccion, 'dd', 'setDD');
-      this.setValoresStore(this.despachoSeleccion, 'lda', 'setLDA');
-      this.selectCatalogoDespacho = this.despachoLdaCatalogo;
-    } else if (tipo === 'dd' && this.tipoDespacho) {
-      this.labelTipoDespacho = LABEL_DESPACHO_DD;
-      this.idNameAutorizacion = ID_NAME_DD;
-      this.funcionStoreAutorizacion = FUNCION_STORE_DD;
-
-      this.despachoSeleccion.get('lda')?.reset();
-      this.despachoSeleccion.get('lda')?.disable();
-      this.setValoresStore(this.despachoSeleccion, 'lda', 'setLDA');
-      this.setValoresStore(this.despachoSeleccion, 'dd', 'setDD');
-      this.selectCatalogoDespacho = this.despachoDDCatalogo;
-      this.activarCatalogoDespacho = true;
-
-    }
-    this.despachoSeleccion.get(this.idNameAutorizacion)?.setValidators(Validators.required);
-    this.despachoSeleccion.get(this.idNameAutorizacion)?.updateValueAndValidity();
   }
 
   /**
@@ -1441,14 +1347,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       form.get(campoDescripcion)?.setValue(this.solicitudState?.[campoDescripcion as keyof Solicitud5701State]);
 
       if (LDA_DD) {
-        this.tipoDespacho = true;
+        this.despachoSeleccionado = true;
         this.idNameAutorizacion = campoId === 'dd' ? ID_NAME_DD : ID_NAME_LDA;
         this.labelTipoDespacho = campoId === 'dd' ? LABEL_DESPACHO_DD : LABEL_DESPACHO_LDA;
 
         if (campoId === 'dd') {
-          this.despachoSeleccion.get('lda')?.disable();
+          this.despacho.get('lda')?.disable();
         } else if (campoId === 'lda') {
-          this.despachoSeleccion.get('dd')?.disable();
+          this.despacho.get('dd')?.disable();
         }
       }
     }
@@ -1521,8 +1427,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     // Verifica que si los campos con check e input estan seleccionados y tienen valor.
     this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
-    this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
-    this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
+    this.verificaDatosCheckInput('lda', 'despacho', this.despacho);
+    this.verificaDatosCheckInput('dd', 'despacho', this.despacho);
 
     if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
       this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
@@ -1658,38 +1564,185 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe();
   }
 
-    /**
-   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+  /**
+ * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+ */
+  public consultarLineaCaptura(): void {
+    const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
+    const MONTO: number = this.pagoCaptura.get('monto')?.value;
+
+    this.validaLineaPagoService.getLineaPagoValidacion(LINEA_PAGO).pipe(
+      takeUntil(this.destroyNotifier$),
+      switchMap(responseValidaPago => {
+        if (responseValidaPago.codigo !== '00') {
+          // TODO: Implementar mensaje de error para línea de captura no válida.
+          return EMPTY;
+        }
+        return this.parametroMontoService.getParametroMonto();
+      }),
+      tap(montoResponse => {
+        // TODO:Implementar lógica para agregar información a tabla de pagos
+        if (montoResponse) {
+          let numeroDias: number = 0;
+          if (this.tipoSolicitudSeleccionada === 2 || this.tipoSolicitudSeleccionada === 3) {
+            numeroDias = this.fechasSeleccionadas.length;
+          }
+          if (montoResponse.datos) {
+            const MONTO_TOTAL: number = numeroDias > 0
+              ? montoResponse.datos * numeroDias
+              : montoResponse.datos;
+            const VALIDACION_MONTO: boolean = MONTO >= MONTO_TOTAL ? true : false;
+            this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
+          }
+        }
+      }),
+    ).subscribe();
+  }
+
+  // #Seccion Modal
+
+  /**
+   * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
    */
-    public consultarLineaCaptura(): void {
-      const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
-      const MONTO: number = this.pagoCaptura.get('monto')?.value;
-  
-      this.validaLineaPagoService.getLineaPagoValidacion(LINEA_PAGO).pipe(
-        takeUntil(this.destroyNotifier$),
-        switchMap(responseValidaPago => {
-          if (responseValidaPago.codigo !== '00') {
-            // TODO: Implementar mensaje de error para línea de captura no válida.
-            return EMPTY;
+  confirmacionModal(confirmar: boolean): void {
+    switch (this.procesoModal) {
+
+      case 'lda_dd': {
+        const CHECK_LDA = this.solicitudState.lda;
+        const CHECK_DD = this.solicitudState.dd;
+
+        if (CHECK_DD || CHECK_LDA) {
+          if (confirmar) {
+            this.despacho.get(this.tipoDespacho)?.setValue(false);
+            this.limpiaCamposDdaLda();
+            this.activaDesactivaCheckLDA_DDEX(this.tipoDespacho);
+            this.despachoSeleccionado = false;
+            this.tipoDespacho = '';
+          } else {
+            this.despacho.get(this.tipoDespacho)?.setValue(true);
+            this.despachoSeleccionado = true;
           }
-          return this.parametroMontoService.getParametroMonto();
-        }),
-        tap(montoResponse => {
-          // TODO:Implementar lógica para agregar información a tabla de pagos
-          if(montoResponse) {
-            let numeroDias: number = 0;
-            if(this.tipoSolicitudSeleccionada === 2 || this.tipoSolicitudSeleccionada === 3) {
-              numeroDias = this.fechasSeleccionadas.length;
-            }
-            if(montoResponse.datos) {
-              const MONTO_TOTAL: number = numeroDias > 0 
-                    ? montoResponse.datos * numeroDias 
-                    : montoResponse.datos;
-              const VALIDACION_MONTO: boolean = MONTO >= MONTO_TOTAL ? true : false;
-              this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-            }
+        } else {
+          if (confirmar) {
+            this.limpiaCamposDdaLda();
+            this.activaDesactivaCheckLDA_DDEX(this.tipoDespacho);
+            this.despacho.get(this.tipoDespacho)?.setValue(true);
+            this.despachoSeleccionado = true;
+            this.tipoDespacho = '';
+          } else {
+            this.despacho.get(this.tipoDespacho)?.setValue(false);
+            this.despachoSeleccionado = false;
           }
-        }),
-      ).subscribe();
+        }
+      }
+        break
+
+      default:
+        break;
     }
+  }
+
+  // #Seccion LDA y DD
+
+  /**
+   * Muestra un cuadro de diálogo de confirmación para la selección de tipo de despacho (LDA o DD).
+   * 
+   * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  showConfirmDialogLDA_DD(tipo: string): void {
+    this.tipoDespacho = tipo;
+    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
+    const RECINTO = this.despacho.get('nombreRecinto')?.value;
+
+    if ((ADUANA || DESPACHO || RECINTO) && this.despacho.touched) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_ERROR,
+        mensaje: ADV_LIMPIA_CAMPOS,
+        cerrar: false,
+        txtBtnAceptar: 'Sí',
+        txtBtnCancelar: 'No',
+      }
+      this.procesoModal = 'lda_dd';
+    } else {
+      this.activaDesactivaCheckLDA_DDEX(tipo);
+    }
+  }
+
+  activaDesactivaCheckLDA_DDEX(tipo: string): void {
+    this.despachoSeleccionado = !this.despachoSeleccionado;
+
+    if (!this.despachoSeleccionado) {
+      this.despacho.get('lda')?.enable();
+      this.despacho.get('dd')?.enable();
+
+      this.despacho.get('lda')?.clearValidators();
+      this.despacho.get('dd')?.clearValidators();
+
+      this.despacho.get('lda')?.updateValueAndValidity();
+      this.despacho.get('dd')?.updateValueAndValidity();
+
+      this.despacho.get('lda')?.reset();
+      this.despacho.get('dd')?.reset();
+    }
+    if (tipo === 'lda' && this.despachoSeleccionado) {
+      this.despacho.get('dd')?.reset();
+      this.despacho.get('dd')?.disable();
+      this.despacho.get('lda')?.setValue(true);
+      this.selectCatalogoDespacho = this.despachoLdaCatalogo;
+
+      this.despacho.get('rfcDespachoLDA')?.setValidators([Validators.required]);
+      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+    } else if (tipo === 'dd' && this.despachoSeleccionado) {
+      this.despacho.get('lda')?.reset();
+      this.despacho.get('lda')?.disable();
+      this.despacho.get('dd')?.setValue(true);
+
+      this.despacho.get('folioDDEX')?.setValidators([Validators.required]);
+      this.despacho.get('folioDDEX')?.updateValueAndValidity();
+
+      this.selectCatalogoDespacho = this.despachoDDCatalogo;
+      this.activarCatalogoDespacho = true;
+    }
+
+    this.setValoresStore(this.despacho, 'lda', 'setLDA');
+    this.setValoresStore(this.despacho, 'dd', 'setDD');
+  }
+
+  limpiaCamposDdaLda(): void {
+    this.despacho.get('idAduanaDespacho')?.setValue('');
+    this.despacho.get('aduanaDespacho')?.setValue('');
+    this.despacho.get('idSeccionDespacho')?.setValue('');
+    this.despacho.get('seccionAduanera')?.setValue('');
+    this.despacho.get('nombreRecinto')?.setValue('');
+    this.despacho.get('tipoOperacion')?.setValue('');
+    this.despacho.get('relacionSociedad')?.setValue(false);
+    this.despacho.get('encargoConferido')?.setValue(false);
+    this.despacho.get('domicilioDespacho')?.setValue('');
+
+    this.setValoresStore(this.despacho, 'idAduanaDespacho', 'setIdAduanaDespacho');
+    this.setValoresStore(this.despacho, 'aduanaDespacho', 'setAduanaDespacho');
+    this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
+    this.setValoresStore(this.despacho, 'seccionAduanera', 'setSeccionAduanera');
+    this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
+    this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
+    this.setValoresStore(this.despacho, this.idNameAutorizacion, 'setAutorizacionDDEX');
+    this.setValoresStore(this.despacho, 'relacionSociedad', 'setRelacionSociedad');
+    this.setValoresStore(this.despacho, 'encargoConferido', 'setEncargoConferido');
+    this.setValoresStore(this.despacho, 'domicilioDespacho', 'setDomicilioDespacho');
+  }
+
+  validaCampoRecintoEspecifique(): boolean {
+    const RECINTO = this.despacho.get('nombreRecinto')?.value ? parseInt(this.despacho.get('nombreRecinto')?.value, 10) : -1;
+    const ESPECIFIQUE = this.despacho.get('recintoEspecifique')?.value;
+    if (RECINTO !== -1 || ESPECIFIQUE !== '') {
+      return true;
+    }
+    return false;
+  }
 }

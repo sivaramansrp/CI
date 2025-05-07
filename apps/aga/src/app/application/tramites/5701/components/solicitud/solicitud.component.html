@@ -232,7 +232,7 @@
     </div>
 
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-    <div formGroupName="despachoSeleccion">
+    <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
 
@@ -257,9 +257,9 @@
           <div class="form-group">
             <label for="tipo" class="form-label">{{this.labelTipoDespacho}}*:</label>
             <input type="text" [id]="idNameAutorizacion" class="form-control" [formControlName]="idNameAutorizacion"
-              placeholder="" (change)="setValoresStore(despachoSeleccion, idNameAutorizacion, funcionStoreAutorizacion)"
+              placeholder="" (change)="setValoresStore(despacho, idNameAutorizacion, funcionStoreAutorizacion)"
               [ngClass]="
-            isValid(despachoSeleccion, idNameAutorizacion)
+            isValid(despacho, idNameAutorizacion)
               ? 'required'
               : ''
           " />
