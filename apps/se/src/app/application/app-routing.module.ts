@@ -432,6 +432,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  },
+  {
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(

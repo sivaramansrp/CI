@@ -1528,8 +1528,8 @@
   {
     "id": 219,
     "tramite": 260508,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1752,8 +1752,8 @@
   {
     "id": 251,
     "tramite": 130401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
@@ -4184,6 +4184,13 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 260202,
+    "linkDashboard": "/cofepris/importacion-materias-primas",
+    "linkDepartment": "/pago/importacion-materias-primas",
+    "department": "cofepris"
   },
   {
     "id": 601,
