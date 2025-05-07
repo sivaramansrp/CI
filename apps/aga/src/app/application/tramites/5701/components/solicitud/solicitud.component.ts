@@ -1,5 +1,33 @@
 
 import {
+  AduanaService,
+  ALFANUMERICO_ESPACIO,
+  Catalogo,
+  CatalogoPaises,
+  CATALOGOS_ID,
+  CatalogosService,
+  DatosAgregarFormulario,
+  FechasService,
+  FormulariosService,
+  ICatalogo,
+  Notificacion,
+  PROGRAMA_FOMENTO,
+  PROGRAMA_IMMEX,
+  Recinto,
+  RecintoService,
+  REGEX_RFC,
+  RFC_GENERICO,
+  SeccionAduanaService,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TIPO_SOLICITUD,
+  TipoPersona,
+  TipoSolicitudService,
+  ValidacionesFormularioService,
+  ValidaRfcService,
+} from '@ng-mf/data-access-user';
+import {
   ADV_LIMPIA_CAMPOS,
   EMPRESAS_CERTIFICADAS,
   FUNCION_STORE_DD,
@@ -12,36 +40,6 @@ import {
   TRANSPORTE,
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
-import {
-  ALFANUMERICO_ESPACIO,
-  AduanaService,
-  SeccionAduanaService,
-  Catalogo,
-  CatalogoPaises,
-  CATALOGOS_ID,
-  CatalogosService,
-  DatosAgregarFormulario,
-  FechasService,
-  FormulariosService,
-  ICatalogo,
-  Notificacion,
-  ParametroMontoService,
-  PROGRAMA_FOMENTO,
-  PROGRAMA_IMMEX,
-  Recinto,
-  RecintoService,
-  REGEX_RFC,
-  RFC_GENERICO,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
-  TIPO_SOLICITUD,
-  TipoPersona,
-  TipoSolicitudService,
-  ValidacionesFormularioService,
-  ValidaLineaPagoService,
-  ValidaRfcService,
-} from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -59,6 +57,7 @@ import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
 import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
+import { ParametroMontoService } from '../../../../core/services/5701/pago/parametro-monto.service';
 import { Patente } from '../../../../core/models/5701/Patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
@@ -72,6 +71,7 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
+import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
 @Component({
   selector: 'app-solicitud',
@@ -320,7 +320,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
     private readonly validaLineaPagoService: ValidaLineaPagoService,
-    private readonly parametroMontoService: ParametroMontoService
+    private readonly parametroMontoService: ParametroMontoService,
   ) { }
 
   ngOnInit(): void {
