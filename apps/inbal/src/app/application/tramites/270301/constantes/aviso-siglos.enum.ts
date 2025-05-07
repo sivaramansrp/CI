@@ -144,3 +144,13 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
     value: '0',
   },
 ];
+
+export const TEXTO_MANIFIESTO_ALERT = `
+<div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="manifiestoCheckbox">
+    <p>Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*</p>
+  </div>
+</div>
+`;
+

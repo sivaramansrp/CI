@@ -26,8 +26,3 @@ export class AgregarQuery extends Query<Solicitud270301State> {
     super(agrergarstore);
   }
 }
-
-
-
-
-

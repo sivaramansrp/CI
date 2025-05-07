@@ -29,7 +29,7 @@ import { TableComponent } from '@libs/shared/data-access-user/src';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO, TEXTO_MANIFIESTO_ALERT } from '../../constantes/aviso-siglos.enum';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 
@@ -273,7 +273,16 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       this.getObraDeArte()
     }
 
-   getObraDeArte(): void {   
+  /**
+   * @method getObraDeArte
+   * @description
+   * Este método obtiene los datos de las obras de arte desde el servicio `SolicitudService`.
+   * Los datos obtenidos se asignan a la propiedad `tablaObraDeArteData` para ser utilizados
+   * en la tabla de obras de arte.
+   *
+   * @returns {void}
+   */
+  getObraDeArte(): void {   
     this.solicitudService
       .getObraDeArteTabla()
       .pipe(takeUntil(this.destroy$))
@@ -366,15 +375,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Configura el texto HTML para el mensaje del manifiesto de alerta.
      */
-    this.TEXTO_MANIFIESTO_ALERT = `
-    <div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="manifiestoCheckbox">
-        <p>Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*</p>
-      </div>
-    </div>
-  `;
+  
   }
+
+  public solicitudAlert = TEXTO_MANIFIESTO_ALERT
 
   /**
    * @method initializeSolicitudFormGroup
