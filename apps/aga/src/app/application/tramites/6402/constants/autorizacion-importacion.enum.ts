@@ -1,4 +1,4 @@
-import { AvisoTabla, DesperdicioTabla, PedimentoTabla, ProcesoTabla } from "../models/autorizacion-importacion.model";
+import { SolicitudTabla } from "../models/autorizacion-importacion.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -42,47 +42,59 @@ export const TEXTOS = {
   <input type="checkbox" formControlName="selectorDesperdicio" /><span class="require">*</span>No es posible declarar el porcentaje que representa la mercancia a destruir, de la mercancia importada temporalmente de la que procede
   `
 };
+
 /**
- * Configuración para la fecha de ingreso.
+ * Fecha de importación temporal.
  * 
- * Define las propiedades de la fecha de ingreso, como el nombre de la etiqueta, si es requerida y si está habilitada.
+ * @property {string} labelNombre - Etiqueta que describe el campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
-export const FECHA_INGRESO = {
-  labelNombre: 'Fecha de programada del traslado',
+export const FECHA_IMPORTACION = {
+  labelNombre: 'Fecha de importación temporal',
   required: true,
   habilitado: true,
 };
 
 /**
- * Tipos de aviso disponibles.
+ * Fecha de vencimiento.
  * 
- * Define los valores y etiquetas para los tipos de aviso.
+ * @property {string} labelNombre - Etiqueta que describe el campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
-export const TIPAVI = [
-  {
-    value: 'nohabitual',
-    label: 'No habitual',
-  },
-  {
-    value: 'periodica',
-    label: 'Periodica',
-  }
-];
+export const FECHA_VENCIMIENTO = {
+  labelNombre: 'Fecha de vencimiento',
+  required: true,
+  habilitado: true,
+};
+
 /**
- * Tipos de carga disponibles.
+ * Fecha de carta de porte.
  * 
- * Define los valores y etiquetas para los tipos de carga.
+ * @property {string} labelNombre - Etiqueta que describe el campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
-export const TIPACA = [
-  {
-    value: 'manual',
-    label: 'Manual',
-  },
-  {
-    value: 'carga_masiva',
-    label: 'Carga Masiva',
-  }
-];
+export const FECHA_CARTAPORTE = {
+  labelNombre: 'Fecha de carta de porte',
+  required: false,
+  habilitado: true,
+};
+
+/**
+ * Constante que define las propiedades de configuración para la fecha de destino.
+ * 
+ * @property {string} labelNombre - Etiqueta que describe el nombre del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
+ */
+export const FECHA_DESTINO = {
+  labelNombre: 'Fecha',
+  required: true,
+  habilitado: true,
+};
+
 
 /**
    * @property {object} tablaDeDatos
@@ -92,134 +104,40 @@ export const TIPACA = [
 export const TABLA_DE_DATOS: {
   encabezadas: {
     encabezado: string,
-    clave: (ele: AvisoTabla) => string,
+    clave: (ele: SolicitudTabla) => string,
     orden: number
   }[],
-  datos: AvisoTabla[],
+  datos: SolicitudTabla[],
 } = {
   encabezadas: [
     {
-      encabezado: 'Nombre comercial',
-      clave: (ele: AvisoTabla) => ele.nombreComercial,
+      encabezado: 'Marca',
+      clave: (ele: SolicitudTabla) => ele.marca,
       orden: 1,
     },
     {
-      encabezado: 'Entidad federativa',
-      clave: (ele: AvisoTabla) => ele.entidadFederativa,
+      encabezado: 'Modelo',
+      clave: (ele: SolicitudTabla) => ele.modelo,
       orden: 2
     },
     {
-      encabezado: 'Alcaldía o Municipio',
-      clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
+      encabezado: 'Número de serie',
+      clave: (ele: SolicitudTabla) => ele.numeroDeSerie,
       orden: 3
     },
     {
-      encabezado: 'Colonia',
-      clave: (ele: AvisoTabla) => ele.colonia,
+      encabezado: 'Tipo',
+      clave: (ele: SolicitudTabla) => ele.tipo,
       orden: 4
     },
     {
-      encabezado: 'Hora Destrucción',
-      clave: (ele: AvisoTabla) => ele.horaDestruccion,
-      orden: 5
-    },
-    {
-      encabezado: 'Fecha Destrucción',
-      clave: (ele: AvisoTabla) => ele.fechaDestruccion,
+      encabezado: 'Descripción de la mercancía',
+      clave: (ele: SolicitudTabla) => ele.descripcionMercancia,
       orden: 5
     }
   ],
   datos: []
 };
 
-/**
-   * @property {object} tablaPedimento
-   * @description Configuración de la tabla de Pedimento utilizada en el componente.
-   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
-   */
-export const TABLA_PEDIMENTO: {
-  encabezadas: {
-    encabezado: string,
-    clave: (ele: PedimentoTabla) => string,
-    orden: number
-  }[],
-  datos: PedimentoTabla[],
-} = {
-  encabezadas: [
-    {
-      encabezado: 'Número de patente',
-      clave: (ele: PedimentoTabla) => ele.patenteAutorizacion,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de pedimento',
-      clave: (ele: PedimentoTabla) => ele.pedimento,
-      orden: 2,
-    },
-    {
-      encabezado: 'Aduana del pedimento',
-      clave: (ele: PedimentoTabla) => ele.claveAduanaPedimento,
-      orden: 3,
-    },
-    {
-      encabezado: 'Fracción de la mercancía',
-      clave: (ele: PedimentoTabla) => ele.claveFraccionArancelariaPedimento,
-      orden: 4,
-    },
-    {
-      encabezado: 'NICO de la mercancía',
-      clave: (ele: PedimentoTabla) => ele.nicoPedimento,
-      orden: 5,
-    },
-    {
-      encabezado: 'Cantidad de la mercancía',
-      clave: (ele: PedimentoTabla) => ele.cantidadPedimento,
-      orden: 6,
-    },
-    {
-      encabezado: 'Unidad de medida de la mercancía',
-      clave: (ele: PedimentoTabla) => ele.claveUnidadMedidaPedimento,
-      orden: 6,
-    }
-  ],
-  datos: []
-};
 
-/**
-   * @property {object} tablaProceso
-   * @description Configuración de la tabla de Proceso utilizada en el componente.
-   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
-   */
-export const TABLA_PROCESO: {
-  encabezadas: {
-    encabezado: string,
-    clave: (ele: ProcesoTabla) => string,
-    orden: number
-  }[],
-  datos: ProcesoTabla[],
-} = {
-  encabezadas: [
-    { encabezado: 'Descripción del proceso destructivo', clave: (ele: ProcesoTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
-  ],
-  datos: []
-};
-
-/**
-   * @property {object} tablaDesperdicio
-   * @description Configuración de la tabla de Desperdicio utilizada en el componente.
-   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
-   */
-export const TABLA_DESPERDICIO: {
-  encabezadas: {
-    encabezado: string,
-    clave: (ele: DesperdicioTabla) => string,
-    orden: number
-  }[],
-  datos: DesperdicioTabla[],
-} = {
-    encabezadas: [
-      { encabezado: 'Datos de los desperdicios a destruir', clave: (ele: DesperdicioTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
-    ],
-    datos: []
-  };
 

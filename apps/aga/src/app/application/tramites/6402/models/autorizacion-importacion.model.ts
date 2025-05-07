@@ -1,51 +1,46 @@
 /**
- * Representa los datos de la tabla de avisos.
+ * Representa los datos de la tabla de Solicitud.
  */
-export interface AvisoTablaDatos {
+export interface SolicitudTablaDatos {
   /**
-   * Lista de avisos en la tabla.
+   * Lista de Solicitud en la tabla.
    */
-  datos: AvisoTabla[];
+  datos: SolicitudTabla[];
 }
 
 /**
- * Representa un aviso en la tabla de avisos.
+ * Representa un Solicitud en la tabla de Solicitud.
  */
-export interface AvisoTabla {
+export interface SolicitudTabla {
   /**
-   * Identificador único del aviso.
+   * Identificador único del Solicitud.
    */
   id: number;
 
   /**
-   * Nombre comercial asociado al aviso.
+   * Marca del Solicitud.
    */
-  nombreComercial: string;
+  marca: string;
 
   /**
-   * Entidad federativa asociada al aviso.
+   * Modelo del Solicitud.
    */
-  entidadFederativa: string;
+  modelo: string;
 
   /**
-   * Alcaldía o municipio asociado al aviso.
+   * Número de serie del Solicitud.
    */
-  alcaldioOMuncipio: string;
+  numeroDeSerie: string;
 
   /**
-   * Colonia asociada al aviso.
+   * Tipo del Solicitud.
    */
-  colonia: string;
+  tipo: string;
 
   /**
-   * Hora de destrucción asociada al aviso.
+   * Descripción de la mercancía del Solicitud.
    */
-  horaDestruccion: string;
-
-  /**
-   * Fecha de destrucción asociada al aviso.
-   */
-  fechaDestruccion: string;
+  descripcionMercancia: string;
 
 }
 
@@ -79,6 +74,302 @@ export interface Catalogo {
    * Descripción del elemento del catálogo.
    */
   descripcion: string;
+}
+
+
+/**
+ * Representa una acción de un botón en el wizard.
+ */
+export interface AccionBoton {
+  /**
+   * Acción realizada por el botón (e.g., "cont" para continuar, "atras" para retroceder).
+   */
+  accion: string;
+
+  /**
+   * Valor asociado a la acción (e.g., índice del paso en el wizard).
+   */
+  valor: number;
+}
+
+export interface SolicitudFormulario {
+  /**
+   * Clave de la aduana.
+   */
+  cveAduana: string;
+
+  /**
+   * Clave de la sección aduanal.
+   */
+  cveSeccionAduanal: string;
+
+  /**
+   * Clave del recinto fiscalizado.
+   */
+  cveRecintoFiscalizado: string;
+
+  /**
+   * Clave del tipo de documento.
+   */
+  cveTipoDocumento: string;
+
+  /**
+   * Estado del tipo de documento.
+   */
+  estadoTipoDocumento: string;
+
+  /**
+   * Nombre de la aduana.
+   */
+  aduana: string;
+
+  /**
+   * Patente asociada.
+   */
+  patente: string;
+
+  /**
+   * Número de pedimento.
+   */
+  pedimento: string;
+
+  /**
+   * Folio de importación temporal.
+   */
+  folioImportacionTemporal: string;
+
+  /**
+   * Folio del formato oficial.
+   */
+  folioFormatoOficial: string;
+
+  /**
+   * Indica si es una prórroga.
+   */
+  checkProrroga: boolean;
+
+  /**
+   * Folio oficial de la prórroga.
+   */
+  folioOficialProrroga: string;
+
+  /**
+   * Fecha de importación temporal.
+   */
+  fechaImportacionTemporal: string;
+
+  /**
+   * Fecha de vencimiento.
+   */
+  fechaVencimiento: string;
+
+  /**
+   * Descripción de la mercancía.
+   */
+  descMercancia: string;
+
+  /**
+   * Marca de la mercancía.
+   */
+  marca: string;
+
+  /**
+   * Modelo de la mercancía.
+   */
+  modelo: string;
+
+  /**
+   * Número de serie de la mercancía.
+   */
+  numeroSerie: string;
+
+  /**
+   * Tipo de mercancía.
+   */
+  tipo: string;
+
+  /**
+   * Clave del medio de transporte.
+   */
+  cveMedioTrasporte: string;
+
+  /**
+   * Guía master.
+   */
+  guiaMaster: string;
+
+  /**
+   * Guía BL.
+   */
+  guiaBl: string;
+
+  /**
+   * Número BL.
+   */
+  numeroBl: string;
+
+  /**
+   * RFC de la empresa transportista.
+   */
+  rfcEmpresaTransportista: string;
+
+  /**
+   * Estado del medio de transporte.
+   */
+  estadoMedioTransporte: string;
+
+  /**
+   * Carta porte.
+   */
+  cartaPorte: string;
+
+  /**
+   * Clave del país de procedencia.
+   */
+  cvePaisProcedencia: string;
+
+  /**
+   * Guía house.
+   */
+  guiaHouse: string;
+
+  /**
+   * Número del buque.
+   */
+  numeroBuque: string;
+
+  /**
+   * Número del equipo.
+   */
+  numeroEquipo: string;
+
+  /**
+   * Fecha de la carta porte.
+   */
+  fechaCartaPorte: string;
+
+  /**
+   * Tipo de contenedor.
+   */
+  tipContenedor: string;
+
+  /**
+   * Marca del transporte.
+   */
+  tranporteMarca: string;
+
+  /**
+   * Modelo del transporte.
+   */
+  tranporteModelo: string;
+
+  /**
+   * Placa del transporte.
+   */
+  tranportePlaca: string;
+
+  /**
+   * Observaciones.
+   */
+  observaciones: string;
+
+  /**
+   * Con destino.
+   */
+  conDestino: string;
+
+  /**
+   * Clave del tipo de destino.
+   */
+  cveTipoDestino: string;
+
+  /**
+   * Clave del tipo de documento reemplazada.
+   */
+  cveTipoDocumentoReemplazada: string;
+
+  /**
+   * Número del acta de destrucción.
+   */
+  numeroActaDescruccion: string;
+
+  /**
+   * Clave de la aduana de destino.
+   */
+  cveAduanaDestino: string;
+
+  /**
+   * Clave de la patente de destino.
+   */
+  cvePatenteDestino: string;
+
+  /**
+   * Clave del pedimento de destino.
+   */
+  cvePedimentoDestino: string;
+
+  /**
+   * Folio VUCEM de retorno.
+   */
+  folioVucemRetorno: string;
+
+  /**
+   * Folio del formato oficial de destino.
+   */
+  folioFormatoOficialDestino: string;
+
+  /**
+   * Fecha de destrucción en el destino.
+   */
+  fechaDescruccionDestino: string;
+
+  /**
+   * Estado del tipo de documento en el destino.
+   */
+  estadoTipoDocumentoDestino: string;
+
+  /**
+   * Autoridad que presentó el aviso de destrucción.
+   */
+  autoridadPresentoAvisoDestruccion: string;
+}
+
+export interface MercanciaFormulario {
+
+  /**
+   * Descripción de la mercancía.
+   */
+  modalDescMercancia: string;
+
+  /**
+   * Especificaciones de la mercancía.
+   */
+  espeMercancia: string;
+
+  /**
+   * Marca de la mercancía.
+   */
+  marcaMercancia: string;
+
+  /**
+   * Modelo de la mercancía.
+   */
+  modeloMercancia: string;
+
+  /**
+   * Número de serie de la mercancía.
+   */
+  numSerieMercancia: string;
+
+  /**
+   * Número de parte de la mercancía.
+   */
+  numParteMercancia: string;
+
+  /**
+   * Tipo de mercancía.
+   */
+  tipoMercancia: string;
 }
 
 /**
@@ -174,396 +465,4 @@ export interface DatosSolicitante {
    * ADACE asociada al solicitante.
    */
   adace: string;
-}
-/**
- * Representa los datos de la tabla de mercancías.
- */
-export interface PedimentoTablaDatos {
-  /**
-   * Lista de mercancías en la tabla.
-   */
-  datos: PedimentoTabla[];
-}
-
-/**
- * Representa un pedimento en la tabla de pedimentos.
- */
-export interface PedimentoTabla {
-  /**
-   * Identificador único del pedimento.
-   */
-  id: number;
-
-  /**
-   * Patente de autorización asociada al pedimento.
-   */
-  patenteAutorizacion: string;
-
-  /**
-   * Número del pedimento.
-   */
-  pedimento: string;
-
-  /**
-   * Clave de la aduana asociada al pedimento.
-   */
-  claveAduanaPedimento: string;
-
-  /**
-   * Clave de la fracción arancelaria asociada al pedimento.
-   */
-  claveFraccionArancelariaPedimento: string;
-
-  /**
-   * Número de Identificación Comercial (NICO) asociado al pedimento.
-   */
-  nicoPedimento: string;
-
-  /**
-   * Cantidad asociada al pedimento.
-   */
-  cantidadPedimento: string;
-
-  /**
-   * Clave de la unidad de medida asociada al pedimento.
-   */
-  claveUnidadMedidaPedimento: string;
-}
-/**
- * Representa una acción de un botón en el wizard.
- */
-export interface AccionBoton {
-  /**
-   * Acción realizada por el botón (e.g., "cont" para continuar, "atras" para retroceder).
-   */
-  accion: string;
-
-  /**
-   * Valor asociado a la acción (e.g., índice del paso en el wizard).
-   */
-  valor: number;
-}
-/**
- * Representa un tipo de documento.
- */
-export interface TipoDocumento {
-  /**
-   * Identificador único del tipo de documento.
-   */
-  id: number;
-
-  /**
-   * Descripción del tipo de documento.
-   */
-  descripcion: string;
-
-  /**
-   * Indica si el tipo de documento debe controlar caja.
-   */
-  controlarCaja: boolean;
-}
-
-/**
- * Representa el formulario de un domicilio.
- */
-export interface DomicilioFormulario {
-  /**
-   * Nombre comercial asociado al domicilio.
-   */
-  nombreComercial: string;
-
-  /**
-   * Clave de la entidad federativa asociada al domicilio.
-   */
-  claveEntidadFederativa: string;
-
-  /**
-   * Clave de la delegación o municipio asociado al domicilio.
-   */
-  claveDelegacionMunicipio: string;
-
-  /**
-   * Clave de la colonia asociada al domicilio.
-   */
-  claveColonia: string;
-
-  /**
-   * Calle asociada al domicilio.
-   */
-  calle: string;
-
-  /**
-   * Número exterior asociado al domicilio.
-   */
-  numeroExterior: string;
-
-  /**
-   * Número interior asociado al domicilio.
-   */
-  numeroInterior: string;
-
-  /**
-   * Código postal asociado al domicilio.
-   */
-  codigoPostal: string;
-
-  /**
-   * RFC asociado al domicilio.
-   */
-  rfc: string;
-}
-
-/**
- * Representa el formulario de un aviso.
- */
-export interface AvisoFormulario {
-  /**
-   * ADACE asociada al aviso.
-   */
-  adace: string;
-
-  /**
-   * Valor del programa IMMEX asociado al aviso.
-   */
-  valorProgramaImmex: string;
-
-  /**
-   * Año del programa IMMEX asociado al aviso.
-   */
-  valorAnioProgramaImmex: string;
-
-  /**
-   * Tipo de aviso.
-   */
-  tipoAviso: string;
-
-  /**
-   * Justificación del aviso.
-   */
-  justificacion: string;
-
-  /**
-   * Periodicidad mensual de destrucción asociada al aviso.
-   */
-  periodicidadMensualDestruccion: string;
-
-  /**
-   * Fecha de traslado asociada al aviso.
-   */
-  fechaTranslado: string;
-
-  /**
-   * Nombre comercial asociado al aviso.
-   */
-  nombreComercial: string;
-
-  /**
-   * Clave de la entidad federativa asociada al aviso.
-   */
-  claveEntidadFederativa: string;
-
-  /**
-   * Clave de la delegación o municipio asociado al aviso.
-   */
-  claveDelegacionMunicipio: string;
-
-  /**
-   * Clave de la colonia asociada al aviso.
-   */
-  claveColonia: string;
-
-  /**
-   * Calle asociada al aviso.
-   */
-  calle: string;
-
-  /**
-   * Número exterior asociado al aviso.
-   */
-  numeroExterior: string;
-
-  /**
-   * Número interior asociado al aviso.
-   */
-  numeroInterior: string;
-
-  /**
-   * Código postal asociado al aviso.
-   */
-  codigoPostal: string;
-
-  /**
-   * Hora de destrucción asociada al aviso.
-   */
-  horaDestruccion: string;
-
-  /**
-   * Fecha de destrucción asociada al aviso.
-   */
-  fechaDestruccion: string;
-
-  /**
-   * Tipo de carga asociada al aviso.
-   */
-  tipoCarga: string;
-}
-
-/**
- * Representa los datos de la tabla de procesos.
- */
-export interface ProcesoTablaDatos {
-  /**
-   * Lista de procesos en la tabla.
-   */
-  datos: ProcesoTabla[];
-}
-
-/**
- * Representa una proceso en la tabla de proceso.
- */
-export interface ProcesoTabla {
-  /**
-   * Identificador único del proceso.
-   */
-  id: number;
-
-  /**
-   * Descripción del proceso de destrucción.
-   */
-  descripcionProcesoDestruccion: string;
-}
-
-/**
- * Representa los datos de la tabla de desperdicios.
- */
-export interface DesperdicioTablaDatos {
-  /**
-   * Lista de desperdicios en la tabla.
-   */
-  datos: DesperdicioTabla[];
-}
-
-/**
- * Representa el formulario de una desperdicio.
- */
-
-export interface DesperdicioTabla {
-  /**
-   * Identificador único del desperdicio.
-   */
-  id: number;
-
-  /**
-   * Descripción del proceso de destrucción asociado al desperdicio.
-   */
-  descripcionProcesoDestruccion: string;
-}
-
-/**
- * Representa el formulario de una proceso.
- */
-
-export interface ProcesoFormulario {
-  /**
-   * Descripción del proceso de destrucción asociado al formulario.
-   */
-  descripcionProcesoDestruccion: string;
-}
-
-/**
- * Representa el formulario de un pedimento con los datos necesarios para su procesamiento.
- */
-export interface PedimentoFormulario {
-  /**
-   * La patente de autorización asociada al pedimento.
-   */
-  patenteAutorizacion: string;
-
-  /**
-   * El número del pedimento.
-   */
-  pedimento: string;
-
-  /**
-   * La clave de la aduana correspondiente al pedimento.
-   */
-  claveAduanaPedimento: string;
-
-  /**
-   * La clave de la fracción arancelaria asociada al pedimento.
-   */
-  claveFraccionArancelariaPedimento: string;
-
-  /**
-   * El número de identificación comercial (NICO) del pedimento.
-   */
-  nicoPedimento: string;
-
-  /**
-   * La cantidad declarada en el pedimento.
-   */
-  cantidadPedimento: string;
-
-  /**
-   * La clave de la unidad de medida utilizada en el pedimento.
-   */
-  claveUnidadMedidaPedimento: string;
-}
-
-/**
- * Representa el formulario de una desperdicio.
- */
-export interface DesperdicioFormulario {
-  /**
-   * Descripción del desperdicio.
-   */
-  descripcionDesperdicio: string;
-
-  /**
-   * Cantidad del desperdicio.
-   */
-  cantidadDesp: string;
-
-  /**
-   * Clave de la unidad de medida del desperdicio.
-   */
-  claveUnidadMedidaDesp: string;
-
-  /**
-   * Porcentaje del desperdicio.
-   */
-  porcentaje: string;
-
-  /**
-   * Descripción de la mercancía asociada al desperdicio.
-   */
-  descripcionMercancia: string;
-
-  /**
-   * Circunstancia de los hechos relacionados con el desperdicio.
-   */
-  circunstanciaHechos: string;
-}
-
-
-/**
- * Representa un archivo de documentos.
- */
-export interface ArchivoDocumentos {
-
-  /**
-   * Nombre del archivo.
-   */
-  nombreDelArchivo: string;
-
-  /**
-   * Tamaño del archivo en bytes.
-   */
-  tamano: number;
-
-  /**
-   * Resolución del archivo (e.g., 1920x1080).
-   */
-  resolucion: string;
-
 }

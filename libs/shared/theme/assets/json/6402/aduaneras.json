@@ -2,15 +2,15 @@
     "datos": [
         {
             "id": 1,
-            "descripcion": "Option 1"
+            "descripcion": "Aduanera 1"
         },
         {
             "id": 2,
-            "descripcion": "Option 2"
+            "descripcion": "Aduanera 2"
         },
         {
             "id": 3,
-            "descripcion": "Option 3"
+            "descripcion": "Aduanera 3"
         }
     ]
 }

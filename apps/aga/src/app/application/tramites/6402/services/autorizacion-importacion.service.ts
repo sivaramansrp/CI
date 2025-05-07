@@ -1,4 +1,4 @@
-import { AvisoTablaDatos, CatalogoLista,DatosSolicitante, DesperdicioTablaDatos, PedimentoTablaDatos, ProcesoTablaDatos } from '../models/autorizacion-importacion.model';
+import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -29,56 +29,15 @@ export class AutorizacionImportacionService {
     return this.http.get<DatosSolicitante>(`assets/json/6402/datosSolicitante.json`);
   }
   /**
-   * Obtiene los datos de la tabla de Pedimento.
+   * Obtiene los datos de la tabla de Solicitud.
    * 
-   * @returns {Observable<PedimentoTablaDatos>} Un observable con los datos de la tabla de Pedimento.
+   * @returns {Observable<SolicitudTablaDatos>} Un observable con los datos de la tabla de Solicitud.
    */
-  obtenerPedimentoTabla(): Observable<PedimentoTablaDatos> {
-    return this.http.get<PedimentoTablaDatos>(`assets/json/6402/pedimento-tabla.json`);
+  obtenerSolicitudTabla(): Observable<SolicitudTablaDatos> {
+    return this.http.get<SolicitudTablaDatos>(`assets/json/6402/autorizacion-tabla.json`);
   }
-
-  /**
-   * Obtiene los datos de la tabla de procesos.
-   * 
-   * @returns {Observable<ProcesoTablaDatos>} Un observable con los datos de la tabla de procesos.
-   */
-  obtenerProcesoTabla(): Observable<ProcesoTablaDatos> {
-    return this.http.get<ProcesoTablaDatos>(`assets/json/6402/proceso-tabla.json`);
-  }
-
-  /**
-   * @descripcion Obtiene los datos de la tabla de desperdicio desde un archivo JSON local.
-   * @retorno Un observable que emite los datos de la tabla de desperdicio (`DesperdicioTablaDatos`).
-   */
-  obtenerDesperdicioTabla(): Observable<DesperdicioTablaDatos> {
-    return this.http.get<DesperdicioTablaDatos>(`assets/json/6402/desperdicio-tabla.json`);
-  }
-
-  /**
-   * Obtiene los datos de la tabla de aviso.
-   * 
-   * @returns {Observable<AvisoTablaDatos>} Un observable con los datos de la tabla de aviso.
-   */
-  obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
-    return this.http.get<AvisoTablaDatos>(`assets/json/6402/aviso-tabla.json`);
-  }
-  /**
-   * Obtiene la lista de colonias.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de colonias.
-   */
-  obtenerColonias(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6402/entidad-federativa.json`);
-  }
-  /**
-   * Obtiene la lista de municipios.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de municipios.
-   */
-  obtenerMunicipio(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6402/entidad-federativa.json`);
-  }
-  /**
+  
+   /**
    * Obtiene la lista de entidades federativas.
    * 
    * @returns {Observable<CatalogoLista>} Un observable con la lista de entidades federativas.
@@ -86,21 +45,70 @@ export class AutorizacionImportacionService {
   obtenerFederativa(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/6402/entidad-federativa.json`);
   }
+
   /**
-   * Obtiene la lista de unidades de medida.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de unidades de medida.
+   * @descripcion Obtiene la lista de aduanas desde un archivo JSON local.
+   * @retorno Un observable que emite un objeto de tipo `CatalogoLista` con los datos de las aduanas.
    */
-  obtenerUnidadMedida(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6402/entidad-federativa.json`);
+  obtenerAduanas(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/aduanas.json`);
   }
+
   /**
-   * Obtiene la lista de fracciones arancelarias.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de fracciones arancelarias.
+   * @descripcion Obtiene la lista de aduaneras desde un archivo JSON local.
+   * @retorna Un observable que emite un objeto de tipo `CatalogoLista` con los datos de las aduaneras.
    */
-  obtenerFraccionArancelaria(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6402/entidad-federativa.json`);
+  obtenerAduaneras(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/aduaneras.json`);
+  }
+
+  /**
+   * @descripcion Obtiene el catálogo de recintos fiscalizados desde un archivo JSON local.
+   * @retorna Un observable que emite un objeto de tipo `CatalogoLista` con los datos del catálogo.
+   */
+  obtenerRecintoFiscalizado(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/recinto-fiscalizado.json`);
+  }
+
+  /**
+   * @descripcion Obtiene el tipo de documento desde un archivo JSON local.
+   * @retorno Un Observable que emite un objeto de tipo `CatalogoLista` con los datos del tipo de documento.
+   */
+  obtenerTipoDeDocumento(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/tipo-de-documento.json`);
+  }
+
+  /**
+   * @descripcion Obtiene el catálogo de medios de transporte desde un archivo JSON local.
+   * @retorna Un observable que emite un objeto de tipo `CatalogoLista` con los datos del catálogo.
+   */
+  obtenerMedioDeTransporte(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/medio-de-transporte.json`);
+  }
+
+  /**
+   * @descripcion Obtiene la lista de países de procedencia desde un archivo JSON local.
+   * @retorna Un observable que emite un objeto de tipo `CatalogoLista` con los datos de los países de procedencia.
+   */
+  obtenerPaisDeProcedencia(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/pais-de-procedencia.json`);
+  }
+
+  /**
+   * Obtiene una lista de opciones "Sí" o "No" desde un archivo JSON local.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de opciones "Sí" o "No".
+   */
+  obtenerSiNo(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/si-no.json`);
+  }
+
+  /**
+   * @description Obtiene el catálogo de tipos de destino desde un archivo JSON local.
+   * @returns {Observable<CatalogoLista>} Un observable que emite el catálogo de tipos de destino.
+   */
+  obtenerTipoDeDestino(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/6402/tipo-de-destino.json`);
   }
  
 }

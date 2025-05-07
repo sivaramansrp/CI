@@ -1,4 +1,4 @@
-import { ArchivoDocumentos, AvisoFormulario, DatosSolicitante, DesperdicioFormulario, DomicilioFormulario, PedimentoFormulario, ProcesoFormulario, TipoDocumento } from '../models/autorizacion-importacion.model';
+import { DatosSolicitante, MercanciaFormulario, SolicitudFormulario } from '../models/autorizacion-importacion.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -11,65 +11,41 @@ import { StoreConfig } from '@datorama/akita';
  * incluyendo datos del solicitante, formularios relacionados, y otros datos relevantes.
  */
 export interface Tramite6402State {
+
   /**
    * Paso activo del trámite.
+   * 
+   * Representa el número del paso actual en el proceso del trámite.
    */
   pasoActivo: number;
 
   /**
    * Pestaña activa del trámite.
+   * 
+   * Representa el número de la pestaña actualmente activa en el proceso del trámite.
    */
   pestanaActiva: number;
 
   /**
-   * Datos del solicitante.
+   * Información del solicitante.
+   * 
+   * Contiene los datos personales y de contacto del solicitante del trámite.
    */
   datosSolicitante: DatosSolicitante;
 
   /**
-   * Información del formulario de domicilio.
+   * Información del formulario de solicitud.
    */
-  domicilioFormulario: DomicilioFormulario;
+  solicitudFormulario: SolicitudFormulario;
 
   /**
-   * Información del formulario de aviso.
+   * Información del formulario de mercancía.
+   * 
+   * Contiene los datos relacionados con la mercancía, como descripción, especificaciones,
+   * marca, modelo, número de serie, número de parte, y tipo de mercancía.
    */
-  avisoFormulario: AvisoFormulario;
+  mercanciaFormulario: MercanciaFormulario;
 
-  /**
-   * Información del formulario de proceso.
-   */
-  procesoFormulario: ProcesoFormulario;
-
-  /**
-   * Información del formulario de desperdicio.
-   */
-  desperdicioFormulario: DesperdicioFormulario;
-
-  /**
-   * Información del formulario de pedimento.
-   */
-  pedimentoFormulario: PedimentoFormulario;
-
-  /**
-   * Datos de la tabla de tipos de documentos.
-   */
-  tipoTablaDatos: TipoDocumento[];
-
-  /**
-   * Tipo de documento seleccionado.
-   */
-  tipoDocumento: string;
-
-  /**
-   * Lista de documentos desplegables.
-   */
-  documentosDesplegable: ArchivoDocumentos[];
-
-  /**
-   * Lista de valores seleccionados.
-   */
-  valorSeleccionado: string[];
 }
 /**
  * Estado inicial del trámite 6402.
@@ -85,6 +61,56 @@ export function createInitialState(): Tramite6402State {
   return {
     pasoActivo: 1,
     pestanaActiva: 2,
+    solicitudFormulario: {
+      cveAduana: '',
+      cveSeccionAduanal: '',
+      cveRecintoFiscalizado: '',
+      cveTipoDocumento: '',
+      estadoTipoDocumento: '',
+      aduana: '',
+      patente: '',
+      pedimento: '',
+      folioImportacionTemporal: '',
+      folioFormatoOficial: '',
+      checkProrroga: false,
+      folioOficialProrroga: '',
+      fechaImportacionTemporal: '',
+      fechaVencimiento: '',
+      descMercancia: '',
+      marca: '',
+      modelo: '',
+      numeroSerie: '',
+      tipo: '',
+      cveMedioTrasporte: '',
+      guiaMaster: '',
+      guiaBl: '',
+      numeroBl: '',
+      rfcEmpresaTransportista: '',
+      estadoMedioTransporte: '',
+      cartaPorte: '',
+      cvePaisProcedencia: '',
+      guiaHouse: '',
+      numeroBuque: '',
+      numeroEquipo: '',
+      fechaCartaPorte: '',
+      tipContenedor: '',
+      tranporteMarca: '',
+      tranporteModelo: '',
+      tranportePlaca: '',
+      observaciones: '',
+      conDestino: '',
+      cveTipoDestino: '',
+      cveTipoDocumentoReemplazada: '',
+      numeroActaDescruccion: '',
+      cveAduanaDestino: '',
+      cvePatenteDestino: '',
+      cvePedimentoDestino: '',
+      folioVucemRetorno: '',
+      folioFormatoOficialDestino: '',
+      fechaDescruccionDestino: '',
+      estadoTipoDocumentoDestino: '',
+      autoridadPresentoAvisoDestruccion: ''
+    },
     datosSolicitante: {
       rfc: "",
       denominacion: "",
@@ -105,61 +131,15 @@ export function createInitialState(): Tramite6402State {
       telefono: "",
       adace: "",
     },
-    domicilioFormulario: {
-      nombreComercial: '',
-      claveEntidadFederativa: '',
-      claveDelegacionMunicipio: '',
-      claveColonia: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      codigoPostal: '',
-      rfc: '',
-    },
-    avisoFormulario: {
-      adace: '',
-      valorProgramaImmex: '',
-      valorAnioProgramaImmex: '',
-      tipoAviso: '',
-      justificacion: '',
-      periodicidadMensualDestruccion: '',
-      fechaTranslado: '',
-      nombreComercial: '',
-      claveEntidadFederativa: '',
-      claveDelegacionMunicipio: '',
-      claveColonia: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      codigoPostal: '',
-      horaDestruccion: '',
-      fechaDestruccion: '',
-      tipoCarga: '',
-    },
-    procesoFormulario: {
-      descripcionProcesoDestruccion: ''
-    },
-    desperdicioFormulario: {
-      descripcionDesperdicio: '',
-      cantidadDesp: '',
-      claveUnidadMedidaDesp: '',
-      porcentaje: '',
-      descripcionMercancia: '',
-      circunstanciaHechos: ''
-    },
-    pedimentoFormulario: {
-      patenteAutorizacion: '',
-      pedimento: '',
-      claveAduanaPedimento: '',
-      claveFraccionArancelariaPedimento: '',
-      nicoPedimento: '',
-      cantidadPedimento: '',
-      claveUnidadMedidaPedimento: ''
-    },
-    tipoTablaDatos: [],
-    tipoDocumento: '',
-    documentosDesplegable: [],
-    valorSeleccionado: []
+    mercanciaFormulario: {
+      modalDescMercancia: '',
+      espeMercancia: '',
+      marcaMercancia: '',
+      modeloMercancia: '',
+      numSerieMercancia: '',
+      numParteMercancia: '',
+      tipoMercancia: ''
+    }
   };
 }
 /**
@@ -196,42 +176,6 @@ export class Tramite6402Store extends Store<Tramite6402State> {
   }
 
   /**
-   * Actualiza el tipo de documento seleccionado.
-   * 
-   * @param {string} tipoDocumento - El tipo de documento seleccionado.
-   */
-  public setTipoDocumento(tipoDocumento: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoDocumento,
-    }));
-  }
-
-  /**
-   * Actualiza la lista de documentos desplegables.
-   * 
-   * @param {ArchivoDocumentos[]} documentosDesplegable - Lista de documentos desplegables.
-   */
-  public setDocumentosDesplegable(documentosDesplegable: ArchivoDocumentos[]): void {
-    this.update((state) => ({
-      ...state,
-      documentosDesplegable,
-    }));
-  }
-
-  /**
-   * Actualiza los valores seleccionados.
-   * 
-   * @param {string[]} valorSeleccionado - Lista de valores seleccionados.
-   */
-  public setValorSeleccionado(valorSeleccionado: string[]): void {
-    this.update((state) => ({
-      ...state,
-      valorSeleccionado,
-    }));
-  }
-
-  /**
    * Actualiza la pestaña activa del trámite.
    * 
    * @param {number} pestanaActiva - El número de la pestaña activa.
@@ -242,6 +186,7 @@ export class Tramite6402Store extends Store<Tramite6402State> {
       pestanaActiva,
     }));
   }
+
   /**
    * Actualiza los datos del solicitante en el estado.
    * 
@@ -255,504 +200,662 @@ export class Tramite6402Store extends Store<Tramite6402State> {
   }
 
   /**
-   * Actualiza el nombre comercial en el formulario de domicilio.
+   * Actualiza la clave de la aduana en el formulario de solicitud.
    * 
-   * @param {string} nombreComercial - El nombre comercial.
+   * @param {string} cveAduana - La clave de la aduana a actualizar.
    */
-  public setDomicilioFormularioNombreComercial(nombreComercial: string): void {
+  public setCveAduana(cveAduana: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, nombreComercial },
+      solicitudFormulario: { ...state.solicitudFormulario, cveAduana },
     }));
   }
 
   /**
-   * Actualiza la clave de la entidad federativa en el formulario de domicilio.
+   * Actualiza la clave de la sección aduanal en el formulario de solicitud.
    * 
-   * @param {string} claveEntidadFederativa - La clave de la entidad federativa.
+   * @param {string} cveSeccionAduanal - La clave de la sección aduanal a actualizar.
    */
-  public setDomicilioFormularioEntidadFederativa(claveEntidadFederativa: string): void {
+  public setCveSeccionAduanal(cveSeccionAduanal: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, claveEntidadFederativa },
+      solicitudFormulario: { ...state.solicitudFormulario, cveSeccionAduanal },
     }));
   }
 
   /**
-   * Actualiza la clave de la delegación o municipio en el formulario de domicilio.
+   * Actualiza la clave del recinto fiscalizado en el formulario de solicitud.
    * 
-   * @param {string} claveDelegacionMunicipio - La clave de la delegación o municipio.
+   * @param {string} cveRecintoFiscalizado - La clave del recinto fiscalizado a actualizar.
    */
-  public setDomicilioFormularioDelegacionMunicipio(claveDelegacionMunicipio: string): void {
+  public setCveRecintoFiscalizado(cveRecintoFiscalizado: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, claveDelegacionMunicipio },
-    }));
-  }
-  /**
-   * Actualiza la clave de la colonia en el formulario de domicilio.
-   * 
-   * @param {string} claveColonia - La clave de la colonia.
-   */
-  public setDomicilioFormularioColonia(claveColonia: string): void {
-    this.update((state) => ({
-      ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, claveColonia },
+      solicitudFormulario: { ...state.solicitudFormulario, cveRecintoFiscalizado },
     }));
   }
 
   /**
-   * Actualiza la calle en el formulario de domicilio.
+   * Actualiza la clave del tipo de documento en el formulario de solicitud.
    * 
-   * @param {string} calle - El nombre de la calle.
+   * @param {string} cveTipoDocumento - La clave del tipo de documento a actualizar.
    */
-  public setDomicilioFormularioCalle(calle: string): void {
+  public setCveTipoDocumento(cveTipoDocumento: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, calle },
+      solicitudFormulario: { ...state.solicitudFormulario, cveTipoDocumento },
     }));
   }
 
   /**
-   * Actualiza el número exterior en el formulario de domicilio.
+   * Actualiza el estado del tipo de documento en el formulario de solicitud.
    * 
-   * @param {string} numeroExterior - El número exterior.
+   * @param {string} estadoTipoDocumento - El estado del tipo de documento a actualizar.
    */
-  public setDomicilioFormularioNumeroExterior(numeroExterior: string): void {
+  public setEstadoTipoDocumento(estadoTipoDocumento: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, numeroExterior },
+      solicitudFormulario: { ...state.solicitudFormulario, estadoTipoDocumento },
     }));
   }
 
   /**
-   * Actualiza el número interior en el formulario de domicilio.
+   * Actualiza la aduana en el formulario de solicitud.
    * 
-   * @param {string} numeroInterior - El número interior.
+   * @param {string} aduana - La aduana a actualizar.
    */
-  public setDomicilioFormularioNumeroInterior(numeroInterior: string): void {
+  public setAduana(aduana: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, numeroInterior },
+      solicitudFormulario: { ...state.solicitudFormulario, aduana },
     }));
   }
 
   /**
-   * Actualiza el código postal en el formulario de domicilio.
+   * Actualiza la patente en el formulario de solicitud.
    * 
-   * @param {string} codigoPostal - El código postal.
+   * @param {string} patente - La patente a actualizar.
    */
-  public setDomicilioFormularioCodigoPostal(codigoPostal: string): void {
+  public setPatente(patente: string): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, codigoPostal },
+      solicitudFormulario: { ...state.solicitudFormulario, patente },
     }));
   }
 
   /**
-   * Actualiza el hora destrucción en el formulario de domicilio.
+   * Actualiza el pedimento en el formulario de solicitud.
    * 
-   * @param {string} horaDestruccion - El horaDestruccion.
-   */
-  public setHoraDestruccion(horaDestruccion: string): void {
-    this.update((state) => ({
-      ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, horaDestruccion },
-    }));
-  }
-
-  /**
-   * Actualiza el fecha destrucción en el formulario de domicilio.
-   * 
-   * @param {string} fechaDestruccion - El fechaDestruccion.
-   */
-  public setFechaDestruccion(fechaDestruccion: string): void {
-    this.update((state) => ({
-      ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, fechaDestruccion },
-    }));
-  }
-
-  /**
-   * Actualiza el RFC en el formulario de domicilio.
-   * 
-   * @param {string} rfc - El RFC.
-   */
-  public setDomicilioFormularioRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, rfc },
-    }));
-  }
-
-  /**
-   * Actualiza el valor de ADACE en el formulario de aviso.
-   * 
-   * @param {string} adace - El valor de ADACE.
-   */
-  public setAvisoFormularioAdace(adace: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, adace },
-    }));
-  }
-
-  /**
-   * Actualiza el valor del programa IMMEX en el formulario de aviso.
-   * 
-   * @param {string} valorProgramaImmex - El valor del programa IMMEX.
-   */
-  public setAvisoFormularioValorProgramaImmex(valorProgramaImmex: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, valorProgramaImmex },
-    }));
-  }
-  /**
-   * Actualiza el valor del año del programa IMMEX en el formulario de aviso.
-   * 
-   * @param {string} valorAnioProgramaImmex - El valor del año del programa IMMEX.
-   */
-  public setAvisoFormularioValorAnioProgramaImmex(valorAnioProgramaImmex: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, valorAnioProgramaImmex },
-    }));
-  }
-
-  /**
-   * Actualiza el tipo de aviso en el formulario de aviso.
-   * 
-   * @param {string} tipoAviso - El tipo de aviso.
-   */
-  public setAvisoFormularioTipoAviso(tipoAviso: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, tipoAviso },
-    }));
-  }
-
-  /**
-   * Actualiza el ID de la justificación en el formulario de aviso.
-   * 
-   * @param {string} justificacion - El ID de la justificación.
-   */
-  public setAvisoFormularioJustificacion(justificacion: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, justificacion },
-    }));
-  }
-
-  /**
-   * Actualiza el Periodicidad Mensual Destruccion en el formulario de aviso.
-   * 
-   * @param {string} periodicidadMensualDestruccion - El Periodicidad Mensual Destruccion.
-   */
-  public setPeriodicidadMensualDestruccion(periodicidadMensualDestruccion: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, periodicidadMensualDestruccion },
-    }));
-  }
-
-  /**
-   * Actualiza la fecha de traslado en el formulario de aviso.
-   * 
-   * @param {string} fechaTranslado - La fecha de traslado.
-   */
-  public setAvisoFormularioFechaTranslado(fechaTranslado: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, fechaTranslado },
-    }));
-  }
-
-  /**
-   * Actualiza el nombre comercial en el formulario de aviso.
-   * 
-   * @param {string} nombreComercial - El nombre comercial.
-   */
-  public setAvisoFormularioNombreComercial(nombreComercial: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, nombreComercial },
-    }));
-  }
-
-  /**
-   * Actualiza la clave de la entidad federativa en el formulario de aviso.
-   * 
-   * @param {string} claveEntidadFederativa - La clave de la entidad federativa.
-   */
-  public setAvisoFormularioEntidadFederativa(claveEntidadFederativa: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, claveEntidadFederativa },
-    }));
-  }
-
-  /**
-   * Actualiza la clave de la delegación o municipio en el formulario de aviso.
-   * 
-   * @param {string} claveDelegacionMunicipio - La clave de la delegación o municipio.
-   */
-  public setAvisoFormularioDelegacionMunicipio(claveDelegacionMunicipio: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, claveDelegacionMunicipio },
-    }));
-  }
-
-  /**
-   * Actualiza la clave de la colonia en el formulario de aviso.
-   * 
-   * @param {string} claveColonia - La clave de la colonia.
-   */
-  public setAvisoFormularioColonia(claveColonia: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, claveColonia },
-    }));
-  }
-  /**
- * Actualiza la calle en el formulario de aviso.
- * 
- * @param {string} calle - La calle del aviso.
- */
-  public setAvisoFormularioCalle(calle: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, calle },
-    }));
-  }
-
-  /**
-   * Actualiza el número exterior en el formulario de aviso.
-   * 
-   * @param {string} numeroExterior - El número exterior del aviso.
-   */
-  public setAvisoFormularioNumeroExterior(numeroExterior: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, numeroExterior },
-    }));
-  }
-
-  /**
-   * Actualiza el número interior en el formulario de aviso.
-   * 
-   * @param {string} numeroInterior - El número interior del aviso.
-   */
-  public setAvisoFormularioNumeroInterior(numeroInterior: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, numeroInterior },
-    }));
-  }
-
-  /**
-   * Actualiza el código postal en el formulario de aviso.
-   * 
-   * @param {string} codigoPostal - El código postal del aviso.
-   */
-  public setAvisoFormularioCodigoPostal(codigoPostal: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, codigoPostal },
-    }));
-  }
-
-  /**
-   * Actualiza el tipo de carga en el formulario de aviso.
-   * 
-   * @param {string} tipoCarga - El tipo de carga del aviso.
-   */
-  public setAvisoFormularioTipoCarga(tipoCarga: string): void {
-    this.update((state) => ({
-      ...state,
-      avisoFormulario: { ...state.avisoFormulario, tipoCarga },
-    }));
-  }
-
-  /**
-   * Actualiza los datos de la tabla de tipos de documentos.
-   * 
-   * @param {TipoDocumento[]} tipoTablaDatos - Lista de tipos de documentos.
-   */
-  public setTipoTablaDatos(tipoTablaDatos: TipoDocumento[]): void {
-    this.update((state) => ({
-      ...state,
-      tipoTablaDatos,
-    }));
-  }
-
-  /**
-   * Actualiza la descripción del proceso de destrucción en el formulario de proceso.
-   * 
-   * @param {string} descripcionProceso - La descripción del proceso de destrucción.
-   */
-  public setDescripcionProcesoDestruccion(descripcionProceso: string): void {
-    this.update((state) => ({
-      ...state,
-      procesoFormulario: { ...state.procesoFormulario, descripcionProceso },
-    }));
-  }
-
-  
-  /**
-   * Actualiza la descripción del desperdicio en el formulario de desperdicio.
-   * 
-   * @param {string} descripcionDesperdicio - La descripción del desperdicio.
-   */
-  public setDescripcionDesperdicio(descripcionDesperdicio: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionDesperdicio },
-    }));
-  }
-
-  /**
-   * Actualiza la cantidad de desperdicio en el formulario de desperdicio.
-   * 
-   * @param {string} cantidadDesp - La cantidad de desperdicio.
-   */
-  public setCantidadDesp(cantidadDesp: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, cantidadDesp },
-    }));
-  }
-
-  /**
-   * Actualiza la clave de unidad de medida del desperdicio en el formulario de desperdicio.
-   * 
-   * @param {string} claveUnidadMedidaDesp - La clave de unidad de medida del desperdicio.
-   */
-  public setClaveUnidadMedidaDesp(claveUnidadMedidaDesp: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, claveUnidadMedidaDesp },
-    }));
-  }
-
-  /**
-   * Actualiza el porcentaje en el formulario de desperdicio.
-   * 
-   * @param {string} porcentaje - El porcentaje.
-   */
-  public setPorcentaje(porcentaje: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, porcentaje },
-    }));
-  }
-
-  /**
-   * Actualiza la descripción de la mercancía en el formulario de desperdicio.
-   * 
-   * @param {string} descripcionMercancia - La descripción de la mercancía.
-   */
-  public setDescripcionMercancia(descripcionMercancia: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionMercancia },
-    }));
-  }
-
-  /**
-   * Actualiza la circunstancia de los hechos en el formulario de desperdicio.
-   * 
-   * @param {string} circunstanciaHechos - La circunstancia de los hechos.
-   */
-  public setCircunstanciaHechos(circunstanciaHechos: string): void {
-    this.update((state) => ({
-      ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, circunstanciaHechos },
-    }));
-  }
-
-  /**
-   * Actualiza la patente de autorización en el formulario de pedimento.
-   * 
-   * @param {string} patenteAutorizacion - La patente de autorización.
-   */
-  public setPatenteAutorizacion(patenteAutorizacion: string): void {
-    this.update((state) => ({
-      ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, patenteAutorizacion },
-    }));
-  }
-
-  /**
-   * Actualiza el pedimento en el formulario de pedimento.
-   * 
-   * @param {string} pedimento - El pedimento.
+   * @param {string} pedimento - El pedimento a actualizar.
    */
   public setPedimento(pedimento: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, pedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, pedimento },
     }));
   }
 
   /**
-   * Actualiza la clave de aduana del pedimento en el formulario de pedimento.
+   * Actualiza el folio de importación temporal en el formulario de solicitud.
    * 
-   * @param {string} claveAduanaPedimento - La clave de aduana del pedimento.
+   * @param {string} folioImportacionTemporal - El folio de importación temporal a actualizar.
    */
-  public setClaveAduanaPedimento(claveAduanaPedimento: string): void {
+  public setFolioImportacionTemporal(folioImportacionTemporal: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveAduanaPedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, folioImportacionTemporal },
     }));
   }
 
   /**
-   * Actualiza la clave de fracción arancelaria del pedimento en el formulario de pedimento.
+   * Actualiza el folio del formato oficial en el formulario de solicitud.
    * 
-   * @param {string} claveFraccionArancelariaPedimento - La clave de fracción arancelaria del pedimento.
+   * @param {string} folioFormatoOficial - El folio del formato oficial a actualizar.
    */
-  public setClaveFraccionArancelariaPedimento(claveFraccionArancelariaPedimento: string): void {
+  public setFolioFormatoOficial(folioFormatoOficial: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveFraccionArancelariaPedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, folioFormatoOficial },
     }));
   }
 
   /**
-   * Actualiza el NICO del pedimento en el formulario de pedimento.
+   * Actualiza el check de prórroga en el formulario de solicitud.
    * 
-   * @param {string} nicoPedimento - El NICO del pedimento.
+   * @param {boolean} checkProrroga - El valor del check de prórroga a actualizar.
    */
-  public setNicoPedimento(nicoPedimento: string): void {
+  public setCheckProrroga(checkProrroga: boolean): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, nicoPedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, checkProrroga },
     }));
   }
 
   /**
-   * Actualiza la cantidad del pedimento en el formulario de pedimento.
+   * Actualiza el folio oficial de prórroga en el formulario de solicitud.
    * 
-   * @param {string} cantidadPedimento - La cantidad del pedimento.
+   * @param {string} folioOficialProrroga - El folio oficial de prórroga a actualizar.
    */
-  public setCantidadPedimento(cantidadPedimento: string): void {
+  public setFolioOficialProrroga(folioOficialProrroga: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, cantidadPedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, folioOficialProrroga },
     }));
   }
 
   /**
-   * Actualiza la clave de unidad de medida del pedimento en el formulario de pedimento.
+   * Actualiza la fecha de importación temporal en el formulario de solicitud.
    * 
-   * @param {string} claveUnidadMedidaPedimento - La clave de unidad de medida del pedimento.
+   * @param {string} fechaImportacionTemporal - La fecha de importación temporal a actualizar.
    */
-  public setClaveUnidadMedidaPedimento(claveUnidadMedidaPedimento: string): void {
+  public setFechaImportacionTemporal(fechaImportacionTemporal: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveUnidadMedidaPedimento },
+      solicitudFormulario: { ...state.solicitudFormulario, fechaImportacionTemporal },
+    }));
+  }
+
+  /**
+   * Actualiza la fecha de vencimiento en el formulario de solicitud.
+   * 
+   * @param {string} fechaVencimiento - La fecha de vencimiento a actualizar.
+   */
+  public setFechaVencimiento(fechaVencimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, fechaVencimiento },
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la mercancía en el formulario de solicitud.
+   * 
+   * @param {string} descMercancia - La descripción de la mercancía a actualizar.
+   */
+  public setDescMercancia(descMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, descMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza la marca en el formulario de solicitud.
+   * 
+   * @param {string} marca - La marca a actualizar.
+   */
+  public setMarca(marca: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, marca },
+    }));
+  }
+
+  /**
+   * Actualiza el modelo en el formulario de solicitud.
+   * 
+   * @param {string} modelo - El modelo a actualizar.
+   */
+  public setModelo(modelo: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, modelo },
+    }));
+  }
+
+  /**
+   * Actualiza el número de serie en el formulario de solicitud.
+   * 
+   * @param {string} numeroSerie - El número de serie a actualizar.
+   */
+  public setNumeroSerie(numeroSerie: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, numeroSerie },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo en el formulario de solicitud.
+   * 
+   * @param {string} tipo - El tipo a actualizar.
+   */
+  public setTipo(tipo: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, tipo },
+    }));
+  }
+
+  /**
+   * Establece el valor de `cveMedioTrasporte` en el estado de la solicitud de formulario.
+   *
+   * @param cveMedioTrasporte - El código del medio de transporte que se desea establecer.
+   */
+  public setCveMedioTrasporte(cveMedioTrasporte: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cveMedioTrasporte },
+    }));
+  }
+
+  /**
+   * Actualiza la guía master en el formulario de solicitud.
+   * 
+   * @param {string} guiaMaster - La guía master a actualizar.
+   */
+  public setGuiaMaster(guiaMaster: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, guiaMaster },
+    }));
+  }
+
+  /**
+   * Actualiza la guía BL en el formulario de solicitud.
+   * 
+   * @param {string} guiaBl - La guía BL a actualizar.
+   */
+  public setGuiaBl(guiaBl: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, guiaBl },
+    }));
+  }
+
+  /**
+   * Actualiza el número BL en el formulario de solicitud.
+   * 
+   * @param {string} numeroBl - El número BL a actualizar.
+   */
+  public setNumeroBl(numeroBl: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, numeroBl },
+    }));
+  }
+
+  /**
+   * Actualiza el RFC de la empresa transportista en el formulario de solicitud.
+   * 
+   * @param {string} rfcEmpresaTransportista - El RFC de la empresa transportista a actualizar.
+   */
+  public setRfcEmpresaTransportista(rfcEmpresaTransportista: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, rfcEmpresaTransportista },
+    }));
+  }
+
+  /**
+   * Actualiza el estado del medio de transporte en el formulario de solicitud.
+   * 
+   * @param {string} estadoMedioTransporte - El estado del medio de transporte a actualizar.
+   */
+  public setEstadoMedioTransporte(estadoMedioTransporte: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, estadoMedioTransporte },
+    }));
+  }
+
+  /**
+   * Actualiza la carta porte en el formulario de solicitud.
+   * 
+   * @param {string} cartaPorte - La carta porte a actualizar.
+   */
+  public setCartaPorte(cartaPorte: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cartaPorte },
+    }));
+  }
+
+  /**
+   * Actualiza la clave del país de procedencia en el formulario de solicitud.
+   * 
+   * @param {string} cvePaisProcedencia - La clave del país de procedencia a actualizar.
+   */
+  public setCvePaisProcedencia(cvePaisProcedencia: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cvePaisProcedencia },
+    }));
+  }
+
+  /**
+   * Actualiza la guía house en el formulario de solicitud.
+   * 
+   * @param {string} guiaHouse - La guía house a actualizar.
+   */
+  public setGuiaHouse(guiaHouse: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, guiaHouse },
+    }));
+  }
+
+  /**
+   * Actualiza el número de buque en el formulario de solicitud.
+   * 
+   * @param {string} numeroBuque - El número de buque a actualizar.
+   */
+  public setNumeroBuque(numeroBuque: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, numeroBuque },
+    }));
+  }
+
+  /**
+   * Actualiza el número de equipo en el formulario de solicitud.
+   * 
+   * @param {string} numeroEquipo - El número de equipo a actualizar.
+   */
+  public setNumeroEquipo(numeroEquipo: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, numeroEquipo },
+    }));
+  }
+
+  /**
+   * Actualiza la fecha de la carta porte en el formulario de solicitud.
+   * 
+   * @param {string} fechaCartaPorte - La fecha de la carta porte a actualizar.
+   */
+  public setFechaCartaPorte(fechaCartaPorte: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, fechaCartaPorte },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de contenedor en el formulario de solicitud.
+   * 
+   * @param {string} tipContenedor - El tipo de contenedor a actualizar.
+   */
+  public setTipContenedor(tipContenedor: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, tipContenedor },
+    }));
+  }
+
+  /**
+   * Actualiza la marca del transporte en el formulario de solicitud.
+   * 
+   * @param {string} tranporteMarca - La marca del transporte a actualizar.
+   */
+  public setTranporteMarca(tranporteMarca: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, tranporteMarca },
+    }));
+  }
+
+  /**
+   * Actualiza el modelo del transporte en el formulario de solicitud.
+   * 
+   * @param {string} tranporteModelo - El modelo del transporte a actualizar.
+   */
+  public setTranporteModelo(tranporteModelo: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, tranporteModelo },
+    }));
+  }
+
+  /**
+   * Actualiza la placa del transporte en el formulario de solicitud.
+   * 
+   * @param {string} tranportePlaca - La placa del transporte a actualizar.
+   */
+  public setTranportePlaca(tranportePlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, tranportePlaca },
+    }));
+  }
+
+  /**
+   * Actualiza las observaciones en el formulario de solicitud.
+   * 
+   * @param {string} observaciones - Las observaciones a actualizar.
+   */
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, observaciones },
+    }));
+  }
+
+  /**
+   * Actualiza el destino en el formulario de solicitud.
+   * 
+   * @param {string} conDestino - El destino a actualizar.
+   */
+  public setConDestino(conDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, conDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la clave del tipo de destino en el formulario de solicitud.
+   * 
+   * @param {string} cveTipoDestino - La clave del tipo de destino a actualizar.
+   */
+  public setCveTipoDestino(cveTipoDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cveTipoDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la clave del tipo de documento reemplazada en el formulario de solicitud.
+   * 
+   * @param {string} cveTipoDocumentoReemplazada - La clave del tipo de documento reemplazada a actualizar.
+   */
+  public setCveTipoDocumentoReemplazada(cveTipoDocumentoReemplazada: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cveTipoDocumentoReemplazada },
+    }));
+  }
+
+  /**
+   * Actualiza el número de acta de destrucción en el formulario de solicitud.
+   * 
+   * @param {string} numeroActaDescruccion - El número de acta de destrucción a actualizar.
+   */
+  public setNumeroActaDescruccion(numeroActaDescruccion: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, numeroActaDescruccion },
+    }));
+  }
+
+  /**
+   * Actualiza la clave de la aduana de destino en el formulario de solicitud.
+   * 
+   * @param {string} cveAduanaDestino - La clave de la aduana de destino a actualizar.
+   */
+  public setCveAduanaDestino(cveAduanaDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cveAduanaDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la clave de la patente de destino en el formulario de solicitud.
+   * 
+   * @param {string} cvePatenteDestino - La clave de la patente de destino a actualizar.
+   */
+  public setCvePatenteDestino(cvePatenteDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cvePatenteDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la clave del pedimento de destino en el formulario de solicitud.
+   * 
+   * @param {string} cvePedimentoDestino - La clave del pedimento de destino a actualizar.
+   */
+  public setCvePedimentoDestino(cvePedimentoDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, cvePedimentoDestino },
+    }));
+  }
+
+  /**
+   * Actualiza el folio VUCEM de retorno en el formulario de solicitud.
+   * 
+   * @param {string} folioVucemRetorno - El folio VUCEM de retorno a actualizar.
+   */
+  public setFolioVucemRetorno(folioVucemRetorno: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, folioVucemRetorno },
+    }));
+  }
+
+  /**
+   * Actualiza el folio del formato oficial de destino en el formulario de solicitud.
+   * 
+   * @param {string} folioFormatoOficialDestino - El folio del formato oficial de destino a actualizar.
+   */
+  public setFolioFormatoOficialDestino(folioFormatoOficialDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, folioFormatoOficialDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la fecha de destrucción de destino en el formulario de solicitud.
+   * 
+   * @param {string} fechaDescruccionDestino - La fecha de destrucción de destino a actualizar.
+   */
+  public setFechaDescruccionDestino(fechaDescruccionDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, fechaDescruccionDestino },
+    }));
+  }
+
+  /**
+   * Actualiza el estado del tipo de documento de destino en el formulario de solicitud.
+   * 
+   * @param {string} estadoTipoDocumentoDestino - El estado del tipo de documento de destino a actualizar.
+   */
+  public setEstadoTipoDocumentoDestino(estadoTipoDocumentoDestino: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, estadoTipoDocumentoDestino },
+    }));
+  }
+
+  /**
+   * Actualiza la autoridad que presentó el aviso de destrucción en el formulario de solicitud.
+   * 
+   * @param {string} autoridadPresentoAvisoDestruccion - La autoridad que presentó el aviso de destrucción a actualizar.
+   */
+  public setAutoridadPresentoAvisoDestruccion(autoridadPresentoAvisoDestruccion: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitudFormulario: { ...state.solicitudFormulario, autoridadPresentoAvisoDestruccion },
+    }));
+  }
+
+  /**
+   * Actualiza el modal de descripción de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} modalDescMercancia - El modal de descripción de mercancía a actualizar.
+   */
+  public setModalDescMercancia(modalDescMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, modalDescMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza la especificación de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} espeMercancia - La especificación de mercancía a actualizar.
+   */
+  public setEspeMercancia(espeMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, espeMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza la marca de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} marcaMercancia - La marca de mercancía a actualizar.
+   */
+  public setMarcaMercancia(marcaMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, marcaMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza el modelo de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} modeloMercancia - El modelo de mercancía a actualizar.
+   */
+  public setModeloMercancia(modeloMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, modeloMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza el número de serie de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} numSerieMercancia - El número de serie de mercancía a actualizar.
+   */
+  public setNumSerieMercancia(numSerieMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, numSerieMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza el número de parte de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} numParteMercancia - El número de parte de mercancía a actualizar.
+   */
+  public setNumParteMercancia(numParteMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, numParteMercancia },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de mercancía en el formulario de mercancía.
+   * 
+   * @param {string} tipoMercancia - El tipo de mercancía a actualizar.
+   */
+  public setTipoMercancia(tipoMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: { ...state.mercanciaFormulario, tipoMercancia },
     }));
   }
 

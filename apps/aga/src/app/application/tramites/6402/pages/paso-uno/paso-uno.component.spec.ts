@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
-import { AvisoComponent } from '../../components/aviso/aviso.component';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Tramite6402Query } from '../../estados/tramite6402.query';
 import { Tramite6402Store } from '../../estados/tramite6402.store';
 import { of, Subject } from 'rxjs';
@@ -25,7 +25,7 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent, SolicitanteComponent, AvisoComponent],
+      imports: [PasoUnoComponent, SolicitanteComponent, SolicitudComponent],
       providers: [
         provideHttpClient(),
         { provide: Tramite6402Query, useValue: tramiteQueryMock },
