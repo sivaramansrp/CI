@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * Clase que proporciona consultas reactivas para el estado del trámite 31803.
+ * Clase que proporciona consultas reactivas para el estado del trámite 324.
  * Permite seleccionar partes específicas del estado almacenado en la tienda.
  */
 @Injectable({ providedIn: 'root' })

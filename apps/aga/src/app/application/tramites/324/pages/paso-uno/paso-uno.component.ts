@@ -64,7 +64,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   registroForm!: FormGroup;
 
   /**
-   * Estado global de la solicitud 570102.
+   * Estado global de la solicitud 324.
    * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
    */
   public solicitudState!: Solicitud324State;
