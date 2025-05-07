@@ -75,13 +75,17 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+/**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
@@ -338,6 +342,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
+      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
     this.formAgente = this.fb.group({
