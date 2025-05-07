@@ -1,4 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogo.service';
@@ -17,7 +16,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { SolicitudForm } from '../../modelos/acta-de-hechos.model';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -120,11 +118,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @param {CatalogosService} catalogosService - Servicio para obtener catálogos.
    * @param {HechosTablaServicios} hechosTablaServicios - Servicio para obtener datos de la tabla.
    * @param {Router} router - Servicio para navegación.
-   * @param {ActivatedRoute} route - Ruta activa del componente.
    * @param {TramiteStoreQuery} tramiteStoreQuery - Query para el estado del trámite.
    * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    */
   constructor(
     private fb: FormBuilder,
@@ -132,18 +128,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private readonly catalogosService: CatalogosService,
     private readonly hechosTablaServicios: HechosTablaServicios,
     private router: Router,
-    private route: ActivatedRoute,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore,
   ) {
-    
-    this.solicitudForm = this.fb.group({
-      cantidadBienes: [''],
-      descripcionGenerica3: [''],
-    });
-    
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**
@@ -266,10 +255,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   obtenerHechosSelectList(): void {
     this.catalogosService
-      .obtenerMenuDesplegable('acta-de-hechos.json')
-      .subscribe((data: Catalogo[]) => {
+    .obtenerMenuDesplegable('acta-de-hechos.json')
+    .subscribe({
+      next: (data: Catalogo[]) => {
         this.actaDeHechos = data;
-      });
+      },
+      error: (error) => {
+        console.error('Error al obtener el menú desplegable:', error);
+      },
+    });
   }
 
   /**

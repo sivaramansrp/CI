@@ -12,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TramiteState } from '../../estados/tramite32516Store.store';
@@ -82,7 +81,6 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
    * @param {TramiteStoreQuery} tramiteStoreQuery - Query para el estado del trámite.
    * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    */ 
     constructor(
        private fb: FormBuilder,
@@ -91,7 +89,6 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
       private tramiteStoreQuery: TramiteStoreQuery,
       private tramiteStore: TramiteStore,
       private seccionQuery: SeccionLibQuery,
-      private seccionStore: SeccionLibStore,
     ) {
       // Se puede agregar aquí la lógica del constructor si es necesario
     }
@@ -178,10 +175,15 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
    */
   obtenerUnidadMedidaSelectList(): void {
     this.catalogosService
-      .obtenerUnidadDesplegable('unidad-de-medida.json')
-      .subscribe((data: Catalogo[]) => {
+    .obtenerUnidadDesplegable('unidad-de-medida.json')
+    .subscribe({
+      next: (data: Catalogo[]) => {
         this.unidadMedida = data;
-      });
+      },
+      error: (error) => {
+        console.error('Error al obtener la unidad de medida:', error);
+      },
+    });
   }
 
   /**
@@ -192,11 +194,11 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
     const CURRENT_URL = this.router.url;
     if (CURRENT_URL.includes('pago')) {
       this.router.navigate([
-        '/pago/acta-de-hechos/acta-de-hechos',
+        '/pago/acta-de-hechos/solicitud',
       ], { queryParams: { tab: index } });
     }else{
       this.router.navigate([
-        '/agace/acta-de-hechos/acta-de-hechos',
+        '/agace/acta-de-hechos/solicitud',
       ], { queryParams: { tab: index } });
     }
   }
