@@ -445,10 +445,17 @@ const ROUTES: Routes = [
   {
     path: 'modificacion-permiso-importacion-medicamentos',
     loadChildren: () =>
-      import(
-        './tramites/261103/modificacion-permiso-importacion-medicamentos.module'
-      ).then((m) => m.ModificacionPermisoImportacionModule),
+      import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
+        (m) => m.ModificacionPermisoImportacionModule
+      ),
+},  {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
   },
+
 
   {
     path: 'exportacion-medicamentos-contengan',
@@ -458,55 +465,54 @@ const ROUTES: Routes = [
       ).then((m) => m.ExportacionMedicamentosContenganModule),
   },
 
-  {
-    path: 'permiso-importacion-module',
-    loadChildren: () =>
-      import('./tramites/260917/permiso-importacion.module').then(
-        (m) => m.PermisoImportacionModule
-      ),
-  },
-  {
-    path: 'modificacion-permiso-importacion-tratamientos',
-    loadChildren: () =>
-      import(
-        './tramites/260907/modificacion-permiso-importacion-tratamientos.module'
-      ).then((m) => m.ModificacionPermisoImportacionTratamientosModule),
-  },
-  {
-    path: 'exportacion-materias-primas-estupefacientes',
-    loadChildren: () =>
-      import(
-        './tramites/260302/exportacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
-  },
-  {
-    path: 'modificacion-permiso-lab',
-    loadChildren: () =>
-      import('./tramites/260918/modificacion-permiso-lab.module').then(
-        (m) => m.ModificacionPermisoLabModule
-      ),
-  },
-  {
-    path: 'sustancias-permitidas',
-    loadChildren: () =>
-      import('./tramites/260515/permit-de-substances.module').then(
-        (m) => m.PermitDeSubstancesModule
-      ),
-  },
-  {
-    path: 'importacion-retorno-sanitario',
-    loadChildren: () =>
-      import('./tramites/260103/importacion-retorno-sanitario.module').then(
-        (m) => m.ImportacionRetornoSanitarioModule
-      ),
-  },
-  {
-    path: 'permiso-vegetales-nutrientes',
-    loadChildren: () =>
-      import('./tramites/260509/permiso-vegetales-nutrientes.module').then(
-        (m) => m.PermisoVegetalesNutrientesModule
-      ),
-  },
+{
+  path: 'permiso-importacion-module',
+  loadChildren: () =>
+  import('./tramites/260917/permiso-importacion.module').then(
+    (m) => m.PermisoImportacionModule),
+},
+{
+  path: 'modificacion-permiso-importacion-tratamientos',
+  loadChildren: () =>
+    import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
+      (m) => m.ModificacionPermisoImportacionTratamientosModule
+    ),
+},
+{   
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+}
 ];
 
 @NgModule({
