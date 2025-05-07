@@ -49,8 +49,8 @@
                     <div class="row mt-5">
                         <ng-titulo titulo="Datos mercancía"> </ng-titulo>
                         <formas-dinamicas [forma]="formularioDatosMercancia"
-                            [formularioDatos]="configuracionFormularioMercancia" [estado]="estadoSeleccionado"
-                            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                            [formularioDatos]="configuracionFormularioMercancia" [estado]="estadoSeleccionadoMercancia"
+                            (emitirCambioDeValor)="establecerCambioDeValor($event,'mercancia')"></formas-dinamicas>
                     </div>
                     <div class="row my-5">
                         <div class="col-md-8">

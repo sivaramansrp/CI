@@ -1,0 +1,25 @@
+<div class="container">
+    <ng-titulo titulo="Agregar destinatario (destino final)"> </ng-titulo>
+    <div class="col-md-12">
+        <div [formGroup]="formularioAgregarDestinatario">
+        <label for="tipoPersona" class="form-label">Tipo persona*:</label>
+        <app-input-radio [radioOptions]="tipoPersona" [isRequired]="true" [layout]="'vertical'"
+            [isBold]="true" (valueChange)="establecerCambioDeValor({campo:'tipoPersona', valor:$event})" formControlName="tipoPersona"></app-input-radio>
+        </div>
+    </div>
+    <ng-titulo titulo="Datos personales"> </ng-titulo>
+    <div class="row mt-5">
+        <formas-dinamicas [forma]="formularioAgregarDestinatario" [formularioDatos]="formularioConfiguracion" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+    <div class="row my-5">
+        <div class="col-md-8">
+            <p>* Campos obligatorios</p>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <button name="agregar" class="btn btn-primary" (click)="agregarMercancia()">
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>

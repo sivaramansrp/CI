@@ -10,7 +10,8 @@ import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
  * Contiene las propiedades necesarias para gestionar el estado del trámite.
  */
 export interface Tramite220103State {
-    Tablamercancia?: Mercancia[];
+    tablaMercancia?: Mercancia[];
+    mercancia?: Mercancia;
     [key: string]: unknown;
 }
 
@@ -21,7 +22,23 @@ export interface Tramite220103State {
  */
 export function createInitialState(): Tramite220103State {
     return {
-       
+        mercancia: {
+            descripcion: '',
+            fraccionArancelaria: '',
+            descripcionFraccion: '',
+            cantidadUMT: '',
+            umt: '',
+            cantidadUMC: '',
+            umc: '',
+            nombreComun: '',
+            nombreCientifico: '',
+            faseDesarrollo: '',
+            uso: '',
+            otroUso: '',
+            origen: '',
+            paisOrigen: '',
+            paisProcedencia: ''
+        }
     }
 }
 
@@ -47,20 +64,31 @@ export class Tramite220103Store extends Store<Tramite220103State> {
      * 
      * @param valores - Valores parciales para actualizar el estado.
      */
-    setTramite220103State(fieldName: string, valores: unknown): void {
-        this.update((state => ({
+    setTramite220103State(fieldName: string, valores: unknown, prop?: string): void {
+        this.update(state => ({
             ...state,
-            [fieldName]: valores,
-        })));
-    }
-
-   eliminarMercancia(id: string): void {
-        this.update((state) => ({
-            ...state,
-            Tablamercancia: state.Tablamercancia?.filter((mercancia) => mercancia.id !== id)
+            [prop ?? fieldName]: prop
+                ? {
+                    ...(state[prop] as object),
+                    [fieldName]: valores
+                }
+                : valores
         }));
     }
 
-}
 
+    eliminarMercancia(id: string): void {
+        this.update((state) => ({
+            ...state,
+            Tablamercancia: state.tablaMercancia?.filter((mercancia) => mercancia.id !== id)
+        }));
+    }
+
+    resetMercancia(): void {
+        this.update((state) => ({
+            ...state,
+            mercancia: createInitialState().mercancia
+        }));
+    }
+}
 

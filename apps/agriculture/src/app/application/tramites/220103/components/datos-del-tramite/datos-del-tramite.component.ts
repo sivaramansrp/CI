@@ -83,6 +83,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Estado seleccionado del trámite.
    */
   estadoSeleccionado!: Tramite220103State;
+  estadoSeleccionadoMercancia!: Tramite220103State;
 
   /**
    * Configuración de la tabla de mercancías.
@@ -122,13 +123,26 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Suscribe al estado del trámite y actualiza los datos de la tabla.
    */
   ngOnInit(): void {
-    this.tramite220103Query.selectTramite220103State$
-      .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe((estado) => {
-        this.estadoSeleccionado = estado;
-        this.datosTabla = estado['Tablamercancia'] as Mercancia[] || [];
-      });
+    this.obtenerEstadoValor();
+    this.obtenerAduanaDeIngreso();
+    this.obtenerMedioDeTransporte();
+    this.getOrigen();
+    this.getUmc();
+    this.getUso();
+    this.getPais();
   }
+
+
+  obtenerEstadoValor(): void {
+    this.tramite220103Query.selectTramite220103State$
+    .pipe(takeUntil(this.notificadorDestruccion$))
+    .subscribe((estado) => {
+      this.estadoSeleccionado = estado;
+      this.estadoSeleccionadoMercancia = estado.mercancia ?? {} ;
+      this.datosTabla = estado.tablaMercancia || [];
+    });
+  }
+
 
   /**
    * Obtiene la descripción de la fracción arancelaria y actualiza el formulario y el estado.
@@ -138,8 +152,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       descripcionFraccion: 'Los demás',
       umt: 'kilogramo',
     });
-    this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demás');
-    this.tramite220103Store.setTramite220103State('umt', 'kilogramo');
+    this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demás','mercancia');
+    this.tramite220103Store.setTramite220103State('umt', 'kilogramo','mercancia');
   }
 
   /**
@@ -147,19 +161,101 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * 
    * @param evento - Evento que contiene el campo y el valor a actualizar.
    */
-  establecerCambioDeValor(evento: { campo: string; valor: unknown }): void {
-    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor);
+  establecerCambioDeValor(evento: { campo: string; valor: unknown },prop?:string): void {
+    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor,prop);
     if (evento.campo === 'fraccionArancelaria') {
       this.obtenerDescripcionFraccion();
     }
     if (evento.campo === 'uso') {
       const OTRO_USO_ITEM = this.configuracionFormularioMercancia.find((item) => item.campo === 'otroUso');
       if (OTRO_USO_ITEM) {
-        OTRO_USO_ITEM.mostrar = this.formularioDatosMercancia.get('uso')?.value;
+        OTRO_USO_ITEM.mostrar = this.formularioDatosMercancia.get('uso')?.value!=='';
       }
     }
   }
 
+  obtenerAduanaDeIngreso(): void {
+    this.servicio.getAdunaDeIngreso()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const ADUANA = this.configuracionFormularioDatos.find((aduana) => aduana.campo === 'aduanaDeIngreso');
+          if (ADUANA) {
+           ADUANA.opciones=opciones
+          }
+        }
+      });
+    }
+
+      obtenerMedioDeTransporte(): void {
+        this.servicio.getMedioDeTransporte()
+          .pipe(takeUntil(this.notificadorDestruccion$))
+          .subscribe((opciones) => {
+            if (opciones) {
+              const MEDIO_TRANSPORTE = this.configuracionFormularioDatos.find((medioTransporte) => medioTransporte.campo === 'medioDeTransporte');
+              if (MEDIO_TRANSPORTE) {
+                MEDIO_TRANSPORTE.opciones = opciones;
+              }
+            }
+          });
+        }
+
+
+        getOrigen(): void {
+          this.servicio.getOrigen()
+            .pipe(takeUntil(this.notificadorDestruccion$))
+            .subscribe((opciones) => {
+              if (opciones) {
+                const ORIGEN = this.configuracionFormularioMercancia.find((origen) => origen.campo === 'origen');
+                if (ORIGEN) {
+                  ORIGEN.opciones = opciones;
+                }
+              }
+            });
+        }
+
+        getUmc(): void {
+          this.servicio.getUmc()
+            .pipe(takeUntil(this.notificadorDestruccion$))
+            .subscribe((opciones) => {
+              if (opciones) {
+                const UMC = this.configuracionFormularioMercancia.find((umc) => umc.campo === 'umc');
+                if (UMC) {
+                  UMC.opciones = opciones;
+                }
+              }
+            });
+        } 
+
+        getUso(): void {
+          this.servicio.getUso()
+            .pipe(takeUntil(this.notificadorDestruccion$))
+            .subscribe((opciones) => {
+              if (opciones) {
+                const USO = this.configuracionFormularioMercancia.find((uso) => uso.campo === 'uso');
+                if (USO) {
+                  USO.opciones = opciones;
+                }
+              }
+            });
+        } 
+
+        getPais(): void {
+          this.servicio.getPais()
+            .pipe(takeUntil(this.notificadorDestruccion$))
+            .subscribe((opciones) => {
+              if (opciones) {
+                const PAIS_ORIGEN = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisOrigen');
+                const PAIS_PROCEDENCIA = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisProcedencia');
+                if (PAIS_ORIGEN) {
+                  PAIS_ORIGEN.opciones = opciones;
+                }
+                if (PAIS_PROCEDENCIA) {
+                  PAIS_PROCEDENCIA.opciones = opciones;
+                }
+              }
+            });
+        }
   /**
    * Obtiene las mercancías seleccionadas en la tabla.
    * 
@@ -179,9 +275,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       if (INSTANCIA) {
         this.instanciaModal = INSTANCIA;
       }
-      this.instanciaModal.hide();
-      this.formularioDatosMercancia.reset();
-    } else {
+    this.instanciaModal.hide();
+    this.formularioDatosMercancia.reset();
+    this.tramite220103Store.resetMercancia();
+    
+    } 
+    else if(this.formularioDatosMercancia.invalid) {
       this.formularioDatosMercancia.markAllAsTouched();
     }
   }
@@ -194,7 +293,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((respuesta: Mercancia[]) => {
         if (respuesta) {
-          this.tramite220103Store.setTramite220103State('Tablamercancia', respuesta);
+          this.tramite220103Store.setTramite220103State('tablaMercancia', respuesta);
         }
       });
   }

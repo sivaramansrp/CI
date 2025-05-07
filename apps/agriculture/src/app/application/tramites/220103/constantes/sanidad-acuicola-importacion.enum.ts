@@ -1,4 +1,4 @@
-import { REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_DECIMAL_15_4 } from "@libs/shared/data-access-user/src";
+import { REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_DECIMAL_15_4, REGEX_POSTAL, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
 
 import { Mercancia } from "../modelos/sanidad-acuicola-importacion.model";
 
@@ -41,18 +41,6 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [{ id: 1, descripcion: "ACAPULCO, PUERTO Y AEROPUERTO" },
-    { id: 2, descripcion: "ADUANA DE PANTACO" },
-    { id: 3, descripcion: "AEROPUERTO INT. DE LA CD DE MEXICO" },
-    { id: 4, descripcion: "AEROPUERTO INTERNACIONAL FELIPE ÁNGELES" },
-    { id: 5, descripcion: "AGUA PRIETA" },
-    { id: 6, descripcion: "AGUASCALIENTES, AGS." },
-    { id: 7, descripcion: "ALTAMIRA" },
-    { id: 8, descripcion: "CANCUN, AEROPUERTO" },
-    { id: 9, descripcion: "CD. CAMARGO, TAMPS." },
-    { id: 10, descripcion: "CD. DEL CARMEN" },
-    { id: 11, descripcion: "CD. JUAREZ" },
-    { id: 12, descripcion: "CHIHUAHUA, CHIH." }],
     marginTop: 4,
     mostrar: true,
     habilitado: true,
@@ -70,10 +58,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     opciones: [
-      { id: 1, descripcion: "Aéreo" },
-      { id: 2, descripcion: "Marítimo" },
-      { id: 3, descripcion: "Otros" },
-      { id: 4, descripcion: "Terrestre" }
+      
     ],
     marginTop: 4,
     mostrar: true,
@@ -226,21 +211,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [{ id: 1, descripcion: 'Caja' },
-    { id: 2, descripcion: 'Cientos' },
-    { id: 3, descripcion: 'Decenas' },
-    { id: 4, descripcion: 'Docenas' },
-    { id: 5, descripcion: 'Gramo' },
-    { id: 6, descripcion: 'Gramo Neto' },
-    { id: 7, descripcion: 'Juego' },
-    { id: 8, descripcion: 'Kilogramo' },
-    { id: 9, descripcion: 'Litro' },
-    { id: 10, descripcion: 'Metro Cúbico' },
-    { id: 11, descripcion: 'Metro Lineal' },
-    { id: 12, descripcion: 'Metros Cuadrados' },
-    { id: 13, descripcion: 'Miligramo' },
-    { id: 14, descripcion: 'Pieza' },
-    { id: 15, descripcion: 'Tonelada' }],
+    opciones: [],
     marginTop: 0,
     mostrar: true,
     habilitado: true,
@@ -348,13 +319,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [{ id: 1, descripcion: 'Acuacultura' },
-    { id: 2, descripcion: 'Consumo humano' },
-    { id: 3, descripcion: 'Investigación, diagnóstico o fomento' },
-    { id: 4, descripcion: 'Ornato' },
-    { id: 5, descripcion: 'Otro' },
-    { id: 6, descripcion: 'Uso o consumo de animales terrestres' },
-    { id: 7, descripcion: 'Uso o consumo de especies acuáticas' }],
+    opciones: [],
     marginTop: 0,
     mostrar: true,
     habilitado: true,
@@ -386,8 +351,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [{ id: 1, descripcion: 'Silvestre' },
-    { id: 2, descripcion: 'Cultivado' }],
+    opciones: [],
     marginTop: 4,
     mostrar: true,
     habilitado: true,
@@ -418,48 +382,6 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [
-      {
-        id: 1,
-        descripcion: "AFGANISTAN (EMIRATO ISLAMICO DE)"
-      },
-      {
-        id: 2,
-        descripcion: "ALBANIA (REPUBLICA DE)"
-      },
-      {
-        id: 3,
-        descripcion: "ALEMANIA (REPUBLICA FEDERAL DE)"
-      },
-      {
-        id: 4,
-        descripcion: "ANDORRA (PRINCIPADO DE)"
-      },
-      {
-        id: 5,
-        descripcion: "ANGOLA (REPUBLICA DE)"
-      },
-      {
-        id: 6,
-        descripcion: "ANGUILA"
-      },
-      {
-        id: 7,
-        descripcion: "ANTARTIDA"
-      },
-      {
-        id: 8,
-        descripcion: "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"
-      },
-      {
-        id: 9,
-        descripcion: "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"
-      },
-      {
-        id: 10,
-        descripcion: "ARABIA SAUDITA (REINO DE)"
-      }
-    ],
     marginTop: 0,
     mostrar: true,
     habilitado: true,
@@ -477,47 +399,6 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    opciones: [
-      {
-        id: 1,
-        descripcion: "AFGANISTAN (EMIRATO ISLAMICO DE)"
-      },
-      {
-        id: 2,
-        descripcion: "ALBANIA (REPUBLICA DE)"
-      },
-      {
-        id: 3,
-        descripcion: "ALEMANIA (REPUBLICA FEDERAL DE)"
-      },
-      {
-        id: 4,
-        descripcion: "ANDORRA (PRINCIPADO DE)"
-      },
-      {
-        id: 5,
-        descripcion: "ANGOLA (REPUBLICA DE)"
-      },
-      {
-        id: 6,
-        descripcion: "ANGUILA"
-      },
-      {
-        id: 7,
-        descripcion: "ANTARTIDA"
-      },
-      {
-        id: 8,
-        descripcion: "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"
-      },
-      {
-        id: 9,
-        descripcion: "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"
-      },
-      {
-        id: 10,
-        descripcion: "ARABIA SAUDITA (REINO DE)"
-      }],
     marginTop: 0,
     mostrar: true,
     habilitado: true,
@@ -557,6 +438,277 @@ export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
     habilitado: true,
   }
 ];
+
+
+export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
+
+  {
+    id: 'nombre',
+    labelNombre: 'Nombre(s)',
+    campo: 'nombre',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' },
+        { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+},
+{
+    id: 'primerApellido',
+    labelNombre: 'primer apellido',
+    campo: 'primerApellido',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' },
+        { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el primer apellido.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+},
+{
+    id: 'segundoApellido',
+    labelNombre: 'Segundo apellido',
+    campo: 'segundoApellido',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el segundo apellido.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+},
+{
+    id: 'razonSocial',
+    labelNombre: 'Denominación/razón social',
+    campo: 'razonSocial',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' },
+        { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación/razón social.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 4
+},
+{
+  id: '',
+  labelNombre: '',
+  campo: '',
+  clase: 'col-md-4',
+  tipoInput: '',
+  desactivado: false,
+  soloLectura: false,
+  validadores: [],
+  marcadorDePosicion: '',
+  valorPredeterminado: '',
+  marginTop: 0
+},
+  {
+    id: 'pais',
+    labelNombre: 'País',
+    campo: 'pais',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' }
+    ],
+    opciones: [
+        { id: '1', descripcion: 'MEXICO(ESTADOS UNIDOS MEXICANOS)' },
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '1',
+    marginTop: 0
+},
+{
+  id: 'codigoPostal',
+  labelNombre: 'Código postal',
+  campo: 'codigoPostal',
+  clase: 'col-md-4',
+  tipoInput: 'text',
+  desactivado: false,
+  soloLectura: false,
+  validadores: [
+      { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
+  ],
+  marcadorDePosicion: '',
+  valorPredeterminado: '',
+  marginTop: 0
+},
+{
+  id: 'estado',
+  labelNombre: 'Estado',
+  campo: 'estado',
+  clase: 'col-md-4',
+  tipoInput: 'select-catalogos',
+  desactivado: false,
+  soloLectura: false,
+  validadores: [
+      { tipo: 'required' },
+  ],
+  opciones: [
+    { id: '1', descripcion:'VERACRUZ'},
+],
+  marcadorDePosicion: '',
+  valorPredeterminado: '',
+  marginTop: 0
+},
+{
+  id: 'municipioAlcaldia',
+  labelNombre: 'Municipio o Alcaldía',
+  campo: 'municipioAlcaldia',
+  clase: 'col-md-4',
+  tipoInput: 'select-catalogos',
+  desactivado: false,
+  soloLectura: false,
+  validadores: [
+  ],
+  opciones: [
+    { id: '1', descripcion:'ALVARADO' },
+],
+  marcadorDePosicion: '',
+  valorPredeterminado: '',
+  marginTop: 4
+},
+{
+  id: 'colonia',
+  labelNombre: 'Colonia',
+  campo: 'colonia',
+  clase: 'col-md-4',
+  tipoInput: 'select-catalogos',
+  desactivado: false,
+  soloLectura: false,
+  validadores: [
+  ],
+  marcadorDePosicion: '',
+  valorPredeterminado: '',
+  marginTop: 4
+},
+  {
+      id: 'calle',
+      labelNombre: 'Calle',
+      campo: 'calle',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+          { tipo: 'required' },
+          { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 4
+  },
+  {
+      id: 'numeroExterior',
+      labelNombre: 'Número exterior',
+      campo: 'numeroExterior',
+      clase: 'col-md-4',
+      tipoInput: 'number',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+          { tipo: 'required' }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 4
+  },
+  {
+      id: 'numeroInterior',
+      labelNombre: 'Número interior',
+      campo: 'numeroInterior',
+      clase: 'col-md-4',
+      tipoInput: 'number',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 4
+  },
+  {
+      id: '',
+      labelNombre: '',
+      campo: '',
+      clase: 'col-md-4',
+      tipoInput: '',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+  },
+  {
+    id: 'lada',
+    labelNombre: 'Lada',
+    campo: 'lada',
+    clase: 'col-md-1',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'telefono',
+    labelNombre: 'Teléfono',
+    campo: 'telefono',
+    clase: 'col-md-3',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' },
+        { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+},
+  {
+      id: 'correoElectronico',
+      labelNombre: 'Correo electrónico',
+      campo: 'correoElectronico',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+          { tipo: 'required' },
+          { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+  }
+];
+
+export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
+  
+];
+
 
 export const CONFIGURACION_MERCANCIAS = [
   {
@@ -636,4 +788,13 @@ export const CONFIGURACION_MERCANCIAS = [
   }
 ];
 
-
+export const TIPO_PERSONA=[
+  {
+  label: "Física",
+  value: 'Fisica'
+  },
+  {
+    label: "Moral",
+    value: 'Moral'
+  }
+]

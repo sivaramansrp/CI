@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModeloDeFormaDinamica, TituloComponent } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -19,17 +19,22 @@ import { CAMPOS_FORMULARIO_DATOS_DE_INSTALACION } from '../../constantes/sanidad
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State, Tramite220103Store} from '../../estados/tramites/tramites220103.store';
+import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
+import { Modal } from 'bootstrap';
 /**
  * Componente que gestiona los datos de instalación para el trámite 220103.
  */
 @Component({
   selector: 'app-datos-de-instalacion',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormasDinamicasComponent],
+  imports: [CommonModule, TituloComponent, FormasDinamicasComponent, AgregarDestinatarioComponent],
   templateUrl: './datos-de-instalacion.component.html',
   styleUrl: './datos-de-instalacion.component.scss',
 })
 export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
+
+  @ViewChild('modalMercancia') elementoModal!: ElementRef;
+  private instanciaModal!: Modal;
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -84,6 +89,15 @@ export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
    */
   establecerCambioDeValor(evento: { campo: string; valor: unknown }): void {
     this.tramite220103Store.setTramite220103State(evento.campo, evento.valor);
+  }
+
+
+  closeModal(): void {
+    const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
+    if (INSTANCIA) {
+      this.instanciaModal = INSTANCIA;
+    }
+  this.instanciaModal.hide();
   }
 
   /**
