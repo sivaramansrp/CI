@@ -358,8 +358,11 @@ export const TEXTOS = {
    */
   SECCION_LEYENDA_CONFIRMAR_TEXTOS: 'Debes declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.'
 }
-
-export const VALIDATION_MESSAGE : { [key: string]: string } = {
+/**
+ * Mensajes de validación para los campos del formulario.
+ * Cada clave representa un campo específico y su valor es el mensaje de error correspondiente.
+ * */
+export const MENSAJE_DE_VALIDACI0N : { [key: string]: string } = {
   clasificacion: 'La clasificación del producto es obligatoria.',
   especificarClasificacionProducto: 'Especificar la clasificación del producto es obligatoria.',
   denominacionEspecifica: 'La denominación específica del producto es obligatoria.',

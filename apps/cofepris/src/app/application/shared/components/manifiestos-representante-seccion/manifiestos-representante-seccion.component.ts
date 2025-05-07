@@ -121,6 +121,10 @@ export class ManifiestosRepresentanteSeccionComponent
        
       });
   }
+  /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
   hasError(controlName: string, errorName: string) {
     return this.manifiestosRepresentanteForm.get(controlName)?.touched &&
            this.manifiestosRepresentanteForm.get(controlName)?.hasError(errorName);

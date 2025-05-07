@@ -36,7 +36,7 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import {VALIDATION_MESSAGE} from '../../../shared/constantes/aviso-de-funcionamiento.enum';
+import {MENSAJE_DE_VALIDACI0N} from '../../../shared/constantes/aviso-de-funcionamiento.enum';
 
 import { Modal } from 'bootstrap';
 
@@ -83,10 +83,18 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+  /**
+   * Referencia al componente `ManifiestosRepresentanteSeccionComponent`.
+   */
  @Input() hideRepresentanteLegal: boolean =true;
   /**
-  *
-  */
+   * Referencia al componente `CatalogoSelectComponent`.
+ * @tipo {boolean}
+ * @descripción
+ * Este decorador de entrada (`@Input`) permite controlar la visibilidad de los campos relacionados con
+ * el código postal y el correo electrónico en el componente. 
+ * 
+  * */
   @Input() showCodigoPostalCorreoElectronico: boolean = false;
   /**
  * Notificación actual que se muestra en el componente.
@@ -484,7 +492,9 @@ eliminarPedimento(borrar: boolean): void {
   
   }
 
-  
+  /*
+  * Método para manejar el evento de cierre del modal.
+  */
   estadoDelServicio():void{
     this.establecimientoService
     .getJustificationData()
@@ -631,6 +641,14 @@ cerrarModal(): void {
     this.modalInstance.hide();
   }
 }
+/**
+ * @method abrirModal
+ * @description
+ * Este método abre el modal activo utilizando la instancia del modal de Bootstrap.
+ * Verifica si la instancia del modal (`modalInstance`) está definida antes de intentar abrirlo.
+ * 
+ * @returns void
+ */
 enCambioDeControl(formName: string, controlName: string): void {
   let formGroup: FormGroup;
 
@@ -649,12 +667,12 @@ enCambioDeControl(formName: string, controlName: string): void {
       return;
   }
 
-  // Get the updated value of the control
+  // Obtener el valor actualizado del control
   const UPDATED_VALUE = {
     [controlName]: formGroup.get(controlName)?.value,
   };
 
-  // Update the store or service with the updated value
+  //Actualizar la tienda o el servicio con el valor actualizado
   this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   
 }
@@ -747,10 +765,17 @@ enCambioDeControl(formName: string, controlName: string): void {
       this.cerrarModalMercancía();
     }
   }
-/*
-*
-*/
-validationMessages = VALIDATION_MESSAGE;
+/* *
+* Método para eliminar un elemento de la tabla de mercancías.
+* @param index Índice del elemento a eliminar.
+**/
+validationMessages = MENSAJE_DE_VALIDACI0N;
+/**
+ * * Método para obtener el mensaje de error de un control específico en el formulario.
+ * @param controlName Nombre del control en el formulario.
+  * @returns Mensaje de error o null si no hay error.
+  * 
+  * */
   getErrorMessage(controlName: string): string | null {
     const CONTROL = this.formMercancias.get(controlName);
     if (CONTROL && CONTROL.hasError('required') && (CONTROL.touched || CONTROL.dirty)) {

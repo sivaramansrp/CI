@@ -111,7 +111,7 @@ export class PasoUnoPagesComponent {
         .flat() as Tramite[], // Flatten the array if `acuseTablaDatos` is nested
     };
 
-    // Update the service with the collected form values
+    // Actualice el servicio con los valores de formulario recopilados
     this.formDataService.updateFormData(
       'solicitanteData',
       FORM_VALUES.solicitante
@@ -132,7 +132,7 @@ export class PasoUnoPagesComponent {
     this.formDataService.updateFormData(
       'tramitesAsociados',
       FORM_VALUES.tramitesAsociados
-    ); // Commented out as per recent edits
+    ); 
 
     return FORM_VALUES;
   }
