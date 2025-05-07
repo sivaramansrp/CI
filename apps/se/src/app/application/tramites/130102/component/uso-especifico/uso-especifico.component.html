@@ -11,6 +11,14 @@
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
                [required]="true"></app-catalogo-select>
+               @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
+                <div class="text-danger">
+                  @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
+                    <small>Debe seleccionar un valor.</small>
+                  }
+                </div>
+              }
+              
             </div>
         </div>
 
@@ -22,6 +30,17 @@
                 </label>
                 <textarea id="descripcionFraccionProsec" class="form-control height" rows="3"
                     formControlName="descripción"></textarea>
+                    @if (usoEspicificoForm.controls['descripción'].invalid && usoEspicificoForm.controls['descripción'].touched) {
+                        <div class="text-danger">
+                          @if (usoEspicificoForm.controls['descripción'].errors?.['required']) {
+                            <small>Descripción es obligatoria.</small>
+                          }
+                          @if (usoEspicificoForm.controls['descripción'].errors?.['leadingSpaces']) {
+                            <small>No se permiten espacios al inicio del campo.</small>
+                          }
+                        </div>
+                      }
+                      
             </div>
         </div>
          
