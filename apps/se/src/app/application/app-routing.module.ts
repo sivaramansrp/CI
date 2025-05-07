@@ -432,14 +432,19 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'programa-prosec',
+    path: 'modificacion-descripcion',
     loadChildren: () =>
-      import('./tramites/90302/programa-prosec.module').then(
-        (m) => m.ProgramaProsecModule
-      ),
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
   },
-
-  
+  {
+        path: 'programa-prosec',
+        loadChildren: () =>
+          import('./tramites/90302/programa-prosec.module').then(
+            (m) => m.ProgramaProsecModule
+          ),
+  },
   
 ];
 
