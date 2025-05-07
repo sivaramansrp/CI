@@ -5,9 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'lib-modal-funciones',
   standalone: true,
-  imports: [CommonModule,
-    ModalModule
-  ],
+  imports: [CommonModule, ModalModule],
   templateUrl: './modal-funciones.component.html',
   styleUrl: './modal-funciones.component.scss',
 })
@@ -40,10 +38,15 @@ export class ModalFuncionesComponent implements OnChanges {
    * se encarga de cerrar el modal
    */
   @Output() cerrar = new EventEmitter<void>();
-
+  /**
+   * se encarga de mostrar el modal
+   */
   public mostrarModal: boolean = false;
   @ViewChild('modal', { static: false }) modal?: ModalDirective;
-
+  /**
+   * archivo es una propiedad opcional que representa un archivo seleccionado por el usuario. Se utiliza para almacenar el archivo que se va a cargar o procesar en el componente.
+   * Esta propiedad es de tipo File, lo que significa que puede contener información sobre el archivo, como su nombre, tipo y tamaño.
+   */
   archivo?: File;
   /** 
    * se encarga de manejar el evento cuando un archivo es seleccionado en un campo de entrada (<input type="file">). Su propósito principal es validar el archivo seleccionado y almacenarlo si cumple con los criterios definidos.
@@ -55,13 +58,9 @@ export class ModalFuncionesComponent implements OnChanges {
     const ARCHIVO = INPUT.files?.[0];
     if (ARCHIVO) {
       if (ARCHIVO.type !== this.aceptado) {
-        // eslint-disable-next-line no-alert
-        alert('Tipo de archivo no permitido');
         return;
       }
       if (ARCHIVO.size > this.maxSizeMB * 1024 * 1024) {
-        // eslint-disable-next-line no-alert
-        alert(`Archivo excede el tamaño máximo de ${this.maxSizeMB} MB`);
         return;
       }
       this.archivo = ARCHIVO;
