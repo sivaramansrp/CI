@@ -48,6 +48,13 @@
         <label for="motivoJustificacion">Motivo y/o Justificación*:</label>
         <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control"
         (change)="setValoresStore(form,'motivoJustificacion', 'setmotivoJustificacion')" ></textarea>
+        <div class="d-grid">
+          <div *ngIf="form.get('motivoJustificacion')?.touched">
+            <small class="text-danger" *ngIf="form.get('motivoJustificacion')?.hasError('required')">
+            Este campo es obligatorio.
+            </small>
+          </div>
+          </div>
       </div>
       <div class="col-md-12">
         <label for="motivoJustificacion">Otras declaraciones:</label>
