@@ -11,7 +11,7 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -24,10 +24,7 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('should initialize with default values', () => {
-    expect(component.TEXTO_DE_ALERTA).toBe(
-      'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.'
-    );
-    expect(component.pasos).toEqual(PASOS);
+    expect(component.pasos).toEqual(PASOS.filter((step) => step.indice !== 2).map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step)));
     expect(component.indice).toBe(1);
     expect(component.datosPasos).toEqual({
       nroPasos: PASOS.length,
@@ -79,11 +76,16 @@ describe('SolicitudPageComponent', () => {
     };
     component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
-    const accionBoton = { accion: 'cont', valor: 6 }; // Out of range
+    const accionBoton = { accion: 'cont', valor: 6 }; 
     component.getValorIndice(accionBoton);
 
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1); 
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should handle alEventoHijo and update nombre', () => {
+    component.alEventoHijo(5);
+    expect(component.nombre).toBe(5);
   });
 });

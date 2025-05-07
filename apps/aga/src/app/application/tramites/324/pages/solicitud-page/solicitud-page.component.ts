@@ -1,12 +1,10 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
   PASOS,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -31,24 +29,24 @@ interface AccionBoton {
   styles: ``,
 })
 export class SolicitudPageComponent implements OnInit {
-/**
-   * Referencia al componente del asistente.
-   */
-@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
- /**
-   * Lista de pasos del asistente.
-   */
- pasos: ListaPasosWizard[] = PASOS;
+  /**
+     * Referencia al componente del asistente.
+     */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+    * Lista de pasos del asistente.
+    */
+  pasos: ListaPasosWizard[] = PASOS;
 
- /**
-  * Índice del paso actual.
-  */
- indice: number = 1;
-/**
-   * Número del paso actual.
+  /**
+   * Índice del paso actual.
    */
-nombre!: number;
- 
+  indice: number = 1;
+  /**
+     * Número del paso actual.
+     */
+  nombre!: number;
+
   /**
    * Datos de los pasos del asistente.
    */
@@ -58,16 +56,16 @@ nombre!: number;
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-/**
-   * Inicializa el componente.
-   * Filtra y mapea los pasos del asistente para excluir y reorganizar pasos específicos.
-   */
+  /**
+     * Inicializa el componente.
+     * Filtra y mapea los pasos del asistente para excluir y reorganizar pasos específicos.
+     */
   ngOnInit(): void {
     this.pasos = this.pasos
       .filter((step) => step.indice !== 2)
       .map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step));
   }
-  
+
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -92,11 +90,11 @@ nombre!: number;
       }
     }
   }
-/**
-   * Maneja el evento emitido por un componente hijo.
-   * 
-   * @param event Número del evento emitido.
-   */
+  /**
+     * Maneja el evento emitido por un componente hijo.
+     * 
+     * @param event Número del evento emitido.
+     */
   alEventoHijo(event: number) {
     this.nombre = event;
   }

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { ReplaySubject } from 'rxjs';
 import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
-import { Solicitud570102State } from '../../state/Tramite570102.store';
+import { Solicitud324State } from '../../state/Tramite324.store';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -67,7 +67,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * Estado global de la solicitud 570102.
    * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
    */
-  public solicitudState!: Solicitud570102State;
+  public solicitudState!: Solicitud324State;
 
   /**
    * Constructor del componente PasoUnoComponent.
