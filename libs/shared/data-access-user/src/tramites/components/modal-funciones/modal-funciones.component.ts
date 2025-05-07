@@ -19,9 +19,9 @@ export class ModalFuncionesComponent implements OnChanges {
    * Descripcion del modal
    */
   @Input() descripcion: string = '';
-/**
- * es un decorador de entrada (@Input) que define el tamaño máximo permitido para un archivo que se puede cargar en el modal. Su valor predeterminado es 10, lo que significa que, por defecto, el tamaño máximo permitido es de 10 MB.
- */
+  /**
+   * es un decorador de entrada (@Input) que define el tamaño máximo permitido para un archivo que se puede cargar en el modal. Su valor predeterminado es 10, lo que significa que, por defecto, el tamaño máximo permitido es de 10 MB.
+   */
   @Input() maxSizeMB: number = 10;
   /**
    * Tipo de archivo aceptado
@@ -31,9 +31,9 @@ export class ModalFuncionesComponent implements OnChanges {
    * se enecarga de abrir el modal
    */
   @Input() abrirModal: boolean = false;
-/**
- * declara una propiedad de salida (@Output) llamada archivoSeleccionado que utiliza un EventEmitter para emitir eventos con un valor de tipo File.
- */
+  /**
+   * declara una propiedad de salida (@Output) llamada archivoSeleccionado que utiliza un EventEmitter para emitir eventos con un valor de tipo File.
+   */
   @Output() archivoSeleccionado = new EventEmitter<File>();
   /**
    * se encarga de cerrar el modal
@@ -68,16 +68,16 @@ export class ModalFuncionesComponent implements OnChanges {
     if (ARCHIVO) {
       if (ARCHIVO.type !== this.aceptado) {
         this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: 'Avisos',
-        mensaje: 'Tipo de archivo no permitido',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'Avisos',
+          mensaje: 'Tipo de archivo no permitido',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
         return;
       }
       if (ARCHIVO.size > this.maxSizeMB * 1024 * 1024) {
@@ -95,13 +95,20 @@ export class ModalFuncionesComponent implements OnChanges {
         return;
       }
       this.archivo = ARCHIVO;
+      /**
+       * Si el archivo es válido, la funcionalidad de guardar el archivo se implementará después de que se encuentre el api 
+       * y se defina el destino del archivo.
+       */
+      // Aquí puedes agregar la lógica para guardar el archivo o realizar otras acciones necesarias.
+      const NOMBRE_ARCHIVO = ARCHIVO.name;
+      const EXTENSION_ARCHIVO = NOMBRE_ARCHIVO.split('.').pop()?.toLowerCase();
     }
   }
-/**
- *  Callback que se ejecuta cuando el componente recibe cambios en sus entradas.
- *  Si la propiedad abrirModal cambia a true, se muestra el modal.
- * @param changes 
- */
+  /**
+   *  Callback que se ejecuta cuando el componente recibe cambios en sus entradas.
+   *  Si la propiedad abrirModal cambia a true, se muestra el modal.
+   * @param changes 
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['abrirModal'] && changes['abrirModal'].currentValue) {
       if (this.abrirModal) {
