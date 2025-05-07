@@ -15,7 +15,7 @@ export class Tramite80303Query extends Query<Tramite80303State> {
   /**
    * Constructor que inicializa el query con el store correspondiente.
    *
-   * @param {Tramite240102Store} store - Instancia del store para el Trámite 240101.
+   * @param {Tramite80303Store} store - Instancia del store para el Trámite 240101.
    */
   constructor(protected override store: Tramite80303Store) {
     super(store);

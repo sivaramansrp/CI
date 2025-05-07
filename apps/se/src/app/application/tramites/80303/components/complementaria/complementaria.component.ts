@@ -35,6 +35,14 @@ import { signal } from '@angular/core';
   styleUrl: './complementaria.component.scss',
 })
 export class ComplementariaComponent implements OnDestroy {
+  /**
+   * Señal que representa el estado de certificación SAT.
+   * 
+   * @type {Signal<string>}
+   * @valor Inicialmente configurado con el valor 'Sí'.
+   * 
+   * Esta señal se utiliza para indicar si la certificación SAT está activa o no.
+   */
   public certificacionSAT$ = signal('Sí');
 
   /**
@@ -225,32 +233,26 @@ export class ComplementariaComponent implements OnDestroy {
     public tramite80303Querry: Tramite80303Query
   ) {
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'accionistasTablaDatos',
       '/80303/accionistasTablaDatos.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'federatariosTablaDatos',
       '/80303/federatariosTablaDatos.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'plantasIMMEXDatos',
       '/80303/plantasIMMEXDatos.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'empresasSubmanufacturerasTablaDatos',
       '/80303/empresasSubmanufacturerasTablaDatos.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'plantasManufacturerasTablaDatos',
       '/80303/plantasManufacturerasTablaDatos.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'serviciosImmexTablaDatos',
       '/80303/serviciosImmexTablaDatos.json'
     );

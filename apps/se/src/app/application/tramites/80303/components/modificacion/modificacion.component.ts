@@ -72,7 +72,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormaulario();
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'submanufacturerasTablaDatos',
       '/80303/subManufacturerasTablaDatos.json'
     );

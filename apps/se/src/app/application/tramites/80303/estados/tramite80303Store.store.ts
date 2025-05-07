@@ -18,7 +18,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240102.
+ * Interfaz que representa el estado completo del trámite 80303.
  *
  * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
  * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
@@ -44,10 +44,10 @@ export interface Tramite80303State {
 }
 
 /**
- * Crea el estado inicial para el trámite 240102.
+ * Crea el estado inicial para el trámite 80303.
  *
  * @function createInitialState
- * @returns {Tramite240102State} El estado inicial del store.
+ * @returns {Tramite80303State} El estado inicial del store.
  */
 export function createInitialState(): Tramite80303State {
   return {
@@ -68,7 +68,7 @@ export function createInitialState(): Tramite80303State {
 }
 
 /**
- * Store que maneja el estado del trámite 240102.
+ * Store que maneja el estado del trámite 80303.
  * Utiliza Akita para el control reactivo del estado.
  */
 @Injectable({

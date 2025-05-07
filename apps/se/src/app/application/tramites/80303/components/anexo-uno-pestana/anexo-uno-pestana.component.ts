@@ -149,17 +149,14 @@ export class AnexoUnoPestanaComponent implements OnDestroy {
     public tramite80303Querry: Tramite80303Query
   ) {
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'anexoExportacionTablaDatos',
       '/80303/anexoExportacion.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'anexoImportacionTablaDatos',
       '/80303/anexoImportacion.json'
     );
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      this,
       'sensiblesTablaDatos',
       '/80303/sensible.json'
     );
