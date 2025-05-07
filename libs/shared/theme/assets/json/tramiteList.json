@@ -870,9 +870,9 @@
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDepartment": "/pago/zoosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 126,
@@ -2242,13 +2242,6 @@
   {
     "id": 321,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
-    "id": 322,
-    "tramite": 221601,
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "agricultura"
