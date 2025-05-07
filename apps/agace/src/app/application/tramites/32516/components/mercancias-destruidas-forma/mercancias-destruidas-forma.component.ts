@@ -8,6 +8,8 @@ import { FormGroup } from '@angular/forms';
 import { MercanciaForm } from '../../modelos/acta-de-hechos.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REGEX_IMPORTE_PAGO } from '@libs/shared/data-access-user/src';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
@@ -106,13 +108,11 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
     ).subscribe();
 
     this.mercanciaForm = this.fb.group({
-      consecutivo: ['', [Validators.required, Validators.maxLength(3)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(250)]],
-      cantidad: ['', [Validators.required, Validators.maxLength(16)]],
-      peso: ['', [Validators.required, Validators.maxLength(16)]],
-      unidadMedida: ['', Validators.required]
-      
-      
+      consecutivo: ['', [Validators.required, Validators.maxLength(3), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+      cantidad: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      unidadMedida: ['', Validators.required],
+      peso: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
     this.obtenerUnidadDesplegable();
 

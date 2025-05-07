@@ -22,6 +22,12 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './paso-uno.component.scss'
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+  * Subject utilizado para gestionar la desuscripción de observables.
+  * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
+  * @property {Subject<void>} destroyNotifier$
+  * @private
+  */
   private destroyNotifier$ = new Subject<void>();
 
   /**
@@ -30,6 +36,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @default 1
    */
   public indice: number | undefined = 1;
+
   /**
    * Initializes the component with required query and store for state management.
    *
@@ -50,18 +57,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Lista de secciones del formulario.
-   * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * - Lista de pasos dentro del formulario con sus respectivos componentes.
-   */
-
-
   /**
    * Evento emitido al cambiar de pestaña.
    * @event tabChanged
@@ -77,5 +72,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.tabChanged.emit(i);
+  }
+
+  /**
+   * Maneja la limpieza de recursos antes de destruir el componente.
+   * Completa el Subject `destroyNotifier$` para evitar fugas de memoria.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

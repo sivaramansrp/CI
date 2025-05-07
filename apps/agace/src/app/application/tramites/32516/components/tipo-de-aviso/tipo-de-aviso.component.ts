@@ -1,6 +1,8 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { ALFANUMERICO_ESPACIO } from '@libs/shared/data-access-user/src';
+import { Catalogo} from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogo.service';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -9,7 +11,6 @@ import { FormGroup } from '@angular/forms';
 import { HECHOS_SERVICIO } from '../../modelos/acta-de-hechos.model';
 import { HechosInfo } from '../../modelos/acta-de-hechos.model';
 import { HechosTablaServicios } from '../../servicios/hechos-tabla.service';
-import { HttpClient } from '@angular/common/http';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -121,16 +122,17 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @param {TramiteStoreQuery} tramiteStoreQuery - Query para el estado del trámite.
    * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar y optimizar cambios en la vista.
    */
   constructor(
     private fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private readonly catalogosService: CatalogosService,
     private readonly hechosTablaServicios: HechosTablaServicios,
     private router: Router,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
+    private cdr: ChangeDetectorRef,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -165,11 +167,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     ).subscribe();
 
     this.solicitudForm = this.fb.group({
-      cantidadBienes: ['', Validators.required],
-      descripcionGenerica1: ['', Validators.required],
-      descripcionGenerica2: ['', Validators.required],
-      descripcionGenerica3: ['', Validators.required],
-      capacidadAlmacenamiento: ['', Validators.required]
+      cantidadBienes: ['', [Validators.required]],
+      descripcionGenerica1: ['', [Validators.required]],
+      descripcionGenerica2: ['', [Validators.required]],
+      descripcionGenerica3: ['', [Validators.required, Validators.maxLength(250), Validators.pattern(ALFANUMERICO_ESPACIO)]],
+      capacidadAlmacenamiento: ['', [Validators.required]]
     });
 
     this.handleConditionalValidation();
