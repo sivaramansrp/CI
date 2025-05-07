@@ -4,41 +4,62 @@ import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-d
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
+
 /**
- * Componente `PagoDeDerechosContenedoraComponent`.
+ * @component PagoDeDerechosContenedoraComponent
+ * @selector app-pago-de-derechos-contenedora
+ * @standalone true
+ * @imports [CommonModule, PagoDeDerechosComponent]
+ * @templateUrl ./pago-de-derechos-contenedora.component.html
+ * @styleUrl ./pago-de-derechos-contenedora.component.scss
  * 
- * Este componente es responsable de manejar la lógica relacionada con el formulario
- * de pago de derechos dentro del trámite 260104. Utiliza un estado compartido a través
- * de `Tramite260104Store` para gestionar los datos del formulario.
+ * @description
+ * Este componente es responsable de contener y gestionar el formulario de pago de derechos
+ * para el trámite 260104. Se conecta con el estado global del trámite a través del servicio
+ * `Tramite260104Store` para obtener y actualizar la información relacionada con el pago de derechos.
  * 
- * @selector `app-pago-de-derechos-contenedora`
- * @standalone Este componente es independiente y puede ser utilizado sin un módulo específico.
- * @imports Incluye los módulos `CommonModule` y `PagoDeDerechosComponent`.
- * @templateUrl Define la plantilla HTML asociada al componente.
- * @styleUrl Define los estilos SCSS asociados al componente.
+ * @class PagoDeDerechosContenedoraComponent
+ * @public
  */
+@Component({
+  selector: 'app-pago-de-derechos-contenedora',
+  standalone: true,
+  imports: [CommonModule, PagoDeDerechosComponent],
+  templateUrl: './pago-de-derechos-contenedora.component.html',
+  styleUrl: './pago-de-derechos-contenedora.component.scss',
+})
+
+
+
 export class PagoDeDerechosContenedoraComponent {
-  /**
-   * Representa el estado actual del formulario de pago de derechos.
-   */
-  public pagoDerechos: PagoDerechosFormState;
+ public pagoDerechos: PagoDerechosFormState;
 
   /**
-   * Constructor del componente.
+   * Constructor de la clase PagoDeDerechosContenedoraComponent.
    * 
-   * @param tramiteStore Servicio de estado compartido para gestionar los datos del trámite 260104.
+   * @param tramiteStore - Inyección del servicio `Tramite260104Store` que se utiliza para acceder 
+   *                       y gestionar el estado relacionado con el trámite 260104.
+   * 
+   * Este constructor inicializa la propiedad `pagoDerechos` con el valor actual del estado 
+   * almacenado en `Tramite260104Store`.
    */
-  constructor(public tramiteStore: Tramite260104Store) {
-    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+  constructor(public tramiteStore: Tramite260104Store){
+   this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
-
-  /**
-   * Actualiza el estado del formulario de pago de derechos en el almacén compartido.
-   * 
-   * @param event Nuevo estado del formulario de pago de derechos.
-   */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
+  
+ /**
+ * @method updatePagoDerechos
+ * @description
+ * Actualiza el estado del pago de derechos en el store del trámite. Este método se utiliza para
+ * reflejar los cambios realizados en el formulario de pago de derechos en el estado global.
+ * 
+ * @param {PagoDerechosFormState} event
+ * Objeto que contiene el nuevo estado del formulario de pago de derechos.
+ * 
+ * @memberof PagoDeDerechosContenedoraComponent
+ */
+  updatePagoDerechos(event: PagoDerechosFormState): void{
     this.tramiteStore.updatePagoDerechos(event);
   }
-}
 
+}
