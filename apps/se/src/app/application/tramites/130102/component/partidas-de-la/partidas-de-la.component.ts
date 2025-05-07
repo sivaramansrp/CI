@@ -28,6 +28,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -154,7 +155,7 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
           PartidasDeLaComponent.noLeadingSpacesValidator,
         ],
       ],
-      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(/^\d{4}\.\d{2}\.\d{2}$/),PartidasDeLaComponent.noLeadingSpacesValidator]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA),PartidasDeLaComponent.noLeadingSpacesValidator]],
       fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
       descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255),PartidasDeLaComponent.noLeadingSpacesValidator,]],
       valorPartidaUSD: [
@@ -162,7 +163,7 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
           Validators.maxLength(20)
         ],
       ],
