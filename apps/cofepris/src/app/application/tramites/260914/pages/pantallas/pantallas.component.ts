@@ -30,12 +30,33 @@ export class PantallasComponent {
    */
   indice: number = 1;
 
-  /**
+/**
    * @description
    * Referencia al componente del wizard para controlar la navegación entre pasos.
+   * Esta referencia permite acceder a los métodos y propiedades del componente `WizardComponent`,
+   * como avanzar al siguiente paso o retroceder al paso anterior.
+   * 
+   * @type {WizardComponent}
+   * 
+   * @example
+   * // Avanzar al siguiente paso del wizard
+   * this.wizardComponent.siguiente();
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  @ViewChild(DatosComponent) datosComponent!: DatosComponent;
+@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+/**
+ * @description
+ * Referencia al componente `DatosComponent` para acceder a los valores de los formularios.
+ * Esta referencia permite interactuar con los métodos y propiedades del componente `DatosComponent`,
+ * como obtener los valores de los formularios o realizar validaciones.
+ * 
+ * @type {DatosComponent}
+ * 
+ * @example
+ * // Obtener los valores del formulario desde el componente `DatosComponent`
+ * const valoresFormulario = this.datosComponent.obtenerValoresFormulario();
+ */
+@ViewChild(DatosComponent) datosComponent!: DatosComponent;
 
   /**
    * @description
