@@ -108,18 +108,4 @@ export const PASOS = [
    */
   export const INFO_ALERT="alert-danger";
 
-  /**
-   * @const REGEX_FECHA_MES_ANO
-   * @description Expresión regular para validar fechas en el formato "MM/AAAA", donde:
-   * - "MM" representa el mes en dos dígitos (01 a 12).
-   * - "AAAA" representa el año en cuatro dígitos.
-   * 
-   * @example
-   * ```typescript
-   * const fechaValida = REGEX_FECHA_MES_ANO.test("03/2023"); // true
-   * const fechaInvalida = REGEX_FECHA_MES_ANO.test("13/2023"); // false
-   * ```
-   * 
-   */
-  export const REGEX_FECHA_MES_ANO = /^(0[1-9]|1[0-2])\/\d{4}$/;
 

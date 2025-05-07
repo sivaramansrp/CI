@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, Notificacion, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, Notificacion, REGEX_FECHA_MES_ANO, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { Subject, takeUntil } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { OperacionService } from '../../services/operacion.service';
 
 import { Personas, Solicitar } from '../../models/personas.module';
 
-import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, REGEX_FECHA_MES_ANO, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
