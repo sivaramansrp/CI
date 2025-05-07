@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { ImportacionExportacionPetroleoComponent } from './importacion-exportacion-petroleo.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { PermisoPetroleoService } from '../../services/permiso-petroleo.service';
 import { Tramite130302Store } from '../../estados/tramite130302.store';
 import { Tramite130302Query } from '../../estados/queries/tramite130302.query';
@@ -32,7 +33,7 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, ImportacionExportacionPetroleoComponent], // Move the component to imports
+      imports: [ReactiveFormsModule, ImportacionExportacionPetroleoComponent],
       providers: [
         { provide: PermisoPetroleoService, useValue: permisoPetroleoServiceMock },
         { provide: Tramite130302Store, useValue: tramite130302StoreMock },
@@ -42,14 +43,23 @@ describe('ImportacionExportacionPetroleoComponent', () => {
 
     fixture = TestBed.createComponent(ImportacionExportacionPetroleoComponent);
     component = fixture.componentInstance;
+
+   component.form = new FormGroup({
+      saldoDisponible: new FormControl(''),
+      prorrogaDel: new FormControl(''),
+      prorrogaAl: new FormControl(''),
+      fechaPago: new FormControl(''),
+      motivoJustificacion: new FormControl(''),
+    });
+
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  test('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and load data on ngOnInit', () => {
+  test('should initialize the form and load data on ngOnInit', () => {
     component.ngOnInit();
     expect(component.form.get('saldoDisponible')?.value).toBe('');
     expect(component.form.get('motivoJustificacion')?.value).toBe('Test Justification');
@@ -57,9 +67,9 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     expect(component.tercerosProd[0].fetchaSolicitud).toBe('2023-01-01');
   });
 
-  it('should call setprorrogaAl on onFechaCambiada', () => {
+  test('should call setprorrogaAl on onFechaCambiada', () => {
     const nuevoValor = '2023-12-31';
-    component.form = component.form = new FormGroup({
+    component.form = new FormGroup({
       fechaPago: new FormControl(''),
     });
     component.onFechaCambiada(nuevoValor);
@@ -67,26 +77,26 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     expect(tramite130302StoreMock.setprorrogaAl).toHaveBeenCalledWith(nuevoValor);
   });
 
-  it('should load solicitante data on loadAsignacionData', () => {
+  test('should load solicitante data on loadAsignacionData', () => {
     component.loadAsignacionData();
     expect(component.form.get('saldoDisponible')?.value).toBe(100);
     expect(component.form.get('prorrogaDel')?.value).toBe('2023-01-01');
     expect(component.form.get('prorrogaAl')?.value).toBe('2023-12-31');
   });
 
-  it('should load mercancias data on loadMercancias', () => {
+  test('should load mercancias data on loadMercancias', () => {
     component.loadMercancias();
     expect(component.tercerosProd.length).toBe(1);
     expect(component.tercerosProd[0].fetchaSolicitud).toBe('2023-01-01');
   });
 
-  it('should call setDynamicFieldValue on establecerCambioDeValor', () => {
+  test('should call setDynamicFieldValue on establecerCambioDeValor', () => {
     const event = { campo: 'testField', valor: 'testValue' };
     component.establecerCambioDeValor(event);
     expect(tramite130302StoreMock.setDynamicFieldValue).toHaveBeenCalledWith('testField', 'testValue');
   });
 
-  it('should set values in the store on setValoresStore', () => {
+  test('should set values in the store on setValoresStore', () => {
     const form = new FormGroup({
       testField: new FormControl('testValue'),
     });
@@ -95,11 +105,25 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     expect(tramite130302StoreMock[metodoNombre]).toHaveBeenCalledWith('testValue');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component.getDestroyed$(), 'next');
-    const completeSpy = jest.spyOn(component.getDestroyed$(), 'complete');
+  test('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  test('should handle empty data gracefully in loadMercancias', () => {
+    permisoPetroleoServiceMock.obtenerTabla.mockReturnValue(of([]));
+    component.loadMercancias();
+    expect(component.tercerosProd.length).toBe(0);
+  });
+
+  test('should handle empty data gracefully in loadAsignacionData', () => {
+    permisoPetroleoServiceMock.getSolicitante.mockReturnValue(of({}));
+    component.loadAsignacionData();
+    expect(component.form.get('saldoDisponible')?.value).toBeNull();
+    expect(component.form.get('prorrogaDel')?.value).toBeNull();
+    expect(component.form.get('prorrogaAl')?.value).toBeNull();
   });
 });
