@@ -517,7 +517,14 @@ const ROUTES: Routes = [
         import(
           './tramites/260202/importacion-materias-primas.module'
         ).then((m) => m.ImportacionMateriasPrimasModule),
-}
+},
+{
+      path: 'medicamentos-donacion',
+      loadChildren: () =>
+        import('./tramites/260909/medicamentos-donacion.module').then(
+          (m) => m.MedicamentosDonacionModule
+        )
+    }
 ];
 
 @NgModule({
