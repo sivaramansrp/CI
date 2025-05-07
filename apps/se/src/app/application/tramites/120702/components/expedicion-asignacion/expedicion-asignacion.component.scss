@@ -10,14 +10,10 @@
 
   .form-container {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    gap: 1.5rem; /* Add spacing between elements */
+    flex-direction: column; 
+    gap: 1.5rem;
 }
 
-// .form-group {
-//     width: 100%; /* Ensure form groups take full width */
-// }
-
 .dropdown-field {
-  height: 50px;
+  height: 100px;
 }

@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   Solicitud120702State,
   Tramite120702Store,
@@ -15,6 +12,13 @@ import {
 } from '../../constantes/expedicion-certificados-frontera.enum';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 
+/**
+ * Componente encargado de mostrar y administrar el formulario de descripción del cupo
+ * dentro del trámite 120702.
+ *
+ * Este componente utiliza formularios reactivos para la captura de información
+ * dinámica y se integra con el store de Akita para actualizar el estado global.
+ */
 @Component({
   selector: 'app-descripcion-cupo',
   standalone: true,
@@ -23,34 +27,50 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
   styleUrl: './descripcion-cupo.component.scss',
 })
 export class DescripcionCupoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal del componente.
+   * Contiene un subgrupo llamado `ninoFormGroup` donde se almacena la forma dinámica.
+   */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Arreglo con los metadatos para construir dinámicamente el formulario de descripción del cupo.
+   */
   public informacionFormData = INFORMACION_DESCRPCION_CUPO;
 
+  /**
+   * Subject usado para destruir las suscripciones activas al destruir el componente.
+   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Estado actual del trámite 120702, obtenido desde Akita Store.
+   */
   public solicitudState!: Solicitud120702State;
 
-  // public descripcionCupoForm!: FormGroup;
-
+  /**
+   * Acceso directo al grupo de formulario hijo `ninoFormGroup`.
+   */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
-
+  /**
+   * Constructor del componente.
+   * @param tramite120702Store Store de Akita para modificar el estado del trámite.
+   * @param tramite120702Query Query de Akita para obtener el estado actual del trámite.
+   */
   constructor(
-    // private fb: FormBuilder,
     private tramite120702Store: Tramite120702Store,
     private tramite120702Query: Tramite120702Query
-  ) {
-    //
-  }
+  ) {}
 
+  /**
+   * Inicializa el componente y suscribe al estado del trámite desde el store.
+   */
   ngOnInit(): void {
-    // this.establecerDescripcionCupoFormGroup();
-
     this.tramite120702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -61,34 +81,29 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  // establecerDescripcionCupoFormGroup(): void {
-  //   this.descripcionCupoForm = this.fb.group({
-  //     regimenAduanero: new FormControl({ value: '', disabled: true }),
-  //     descripcionProducto: new FormControl({ value: '', disabled: true }),
-  //     clasificacionSubProducto: new FormControl({ value: '', disabled: true }),
-  //     unidadMedida: new FormControl({ value: '', disabled: true }),
-  //     fechaInicioCupo: new FormControl({ value: '', disabled: true }),
-  //     fechaFinCupo: new FormControl({ value: '', disabled: true }),
-  //     mecanismoAsignacion: new FormControl({ value: '', disabled: true }),
-  //     tratadoAcuerdo: new FormControl({ value: '', disabled: true }),
-  //     fraccionesArancelarias: new FormControl({ value: '', disabled: true }),
-  //     paises: new FormControl({ value: '', disabled: true }),
-  //     observaciones: new FormControl({ value: '', disabled: true }),
-  //     fundamento: new FormControl({ value: '', disabled: true }),
-  //   });
-  // }
-
+  /**
+   * Método invocado al detectar un cambio en los valores del formulario.
+   * @param event Objeto con el nombre del campo y su nuevo valor.
+   */
   establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
     if (event) {
       this.cambioEnValoresStore(event.campo, event.valor);
     }
   }
 
+  /**
+   * Actualiza un campo específico del estado global en el store.
+   * @param campo Nombre del campo a actualizar.
+   * @param valor Nuevo valor del campo.
+   */
   cambioEnValoresStore(campo: string, valor: unknown): void {
-      this.tramite120702Store.setDynamicFieldValue(campo,valor);
-    }
-  
+    this.tramite120702Store.setDynamicFieldValue(campo, valor);
+  }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera todas las suscripciones activas.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

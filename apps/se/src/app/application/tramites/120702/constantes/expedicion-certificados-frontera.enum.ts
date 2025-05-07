@@ -1,3 +1,7 @@
+/**
+ * Lista de pasos del proceso de expedición de certificados en frontera.
+ * Cada paso incluye un índice, título, y su estado (activo y completado).
+ */
 export const EXPEDICION_CERTIFICADOS_FRONTERA = [
   {
     indice: 1,
@@ -13,27 +17,59 @@ export const EXPEDICION_CERTIFICADOS_FRONTERA = [
   },
 ];
 
+/**
+ * Configuración del input de fecha de inicio.
+ */
 export const INPUT_FECHA_INICIO = {
+  /**
+   * Etiqueta mostrada para el campo.
+   */
   labelNombre: 'Fecha inicio',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
+
+  /**
+   * Indica si el campo está habilitado.
+   */
   habilitado: false,
 };
 
+/**
+ * Configuración del input de fecha de fin.
+ */
 export const INPUT_FECHA_FIN = {
+  /**
+   * Etiqueta mostrada para el campo.
+   */
   labelNombre: 'Fecha fin',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
+
+  /**
+   * Indica si el campo está habilitado.
+   */
   habilitado: false,
 };
 
+/**
+ * Arreglo que describe los campos del formulario para la información del cupo.
+ * Cada objeto define un campo específico, sus atributos y comportamiento.
+ */
 export const INFORMACION_DESCRPCION_CUPO = [
   {
     id: 'regimenAduanero',
-    labelNombre: 'Regimen aduanero',
+    labelNombre: 'Régimen aduanero',
     campo: 'regimenAduanero',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: 'EXPORTACION',
     valorPredeterminado: '',
@@ -46,7 +82,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: 'PANTALONES Y FALDAS DE ALGODON',
     valorPredeterminado: '',
@@ -54,12 +90,12 @@ export const INFORMACION_DESCRPCION_CUPO = [
   },
   {
     id: 'clasificacionSubProducto',
-    labelNombre: 'Clasificacion del subproducto',
+    labelNombre: 'Clasificación del subproducto',
     campo: 'clasificacionSubProducto',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
@@ -72,7 +108,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: 'METROS CUADRADOS EQUIVALENTES',
     valorPredeterminado: '',
@@ -85,7 +121,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'date',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '15/11/2024',
@@ -99,7 +135,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'date',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '15/11/2025',
@@ -113,7 +149,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-8',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: 'Asignación directa',
     valorPredeterminado: '',
@@ -126,7 +162,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: 'Tratado entre Mexico, Estados Unidad',
     valorPredeterminado: '',
@@ -139,12 +175,12 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado:
       '26011101,26011201,26012001,26020002,26030001,26040001,26050001,26060001,26070001,26080001,26090001,26100001,26110001,26120001,26130001,26140001,26150001',
-    marginTop: 3,
+    marginTop: 4,
   },
   {
     id: 'paises',
@@ -153,7 +189,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: 'ESTADOS UNIDOS DE AMERICA,',
@@ -166,7 +202,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: 'Observación',
@@ -179,7 +215,7 @@ export const INFORMACION_DESCRPCION_CUPO = [
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: true,
-    soloLectura: true,
+    soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: 'fundamento',

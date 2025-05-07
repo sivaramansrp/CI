@@ -6,15 +6,16 @@
             <div class="col-md-4 dropdown-field">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
-                        [required]="true" formControlName="anoDelOficio" for="anoDelOficio" id="anoDelOficio"
+                        [required]="true" placeholder="Selecciona un año" formControlName="anoDelOficio"
+                        for="anoDelOficio" id="anoDelOficio" aria-label="Año del oficio de asignación"
                         (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')"></app-catalogo-select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 dropdown-field">
                 <div class="form-group">
                     <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
                     <input type="number" class="form-control" id="numeroOficio" formControlName="numeroOficio"
-                        name="numeroOficio" [required]="true"
+                        name="numeroOficio" [required]="true" aria-label="Número de oficio de asignación"
                         (change)="setValoresStore(asignacionForm,'numeroOficio', 'setNumeroOficio')">
                     @if(asignacionForm.controls['numeroOficio'].invalid &&
                     asignacionForm.controls['numeroOficio'].touched){
@@ -37,14 +38,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="estado">Estado:</label>
-                    <input type="text" class="form-control" id="estado" formControlName="estado" name="estado">
+                    <input type="text" class="form-control" id="estado" formControlName="estado" name="estado" aria-label="Estado">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="representacionFederal">Representación federal:</label>
                     <input type="text" class="form-control" id="representacionFederal"
-                        formControlName="representacionFederal" name="representacionFederal">
+                        formControlName="representacionFederal" name="representacionFederal" aria-label="Representación federal">
                 </div>
             </div>
         </div>
@@ -56,21 +57,21 @@
                 <div class="form-group">
                     <label class="form-label" for="montoAsignado">Monto asignado:</label>
                     <input type="number" class="form-control" id="montoAsignado" formControlName="montoAsignado"
-                        name="montoAsignado">
+                        name="montoAsignado" aria-label="Monto asignado">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoExpedido">Monto expedido:</label>
                     <input type="number" class="form-control" id="montoExpedido" formControlName="montoExpedido"
-                        name="montoExpedido">
+                        name="montoExpedido" aria-label="Monto expedido">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoDisponible">Monto disponible:</label>
                     <input type="number" class="form-control" id="montoDisponible" formControlName="montoDisponible"
-                        name="montoDisponible">
+                        name="montoDisponible" aria-label="Monto disponible">
                 </div>
             </div>
         </div>
@@ -82,7 +83,7 @@
                 <div class="form-group">
                     <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
                     <input type="number" class="form-control" id="datosNumeroOficio" formControlName="datosNumeroOficio"
-                        name="datosNumeroOficio">
+                        name="datosNumeroOficio" aria-label="Número de oficio">
                 </div>
             </div>
         </div>
@@ -92,10 +93,13 @@
             <div class="datos-asignacion mt-5">
                 <ng-titulo titulo="Vigencia de la asignación" />
                 <div class="col-md-4">
-                    <input-fecha [datos]="fechaIncicioAsignacion" [setFecha]="fechaInicioDate" />
+                    <input-fecha [datos]="fechaIncicioAsignacion"
+                        [setFecha]="asignacionForm.get('fechaInicioVigencia')?.value" id="fechaInicioVigencia" aria-label="Fecha inicio vigencia"
+                        (valorCambiado)="cambioFechaInicio($event)" />
                 </div>
                 <div class="col-md-4">
-                    <input-fecha [datos]="fechaFinAsignacion" [setFecha]="fechaFinDate" />
+                    <input-fecha [datos]="fechaFinAsignacion" [setFecha]="asignacionForm.get('fechaFinVigencia')?.value"
+                        id="fechaFinVigencia" aria-label="Fecha fin vigencia" (valorCambiado)="cambioFechaFin($event)" />
                 </div>
             </div>
         </div>
@@ -110,15 +114,23 @@
                 <div class="form-group">
                     <label class="form-label" for="montoADisponible">Monto disponible:</label>
                     <input type="number" class="form-control" id="montoADisponible" formControlName="montoADisponible"
-                        name="montoADisponible">
+                        name="montoADisponible" aria-label="Monto disponible">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
                     <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
-                        name="montoAExpedir" [required]="true"
+                        name="montoAExpedir" [required]="true" aria-label="Monto a expedir"
                         (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
+                    @if(asignacionForm.controls['montoAExpedir'].invalid &&
+                    asignacionForm.controls['montoAExpedir'].touched){
+                    <div class="d-grid">
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -139,7 +151,7 @@
             <div class="form-group">
                 <label class="form-label" for="totalAExpedir">Total a expedir:</label>
                 <input type="number" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
-                    name="totalAExpedir">
+                    name="totalAExpedir" aria-label="Total a expedir">
             </div>
         </div>
     </form>
