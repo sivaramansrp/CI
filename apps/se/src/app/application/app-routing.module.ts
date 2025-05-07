@@ -439,6 +439,13 @@ const ROUTES: Routes = [
       )
   }
   
+  {
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
+  },
 ];
 
 @NgModule({
