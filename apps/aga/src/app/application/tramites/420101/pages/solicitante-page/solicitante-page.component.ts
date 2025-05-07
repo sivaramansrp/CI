@@ -33,7 +33,6 @@ export class SolicitantePageComponent {
    * @description Título del mensaje que se muestra en el wizard.
    * Inicializado con el valor de `TITULO_MENSAJE`.
    */
-
   tituloMensaje: string | null = TITULO_MENSAJE;
 
   /**

@@ -1,4 +1,7 @@
-import { DatosDelRegistrar, DatosDelRegistrarManual } from '../models/proveedores.model';
+import {
+  DatosDelRegistrar,
+  DatosDelRegistrarManual,
+} from '../models/proveedores.model';
 
 /**
  * @const PASOS
@@ -32,6 +35,12 @@ export const TITULO_MENSAJE = 'Registrar proveedores.';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * @const REGISTRAR_PROVEEDORES_DE_TABLA
+ * @description Configuración de las columnas para la tabla de registro de proveedores.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente en la fila, y un orden para su disposición.
+ * @type {ConfiguracionColumna<DatosDelRegistrar>[]}
+ */
 export const REGISTRAR_PROVEEDORES_DE_TABLA: ConfiguracionColumna<DatosDelRegistrar>[] =
   [
     {
@@ -39,15 +48,31 @@ export const REGISTRAR_PROVEEDORES_DE_TABLA: ConfiguracionColumna<DatosDelRegist
       clave: (fila) => fila.rfc,
       orden: 1,
     },
-    { encabezado: 'Denominación o razón social', clave: (fila) => fila.razonSocial, orden: 2 },
-    { encabezado: 'Nombre completo', clave: (fila) => fila.nombreCompleto, orden: 3 },
-    { encabezado: 'Domicilio fiscal', clave: (fila) => fila.domicilioFiscal, orden: 4 },
+    {
+      encabezado: 'Denominación o razón social',
+      clave: (fila) => fila.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Nombre completo',
+      clave: (fila) => fila.nombreCompleto,
+      orden: 3,
+    },
+    {
+      encabezado: 'Domicilio fiscal',
+      clave: (fila) => fila.domicilioFiscal,
+      orden: 4,
+    },
     {
       encabezado: 'Norma',
       clave: (fila) => fila.norma,
       orden: 5,
     },
-    { encabezado: 'Número de programa IMMEX', clave: (fila) => fila.numeroProgramaIMMEX, orden: 6 },
+    {
+      encabezado: 'Número de programa IMMEX',
+      clave: (fila) => fila.numeroProgramaIMMEX,
+      orden: 6,
+    },
     {
       encabezado: 'Número de programa PROSEC',
       clave: (fila) => fila.numeroProgramaPROSEC,
@@ -60,6 +85,12 @@ export const REGISTRAR_PROVEEDORES_DE_TABLA: ConfiguracionColumna<DatosDelRegist
     },
   ];
 
+/**
+ * @const REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA
+ * @description Configuración de las columnas para la tabla de registro manual de proveedores.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente en la fila, y un orden para su disposición.
+ * @type {ConfiguracionColumna<DatosDelRegistrarManual>[]}
+ */
 export const REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA: ConfiguracionColumna<DatosDelRegistrarManual>[] =
   [
     {
@@ -67,15 +98,31 @@ export const REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA: ConfiguracionColumna<DatosDe
       clave: (fila) => fila.rfc,
       orden: 1,
     },
-    { encabezado: 'Denominación o razón social', clave: (fila) => fila.razonSocial, orden: 2 },
-    { encabezado: 'Nombre completo', clave: (fila) => fila.nombreCompleto, orden: 3 },
-    { encabezado: 'Domicilio fiscal', clave: (fila) => fila.domicilioFiscal, orden: 4 },
+    {
+      encabezado: 'Denominación o razón social',
+      clave: (fila) => fila.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Nombre completo',
+      clave: (fila) => fila.nombreCompleto,
+      orden: 3,
+    },
+    {
+      encabezado: 'Domicilio fiscal',
+      clave: (fila) => fila.domicilioFiscal,
+      orden: 4,
+    },
     {
       encabezado: 'Norma',
       clave: (fila) => fila.norma,
       orden: 5,
     },
-    { encabezado: 'Número de programa IMMEX', clave: (fila) => fila.numeroProgramaImmex, orden: 6 },
+    {
+      encabezado: 'Número de programa IMMEX',
+      clave: (fila) => fila.numeroProgramaImmex,
+      orden: 6,
+    },
     {
       encabezado: 'Número de programa PROSEC',
       clave: (fila) => fila.numeroProgramaProsec,
@@ -88,6 +135,10 @@ export const REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA: ConfiguracionColumna<DatosDe
     },
   ];
 
+/**
+ * @interface ConfiguracionColumna
+ * @description Representa la configuración de una columna en una tabla.
+ */
 export interface ConfiguracionColumna<T> {
   encabezado: string;
   clave: (ele: T) => string | number | undefined | boolean;
@@ -95,10 +146,15 @@ export interface ConfiguracionColumna<T> {
   hiperenlace?: boolean;
 }
 
+/**
+ * @const CROSLISTA_DE_DATOS
+ * @description Lista de datos de ejemplo que incluye nombres de países y autorizaciones de programas.
+ * @type {string[]}
+ */
 export const CROSLISTA_DE_DATOS: string[] = [
   'AFGANISTÁN (EMIRATO ISLÁMICO)',
   'ALBANIA (REPÚBLICA DE)',
   'ALEMANIA (REPÚBLICA FEDERAL DE)',
   'ANDORRA (PRINCIPADO DE)',
-  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO'
+  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO',
 ];

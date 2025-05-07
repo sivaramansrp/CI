@@ -16,6 +16,7 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite420101Query extends Query<Tramite420101State> {
+  
   /**
    * @constructor
    * @description
@@ -26,6 +27,7 @@ export class Tramite420101Query extends Query<Tramite420101State> {
   constructor(protected override store: Tramite420101Store) {
     super(store);
   }
+
   /**
    * @property {Observable<Tramite420101State>} selectTramiteState$
    * @description
@@ -35,13 +37,23 @@ export class Tramite420101Query extends Query<Tramite420101State> {
     return state;
   });
 
-  public getDatosProveedoresManual$ = this.select (
+  /**
+   * @property {Observable<any>} getDatosProveedoresManual$
+   * @description
+   * Selecciona los datos de los proveedores manuales del estado.
+   * Este observable emite los valores almacenados en `datosProveedoresManual`.
+   */
+  public getDatosProveedoresManual$ = this.select(
     (state) => state.datosProveedoresManual
-  )
-  
-  public getNormaDatos$ = this.select (
-    (state) => state.usoCrossListDatos
-  )
+  );
+
+  /**
+   * @property {Observable<any>} getNormaDatos$
+   * @description
+   * Selecciona los datos relacionados con el uso de la lista cruzada (`usoCrossListDatos`) del estado.
+   * Este observable emite los valores almacenados en `usoCrossListDatos`.
+   */
+  public getNormaDatos$ = this.select((state) => state.usoCrossListDatos);
 
   /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
@@ -49,5 +61,4 @@ export class Tramite420101Query extends Query<Tramite420101State> {
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
-
 }

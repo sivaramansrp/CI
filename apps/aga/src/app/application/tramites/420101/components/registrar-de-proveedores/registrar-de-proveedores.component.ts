@@ -21,18 +21,50 @@ import { Tramite420101Store } from '../../estados/tramite420101Store.store';
 })
 export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
 
+  /**
+  * Arreglo que almacena los datos del registro.
+  * @type {DatosDelRegistrar[]}
+  */
   datosTabla: DatosDelRegistrar[] = [];
 
+  /**
+   * Arreglo que almacena los datos de proveedores registrados manualmente.
+   * @type {DatosDelRegistrarManual[]}
+   */
   datosProveedoresManual: DatosDelRegistrarManual[] = [];
 
+  /**
+   * Configuración de las columnas para la tabla de registro de proveedores.
+   * @type {ConfiguracionColumna<DatosDelRegistrar>[]}
+   */
   configuracionTablaRegistrar: ConfiguracionColumna<DatosDelRegistrar>[] = REGISTRAR_PROVEEDORES_DE_TABLA;
 
+  /**
+   * Configuración de las columnas para la tabla de registro manual de proveedores.
+   * @type {ConfiguracionColumna<DatosDelRegistrarManual>[]}
+   */
   configuracionTablaRegistrarManual: ConfiguracionColumna<DatosDelRegistrarManual>[] = REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA;
 
+  /**
+   * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
+   * @type {TablaSeleccion}
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Subject privado que notifica la destrucción del componente para liberar recursos.
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente que inicializa las dependencias necesarias.
+   * @param router - Servicio para la navegación entre rutas.
+   * @param activatedRoute - Servicio para acceder a la ruta activa actual.
+   * @param tramite420101Query - Servicio de consulta para datos relacionados con el trámite 420101.
+   * @param tramite420101Store - Servicio de almacenamiento para datos relacionados con el trámite 420101.
+   */
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -40,6 +72,10 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
     private tramite420101Store: Tramite420101Store,
   ) { }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe al observable de datos de proveedores manuales y actualiza `datosProveedoresManual`.
+   */
   ngOnInit(): void {
     this.tramite420101Query.getDatosProveedoresManual$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -48,6 +84,10 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Analiza un archivo CSV y mapea sus datos a la estructura de `DatosDelRegistrar`.
+   * @param csv - Contenido del archivo CSV como cadena de texto.
+   */
   analizarGramaticalmenteCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
@@ -85,6 +125,9 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
     }));
   }
 
+  /**
+   * Lee un archivo CSV seleccionado por el usuario y lo procesa mediante `analizarGramaticalmenteCSV`.
+   */
   archivo(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
@@ -100,16 +143,21 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Navega a la ruta de registro de proveedores manual.
+   */
   navigateRegistroProveedoresManual(): void {
     this.router.navigate(['..', 'registro-de-proveedores-manual'], {
       relativeTo: this.activatedRoute,
     });
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Completa el observable `destroyNotifier$` para liberar recursos.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-
 }

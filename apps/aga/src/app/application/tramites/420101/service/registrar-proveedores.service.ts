@@ -8,7 +8,11 @@ import { Injectable } from '@angular/core';
 })
 export class RegistrarProveedoresService {
 
-
+  /**
+   * URL base para las peticiones a los recursos JSON relacionados con el trámite 420101.
+   * @private
+   * @type {string}
+   */
   private apiUrl = 'assets/json/420101/';
 
   /**
@@ -18,6 +22,10 @@ export class RegistrarProveedoresService {
    */
   constructor(private readonly http: HttpClient) { }
 
+  /**
+   * Obtiene los datos de proveedores manuales desde un archivo JSON.
+   * @returns {Observable<DatosDelProveedoresManual>} Observable que emite los datos de proveedores manuales.
+   */
   proveedoresManual(): Observable<DatosDelProveedoresManual> {
     return this.http.get<DatosDelProveedoresManual>(`${this.apiUrl}proveedores.json`).pipe(
       map((res) => res)

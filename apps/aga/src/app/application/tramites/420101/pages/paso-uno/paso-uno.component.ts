@@ -24,6 +24,7 @@ import { Tramite420101Store } from '../../estados/tramite420101Store.store';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
   /**
    * Índice utilizado para realizar selecciones o identificaciones de elementos.
    * Puede ser un número o estar indefinido.
@@ -38,6 +39,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente que inicializa las dependencias necesarias para el manejo del trámite 420101.
+   * @param tramite420101Query - Servicio de consulta para datos relacionados con el trámite 420101.
+   * @param tramite420101Store - Servicio de almacenamiento para datos relacionados con el trámite 420101.
+   */
   constructor(
     private tramite420101Query: Tramite420101Query,
     private tramite420101Store: Tramite420101Store

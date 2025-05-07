@@ -6,8 +6,22 @@ import { StoreConfig } from '@datorama/akita';
 
 export interface Tramite420101State {
 
+  /**
+   * @type {string}
+   * RFC del contribuyente
+   */
   registroFederalContribuyente: string;
+
+  /**
+   * @type {string}
+   * Razón social del contribuyente
+   */
   razonSocial: string;
+
+  /**
+   * @type {string}
+   * Domicilio fiscal del contribuyente
+   */
   domicilioFiscal: string;
 
   /**
@@ -15,7 +29,17 @@ export interface Tramite420101State {
    * Índice de la pestaña seleccionada
    */
   tabSeleccionado?: number;
+
+  /**
+   * @type {string[]}
+   * Lista de datos de uso de norma
+   */
   usoCrossListDatos: string[];
+
+  /**
+   * @type {DatosDelRegistrarManual[]}
+   * Datos de los proveedores registrados manualmente
+   */
   datosProveedoresManual: DatosDelRegistrarManual[];
 
 }
@@ -51,11 +75,22 @@ export function createInitialState(): Tramite420101State {
  * @extends {Store<Tramite420101State>}
  */
 export class Tramite420101Store extends Store<Tramite420101State> {
+
+  /**
+   * @constructor
+   * @description
+   * Constructor de la tienda del trámite 420101. Inicializa el estado con el estado inicial.
+   */
   constructor() {
     super(createInitialState());
   }
 
 
+  /**
+   * @method updateProveedoresTabla
+   * @description Actualiza la lista de proveedores registrados manualmente en la tabla.
+   * @param {DatosDelRegistrarManual[]} datosProveedoresManual - Nuevos datos de los proveedores.
+   */
   public updateProveedoresTabla(datosProveedoresManual: DatosDelRegistrarManual[]): void {
     this.update((state) => ({
       ...state,
@@ -63,12 +98,18 @@ export class Tramite420101Store extends Store<Tramite420101State> {
     }));
   }
 
+  /**
+   * @method updateCrossListDatos
+   * @description Actualiza la lista de datos de uso de norma.
+   * @param {string[]} usoNormaDatos - Nuevos datos de uso de norma.
+   */
   public updateCrossListDatos(usoNormaDatos: string[]): void {
     this.update((state) => ({
       ...state,
       usoNormaDatos
     }));
   }
+
   /**
    * @method updateTabSeleccionado
    * @description Actualiza el índice de la pestaña seleccionada.
@@ -81,7 +122,11 @@ export class Tramite420101Store extends Store<Tramite420101State> {
     }));
   }
 
-
+  /**
+   * @method updateRegistroFederalContribuyente
+   * @description Actualiza el RFC del contribuyente.
+   * @param {string} registroFederalContribuyente - Nuevo RFC del contribuyente.
+   */
   public updateRegistroFederalContribuyente(registroFederalContribuyente: string): void {
     this.update((state) => ({
       ...state,
@@ -89,7 +134,11 @@ export class Tramite420101Store extends Store<Tramite420101State> {
     }));
   }
 
-
+  /**
+   * @method updateRazonSocial
+   * @description Actualiza la razón social del contribuyente.
+   * @param {string} razonSocial - Nueva razón social del contribuyente.
+   */
   public updateRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
@@ -97,6 +146,11 @@ export class Tramite420101Store extends Store<Tramite420101State> {
     }));
   }
 
+  /**
+   * @method updateDomicilioFiscal
+   * @description Actualiza el domicilio fiscal del contribuyente.
+   * @param {string} domicilioFiscal - Nuevo domicilio fiscal del contribuyente.
+   */
   public updateDomicilioFiscal(domicilioFiscal: string): void {
     this.update((state) => ({
       ...state,
