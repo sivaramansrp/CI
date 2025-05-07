@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
+import { Notificacion } from '../notificaciones/notificaciones.component';
 
 @Component({
   selector: 'lib-modal-funciones',
@@ -42,6 +43,14 @@ export class ModalFuncionesComponent implements OnChanges {
    * se encarga de mostrar el modal
    */
   public mostrarModal: boolean = false;
+  /** 
+ * Configuración para la notificación actual.
+ */
+  public nuevaNotificacion: Notificacion | null = null;
+  /**
+   * Referencia al modal automático mostrado.
+   * Utiliza `ModalDirective` para controlar su comportamiento.
+   */
   @ViewChild('modal', { static: false }) modal?: ModalDirective;
   /**
    * archivo es una propiedad opcional que representa un archivo seleccionado por el usuario. Se utiliza para almacenar el archivo que se va a cargar o procesar en el componente.
@@ -58,9 +67,31 @@ export class ModalFuncionesComponent implements OnChanges {
     const ARCHIVO = INPUT.files?.[0];
     if (ARCHIVO) {
       if (ARCHIVO.type !== this.aceptado) {
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: 'Tipo de archivo no permitido',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
         return;
       }
       if (ARCHIVO.size > this.maxSizeMB * 1024 * 1024) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'Avisos',
+          mensaje: 'El tamaño del archivo excede el límite permitido de ' + this.maxSizeMB + ' MB',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
         return;
       }
       this.archivo = ARCHIVO;
