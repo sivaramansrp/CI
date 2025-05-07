@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
+import { CANCELACION_TABLA } from '../../constants/programa-seleccionado.enum';
 import { CancelacionDeAutorizacionesService } from '../../services/cancelacion-de-autorizaciones.service';
 import { CancelacionTabla } from '../../models/Cancelacion-de-autorizaciones';
 import { CommonModule } from '@angular/common';
@@ -38,13 +39,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla de cancelación de autorizaciones.
    */
-  public tableHeaderExtranjeros: ConfiguracionColumna<CancelacionTabla>[] = [
-    { encabezado: 'Folio de programa', clave: (item) => item.folioDePrograma, orden: 1 },
-    { encabezado: 'Selecciona la modalidad', clave: (item) => item.seleccionaLaModalidad, orden: 2 },
-    { encabezado: 'Representación federal', clave: (item) => item.representacionFederal, orden: 3 },
-    { encabezado: 'Tipo programa', clave: (item) => item.tipoPrograma, orden: 4 },
-    { encabezado: 'Estatus', clave: (item) => item.estatus, orden: 5 },
-  ];
+  public tableHeaderExtranjeros: ConfiguracionColumna<CancelacionTabla>[] = CANCELACION_TABLA;
 
   /**
    * Constructor del componente.

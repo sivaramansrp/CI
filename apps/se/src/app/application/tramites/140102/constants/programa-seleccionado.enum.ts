@@ -1,3 +1,5 @@
+import { CancelacionTabla } from "../models/Cancelacion-de-autorizaciones";
+
 /**
  * Constante que define los datos del formulario dinámico para el programa seleccionado.
  * Contiene la configuración de los campos, incluyendo etiquetas, tipos de entrada, valores predeterminados, y más.
@@ -119,3 +121,32 @@ export const ALERTA_DE_APLICACION_REGISTRADA = {
  */
 export const ERROR_FORMA_ALERT =
   '<strong>¡Error de registro! </strong>Faltan campos por capturar.';
+
+export const CANCELACION_TABLA = [
+  {
+    encabezado: 'Folio de programa',
+    clave: (item: CancelacionTabla): string => item.folioDePrograma,
+    orden: 1
+  },
+
+  {
+    encabezado: 'Selecciona la modalidad',
+    clave: (item: CancelacionTabla): string => item.seleccionaLaModalidad,
+    orden: 2
+  },
+  {
+    encabezado: 'Representación federal',
+    clave: (item: CancelacionTabla): string => item.representacionFederal,
+    orden: 3
+  },
+  {
+    encabezado: 'Tipo programa',
+    clave: (item: CancelacionTabla): string => item.tipoPrograma,
+    orden: 4
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (item: CancelacionTabla): string => item.estatus,
+    orden: 5
+  },
+];
