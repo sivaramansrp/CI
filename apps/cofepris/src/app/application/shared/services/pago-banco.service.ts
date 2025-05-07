@@ -28,9 +28,9 @@ export class PagoBancoService {
   }
   
 /**
- * Retrieves the current state of the `SolicitudPagoBanco` as an observable.
+ * Recupera el estado actual de `SolicitudPagoBanco` como un observable.
  *
- * @returns An `Observable` that emits the current state of `SolicitudPagoBancoState`.
+ * @returns Un `Observable` que emite el estado actual de `SolicitudPagoBancoState`.
  */
  getSolicitudPagoBancoState(): Observable<SolicitudPagoBancoState> {
      return this.query.selectSolicitud$;
