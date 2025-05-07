@@ -1696,8 +1696,8 @@
   {
     "id": 243,
     "tramite": 270301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-importacion-plastica/Pantallas",
+    "linkDepartment": "/pago/aviso-importacion-plastica/Pantallas",
     "department": "inbal"
   },
   {
