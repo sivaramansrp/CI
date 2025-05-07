@@ -6,12 +6,12 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { AlertComponent, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
-import {ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { AvisoValor, FECHA_DE_PAGO, NICO_TABLA, PRORROGA_DEL, PermisoModel } from '../../models/permiso-importacion.model';
-import {PermisoPetroleoService} from '../../services/permiso-petroleo.service';
+import { PermisoPetroleoService } from '../../services/permiso-petroleo.service';
 
 import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -131,7 +131,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
    * param tramite130302Query Consultas relacionadas con el trámite.
    */
   constructor(private fb: FormBuilder, private service: PermisoPetroleoService, private tramite130302Store: Tramite130302Store,
-    private tramite130302Query: Tramite130302Query) {}
+    private tramite130302Query: Tramite130302Query) { }
 
   /**
    * property configuracionTabla
