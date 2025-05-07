@@ -12,7 +12,7 @@ import seleccionarOpciones from '@libs/shared/theme/assets/json/5601/selector-56
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule,TituloComponent],
   templateUrl: './datos-solicitud.component.html',
-  styleUrl: './datos-solicitud.component.css',
+  styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
 

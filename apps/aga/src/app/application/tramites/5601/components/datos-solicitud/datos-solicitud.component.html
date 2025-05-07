@@ -30,7 +30,7 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="motivoDespachoDomicilio">Motivo o justificación de despacho a
+                <label for="motivoDespachoDomicilio">Motivo o justificación de despacho a
                     domicilio*:</label>
                 <textarea class="form-control h-25" id="motivoDespachoDomicilio" rows="3"
                     formControlName="motivoDespachoDomicilio" (change)="setValoresStore(formulario, 'motivoDespachoDomicilio', 'setMotivoDespachoDomicilio')" id="motivoDespachoDomicilio" placeholder=""
@@ -41,7 +41,7 @@
                 }
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="observaciones">Observaciones</label>
+                <label for="observaciones">Observaciones</label>
                 <textarea class="form-control h-25" id="observaciones" rows="3" formControlName="observaciones" (change)="setValoresStore(formulario, 'observaciones', 'setObservaciones')"
                     id="observaciones" placeholder="" title="observaciones"></textarea>
             </div>
@@ -54,7 +54,7 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="valorMercancia" class="form-label">Valor de la mercancía*:</label>
+                <label for="valorMercancia">Valor de la mercancía*:</label>
                 <input class="form-control" type="text" id="valorMercancia" formControlName="valorMercancia" (change)="setValoresStore(formularioMercancia, 'valorMercancia', 'setValorMercancia')" />
                 @if(formularioMercancia.controls['valorMercancia'].invalid &&
                 formularioMercancia.controls['valorMercancia'].touched) {
@@ -70,8 +70,8 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="motivoDespachoDomicilio">Nombre o descripción comercial de la mercancía*:</label>
-                <textarea class="form-control h-25" id="descripcionMercancia" rows="3"
+                <label for="motivoDespachoDomicilio">Nombre o descripción comercial de la mercancía*:</label>
+                <textarea class="form-control h-25" rows="3"
                     formControlName="descripcionMercancia" (change)="setValoresStore(formularioMercancia, 'descripcionMercancia', 'setDescripcionMercancia')" id="descripcionMercancia" placeholder=""
                     title="descripcionMercancia"></textarea>
                 @if(formularioMercancia.controls['descripcionMercancia'].invalid &&
@@ -80,7 +80,7 @@
                 }
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="observaciones">Descripción detallada y/o especificaciones técnicas de la
+                <label for="observaciones">Descripción detallada y/o especificaciones técnicas de la
                     mercancía*:</label>
                 <textarea class="form-control h-25" id="especificacionesMercancia" rows="3"
                     formControlName="especificacionesMercancia" (change)="setValoresStore(formularioMercancia, 'especificacionesMercancia', 'setEspecificacionesMercancia')" placeholder="" title="observaciones"></textarea>
@@ -97,7 +97,7 @@
         <ng-titulo titulo="Logística de las operaciones" />
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label" for="esquemasControlSeguridad
+                <label for="esquemasControlSeguridad
                 ">Señale los esquemas de control y seguridad de las operaciones*:</label>
                 <textarea class="form-control h-25" id="esquemasControlSeguridad" rows="3"
                     formControlName="esquemasControlSeguridad" (change)="setValoresStore(formularioLogistica, 'esquemasControlSeguridad', 'setEsquemasControlSeguridad')" placeholder=""
@@ -108,7 +108,7 @@
                 }
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las
+                <label for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las
                     operaciones*:</label>
                 <textarea class="form-control h-25" id="distanciaRutaTiempos" rows="3"
                     formControlName="distanciaRutaTiempos" (change)="setValoresStore(formularioLogistica, 'distanciaRutaTiempos', 'setDistanciaRutaTiempos')" placeholder="" title="distanciaRutaTiempos"></textarea>
@@ -126,7 +126,7 @@
 
         <div class="row mb-3">
             <div class="col-md-12">
-                <label for="direccion" class="form-label">Dirección*:</label>
+                <label for="direccion">Dirección*:</label>
                 <input class="form-control" type="text" id="direccion" formControlName="direccion" (change)="setValoresStore(formularioUbicacionMercancia, 'direccion', 'setDireccion')" />
                 @if(formularioUbicacionMercancia.controls['direccion'].invalid &&
                 formularioUbicacionMercancia.controls['direccion'].touched) {
@@ -136,7 +136,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="telefono" class="form-label">Teléfono*:</label>
+                <label for="telefono">Teléfono*:</label>
                 <input class="form-control" type="text" id="telefono" formControlName="telefono" (change)="setValoresStore(formularioUbicacionMercancia, 'telefono', 'setTelefono')"/>
                 @if(formularioUbicacionMercancia.controls['telefono'].invalid &&
                 formularioUbicacionMercancia.controls['telefono'].touched) {
@@ -146,7 +146,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="distanciaAduana" class="form-label">Distancia a la aduana (km):*</label>
+                <label for="distanciaAduana">Distancia a la aduana (km):*</label>
                 <input class="form-control" type="text" id="distanciaAduana" formControlName="distanciaAduana" (change)="setValoresStore(formularioUbicacionMercancia, 'distanciaAduana', 'setDistanciaAduana')"/>
                 @if(formularioUbicacionMercancia.controls['distanciaAduana'].invalid &&
                 formularioUbicacionMercancia.controls['distanciaAduana'].touched) {
@@ -156,7 +156,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-12">
-                <label for="referencias" class="form-label">Referencias*:</label>
+                <label for="referencias">Referencias*:</label>
                 <input class="form-control" type="text" id="referencias" formControlName="referencias" (change)="setValoresStore(formularioUbicacionMercancia, 'referencias', 'setReferencias')"/>
                 @if(formularioUbicacionMercancia.controls['referencias'].invalid &&
                 formularioUbicacionMercancia.controls['referencias'].touched) {
