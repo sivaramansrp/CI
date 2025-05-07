@@ -30,6 +30,10 @@ export interface AmpliacionServiciosState {
  * @constant {AmpliacionServiciosState} INITIAL_AMPLIACION_SERVICIOS_STATE
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
+  /**
+   * Información del registro inicial.
+   * @property {Servicios} infoRegistro
+   */
   infoRegistro: {
     rfc: '',
     representacionFederal: '',

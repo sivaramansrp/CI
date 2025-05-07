@@ -43,22 +43,23 @@ export const PASOS = [
   },
 ];
 
+
 /**
- * Configuration array for the bitacora (logbook) table in the application.
- * Each object in the array represents a column configuration for the table.
+ * @const CONFIGURACION_BITCORA
+ * @description Configuración utilizada para definir las propiedades de la bitácora de modificaciones.
+ * Cada objeto dentro del arreglo representa una columna con su encabezado, clave de acceso y orden.
  * 
- * @constant
- * @type {Array<Object>}
- * @property {string} encabezado - The header text for the column.
- * @property {Function} clave - A function that extracts the value for the column from a `Bitacora` object.
- * @property {number} orden - The order in which the column should appear in the table.
+ * @type {Array<{encabezado: string, clave: (ele: Bitacora) => string | undefined, orden: number}>}
  * 
- * Example usage:
- * ```typescript
+ * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
+ * @property {(ele: Bitacora) => string | undefined} clave - Una función que toma un objeto de tipo `Bitacora` y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
  * CONFIGURACION_BITCORA.forEach(config => {
- *   console.log(config.encabezado, config.orden);
+ *   console.log(config.encabezado); // Muestra el encabezado de cada columna
  * });
- * ```
  */
 export const CONFIGURACION_BITCORA = [
   {

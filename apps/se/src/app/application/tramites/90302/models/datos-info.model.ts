@@ -1,19 +1,4 @@
 /**
- * @fileoverview
- * Este archivo define las interfaces utilizadas en el módulo de ampliación de servicios.
- * Proporciona estructuras de datos para sectores, fracciones arancelarias, importaciones, respuestas de API y otros modelos relacionados.
- *
- * @module DatosInfoModel
- * @description
- * Este archivo contiene las definiciones de las interfaces necesarias para manejar los datos relacionados con sectores, fracciones arancelarias,
- * importaciones, servicios y respuestas de API en el módulo de ampliación de servicios.
- */
-
-
-
-
-
-/**
  * Interfaz que representa la respuesta de datos de una API.
  * @export
  * @interface DatosResponse
