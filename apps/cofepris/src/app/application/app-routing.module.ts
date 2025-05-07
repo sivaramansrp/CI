@@ -512,7 +512,14 @@ const ROUTES: Routes = [
         import(
           './tramites/260202/importacion-materias-primas.module'
         ).then((m) => m.ImportacionMateriasPrimasModule),
-}
+},
+{
+  path: 'permiso-vegetales-nutrientes',
+  loadChildren: () =>
+    import('./tramites/260509/permiso-vegetales-nutrientes.module').then(
+      (m) => m.PermisoVegetalesNutrientesModule
+    ),
+},
 ];
 
 @NgModule({
