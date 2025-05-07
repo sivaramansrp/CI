@@ -870,9 +870,9 @@
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDepartment": "/pago/zoosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 126,
@@ -1528,8 +1528,8 @@
   {
     "id": 219,
     "tramite": 260508,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1626,8 +1626,8 @@
   {
     "id": 233,
     "tramite": 260914,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-de-insumos/pantallas",
+    "linkDepartment": "/pago/importacion-de-insumos/pantallas",
     "department": "cofepris"
   },
   {
@@ -1696,8 +1696,8 @@
   {
     "id": 243,
     "tramite": 270301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-importacion-plastica/Pantallas",
+    "linkDepartment": "/pago/aviso-importacion-plastica/Pantallas",
     "department": "inbal"
   },
   {
@@ -1752,8 +1752,8 @@
   {
     "id": 251,
     "tramite": 130401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
@@ -2088,8 +2088,8 @@
   {
     "id": 299,
     "tramite": 6102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/junta-tecnica-registro/registro-tecnica",
+    "linkDepartment": "/pago/junta-tecnica-registro/registro-tecnica",
     "department": "aga"
   },
   {
@@ -2242,13 +2242,6 @@
   {
     "id": 321,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
-    "id": 322,
-    "tramite": 221601,
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "agricultura"
@@ -4184,5 +4177,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 260202,
+    "linkDashboard": "/cofepris/importacion-materias-primas",
+    "linkDepartment": "/pago/importacion-materias-primas",
+    "department": "cofepris"
   }
 ]
