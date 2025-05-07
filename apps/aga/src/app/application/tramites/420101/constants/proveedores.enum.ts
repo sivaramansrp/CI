@@ -70,12 +70,12 @@ export const REGISTRAR_PROVEEDORES_DE_TABLA: ConfiguracionColumna<DatosDelRegist
     },
     {
       encabezado: 'Número de programa IMMEX',
-      clave: (fila) => fila.numeroProgramaIMMEX,
+      clave: (fila) => fila.numeroProgramaImmex,
       orden: 6,
     },
     {
       encabezado: 'Número de programa PROSEC',
-      clave: (fila) => fila.numeroProgramaPROSEC,
+      clave: (fila) => fila.numeroProgramaProsec,
       orden: 7,
     },
     {

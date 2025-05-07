@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite420101State, Tramite420101Store } from '../../estados/tramite420101Store.store';
-import { CrossListLable } from '../../models/proveedores.model';
+import { CrossListEtiqueta } from '../../models/proveedores.model';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarProveedoresService } from '../../service/registrar-proveedores.service';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
@@ -41,36 +41,36 @@ export class RegistroDeProveedoresManualComponent implements OnInit, OnDestroy {
 
   /**
    * Etiquetas para la lista cruzada de normas seleccionadas.
-   * @type {CrossListLable}
+   * @type {CrossListEtiqueta}
    */
-  public usoNormaSeleccionadaLabel: CrossListLable = {
+  public usoNormaSeleccionadaLabel: CrossListEtiqueta = {
     tituluDeLaIzquierda: 'Norma:',
     derecha: 'Norma(s) seleccionada(s)*:',
   };
 
   /**
    * Etiquetas para la lista cruzada de programas IMMEX seleccionados.
-   * @type {CrossListLable}
+   * @type {CrossListEtiqueta}
    */
-  public usoProgramaImmexLabel: CrossListLable = {
+  public usoProgramaImmexLabel: CrossListEtiqueta = {
     tituluDeLaIzquierda: 'Número de programa IMMEX:',
     derecha: 'IMMEX seleccionado:',
   };
 
   /**
    * Etiquetas para la lista cruzada de programas PROSEC seleccionados.
-   * @type {CrossListLable}
+   * @type {CrossListEtiqueta}
    */
-  public usoProgramaProsecLabel: CrossListLable = {
+  public usoProgramaProsecLabel: CrossListEtiqueta = {
     tituluDeLaIzquierda: 'Número de programa PROSEC:',
     derecha: 'PROSEC seleccionado:',
   };
 
   /**
    * Etiquetas para la lista cruzada de aduanas seleccionadas.
-   * @type {CrossListLable}
+   * @type {CrossListEtiqueta}
    */
-  public usoAduanaSeleccionadaLabel: CrossListLable = {
+  public usoAduanaSeleccionadaLabel: CrossListEtiqueta = {
     tituluDeLaIzquierda: 'Aduana en las que opera:',
     derecha: 'Aduana(s) seleccionada(s)*:',
   };

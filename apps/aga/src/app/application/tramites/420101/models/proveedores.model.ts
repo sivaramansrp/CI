@@ -9,8 +9,8 @@ export interface DatosDelRegistrar {
   nombreCompleto: string;
   domicilioFiscal: string;
   norma: string;
-  numeroProgramaIMMEX?: string;
-  numeroProgramaPROSEC?: string;
+  numeroProgramaImmex?: string;
+  numeroProgramaProsec?: string;
   aduanasOpera?: string;
 }
 
@@ -34,7 +34,7 @@ export interface DatosDelRegistrarManual {
  * Interfaz que define la estructura de los datos de un proveedor registrado en un archivo CSV.
  * @interface DatosDelRegistrarCSV
  */
-export interface CrossListLable {
+export interface CrossListEtiqueta {
   tituluDeLaIzquierda: string;
   derecha: string;
 }

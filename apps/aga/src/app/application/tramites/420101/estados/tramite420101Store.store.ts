@@ -66,15 +66,16 @@ export function createInitialState(): Tramite420101State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite420101', resettable: true })
-/**
- * @class
- * @name Tramite420101Store
- * @description
- * Tienda para manejar el estado del trámite 420101. Proporciona métodos para actualizar
- * diferentes partes del estado.
- * @extends {Store<Tramite420101State>}
- */
-export class Tramite420101Store extends Store<Tramite420101State> {
+
+  /**
+   * @class
+   * @name Tramite420101Store
+   * @description
+   * Tienda para manejar el estado del trámite 420101. Proporciona métodos para actualizar
+   * diferentes partes del estado.
+   * @extends {Store<Tramite420101State>}
+   */
+  export class Tramite420101Store extends Store<Tramite420101State> {
 
   /**
    * @constructor
@@ -84,7 +85,6 @@ export class Tramite420101Store extends Store<Tramite420101State> {
   constructor() {
     super(createInitialState());
   }
-
 
   /**
    * @method updateProveedoresTabla

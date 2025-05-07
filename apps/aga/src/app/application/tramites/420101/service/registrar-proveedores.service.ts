@@ -20,7 +20,7 @@ export class RegistrarProveedoresService {
    * @description Constructor que inicializa el servicio HTTP necesario para realizar solicitudes.
    * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
    */
-  constructor(private readonly http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   /**
    * Obtiene los datos de proveedores manuales desde un archivo JSON.
