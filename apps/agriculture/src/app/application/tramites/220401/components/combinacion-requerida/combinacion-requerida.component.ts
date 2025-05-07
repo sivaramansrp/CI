@@ -163,13 +163,14 @@ this.agregarQuery.selectSolicitud$
     public isValid(field: string):boolean |null {
       return this.validacionesService.isValid(this.formCombinacion,field);
     }
-
     /**
      * @description createFormMerge se utiliza para crear el formulario denominado formCombinacion
      * 
      */
-
-  
+      /**
+     * Inicializa el formulario `formCombinacion` con los valores del estado `solicitudState`
+     * y aplica validación de longitud máxima (200) a `puntoIngreso`.
+     */
     public crearFormCombinacion():void {
       this.formCombinacion = this.fb.group({
         // especie:['this.solicitudState?.especie'],

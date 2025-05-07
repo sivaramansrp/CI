@@ -1,7 +1,7 @@
 import { AgregarTransporteComponent,CatalogosService} from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { AttentionOfRenewalRoutingModule } from './attentionOfRenewal-routing.module';
+import { AttentionOfRenewalRoutingModule } from './atencionDeRenovacion-routing.module';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -59,4 +59,6 @@ import { forwardRef } from '@angular/core';
   exports: [PasoUnoComponent, PasoDosComponent],
   providers: [ToastrService, CatalogosService],
 })
-export class AttentionOfRenewalModule {}
+export class AtencionDeRenovacionModule
+{}
+

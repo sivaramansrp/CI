@@ -236,8 +236,6 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * @param {string} campo - El nombre del campo.
    * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El método del store a invocar.
    */
-
-
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
