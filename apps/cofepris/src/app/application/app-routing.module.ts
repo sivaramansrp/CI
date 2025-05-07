@@ -489,6 +489,13 @@ const ROUTES: Routes = [
           (m) => m.ImportacionRetornoSanitarioModule
         ),
 },
+{
+  path: 'importar-de-remedios-herbals',
+  loadChildren: () =>
+    import('./tramites/260919/importar-de-remedios-herbals.module').then(
+      (m) => m.ImportarDeRemediosHerbalsModule
+    ),
+},
 ];
 
 @NgModule({
