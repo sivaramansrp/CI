@@ -2095,8 +2095,8 @@
   {
     "id": 300,
     "tramite": 6402,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/autorizacion-importacion/solicitante",
+    "linkDepartment": "/pago/autorizacion-importacion/solicitante",
     "department": "aga"
   },
   {
