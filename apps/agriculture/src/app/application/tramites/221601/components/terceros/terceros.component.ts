@@ -228,14 +228,22 @@ export class TercerosComponent implements OnInit, OnDestroy {
           this.updateStoreWithFormData();
          
   }
+   /**
+ * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
+ *
+ * Extrae los valores de los campos `transporte` y `empresa` del formulario y los fusiona con el
+ * estado actual `solicitudState`, creando un nuevo objeto que se usa para actualizar el store.
+ *
+ * @private
+ * @returns void
+ */
   updateStoreWithFormData(): void {
     const UPDATE_PERSONALES_FORM: Solicitud221601State = {
       ...this.solicitudState,    
       pais: this.datosPersonales.get('pais')?.value,
           
-    };
-  
-    // Update the store with the modified state
+    };  
+    // Actualiza el store con el estado modificado
     this.tramite221601Store.update(UPDATE_PERSONALES_FORM);
    
   }

@@ -140,14 +140,22 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     this.MedioForm.get('transporte')?.setValue(realizar.formData.transporte);
     this.updateStoreWithFormData();
   }
+  /**
+ * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
+ *
+ * Extrae los valores de los campos `transporte` y `empresa` del formulario y los fusiona con el
+ * estado actual `solicitudState`, creando un nuevo objeto que se usa para actualizar el store.
+ *
+ * @private
+ * @returns void
+ */
   private updateStoreWithFormData(): void {
     const UPDATE_MEDIO_FORM: Solicitud221601State = {
       ...this.solicitudState,     
       transporte: this.MedioForm.get('transporte')?.value,    
       empresa: this.MedioForm.get('empresa')?.value,      
-    };
-
-    // Update the store with the modified state
+    };   
+    // Actualiza el store con el estado modificado
     this.tramite221601Store.update(UPDATE_MEDIO_FORM);
   }
 

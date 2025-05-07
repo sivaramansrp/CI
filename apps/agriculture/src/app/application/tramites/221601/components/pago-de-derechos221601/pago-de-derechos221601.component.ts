@@ -143,6 +143,15 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('importe')?.setValue(realizar.formData.importe);
     this.updateStoreWithFormData();
   }
+  /**
+ * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
+ *
+ * Extrae los valores de los campos `transporte` y `empresa` del formulario y los fusiona con el
+ * estado actual `solicitudState`, creando un nuevo objeto que se usa para actualizar el store.
+ *
+ * @private
+ * @returns void
+ */
   private updateStoreWithFormData(): void {
     const UPDATE_PAGO_FORM: Solicitud221601State = {
       ...this.solicitudState,
@@ -151,7 +160,7 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
       importe: this.pagoDerechosForm.get('importe')?.value
     };
   
-    // Update the store with the modified state
+   // Actualiza el store con el estado modificado
     this.tramite221601Store.update(UPDATE_PAGO_FORM);
   }
   /**

@@ -18,35 +18,45 @@ export class ZoosanitarioParaImportacionComponent{
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
   pantallasPasos: ListaPasosWizard[] = PASOS;
-
-    TEXTOS= ALERTA_COM;
+/**
+ * Constante que asigna el texto de alerta definido en `ALERTA_COM`.
+ */
+  TEXTOS= ALERTA_COM;
 
   /**
    * @property {number} indice - El índice actual del paso.
    */
-  indice: number = 1;
+   indice: number = 1;
+   /**
+ * Referencia al componente hijo `WizardComponent`, 
+ * utilizada para controlar el asistente desde este componente padre.
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
- 
+ /**
+ * Objeto que contiene los datos de configuración de los pasos del asistente.
+ * - `nroPasos`: número total de pasos, basado en la longitud del arreglo `pantallasPasos`.
+ * - `indice`: índice actual del paso (inicializado desde `this.indice`).
+ * - `txtBtnAnt`: texto para el botón "Anterior".
+ * - `txtBtnSig`: texto para el botón "Continuar".
+ */
   datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+ * Constructor del componente. Inyecta el servicio `ZoosanitarioService`
+ * para manejar la lógica relacionada con trámites zoosanitarios.
+ *
+ * @param zoosanitarioService Instancia del servicio `ZoosanitarioService`.
+ */
   constructor(private zoosanitarioService: ZoosanitarioService) { }
- /**
-   * Actualiza la propiedad `indice` según el valor del objeto `AccionBoton` proporcionado.
-   * Si la propiedad `valor` de `AccionBoton` está entre 1 y 4 (inclusive), establece `indice` en `valor`.
-   * Dependiendo de la propiedad `accion` de `AccionBoton`, mueve el componente del asistente hacia adelante o hacia atrás.
-   *
-   * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
-   * @returns {void}
-   */
-//  ngOnInit(): void {
-    
-//  this.zoosanitarioService.initializeForms();
-  
-// }
+/**
+ * Procesa la acción del botón del wizard y navega al paso correspondiente.
+ *
+ * @param e Objeto `AccionBoton` con `valor` (paso destino) y `accion` ('cont' o 'prev').
+ */
   getValorIndice(e: AccionBoton): void {
    
     this.zoosanitarioService.getPayload().subscribe()
