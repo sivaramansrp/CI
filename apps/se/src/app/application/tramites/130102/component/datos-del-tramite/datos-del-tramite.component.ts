@@ -32,6 +32,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
@@ -104,7 +105,8 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    */
   constructor(private http: HttpClient, private fb: FormBuilder, 
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -128,7 +130,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
       fraccion: [this.solicitudState?.fraccion, [Validators.required]],
     });
     this.fetchSolicitudeOptions();
-
+    this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
   }
   /**
    * Asigna un valor del formulario al store.

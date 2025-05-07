@@ -431,7 +431,21 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  }
   
+  {
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
+  },
 ];
 
 @NgModule({
