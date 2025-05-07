@@ -20,10 +20,7 @@ export class RegistrarProveedoresService {
 
   proveedoresManual(): Observable<DatosDelProveedoresManual> {
     return this.http.get<DatosDelProveedoresManual>(`${this.apiUrl}proveedores.json`).pipe(
-      map((res: any) => {
-        return res.data;
-      })
+      map((res) => res)
     );
   }
-
 }

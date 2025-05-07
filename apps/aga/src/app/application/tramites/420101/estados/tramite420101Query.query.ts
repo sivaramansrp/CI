@@ -38,12 +38,9 @@ export class Tramite420101Query extends Query<Tramite420101State> {
   public getDatosProveedoresManual$ = this.select (
     (state) => state.datosProveedoresManual
   )
+  
   public getNormaDatos$ = this.select (
-    (state) => state.usoNormaDatos
-  )
-
-  public getProgramaImmexDatos$ = this.select (
-    (state) => state.usoProgramaImmexDatos
+    (state) => state.usoCrossListDatos
   )
 
   /**

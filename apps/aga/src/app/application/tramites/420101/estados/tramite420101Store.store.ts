@@ -1,6 +1,5 @@
-
-import { CROSLISTA_DE_NORMA, USO_ADUANA_DATOS, USO_PROGRAMA_IMMEX_DATOS, USO_PROGRAMA_PROSEC_DATOS } from '../constants/proveedores.enum';
-import { DatosDelRegistrarManual} from '../models/proveedores.model';
+import { CROSLISTA_DE_DATOS } from '../constants/proveedores.enum';
+import { DatosDelRegistrarManual } from '../models/proveedores.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -16,10 +15,7 @@ export interface Tramite420101State {
    * Índice de la pestaña seleccionada
    */
   tabSeleccionado?: number;
-  usoNormaDatos: string[];
-  usoProgramaImmexDatos: string[];
-  usoProgramaProsecDatos: string[];
-  usoAduanaDatos: string[];
+  usoCrossListDatos: string[];
   datosProveedoresManual: DatosDelRegistrarManual[];
 
 }
@@ -34,15 +30,11 @@ export interface Tramite420101State {
 export function createInitialState(): Tramite420101State {
   return {
     tabSeleccionado: 1,
-    usoNormaDatos: CROSLISTA_DE_NORMA,
-    usoProgramaImmexDatos: USO_PROGRAMA_IMMEX_DATOS,
-    usoProgramaProsecDatos: USO_PROGRAMA_PROSEC_DATOS,
-    usoAduanaDatos: USO_ADUANA_DATOS,
     datosProveedoresManual: [],
-
     registroFederalContribuyente: '',
     razonSocial: '',
     domicilioFiscal: '',
+    usoCrossListDatos: CROSLISTA_DE_DATOS,
   };
 }
 
@@ -71,7 +63,7 @@ export class Tramite420101Store extends Store<Tramite420101State> {
     }));
   }
 
-  public updateusoNormaDatos(usoNormaDatos: string[]): void {
+  public updateCrossListDatos(usoNormaDatos: string[]): void {
     this.update((state) => ({
       ...state,
       usoNormaDatos

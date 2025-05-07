@@ -75,10 +75,10 @@ export const REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA: ConfiguracionColumna<DatosDe
       clave: (fila) => fila.norma,
       orden: 5,
     },
-    { encabezado: 'Número de programa IMMEX', clave: (fila) => fila.numeroProgramaIMMEX, orden: 6 },
+    { encabezado: 'Número de programa IMMEX', clave: (fila) => fila.numeroProgramaImmex, orden: 6 },
     {
       encabezado: 'Número de programa PROSEC',
-      clave: (fila) => fila.numeroProgramaPROSEC,
+      clave: (fila) => fila.numeroProgramaProsec,
       orden: 7,
     },
     {
@@ -95,21 +95,10 @@ export interface ConfiguracionColumna<T> {
   hiperenlace?: boolean;
 }
 
-export const CROSLISTA_DE_NORMA: string[] = [
+export const CROSLISTA_DE_DATOS: string[] = [
   'AFGANISTÁN (EMIRATO ISLÁMICO)',
   'ALBANIA (REPÚBLICA DE)',
   'ALEMANIA (REPÚBLICA FEDERAL DE)',
   'ANDORRA (PRINCIPADO DE)',
-];
-
-export const USO_PROGRAMA_IMMEX_DATOS: string[] = [
-  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO'
-];
-
-export const USO_PROGRAMA_PROSEC_DATOS: string[] = [
-  'ALEMANIA (REPÚBLICA FEDERAL DE)',
-];
-
-export const USO_ADUANA_DATOS: string[] = [
   '8-2024-AUTORIZACIÓN PROGRAMA NUEVO'
 ];

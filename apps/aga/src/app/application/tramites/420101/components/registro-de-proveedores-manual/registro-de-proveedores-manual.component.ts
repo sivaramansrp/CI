@@ -23,10 +23,7 @@ export class RegistroDeProveedoresManualComponent implements OnInit, OnDestroy {
 
   public proveedoreForm!: FormGroup;
 
-  public usoNormaDatos: string[] = [];
-  public usoProgramaImmexDatos: string[] = [];
-  public usoProgramaProsecDatos: string[] = [];
-  public usoAduanaDatos: string[] = [];
+  public usoCrossListDatos: string[] = [];
 
   public destroyNotifier$: Subject<void> = new Subject();
 
@@ -62,42 +59,39 @@ export class RegistroDeProveedoresManualComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tramite420101Query
-      .select((state: Tramite420101State) => state.usoNormaDatos)
+      .select((state: Tramite420101State) => state.usoCrossListDatos)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((usoNormaDatos: string[]) => {
-        this.usoNormaDatos = usoNormaDatos;
+      .subscribe((datos: string[]) => {
+        this.usoCrossListDatos = datos;
       });
-
-    this.tramite420101Query
-      .select((state: Tramite420101State) => state.usoProgramaImmexDatos)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((usoProgramaImmexDatos: string[]) => {
-        this.usoProgramaImmexDatos = usoProgramaImmexDatos;
-      });
-    this.crearProveedoreFormForm();
+    this.iniciarProveedore();
+    this.getProveedoresManual();
   }
 
-  crearProveedoreFormForm(): void {
+  getProveedoresManual(): void {
+    this.registrarProveedoresService.proveedoresManual()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.proveedoreForm.patchValue(data);
+      });
+  }
+
+  iniciarProveedore(): void {
     this.proveedoreForm = this.fb.group({
-      registroFederalContribuyente: ['', Validators.required],
-      razonSocial: [{ value: '', disabled: false }],
-      domicilioFiscal: [{ value: '', disabled: false }],
+      registroFederalContribuyente: [{ value: 'ABC123456XYZ', disabled: false }, Validators.required],
+      razonSocial: [{ value: 'Empresa Demo S.A. de C.V.', disabled: true }],
+      domicilioFiscal: [{ value: 'Av. Reforma 123, CDMX', disabled: true }],
     });
   }
 
   agregarProveedore(): void {
     const VALOR = {
-      id: 0,
       rfc: this.proveedoreForm.get('registroFederalContribuyente')?.value,
       razonSocial: this.proveedoreForm.get('razonSocial')?.value,
-      nombreCompleto: '',
       domicilioFiscal: this.proveedoreForm.get('domicilioFiscal')?.value,
-      norma: this.usoNormaDatos[0],
-      numeroProgramaIMMEX: '',
-      numeroProgramaPROSEC: '',
-      aduanasOpera: '',
     }
     this.tramite420101Store.updateProveedoresTabla([VALOR]);
+    this.ubicaccion.back();
   }
 
   cancelar(): void {

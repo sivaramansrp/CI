@@ -17,14 +17,9 @@ export interface DatosDelRegistrarManual {
   nombreCompleto?: string;
   domicilioFiscal?: string;
   norma?: string;
-  numeroProgramaIMMEX?: string;
-  numeroProgramaPROSEC?: string;
+  numeroProgramaImmex?: string;
+  numeroProgramaProsec?: string;
   aduanasOpera?: string;
-}
-export interface RespuestaContenedor {
-  success: boolean;
-  datos: DatosDelRegistrar;
-  message: string;
 }
 
 export interface CrossListLable {
@@ -37,4 +32,5 @@ export interface DatosDelProveedoresManual {
   razonSocial: '';
   domicilioFiscal: '';
 }
+
 
