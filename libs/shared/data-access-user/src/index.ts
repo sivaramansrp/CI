@@ -28,6 +28,7 @@ export { ValidacionesFormularioService } from './core/services/shared/validacion
 export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
 export {TramiteDetails} from './core/models/tramiteDetails'
 export {TramiteStore} from './core/estados/tramite.store';
+export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
 export * from './core/ambientes';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/forma-render.enum';
