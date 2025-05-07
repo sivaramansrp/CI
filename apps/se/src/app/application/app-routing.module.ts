@@ -431,7 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  
+  {
+    path: 'modificacion-del-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/modificacion-del-cambio-de-sector.module').then(
+        (m) => m.ModificacionDelCambioDeSectorModule
+      ),
+  }
 ];
 
 @NgModule({

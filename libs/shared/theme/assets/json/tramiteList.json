@@ -2025,8 +2025,8 @@
   {
     "id": 290,
     "tramite": 80314,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-del-cambio-de-sector/tipo-de-persona",
+    "linkDepartment": "/pago/modificacion-del-cambio-de-sector/tipo-de-persona",
     "department": "se"
   },
   {
