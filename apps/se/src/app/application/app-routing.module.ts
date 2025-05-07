@@ -448,6 +448,14 @@ const ROUTES: Routes = [
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
   },
+  {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  }
+  
 ];
 
 @NgModule({
