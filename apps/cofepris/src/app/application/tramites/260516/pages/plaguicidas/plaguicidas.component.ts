@@ -10,7 +10,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { takeUntil } from 'rxjs/operators';
 
 /**
- * Represents the action and value associated with a button.
+ * Representa la acción y el valor asociados con un botón.
  */
 interface AccionBoton {
   accion: string;
@@ -80,11 +80,6 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
       }
     }
   }
-
-  
-
- 
-  
 
   /**
    * Obtiene el estado de los datos del domicilio legal desde el servicio `datosDomicilioLegalService`.
