@@ -80,7 +80,7 @@
     "id": 12,
     "tramite": 11201,
     "linkDashboard": "/aga/temporal-contenedores/solicitante",
-    "linkDepartment": "/aga/temporal-contenedores/solicitante",
+    "linkDepartment": "/pago/temporal-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -128,8 +128,8 @@
   {
     "id": 19,
     "tramite": 32502,
-    "linkDashboard": "/agace/aviso",
-    "linkDepartment": "/agace/aviso",
+    "linkDashboard": "/agace/aviso/solicitud",
+    "linkDepartment": "/pago/aviso/solicitud",
     "department": "agace"
   },
   {
@@ -219,8 +219,8 @@
   {
     "id": 32,
     "tramite": 80302,
-    "linkDashboard": "/se/solicitud-modificacion",
-    "linkDepartment": "/se/solicitud-modificacion",
+    "linkDashboard": "/se/solicitud-modificacion/solicitante",
+    "linkDepartment": "/pago/solicitud-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -941,7 +941,7 @@
     "id": 135,
     "tramite": 31501,
     "linkDashboard": "/agace/autoridad/solicitud",
-    "linkDepartment": "/agace/autoridad/solicitud",
+    "linkDepartment": "/pago/autoridad/solicitud",
     "department": "agace"
   },
   {
