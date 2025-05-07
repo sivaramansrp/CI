@@ -9,6 +9,7 @@ import { DestinatarioComponent } from '../../shared/components/destinatario/dest
 import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
+import { NotificacionesComponent } from "@ng-mf/data-access-user";
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PeruCertificadoComponent } from './page/peru-certificado/peru-certificado.component';
@@ -52,6 +53,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     TituloComponent,
     AlertComponent,
     RepresentanteLegalComponent,
+    NotificacionesComponent
 ]
 })
 export class ValidarCertificadoModule { }

@@ -209,6 +209,12 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   @ViewChild('closeModalMercancia') closeModalMercancia!: ElementRef;
   
+  /**
+   * @public
+   * @property {Notificacion} nuevaNotificacion
+   * @description Representa una nueva notificación que se utilizará en el componente.
+   * @command Este campo debe ser inicializado antes de su uso.
+   */
   public nuevaNotificacion!: Notificacion;
   /**
    * Formulario para agregar datos del productor.
@@ -436,6 +442,12 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Abre un modal con una notificación configurada.
+   * 
+   * @command abrirModal
+   * @description Este método configura y muestra un modal con una notificación de alerta.
+   */
   public abrirModal(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',

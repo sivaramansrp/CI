@@ -1,4 +1,4 @@
-import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
@@ -98,6 +98,13 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Estado actual de la sección.
    */
   private seccionState!: SeccionLibState;
+    /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * @descripcion
@@ -255,6 +262,26 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: Tramite110205Store) => void)(VALOR);
   }
+    /**
+   * Abre un modal con una notificación configurada.
+   * 
+   * @command abrirModal
+   * @description Este método configura y muestra un modal con una notificación de alerta.
+   */
+    public abrirModal(): void {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+  
 
   /**
    * @descripcion
