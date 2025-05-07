@@ -22,7 +22,7 @@ export const PASOS = [
   
   // Título del mensaje principal mostrado al usuario durante el trámite
   export const TITULOMENSAJE =
-    'Solicitud Permiso extraordinario para la exportación de sustancias químicas';
+    'Solicitud Permiso extraordinario para la importación de material explosivo';
   
   // Texto explicativo que se muestra una vez registrada la solicitud
   export const TEXTOS_REQUISITOS =

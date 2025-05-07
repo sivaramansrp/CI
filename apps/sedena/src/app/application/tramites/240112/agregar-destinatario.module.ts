@@ -8,7 +8,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 
 import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarProveedorComponent } from '../../shared/components/agregar-proveedor/agregar-proveedor.component';
@@ -28,16 +28,16 @@ import { TercerosRelacionadosContenedoraComponent } from '../240118/components/t
   imports: [
     CommonModule,
     AgregarDestinatarioRoutingModule,
-      WizardComponent,
-      BtnContinuarComponent,
-       SolicitanteComponent,
-          TercerosRelacionadosContenedoraComponent,
-          PagoDeDerechosComponent,
-          DatosMercanciaComponent,
-          DatosDelTramiteComponent,
-          AgregarProveedorComponent,
-          AgregarDestinatarioFinalComponent
-          
-      ]
+    WizardComponent,
+    BtnContinuarComponent,
+    SolicitanteComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosComponent,
+    DatosMercanciaComponent,
+    DatosDelTramiteComponent,
+    AgregarProveedorComponent,
+    AgregarDestinatarioFinalComponent,
+    SharedModule   
+    ]
 })
 export class AgregarDestinatarioModule { }
