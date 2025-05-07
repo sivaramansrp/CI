@@ -438,6 +438,13 @@ const ROUTES: Routes = [
         (m) => m.ExpedicionCertificadosFronteraModule
       ),
   },
+  {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  }
   
 ];
 
