@@ -40,13 +40,13 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { EstablecimientoService } from '../../service/establecimiento.service';
 
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitute-seccion.store';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitud-seccion.store';
 
-import { DatosDelSolicituteSeccionQuery } from '../../estados/datos-del-solicitute-seccion.query';
 import { ManifiestosComponent } from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../../../../shared/components/representante-legal/representante-legal.component';
 
 import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG } from '../../constantes/medicamentos-donacion.enum';
+import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.query';
 
 
 /**
@@ -487,7 +487,7 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSeccionQuery
   ) {
     // Constructor
   }
@@ -514,7 +514,6 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     this.loadScian();
     this.loadEstadoData();
     this.crearAgregarFormulario();
-    this.establecerDeshabilitado();
     this.estadoDelServicio();
   }
 
@@ -624,20 +623,6 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Deshabilita el campo "observaciones" del formulario de domicilio
-   */
-  establecerDeshabilitado(): void {
-    this.domicilioEstablecimiento.get('ideGenerica1')?.valueChanges.subscribe((value) => {
-      if (value === 'modificacion') {
-        this.domicilioEstablecimiento.get('observaciones')?.enable();
-      } else {
-        this.domicilioEstablecimiento.get('observaciones')?.disable();
-      }
-    });
-
-  }
-
-  /**
    * Carga los datos del catálogo SCIAN.
    */
   loadScian(): void {
@@ -698,11 +683,24 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    */
   enCambioDeControl(controlName: string): void {
 
-    const UPDATED_VALUE = {
-      [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
-    };
+    // const UPDATED_VALUE = {
+    //   [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
+    // };
 
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+    // this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+    const selectedValue = this.domicilioEstablecimiento.get(controlName)?.value;
+  
+  // Update store with new value
+  this.domicilioEstablecimientoStore.update({
+    [controlName]: selectedValue
+  });
+
+  // Enable or disable 'observaciones' dynamically
+  if (controlName === 'ideGenerica1' && selectedValue === 'modificacion') {
+    this.domicilioEstablecimiento.get('observaciones')?.enable();
+  } else {
+    this.domicilioEstablecimiento.get('observaciones')?.disable();
+  }
   }
 
   /**

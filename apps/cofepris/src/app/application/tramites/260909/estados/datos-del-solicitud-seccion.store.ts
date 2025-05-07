@@ -162,7 +162,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
  * Utiliza Akita para gestionar el estado de manera reactiva.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'datosDelSolicitute' })
+@StoreConfig({ name: 'datosDelSolicitud' })
 export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicituteSeccionState> {
   /**
    * Constructor de la clase.
