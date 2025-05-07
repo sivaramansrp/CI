@@ -1,12 +1,3 @@
-/**
- * @component CapturarFacturasComponent
- * @description Este componente es responsable de capturar los detalles de las facturas.
- * Incluye un formulario para capturar los datos de las facturas y una tabla para mostrar las facturas capturadas.
- * 
- * @import { Component } from '@angular/core';
- * @import { FormGroup, Validators } from '@angular/forms';
- * @import { TableComponent } from '../../../../shared/components/table/table.component';
- */
 
 import { HttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
