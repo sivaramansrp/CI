@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { OperacionesDeComercioExteriorComponent } from './components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
 import { OperacionesDeComercioExteriorRoutingModule } from './operaciones-de-comercio-exterior-routing.module';
-import { PasoDocComponent } from './pages/paso-doc/paso-doc.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
@@ -15,7 +15,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    PasoDocComponent,
+    PasoDosComponent,
     PasoUnoComponent,
     SolicitudPageComponent,
     OperacionesDeComercioExteriorComponent

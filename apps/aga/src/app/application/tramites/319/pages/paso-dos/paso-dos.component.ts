@@ -13,11 +13,11 @@ import { Router } from '@angular/router';
  * a la página de acuse en caso de que la firma sea válida.
  */
 @Component({
-  selector: 'app-paso-doc',
-  templateUrl: './paso-doc.component.html',
-  styleUrl: './paso-doc.component.scss',
+  selector: 'app-paso-dos',
+  templateUrl: './paso-dos.component.html',
+  styleUrl: './paso-dos.component.scss',
 })
-export class PasoDocComponent {
+export class PasoDosComponent {
   /**
    * Constructor del componente.
    * 

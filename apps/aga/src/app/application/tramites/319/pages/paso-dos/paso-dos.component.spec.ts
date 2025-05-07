@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { PasoDocComponent } from './paso-doc.component';
+import { PasoDosComponent } from './paso-dos.component';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -35,7 +35,7 @@ class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-describe('PasoDocComponent', () => {
+describe('PasoDosComponent', () => {
   let fixture;
   let component;
 
@@ -43,7 +43,7 @@ describe('PasoDocComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        PasoDocComponent,
+        PasoDosComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -51,10 +51,10 @@ describe('PasoDocComponent', () => {
       providers: [
         { provide: Router, useClass: MockRouter }
       ]
-    }).overrideComponent(PasoDocComponent, {
+    }).overrideComponent(PasoDosComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(PasoDocComponent);
+    fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.debugElement.componentInstance;
   });
 
