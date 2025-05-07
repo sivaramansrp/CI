@@ -682,21 +682,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Carga los datos del catálogo de justificación.
    */
   enCambioDeControl(controlName: string): void {
-
-    // const UPDATED_VALUE = {
-    //   [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
-    // };
-
-    // this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-    const selectedValue = this.domicilioEstablecimiento.get(controlName)?.value;
-  
-  // Update store with new value
-  this.domicilioEstablecimientoStore.update({
-    [controlName]: selectedValue
+    const valorSeleccionado = this.domicilioEstablecimiento.get(controlName)?.value;
+    this.domicilioEstablecimientoStore.update({
+    [controlName]: valorSeleccionado
   });
-
-  // Enable or disable 'observaciones' dynamically
-  if (controlName === 'ideGenerica1' && selectedValue === 'modificacion') {
+  if (controlName === 'ideGenerica1' && valorSeleccionado === 'modificacion') {
     this.domicilioEstablecimiento.get('observaciones')?.enable();
   } else {
     this.domicilioEstablecimiento.get('observaciones')?.disable();
