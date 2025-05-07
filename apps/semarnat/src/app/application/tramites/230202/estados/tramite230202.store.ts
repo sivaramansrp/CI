@@ -440,10 +440,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    *
    * {DestinatarioConfiguracionItem[]} datosTabla - La lista de destinatarios.
    */
-  setDatosDestinatario(datosTabla: DestinatarioConfiguracionItem[]) {
+  setDatosDestinatario(destinatarios: DestinatarioConfiguracionItem[]) {
     this.update((state) => ({
       ...state,
-      destinatarios: datosTabla,
+      destinatarios: destinatarios,
     }));
   }
   

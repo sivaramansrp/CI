@@ -8,13 +8,12 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DESTINARIO_INFO, DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../../230202/enum/destinatario-tabla.enum';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MetaInfo } from '../../models/datos-tramite.model';
-import { Modal } from 'bootstrap';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 
@@ -45,13 +44,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   formularioDestinatario!: FormGroup;
 
+  /**
+   * Una instancia de FormGroup utilizada para gestionar los controles del formulario
+   * y la validación para agregar "mercancías" en la aplicación.
+   */
   agregarMercanciasForm!: FormGroup;
 
   /**
    * Estado actual de la solicitud "230202".
    * Este estado se actualiza al suscribirse al observable selectSolicitud$.
    */
-  estadoSolicitud!: Solicitud230202State;
+  solicitudState!: Solicitud230202State;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
@@ -96,6 +99,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   public paisesDatos: Catalogo[] = [];
 
+  /**
+   * Un arreglo que contiene las filas seleccionadas de tipo `DestinatarioConfiguracionItem`.
+   * Esto se utiliza para gestionar los elementos seleccionados en el contexto del componente.
+   */
   filaSeleccionada: DestinatarioConfiguracionItem[] = [];
 
 
@@ -111,9 +118,29 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMercancias', { static: false }) agregarModal!: TemplateRef<Element>;
 
+  /**
+   * Opciones disponibles para el tipo de persona.
+   * Estas opciones se utilizan en el formulario para seleccionar si el destinatario
+   * es una persona física o moral.
+   * 
+   * @type {typeof TIPO_PERSONA_OPCIONES}
+   */
   tipoPersona = TIPO_PERSONA_OPCIONES;
+
+  /**
+   * Opciones disponibles para la nacionalidad.
+   * Estas opciones se utilizan en el formulario para seleccionar la nacionalidad del destinatario.
+   * 
+   * @type {typeof NACIONALIDAD_OPCIONES}
+   */
   nacionalidad = NACIONALIDAD_OPCIONES;
 
+  /**
+   * Información meta utilizada para configurar los campos del formulario.
+   * Contiene etiquetas y configuraciones específicas para los campos relacionados con el destinatario.
+   * 
+   * @type {MetaInfo}
+   */
   metaInfo: MetaInfo = DESTINARIO_INFO;
 
   /**
@@ -127,9 +154,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private tramite230202Query: Tramite230202Query,
     private modalService: BsModalService,
     private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí.
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -138,25 +163,23 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite230202Query.selectSolicitud$
-      .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe((state) => {
-        this.estadoSolicitud = state;
-      });
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((state) => {
+          this.solicitudState = state;
+        })
+      )
+      .subscribe();
 
     this.crearFormularioDestinatario();
     this.cargarDatos();
-    // this.manejarCambioEntidadFederativa();
   }
 
   /**
- * Recupera varias listas de datos del servicio `materialesPeligrososService` y
- * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
- * destrucción usando `takeUntil(this.unsubscribe$)`.
- * @method cargarDatos
- * @returns {void}
- */
+   * Recupera varias listas de datos del servicio `phytosanitaryReexportacionService` y
+   * las asigna a propiedades locales.
+   */
   cargarDatos(): void {
-
     this.phytosanitaryReexportacionService
       .getMetaInfo()
       .pipe(takeUntil(this.notificadorDestruccion$))
@@ -177,28 +200,31 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Inicializa el valor del formulario con el estado actual de la solicitud.
    */
   crearFormularioDestinatario(): void {
-    
-    this.formularioDestinatario = this.formBuilder.group({
-    });
-
+    this.formularioDestinatario = this.formBuilder.group({});
     this.agregarMercanciasForm = this.formBuilder.group({
       nacionalidad: [{ value: 'nacional', disabled: true }, Validators.required],
       tipoPersona: ['', Validators.required],
       razonSocial: ['', Validators.maxLength(250)],
       nombre: ['', Validators.maxLength(200)],
       apellidoPaterno: ['', Validators.maxLength(200)],
-      apellidoMaterno: ['',],
+      apellidoMaterno: [''],
       codigoPostal: ['', [Validators.required, Validators.maxLength(15)]],
       paisSinMexico: [''],
       pais: ['', Validators.required],
       descripcionPais: [''],
       ciudad: ['', [Validators.required, Validators.maxLength(120)]],
-      domicilio: ['', Validators.required]
-    })
+      domicilio: ['', Validators.required],
+    });
+
+    this.filaSeleccionada.push(this.solicitudState.destinatarios[0]);
   }
 
-
-  onTipoPersonaChange(event: unknown) {
+  /**
+   * Maneja el cambio en el tipo de persona (física o moral) y actualiza las validaciones
+   * del formulario en consecuencia.
+   * @param event El valor seleccionado para el tipo de persona.
+   */
+  onTipoPersonaChange(event: unknown): void {
     const IS_FISICA = event === 'fisica';
     const NOMBRES = this.agregarMercanciasForm.get('nombre');
     const PRIMER_APELLIDO = this.agregarMercanciasForm.get('apellidoPaterno');
@@ -222,11 +248,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
-
   /**
    * Maneja los cambios en la entidad federativa seleccionada.
-   * Actualiza el estado del almacén y agrega una entrada a la tabla de datos
-   * si la entidad federativa es válida y la tabla está vacía.
+   * Abre un modal si la entidad federativa es válida.
    */
   manejarCambioEntidadFederativa(): void {
     if (this.modalRef) {
@@ -237,6 +261,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Maneja la fila seleccionada en la tabla de terceros.
    * Habilita o deshabilita el botón de modificar según la selección.
+   * @param filaSeleccionada Las filas seleccionadas en la tabla.
    */
   manejarFilaSeleccionada(filaSeleccionada: DestinatarioConfiguracionItem[]): void {
     this.botonModificarHabilitado = filaSeleccionada.length > 0;
@@ -263,10 +288,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.tramite230202Store.setTercerosPopupState(this.popupCerrado);
   }
 
+  /**
+   * Abre un modal con el contenido proporcionado.
+   * @param template La plantilla del modal.
+   */
   abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
   }
 
+  /**
+   * Abre un modal para editar datos si hay una fila seleccionada.
+   * @param template La plantilla del modal.
+   */
   editDataModal(template: TemplateRef<unknown>): void {
     if (this.filaSeleccionada?.length > 0) {
       this.agregarMercanciasForm.patchValue(this.filaSeleccionada[0]);
@@ -274,6 +307,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Cierra el modal y restablece el formulario.
+   */
   cerrarModal(): void {
     this.agregarMercanciasForm.markAsUntouched();
     this.agregarMercanciasForm.updateValueAndValidity();
@@ -282,23 +318,32 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina las filas seleccionadas de la tabla y restablece el formulario.
+   */
   eleminarSeleccionados(): void {
-    // this.datosTabla = this.datosTabla.filter((item) => !this.filaSeleccionada.includes(item));
     this.datosTabla = [];
     this.filaSeleccionada = [];
+    this.tramite230202Store.setDatosDestinatario(this.datosTabla);
     this.agregarMercanciasForm.reset();
     this.formularioDestinatario.reset();
     this.botonModificarHabilitado = false;
   }
 
+  /**
+   * Guarda los datos del destinatario en la tabla y actualiza el estado del almacén.
+   */
   guardarDestinatario(): void {
     this.agregarMercanciasForm.markAllAsTouched();
     this.agregarMercanciasForm.updateValueAndValidity();
 
     if (this.agregarMercanciasForm.valid) {
       const DATA = this.agregarMercanciasForm.value;
-      const TABLE_DATA = {...DATA, paisStr: this.paisesDatos.find((pais)=> pais.id === DATA.pais)?.descripcion}
-      if(this.datosTabla.length > 0 ) {
+      const TABLE_DATA = {
+        ...DATA,
+        paisStr: this.paisesDatos.find((pais) => pais.id === DATA.pais)?.descripcion,
+      };
+      if (this.datosTabla.length > 0) {
         this.datosTabla.pop();
       }
       this.datosTabla.push(TABLE_DATA);
@@ -309,6 +354,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
   /**
    * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param controlName El nombre del control del formulario.
    * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
    */
   isInvalid(controlName: string): boolean | null {
