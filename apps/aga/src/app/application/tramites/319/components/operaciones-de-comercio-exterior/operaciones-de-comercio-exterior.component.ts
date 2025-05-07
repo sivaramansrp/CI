@@ -154,6 +154,12 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   modalEmergente:boolean=false;
 
+  /**
+   * @property {Notificacion} nuevaAlertaNotificacion
+   * @description Propiedad que representa una nueva alerta de notificación.
+   * @remarks Esta propiedad se utiliza para manejar las notificaciones en el componente.
+   * @access Public
+   */
   public nuevaAlertaNotificacion!: Notificacion;  
   /**
    * @constructor
