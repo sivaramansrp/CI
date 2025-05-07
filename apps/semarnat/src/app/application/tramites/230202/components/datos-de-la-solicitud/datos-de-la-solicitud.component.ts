@@ -285,6 +285,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
+    this.datosSolicitud = this.solicitudState.datosSolicitud;
   }
 
   /**
@@ -551,9 +552,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   descripcionProductoSeleccion(): void {
-    const DESCRIPCIONPRODUCTO = this.solicitudForm.get(
-      'reexportacionForm.descripcionProducto'
-    )?.value;
+    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
@@ -680,21 +679,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * También reinicia el formulario de la solicitud.
    */
   agregarSolicitud() {
-    this.phytosanitaryReexportacionService
-      .agregarSolicitud()
-      .pipe(takeUntil(this.destroyNotifier$))
+    this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosSolicitud.length + 1;
-          this.datosSolicitud.push(respuesta.datos);
-          (
-            this.store.setDatosSolicitud as unknown as (
-              valor: DatosSolicitud[]
-            ) => void
-          )(this.datosSolicitud);
+          this.datosSolicitud = [...this.datosSolicitud, respuesta.datos];
+          this.store.setDatosSolicitud(this.datosSolicitud);
           this.solicitudForm.patchValue({
-            fraccionArancelaria: '',
-            cantidad: '',
+            fraccionArancelaria: this.solicitudState?.fraccionArancelaria,
+            cantidad: this.solicitudState?.cantidad,
+            cantidadLetra: this.solicitudState?.cantidadLetra,
           });
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
