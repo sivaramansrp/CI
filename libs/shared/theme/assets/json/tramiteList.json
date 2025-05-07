@@ -1626,8 +1626,8 @@
   {
     "id": 233,
     "tramite": 260914,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-de-insumos/pantallas",
+    "linkDepartment": "/pago/importacion-de-insumos/pantallas",
     "department": "cofepris"
   },
   {
