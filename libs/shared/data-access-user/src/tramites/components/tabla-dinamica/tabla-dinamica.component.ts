@@ -131,6 +131,8 @@ export class TablaDinamicaComponent<T> {
    * Almacena un array de los indices de las acciones para la tabla definidos en el enum TablaAcciones
    */
   public accionesEnum = TablaAcciones;
+
+  public batonValor:string=ESTADO_REGISTRO.BAJA
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
@@ -228,14 +230,27 @@ export class TablaDinamicaComponent<T> {
     this.alternarValor.emit(row);
   }
 
-// Justificación: La estructura del objeto 'row' varía dinámicamente según los datos de la tabla, 
-// y no es viable aplicar tipado estricto en este momento. Se refactorizará con una interfaz adecuada más adelante.
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+
+/**
+ * Obtiene el texto del botón basado en el estado de la fila proporcionada.
+ *
+ * @param fila - Objeto que representa una fila, el cual puede contener la propiedad `desEstatus`.
+ * @returns El valor del botón (`batonValor`) basado en el estado de la fila.
+ *
+ * @remarks
+ * Si la propiedad `desEstatus` de la fila es igual a `TEXTO_FILA_REGISTRO.BAJA`,
+ * el valor del botón (`batonValor`) se establece en `ESTADO_REGISTRO.ACTIVAR`.
+ */
+// 'fila' proviene de tablas con tipos de fila variables; solo algunas tienen 'desEstatus'.
+// Se usa 'any' para permitir acceso flexible en este componente compartido.
+// El encadenamiento opcional garantiza seguridad en tiempo de ejecución.
+// El uso de 'any' es intencional y limitado a este método.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 obtenerTextoBoton(fila:any):string{
  if(fila?.desEstatus && fila?.desEstatus===TEXTO_FILA_REGISTRO.BAJA){
-     return ESTADO_REGISTRO.ACTIVAR
+     this.batonValor=ESTADO_REGISTRO.ACTIVAR
   }
-  return ESTADO_REGISTRO.BAJA;
+  return this.batonValor
  
   }
 }
