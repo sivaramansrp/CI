@@ -437,8 +437,7 @@ const ROUTES: Routes = [
       import('./tramites/130401/modificacion-descripcion.module').then(
         (m) => m.ModificacionDescripcionModule
       )
-  }
-  
+  },
   {
     path: 'certificado-alianza-posteriori',
     loadChildren:() =>
