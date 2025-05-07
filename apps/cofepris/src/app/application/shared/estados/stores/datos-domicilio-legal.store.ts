@@ -198,7 +198,11 @@ export interface DatosDomicilioLegalState {
    * El valor de apellidoMaterno.
    */
   apellidoMaterno: string;
-  aduanasDeEntrada:string[]
+  /**
+ * Lista de aduanas de entrada asociadas.
+ * @type {string[]}
+ */
+  aduanasDeEntrada: string[]
 
   /**
    * El valor de garantiasOfrecidas.
@@ -400,7 +404,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de apellidoMaterno.
      */
     apellidoMaterno: '',
-    aduanasDeEntrada:[],
+    /**
+     * Lista de aduanas de entrada asociadas.
+     * @type {string[]}
+     */
+    aduanasDeEntrada: [],
 
     /**
      * El valor de garantiasOfrecidas.
@@ -918,9 +926,9 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
   }
 
   /**
-   * Updates the state with the provided array of country of origin data.
+   * Actualiza el estado con el arreglo proporcionado de datos de país de origen.
    *
-   * @param aduanasDeEntrada de entrada - An array of strings representing the country of origin data.
+   * @param aduanasDeEntrada - Un arreglo de cadenas que representa los datos de país de origen.
    */
   public setPaisDeOriginDatos(aduanasDeEntrada: string[]): void {
     this.update((state) => ({
@@ -928,11 +936,11 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       aduanasDeEntrada,
     }));
   }
-   /**
-   * Establece el estado de garantiasOfrecidas.
-   * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
-   */
-   public setGarantiasOfrecidas(garantiasOfrecidas: string): void {
+  /**
+  * Establece el estado de garantiasOfrecidas.
+  * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
+  */
+  public setGarantiasOfrecidas(garantiasOfrecidas: string): void {
     this.update((state) => ({
       ...state,
       garantiasOfrecidas,

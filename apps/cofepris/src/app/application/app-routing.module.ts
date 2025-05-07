@@ -438,7 +438,15 @@ const ROUTES: Routes = [
       import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
         (m) => m.ModificacionPermisoImportacionModule
       ),
-},
+}, 
+ {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
+  },
+
 
 {
   path: 'exportacion-medicamentos-contengan',
@@ -496,7 +504,20 @@ const ROUTES: Routes = [
           (m) => m.ImportacionRetornoSanitarioModule
         ),
 },
-
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+},
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
+}
 ];
 
 @NgModule({
