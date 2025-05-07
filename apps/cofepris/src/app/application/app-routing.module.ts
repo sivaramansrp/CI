@@ -445,7 +445,15 @@ const ROUTES: Routes = [
       import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
         (m) => m.ModificacionPermisoImportacionModule
       ),
-},  {
+},
+{
+  path: 'modificacion-permiso-meds-uso',
+  loadChildren: () =>
+    import('./tramites/260908/modificacion-permiso-meds-uso.module').then(
+      (m) => m.ModificacionPermisoMedsUsoModule
+    ),
+},
+ {
     path: 'permiso-nutrientes',
     loadChildren: () =>
       import('./tramites/260508/permiso-nutrientes.module').then(
