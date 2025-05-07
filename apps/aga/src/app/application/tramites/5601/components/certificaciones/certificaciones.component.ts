@@ -1,9 +1,9 @@
-import { Certificacion5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import {Subject,map,takeUntil } from 'rxjs';
+import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
 import { CommonModule } from '@angular/common';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 
@@ -23,7 +23,7 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
 
   mensajeModal!: string;
 
-  public certificacionState!: Certificacion5601State;
+  public certificacionState!: Tramite5601State;
 
     /**
    * Un Subject que emite un valor `void` cuando el componente es destruido.

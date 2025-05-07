@@ -1,14 +1,14 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-export interface Certificacion5601State {
+export interface Tramite5601State {
     tieneCertificacion:boolean,
     certificacionEmpresa: string, 
     otraCertificacion: string
 
 }
 
-export function createInitialState(): Certificacion5601State {
+export function createInitialState(): Tramite5601State {
     return {
         tieneCertificacion: false,
         certificacionEmpresa: '',
@@ -21,7 +21,7 @@ export function createInitialState(): Certificacion5601State {
     providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite5601', resettable: true })
-export class Tramite5601Store extends Store<Certificacion5601State> {
+export class Tramite5601Store extends Store<Tramite5601State> {
 
     constructor() {
         super(createInitialState());
