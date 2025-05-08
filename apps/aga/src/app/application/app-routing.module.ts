@@ -197,6 +197,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
+      )
+  },
+  {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
       import('./tramites/40202/modificacion-transportacion-maritima.module').then(
