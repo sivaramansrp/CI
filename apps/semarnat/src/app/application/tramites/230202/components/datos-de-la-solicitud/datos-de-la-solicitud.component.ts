@@ -515,7 +515,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   aduanaSeleccion(): void {
     const ADUANA = this.solicitudForm.get('reexportacionForm.aduana')?.value;
-    console.log(ADUANA);
     this.store.setAduana(ADUANA);
   }
 
@@ -545,7 +544,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   descripcionProductoSeleccion(): void {
     const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
-    console.log(DESCRIPCIONPRODUCTO);
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
