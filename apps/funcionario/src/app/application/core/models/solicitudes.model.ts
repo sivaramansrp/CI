@@ -1,3 +1,6 @@
+/**
+ * Representa un elemento de la lista de solicitudes.
+ */
 export interface ListaSolicitudes {
     //Id solicitud
     idSolicitud: string;
