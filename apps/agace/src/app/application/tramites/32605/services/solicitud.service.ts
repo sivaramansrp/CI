@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   EnlaceOperativo,
+  Inventarios,
   RecibirNotificaciones,
   RepresentanteLegal,
   SeccionSubcontratados,
@@ -69,6 +70,12 @@ export class SolicitudService {
   conseguirSeccionSubcontratados(): Observable<SeccionSubcontratados> {
     return this.http.get<SeccionSubcontratados>(
       'assets/json/32605/seccion-subcontratados.json'
+    );
+  }
+
+  conseguirInventarios(): Observable<Inventarios[]> {
+    return this.http.get<Inventarios[]>(
+      'assets/json/32605/inventarios-datos.json'
     );
   }
 }

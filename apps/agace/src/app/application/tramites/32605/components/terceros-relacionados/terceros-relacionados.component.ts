@@ -149,6 +149,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
             telefono: this.solicitud32605State.telefono,
             correoElectronico: this.solicitud32605State.correoElectronico,
           });
+          this.enlaceOperativosLista =
+            this.solicitud32605State.enlaceOperativosLista;
         })
       )
       .subscribe();
@@ -254,7 +256,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       'Se debe registrar por lo menos un enlace operativo que no sea suplente.'
     );
     this.pedimentos.push(PEDIMENTO);
-    this.enlaceOperativosLista.push(evento);
+    this.enlaceOperativosLista = [...this.enlaceOperativosLista, evento];
+    this.solicitud32605Store.actualizarEnlaceOperativosLista(
+      this.enlaceOperativosLista
+    );
   }
 
   abrirModal(mensaje: string, i: number = 0): void {

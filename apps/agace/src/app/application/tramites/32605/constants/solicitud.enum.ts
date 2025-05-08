@@ -1,6 +1,8 @@
 import {
+  ConfiguracionAporteColumna,
   ConfiguracionColumna,
   InputFecha,
+  TablaCampoSeleccion,
 } from '@libs/shared/data-access-user/src';
 import {
   Domicilios,
@@ -311,24 +313,31 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
     },
   ];
 
-export const INVENTARIOS_CONFIGURACION: ConfiguracionColumna<Inventarios>[] = [
-  {
-    encabezado: 'Nombre del sistema o datos para su identificación',
-    clave: (item: Inventarios) => item.nombre,
-    orden: 1,
-  },
-  {
-    encabezado: 'Lugar de radicación',
-    clave: (item: Inventarios) => item.lugarRadicacion,
-    orden: 2,
-  },
-  {
-    encabezado:
-      'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
-    clave: (item: Inventarios) => item.anexo24,
-    orden: 3,
-  },
-];
+export const INVENTARIOS_CONFIGURACION: ConfiguracionAporteColumna<Inventarios>[] =
+  [
+    {
+      encabezado: 'Nombre del sistema o datos para su identificación',
+      llave: '',
+      clave: (item: Inventarios) => item.nombre,
+      orden: 1,
+      opcionDeEntrada: TablaCampoSeleccion.NONE,
+    },
+    {
+      encabezado: 'Lugar de radicación',
+      llave: '',
+      clave: (item: Inventarios) => item.lugarRadicacion,
+      orden: 2,
+      opcionDeEntrada: TablaCampoSeleccion.NONE,
+    },
+    {
+      encabezado:
+        'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
+      llave: '',
+      clave: (item: Inventarios) => item.anexo24,
+      orden: 3,
+      opcionDeEntrada: TablaCampoSeleccion.CHECKBOX,
+    },
+  ];
 
 /** Configuración de columnas para Sección de Socios IC */
 export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<SeccionSociosIC>[] =

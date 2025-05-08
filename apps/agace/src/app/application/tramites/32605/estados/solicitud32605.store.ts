@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import {
+  Domicilios,
+  EnlaceOperativo,
+  NumeroDeEmpleados,
+  SeccionSociosIC,
+} from '../models/solicitud.model';
 
 export interface Solicitud32605State {
   idPersonaSolicitud: string;
@@ -119,6 +125,45 @@ export interface Solicitud32605State {
   empresa: string | number;
   comercioExterior: string | number;
   mutuo: string | number;
+
+  catseleccionados: number;
+  servicio: number;
+  '190': string | number;
+  '191': string | number;
+  '199': string | number;
+  empleados: string;
+  bimestre: number;
+  '2034': string | number;
+  '236': string | number;
+  '237': string | number;
+  '238': string | number;
+  '239': string | number;
+  '240': string | number;
+  '243': string | number;
+  '244': string | number;
+  '245': string | number;
+  indiqueTodos: number;
+  '246': string | number;
+  file1: string;
+  file2: string;
+  '247': string | number;
+  '248': string | number;
+  identificacion: string;
+  lugarDeRadicacion: string;
+  '249': string | number;
+  '250': string | number;
+  '251': string | number;
+  checkbox1: boolean;
+  checkbox2: boolean;
+  checkbox3: boolean;
+  actualmente2: string;
+  actualmente1: string;
+
+  numeroDeEmpleadosLista: NumeroDeEmpleados[];
+  domiciliosDatos: Domicilios[];
+  listaSeccionSociosIC: SeccionSociosIC[];
+
+  enlaceOperativosLista: EnlaceOperativo[];
 }
 
 export function createInitialSolicitudState(): Solicitud32605State {
@@ -196,6 +241,43 @@ export function createInitialSolicitudState(): Solicitud32605State {
     empresa: 0,
     comercioExterior: 0,
     mutuo: 0,
+
+    catseleccionados: 0,
+    servicio: 0,
+    '190': 0,
+    '191': 0,
+    '199': 0,
+    empleados: '',
+    bimestre: 0,
+    '2034': 0,
+    '236': 0,
+    '237': 0,
+    '238': 0,
+    '239': 0,
+    '240': 0,
+    '243': 0,
+    '244': 0,
+    '245': 0,
+    indiqueTodos: 0,
+    '246': 0,
+    file1: '',
+    file2: '',
+    '247': 0,
+    '248': 0,
+    identificacion: '',
+    lugarDeRadicacion: '',
+    '249': 0,
+    '250': 0,
+    '251': 0,
+    checkbox1: false,
+    checkbox2: false,
+    checkbox3: false,
+    actualmente2: '',
+    actualmente1: '',
+    numeroDeEmpleadosLista: [] as NumeroDeEmpleados[],
+    domiciliosDatos: [] as Domicilios[],
+    listaSeccionSociosIC: [] as SeccionSociosIC[],
+    enlaceOperativosLista: [] as EnlaceOperativo[],
   };
 }
 @Injectable({
@@ -519,6 +601,150 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
 
   actualizarMutuo(valor: string | number): void {
     this.update((state) => ({ ...state, mutuo: valor }));
+  }
+
+  actualizarCatseleccionados(valor: number): void {
+    this.update((state) => ({ ...state, catseleccionados: valor }));
+  }
+
+  actualizarServicio(valor: number): void {
+    this.update((state) => ({ ...state, servicio: valor }));
+  }
+
+  actualizar190(valor: string | number): void {
+    this.update((state) => ({ ...state, '190': valor }));
+  }
+
+  actualizar191(valor: string | number): void {
+    this.update((state) => ({ ...state, '191': valor }));
+  }
+
+  actualizar199(valor: string | number): void {
+    this.update((state) => ({ ...state, '199': valor }));
+  }
+
+  actualizarEmpleados(valor: string): void {
+    this.update((state) => ({ ...state, empleados: valor }));
+  }
+
+  actualizarBimestre(valor: number): void {
+    this.update((state) => ({ ...state, bimestre: valor }));
+  }
+
+  actualizar2034(valor: string | number): void {
+    this.update((state) => ({ ...state, '2034': valor }));
+  }
+
+  actualizar236(valor: string | number): void {
+    this.update((state) => ({ ...state, '236': valor }));
+  }
+
+  actualizar237(valor: string | number): void {
+    this.update((state) => ({ ...state, '237': valor }));
+  }
+
+  actualizar238(valor: string | number): void {
+    this.update((state) => ({ ...state, '238': valor }));
+  }
+
+  actualizar239(valor: string | number): void {
+    this.update((state) => ({ ...state, '239': valor }));
+  }
+
+  actualizar240(valor: string | number): void {
+    this.update((state) => ({ ...state, '240': valor }));
+  }
+
+  actualizar243(valor: string | number): void {
+    this.update((state) => ({ ...state, '243': valor }));
+  }
+
+  actualizar244(valor: string | number): void {
+    this.update((state) => ({ ...state, '244': valor }));
+  }
+
+  actualizar245(valor: string | number): void {
+    this.update((state) => ({ ...state, '245': valor }));
+  }
+
+  actualizarIndiqueTodos(valor: number): void {
+    this.update((state) => ({ ...state, indiqueTodos: valor }));
+  }
+
+  actualizar246(valor: string | number): void {
+    this.update((state) => ({ ...state, '246': valor }));
+  }
+
+  actualizarFile1(valor: string): void {
+    this.update((state) => ({ ...state, file1: valor }));
+  }
+
+  actualizarFile2(valor: string): void {
+    this.update((state) => ({ ...state, file2: valor }));
+  }
+
+  actualizar247(valor: string | number): void {
+    this.update((state) => ({ ...state, '247': valor }));
+  }
+
+  actualizar248(valor: string | number): void {
+    this.update((state) => ({ ...state, '248': valor }));
+  }
+
+  actualizarIdentificacion(valor: string): void {
+    this.update((state) => ({ ...state, identificacion: valor }));
+  }
+
+  actualizarLugarDeRadicacion(valor: string): void {
+    this.update((state) => ({ ...state, lugarDeRadicacion: valor }));
+  }
+
+  actualizar249(valor: string | number): void {
+    this.update((state) => ({ ...state, '249': valor }));
+  }
+
+  actualizar250(valor: string | number): void {
+    this.update((state) => ({ ...state, '250': valor }));
+  }
+
+  actualizar251(valor: string | number): void {
+    this.update((state) => ({ ...state, '251': valor }));
+  }
+
+  actualizarCheckbox1(valor: boolean): void {
+    this.update((state) => ({ ...state, checkbox1: valor }));
+  }
+
+  actualizarCheckbox2(valor: boolean): void {
+    this.update((state) => ({ ...state, checkbox2: valor }));
+  }
+
+  actualizarCheckbox3(valor: boolean): void {
+    this.update((state) => ({ ...state, checkbox3: valor }));
+  }
+
+  actualizarActualmente2(valor: string): void {
+    this.update((state) => ({ ...state, actualmente2: valor }));
+  }
+
+  actualizarActualmente1(valor: string): void {
+    this.update((state) => ({ ...state, actualmente1: valor }));
+  }
+
+  actualizarNumeroDeEmpleadosLista(valor: NumeroDeEmpleados[]): void {
+    this.update((state) => ({ ...state, numeroDeEmpleadosLista: valor }));
+  }
+
+  actualizarDomiciliosDatos(valor: Domicilios[]): void {
+    this.update((state) => ({ ...state, domiciliosDatos: valor }));
+  }
+
+  actualizarListaSeccionSociosIC(valor: SeccionSociosIC[]): void {
+    this.update((state) => ({ ...state, listaSeccionSociosIC: valor }));
+  }
+
+  actualizarEnlaceOperativosLista(valor: EnlaceOperativo[]): void {
+    this.update((state) => ({ ...state, enlaceOperativosLista: valor }));
   }
 
   /**

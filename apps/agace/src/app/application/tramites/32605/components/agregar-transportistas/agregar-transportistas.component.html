@@ -86,16 +86,30 @@
             type="button"
             id="aceptar"
             class="btn btn-primary"
+            data-bs-dismiss="modal"
+            #closeModal
             (click)="aceptarTransportista()"
           >
             Aceptar
           </button>
 
-          <button type="button" id="limpiar" class="btn btn-secondary ms-3">
+          <button
+            type="button"
+            id="limpiar"
+            class="btn btn-secondary ms-3"
+            data-bs-dismiss="modal"
+            #closeModal
+          >
             Limpiar
           </button>
 
-          <button type="button" id="cancelar" class="btn btn-danger ms-3">
+          <button
+            type="button"
+            id="cancelar"
+            class="btn btn-danger ms-3"
+            data-bs-dismiss="modal"
+            #closeModal
+          >
             Cancelar
           </button>
         </div>

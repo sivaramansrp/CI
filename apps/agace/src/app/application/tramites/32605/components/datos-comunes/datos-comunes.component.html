@@ -8,16 +8,20 @@
       </div>
       <div class="col-md-6">
         <app-catalogo-select
+          formControlName="catseleccionados"
           [catalogo]="sectorProductivo.catalogos"
           [label]="sectorProductivo.labelNombre"
           [required]="sectorProductivo.required"
+          (selectionChange)="actualizarCatseleccionados($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <app-catalogo-select
+          formControlName="servicio"
           [catalogo]="servicio.catalogos"
           [label]="servicio.labelNombre"
           [required]="servicio.required"
+          (selectionChange)="actualizarServicio($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-12 mt-5">
@@ -35,10 +39,12 @@
           *</label
         >
         <app-input-radio
+          formControlName="190"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar190($event)"
         ></app-input-radio>
       </div>
 
@@ -48,10 +54,12 @@
           el cumplimiento de obligaciones fiscales *</label
         >
         <app-input-radio
+          formControlName="191"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar191($event)"
         ></app-input-radio>
       </div>
 
@@ -62,10 +70,12 @@
           *</label
         >
         <app-input-radio
+          formControlName="199"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar199($event)"
         ></app-input-radio>
       </div>
 
@@ -76,14 +86,25 @@
         >
       </div>
       <div class="col-md-6 mt-3">
-        <label class="form-label text-start" for="">Número de empleados</label>
-        <input type="text" class="form-control" name="" id="" />
+        <label class="form-label text-start" for="empleados"
+          >Número de empleados</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          formControlName="empleados"
+          name="empleados"
+          id="empleados"
+          (change)="actualizarEmpleados($event)"
+        />
       </div>
       <div class="col-md-6 mt-3">
         <app-catalogo-select
+          formControlName="bimestre"
           [catalogo]="bimestre.catalogos"
           [label]="bimestre.labelNombre"
           [required]="bimestre.required"
+          (selectionChange)="actualizarBimestre($event)"
         ></app-catalogo-select>
       </div>
 
@@ -93,10 +114,12 @@
           trabajadores *</label
         >
         <app-input-radio
+          formControlName="2034"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar2034($event)"
         ></app-input-radio>
       </div>
 
@@ -105,10 +128,12 @@
           >Acredita realizar el pago de cuotas obrero patronales *</label
         >
         <app-input-radio
+          formControlName="236"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar236($event)"
         ></app-input-radio>
       </div>
 
@@ -119,10 +144,12 @@
           de obras especializadas *</label
         >
         <app-input-radio
+          formControlName="237"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar237($event)"
         ></app-input-radio>
       </div>
 
@@ -142,6 +169,7 @@
           [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
           [configuracionTabla]="numeroDeEmpleadosConfiguracionColumnas"
           [datos]="numeroDeEmpleadosLista"
+          (listaDeFilaSeleccionada)="seleccionarNumeroDeEmpleadosDato($event)"
         >
         </app-tabla-dinamica>
       </div>
@@ -168,7 +196,12 @@
           >
             Modificar
           </button>
-          <button type="button" id="eliminar" class="btn btn-danger ms-3">
+          <button
+            type="button"
+            id="eliminar"
+            class="btn btn-danger ms-3"
+            (click)="eliminarNumeroDeEmpleadosDato()"
+          >
             Eliminar
           </button>
         </div>
@@ -180,10 +213,12 @@
           que se refiere el artículo 15 de la LFT. *</label
         >
         <app-input-radio
+          formControlName="239"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar239($event)"
         ></app-input-radio>
       </div>
 
@@ -194,10 +229,12 @@
           con excepción de lo dispuesto en la fracción VI. *</label
         >
         <app-input-radio
+          formControlName="240"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar240($event)"
         ></app-input-radio>
       </div>
 
@@ -207,10 +244,12 @@
           SAT en términos del artículo 69-B Bis noveno párrafo del CFF. *</label
         >
         <app-input-radio
+          formControlName="243"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar243($event)"
         ></app-input-radio>
       </div>
 
@@ -220,10 +259,12 @@
           *</label
         >
         <app-input-radio
+          formControlName="244"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar244($event)"
         ></app-input-radio>
       </div>
 
@@ -234,18 +275,22 @@
           meses. *</label
         >
         <app-input-radio
+          formControlName="245"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizar245($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-4 mt-1">
         <app-catalogo-select
+          formControlName="indiqueTodos"
           [catalogo]="indiqueTodos.catalogos"
           [label]="indiqueTodos.labelNombre"
           [required]="indiqueTodos.required"
+          (selectionChange)="actualizarIndiqueTodos($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-1"></div>
@@ -273,6 +318,7 @@
             [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
             [configuracionTabla]="domiciliosConfiguracionColumnas"
             [datos]="domiciliosDatos"
+            (listaDeFilaSeleccionada)="seleccionarDomiciliosDato($event)"
           >
           </app-tabla-dinamica>
         </div>
@@ -288,7 +334,12 @@
             >
               Modificar
             </button>
-            <button type="button" id="eliminar" class="btn btn-danger ms-3">
+            <button
+              type="button"
+              id="eliminar"
+              class="btn btn-danger ms-3"
+              (click)="eliminarDomiciliosDatos()"
+            >
               Eliminar
             </button>
             <button
@@ -311,10 +362,12 @@
             del CFF. *</label
           >
           <app-input-radio
+            formControlName="246"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar246($event)"
           ></app-input-radio>
         </div>
 
@@ -325,10 +378,12 @@
             Exportadores Sectorial. *</label
           >
           <app-input-radio
+            formControlName="247"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar247($event)"
           ></app-input-radio>
         </div>
 
@@ -358,7 +413,8 @@
                 class="form-control sfile"
                 name="archivoExtranjero"
                 id="archivoExtranjero"
-                disabled="true"
+                formControlName="file1"
+                (change)="actualizarFile2($event)"
                 title="Examinar"
               />
             </div>
@@ -377,10 +433,17 @@
         </div>
 
         <div class="col-md-4 mt-4">
-          <label class="form-label text-start"
+          <label class="form-label text-start" for="actualmente1"
             >Registros que existen actualmente.</label
           >
-          <input type="text" class="form-control" name="" id="" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="actualmente1"
+            name="actualmente1"
+            id="actualmente1"
+            (change)="actualizarActualmente1($event)"
+          />
         </div>
 
         <div class="col-md-8"></div>
@@ -410,8 +473,9 @@
                 class="form-control sfile"
                 name="archivoExtranjero"
                 id="archivoExtranjero"
-                disabled="true"
+                formControlName="file2"
                 title="Examinar"
+                (change)="actualizarFile2($event)"
               />
             </div>
             <div class="col-md-4"></div>
@@ -432,7 +496,14 @@
           <label class="form-label text-start"
             >Registros que existen actualmente.</label
           >
-          <input type="text" class="form-control" name="" id="" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="actualmente2"
+            name="actualmente2"
+            id="actualmente2"
+            (change)="actualizarActualmente2($event)"
+          />
         </div>
 
         <div class="col-md-8"></div>
@@ -461,10 +532,12 @@
             certificación. *</label
           >
           <app-input-radio
+            formControlName="248"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar248($event)"
           ></app-input-radio>
         </div>
 
@@ -479,10 +552,12 @@
             el artículo 59, fracción I de la Ley. *</label
           >
           <app-input-radio
+            formControlName="249"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar249($event)"
           ></app-input-radio>
         </div>
 
@@ -490,18 +565,37 @@
           <label class="form-label text-start"
             >Nombre del sistema o datos para su identificación</label
           >
-          <input type="text" class="form-control" name="" id="" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="identificacion"
+            name="identificacion"
+            id="identificacion"
+            (change)="actualizarIdentificacion($event)"
+          />
         </div>
         <div class="col-md-6 mt-4">
           <label class="form-label text-start">Lugar de radicación</label>
-          <input type="text" class="form-control" name="" id="" />
+          <input
+            type="text"
+            class="form-control"
+            name="lugarDeRadicacion"
+            formControlName="lugarDeRadicacion"
+            id="lugarDeRadicacion"
+            (change)="actualizarLugarDeRadicacion($event)"
+          />
         </div>
 
         <div class="col-md-12 mt-4">
           <div class="form-check text-start">
-            <input type="checkbox" class="form-check-input" /> Indique, si
-            cuenta con un sistema de control de inventarios de conformidad con
-            las disposiciones previstas por el Anexo 24.
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="checkbox3"
+              (click)="actualizarCheckbox3($event)"
+            />
+            Indique, si cuenta con un sistema de control de inventarios de
+            conformidad con las disposiciones previstas por el Anexo 24.
           </div>
         </div>
 
@@ -515,12 +609,13 @@
         </div>
 
         <div class="col-md-12 mt-4">
-          <app-tabla-dinamica
+          <app-tabla-con-entrada
             [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
             [configuracionTabla]="inventariosConfiguracionColumnas"
             [datos]="inventariosDatos"
+            (listaDeFilaSeleccionada)="seleccionarInventariosDatos($event)"
           >
-          </app-tabla-dinamica>
+          </app-tabla-con-entrada>
         </div>
 
         <div class="col-md-12 mt-5">
@@ -528,7 +623,12 @@
             <button type="button" id="modificar" class="btn btn-secondary ms-3">
               Modificar
             </button>
-            <button type="button" id="eliminar" class="btn btn-danger ms-3">
+            <button
+              type="button"
+              id="eliminar"
+              class="btn btn-danger ms-3"
+              (click)="eliminarInventariosDatos()"
+            >
               Eliminar
             </button>
           </div>
@@ -553,10 +653,12 @@
             CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. *</label
           >
           <app-input-radio
+            formContolName="250"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar250($event)"
           ></app-input-radio>
         </div>
 
@@ -583,6 +685,7 @@
             [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
             [configuracionTabla]="seccionSociosICConfiguracionColumnas"
             [datos]="listaSeccionSociosIC"
+            (listaDeFilaSeleccionada)="seleccionarlistaSeccionSociosIC($event)"
           >
           </app-tabla-dinamica>
         </div>
@@ -609,7 +712,12 @@
             >
               Modificar
             </button>
-            <button type="button" id="eliminar" class="btn btn-danger ms-3">
+            <button
+              type="button"
+              id="eliminar"
+              class="btn btn-danger ms-3"
+              (click)="eliminarlistaSeccionSociosIC()"
+            >
               Eliminar
             </button>
           </div>
@@ -627,23 +735,31 @@
             *</label
           >
           <app-input-radio
+            formContolName="251"
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
             [gap]="'50px'"
+            (valueChange)="actualizar251($event)"
           ></app-input-radio>
         </div>
 
         <div class="col-md-12 mt-4">
           <div class="alert alert-info">
             <div class="form-check text-start">
-              <input type="checkbox" class="form-check-input" /> &nbsp; * Una
-              vez manifestado lo anterior, se solicita al SAT, a través de
-              AGACE, que realice las inspecciones a que hace referencia la
-              fracción IX de la regla 7.1.1, a las instalaciones señaladas en
-              las que se realizan las operaciones de comercio exterior con el
-              propósito de verificar la información plasmada en la presente
-              solicitud del Registro en el Esquema Integral de Certificación.
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="checkbox1"
+                (change)="actualizarCheckbox1($event)"
+              />
+              &nbsp; * Una vez manifestado lo anterior, se solicita al SAT, a
+              través de AGACE, que realice las inspecciones a que hace
+              referencia la fracción IX de la regla 7.1.1, a las instalaciones
+              señaladas en las que se realizan las operaciones de comercio
+              exterior con el propósito de verificar la información plasmada en
+              la presente solicitud del Registro en el Esquema Integral de
+              Certificación.
             </div>
           </div>
         </div>
@@ -651,11 +767,16 @@
         <div class="col-md-12 mt-4">
           <div class="alert alert-info">
             <div class="form-check text-start">
-              <input type="checkbox" class="form-check-input" /> &nbsp; * Bajo
-              protesta de decir verdad, manifiesto que los datos asentados en el
-              presente documento son ciertos y que las facultades que me fueron
-              otorgadas para representar al solicitante no me han sido
-              modificadas y/ o revocadas.
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="checkbox2"
+                (change)="actualizarCheckbox2($event)"
+              />
+              &nbsp; * Bajo protesta de decir verdad, manifiesto que los datos
+              asentados en el presente documento son ciertos y que las
+              facultades que me fueron otorgadas para representar al solicitante
+              no me han sido modificadas y/ o revocadas.
             </div>
           </div>
         </div>
@@ -705,7 +826,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-instalaciones-principales (instalacionesPrincipales)="instalacionesPrincipales($event)"></app-instalaciones-principales>
+      <app-instalaciones-principales
+        (instalacionesPrincipales)="instalacionesPrincipales($event)"
+      ></app-instalaciones-principales>
     </div>
   </div>
 </div>
