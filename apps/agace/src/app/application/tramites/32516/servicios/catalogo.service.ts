@@ -71,8 +71,8 @@ export class CatalogosService {
    * @description Realiza una solicitud HTTP GET para cargar las opciones del menú desplegable para unidad de medida.
    */
   obtenerUnidadDesplegable(fileName: string): Observable<Catalogo[]> {
-    const BASE_URL_LEVANTAR = this.urlLevantar + fileName;
-    return this.http.get<RespuestaCatalogos>(BASE_URL_LEVANTAR).pipe(
+    const BASE_URL_UNIDAD_MEDIDA = this.urlLevantar + fileName;
+    return this.http.get<RespuestaCatalogos>(BASE_URL_UNIDAD_MEDIDA).pipe(
       map(response => response.data)
     );
   }
