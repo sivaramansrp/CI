@@ -360,7 +360,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    this.tipoSolicitudSeleccion();    
+    this.tipoSolicitudSeleccion();
 
     this.verificarDatosExistentesStore();
   }
@@ -1201,10 +1201,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
  * Cierra el modal.
  */
   cerrarModal(tipo: string, acepta: boolean): void {
-
-
-
-
     if (tipo === 'fecha') {
       this.datosServicio.reset();
     }
@@ -1219,6 +1215,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     if (SECCION_ADUANERA) {
       this.desactivarSelectRecinto = true;
+      this.despacho.get('nombreRecinto')?.disable();
     }
 
     this.setValoresStore(
@@ -1449,11 +1446,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * y actualiza el estado del componente.
    */
   public changeAduana(): void {
-    const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
-    if (ADUANA) {
-      this.desactivarSelectRecinto = true;
 
-      this.seccionAduanaService.getListaSeccionesAduanas(ADUANA.clave).pipe(
+    const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value; if (ADUANA) {
+      this.despacho.get('idAduanaDespacho')?.setValue(-1);
+      this.despacho.get('idSeccionDespacho')?.setValue(-1);
+
+      this.seccionAduanaService.getListaSeccionesAduanas('CV2').pipe(
         switchMap(response => {
           this.desactivarSelectSeccionAduanera = response && response.datos?.length === 0;
           if (this.desactivarSelectSeccionAduanera) {
