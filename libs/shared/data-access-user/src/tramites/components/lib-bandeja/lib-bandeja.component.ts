@@ -7,6 +7,7 @@ import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/f
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
 
 
 @Component({
@@ -42,7 +43,8 @@ export class LibBandejaComponent<T> implements OnInit {
 
 
     constructor(
-      public router: Router
+      public router: Router,
+      private consultaioStore: ConsultaioStore
     ) {
       
     }
@@ -78,6 +80,8 @@ export class LibBandejaComponent<T> implements OnInit {
       });
       this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
       this.procedureUrl = this.tramiteData[0].linkDashboard;
+      //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
+
       this.router.navigate([this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento]);
     }
 

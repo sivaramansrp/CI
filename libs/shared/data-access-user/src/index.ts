@@ -165,3 +165,5 @@ export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
 export {TramiteDetails} from './core/models/tramiteDetails'
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { enviroment } from './enviroments/enviroment';
+export * from './core/estados/consulta.store';
+export * from './core/queries/consulta.query';
