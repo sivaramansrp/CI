@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/login
 
 # Build the application
-RUN npx nx build login --configuration=production --skip-nx-cache --verbose
+RUN npx nx build login --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/login" && test -f "/app/dist/apps/login/index.html" || exit 1

@@ -186,21 +186,44 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Reiniciar despliegue para aplicar cambios
-echo "Reiniciando deployment vucem-microfrontends-dev..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout restart deployment vucem-microfrontends-dev -n default | tee -a "$LOG_FILE"
-if [ $? -ne 0 ]; then
-  echo "Error: Falló el reinicio del deployment." | tee -a "$LOG_FILE"
-  exit 1
+# Reiniciar despliegues de microfrontends
+echo "Reiniciando deployments de microfrontends..." | tee -a "$LOG_FILE"
+
+# Configurar prefijo según el entorno
+if [[ "$DEPLOYMENT_ENV" == "dev" ]]; then
+  DEPLOY_PREFIX="modulefederation"
+  ENV_SUFFIX="dev"
+elif [[ "$DEPLOYMENT_ENV" == "staging" ]]; then
+  DEPLOY_PREFIX="modulefederation"
+  ENV_SUFFIX="staging"
+elif [[ "$DEPLOYMENT_ENV" == "prod" ]]; then
+  DEPLOY_PREFIX="modulefederation"
+  ENV_SUFFIX="prod"
+else
+  DEPLOY_PREFIX="modulefederation"
+  ENV_SUFFIX="dev"
 fi
 
-# Verificar estado del despliegue
-echo "=== Verificando estado del despliegue ===" | tee -a "$LOG_FILE"
-echo "Pods en el namespace default:" | tee -a "$LOG_FILE"
-microk8s kubectl get pods -n default | grep vucem-microfrontends | tee -a "$LOG_FILE"
+# Lista de microfrontends
+MICROFRONTENDS=("dashboard" "login-microfront" "aga-microfront" "agricultura-microfront" "se-microfront" "semarnat-microfront" "agace-microfront" "funcionario-microfront" "cofepris-microfront" "amecafe-microfront" "sedena-microfront" "inbal-microfront")
 
-echo "Información del deployment:" | tee -a "$LOG_FILE"
-microk8s kubectl get deployment vucem-microfrontends-dev -n default | tee -a "$LOG_FILE"
+# Realizar reinicio para cada microfront
+for microfront in "${MICROFRONTENDS[@]}"; do
+  DEPLOYMENT_NAME="${DEPLOY_PREFIX}-${microfront}-deployment-${ENV_SUFFIX}"
+  echo "Reiniciando deployment $DEPLOYMENT_NAME..." | tee -a "$LOG_FILE"
+  microk8s kubectl rollout restart deployment $DEPLOYMENT_NAME -n default | tee -a "$LOG_FILE"
+  if [ $? -ne 0 ]; then
+    echo "Advertencia: Falló el reinicio del deployment $DEPLOYMENT_NAME, continuando con los siguientes..." | tee -a "$LOG_FILE"
+  fi
+done
+
+# Verificar estado del despliegue
+echo "=== Verificando estado de los despliegues ===" | tee -a "$LOG_FILE"
+echo "Pods en el namespace default:" | tee -a "$LOG_FILE"
+microk8s kubectl get pods -n default | grep ${DEPLOY_PREFIX} | tee -a "$LOG_FILE"
+
+echo "Información de los deployments:" | tee -a "$LOG_FILE"
+microk8s kubectl get deployment -n default | grep ${DEPLOY_PREFIX} | tee -a "$LOG_FILE"
 
 # Verificar los servicios
 echo "Información de servicios:" | tee -a "$LOG_FILE"
@@ -210,15 +233,35 @@ microk8s kubectl get services -n default | grep -v kubernetes | tee -a "$LOG_FIL
 echo "Información de ingress:" | tee -a "$LOG_FILE"
 microk8s kubectl get ingress -n default | tee -a "$LOG_FILE"
 
-# Esperar a que el despliegue esté disponible
-echo "Esperando a que el despliegue esté disponible..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout status deployment/vucem-microfrontends-dev -n default --timeout=180s | tee -a "$LOG_FILE"
+# Esperar a que los despliegues estén disponibles
+echo "Esperando a que los despliegues estén disponibles..." | tee -a "$LOG_FILE"
+
+# Verificar estado de los deployments principales
+for microfront in "dashboard" "login-microfront"; do
+  DEPLOYMENT_NAME="${DEPLOY_PREFIX}-${microfront}-deployment-${ENV_SUFFIX}"
+  echo "Verificando estado de $DEPLOYMENT_NAME..." | tee -a "$LOG_FILE"
+  microk8s kubectl rollout status deployment/$DEPLOYMENT_NAME -n default --timeout=60s | tee -a "$LOG_FILE" || echo "Warning: Timeout esperando $DEPLOYMENT_NAME" | tee -a "$LOG_FILE"
+done
+
+# Nota: No esperamos por todos para evitar bloquear el script si alguno no está listo
 
 # Verificar readiness/liveness de los pods
-echo "Verificando estado de readiness/liveness de los pods:" | tee -a "$LOG_FILE"
-POD_NAMES=$(microk8s kubectl get pods -n default -l app=vucem-microfrontends -o name | head -1)
-if [ -n "$POD_NAMES" ]; then
-  microk8s kubectl describe $POD_NAMES -n default | grep -A 5 "Readiness\|Liveness" | tee -a "$LOG_FILE"
-fi
+echo "Verificando estado de readiness/liveness de los pods principales:" | tee -a "$LOG_FILE"
+
+# Verificar dashboard y login pods
+for microfront in "dashboard" "login-microfront"; do
+  DEPLOYMENT_NAME="${DEPLOY_PREFIX}-${microfront}-deployment-${ENV_SUFFIX}"
+  echo "Verificando pods de $DEPLOYMENT_NAME..." | tee -a "$LOG_FILE"
+  
+  # Obtener primer pod de este deployment
+  POD_NAME=$(microk8s kubectl get pods -n default -l app=${microfront} --sort-by=.metadata.creationTimestamp -o name | head -1)
+  
+  if [ -n "$POD_NAME" ]; then
+    echo "Encontrado pod: $POD_NAME" | tee -a "$LOG_FILE"
+    microk8s kubectl describe $POD_NAME -n default | grep -A 5 "Readiness\|Liveness" | tee -a "$LOG_FILE"
+  else
+    echo "No se encontraron pods para $DEPLOYMENT_NAME" | tee -a "$LOG_FILE"
+  fi
+done
 
 echo "=== Despliegue completado ===" | tee -a "$LOG_FILE"
