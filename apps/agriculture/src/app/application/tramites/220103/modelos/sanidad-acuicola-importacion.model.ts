@@ -14,8 +14,7 @@ export interface Mercancia {
     otroUso: string;                     
     origen: string;                      
     paisOrigen: string;                  
-    paisProcedencia: string; 
-    [key: string]: string | undefined;      
+    paisProcedencia: string;            
   }
   
   export interface DatosDelTramite {
