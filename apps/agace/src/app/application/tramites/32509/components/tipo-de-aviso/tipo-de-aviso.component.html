@@ -1,0 +1,27 @@
+<div class="container">
+    <form [formGroup]="avisoForm" >
+        <div class="col-md-12">
+            <ng-titulo titulo="Tipo de aviso" />
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <app-input-radio
+            [radioOptions]="avisoOpciones"
+            [isRequired]="true"
+            [layout]="'vertical'"
+            formControlName="tipoDeAviso"
+            ></app-input-radio>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos del aviso" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
