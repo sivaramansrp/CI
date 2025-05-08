@@ -25,6 +25,8 @@ export interface Solicitud80316State {
   programa: string;
   actividadActual: string;
   actividadProductiva: Catalogo[] | null;
+  tipoDePersona: Catalogo[] | null;
+  RFCImpExp: string;
 }
 
 export function createInitialState(): Solicitud80316State {
@@ -41,7 +43,8 @@ export function createInitialState(): Solicitud80316State {
     programa: '',
     actividadActual: '',
     actividadProductiva: null,
-
+    tipoDePersona: null,
+    RFCImpExp: '',
     altaPlanta: [],
     estado: {
       id: -1,
@@ -148,6 +151,20 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
     this.update((state) => ({
       ...state,
       tipoBusqueda,
+    }));
+  }
+
+  setTipoDePersona(tipoDePersona: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      tipoDePersona,
+    }));
+  }
+
+  public setRFCImpExp(RFCImpExp: string): void {
+    this.update((state) => ({
+      ...state,
+      RFCImpExp,
     }));
   }
 

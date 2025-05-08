@@ -103,4 +103,8 @@ export class SolicitudService {
     return this.http.get<RespuestaCatalogos>(`assets/json/80316/tablaLista.json`);
   }
 
+  getTipoDePersona(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/80316/tipoDePersona.json`);
+  }
+
 }

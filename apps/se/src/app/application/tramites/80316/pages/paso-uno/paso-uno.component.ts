@@ -98,10 +98,7 @@ export class PasoUnoComponent implements AfterViewInit {
  * 
  * Este método emite un evento `continuarEvento` con una cadena vacía como valor.
  * Se utiliza para indicar que se debe continuar al siguiente paso en el proceso.
- * 
- * @example
- * // Llamar al método para emitir el evento de continuar
- * this.continuar();
+ *
  */
   continuar(): void {
     this.continuarEvento.emit('');
