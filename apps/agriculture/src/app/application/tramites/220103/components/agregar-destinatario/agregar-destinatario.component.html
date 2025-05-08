@@ -16,9 +16,17 @@
         <div class="col-md-8">
             <p>* Campos obligatorios</p>
         </div>
-        <div class="col-md-4 d-flex justify-content-end">
-            <button name="agregar" class="btn btn-primary" (click)="agregarMercancia()">
-                Agregar
+         <div class="col-md-4 d-flex justify-content-end">
+                <button name="limpiar" class="btn btn-primary me-2"
+                    (click)="formularioAgregarDestinatario.reset()">
+                    Limpiar
+                </button>
+                <button name="cancelar" class="btn btn btn-danger me-2" 
+              (click)="closeModal.emit()">
+                    Cancelar
+                </button>
+            <button name="guardar" class="btn btn-primary" (click)="guardarDestinatario()">
+                Guardar
             </button>
         </div>
     </div>

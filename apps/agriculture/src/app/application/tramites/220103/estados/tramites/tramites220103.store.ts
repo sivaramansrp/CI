@@ -2,7 +2,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
+
+import { DatosDelTerceroDestinatario, Instalacion, Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
 
 
 /**
@@ -11,6 +12,9 @@ import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
  */
 export interface Tramite220103State {
     tablaMercancia?: Mercancia[];
+    tablaInstalacion?: Instalacion[];
+    tablaDestinatario?: DatosDelTerceroDestinatario[];
+    datosDelTerceroDestinatario?: DatosDelTerceroDestinatario;
     mercancia?: Mercancia;
     [key: string]: unknown;
 }

@@ -17,7 +17,7 @@
     
     <div class="col-md-12 mt-4">
         <div class="col-12 d-flex justify-content-end">
-            @if(datosTabla.length > 0) {
+            <!-- @if(datosTabla.length > 0) {
             <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
                 data-bs-target="#modalDestinatario" (click)="modificarDestinatario()">
                 Modificar
@@ -25,15 +25,26 @@
             <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarDestinatario()">
                 Eliminar
             </button>
-            }
-            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
+            } -->
+            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDestinatario">
                 Agregar
             </button>
         </div>
     </div>
+
+    <div #modalDestinatario class="modal fade test-modal" id="modalDestinatario" tabindex="-1" aria-labelledby="modalDestinatario">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <app-agregar-destinatario (closeModal)="closeModal()"></app-agregar-destinatario>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     <div class="col-md-12">
         <label for="instalaci" class="form-label">Instalación de procedencia'*:</label>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTablaInstalacion" [datos]="datosTabla"
+        <app-tabla-dinamica [configuracionTabla]="configuracionTablaInstalacion" [datos]="datosTablaInstalacion"
             [tipoSeleccionTabla]="seleccionTabla"
             (listaDeFilaSeleccionada)="obtenerInstalaciSeleccionadas($event)"></app-tabla-dinamica>
         <nav aria-label="Page navigation example">
@@ -45,7 +56,7 @@
     
     <div class="col-md-12 mt-4">
         <div class="col-12 d-flex justify-content-end">
-            @if(datosTabla.length > 0) {
+            <!-- @if(datosTabla.length > 0) {
             <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
                 data-bs-target="#modalInstalaci" (click)="modificarInstalaci()">
                 Modificar
@@ -53,7 +64,7 @@
             <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarInstalaci()">
                 Eliminar
             </button>
-            }
+            } -->
             <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
                 Agregar
             </button>

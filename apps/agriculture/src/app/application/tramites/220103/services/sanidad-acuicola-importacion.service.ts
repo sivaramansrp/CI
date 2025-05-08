@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Mercancia } from "../../220103/modelos/sanidad-acuicola-importacion.model";
+
+import { DatosDelTerceroDestinatario, Mercancia } from "../../220103/modelos/sanidad-acuicola-importacion.model";
 import { Observable } from "rxjs";
 
 import { Catalogo } from "@libs/shared/data-access-user/src";
@@ -36,5 +37,9 @@ export class SanidadAcuicolaImportacionService {
 
     getColonia(): Observable<Catalogo[]> {
         return this.http.get<Catalogo[]>('/assets/json/220103/colonia.json');
+    }
+
+    getDestinatario(): Observable<DatosDelTerceroDestinatario[]> {
+        return this.http.get<DatosDelTerceroDestinatario[]>('/assets/json/220103/destinatario.json');
     }
 }

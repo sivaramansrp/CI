@@ -1,6 +1,6 @@
 import { REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_DECIMAL_15_4, REGEX_POSTAL, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
 
-import { DatosDelTercero, Mercancia } from "../modelos/sanidad-acuicola-importacion.model";
+import { DatosDelTerceroDestinatario,Instalacion,Mercancia } from "../modelos/sanidad-acuicola-importacion.model";
 
 export const PASOS = [
   {
@@ -801,37 +801,37 @@ export const TIPO_PERSONA=[
 export const CONFIGURACION_CONTACTO = [
   {
     encabezado: 'Nombre/denominaciC o razón social',
-    clave: (ele: DatosDelTercero): string => ele.nombre,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.nombre,
     orden: 1
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: DatosDelTercero): string => ele.telefono,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.telefono,
     orden: 2
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: DatosDelTercero): string => ele.correoElectronico,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.correoElectronico,
     orden: 3
   },
   {
     encabezado: 'Calle',
-    clave: (ele: DatosDelTercero): string => ele.calle,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.calle,
     orden: 4
   },
   {
     encabezado: 'Número exterior',
-    clave: (ele: DatosDelTercero): string => ele.numeroExterior,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.numeroExterior,
     orden: 5
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: DatosDelTercero): string => ele.numeroInterior,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.numeroInterior,
     orden: 6
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosDelTercero): string => ele.pais,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.pais,
     orden: 7
   },
 ];
@@ -839,27 +839,27 @@ export const CONFIGURACION_CONTACTO = [
 export const CONFIGURACION_TABLA_INSTALACION = [
   {
     encabezado: 'Nombre de la instalación',
-    clave: (ele: any): string => ele.nombreInstalacion,
+    clave: (ele: Instalacion): string => ele.nombreInstalacion,
     orden: 1,
   },
   {
     encabezado: 'Dirección',
-    clave: (ele: any): string => ele.direccion,
+    clave: (ele: Instalacion): string => ele.direccion,
     orden: 2,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: any): string => ele.telefono,
+    clave: (ele: Instalacion): string => ele.telefono,
     orden: 3,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: any): string => ele.correoElectronico,
+    clave: (ele: Instalacion): string => ele.correoElectronico,
     orden: 4,
   },
   {
     encabezado: 'País',
-    clave: (ele: any): string => ele.pais,
+    clave: (ele: Instalacion): string => ele.pais,
     orden: 5,
   },
 ];

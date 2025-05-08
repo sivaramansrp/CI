@@ -14,11 +14,32 @@ export interface Mercancia {
     otroUso: string;                     
     origen: string;                      
     paisOrigen: string;                  
-    paisProcedencia: string;            
+    paisProcedencia: string;     
+    [key: string]: string|undefined; 
+  }
+
+  export interface DatosDelTerceroDestinatario {
+    id?: string;
+    nombre: string;
+    telefono: string;
+    correoElectronico: string;
+    calle: string;
+    numeroExterior: string;
+    numeroInterior: string;
+    pais: string;
+    estado: string;
+    municipio: string;
+    localidad: string;
+    codigoPostal: string;
+    [key: string]: string|undefined;
   }
   
-  export interface DatosDelTramite {
-    aduanaDeIngreso: string;
-    medioDeTransporte: string;
-    identificacionDelTransporte: string;
+  export interface Instalacion {
+    id?: string;
+    nombreInstalacion: string;
+    direccion: string;
+    telefono: string;
+    correoElectronico: string;
+    pais: string;
+    [key: string]: string|undefined;
   }

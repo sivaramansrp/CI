@@ -1,12 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder} from '@angular/forms';
+
 import { Subject, takeUntil } from 'rxjs';
 
 import {
@@ -21,13 +17,15 @@ import {
   CONFIGURACION_TABLA_INSTALACION,
   IMPORTANTE,
 } from '../../constantes/sanidad-acuicola-importacion.enum';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { DatosDelTercero } from '../../modelos/sanidad-acuicola-importacion.model';
+import { DatosDelTerceroDestinatario, Instalacion } from '../../modelos/sanidad-acuicola-importacion.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State } from '../../estados/tramites/tramites220103.store';
+
+import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
+import { Modal } from 'bootstrap';
 /**
  * Componente que gestiona los datos de terceros relacionados con el trámite.
  * Permite la visualización, modificación y eliminación de destinatarios e instalaciones.
@@ -39,9 +37,9 @@ import { Tramite220103State } from '../../estados/tramites/tramites220103.store'
     CommonModule,
     AlertComponent,
     TituloComponent,
-    FormasDinamicasComponent,
     TablaDinamicaComponent,
-  ],
+    AgregarDestinatarioComponent
+],
   templateUrl: './datos-del-terceros.component.html',
   styleUrl: './datos-del-terceros.component.scss',
 })
@@ -49,7 +47,8 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al modal de mercancías.
    */
-  @ViewChild('modalMercancia') elementoModal!: ElementRef;
+  @ViewChild('modalDestinatario') elementoModal!: ElementRef;
+  private instanciaModal!: Modal;
 
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
@@ -86,7 +85,8 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla de mercancías.
    */
-  datosTabla: DatosDelTercero[] = [];
+  datosTabla: DatosDelTerceroDestinatario[] = [];
+  datosTablaInstalacion: Instalacion[] = [];
 
   /**
    * Tipo de selección de la tabla (checkbox).
@@ -96,12 +96,12 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
   /**
    * Almacena los destinatarios seleccionados en la tabla
    */
-  destinatariosSeleccionados: DatosDelTercero[] = [];
+  destinatariosSeleccionados: DatosDelTerceroDestinatario[] = [];
 
   /**
    * Almacena las instalaciones seleccionadas en la tabla
    */
-  instalacionesSeleccionadas: DatosDelTercero[] = [];
+  instalacionesSeleccionadas: Instalacion[] = [];
 
   /**
    * Constructor del componente.
@@ -122,7 +122,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
     this.tramite220103Query.selectTramite220103State$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estado) => {
-        // Logic for updating state if needed
+        this.datosTabla = estado?.['tablaDestinatario'] || [];
       });
   }
 
@@ -131,49 +131,23 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * @param event Evento con las filas seleccionadas
    */
   obtenerDestinatarioSeleccionadas(event: any): void {
-    // TODO: Implement logic to handle selected destinatarios
     this.destinatariosSeleccionados = event;
   }
-
-  /**
-   * Modifica el destinatario seleccionado
-   */
-  modificarDestinatario(): void {
-    // TODO: Implement logic to modify selected destinatario
-    // This should open modal and handle modification
-  }
-
-  /**
-   * Elimina el destinatario seleccionado
-   */
-  eliminarDestinatario(): void {
-    // TODO: Implement logic to delete selected destinatario
-    // Add confirmation dialog before deletion
-  }
-
   /**
    * Maneja la selección de instalaciones en la tabla
    * @param event Evento con las filas seleccionadas
    */
   obtenerInstalaciSeleccionadas(event: any): void {
-    // TODO: Implement logic to handle selected instalaciones
     this.instalacionesSeleccionadas = event;
   }
 
-  /**
-   * Modifica la instalación seleccionada
-   */
-  modificarInstalaci(): void {
-    // TODO: Implement logic to modify selected instalacion
-    // This should open modal and handle modification
-  }
 
-  /**
-   * Elimina la instalación seleccionada
-   */
-  eliminarInstalaci(): void {
-    // TODO: Implement logic to delete selected instalacion
-    // Add confirmation dialog before deletion
+  closeModal(): void {
+    const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
+    if (INSTANCIA) {
+      this.instanciaModal = INSTANCIA;
+    }
+  this.instanciaModal.hide();
   }
 
   /**

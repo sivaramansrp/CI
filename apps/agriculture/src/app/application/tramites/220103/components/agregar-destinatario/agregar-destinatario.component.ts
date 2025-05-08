@@ -73,7 +73,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     private tramite220103Query: Tramite220103Query,
     private tramite220103Store: Tramite220103Store,
     private servicio: SanidadAcuicolaImportacionService
-  ) {}
+  ) { }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -152,10 +152,23 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     }
   }
 
-  agregarMercancia(): void {
-        this.closeModal.emit();
+  guardarDestinatario(): void {
+    if (this.formularioAgregarDestinatario.valid) {
+      this.getDestinatario();
+      this.formularioAgregarDestinatario.reset();
+      this.closeModal.emit();
+    } else {
+      this.formularioAgregarDestinatario.markAllAsTouched();
+    }
   }
-    
+  getDestinatario(): void {
+    this.servicio.getDestinatario()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((valor) => {
+        this.tramite220103Store.setTramite220103State('tablaDestinatario', valor);
+      });
+  }
+
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Limpia las suscripciones para evitar fugas de memoria.
