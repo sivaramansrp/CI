@@ -1,0 +1,373 @@
+/**
+ * Lista de pasos del proceso de captura y firma de solicitud.
+ * Cada paso contiene un índice, un título, y estados de activación y finalización.
+ */
+export const PASOS = [
+  {
+    indice: 1, // Índice del paso en el flujo
+    titulo: 'Capturar solicitud', // Nombre del paso mostrado al usuario
+    activo: true, // Indica si es el paso actual
+    completado: true, // Indica si el paso ya se completó
+  },
+  {
+    indice: 2,
+    titulo: 'Anexar requisitos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar solicitud',
+    activo: false,
+    completado: false,
+  },
+];
+
+/**
+ * Definición de los campos dinámicos para el formulario de datos del solicitante.
+ */
+export const DATOS_DEL_SOLICITANTE = [
+  {
+    id: 'acuseResolucion.acumulables', // Identificador único del campo
+    labelNombre: 'Ingresos acumulables', // Etiqueta visible
+    campo: 'acumulables', // Nombre del campo para el binding
+    clase: 'col-md-4', // Clase para el diseño del formulario (Bootstrap)
+    tipoInput: 'number', // Tipo de campo
+    desactivado: false, // Indica si está deshabilitado
+    soloLectura: false, // Indica si solo es de lectura
+    validadores: [{ tipo: 'required', mensaje: '' }], // Validadores asociados
+    marcadorDePosicion: '', // Texto de placeholder
+    valorPredeterminado: '', // Valor inicial
+    marginTop: 0, // Margen superior personalizado
+  },
+  {
+    id: 'acuseResolucion.socialPagado',
+    labelNombre: 'Capital social mínimo pagado',
+    campo: 'socialPagado',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+];
+
+/**
+ * Configuración del formulario para datos del representante legal.
+ */
+export const REPRESENTANTE_LEGAL = [
+  {
+    id: 'representante.rfc',
+    labelNombre: 'RFC',
+    campo: 'rfc',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'representante.nombre',
+    labelNombre: 'Nombre',
+    campo: 'nombre',
+    clase: 'col-md-4',
+    tipoInput: 'number', // Nota: se recomienda cambiar a 'text' si es un nombre de persona
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'representante.apellidoPaterno',
+    labelNombre: 'Apellido paterno',
+    campo: 'apellidoPaterno',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'acuseResolucion.apellidoMaterno',
+    labelNombre: 'Apellido materno',
+    campo: 'apellidoMaterno',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'acuseResolucion.telefono',
+    labelNombre: 'Teléfono',
+    campo: 'telefono',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'acuseResolucion.correoElectronico',
+    labelNombre: 'Correo electrónico',
+    campo: 'correoElectronico',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required', mensaje: '' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+];
+
+/**
+ * Campos del formulario relacionados con el seguro contratado por el solicitante.
+ */
+export const DATOS_DEL_SEGURO = [
+  {
+    id: 'datosDelSeguro.fechaInicioVigencia',
+    labelNombre: 'Fecha de inicio de vigencia del seguro',
+    campo: 'fechaInicioVigencia',
+    clase: 'col-md-6',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'representante.fechaDeTerminoVigencia',
+    labelNombre: 'Fecha de término de la vigencia del seguro',
+    campo: 'fechaDeTerminoVigencia',
+    clase: 'col-md-6',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.noPolizaSeguro',
+    labelNombre: 'No. de póliza de seguro global anual de transporte',
+    campo: 'noPolizaSeguro',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.costoSeguroGlobal',
+    labelNombre: ' Costo del seguro global',
+    campo: 'costoSeguroGlobal',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.valorTotalMercancias',
+    labelNombre: 'Valor total de las mercancías',
+    campo: 'valorTotalMercancias',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.factorAplicable',
+    labelNombre: 'Factor aplicable',
+    campo: 'factorAplicable',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+];
+
+/**
+ * Campos para el formulario de información de la compañía aseguradora.
+ */
+export const INFORMACION_DE_COMPANIA = [
+  {
+    id: 'informacionCompania.rfc',
+    labelNombre: 'RFC',
+    campo: 'rfc',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'informacionCompania.nombreCompania',
+    labelNombre: 'Nombre o Razón Social de la compañía aseguradora',
+    campo: 'nombreCompania',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'informacionCompania.entidadFederativa',
+    labelNombre: 'Entidad federativa',
+    campo: 'entidadFederativa',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 2,
+  },
+  {
+    id: 'informacionCompania.municipioDemarcacionTerritorial',
+    labelNombre: 'Municipio/Demarcación Territorial',
+    campo: 'municipioDemarcacionTerritorial',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 2,
+  },
+  {
+    id: 'informacionCompania.colonia',
+    labelNombre: 'Colonia',
+    campo: 'colonia',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 2,
+  },
+  {
+    id: 'datosDelSeguro.localidad',
+    labelNombre: 'Localidad',
+    campo: 'localidad',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.calle',
+    labelNombre: 'Calle',
+    campo: 'calle',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.numeroExterior',
+    labelNombre: 'Número y/o letra exterior',
+    campo: 'numeroExterior',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.numeroInterior',
+    labelNombre: 'Número y/o letra interior',
+    campo: 'numeroInterior',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+  {
+    id: 'datosDelSeguro.codigoPostal',
+    labelNombre: 'Código postal',
+    campo: 'codigoPostal',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+  },
+];

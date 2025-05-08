@@ -18,7 +18,15 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   styleUrl: './complementar-fraccion-vista.component.scss',
 })
 /**
- * Componente para la vista de complementar fracción.
+ * @component
+ * @name ComplementarFraccionVistaComponent
+ * @description Componente encargado de gestionar la vista de la fracción complementaria.
+ * Este componente permite visualizar y complementar los datos de la fracción en el trámite 80102.
+ * 
+ * @usageNotes
+ * Este componente utiliza servicios de consulta (`Tramite80102Query`) para manejar y observar los datos 
+ * relacionados con la fracción complementaria. Además, implementa el ciclo de vida de Angular para limpiar 
+ * las suscripciones al destruirse.
  */
 export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
   /**
