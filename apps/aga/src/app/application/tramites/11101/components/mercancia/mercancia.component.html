@@ -59,18 +59,42 @@
         </form>
     </div>
     <div class="container2">
-        <ng-titulo titulo="fines a que se  destinara " />
+        <ng-titulo titulo="fines a que se  destinara" />
         <form [formGroup]="mercanciaForm">
             <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label" for="fin">FIN* :</label>
+                <div class="col-md-3">
+                    <label class="form-label" for="fin">fin* :</label>
                     <input type="text" class="form-control" id="fin" formControlName="fin" readonly />
                 </div>
-                <div class="col-md-8">
-                    <label for="especifique">Especifique</label>
-                    <input id="especifique" type="text" class="form-control" formControlName="especifique" readonly />
+                <div class="col-md-9">
+                    <label class="form-label" for="especifique">Especifique* :</label>
+                    <textarea class="form-control" id="especifique" formControlName="especifique" readonly></textarea>
                 </div>
+
             </div>
         </form>
     </div>
+    <div class="container3 mt-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <button type="button" name="LimPiar" class="btn btn-default"> LimPiar </button>
+                    <button type="button" name="Agregar" class="btn btn-primary ms-2"> Agregar </button>
+                    <button type="button" name="EliminarPFE" class="btn btn-danger ms-2"> Eliminar </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- <div class="row align-items-center">
+        <label for="Persona física extranjero">Persona física extranjera:</label>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
+                    [datos]="personaFisicaExtranjeraTabla"></app-tabla-dinamica>
+            </div>
+        </div>
+        <app-table-pagination></app-table-pagination>
+    </div> -->
 </div>

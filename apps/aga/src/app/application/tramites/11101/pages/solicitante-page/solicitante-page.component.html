@@ -14,12 +14,10 @@
         } @case (2) { 
           <app-paso-dos></app-paso-dos> 
         } 
-        <!-- @case (3) { 
+        @case (3) { 
           <app-paso-tres></app-paso-tres> 
-        }  -->
+        } 
       }
-      <!-- Componente de botón para continuar al siguiente paso. @input [datos]: Datos que se pasan al componente `btn-continuar`. @output (continuarEvento): Evento que se emite cuando se hace clic en el botón continuar. -->
-      <!-- <btn-continuar [datos]="datosPasos" ></btn-continuar> -->
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
 
     </div>

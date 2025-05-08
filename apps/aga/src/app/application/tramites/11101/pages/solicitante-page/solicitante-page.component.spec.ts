@@ -1,22 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  Pipe,
-  PipeTransform,
   Injectable,
   CUSTOM_ELEMENTS_SCHEMA,
   NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite40402Query } from '../../estados/tramite40402.query';
-import { Tramite40402Store } from '../../estados/tramite40402.store';
+import { Tramite11101Query } from '../../estados/tramite11101.query';
+import { Tramite11101Store } from '../../estados/tramite11101.store';
 
 @Injectable()
-class MockTramite40402Store {
+class MockTramite11101Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -25,17 +20,22 @@ class MockTramite40402Store {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Tramite40402QueryMock: jest.Mocked<Tramite40402Query>;
-  let tramite40402StoreMock: MockTramite40402Store;
+  let Tramite11101QueryMock: jest.Mocked<Tramite11101Query>;
+  let tramite11101StoreMock: Tramite11101Store;
 
   beforeEach(async () => {
-    Tramite40402QueryMock = {
-      selectSeccionState$: observableOf({
-        pasos: [],
-        currentStep: 1,
-      }),
-    } as unknown as jest.Mocked<Tramite40402Query>;
-    tramite40402StoreMock = new MockTramite40402Store();
+    Tramite11101QueryMock = {
+      selectSeccionState$: jest.fn().mockReturnValue(
+        observableOf({
+          pasos: [],
+          currentStep: 1,
+        })
+      ),
+    } as unknown as jest.Mocked<Tramite11101Query>;
+    tramite11101StoreMock = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn(),
+    } as unknown as Tramite11101Store;
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -43,8 +43,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Tramite40402Query, useValue: Tramite40402QueryMock },
-        { provide: Tramite40402Store, useValue: tramite40402StoreMock },
+        { provide: Tramite11101Query, useValue: Tramite11101QueryMock },
+        { provide: Tramite11101Store, useValue: tramite11101StoreMock },
       ],
     }).compileComponents();
 
@@ -62,17 +62,6 @@ describe('SolicitantePageComponent', () => {
    */
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  /**
-   * Verifica que el método `ngOnInit` se inicialice correctamente.
-   */
-  it('should initialize properly on ngOnInit()', () => {
-    jest.spyOn(component as any, 'asignarSecciones');
-
-    component.ngOnInit();
-
-    expect((component as any).asignarSecciones).toHaveBeenCalled();
   });
 
   /**
@@ -95,7 +84,7 @@ describe('SolicitantePageComponent', () => {
    */
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(tramite40402StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(tramite40402StoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(tramite11101StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(tramite11101StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

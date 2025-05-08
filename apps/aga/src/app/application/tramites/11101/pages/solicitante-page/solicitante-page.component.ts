@@ -7,8 +7,8 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { SECCIONES_TRAMITE_11101 } from '../../constants/solicitud.enums';
-// import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
-// import { Tramite40402Query } from '../../estados/tramite40402.query';
+import { Tramite11101Query } from '../../estados/tramite11101.query';
+import { Tramite11101Store } from '../../estados/tramite11101.store';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
@@ -33,7 +33,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente (wizard) que se mostrarán en la página.
    */
-  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 4);
 
   /**
    * Índice actual del paso seleccionado en el asistente.
@@ -73,8 +73,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @param tramite40402Store - Almacén para gestionar el estado del trámite.
    */
   constructor(
-    // private tramite40402Query: Tramite40402Query,
-    // private tramite40402Store: Tramite40402Store
+    private tramite11101Query: Tramite11101Query,
+    private tramite11101Store: Tramite11101Store
   ) {}
 
   /**
@@ -82,7 +82,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Configura los pasos del asistente y asigna las secciones al store.
    */
   ngOnInit(): void {
-    this.tramite40402Query.selectSeccionState$
+    this.tramite11101Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -141,7 +141,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       FORMA_VALIDA.push(false);
     }
 
-    // this.tramite40402Store.establecerSeccion(SECCIONES);
-    // this.tramite40402Store.establecerFormaValida(FORMA_VALIDA);
+    this.tramite11101Store.establecerSeccion(SECCIONES);
+    this.tramite11101Store.establecerFormaValida(FORMA_VALIDA);
   }
 }

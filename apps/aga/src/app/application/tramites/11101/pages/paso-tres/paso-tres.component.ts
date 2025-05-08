@@ -5,7 +5,7 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'paso-tres',
+  selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss'
 })
@@ -15,7 +15,6 @@ export class PasoTresComponent {
     private router: Router,
     private tramiteFolioServices: TramiteFolioService,
     private tramiteStore: TramiteFolioStore,) 
-  // eslint-disable-next-line no-empty-function
   {
 
   }

@@ -5,7 +5,7 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'paso-dos',
+  selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

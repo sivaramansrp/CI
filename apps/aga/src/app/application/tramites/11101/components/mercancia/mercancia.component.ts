@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TablePaginationComponent, TituloComponent,TablaDinamicaComponent,TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 @Component({
     selector: 'app-mercancia',
     templateUrl: './mercancia.component.html',
     standalone: true,
-    imports: [TituloComponent, ReactiveFormsModule], 
+    imports: [TituloComponent, ReactiveFormsModule, TablePaginationComponent, TablaDinamicaComponent], 
 })
 export class MercanciaComponent implements OnInit {
+    // Removed incorrect usage of TablaSeleccion
     mercanciaForm!:FormGroup 
     constructor(private fb:FormBuilder) { }
     ngOnInit(): void {

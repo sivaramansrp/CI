@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import mockData from '@libs/shared/theme/assets/json/11101/aviso-mockdata.json';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
+import { CommonModule } from '@angular/common';
 @Component({
     selector: 'app-tipode-aviso',
     templateUrl: './tipode-aviso.component.html',
     styleUrls: ['./tipode-aviso.component.scss'],
     standalone: true,
-    imports: [TituloComponent, ReactiveFormsModule,MercanciaComponent]
+    imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule]
 })
 export class TipodeAvisoComponent implements OnInit {
+    isManualSelected: boolean = false;
+    CargaMasiva: boolean = false;
     avisoForm!: FormGroup;
     constructor(private fb: FormBuilder) { }
     ngOnInit(): void {
@@ -49,4 +52,17 @@ export class TipodeAvisoComponent implements OnInit {
         this.avisoForm.get('entrecalle')?.setValue(mockData.entrecalle);
         this.avisoForm.get('ycalle')?.setValue(mockData.ycalle);
     }
+
+    setManual(value: boolean): void {
+        if (this.isManualSelected) {
+            this.CargaMasiva = false;
+            this.isManualSelected = value;
+        } else {
+            this.CargaMasiva = true;
+            this.isManualSelected = value;
+        }
+        console.log('Manual selected:', this.isManualSelected);
+    }
+
+
 }
