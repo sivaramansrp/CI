@@ -2319,8 +2319,8 @@
   {
     "id": 332,
     "tramite": 324,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/tecnologicos/solicitud",
+    "linkDepartment": "/pago/tecnologicos/solicitud",
     "department": "aga"
   },
   {
