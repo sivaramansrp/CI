@@ -1,6 +1,6 @@
 import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
+import { 
     ConfiguracionColumna,
     InputFecha,
     InputFechaComponent,
