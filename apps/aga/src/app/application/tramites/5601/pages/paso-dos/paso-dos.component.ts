@@ -1,52 +1,80 @@
-import {CATALOGOS_ID,Catalogo,CatalogosService,TEXTOS } from '@libs/shared/data-access-user/src';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-
+/**
+ * Componente que representa el paso dos del flujo de trabajo.
+ * En este paso, se gestionan los formularios relacionados con los datos
+ * de solicitud y validación antes de continuar al siguiente paso.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent implements OnInit{
-    TEXTOS = TEXTOS;
-  
-    tiposDocumentos: Catalogo[] = [];
-    infoAlert = 'alert-info';
-    catalogoDocumentos: Catalogo[] = [];
-    documentosSeleccionados: Catalogo[] = [];
-  
-    constructor(private catalogosServices: CatalogosService,)
-    // eslint-disable-next-line no-empty-function
-    {
-  
-    }
-  
-    ngOnInit(): void {
-      this.getTiposDocumentos();
-      this.documentosSeleccionados = [
-        {
-          id: 1,
-          descripcion: 'Documentos que ampare el valor de la mercancía'
-        },
-        {
-          id: 2,
-          descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-        }
-      ]
-  
-    }
-  
-    /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+export class PasoDosComponent implements OnInit {
+/**
+ * Asigna el valor de la constante TEXTOS al mismo nombre para su uso en el componente.
+ */
+  TEXTOS = TEXTOS;
+
+  /**
+   * Lista de tipos de documentos disponibles para el trámite.
    */
-    getTiposDocumentos(): void {
-      this.catalogosServices
-        .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-        .subscribe({
-          next: (resp): void => {
-            if (resp.length > 0) {
-              this.catalogoDocumentos = resp;
-            }
-          },
-          error: (_error): void => { return _error; },
-        });
-    }
+  tiposDocumentos: Catalogo[] = [];
+
+  /**
+   * Clase CSS para mostrar información en una alerta.
+   */
+  infoAlert = 'alert-info';
+
+  /**
+   * Catálogo de documentos obtenidos del servicio.
+   */
+  catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * Documentos seleccionados por el usuario.
+   */
+  documentosSeleccionados: Catalogo[] = [];
+
+  /**
+   * Constructor del componente.
+   * @param catalogosServices Servicio para obtener los catálogos necesarios.
+   */
+  constructor(private catalogosServices: CatalogosService) {
+
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Obtiene los tipos de documentos disponibles y asigna documentos seleccionados por defecto.
+   */
+  ngOnInit(): void {
+    // Obtiene los tipos de documentos disponibles para el trámite.
+    this.getTiposDocumentos();
+    this.documentosSeleccionados = [
+      {
+        id: 1,
+        descripcion: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+      }
+    ];
+  }
+
+  /**
+ * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+ */
+  getTiposDocumentos(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
+          }
+        },
+        error: (_error): void => { return _error; },
+      });
+  }
 }
