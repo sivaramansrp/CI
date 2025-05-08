@@ -16,10 +16,36 @@ describe('CertificacionesComponent', (): void => {
   let destroyed$: Subject<void>;
 
   const ESTADO_INICIAL: Tramite5601State = {
+    // formularioCertificacion
     tieneCertificacion: true,
-    certificacionEmpresa: 'ISO 9001',
-    otraCertificacion: 'Certificado Verde',
+    certificacionEmpresa: 'Certificación ISO 9001',
+    otraCertificacion: 'Certificación adicional',
+  
+    // formulario
+    aduana: 'Aduana ejemplo',
+    seccionAduanera: 'Sección A',
+    tipoOperacion: 'Importación',
+    fechaOperacion: '2025-01-01',
+    motivoDespachoDomicilio: 'Entrega urgente',
+    observaciones: 'Sin observaciones',
+  
+    // formularioMercancia
+    especificacionesMercancia: 'Detalles de la mercancía',
+    descripcionMercancia: 'Mercancía de prueba',
+    tipoMoneda: 'MXN',
+    valorMercancia: '10000',
+  
+    // formularioLogistica
+    esquemasControlSeguridad: 'CCTV, Guardia',
+    distanciaRutaTiempos: '10km - 15min',
+  
+    // formularioUbicacionMercancia
+    direccion: 'Calle Falsa 123',
+    telefono: '5551234567',
+    distanciaAduana: '5km',
+    referencias: 'Frente al parque industrial',
   };
+  
 
   beforeEach(async (): Promise<void> => {
     destroyed$ = new Subject<void>();
@@ -59,8 +85,8 @@ describe('CertificacionesComponent', (): void => {
   it('debería inicializar el formulario con el estado del query', (): void => {
     const VALORES = componente.formularioCertificacion.value;
     expect(VALORES.tieneCertificacion).toBe(true);
-    expect(VALORES.certificacionEmpresa).toBe('ISO 9001');
-    expect(VALORES.otraCertificacion).toBe('Certificado Verde');
+    expect(VALORES.certificacionEmpresa).toBe('Certificación ISO 9001');
+    expect(VALORES.otraCertificacion).toBe('Certificación adicional');
   });
 
   it('debería mostrar el modal si el checkbox está seleccionado', (): void => {
