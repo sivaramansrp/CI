@@ -821,8 +821,8 @@
   {
     "id": 118,
     "tramite": 110223,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/certificado-alianza-posteriori",
+    "linkDepartment": "/pago/certificado-alianza-posteriori",
     "department": "se"
   },
   {
@@ -870,9 +870,9 @@
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDepartment": "/pago/zoosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 126,
@@ -1430,8 +1430,8 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
@@ -1458,8 +1458,8 @@
   {
     "id": 209,
     "tramite": 260103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-retorno-sanitario/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-retorno-sanitario/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1528,8 +1528,8 @@
   {
     "id": 219,
     "tramite": 260508,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
@@ -1605,15 +1605,15 @@
   {
     "id": 230,
     "tramite": 260908,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-meds-uso/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-meds-uso/solicitante",
     "department": "cofepris"
   },
   {
     "id": 231,
     "tramite": 260909,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-donacion/solicitante",
+    "linkDepartment": "/pago/medicamentos-donacion/solicitante",
     "department": "cofepris"
   },
   {
@@ -1626,8 +1626,8 @@
   {
     "id": 233,
     "tramite": 260914,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-de-insumos/pantallas",
+    "linkDepartment": "/pago/importacion-de-insumos/pantallas",
     "department": "cofepris"
   },
   {
@@ -1696,8 +1696,8 @@
   {
     "id": 243,
     "tramite": 270301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-importacion-plastica/Pantallas",
+    "linkDepartment": "/pago/aviso-importacion-plastica/Pantallas",
     "department": "inbal"
   },
   {
@@ -1752,8 +1752,8 @@
   {
     "id": 251,
     "tramite": 130401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
@@ -1850,8 +1850,8 @@
   {
     "id": 265,
     "tramite": 240122,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1892,8 +1892,8 @@
   {
     "id": 271,
     "tramite": 240411,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1927,8 +1927,8 @@
   {
     "id": 276,
     "tramite": 130201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+    "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
     "department": "sener"
   },
   {
@@ -1976,8 +1976,8 @@
   {
     "id": 283,
     "tramite": 31801,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/renovacion-comercializadora/renovacion",
+    "linkDepartment": "/pago/renovacion-comercializadora/renovacion",
     "department": "agace"
   },
   {
@@ -2088,8 +2088,8 @@
   {
     "id": 299,
     "tramite": 6102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/junta-tecnica-registro/registro-tecnica",
+    "linkDepartment": "/pago/junta-tecnica-registro/registro-tecnica",
     "department": "aga"
   },
   {
@@ -2242,13 +2242,6 @@
   {
     "id": 321,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
-    "id": 322,
-    "tramite": 221601,
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "agricultura"
@@ -4184,5 +4177,12 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 260202,
+    "linkDashboard": "/cofepris/importacion-materias-primas",
+    "linkDepartment": "/pago/importacion-materias-primas",
+    "department": "cofepris"
   }
 ]

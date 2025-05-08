@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/bandejas
 
 # Build the application
-RUN npx nx build bandejas --configuration=production --skip-nx-cache --verbose
+RUN npx nx build bandejas --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/bandejas" && test -f "/app/dist/apps/bandejas/index.html" || exit 1
