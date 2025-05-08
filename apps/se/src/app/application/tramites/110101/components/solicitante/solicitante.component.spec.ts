@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import mockData from '../../../../../assets/json/110101/solicitante-mockdata.json';
 import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
 
 import { Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -14,8 +13,7 @@ fdescribe('SolicitanteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // REMOVE declarations array since it's a standalone component
-      imports: [SolicitanteComponent, ReactiveFormsModule], // ADD it here instead
+      imports: [SolicitanteComponent, ReactiveFormsModule], 
       providers: [FormBuilder],
     })
     .compileComponents();
@@ -55,7 +53,6 @@ fdescribe('SolicitanteComponent', () => {
   });
 
   it('should update the store with form values', () => {
-    // Arrange: Set form values
     component.solicitudForm.setValue({
       rfc: 'TEST123456789',
       denominacion: 'Test Denominacion',
@@ -63,10 +60,8 @@ fdescribe('SolicitanteComponent', () => {
       correoElectronico: 'test@example.com',
     });
   
-    // Act: Call the updateStore method
     component['updateStore']();
   
-    // Assert: Verify that the store methods are called with the correct values
     const store = TestBed.inject(Tramite110101Store);
     expect(store.setRfc).toHaveBeenCalledWith('TEST123456789');
     expect(store.setDenominacion).toHaveBeenCalledWith('Test Denominacion');
