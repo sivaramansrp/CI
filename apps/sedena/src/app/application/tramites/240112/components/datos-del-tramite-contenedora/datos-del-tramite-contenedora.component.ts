@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject, takeUntil } from 'rxjs';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
-import { Subject } from 'rxjs';
+import { Tramite240112Query } from '../../estados/tramite240112Query.query';
+import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
@@ -39,8 +41,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit,OnDestroy {
      * @returns {void}
      */
     constructor(
-      // private tramiteQuery: Tramite240111Query,
-      // private tramiteStore: Tramite240111Store
+      private tramiteQuery: Tramite240112Query,
+      private tramiteStore: Tramite240112Store
     ) // eslint-disable-next-line no-empty-function
     {}
   
@@ -52,17 +54,17 @@ export class DatosDelTramiteContenedoraComponent implements OnInit,OnDestroy {
      * @returns {void}
      */
     ngOnInit(): void {
-      // this.tramiteQuery.getMercanciaTablaDatos$
-      //   .pipe(takeUntil(this.destroy$))
-      //   .subscribe((data) => {
-      //     this.datosMercanciaTabla = data;
-      //   });
+      this.tramiteQuery.getMercanciaTablaDatos$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.datosMercanciaTabla = data;
+        });
   
-      // this.tramiteQuery.getDatosDelTramite$
-      //   .pipe(takeUntil(this.destroy$))
-      //   .subscribe((data) => {
-      //     this.datosDelTramiteFormState = data;
-      //   });
+      this.tramiteQuery.getDatosDelTramite$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.datosDelTramiteFormState = data;
+        });
     }
   
     /**
@@ -85,6 +87,6 @@ export class DatosDelTramiteContenedoraComponent implements OnInit,OnDestroy {
      * @returns {void}
      */
     updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
-      // this.tramiteStore.updateDatosDelTramiteFormState(event);
+      this.tramiteStore.updateDatosDelTramiteFormState(event);
     }
 }

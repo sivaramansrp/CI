@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
@@ -30,13 +31,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
      * Constructor del componente.
      *
      * @method constructor
-     * @param {Tramite240111Store} tramiteStore - Store de Akita que maneja el estado del trámite.
      * @param {Tramite240111Query} tramiteQuery - Query de Akita para obtener datos del trámite.
      * @returns {void}
      */
     constructor(
-      // private tramiteStore: Tramite240111Store,
-      // private tramiteQuery: Tramite240111Query
+      private tramiteQuery: Tramite240112Query
     ) // eslint-disable-next-line no-empty-function
     {}
   
@@ -48,16 +47,16 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
      * @returns {void}
      */
     ngOnInit(): void {
-      // this.tramiteQuery.getDestinatarioFinalTablaDatos$
-      //   .pipe(takeUntil(this.destroy$))
-      //   .subscribe((data) => {
-      //     this.destinatarioFinalTablaDatos = data;
-      //   });
+      this.tramiteQuery.getDestinatarioFinalTablaDatos$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.destinatarioFinalTablaDatos = data;
+        });
   
-      // this.tramiteQuery.getProveedorTablaDatos$
-      //   .pipe(takeUntil(this.destroy$))
-      //   .subscribe((data) => {
-      //     this.proveedorTablaDatos = data;
-      //   });
+      this.tramiteQuery.getProveedorTablaDatos$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.proveedorTablaDatos = data;
+        });
     }
 }
