@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/inah
 
 # Build the application
-RUN npx nx build inah --configuration=production --skip-nx-cache --verbose
+RUN npx nx build inah --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/inah" && test -f "/app/dist/apps/inah/index.html" || exit 1

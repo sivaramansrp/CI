@@ -2,9 +2,11 @@
 import { CommonModule } from '@angular/common';
  
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
@@ -25,6 +27,8 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -94,7 +98,8 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
       private tramite130102Store: Tramite130102Store,
-      private tramite130102Query: Tramite130102Query
+      private tramite130102Query: Tramite130102Query,
+      private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -112,6 +117,8 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
     this.formForTotalCount.controls['cantidadTotal'].disable();
     // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].disable();
+    this.formularioRegistroService.registrarFormulario('form', this.form);
+    this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);
   }
  
     /**
@@ -145,18 +152,19 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(18),
+          PartidasDeLaComponent.noLeadingSpacesValidator,
         ],
       ],
-      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA),PartidasDeLaComponent.noLeadingSpacesValidator]],
       fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
-      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255)]],
+      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255),PartidasDeLaComponent.noLeadingSpacesValidator,]],
       valorPartidaUSD: [
         this.solicitudState?.valorPartidaUSD,
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
-          Validators.maxLength(20),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20)
         ],
       ],
     });
@@ -216,12 +224,7 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.log(
-        'El formulario tiene errores. Corríjalos antes de continuar.'
-      );
-    } else {
-      console.log('Formulario enviado con éxito', this.form.value);
-    }
+    } 
   }
  
   /**
@@ -236,6 +239,23 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
       : false;
   }
 
+   /**
+   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+   * 
+   * @param control - Control del formulario a validar.
+   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+   */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+
+  /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Emite y completa el observable para evitar fugas de memoria.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
