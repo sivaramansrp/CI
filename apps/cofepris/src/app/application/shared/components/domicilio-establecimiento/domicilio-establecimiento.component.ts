@@ -72,7 +72,7 @@ export interface MercanciasTabla {
     CrosslistComponent,
   ],
   templateUrl: './domicilio-establecimiento.component.html',
-  styleUrls: ['./domicilio-establecimiento.component.css'],
+  styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
 /**
@@ -181,10 +181,10 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Handles the change event for selected customs entries.
-   * Updates the internal state and form control with the provided events.
+   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - An array of strings representing the selected customs entries.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;

@@ -81,9 +81,9 @@ export class TercerosFabricanteService {
   }
 
   /**
-   * Retrieves the current state of the "Terceros Fabricante" from the store.
+   * Recupera el estado actual de "Terceros Fabricante" desde el store.
    *
-   * @returns An `Observable` that emits the `TercerosFabricanteState` object.
+   * @returns Un `Observable` que emite el objeto `TercerosFabricanteState`.
    */
   getTercerosFabricanteState(): Observable<TercerosFabricanteState> {
        return this.query.selectSolicitud$;
