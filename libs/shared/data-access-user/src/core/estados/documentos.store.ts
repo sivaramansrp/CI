@@ -2,7 +2,7 @@ import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
 
 /**
- * Estado para almacenar la información de cada documento
+ * Modelo para almacenar la información del estado de los documentos requeridos y opcionales
  */
 
 export interface DocumentosState {
@@ -11,7 +11,7 @@ export interface DocumentosState {
 }
 
 /**
- * Model para el estado de cada documento
+ * Modelo para el estado de cada documento
  */
 export interface DocumentoState {
     id: number;
