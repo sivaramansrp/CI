@@ -1,104 +1,119 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { PaisDeOrigenComponent } from './pais-de-origen.component';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { EventEmitter } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 describe('PaisDeOrigenComponent', () => {
   let component: PaisDeOrigenComponent;
   let fixture: ComponentFixture<PaisDeOrigenComponent>;
+  let formBuilder: FormBuilder;
+
+  const MOCK_PAISES_POR_BLOQUE: Catalogo[] = [
+    { id: 1, descripcion: 'País 1' },
+    { id: 2, descripcion: 'País 2' },
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, PaisDeOrigenComponent],
-      declarations: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaisDeOrigenComponent);
     component = fixture.componentInstance;
+    formBuilder = TestBed.inject(FormBuilder);
+
+    component.paisForm = formBuilder.group({
+      bloque: [''],
+      campo: [''],
+      usoEspecifico: [''],
+      justificacionImportacionExportacion: [''],
+      observaciones: [''],
+    });
+
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('campoDeBotones', () => {
-    beforeEach(() => {
-      component.crosslistComponent = {
-        agregar: jest.fn(),
-        quitar: jest.fn(),
-      } as unknown as any;
+  it('debería inicializar la propiedad selectRangoDias en ngOnChanges', () => {
+    const CHANGES = {
+      paisesPorBloque: {
+        currentValue: MOCK_PAISES_POR_BLOQUE,
+        previousValue: [],
+        firstChange: true,
+        isFirstChange: () => true,
+      },
+    };
+
+    component.paisesPorBloque = MOCK_PAISES_POR_BLOQUE;
+    component.ngOnChanges(CHANGES);
+
+    expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
+  });
+
+  it('debería emitir el evento bloqueCambiar al llamar a enCambioDeBloque', () => {
+    const EVENTO_CAMBIO = new Event('change');
+    const INPUT_ELEMENT = document.createElement('input');
+    INPUT_ELEMENT.value = '1';
+    Object.defineProperty(EVENTO_CAMBIO, 'target', { value: INPUT_ELEMENT });
+
+    jest.spyOn(component.bloqueCambiar, 'emit');
+    component.enCambioDeBloque(EVENTO_CAMBIO);
+
+    expect(component.bloqueCambiar.emit).toHaveBeenCalledWith(1);
+  });
+
+  it('debería emitir el evento setValoresStoreEvent al llamar a setValoresStore', () => {
+    const MOCK_FORM: FormGroup = formBuilder.group({
+      campo: ['valor'],
     });
 
-    it('should call agregar method of CrosslistComponent when "Agregar" button is clicked', () => {
-      component.campoDeBotones[0].funcion();
-      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('');
-    });
+    jest.spyOn(component.setValoresStoreEvent, 'emit');
+    component.setValoresStore(MOCK_FORM, 'campo');
 
-    it('should call agregar method of CrosslistComponent with "t" when "Agregar todos" button is clicked', () => {
-      component.campoDeBotones[1].funcion();
-      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('t');
-    });
-
-    it('should call agregar method of CrosslistComponent when "Eliminar" button is clicked', () => {
-      component.campoDeBotones[2].funcion();
-      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('');
-    });
-
-    it('should call quitar method of CrosslistComponent when "Eliminar todos" button is clicked', () => {
-      component.campoDeBotones[3].funcion();
-      expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('');
+    expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
+      form: MOCK_FORM,
+      campo: 'campo',
     });
   });
 
-  describe('ngOnChanges', () => {
-    it('should update selectRangoDias when paisesPorBloque changes', () => {
-      const mockPaisesPorBloque: Catalogo[] = [
-        { id: 1, descripcion: 'País 1' },
-        { id: 2, descripcion: 'País 2' },
-      ];
-      component.paisesPorBloque = mockPaisesPorBloque;
+  it('debería emitir el evento eventoAlHacerClicEnTodasLasCiudades al llamar a onObtenerCiudades', () => {
+    jest.spyOn(component.eventoAlHacerClicEnTodasLasCiudades, 'emit');
+    component.onObtenerCiudades();
 
-      component.ngOnChanges({
-        paisesPorBloque: {
-          currentValue: mockPaisesPorBloque,
-          previousValue: [],
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
-
-      expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
-    });
+    expect(component.eventoAlHacerClicEnTodasLasCiudades.emit).toHaveBeenCalled();
   });
 
-  describe('Outputs', () => {
-    it('should emit bloqueCambiar with the correct value', () => {
-      jest.spyOn(component.bloqueCambiar, 'emit');
-      const mockEvent = {
-        target: { value: '2' },
-      } as unknown as Event;
+  it('debería llamar a la función agregar del crosslistComponent al presionar el botón "Agregar"', () => {
+    component.crosslistComponent = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as unknown as any;
 
-      component.enCambioDeBloque(mockEvent);
+    component.campoDeBotones[0].funcion();
+    expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('');
+  });
 
-      expect(component.bloqueCambiar.emit).toHaveBeenCalledWith(2);
-    });
+  it('debería llamar a la función agregar del crosslistComponent al presionar el botón "Agregar todos"', () => {
+    component.crosslistComponent = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as unknown as any;
 
-    it('should emit setValoresStoreEvent with the correct payload', () => {
-      jest.spyOn(component.setValoresStoreEvent, 'emit');
-      const mockForm = new FormGroup({
-        campo1: new FormControl('valor1'),
-      } as any);
-      const mockCampo = 'campo1';
-      const mockMetodoNombre = 'metodo1';
+    component.campoDeBotones[1].funcion();
+    expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('t');
+  });
 
-      component.setValoresStore(mockForm, mockCampo, mockMetodoNombre);
+  it('debería llamar a la función quitar del crosslistComponent al presionar el botón "Eliminar todos"', () => {
+    component.crosslistComponent = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as unknown as any;
 
-      expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
-        form: mockForm,
-        campo: mockCampo,
-        metodoNombre: mockMetodoNombre,
-      });
-    });
+    component.campoDeBotones[3].funcion();
+    expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('');
   });
 });

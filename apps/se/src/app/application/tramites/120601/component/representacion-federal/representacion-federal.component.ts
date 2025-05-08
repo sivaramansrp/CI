@@ -1,17 +1,12 @@
+import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { Tramite120601Query } from '../../estados/tramite-120601.query';
-import { Tramite120601Store } from '../../estados/tramite-120601.store';
-
-import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
-
-
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
  */
@@ -20,8 +15,7 @@ import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
-    SelectCatalogosComponent,
+    TituloComponent,  
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TableComponent,
@@ -97,9 +91,11 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private store: Tramite120601Store,
     private datosEmpresaService: DatosEmpresaService
   ) {
-    //constructor
+    
   }
-
+ /**
+   * Inicializa el componente.
+   */
   ngOnInit(): void {
     this.crearFormulario();
     this.getEntidadFederativa();
@@ -145,7 +141,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     });
   }
 
-  getRepresentacionFederal() {
+  getRepresentacionFederal():void {
     this.datosEmpresaService.obtenerDatosDeRepresentacionFederal().subscribe((data)=>{
       this.representacion = data;
     });
@@ -167,7 +163,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @param _e El evento de selección de documento.
    * @returns {void}
    */
-   // eslint-disable-next-line class-methods-use-this
+
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setEstado(this.formulario.get('estado')?.value);
@@ -178,7 +174,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @param _e El evento de validación de representación federal.
    * @returns {void}
    */
-   // eslint-disable-next-line class-methods-use-this
+
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setRepresentacion(this.formulario.get('representacion')?.value);
