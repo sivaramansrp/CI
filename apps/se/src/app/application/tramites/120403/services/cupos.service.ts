@@ -1,9 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Catalogo } from '../state/Tramite120403.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CuposService {
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
+
+  obtenerDatosAno(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/120403/ano.json');
+  }
 }

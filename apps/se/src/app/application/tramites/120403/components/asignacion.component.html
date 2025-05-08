@@ -1,1 +1,38 @@
-<p>asignacion works!</p>
+<!-- Mecanismo de asignación directa -->
+<ng-titulo titulo="Mecanismo de asignación directa" />
+<label>Estimado contribuyente, debido a que usted cuenta con una autorización previa para este trámite, debe seleccionar
+    la modalidad del trámite a requerir:</label>
+
+<div class="row mt-5 radios">
+    <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"
+        [isRequired]="true"></app-input-radio>
+</div>
+<!-- Número de oficio de asignación -->
+<ng-titulo titulo="Número de oficio de asignación" />
+<div class="row mt-5">
+    <div class="col-md-6">
+        <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del oficio de asignación'"
+            [required]="true"></app-catalogo-select>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Número de oficio de asignación*:</label>
+        <input type="text" class="form-control" size="68" />
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ms-2 mb-5"> Buscar </button>
+    </div>
+</div>
+<!-- Datos de la asignacion -->
+<ng-titulo titulo="Datos de la asignacion" />
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-4">
+        <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+    </div>
+    <div class="col-md-4">
+        <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+    </div>
+</div>
