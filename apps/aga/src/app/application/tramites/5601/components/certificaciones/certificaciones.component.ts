@@ -6,7 +6,10 @@ import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
 import { CommonModule } from '@angular/common';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
-
+/**
+ * Componente para gestionar las certificaciones, incluyendo su visualización y edición.
+ * Se utiliza en un módulo independiente con los componentes necesarios importados.
+ */
 @Component({
   selector: 'app-certificaciones',
   standalone: true,
@@ -16,13 +19,30 @@ import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 })
 export class CertificacionesComponent implements OnInit, OnDestroy {
 
+  /**
+   * Formulario reactivo para gestionar los datos de certificación.
+   */
   formularioCertificacion!: FormGroup;
+
+  /**
+   * Variable para controlar la visibilidad del modal.
+   * Puede ser 'show' para mostrar el modal o una cadena vacía para ocultarlo.
+   */
   modal: string = '';
 
+  /**
+   * Título del modal que se muestra al usuario.
+   */
   tituloModal!: string;
 
+  /**
+   * Mensaje del modal que se muestra al usuario.
+   */
   mensajeModal!: string;
 
+  /**
+   * Estado actual de la certificación, obtenido desde el store.
+   */
   public certificacionState!: Tramite5601State;
 
     /**
@@ -31,65 +51,102 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    */
   private destroyed$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param tramite5601Store - Store para gestionar el estado del trámite 5601.
+   * @param tramite5601Query - Query para obtener datos del estado del trámite 5601.
+   */
   constructor(private fb: FormBuilder, private tramite5601Store: Tramite5601Store,
     private tramite5601Query: Tramite5601Query) {
     // Inicializa el formulario de certificación
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama al inicializar el componente.
+   * Configura el formulario reactivo y suscribe al estado de certificación.
+   */
   ngOnInit(): void {
+    // Suscribirse al estado de certificación desde el query
     this.tramite5601Query.selectCertificacion$
     .pipe(
-      takeUntil(this.destroyed$),
+      takeUntil(this.destroyed$), // Finaliza la suscripción cuando el componente se destruye
       map((certificacionState) => {
+        // Actualiza el estado de certificación local
         this.certificacionState = certificacionState;
       })
     )
     .subscribe();
 
+    // Configura el formulario reactivo con los valores iniciales del estado
     this.formularioCertificacion = this.fb.group({
-      tieneCertificacion: [this.certificacionState.tieneCertificacion],
-      certificacionEmpresa: [this.certificacionState.certificacionEmpresa], 
-      otraCertificacion: [this.certificacionState.otraCertificacion], 
+      tieneCertificacion: [this.certificacionState.tieneCertificacion], // Campo para indicar si tiene certificación
+      certificacionEmpresa: [this.certificacionState.certificacionEmpresa], // Campo para la certificación de la empresa
+      otraCertificacion: [this.certificacionState.otraCertificacion], // Campo para otra certificación
     });
   }
   
-
+  /**
+   * Muestra un modal si el checkbox está seleccionado.
+   * @param event - Evento del checkbox.
+   */
   mostrarModalSiSeleccionado(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;
     if (CHECKBOX.checked) {
-      this.tituloModal = TITULO_MODAL
-      this.mensajeModal = MENSAJE_MODAL;
-      this.abrirModal();
+      this.tituloModal = TITULO_MODAL; // Asigna el título del modal.
+      this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal.
+      this.abrirModal(); // Abre el modal.
     }
   }
 
+  /**
+   * Abre el modal estableciendo su estado en 'show'.
+   */
   abrirModal(): void {
     this.modal = 'show';
   }
 
+  /**
+   * Cierra el modal y limpia los valores de título y mensaje.
+   */
   cerrarModal(): void {
     this.modal = '';
     this.tituloModal = '';
     this.mensajeModal = '';
   }
 
+  /**
+   * Confirma la acción del modal y lo cierra.
+   */
   confirmarAccion(): void {
     this.cerrarModal();
   }
 
+  /**
+   * Cancela la acción del modal y lo cierra.
+   */
   cancelarAccion(): void {
     this.cerrarModal();
   }
 
+  /**
+   * Maneja el cambio en el campo 'tieneCertificacion' del formulario.
+   * @param event - Evento del cambio.
+   */
   onTieneCertificacionChange(event: Event): void {
-    this.mostrarModalSiSeleccionado(event);
-    this.setValoresStore(this.formularioCertificacion, 'tieneCertificacion', 'setTieneCertificacion');
+    this.mostrarModalSiSeleccionado(event); // Muestra el modal si es necesario.
+    this.setValoresStore(this.formularioCertificacion, 'tieneCertificacion', 'setTieneCertificacion'); // Actualiza el store.
   }
-  
 
+  /**
+   * Actualiza un valor en el store basado en el formulario.
+   * @param form - Formulario reactivo.
+   * @param campo - Nombre del campo en el formulario.
+   * @param metodoNombre - Nombre del método en el store para actualizar el valor.
+   */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5601Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    const VALOR = form.get(campo)?.value; // Obtiene el valor del campo.
+    (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método del store con el valor.
   }
 
     /**
