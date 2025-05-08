@@ -233,3 +233,221 @@ export const FORMA_MODIFICACIONES_SOLICITUDE =[
   },
 
 ]
+
+export const FORMA_NACIONALIDAA_MAXICANA =[
+  {
+    id: 'taxId',
+    labelNombre: 'Tax ID',
+    campo: 'taxId',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'razonSocial',
+    labelNombre: 'Denominación o razón social',
+    campo: 'razonSocial',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'pais',
+    labelNombre: 'País',
+    campo: 'pais',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'codigoPostal',
+    labelNombre: 'Código postal',
+    campo: 'codigoPostal',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'estado',
+    labelNombre: 'Estado',
+    campo: 'estado',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'correoElectronico',
+    labelNombre: 'Correo electrónico',
+    campo: 'correoElectronico',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    validadores: [
+      { tipo: 'required' }
+    ],
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+]
+export const FORMA_SI_NACIONALIDAA_MAXICANA=[
+  {
+    id: 'rfc_de_contri',
+    labelNombre: 'Registro Federal de Contribuyentes ',
+    campo: 'rfc_de_contri',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+]
+export const FORMA_PERSONA_FISICA_FORM_DATA =[
+  {
+    id: 'Nombre',
+    labelNombre: 'Nombre',
+    campo: 'Nombre',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'Apellido paterno',
+    labelNombre: 'Apellido paterno',
+    campo: 'Apellido paterno',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'pais_fisica',
+    labelNombre: 'País',
+    campo: 'pais_fisica',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'codigoPostal',
+    labelNombre: 'Código postal',
+    campo: 'codigoPostal',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'estado',
+    labelNombre: 'Estado',
+    campo: 'estado',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'correoElectronico',
+    labelNombre: 'Correo electrónico',
+    campo: 'correoElectronico',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'taxId',
+    labelNombre: 'Tax ID',
+    campo: 'taxId',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+
+]

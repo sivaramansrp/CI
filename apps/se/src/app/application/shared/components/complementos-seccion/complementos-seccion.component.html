@@ -52,31 +52,60 @@
 </form>
 
 <ng-titulo titulo="Datos generales socios accionistas" />
+<form [formGroup]="formaAccionistas">
+  <div class="row">
+    <!-- Nacionalidad mexicana -->
+    <div class="col-6">
+      <label>
+        Nacionalidad mexicana
+      </label>
+      <app-input-radio
+        [radioOptions]="accionistasRadio"
+        [layout]="'horizontal'"
+        [gap]="'80%'"
+        [isBold]="true"
+        [labelMargin]="'10%'"
+        formControlName="nacionalidadMexicana"
+        (change)="onRadioChange()"
+      ></app-input-radio>
+    </div>
 
-<div class="row">
-<div class="col-6">
-  <label>
-    Nacionalidad maxicana
-  </label>
-  <app-input-radio 
-  [radioOptions]="accionistasRadio"
-  [layout]="'horizontal'"
-  [gap]="'80%'"
-  [isBold]="true"
-  [labelMargin]="'10%'"
-  ></app-input-radio>
-</div>
-<div class="col-6">
-  <label>
-    Tipo de persona
-  </label>
-  <app-input-radio 
-  [radioOptions]="tipoPersonaRadio"
-  [layout]="'horizontal'"
-  [gap]="'800px'"
-  [isBold]="true"
-  [labelMargin]="'100px'"
-  
-  ></app-input-radio>
-</div>
-</div>
+    <!-- Tipo de persona -->
+    <div class="col-6">
+      <label>
+        Tipo de persona
+      </label>
+      <app-input-radio
+        [radioOptions]="tipoPersonaRadio"
+        [layout]="'horizontal'"
+        [gap]="'800px'"
+        [isBold]="true"
+        [labelMargin]="'100px'"
+        formControlName="tipoDePersona"
+        (change)="onRadioChange()"
+      ></app-input-radio>
+    </div>
+  </div>
+
+  <!-- Show/Hide Tabs Based on Selection -->
+  <div class="row mb-3" *ngIf="activeTab === 'No'">
+    <formas-dinamicas
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaNacionalidadMaxicanaFormData"
+    ></formas-dinamicas>
+  </div>
+
+  <div class="row mt-3" *ngIf="activeTab === 'Si'">
+    <formas-dinamicas
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaNacionalidadMaxicanaSiFormData"
+    ></formas-dinamicas>
+  </div>
+
+  <div class="row mt-3" *ngIf="activeTab === 'Persona fisica'">
+    <formas-dinamicas
+      [forma]="ninoFormGroup"
+      [formularioDatos]="formaPersonaFisicaFormData"
+    ></formas-dinamicas>
+  </div>
+</form>

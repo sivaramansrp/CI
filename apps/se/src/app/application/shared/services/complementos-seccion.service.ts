@@ -15,7 +15,7 @@ export class ComplementosSeccionService {
         return this.http.get<NacionalidadMaxicana[]>('assets/json/260401/radioSiNo.json');
       }
       getTipoPersonaData(): Observable<NacionalidadMaxicana[]> {
-        return this.http.get<NacionalidadMaxicana[]>('assets/json/80103/radioTipoPersona.json');
+        return this.http.get<NacionalidadMaxicana[]>('assets/json/80103/tipo_persona.json');
       }
 
 }
