@@ -143,7 +143,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    * Constructor del store.
    * Inicializa el estado con los valores predeterminados.
    */
-  constructor(): void {
+  constructor() {
     super(createInitialState());
   }
 
