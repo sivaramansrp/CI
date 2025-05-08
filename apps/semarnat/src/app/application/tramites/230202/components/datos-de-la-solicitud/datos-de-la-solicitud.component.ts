@@ -2,17 +2,17 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  CrosslistComponent,
   CrossListLable,
+  CrosslistComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
+import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
-import { map, merge, Subject, takeUntil } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';

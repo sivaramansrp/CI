@@ -1,7 +1,7 @@
+import { DatosDetalle, DatosSolicitud } from '../models/datos-tramite.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
 import { Injectable } from '@angular/core';
-import { DatosDetalle, DatosSolicitud } from '../models/datos-tramite.model';
 
 /**
  * Interfaz que representa un catálogo genérico.
@@ -143,7 +143,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    * Constructor del store.
    * Inicializa el estado con los valores predeterminados.
    */
-  constructor() {
+  constructor(): void {
     super(createInitialState());
   }
 
@@ -176,14 +176,14 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setPais(pais: Catalogo[]) {
+  public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       pais,
     }));
   }
 
-  public setEntidades(entidades: Catalogo[]) {
+  public setEntidades(entidades: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       entidades,
@@ -197,21 +197,21 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setDatosSolicitud(datosSolicitud: DatosSolicitud[]) {
+  public setDatosSolicitud(datosSolicitud: DatosSolicitud[]): void {
     this.update((state) => ({
       ...state,
       datosSolicitud,
     }));
   }
   
-  public setDatosDetalle(datosDetalle: DatosDetalle[]) {
+  public setDatosDetalle(datosDetalle: DatosDetalle[]): void {
     this.update((state) => ({
       ...state,
       datosDetalle,
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -220,112 +220,112 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
 
   public setDescripcionFraccionArancelaria(
     descripcionFraccionArancelaria: string
-  ) {
+  ): void {
     this.update((state) => ({
       ...state,
       descripcionFraccionArancelaria,
     }));
   }
 
-  public setCantidad(cantidad: string) {
+  public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
       cantidad,
     }));
   }
 
-  public setCantidadLetra(cantidadLetra: string) {
+  public setCantidadLetra(cantidadLetra: string): void {
     this.update((state) => ({
       ...state,
       cantidadLetra,
     }));
   }
 
-  public setGenero(genero: Catalogo[]) {
+  public setGenero(genero: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       genero,
     }));
   }
 
-  public setEspecie(especie: Catalogo[]) {
+  public setEspecie(especie: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       especie,
     }));
   }
 
-  public setNombreComun(nombreComun: Catalogo[]) {
+  public setNombreComun(nombreComun: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       nombreComun,
     }));
   }
 
-  public setUnidadDeMedida(unidadDeMedida: Catalogo[]) {
+  public setUnidadDeMedida(unidadDeMedida: Catalogo[]): void {
     this.update((state) => ({
       ...this.getValue(),
       unidadDeMedida,
     }));
   }
 
-  public setLungarDeEntrada(lungarDeEntrada: string) {
+  public setLungarDeEntrada(lungarDeEntrada: string): void {
     this.update((state) => ({
       ...state,
       lungarDeEntrada: lungarDeEntrada,
     }));
   }
 
-  public setMedioDeTransporte(medioDeTransporte: Catalogo[]) {
+  public setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       medioDeTransporte: medioDeTransporte,
     }));
   }
 
-  public setNumeroYDescripcion(numeroYDescripcion: string) {
+  public setNumeroYDescripcion(numeroYDescripcion: string): void {
     this.update((state) => ({
       ...state,
       numeroYDescripcion: numeroYDescripcion,
     }));
   }
 
-  public setCodigoPostal(codigoPostal: string) {
+  public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
       codigoPostal: codigoPostal,
     }));
   }
 
-  public setEstado(estado: Catalogo[]) {
+  public setEstado(estado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       estado: estado,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle: calle,
     }));
   }
 
-  public setNumeroExterior(numeroExterior: string) {
+  public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
       numeroExterior: numeroExterior,
     }));
   }
 
-  public setNumeroInterior(numeroInterior: string) {
+  public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
       numeroInterior: numeroInterior,
     }));
   }
 
-  public setColonia(colonia: string) {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia: colonia,
@@ -440,7 +440,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    *
    * {DestinatarioConfiguracionItem[]} datosTabla - La lista de destinatarios.
    */
-  setDatosDestinatario(destinatarios: DestinatarioConfiguracionItem[]) {
+  setDatosDestinatario(destinatarios: DestinatarioConfiguracionItem[]): void {
     this.update((state) => ({
       ...state,
       destinatarios: destinatarios,

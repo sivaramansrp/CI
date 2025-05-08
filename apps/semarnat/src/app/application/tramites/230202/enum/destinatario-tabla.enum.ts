@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 /**
  * Representa la configuración de un destinatario con información detallada.

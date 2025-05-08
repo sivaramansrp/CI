@@ -1,9 +1,9 @@
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  CATALOGOS_ID,
   Catalogo,
   CatalogosService,
-  CATALOGOS_ID,
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
