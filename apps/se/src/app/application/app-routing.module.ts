@@ -445,7 +445,14 @@ const ROUTES: Routes = [
         (m) => m.CertificadoAlianzaPosterioriModule
       )
   },
-];
+  {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      ),
+  },
+]
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
