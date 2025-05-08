@@ -11,7 +11,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, MENSAJES_MODAL, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
@@ -27,17 +27,9 @@ import { DocumentosState, DocumentosStore } from '../../../core/estados/document
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
+import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
 
-interface DocumentosParaCargar {
-  name: string;
-  id: number;
-  archivo?: File;
-  ruta: string;
-  cargado: boolean;
-  tipo: string;
-  mensaje: string;
-  estatus: string;
-}
+
 
 @Component({
   selector: 'anexar-documentos',
