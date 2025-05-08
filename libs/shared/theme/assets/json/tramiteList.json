@@ -1570,8 +1570,8 @@
   {
     "id": 225,
     "tramite": 260516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/operación-de-maquila-submaquila/plaguicidas",
+    "linkDepartment": "/pago/operación-de-maquila-submaquila/plaguicidas",
     "department": "cofepris"
   },
   {
