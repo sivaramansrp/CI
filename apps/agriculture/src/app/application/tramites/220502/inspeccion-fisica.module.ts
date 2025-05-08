@@ -20,7 +20,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -44,13 +43,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     WizardComponent,
     SharedModule,
     SolicitanteComponent,
-    BtnContinuarComponent,
-    SelectCatalogosComponent,
+    BtnContinuarComponent,   
     InputCheckComponent,
     InputFechaComponent,
     InputHoraComponent,
-    CrosslistComponent,
-    // PedimentoComponent,
+    CrosslistComponent,    
     ReactiveFormsModule,
     TituloComponent,
     SelectPaisesComponent,
