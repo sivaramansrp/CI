@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DetalleComponent } from '../detalle/detalle.component';
 import { OficioComponent } from './oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('OficioComponent', () => {
   let component: OficioComponent;
@@ -13,7 +13,7 @@ describe('OficioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, OficioComponent, BtnContinuarComponent, TituloComponent, TablaDinamicaComponent, DetalleComponent],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, OficioComponent, BtnContinuarComponent, TituloComponent, TablaDinamicaComponent, DetalleComponent],
       providers: [FormBuilder],
     }).compileComponents();
 
