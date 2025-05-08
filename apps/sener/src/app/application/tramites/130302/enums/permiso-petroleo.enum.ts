@@ -40,18 +40,7 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
       valorPredeterminado: '1300254125004512541254',
       marginTop: 0,
     },
-    // {
-    //   id: 'tipoSolicitud',
-    //   labelNombre: 'Tipo de solicitud',
-    //   campo: 'tipoSolicitud',
-    //   clase: 'col-md-4',
-    //   tipoInput: 'text',
-    //   desactivado: true,
-    //   soloLectura: true,
-    //   marcadorDePosicion: '',
-    //   valorPredeterminado: 'inicial',
-    //   marginTop: 0,
-    // },
+    
     {
       id: 'tipoSolicitud',
       row: 1,

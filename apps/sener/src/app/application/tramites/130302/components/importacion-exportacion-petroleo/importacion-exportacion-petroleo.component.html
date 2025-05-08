@@ -38,7 +38,7 @@
     <div class="col-md-12">
 
       <label for="motivoJustificacion">Motivo y/o Justificación*:</label>
-      <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control"
+      <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control h-150"
         (change)="setValoresStore(form,'motivoJustificacion', 'setmotivoJustificacion')"></textarea>
       <div class="d-grid">
         <div *ngIf="form.get('motivoJustificacion')?.touched">
@@ -50,10 +50,10 @@
     </div>
     <div class="col-md-12">
       <label for="motivoJustificacion">Otras declaraciones:</label>
-      <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control " rows="6" cols="100"
+      <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control h-150 " 
         (change)="setValoresStore(form,'otrasDeclaraciones', 'setotrasDeclaraciones')"></textarea>
     </div>
-  </div>
+  </div> 
   <ng-titulo titulo="Manifiesto de aceptación" />
   <ng-alert [CONTENIDO]="aduanaAlert"></ng-alert>
 </form>
