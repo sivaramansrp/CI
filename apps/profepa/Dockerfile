@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/profepa
 
 # Build the application
-RUN npx nx build profepa --configuration=production --skip-nx-cache --verbose
+RUN npx nx build profepa --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/profepa" && test -f "/app/dist/apps/profepa/index.html" || exit 1
