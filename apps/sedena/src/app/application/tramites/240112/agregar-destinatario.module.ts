@@ -18,11 +18,11 @@ import {
 import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarProveedorComponent } from '../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDelTramiteContenedoraComponent } from './components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { DatosMercanciaComponent } from '../../shared/components/datos-mercancia/datos-mercancia.component';
 import { PagoDeDerechocComponent } from './components/pago-de-derechoc/pago-de-derechoc.component';
 import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
-import { TercerosRelacionadosContenedoraComponent } from '../240118/components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
-
+import { TercerosRelacionadosContenedoraComponent } from './components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,8 @@ import { TercerosRelacionadosContenedoraComponent } from '../240118/components/t
     PasoDosComponent,
     PasoTresComponent,
     PagoDeDerechocComponent,
+    TercerosRelacionadosContenedoraComponent,
+    DatosDelTramiteContenedoraComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +40,6 @@ import { TercerosRelacionadosContenedoraComponent } from '../240118/components/t
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
-    TercerosRelacionadosContenedoraComponent,
     PagoDeDerechosComponent,
     DatosMercanciaComponent,
     DatosDelTramiteComponent,
