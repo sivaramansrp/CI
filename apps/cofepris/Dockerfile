@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/cofepris
 
 # Build the application
-RUN npx nx build cofepris --configuration=production --skip-nx-cache --verbose
+RUN npx nx build cofepris --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/cofepris" && test -f "/app/dist/apps/cofepris/index.html" || exit 1

@@ -437,9 +437,29 @@ const ROUTES: Routes = [
       import('./tramites/90303/catalogos.module').then(
         (m) => m.CatalogosModule
       ),
-  }
-  
-];
+  },
+{  
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  },
+  {
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
+  },
+  {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      ),
+  },
+]
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
