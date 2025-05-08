@@ -9,9 +9,13 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 import {
+  AlertComponent,
+  AnexarDocumentosComponent,
   BtnContinuarComponent,
+  FirmaElectronicaComponent,
   SharedModule,
   SolicitanteComponent,
+  TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 
@@ -55,7 +59,11 @@ import { TercerosRelacionadosContenedoraComponent } from './components/terceros-
     AgregarProveedorComponent,
     AgregarDestinatarioFinalComponent,
     SharedModule,
-    TercerosRelacionadosComponent
+    TercerosRelacionadosComponent,
+    FirmaElectronicaComponent,
+     AlertComponent,
+        TituloComponent,
+        AnexarDocumentosComponent,
   ],
 })
 export class AgregarDestinatarioModule {}
