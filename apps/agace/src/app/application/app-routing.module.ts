@@ -122,6 +122,13 @@ const ROUTES: Routes = [
         (m) => m.RenovacionComercializadoraModule
       ),
   },
+  {
+    path: 'garantia',
+    loadChildren: () =>
+      import('./tramites/31101/garantia.module').then(
+        (m) => m.GarantiaModule
+      ),
+  },
 ];
 
 @NgModule({

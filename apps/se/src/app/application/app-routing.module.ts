@@ -439,6 +439,13 @@ const ROUTES: Routes = [
       ),
   },
 {  
+    path: 'registro-modificacion', 
+    loadChildren: () =>
+      import('./tramites/80301/registro-modificacion.module').then(
+        (m) => m.RegistroModificacionModule
+      ),
+  },
+  {
     path: 'modificacion-descripcion',
     loadChildren: () =>
       import('./tramites/130401/modificacion-descripcion.module').then(
@@ -457,9 +464,10 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110212/validacion-posteriori.module').then(
         (m) => m.ValidacionPosterioriModuleModule
-      ),
+      )
   },
-]
+];
+
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
