@@ -22,6 +22,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
@@ -68,7 +69,8 @@ export class CriterioDeDictComponent implements OnInit {
    */
   constructor(private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -103,8 +105,7 @@ export class CriterioDeDictComponent implements OnInit {
    this.tramite130102Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {  
-          console.log('Solicitud130102State', seccionState);
+        map((seccionState) => { 
           this.solicitudState = seccionState;
         })
       )
@@ -113,5 +114,7 @@ export class CriterioDeDictComponent implements OnInit {
     this.frmCriterioDictamen = this.fb.group({
       solicitudMercancia: [this.solicitudState?.solicitudMercancia, Validators.required],
     });
+
+    this.formularioRegistroService.registrarFormulario('frmCriterioDictamen', this.frmCriterioDictamen);
   }
 }
