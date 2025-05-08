@@ -4184,5 +4184,12 @@
     "linkDashboard": "/cofepris/importacion-materias-primas",
     "linkDepartment": "/pago/importacion-materias-primas",
     "department": "cofepris"
+  },
+  {
+    "id": 600,
+    "tramite": 31603,
+    "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud31603",
+    "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud31603",
+    "department": "agace"
   }
 ]

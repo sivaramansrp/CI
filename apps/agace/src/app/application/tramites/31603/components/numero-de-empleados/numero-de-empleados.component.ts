@@ -114,7 +114,7 @@ export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
    * `numeroDeEmpleadosDatos`.
    */
   public getAnterioresTablaDatos(): void {
-    this.comercioExteriorSvc.getAnterioresDatos().subscribe((response) => {
+    this.comercioExteriorSvc.getAnterioresDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = JSON.parse(JSON.stringify(response));
       this.numeroDeEmpleadosDatos = DATOS;
     })
