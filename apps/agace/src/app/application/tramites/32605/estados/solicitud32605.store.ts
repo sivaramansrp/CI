@@ -1,12 +1,10 @@
+import { Domicilios } from '../models/solicitud.model';
+import { EnlaceOperativo } from '../models/solicitud.model';
 import { Injectable } from '@angular/core';
+import { NumeroDeEmpleados } from '../models/solicitud.model';
+import { SeccionSociosIC } from '../models/solicitud.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import {
-  Domicilios,
-  EnlaceOperativo,
-  NumeroDeEmpleados,
-  SeccionSociosIC,
-} from '../models/solicitud.model';
 
 export interface Solicitud32605State {
   idPersonaSolicitud: string;

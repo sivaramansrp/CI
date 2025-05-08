@@ -1,10 +1,19 @@
 import { TestBed } from '@angular/core/testing';
-
-import { SolicitudService } from './solicitud.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { SolicitudService } from './solicitud.service';
+import {
+  EnlaceOperativo,
+  Inventarios,
+  RecibirNotificaciones,
+  RepresentanteLegal,
+  SeccionSubcontratados,
+  SolicitudCatologoSelectLista,
+  SolicitudRadioLista,
+  TransportistasTable,
+} from '../models/solicitud.model';
 
 describe('SolicitudService', () => {
   let service: SolicitudService;
@@ -19,24 +28,35 @@ describe('SolicitudService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
+  afterEach(() => {
+    httpMock.verify();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch recibir notificaciones', () => {
-    const mockData = [
+  it('should fetch recibir notificaciones', (done) => {
+    const mockData: RecibirNotificaciones[] = [
       {
-        rfc: 'GODE561231GR8',
-        curp: 'GODE561231HDFRRN04',
-        nombre: 'Juan',
-        apellidoPaterno: 'Gómez',
-        apellidoMaterno: 'Delgado',
+        rfc: 'LEQI8101314S7',
+        curp: 'LEQI810131HDGSXG05',
+        nombre: 'MISAEL',
+        apellidoPaterno: 'BARRAGAN',
+        apellidoMaterno: 'RUIZ',
+      },
+      {
+        rfc: 'MAJIth621207C95',
+        curp: 'MAVL621207HDGRLS06',
+        nombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
       },
     ];
     service.conseguirRecibirNotificaciones().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
       'assets/json/32605/recibir-notificaciones.json'
     );
@@ -44,133 +64,62 @@ describe('SolicitudService', () => {
     req.flush(mockData);
   });
 
-  it('should fetch modificacion denominacion razon social', () => {
-    const mockData = {
-      razonSocialAnterior: 'EQUIPOS ELECTRICOS GARCIA SA DE CV',
-      razonSocialActual:
-        'UNION DE PERMISIONARIOS VERACRUZ BOCA DEL RIO GRUPO LIBERTAD SA DE CV',
-    };
-    service.conseguirModificacionDenominacionRazonSocial().subscribe((data) => {
+  it('should fetch enlace operativo datos', (done) => {
+    const mockData: EnlaceOperativo[] = [
+      {
+        rfc: 'ABC123456XYZ',
+        nombre: 'Juan',
+        apellidoPaterno: 'Pérez',
+        apellidoMaterno: 'Gómez',
+        claveCiudad: '001',
+        ciudad: 'Ciudad de México',
+        cargo: 'Gerente',
+        telefono: '+52 55 1234 5678',
+        correo: 'juan.perez@example.com',
+        suplente: 'Maria López',
+        calle: 'Avenida Reforma',
+        numeroExterior: '123',
+        numeroInterior: '4B',
+        colonia: 'Centro',
+        codigoPostal: '01000',
+        localidad: 'Ciudad de México',
+        delegacionMunicipio: 'Cuauhtémoc',
+      },
+    ];
+    service.conseguirEnlaceOperativoDatos().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
-      'assets/json/32605/modificacion-denominacion-razon-social.json'
+      'assets/json/32605/enlace-operativo-datos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
 
-  it('should fetch nombre institucion catalogo', () => {
-    const mockData = {
-      labelNombre: 'Datos de la póliza de fianza actual',
-      required: false,
-      primerOpcion: 'Seleccione un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA',
-        },
-        {
-          id: 2,
-          descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1',
-        },
-      ],
+  it('should fetch representante legal datos', (done) => {
+    const mockData: RepresentanteLegal = {
+      rfcTercero: 'ZURC721023D12',
+      rfc: 'ZURC721023D12',
+      nombre: 'ROBERTO CARLOS',
+      apellidoPaterno: 'CRUZ',
+      apellidoMaterno: 'VELAZQUEZ',
+      telefono: '22234323',
+      correoElectronico: 'vucem2.5@hotmail.com',
     };
-    service.conseguirNombreInstitucionCatalogo().subscribe((data) => {
+    service.conseguirRepresentanteLegalDatos().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
-      'assets/json/32605/nombre-institucion-catalogo.json'
+      'assets/json/32605/representante-legal-datos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
 
-  it('should fetch datos por garantia', () => {
-    const mockData = {
-      polizaDeFianzaActual: 1,
-      numeroFolio: '645456546',
-      rfcInstitucion: 'FDO9411098R8',
-      fechaExpedicion: '30/09/2024',
-      fechaInicioVigenciaNo: '30/09/2024',
-      fechaFinVigenciaNo: '30/09/2024',
-      fechaInicioVigencia: '30/09/2024',
-      fechaFinVigencia: '30/09/2024',
-      importeTotal: '3213',
-    };
-    service.conseguirDatosPorGarantia().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('assets/json/32605/datos-por-garantia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch datos generales opcion de radio', () => {
-    const mockData = {
-      tipoDeEndoso: {
-        radioOptions: [
-          {
-            label: 'Aumento de monto',
-            value: 1,
-          },
-          {
-            label: 'Aumento de monto y renovación/ampliación de vigencia',
-            value: 2,
-          },
-          {
-            label: 'Modificación de denominación o razórrsocial',
-            value: 3,
-          },
-          {
-            label: 'Renovación/ampliación de vigencia',
-            value: 4,
-          },
-        ],
-        isRequired: true,
-      },
-      tipoDeGarantia: {
-        radioOptions: [
-          {
-            label: 'Fianza',
-            value: 1,
-          },
-          {
-            label: 'Carta de crédito',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      modalidadDeLaGarantia: {
-        radioOptions: [
-          {
-            label: 'Garantía revolvente',
-            value: 1,
-          },
-          {
-            label: 'Garantía individual',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      tipoSector: {
-        radioOptions: [
-          {
-            label: 'Sector productivo',
-            value: 1,
-          },
-          {
-            label: 'Sector servicio',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
+  it('should fetch opcion de radio', (done) => {
+    const mockData: SolicitudRadioLista = {
       requisitos: {
         radioOptions: [
           {
@@ -184,173 +133,228 @@ describe('SolicitudService', () => {
         ],
         isRequired: true,
       },
+      reconocimientoMutuo: {
+        radioOptions: [
+          {
+            label: 'Sí Autorizo',
+            value: 1,
+          },
+          {
+            label: 'No Autorizo',
+            value: 2,
+          },
+        ],
+        isRequired: true,
+      },
+      clasificacionInformacion: {
+        radioOptions: [
+          {
+            label: 'Pública',
+            value: 1,
+          },
+          {
+            label: 'Privada',
+            value: 2,
+          },
+        ],
+        isRequired: true,
+      },
     };
-    service.conseguirDatosGeneralesOpcionDeRadio().subscribe((data) => {
+    service.conseguirOpcionDeRadio().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
-      'assets/json/32605/datos-generales-de-la-solicitud-radio-option.json'
+      'assets/json/32605/solicitud-radio-lista.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
 
-  it('should fetch datos generales catalogo', () => {
-    const mockData = {
-      concepto: {
-        labelNombre: 'Concepto',
+  it('should fetch transportistas lista', (done) => {
+    const mockData: TransportistasTable[] = [
+      {
+        rfc: 'AAL0409235E6',
+        razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+        domicilio:
+          'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS MEXICANOS',
+        caat: '3CJD',
+      },
+    ];
+    service.conseguirTransportistasLista().subscribe((data) => {
+      expect(data).toEqual(mockData);
+      done();
+    });
+    const req = httpMock.expectOne(
+      'assets/json/32605/transportistas-lista.json'
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should fetch solicitud catalogo select lista', (done) => {
+    const mockData: SolicitudCatologoSelectLista = {
+      sectorProductivo: {
+        labelNombre: 'Sector Productivo',
         required: false,
         primerOpcion: 'Seleccione un valor',
         catalogos: [
           {
             id: 1,
-            descripcion: 'Fabricación de maquinaria y equipo',
+            descripcion: 'Bordado o impresión de prendas',
           },
           {
             id: 2,
-            descripcion: 'Fabricación de maquinaria y equipo - 1',
+            descripcion: 'Bordado o impresión de prendas -n1',
           },
         ],
       },
-      tipoDeInversion: {
-        labelNombre: 'Tipo de inversión',
+      servicio: {
+        labelNombre: 'Servicio',
+        required: false,
+        primerOpcion: 'Seleccione un valor',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'Bordado o impresión de prendas',
+          },
+          {
+            id: 2,
+            descripcion: 'Bordado o impresión de prendas -n1',
+          },
+        ],
+      },
+      bimestre: {
+        labelNombre: 'Bimestre',
+        required: false,
+        primerOpcion: 'Seleccione un valor',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'Marzo-Abril',
+          },
+          {
+            id: 2,
+            descripcion: 'Marzo-Abril-1',
+          },
+        ],
+      },
+      indiqueTodos: {
+        labelNombre: '',
+        required: false,
+        primerOpcion: 'Seleccione un valor',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'Domicilios registrados',
+          },
+          {
+            id: 2,
+            descripcion: '42025 - Autorización Programa Nuevo Industrial',
+          },
+        ],
+      },
+      enSuCaracterDe: {
+        labelNombre: 'En su caracter de',
         required: true,
         primerOpcion: 'Selecciona un tipo',
         catalogos: [
           {
             id: 1,
-            descripcion: 'Test',
+            descripcion: 'Accionista',
           },
           {
             id: 2,
-            descripcion: 'Test - 1',
+            descripcion: 'Accionista - 1',
+          },
+        ],
+      },
+      nacionalidad: {
+        labelNombre: 'Nacionalidad',
+        required: true,
+        primerOpcion: 'Selecciona un tipo',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
+          },
+          {
+            id: 2,
+            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
+          },
+        ],
+      },
+      tipoDePersona: {
+        labelNombre: 'Tipo de Persona',
+        required: true,
+        primerOpcion: 'Selecciona un tipo',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'Física',
+          },
+          {
+            id: 2,
+            descripcion: 'Moral',
+          },
+        ],
+      },
+      tipoDeInstalacion: {
+        labelNombre: 'Tipo de instalación',
+        required: true,
+        primerOpcion: 'Selecciona un tipo',
+        catalogos: [
+          {
+            id: 1,
+            descripcion: 'Test 1',
+          },
+          {
+            id: 2,
+            descripcion: 'Test 2',
           },
         ],
       },
     };
-    service.conseguirDatosGeneralesCatologo().subscribe((data) => {
+    service.conseguirSolicitudCatologoSelectLista().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
-      'assets/json/32605/datos-generales-de-la-solicitud-catologo.json'
+      'assets/json/32605/solicitud-catologo-select-lista.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
 
-  it('should fetch lista de subcontratistas', () => {
-    const mockData = [
-      {
-        rfc: 'MAHA790703QW5',
-        razonSocial: 'ARTURO MATA HERNANDEZ',
-      },
-    ];
-    service.conseguirListaDeSubcontratistas().subscribe((data) => {
+  it('should fetch seccion subcontratados', (done) => {
+    const mockData: SeccionSubcontratados = {
+      subcontrataRFC: 'MAVL621207C95',
+      subcontrataRazonSocial: 'test ',
+    };
+    service.conseguirSeccionSubcontratados().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
     const req = httpMock.expectOne(
-      'assets/json/32605/lista-de-subcontratistas.json'
+      'assets/json/32605/seccion-subcontratados.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
 
-  it('should fetch regimen aduanero', () => {
-    const mockData = [
-      'Importación temporal para elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)',
-      'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria automotriz terminal',
-      'Elaboración, transformación o reparación en recinto fiscalizado',
-      'Recinto fiscalizado estratégico',
-    ];
-    service.conseguirRegimenAduanero().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('assets/json/32605/regimen-aduanero.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch miembros de la empresa', () => {
-    const mockData = [
+  it('should fetch inventarios', (done) => {
+    const mockData: Inventarios[] = [
       {
-        tipoPersonaMuestra: 'Física',
-        nombreCompleto: 'Juan Pérez',
-        rfc: 'PEJJ800101XXX',
-        caracterDe: 'Representante Legal',
-        nacionalidad: 'Mexicana',
-        nombreEmpresa: 'Tecnologías Avanzadas SA de CV',
-        tributarMexico: 'Sí',
-        razonSocial: 'Tecnologías Avanzadas SA de CV',
+        nombre: 'Nombre prueba1',
+        lugarRadicacion: 'Mexíco',
+        anexo24: '',
       },
     ];
-    service.conseguirMiembrosDeLaEmpresa().subscribe((data) => {
+    service.conseguirInventarios().subscribe((data) => {
       expect(data).toEqual(mockData);
+      done();
     });
-
-    const req = httpMock.expectOne(
-      'assets/json/32605/miembros-de-la-empresa.json'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch tipo de inversion datos', () => {
-    const mockData = [
-      {
-        idRegistro: 'INV12345',
-        tipoInversion: 'Bienes Inmuebles',
-        descripcion: 'Departamento en Ciudad de México',
-        valor: '2500000',
-        cveTipoInversion: 'BI01',
-      },
-    ];
-    service.conseguirTipoDeInversionDatos().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne(
-      'assets/json/32605/tipo-de-inversion-datos.json'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch domicilios', () => {
-    const mockData = [
-      {
-        instalacionPrincipal: 'Planta Norte',
-        cveTipoInstalacion: '01',
-        tipoInstalacion: 'Fábrica',
-        cveEntidadFederativa: '09',
-        entidadFederativa: 'Ciudad de México',
-        cveDelegacionMunicipio: '010',
-        municipioDelegacion: 'Gustavo A. Madero',
-        direccion: 'Av. Central 123',
-        codigoPostal: '07760',
-        registroSESAT: 'SESAT-456789',
-        procesoProductivo: 'Fabricación de electrónicos',
-        fechaModificacion: '2025-04-18',
-        cveEstatus: 'A1',
-        estatus: 'Activo',
-        noExterior: '123',
-        noInterior: '5B',
-        cveColonia: '025',
-        calle: 'Av. Central',
-        descCol: 'Colonia Industrial',
-        idRecinto: 'RC-998877',
-        numFolioAcuse: 'FA-20250418-01',
-        observaciones: 'Instalación con verificación reciente.',
-      },
-    ];
-    service.conseguirDomicilios().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('assets/json/32605/domicilios.json');
+    const req = httpMock.expectOne('assets/json/32605/inventarios-datos.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });

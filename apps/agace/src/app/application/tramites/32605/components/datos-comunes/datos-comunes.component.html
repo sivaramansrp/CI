@@ -330,7 +330,7 @@
               class="btn btn-secondary"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
-              (click)="agregarInstalacionesPrincipales('modificar')"
+              (click)="agregarInstalacionesPrincipales()"
             >
               Modificar
             </button>
@@ -348,7 +348,7 @@
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
-              (click)="agregarInstalacionesPrincipales('modificar')"
+              (click)="agregarInstalacionesPrincipales()"
             >
               Agregar
             </button>
@@ -698,7 +698,7 @@
               class="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
-              (click)="agregarMiembrosEmpresa('agregar')"
+              (click)="agregarMiembrosEmpresa()"
             >
               Agregar
             </button>
@@ -708,7 +708,7 @@
               class="btn btn-secondary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
-              (click)="agregarMiembrosEmpresa('modificar')"
+              (click)="agregarMiembrosEmpresa()"
             >
               Modificar
             </button>
@@ -745,39 +745,34 @@
         </div>
 
         <div class="col-md-12 mt-4">
-          <div class="alert alert-info">
-            <div class="form-check text-start">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                formControlName="checkbox1"
-                (change)="actualizarCheckbox1($event)"
-              />
-              &nbsp; * Una vez manifestado lo anterior, se solicita al SAT, a
-              través de AGACE, que realice las inspecciones a que hace
-              referencia la fracción IX de la regla 7.1.1, a las instalaciones
-              señaladas en las que se realizan las operaciones de comercio
-              exterior con el propósito de verificar la información plasmada en
-              la presente solicitud del Registro en el Esquema Integral de
-              Certificación.
-            </div>
+          <div class="form-check text-start">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="checkbox1"
+              (change)="actualizarCheckbox1($event)"
+            />
+            &nbsp; * Una vez manifestado lo anterior, se solicita al SAT, a
+            través de AGACE, que realice las inspecciones a que hace referencia
+            la fracción IX de la regla 7.1.1, a las instalaciones señaladas en
+            las que se realizan las operaciones de comercio exterior con el
+            propósito de verificar la información plasmada en la presente
+            solicitud del Registro en el Esquema Integral de Certificación.
           </div>
         </div>
 
         <div class="col-md-12 mt-4">
-          <div class="alert alert-info">
-            <div class="form-check text-start">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                formControlName="checkbox2"
-                (change)="actualizarCheckbox2($event)"
-              />
-              &nbsp; * Bajo protesta de decir verdad, manifiesto que los datos
-              asentados en el presente documento son ciertos y que las
-              facultades que me fueron otorgadas para representar al solicitante
-              no me han sido modificadas y/ o revocadas.
-            </div>
+          <div class="form-check text-start">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="checkbox2"
+              (change)="actualizarCheckbox2($event)"
+            />
+            &nbsp; * Bajo protesta de decir verdad, manifiesto que los datos
+            asentados en el presente documento son ciertos y que las facultades
+            que me fueron otorgadas para representar al solicitante no me han
+            sido modificadas y/ o revocadas.
           </div>
         </div>
       </div>

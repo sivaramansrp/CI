@@ -1,16 +1,14 @@
+import { EnlaceOperativo } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Inventarios } from '../models/solicitud.model';
 import { Observable } from 'rxjs';
-import {
-  EnlaceOperativo,
-  Inventarios,
-  RecibirNotificaciones,
-  RepresentanteLegal,
-  SeccionSubcontratados,
-  SolicitudCatologoSelectLista,
-  SolicitudRadioLista,
-  TransportistasTable,
-} from '../models/solicitud.model';
+import { RecibirNotificaciones } from '../models/solicitud.model';
+import { RepresentanteLegal } from '../models/solicitud.model';
+import { SeccionSubcontratados } from '../models/solicitud.model';
+import { SolicitudCatologoSelectLista } from '../models/solicitud.model';
+import { SolicitudRadioLista } from '../models/solicitud.model';
+import { TransportistasTable } from '../models/solicitud.model';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario

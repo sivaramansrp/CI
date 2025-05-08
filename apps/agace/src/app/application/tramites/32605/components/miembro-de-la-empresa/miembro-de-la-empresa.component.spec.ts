@@ -1,10 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MiembroDeLaEmpresaComponent } from './miembro-de-la-empresa.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { MiembroDeLaEmpresaComponent } from './miembro-de-la-empresa.component';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { of, Subject } from 'rxjs';
+import {
+  Domicilios,
+  EnlaceOperativo,
+  NumeroDeEmpleados,
+  SeccionSociosIC,
+  SolicitudCatologoSelectLista,
+  SolicitudRadioLista,
+} from '../../models/solicitud.model';
 import { CommonModule } from '@angular/common';
 import {
   CatalogoSelectComponent,
@@ -16,79 +24,15 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('MiembroDeLaEmpresaComponent', () => {
   let component: MiembroDeLaEmpresaComponent;
   let fixture: ComponentFixture<MiembroDeLaEmpresaComponent>;
-  let solicitudServiceMock: any;
-  let solicitud32605StoreMock: any;
-  let solicitud32605QueryMock: any;
+  let solicitudServiceMock: jest.Mocked<SolicitudService>;
+  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
+  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirDatosGeneralesCatologo: jest.fn().mockReturnValue(
-        of({
-          enSuCaracterDe: {
-            labelNombre: 'En su caracter de',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'Accionista',
-              },
-              {
-                id: 2,
-                descripcion: 'Accionista - 1',
-              },
-            ],
-          },
-          nacionalidad: {
-            labelNombre: 'Nacionalidad',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
-              },
-              {
-                id: 2,
-                descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
-              },
-            ],
-          },
-          tipoDePersona: {
-            labelNombre: 'Tipo de Persona',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'Física',
-              },
-              {
-                id: 2,
-                descripcion: 'Moral',
-              },
-            ],
-          },
-        })
-      ),
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
-        of({
-          requisitos: {
-            radioOptions: [
-              {
-                label: 'Sí',
-                value: 1,
-              },
-              {
-                label: 'No',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-        })
-      ),
-    };
+      conseguirSolicitudCatologoSelectLista: jest.fn(),
+      conseguirOpcionDeRadio: jest.fn(),
+    } as unknown as jest.Mocked<SolicitudService>;
 
     solicitud32605StoreMock = {
       actualizarMiembroCaracterDe: jest.fn(),
@@ -102,33 +46,21 @@ describe('MiembroDeLaEmpresaComponent', () => {
       actualizarMiembroNombreEmpresa: jest.fn(),
       actualizarMiembroRegistroFederal: jest.fn(),
       actualizarMiembroNombreCompleto: jest.fn(),
-    };
+    } as unknown as jest.Mocked<Solicitud32605Store>;
 
     solicitud32605QueryMock = {
-      selectSolicitud$: of({
-        miembroCaracterDe: '',
-        miembroTributarMexico: '',
-        miembroNacionalidad: '',
-        miembroRfc: '',
-        miembroRegistroFederal: '',
-        miembroNombreCompleto: '',
-        miembroTipoPersonaMuestra: '',
-        miembroNombre: '',
-        miembroApellidoPaterno: '',
-        miembroApellidoMaterno: '',
-        miembroNombreEmpresa: '',
-      }),
-    };
+      selectSolicitud$: jest.fn(),
+    } as unknown as jest.Mocked<Solicitud32605Query>;
 
     await TestBed.configureTestingModule({
       imports: [
-        ReactiveFormsModule,
         MiembroDeLaEmpresaComponent,
         CommonModule,
+        ReactiveFormsModule,
         TituloComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ],
       declarations: [],
       providers: [
@@ -143,30 +75,279 @@ describe('MiembroDeLaEmpresaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MiembroDeLaEmpresaComponent);
     component = fixture.componentInstance;
+
+    solicitud32605QueryMock = {
+      selectSolicitud$: of({
+        idPersonaSolicitud: '',
+        rfcTercero: '',
+        rfc: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        telefono: '',
+        correoElectronico: '',
+
+        agregarEnlaceRfcTercero: '',
+        agregarEnlaceRfc: '',
+        agregarEnlaceNombre: '',
+        agregarEnlaceApellidoPaterno: '',
+        agregarEnlaceApellidoMaterno: '',
+        agregarEnlaceCiudadEstado: '',
+        agregarEnlaceCargo: '',
+        agregarEnlaceTelefono: '',
+        agregarEnlaceCorreoElectronico: '',
+        agregarEnlaceSuplente: false,
+
+        '2089': 0,
+        '2090': 0,
+        '2091': 0,
+
+        '2042': 0,
+        '2043': 0,
+        '2044': 0,
+        fechaInicioComercio: '',
+        fechaPago: '',
+        monto: '',
+        operacionesBancarias: '',
+        llavePago: '',
+
+        transportistaRFC: '',
+        transportistaRFCModifTrans: '',
+        transportistaRazonSocial: '',
+        transportistaDomicilio: '',
+        transportistaCaat: '',
+        transportistaIdDomicilio: '',
+        transportistaIdRFC: '',
+        transportistaIdRazonSocial: '',
+        transportistaIdCaat: '',
+
+        miembroCaracterDe: '',
+        miembroTributarMexico: 0,
+        miembroNacionalidad: '',
+        miembroRfc: '',
+        miembroRegistroFederal: '',
+        miembroNombreCompleto: '',
+        miembroTipoPersonaMuestra: '',
+        miembroNombre: '',
+        miembroApellidoPaterno: '',
+        miembroApellidoMaterno: '',
+        miembroNombreEmpresa: '',
+
+        subcontrataRFCBusqueda: '',
+        subcontrataRFC: '',
+        subcontrataRazonSocial: '',
+        subcontrataEmpleados: '',
+        subcontrataBimestre: 0,
+
+        principales: 0,
+        municipio: '',
+        tipoDeInstalacion: 0,
+        entidadFederativa: '',
+        registroSESAT: '',
+        descripcion: '',
+        codigoPostal: '',
+        procesoProductivo: 0,
+        goceDelInmueble: 0,
+        empresa: 0,
+        comercioExterior: 0,
+        mutuo: 0,
+
+        catseleccionados: 0,
+        servicio: 0,
+        '190': 0,
+        '191': 0,
+        '199': 0,
+        empleados: '',
+        bimestre: 0,
+        '2034': 0,
+        '236': 0,
+        '237': 0,
+        '238': 0,
+        '239': 0,
+        '240': 0,
+        '243': 0,
+        '244': 0,
+        '245': 0,
+        indiqueTodos: 0,
+        '246': 0,
+        file1: '',
+        file2: '',
+        '247': 0,
+        '248': 0,
+        identificacion: '',
+        lugarDeRadicacion: '',
+        '249': 0,
+        '250': 0,
+        '251': 0,
+        checkbox1: false,
+        checkbox2: false,
+        checkbox3: false,
+        actualmente2: '',
+        actualmente1: '',
+        numeroDeEmpleadosLista: [] as NumeroDeEmpleados[],
+        domiciliosDatos: [] as Domicilios[],
+        listaSeccionSociosIC: [] as SeccionSociosIC[],
+        enlaceOperativosLista: [] as EnlaceOperativo[],
+      }),
+    } as jest.Mocked<Solicitud32605Query>;
+
+    solicitudServiceMock.conseguirSolicitudCatologoSelectLista.mockReturnValue(
+      of({
+        sectorProductivo: {
+          labelNombre: 'Sector Productivo',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Bordado o impresión de prendas',
+            },
+            {
+              id: 2,
+              descripcion: 'Bordado o impresión de prendas -n1',
+            },
+          ],
+        },
+        servicio: {
+          labelNombre: 'Servicio',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Bordado o impresión de prendas',
+            },
+            {
+              id: 2,
+              descripcion: 'Bordado o impresión de prendas -n1',
+            },
+          ],
+        },
+        bimestre: {
+          labelNombre: 'Bimestre',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Marzo-Abril',
+            },
+            {
+              id: 2,
+              descripcion: 'Marzo-Abril-1',
+            },
+          ],
+        },
+        indiqueTodos: {
+          labelNombre: '',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Domicilios registrados',
+            },
+            {
+              id: 2,
+              descripcion: '42025 - Autorización Programa Nuevo Industrial',
+            },
+          ],
+        },
+        enSuCaracterDe: {
+          labelNombre: 'En su caracter de',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Accionista',
+            },
+            {
+              id: 2,
+              descripcion: 'Accionista - 1',
+            },
+          ],
+        },
+        nacionalidad: {
+          labelNombre: 'Nacionalidad',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
+            },
+            {
+              id: 2,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
+            },
+          ],
+        },
+        tipoDePersona: {
+          labelNombre: 'Tipo de Persona',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Física',
+            },
+            {
+              id: 2,
+              descripcion: 'Moral',
+            },
+          ],
+        },
+        tipoDeInstalacion: {
+          labelNombre: 'Tipo de instalación',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Test 1',
+            },
+            {
+              id: 2,
+              descripcion: 'Test 2',
+            },
+          ],
+        },
+      } as SolicitudCatologoSelectLista)
+    );
+
+    solicitudServiceMock.conseguirOpcionDeRadio.mockReturnValue(
+      of({
+        requisitos: { radioOptions: [{ value: 'Sí', label: 'Sí' }] },
+      } as SolicitudRadioLista)
+    );
+
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should initialize the form on ngOnInit', () => {
     expect(component.miembroEmpresaForm).toBeDefined();
-    expect(
-      component.miembroEmpresaForm.controls['miembroCaracterDe']
-    ).toBeDefined();
+    expect(component.miembroEmpresaForm.get('miembroCaracterDe')?.value).toBe(
+      '1'
+    );
   });
 
-  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
+  it('should call conseguirSolicitudCatologoSelectLista on initialization', () => {
     expect(
-      solicitudServiceMock.conseguirDatosGeneralesCatologo
+      solicitudServiceMock.conseguirSolicitudCatologoSelectLista
     ).toHaveBeenCalled();
+    expect(component.enSuCaracterDeLista.catalogos[0].descripcion).toBe(
+      'Carácter 1'
+    );
   });
 
-  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
-    expect(
-      solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio
-    ).toHaveBeenCalled();
+  it('should call conseguirOpcionDeRadio on initialization', () => {
+    expect(solicitudServiceMock.conseguirOpcionDeRadio).toHaveBeenCalled();
+    expect(component.sinoOpcion.radioOptions[0].label).toBe('Sí');
   });
 
   it('should emit eventoCerrarModal when cerrarModal is called', () => {
@@ -176,42 +357,38 @@ describe('MiembroDeLaEmpresaComponent', () => {
   });
 
   it('should update miembroCaracterDe when actualizarMiembroCaracterDe is called', () => {
-    const mockCatalogo = { id: 1 };
-    component.actualizarMiembroCaracterDe(mockCatalogo as any);
+    component.actualizarMiembroCaracterDe({
+      id: 2,
+      descripcion: 'Carácter 2',
+    });
     expect(
       solicitud32605StoreMock.actualizarMiembroCaracterDe
-    ).toHaveBeenCalledWith(1);
+    ).toHaveBeenCalledWith('2');
   });
 
   it('should update miembroTributarMexico when actualizarMiembroTributarMexico is called', () => {
-    component.actualizarMiembroTributarMexico(1);
+    component.actualizarMiembroTributarMexico('No');
     expect(
       solicitud32605StoreMock.actualizarMiembroTributarMexico
-    ).toHaveBeenCalledWith(1);
+    ).toHaveBeenCalledWith('No');
   });
 
   it('should update miembroNacionalidad when actualizarMiembroNacionalidad is called', () => {
-    const mockCatalogo = { id: 2 };
-    component.actualizarMiembroNacionalidad(mockCatalogo as any);
+    component.actualizarMiembroNacionalidad({
+      id: 1,
+      descripcion: 'Estados Unidos',
+    });
     expect(
       solicitud32605StoreMock.actualizarMiembroNacionalidad
-    ).toHaveBeenCalledWith(2);
+    ).toHaveBeenCalledWith('US');
   });
 
   it('should update miembroRFC when actualizarMiembroRFC is called', () => {
-    const mockEvent = { target: { value: 'RFC123' } } as any;
-    component.actualizarMiembroRFC(mockEvent);
+    const event = { target: { value: 'RFC456' } } as any;
+    component.actualizarMiembroRFC(event);
     expect(solicitud32605StoreMock.actualizarMiembroRFC).toHaveBeenCalledWith(
-      'RFC123'
+      'RFC456'
     );
-  });
-
-  it('should update miembroNombre when actualizarMiembroNombre is called', () => {
-    const mockEvent = { target: { value: 'John' } } as any;
-    component.actualizarMiembroNombre(mockEvent);
-    expect(
-      solicitud32605StoreMock.actualizarMiembroNombre
-    ).toHaveBeenCalledWith('John');
   });
 
   it('should emit eventoActualizarMiembro when aceptarModal is called', () => {

@@ -41,6 +41,8 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -60,8 +62,9 @@ import { takeUntil } from 'rxjs';
     SeccionSubcontratadosComponent,
     InstalacionesPrincipalesComponent,
     TablaConEntradaComponent,
+    ToastrModule,
   ],
-  providers: [SolicitudService],
+  providers: [SolicitudService, ToastrService],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.scss',
 })
@@ -264,7 +267,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /** Muestra el modal para agregar miembros de la empresa */
-  agregarMiembrosEmpresa(valor: string): void {
+  agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
@@ -280,7 +283,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-  agregarInstalacionesPrincipales(valor: string): void {
+  agregarInstalacionesPrincipales(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
         this.modalInstalacionesPrincipalesElement.nativeElement
@@ -344,6 +347,18 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   instalacionesPrincipales(evento: Domicilios): void {
     this.domiciliosDatos = [...this.domiciliosDatos, evento];
     this.solicitud32605Store.actualizarDomiciliosDatos(this.domiciliosDatos);
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal('Datos guardados correctamente.');
+    this.pedimentos.push(PEDIMENTO);
   }
 
   actualizarCatseleccionados(valor: Catalogo): void {
@@ -393,6 +408,22 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
 
   actualizar239(valor: string | number): void {
     this.solicitud32605Store.actualizar239(valor);
+    if (valor === 1) {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+      this.abrirModal(
+        'Es un requisito obligatorio para acceder a Registro en el Esquema de Certificacion de Empresas, de conformidad con la regla 7.1.1. de las RGCE.'
+      );
+      this.pedimentos.push(PEDIMENTO);
+    }
   }
 
   actualizar240(valor: string | number): void {
