@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { TABLA_PRODUCTOR_INDIRECTO } from '../../constantes/complementaria.enum';
 import { ProductorIndirecto } from '../../models/complementaria.model';
+import { TABLA_PRODUCTOR_INDIRECTO } from '../../constantes/complementaria.enum';
+
 
 /**
  * Componente para mostrar la tabla de productores indirectos.
@@ -34,5 +35,5 @@ export class ProductorIndirectoComponent {
    * Tabla de selección de mercancías
    * @type {TablaSeleccion}
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 }

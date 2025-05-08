@@ -466,7 +466,15 @@ const ROUTES: Routes = [
         (m) => m.ValidacionPosterioriModuleModule
       )
   },
+  {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/90304/prosec.module').then(
+        (m) => m.ProsecModule
+      ),
+  },
 ];
+
 
 
 @NgModule({

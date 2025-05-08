@@ -66,7 +66,7 @@
     "id": 10,
     "tramite": 10303,
     "linkDashboard": "/aga/donaciones-extranjeras/solicitud",
-    "linkDepartment": "/aga/donaciones-extranjeras/solicitud",
+    "linkDepartment": "/pago/donaciones-extranjeras/solicitud",
     "department": "aga"
   },
   {
@@ -423,7 +423,7 @@
     "id": 61,
     "tramite": 130118,
     "linkDashboard": "/se/pexim/solicitud",
-    "linkDepartment": "/se/pexim/solicitud",
+    "linkDepartment": "/pago/pexim/solicitud",
     "department": "se"
   },
   {
@@ -535,7 +535,7 @@
     "id": 77,
     "tramite": 220501,
     "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
-    "linkDepartment": "/agriculture/sagarpa/datosdelasolicitud",
+    "linkDepartment": "/pago/sagarpa/datosdelasolicitud",
     "department": "agriculture"
   },
   {
@@ -681,8 +681,8 @@
   {
     "id": 98,
     "tramite": 260601,
-    "linkDashboard": "/cofepris/aviso-sanitario/datosde-la-solicitud",
-    "linkDepartment": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+    "linkDashboard": "/cofepris/aviso-sanitario/datos-de-la-solicitud",
+    "linkDepartment": "/pago/aviso-sanitario/datos-de-la-solicitud",
     "department": "cofepris"
   },
   {
@@ -906,7 +906,7 @@
     "id": 130,
     "tramite": 40201,
     "linkDashboard": "/aga/transportacion-maritima/asignar-caat-maritimo",
-    "linkDepartment": "/aga/transportacion-maritima/asignar-caat-maritimo",
+    "linkDepartment": "/pago/transportacion-maritima/asignar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -1298,7 +1298,7 @@
     "id": 186,
     "tramite": 202,
     "linkDashboard": "/aga/prestadores-servicio/maniobras-mercancias",
-    "linkDepartment": "/aga/prestadores-servicio/maniobras-mercancias",
+    "linkDepartment": "/pago/prestadores-servicio/maniobras-mercancias",
     "department": "aga"
   },
   {
@@ -1354,7 +1354,7 @@
     "id": 194,
     "tramite": 40202,
     "linkDashboard": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
-    "linkDepartment": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
+    "linkDepartment": "/pago/modificacion-transportacion-maritima/modificar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -2060,8 +2060,8 @@
   {
     "id": 295,
     "tramite": 90304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/solicitud-modificaciones",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/solicitud-modificaciones",
     "department": "se"
   },
   {
@@ -3117,8 +3117,8 @@
   {
     "id": 447,
     "tramite": 32515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-opcion-seguro-global/solicitante",
+    "linkDepartment": "/pago/aviso-opcion-seguro-global/solicitante",
     "department": "agace"
   },
   {

@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
+
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { TABLA_PRODUCIR_MERCANCIAS } from '../../constantes/complementaria.enum';
 import { Mercancias } from '../../models/complementaria.model';
+import { TABLA_PRODUCIR_MERCANCIAS } from '../../constantes/complementaria.enum';
 
 /**
  * Componente para mostrar la tabla de mercancías a producir.
@@ -33,5 +34,5 @@ export class ProducirMercanciasComponent {
    * Lista de mercancías obtenidas del servicio
    * @type {Mercancias[]}
    */
-  @Input() mercanciasProducir: Mercancias[] = [];
+  @Input() mercanciasProducir: Mercancias [] = [];
 }
