@@ -1,11 +1,13 @@
-import { catchError, map } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
-import { ConfiguracionColumna, 
-        InputFecha, 
-        InputFechaComponent, 
-        TablaAcciones, 
-        TablaDinamicaComponent, 
-        TablePaginationComponent } from '@libs/shared/data-access-user/src';
+import { catchError, map, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+    ConfiguracionColumna,
+    InputFecha,
+    InputFechaComponent,
+    TablaAcciones,
+    TablaDinamicaComponent,
+    TablePaginationComponent
+} from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CONFIGURACION_ENCABEZADO_PENDIENTES } from '../../core/constantes/constantes-bandejas.constants';
@@ -19,46 +21,47 @@ import { TablerosService } from '../../core/service/tableros.service';
     templateUrl: './seleccion-modulo.component.html',
     styleUrl: './seleccion-modulo.component.scss',
 })
-export class BandejaPendientesComponent implements OnInit {
-    /** Configuraci�n del campo de fecha inicial */
+export class BandejaPendientesComponent implements OnInit, OnDestroy {
+    /** Configuración del campo de fecha inicial */
     FECHA_INICIO = {
         labelNombre: 'Fecha inicial',
         required: false,
         habilitado: true,
     };
-    /** Configuraci�n del campo de fecha final */
+    /** Configuración del campo de fecha final */
     FECHA_FINAL = {
         labelNombre: 'Fecha final',
         required: false,
         habilitado: true,
     };
-    
-    /** Indica si el bloque de filtros est� colapsado */
+
+    /** Indica si el bloque de filtros esté colapsado */
     colapsable: boolean = false;
-    /** Formulario de b�squeda */
+    /** Formulario de búsqueda */
     public FormBusqueda!: FormGroup;
-    /** Configuraci�n del input de fecha inicial */
+    /** Configuración del input de fecha inicial */
     public fechaInicioInput: InputFecha = this.FECHA_INICIO;
-    /** Configuraci�n del input de fecha final */
+    /** Configuración del input de fecha final */
     public fechaFinalInput: InputFecha = this.FECHA_FINAL;
     /** Acciones disponibles en la tabla */
     public accionesServcios: TablaAcciones[] = [];
     /** Lista completa de pendientes obtenida del backend */
     public todosPendientes: ListaPendientes[] = [];
-    /** Lista de pendientes mostrada en la p�gina actual */
+    /** Lista de pendientes mostrada en la página actual */
     public listaPendientesPaginados: ListaPendientes[] = [];
-    /** Total de elementos (para paginaci�n) */
+    /** Total de elementos (para paginación) */
     public totalItems: number = 0;
-    /** Cantidad de elementos por p�gina */
+    /** Cantidad de elementos por página */
     public itemsPerPage: number = 5;
-    /** P�gina actual */
+    /** página actual */
     public currentPage: number = 1;
     /** Copia original de los pendientes (sin filtros) */
     public todosPendientesOriginales: ListaPendientes[] = [];
 
-    /** Configuraci�n de columnas de la tabla */
+    /** Configuración de columnas de la tabla */
     public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = CONFIGURACION_ENCABEZADO_PENDIENTES;
-
+    /** Propiedad para manejar la suscripción*/
+    private subscription: Subscription = new Subscription();
     constructor(
         private fb: FormBuilder,
         private servicioFuncionario: TablerosService
@@ -71,7 +74,9 @@ export class BandejaPendientesComponent implements OnInit {
         this.getPendientesTabla();
     }
 
-    // Inicializaci�n del formulario de b�squeda
+    /**
+     * Inicialización del formulario de búsqueda
+     */
     inicializaFormConsulta(): void {
         this.FormBusqueda = this.fb.group({
             folio: [''],
@@ -104,10 +109,10 @@ export class BandejaPendientesComponent implements OnInit {
         this.colapsable = !this.colapsable;
     }
 
-    /** Obtiene todos los pendientes desde el backend y aplica la paginaci�n inicial */
+    /** Obtiene todos los pendientes desde el backend y aplica la paginación inicial */
     public getPendientesTabla(): void {
         this.accionesServcios = [TablaAcciones.EDITAR];
-        this.servicioFuncionario.getListaPendientes()
+        const SUB = this.servicioFuncionario.getListaPendientes()
             .pipe(
                 map((data) => {
                     this.todosPendientesOriginales = data;
@@ -120,34 +125,23 @@ export class BandejaPendientesComponent implements OnInit {
                 })
             )
             .subscribe();
+        this.subscription.add(SUB);
     }
 
-    /**
-     * M�todo que actualiza la paginac�n de la tabla 
-     * @param changes Cambios detectados en las propiedades de entrada.
-     */
-    // ngOnChanges(changes: SimpleChanges): void {
-    //     if (changes['currentPage'] || changes['itemsPerPage'] || changes['todosPendientes']) {
-    //         this.updatePagination();
-    //     }
-    // }
-
-    /** Actualiza los elementos paginados seg�n la p�gina e �tems por p�gina seleccionados */
+    /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
     public updatePagination(): void {
         const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
         const ENDINDEX = STARTINDEX + this.itemsPerPage;
         this.listaPendientesPaginados = this.todosPendientes.slice(STARTINDEX, ENDINDEX);
     }
 
-    /** Ejecuta la b�squeda de pendientes con los filtros del formulario */
+    /** Ejecuta la búsqueda de pendientes con los filtros del formulario */
     buscarPendiente() {
-        /**
-         * Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
-         * son valores predefinidos como el formulario fueron declarados
-         */
+        //Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
+        //son valores predefinidos como el formulario fueron declarados
         //eslint-disable-next-line @typescript-eslint/naming-convention
         const { folio, info, fechaInicio, fechaFinal } = this.FormBusqueda.value;
-        this.servicioFuncionario
+        const SUB = this.servicioFuncionario
             .getListaPendientes(folio || undefined, info || undefined, fechaInicio || undefined, fechaFinal || undefined)
             .pipe(
                 map((data) => {
@@ -162,6 +156,14 @@ export class BandejaPendientesComponent implements OnInit {
                 })
             )
             .subscribe();
+        this.subscription.add(SUB);
+    }
+
+    /** Método del ciclo de vida para limpiar recursos 
+     * Cancela todas las suscripciones
+    */
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     /**
@@ -175,22 +177,22 @@ export class BandejaPendientesComponent implements OnInit {
         this.updatePagination();
     }
 
-     /**
-  * Maneja el cambio de página
-  * @param page Página seleccionada
-  */
-  public cambioDePagina(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
-  }
+    /**
+ * Maneja el cambio de página
+ * @param page Página seleccionada
+ */
+    public cambioDePagina(page: number): void {
+        this.currentPage = page;
+        this.updatePagination();
+    }
 
-  /**
-   * Maneja el cambio de número de ítems por página
-   * @param itemsPerPage Nuevo valor de ítems por página
-   */
-  public elementosPorCambioDePagina(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+    /**
+     * Maneja el cambio de número de ítems por página
+     * @param itemsPerPage Nuevo valor de ítems por página
+     */
+    public elementosPorCambioDePagina(itemsPerPage: number): void {
+        this.itemsPerPage = itemsPerPage;
+        this.currentPage = 1;
+        this.updatePagination();
+    }
 }
