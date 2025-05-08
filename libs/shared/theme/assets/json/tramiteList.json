@@ -1311,8 +1311,8 @@
   {
     "id": 188,
     "tramite": 11102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/modificacion-donaciones-immex/solicitante",
+    "linkDepartment": "/pago/modificacion-donaciones-immex/solicitante",
     "department": "aga"
   },
   {
@@ -1717,8 +1717,8 @@
   {
     "id": 246,
     "tramite": 80301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-modificacion/registro-modificacion",
+    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {
