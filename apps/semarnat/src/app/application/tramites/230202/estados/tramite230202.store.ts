@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
 import { Injectable } from '@angular/core';
 import { DatosDetalle, DatosSolicitud } from '../models/datos-tramite.model';
 
@@ -50,6 +51,11 @@ export interface Solicitud230202State {
   numeroInterior: string;
   colonia: string;
 
+
+  /**
+   * Lista de destinatarios configurados para el trámite.
+   */
+  destinatarios: DestinatarioConfiguracionItem[];
 
   /**
    * Clave de referencia del trámite.
@@ -119,7 +125,8 @@ export function createInitialState(): Solicitud230202State {
     banco: '',
     llaveDePago: '',
     fecPago: '',
-    impPago: ''
+    impPago: '',
+    destinatarios: [],
   };
 }
 
@@ -131,6 +138,7 @@ export function createInitialState(): Solicitud230202State {
 })
 @StoreConfig({ name: 'tramite230202', resettable: true })
 export class Tramite230202Store extends Store<Solicitud230202State> {
+
   /**
    * Constructor del store.
    * Inicializa el estado con los valores predeterminados.
@@ -396,4 +404,47 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
       impPago
     }));
   }
+  
+
+  /**
+   * 
+   * Actualiza el estado con la entidad federativa seleccionada.
+   *
+   * {string} entidadFederativa - La entidad federativa seleccionada.
+   */
+  public setEntidadFederativa(entidadFederativa: string): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativa,
+    }));
+  }
+
+  /**
+   * 
+   * Actualiza el estado con el estado del popup de terceros.
+   *
+   * {boolean} tercerosPopupState - El estado del popup de terceros.
+   */
+
+  public setTercerosPopupState(tercerosPopupState: boolean): void {
+    this.update((state) => ({
+      ...state,
+      tercerosPopupState,
+    }));
+  }
+
+  
+  /**
+   * 
+   * Actualiza el estado con la lista de destinatarios.
+   *
+   * {DestinatarioConfiguracionItem[]} datosTabla - La lista de destinatarios.
+   */
+  setDatosDestinatario(destinatarios: DestinatarioConfiguracionItem[]) {
+    this.update((state) => ({
+      ...state,
+      destinatarios: destinatarios,
+    }));
+  }
+  
 }

@@ -31,3 +31,24 @@ export interface RespuestaDetalle {
   datos: DatosDetalle;
   message: string;
 }
+
+export interface MetaInfo {
+  nacionalidad: string;
+  tipoPersona: string;
+  nacional: string;
+  extranjero: string;
+  denominacion: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  codigoPostal: string;
+  pais: string;
+  ciudad: string;
+  domicilio: string;
+}
+
+export interface Respuesta<T> {
+  success: boolean;
+  datos: T;
+  message: string;
+}
