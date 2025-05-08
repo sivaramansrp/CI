@@ -5,7 +5,7 @@
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -42,6 +42,8 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
   standalone: true,
 })
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
+
+  @Input() public procedureDatos:Array<any> = [];
   /**
    * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
@@ -141,6 +143,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+    if(this.procedureDatos.length > 0) {
+      this.getProcedureDatos();
+    }
   }
 
   /**
@@ -183,6 +188,19 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  public getProcedureDatos(): void {
+    this.informacionDeLaform.get('fraccionArancelaria')?.setValue(this.procedureDatos[0].registroPara.fraccionArancelaria);
+    this.informacionDeLaform.get('descripcionFraccion')?.setValue(this.procedureDatos[0].registroPara.descripcionFraccion);
+    this.informacionDeLaform.get('nico')?.setValue(this.procedureDatos[0].registroPara.nico);
+    this.informacionDeLaform.get('descripcionNico')?.setValue(this.procedureDatos[0].registroPara.descripcionNico);
+    this.informacionDeLaform.get('nombreQuimico')?.setValue(this.procedureDatos[0].registroPara.nombreQuimico);
+    this.informacionDeLaform.get('nombreComercial')?.setValue(this.procedureDatos[0].registroPara.nombreComercial);
+    this.informacionDeLaform.get('numeroCAS')?.setValue(this.procedureDatos[0].registroPara.numeroCAS);
+    this.informacionDeLaform.get('estadoFisico')?.setValue(this.procedureDatos[0].registroPara.estadoFisico);
+    this.informacionDeLaform.get('acondicionamiento')?.setValue(this.procedureDatos[0].registroPara.acondicionamiento);
+
   }
 
   /**

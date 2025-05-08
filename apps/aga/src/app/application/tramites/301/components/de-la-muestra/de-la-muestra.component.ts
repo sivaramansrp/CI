@@ -3,7 +3,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -40,6 +40,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   standalone: true,
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
+
+  @Input() public procedureDatos:Array<any> = [];
   /**
    * Datos del catálogo relacionados con la mercancía.
    *
@@ -120,6 +122,9 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
+    if(this.procedureDatos.length > 0) {
+      this.getProcedureDatos();
+    }
   }
 
   /**
@@ -154,6 +159,11 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     } else {
       this.Informaciondela.get('datosImportadorExportador.folio')?.enable();
     }
+  }
+
+  public getProcedureDatos(): void {
+    this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
+    this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
   }
 
   /**

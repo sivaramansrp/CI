@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -35,6 +35,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   imports: [TituloComponent, ReactiveFormsModule],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+  @Input() public procedureDatos:Array<any> = [];
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
@@ -102,6 +104,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
+    if(this.procedureDatos.length > 0) {
+      this.getProcedureDatos();
+    }
   }
 
   /**
@@ -134,6 +139,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  public getProcedureDatos(): void {
+    this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
+      this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+      this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
+      this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
   }
 
   /**
