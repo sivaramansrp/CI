@@ -457,10 +457,9 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110212/validacion-posteriori.module').then(
         (m) => m.ValidacionPosterioriModuleModule
-      ),
-      
+      )
   },
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
