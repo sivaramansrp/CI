@@ -446,13 +446,20 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      ),
+  },
+  {
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(
         (m) => m.RegistroComoEmpresaModule
       ),
-  },
-];
+  }
+]
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
