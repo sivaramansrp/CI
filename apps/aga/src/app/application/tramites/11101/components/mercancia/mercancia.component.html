@@ -1,58 +1,58 @@
 <div class="conatiner">
     <div class="container1">
-        <ng-titulo titulo="Datos del Donatario Extranjero" />
+        <ng-titulo titulo="Discripccion de la mercancia" />
         <form [formGroup]="mercanciaForm">
             <div class="row">
                 <div class="col-md-4">
-                    <label class="form-label" for="estado">numero de registro:</label>
+                    <label class="form-label" for="estado">Estado*:</label>
                     <input type="text" class="form-control" id="estado" formControlName="estado" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="cantidad">numero de registro:</label>
+                    <label class="form-label" for="cantidad">Cantidad*:</label>
                     <input type="number" class="form-control" id="cantidad" formControlName="cantidad" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="forma-parta-de-patrimonia">numero de registro:</label>
+                    <label class="form-label" for="forma-parta-de-patrimonia">Forma parta de patrimonia*:</label>
                     <input type="text" class="form-control" id="forma-parta-de-patrimonia"
                         formControlName="formapartadepatrimonia" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="descripcion">numero de registro:</label>
-                    <input type="text" class="form-control" id="descripcion" formControlName="descripcion" readonly />
+                    <label class="form-label" for="descripcion">Descripcion*:</label>
+                    <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion" readonly ></textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="valor">numero de registro:</label>
+                    <label class="form-label" for="valor">valor*:</label>
                     <input type="text" class="form-control" id="valor" formControlName="valor" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="unida-de-medida">numero de registro:</label>
+                    <label class="form-label" for="unida-de-medida">unida-de-medida*:</label>
                     <input type="text" class="form-control" id="unida-de-medida" formControlName="unidadmedida"
                         readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="fraccion-arancelaria">numero de registro:</label>
+                    <label class="form-label" for="fraccion-arancelaria">fraccion arancelaria*:</label>
                     <input type="number" class="form-control" id="fraccion-arancelaria"
                         formControlName="fraccionarancelaria" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="nico">numero de registro:</label>
+                    <label class="form-label" for="nico">nico*:</label>
                     <input type="text" class="form-control" id="nico" formControlName="nico" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="marca">numero de registro:</label>
+                    <label class="form-label" for="marca">marca*:</label>
                     <input type="text" class="form-control" id="marca" formControlName="marca" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="modelo">numero de registro:</label>
+                    <label class="form-label" for="modelo">modelo*:</label>
                     <input type="text" class="form-control" id="modelo" formControlName="modelo" readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="numero-de-serie">numero de registro:</label>
+                    <label class="form-label" for="numero-de-serie">numero de serie*:</label>
                     <input type="text" class="form-control" id="numero-de-serie" formControlName="numerodeserie"
                         readonly />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="moneda">numero de registro:</label>
+                    <label class="form-label" for="moneda">Moneda*:</label>
                     <input type="text" class="form-control" id="moneda" formControlName="moneda" readonly />
                 </div>
             </div>
@@ -70,11 +70,10 @@
                     <label class="form-label" for="especifique">Especifique* :</label>
                     <textarea class="form-control" id="especifique" formControlName="especifique" readonly></textarea>
                 </div>
-
             </div>
         </form>
     </div>
-    <div class="container3 mt-3">
+    <div class="container3 mt-5">
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right">
@@ -84,7 +83,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <!-- <div class="row align-items-center">
         <label for="Persona física extranjero">Persona física extranjera:</label>
