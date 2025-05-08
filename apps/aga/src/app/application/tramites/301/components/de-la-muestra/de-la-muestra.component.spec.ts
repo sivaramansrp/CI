@@ -13,7 +13,7 @@ describe('DeLaMuestraComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        TituloComponent,
+        TituloComponent,       
         CatalogoSelectComponent,DeLaMuestraComponent
       ],
       declarations: [],
