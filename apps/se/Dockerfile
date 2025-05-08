@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/se
 
 # Build the application
-RUN npx nx build se --configuration=production --skip-nx-cache --verbose
+RUN npx nx build se --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/se" && test -f "/app/dist/apps/se/index.html" || exit 1
