@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
-import { BandejaPendientesComponent } from './bandeja-pendientes/seleccion-modulo.component';
+import { BandejaPendientesComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { ConsultaComponent } from './consulta/consulta.component';

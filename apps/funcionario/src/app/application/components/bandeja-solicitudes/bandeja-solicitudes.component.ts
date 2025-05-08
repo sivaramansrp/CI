@@ -74,7 +74,9 @@ export class BandejaSolicitudesComponent implements OnInit {
     this.getSolicitudesTabla();
   }
 
-  // Inicialización del formulario de búsqueda
+  /**
+   * Inicialización del formulario de búsqueda 
+   */ 
   inicializaFormConsulta(): void {
     this.FormBusqueda = this.fb.group({
       idSolicitud: [''],
@@ -111,6 +113,7 @@ export class BandejaSolicitudesComponent implements OnInit {
     this.accionesServcios = [TablaAcciones.VER];
     this.tableroService.getListaSolicitudes()
       .pipe(
+        takeUntilDestroyed(),
         map((data) => {
           this.todasSolicitudesOriginales = data;
           this.todasSolicitudes = [...data];
