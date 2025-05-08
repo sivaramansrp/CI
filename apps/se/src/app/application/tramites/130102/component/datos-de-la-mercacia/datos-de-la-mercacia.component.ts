@@ -9,9 +9,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule, 
+  ValidationErrors,  
   Validators,
 } from '@angular/forms';
 
@@ -29,6 +31,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 
 /**
@@ -103,7 +106,8 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   constructor(private http: HttpClient,
      private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -131,6 +135,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(500),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator
         ],
       ],
       fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
@@ -140,7 +145,8 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(REG_X.SOLO_NUMEROS), 
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
       valorFacturaUSD: [
@@ -149,10 +155,12 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
           Validators.required,
           Validators.min(0.01),
           Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
     });
    this.fetchProductoOptions();
+   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
   }
 
     /**
@@ -205,6 +213,21 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   fetchUnidad(): void {
     this.selectedValue = 'Nuevo';
   }
+
+  /**
+ * Validador personalizado que verifica si un campo comienza con espacios en blanco.
+ * Retorna un error si se detectan espacios al inicio.
+ */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Emite y completa el observable para evitar fugas de memoria.
+   */
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
