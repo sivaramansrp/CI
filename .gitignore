@@ -53,3 +53,5 @@ Thumbs.db
 /.vs/frontend/v17/workspaceFileList.bin
 
 **/.claude/settings.local.json
+.vs
+/.vs/VSWorkspaceState.json
