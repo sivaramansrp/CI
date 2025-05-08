@@ -101,7 +101,7 @@
     "id": 15,
     "tramite": 30901,
     "linkDashboard": "/aga/muestras-mercancias/renovaciones",
-    "linkDepartment": "/aga/muestras-mercancias/renovaciones",
+    "linkDepartment": "/pago/muestras-mercancias/renovaciones",
     "department": "aga"
   },
   {
@@ -122,7 +122,7 @@
     "id": 18,
     "tramite": 32501,
     "linkDashboard": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
-    "linkDepartment": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+    "linkDepartment": "/pago/mercancias-desmontadas-o-sin-montar/solicitud",
     "department": "agace"
   },
   {
@@ -479,7 +479,7 @@
     "id": 69,
     "tramite": 150102,
     "linkDashboard": "/se/reporte-anual/solicitud",
-    "linkDepartment": "/se/reporte-anual/solicitud",
+    "linkDepartment": "/pago/reporte-anual/solicitud",
     "department": "se"
   },
   {
@@ -542,7 +542,7 @@
     "id": 78,
     "tramite": 220502,
     "linkDashboard": "/agriculture/inspeccion-fisica/pantallas",
-    "linkDepartment": "/agriculture/inspeccion-fisica/pantallas",
+    "linkDepartment": "/pago/inspeccion-fisica/pantallas",
     "department": "agriculture"
   },
   {
@@ -591,7 +591,7 @@
     "id": 85,
     "tramite": 260101,
     "linkDashboard": "/cofepris/importacion-productos/productos",
-    "linkDepartment": "/cofepris/importacion-productos/productos",
+    "linkDepartment": "/pago/importacion-productos/productos",
     "department": "cofepris"
   },
   {
@@ -962,7 +962,7 @@
     "id": 138,
     "tramite": 32401,
     "linkDashboard": "/agace/manifiesto-aereo/solicitar-requiremento",
-    "linkDepartment": "/agace/manifiesto-aereo/solicitar-requiremento",
+    "linkDepartment": "/pago/manifiesto-aereo/solicitar-requiremento",
     "department": "agace"
   },
   {
@@ -1305,7 +1305,7 @@
     "id": 187,
     "tramite": 6101,
     "linkDashboard": "/aga/junta-tecnica/solicitud",
-    "linkDepartment": "/aga/junta-tecnica/solicitud",
+    "linkDepartment": "/pago/junta-tecnica/solicitud",
     "department": "aga"
   },
   {
@@ -1388,8 +1388,8 @@
   {
     "id": 199,
     "tramite": 31301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/endoso-garantia/solicitud",
+    "linkDepartment": "/pago/endoso-garantia/solicitud",
     "department": "agace"
   },
   {
