@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, MENSAJES_MODAL, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, map, of, take, takeUntil } from 'rxjs';
 
 import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
@@ -114,16 +114,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    */
   documentoSeleccionado!: CatalogoDocumento;
 
-
-  /**
-   * @description Objeto para almacenar los datos de inicio de sesión.
-   * @type {Login}
-   */
-  datosLogin: Login = {
-    user: 'user1@example.com',
-    password: 'clave1'
-  };
-
   /**
    * @description VAriable para almacenar el token de autenticación.
    * @type {string}
@@ -145,7 +135,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @description Arreglo para almacenar los documentos opcionales duplicados.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   documentosOpcionalesSeleccionados: CatalogoDocumento[] = [];
 
   /**
@@ -212,7 +201,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
     this.documentosOpcionalesSeleccionados = (this.documentosState.catalogoDocumentosRequeridos.length > 0) ? this.documentosState.catalogoDocumentosRequeridos : [];
 
-    this.obtenerToken(this.datosLogin);
 
     this.cargaArchivosEvento
       .pipe(takeUntil(this.destroyNotifier$),
@@ -225,21 +213,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
-  }
-
-  /**
-   * Obtiene el token de autenticación.
-   * @param {Login} body - Datos de inicio de sesión.
-   */
-  obtenerToken(body: Login): void {
-    this.inicioSesionService.obtenerToken(body).subscribe({
-      next: (resp): void => {
-        this.token = resp.jwt;
-      },
-      error: (error): void => {
-        return error;
-      },
-    });
   }
 
   /**
@@ -261,7 +234,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
           categoria: 'danger',
           modo: '',
           titulo: '',
-          mensaje: MENSAJES_DOCUMENTOS.ONLYPDF,
+          mensaje: MENSAJES_DOCUMENTOS.ONL_YPDF,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
@@ -280,7 +253,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
           categoria: 'danger',
           modo: '',
           titulo: '',
-          mensaje: MENSAJES_DOCUMENTOS.MAXSIZE,
+          mensaje: MENSAJES_DOCUMENTOS.MAX_SIZE,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
@@ -307,11 +280,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Verifica si un archivo ya existe en la lista de archivos cargados.
-   * @param {any} id - El ID del archivo a verificar.
+   * @param {number} id - El ID del archivo a verificar.
    * @returns {boolean} `true` si el archivo ya existe, de lo contrario `false`.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  existePreview(id: any): boolean {
+  existePreview(id: number): boolean {
     const ENCONTRADO = this.listadoArchivos.find(f => f.id === id);
     return ENCONTRADO !== undefined;
   }
@@ -324,10 +296,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   uploadFiles(informacionArchivo: any): Promise<any> {
     return new Promise((resolve) => {
-      this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
-        next: () => resolve({ cargado: true, mensaje: 'Correcto', estatus: 'OK' }),
-        error: (_error): void => resolve({ cargado: false, mensaje: 'Error al cargar', estatus: 'Error al cargar' })
-      });
+      this.subirDocumentoService.subirDocumento(this.token, informacionArchivo)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map(() => ({ cargado: true, mensaje: 'Correcto', estatus: 'OK' })),
+          catchError(() => of({ cargado: false, mensaje: 'Error al cargar', estatus: 'Error al cargar' }))
+        )
+        .subscribe(resolve);
     });
   }
 
@@ -529,12 +504,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INDICE !== -1) {
       if (this.documentosOpcionalesSeleccionados[INDICE] &&
         this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
-/*         if (this.documentosOpcionalesSeleccionados[INDICE].adicionales.length > 0) {
- */
-          this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: CatalogoDocumento) => {
-            const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
-            this.listadoArchivos.splice(INDICE_LISTADO, 1);
-          });
+        /*         if (this.documentosOpcionalesSeleccionados[INDICE].adicionales.length > 0) {
+         */
+        this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: CatalogoDocumento) => {
+          const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
+          this.listadoArchivos.splice(INDICE_LISTADO, 1);
+        });
         // }
       }
 
@@ -563,7 +538,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void}
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  eliminarNuevo(item: any, adicional = false): void {   
+  eliminarNuevo(item: any, adicional = false): void {
     if (adicional) {
       const INDICE_ADICIONAL = item.item.adicionales.findIndex((adicional: CatalogoDocumento) => adicional.id === item.adicional.id);
       item.item.adicionales.splice(INDICE_ADICIONAL, 1);
