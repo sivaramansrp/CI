@@ -452,6 +452,13 @@ const ROUTES: Routes = [
         (m) => m.ValidacionPosterioriModuleModule
       ),
   },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120403/cupos.module').then(
+        (m) => m.CuposModule
+      ),
+  },
 ]
 
 @NgModule({
