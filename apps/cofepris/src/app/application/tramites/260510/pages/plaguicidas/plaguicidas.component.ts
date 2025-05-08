@@ -101,17 +101,17 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
     }
   
     /**
-     * Retrieves the state of the "Solicitud Pago Banco" from the service and processes it.
-     * 
-     * This method subscribes to the `getSolicitudPagoBancoState` observable from the `pagoBancoService`,
-     * filters out any properties in the state object that have empty string, null, or undefined values,
-     * and logs the resulting payload to the console.
-     * 
-     * The subscription is automatically unsubscribed when the `destroyNotifier$` observable emits a value,
-     * ensuring proper cleanup of resources.
-     * 
-     * @returns {void} This method does not return a value.
-     */
+ * Recupera el estado de la "Solicitud Pago Banco" desde el servicio y lo procesa.
+ * 
+ * Este método se suscribe al observable `getSolicitudPagoBancoState` del `pagoBancoService`,
+ * filtra las propiedades del objeto de estado que tengan valores de cadena vacía, null o undefined,
+ * y registra la carga resultante en la consola.
+ * 
+ * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
+ * lo que garantiza una limpieza adecuada de los recursos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
     getSolicitudPagoBancoState():SolicitudPagoBancoState{
       let PAYLOAD={} as SolicitudPagoBancoState;
       this.pagoBancoService.getSolicitudPagoBancoState()
@@ -121,7 +121,17 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
         });
         return PAYLOAD;
     }
-
+    /**
+ * Recupera el estado de "Terceros Fabricante" desde el servicio y lo procesa.
+ * 
+ * Este método se suscribe al observable `getTercerosFabricanteState` del `tercerosFabricanteService`,
+ * asigna el estado recibido al objeto `PAYLOAD` y retorna dicho objeto.
+ * 
+ * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
+ * lo que garantiza una limpieza adecuada de los recursos.
+ * 
+ * @returns {TercerosFabricanteState} El estado de "Terceros Fabricante".
+ */
     getTercerosFabricanteState():TercerosFabricanteState{
       let PAYLOAD={} as TercerosFabricanteState;
       this.tercerosFabricanteService.getTercerosFabricanteState()
@@ -133,8 +143,8 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
     }
 
     /**
-     * Cleanup logic to unsubscribe from observables when the component is destroyed.
-     */
+ * Lógica de limpieza para cancelar la suscripción a los observables cuando el componente es destruido.
+ */
     ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
