@@ -5,7 +5,7 @@ import {
   Aviso,
   Importante,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -49,6 +49,9 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   standalone: true,
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
+
+
+  @Input() public procedureDatos:Array<any> = [];
   /**
    * Formulario principal del componente.
    * Este formulario contiene el campo de registro de importaciones/exportaciones.
@@ -170,6 +173,10 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     this.registroParaLaForm = this.fb.group({
       registro: [this.solicitudState?.registro, Validators.required],
     });
+
+    if(this.procedureDatos.length > 0) {
+      this.registroParaLaForm.get('registro')?.setValue(this.procedureDatos[0].registroPara.registro);
+    }
   }
 
   /**

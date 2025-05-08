@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md p-2">
+            <h2>{{titulo}}</h2>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-8">
+            <div class="d-flex">
+                <label class="form-label" for="solicitante">Solicitante:</label>
+                <span class="mt-3 ms-2">4354543</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex">
+                <label class="form-label" for="rfc">RFC:</label>
+                <span class="mt-3 ms-2">1242143432322</span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <form [formGroup]="dinamicasBandejaForma">
+            <div class="row mb-3">  
+                <formas-dinamicas 
+                    [forma]="bandejaSolicitudeFormGroup" 
+                    [formularioDatos]="bandejaSolicitudeDatos"
+                    >
+                </formas-dinamicas>
+            </div>
+        </form>
+        <div class="d-flex justify-content-end mt-2">
+            <button type="button" class="btn btn-primary" (click)="enviarDatos()">Buscar</button>
+        </div>
+    </div>
+    @if(hasValidForm) {
+        <div class="row mt-2">
+            <div class="col-md">
+              <h4 class="mb-2">{{tablaTitulo}}</h4>
+              <app-tabla-dinamica
+                [configuracionTabla]="configuracionTabla"
+                [datos]="configuracionTablaDatos"
+                (filaClic)="onFilaClic($event)"
+              >
+              </app-tabla-dinamica>
+            </div>
+          </div>
+    }
+</div>

@@ -9,6 +9,8 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tra
 import { InformacionDeLaComponent } from './components/informacion-de-la/informacion-de-la.component';
 import { NavComponent } from 'libs/shared/data-access-user/src/tramites/components/nav/nav.component';
 import { NgModule } from '@angular/core';
+import { Pantallas301Service } from './services/pantallas301.service';
+
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
@@ -18,6 +20,7 @@ import { RegistroParaLaComponent } from './components/registro-para-la/registro-
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,10 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   exports: [
     PasoDosComponent,
     PasoTresComponent
+  ],
+  providers: [
+    provideHttpClient(),
+    Pantallas301Service
   ]
 })
 export class Pantallas301Module {}
