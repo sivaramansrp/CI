@@ -26,24 +26,41 @@ export interface Tramite220103State {
  */
 export function createInitialState(): Tramite220103State {
     return {
-        mercancia: {
-            descripcion: '',
-            fraccionArancelaria: '',
-            descripcionFraccion: '',
-            cantidadUMT: '',
-            umt: '',
-            cantidadUMC: '',
-            umc: '',
-            nombreComun: '',
-            nombreCientifico: '',
-            faseDesarrollo: '',
-            uso: '',
-            otroUso: '',
-            origen: '',
-            paisOrigen: '',
-            paisProcedencia: ''
-        }
+    mercancia: {
+        descripcion: '',
+        fraccionArancelaria: '',
+        descripcionFraccion: '',
+        cantidadUMT: '',
+        umt: '',
+        cantidadUMC: '',
+        umc: '',
+        nombreComun: '',
+        nombreCientifico: '',
+        faseDesarrollo: '',
+        uso: '',
+        otroUso: '',
+        origen: '',
+        paisOrigen: '',
+        paisProcedencia: ''
+    },
+    datosDelTerceroDestinatario:{
+        nombre: '',
+        primerApellido: '',
+        razonSocial: '',
+        segundoApellido: '',
+        telefono: '',
+        correoElectronico: '',
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        pais: '',
+        estado: '',
+        municipioAlcaldia: '',
+        lada: '',
+        colonia: '',
+        codigoPostal: ''
     }
+}
 }
 
 /**
@@ -88,11 +105,6 @@ export class Tramite220103Store extends Store<Tramite220103State> {
         }));
     }
 
-    resetMercancia(): void {
-        this.update((state) => ({
-            ...state,
-            mercancia: createInitialState().mercancia
-        }));
-    }
+
 }
 

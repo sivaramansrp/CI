@@ -138,7 +138,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.notificadorDestruccion$))
     .subscribe((estado) => {
       this.estadoSeleccionado = estado;
-      this.estadoSeleccionadoMercancia = estado.mercancia ?? {} ;
+      this.estadoSeleccionadoMercancia = estado['mercancia'] ?? {} as Tramite220103State;
       this.datosTabla = estado.tablaMercancia || [];
     });
   }
@@ -277,7 +277,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }
     this.instanciaModal.hide();
     this.formularioDatosMercancia.reset();
-    this.tramite220103Store.resetMercancia();
+    this.tramite220103Store.reset();
     
     } 
     else if(this.formularioDatosMercancia.invalid) {

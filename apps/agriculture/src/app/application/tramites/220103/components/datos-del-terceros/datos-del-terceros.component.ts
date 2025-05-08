@@ -22,7 +22,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
-import { Tramite220103State } from '../../estados/tramites/tramites220103.store';
 
 import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
 import { Modal } from 'bootstrap';

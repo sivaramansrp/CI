@@ -801,7 +801,8 @@ export const TIPO_PERSONA=[
 export const CONFIGURACION_CONTACTO = [
   {
     encabezado: 'Nombre/denominaciC o razón social',
-    clave: (ele: DatosDelTerceroDestinatario): string => ele.nombre,
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.nombre ? 
+    `${ele.nombre} ${ele.primerApellido} ${ele.segundoApellido}` : ele.razonSocial,
     orden: 1
   },
   {
@@ -834,6 +835,31 @@ export const CONFIGURACION_CONTACTO = [
     clave: (ele: DatosDelTerceroDestinatario): string => ele.pais,
     orden: 7
   },
+  {
+    encabezado: 'Estado',
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.estado,
+    orden: 8
+  },
+  {
+    encabezado: 'Municipio o Alcaldía',
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.municipioAlcaldia,
+    orden: 9
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.colonia,
+    orden: 10
+  },
+  {
+    encabezado: 'Lada',
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.lada,
+    orden: 11
+  },
+  {
+    encabezado: 'Código postal',
+    clave: (ele: DatosDelTerceroDestinatario): string => ele.codigoPostal,
+    orden: 12
+  }
 ];
 
 export const CONFIGURACION_TABLA_INSTALACION = [

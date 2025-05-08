@@ -9,8 +9,8 @@
     </div>
     <ng-titulo titulo="Datos personales"> </ng-titulo>
     <div class="row mt-5">
-        <formas-dinamicas [forma]="formularioAgregarDestinatario" [formularioDatos]="formularioConfiguracion" [estado]="estadoSeleccionado"
-            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        <formas-dinamicas [forma]="formularioAgregarDestinatario" [formularioDatos]="formularioConfiguracion" [estado]="estadoSeleccionado.datosDelTerceroDestinatario || {}"
+            (emitirCambioDeValor)="establecerCambioDeValor($event,'datosDelTerceroDestinatario')"></formas-dinamicas>
     </div>
     <div class="row my-5">
         <div class="col-md-8">

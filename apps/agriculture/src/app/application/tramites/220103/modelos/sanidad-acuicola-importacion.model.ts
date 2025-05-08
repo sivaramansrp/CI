@@ -21,6 +21,9 @@ export interface Mercancia {
   export interface DatosDelTerceroDestinatario {
     id?: string;
     nombre: string;
+    primerApellido: string;
+    segundoApellido: string;
+    razonSocial: string;
     telefono: string;
     correoElectronico: string;
     calle: string;
@@ -28,8 +31,9 @@ export interface Mercancia {
     numeroInterior: string;
     pais: string;
     estado: string;
-    municipio: string;
-    localidad: string;
+    municipioAlcaldia: string;
+    colonia: string;
+    lada: string;
     codigoPostal: string;
     [key: string]: string|undefined;
   }

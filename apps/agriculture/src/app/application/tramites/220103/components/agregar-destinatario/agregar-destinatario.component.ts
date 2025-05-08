@@ -101,9 +101,10 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
   obtenerEstadoValor(): void {
     this.tramite220103Query.selectTramite220103State$
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe((estado) => {
-        this.estadoSeleccionado = estado;
-      });
+      .subscribe((estado: Tramite220103State) => {
+              this.estadoSeleccionado = estado;
+
+            });
   }
 
   /**
@@ -132,9 +133,9 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
       const CAMPO_RAZON_SOCIAL = this.formularioConfiguracion.find((campo) => campo.campo === 'razonSocial');
 
       if (CAMPO_NOMBRE && CAMPO_PRIMER_APELLIDO && CAMPO_SEGUNDO_APELLIDO && CAMPO_RAZON_SOCIAL) {
-        CAMPO_NOMBRE.mostrar = TIPO_PERSONA_SELECCIONADA === 'Física';
-        CAMPO_PRIMER_APELLIDO.mostrar = TIPO_PERSONA_SELECCIONADA === 'Física';
-        CAMPO_SEGUNDO_APELLIDO.mostrar = TIPO_PERSONA_SELECCIONADA === 'Física';
+        CAMPO_NOMBRE.mostrar = TIPO_PERSONA_SELECCIONADA === 'Fisica';
+        CAMPO_PRIMER_APELLIDO.mostrar = TIPO_PERSONA_SELECCIONADA === 'Fisica';
+        CAMPO_SEGUNDO_APELLIDO.mostrar = TIPO_PERSONA_SELECCIONADA === 'Fisica';
         CAMPO_RAZON_SOCIAL.mostrar = TIPO_PERSONA_SELECCIONADA === 'Moral';
       }
     }
@@ -145,8 +146,8 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
    * 
    * @param evento - Evento que contiene el campo y el valor a actualizar.
    */
-  establecerCambioDeValor(evento: { campo: string; valor: unknown }): void {
-    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor);
+  establecerCambioDeValor(evento: { campo: string; valor: unknown },prop?:string): void {
+    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor,prop);
     if (evento.campo === 'tipoPersona') {
       this.cambiarValoresTipoPersona();
     }
@@ -155,8 +156,9 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
   guardarDestinatario(): void {
     if (this.formularioAgregarDestinatario.valid) {
       this.getDestinatario();
-      this.formularioAgregarDestinatario.reset();
       this.closeModal.emit();
+      this.formularioAgregarDestinatario.reset();
+      this.tramite220103Store.reset();
     } else {
       this.formularioAgregarDestinatario.markAllAsTouched();
     }
