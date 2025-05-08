@@ -3117,8 +3117,8 @@
   {
     "id": 447,
     "tramite": 32515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-opcion-seguro-global/solicitante",
+    "linkDepartment": "/pago/aviso-opcion-seguro-global/solicitante",
     "department": "agace"
   },
   {
