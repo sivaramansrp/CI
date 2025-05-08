@@ -7,7 +7,6 @@ import { MontoFactorComponent } from '../monto-factor/monto-factor.component';
 @Component({
   selector: 'app-complementaria-immex',
   templateUrl: './complementaria-immex.component.html',
-  styleUrls: ['./complementaria-immex.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
