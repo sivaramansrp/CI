@@ -122,7 +122,13 @@ const ROUTES: Routes = [
         (m) => m.ActaDeHechosModule
       ),
   },
-  
+  {
+    path: 'renovacion-comercializadora',
+    loadChildren: () =>
+      import('./tramites/31801/renovacion-comercializadora.module').then(
+        (m) => m.RenovacionComercializadoraModule
+      ),
+  },
 ];
 
 @NgModule({
