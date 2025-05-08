@@ -116,6 +116,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-comercializadora',
+    loadChildren: () =>
+      import('./tramites/31801/renovacion-comercializadora.module').then(
+        (m) => m.RenovacionComercializadoraModule
+      ),
+  },
+  {
     path: 'garantia',
     loadChildren: () =>
       import('./tramites/31101/garantia.module').then(
