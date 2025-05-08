@@ -9,7 +9,7 @@
                     <div class="form-group">
                         <label class="form-label" for="clave">Clave de referencia:</label>
                         <input class="form-control" id="clave" type="number" formControlName="clave"
-                            (change)="setValoresStore(pagoDerechosForm, 'clave', 'setClave')" />
+                            (change)="setValoresStore(pagoDerechosForm, 'clave')" />
                     </div>
                     @if(pagoDerechosForm.controls['clave'].invalid && pagoDerechosForm.controls['clave'].touched) {
                     <div class="d-grid">
@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label class="form-label" for="dependencia">Cadena de la dependencia:</label>
                         <input class="form-control" id="dependencia" type="text" formControlName="dependencia"
-                            (change)="setValoresStore(pagoDerechosForm, 'dependencia', 'setDependencia')" />
+                            (change)="setValoresStore(pagoDerechosForm, 'dependencia')" />
                     </div>
                     @if(pagoDerechosForm.controls['dependencia'].invalid &&
                     pagoDerechosForm.controls['dependencia'].touched) {
@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'"
                             [required]="true" name="banco"
-                            (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')"></app-catalogo-select>
+                            (change)="setValoresStore(pagoDerechosForm, 'banco')"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     <div class="form-group">
                         <label class="form-label" for="llave">Llave de pago:</label>
                         <input class="form-control" id="llave" type="number" formControlName="llave"
-                            (change)="setValoresStore(pagoDerechosForm, 'llave', 'setLlave')" />
+                            (change)="setValoresStore(pagoDerechosForm, 'llave')" />
                     </div>
                     @if(pagoDerechosForm.controls['llave'].invalid && pagoDerechosForm.controls['llave'].touched) {
                     <div class="d-grid">
@@ -91,7 +91,7 @@
                     <div class="form-group">
                         <label class="form-label" for="importe">Importe de pago:</label>
                         <input class="form-control" id="importe" type="number" formControlName="importe"
-                            (change)="setValoresStore(pagoDerechosForm, 'importe', 'setImporte')" />
+                            (change)="setValoresStore(pagoDerechosForm, 'importe')" />
                     </div>
                     @if(pagoDerechosForm.controls['importe'].invalid && pagoDerechosForm.controls['importe'].touched) {
                     <div class="d-grid">
@@ -118,7 +118,7 @@
         <div class="mb-3">
 
             <input class="form-check-input ms-2" id="revisados" type="checkbox" formControlName="revisados"
-                (change)="setValoresStore(pagoDerechosForm, 'revisados', 'setRevisados')" />
+                (change)="setValoresStore(pagoDerechosForm, 'revisados')" />
             <label class="form-label" for="revisados">Datos revisados y correctos</label>
         </div>
     </form>

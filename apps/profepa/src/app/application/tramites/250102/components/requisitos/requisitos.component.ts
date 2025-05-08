@@ -105,7 +105,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
       this.transporteForm.patchValue({
         fechas: nuevo_valor,
       });
-      this.tramite250102Store.setFechas(nuevo_valor);
+      this.tramite250102Store.establecerDatos({ fechas: nuevo_valor });
     }
   constructor(
     private fb: FormBuilder,
@@ -120,7 +120,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * y creando el formulario reactivo.
    */
   ngOnInit(): void {
-    this.tramite250102Query.selectSolicitud$
+    this.tramite250102Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -168,15 +168,13 @@ export class RequisitosComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Asigna valores del formulario al store llamando un método por nombre.
-   * 
-   * @param form Formulario del cual se obtiene el valor.
-   * @param campo Nombre del campo dentro del formulario.
-   * @param metodoNombre Nombre del método del store a invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite250102Store): void {
+    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+    * @param form - El formulario reactivo.
+    * @param campo - El nombre del campo en el formulario.
+    */
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite250102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite250102Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

@@ -123,7 +123,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
    */
   private inicializarFormulario(): void {
-    this.tramite250102Query.selectSolicitud$
+    this.tramite250102Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -150,17 +150,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('importe')?.setValue(pago.formData.importe);
   }
 
-  /**
-   * Método que actualiza el store con los valores del formulario.
-   * 
-   * @param form - Formulario reactivo con los datos actuales.
-   * @param campo - El campo que debe actualizarse en el store.
-   * @param metodoNombre - El nombre del método en el store que se debe invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite250102Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite250102Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+    /**
+    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+    * @param form - El formulario reactivo.
+    * @param campo - El nombre del campo en el formulario.
+    */
+    setValoresStore(form: FormGroup, campo: string): void {
+      const VALOR = form.get(campo)?.value;
+      this.tramite250102Store.establecerDatos({ [campo]: VALOR });
+    }
   /**
   * Maneja los cambios en el campo "Fecha de Pago".
   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
@@ -169,7 +167,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.patchValue({
       fecha: nuevo_valor,
     });
-    this.tramite250102Store.setFecha(nuevo_valor);
+    this.tramite250102Store.establecerDatos({ fecha: nuevo_valor });
   }
 
   /**
