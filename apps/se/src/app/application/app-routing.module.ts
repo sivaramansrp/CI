@@ -439,14 +439,27 @@ const ROUTES: Routes = [
       )
   },
   {
-        path: 'programa-prosec',
-        loadChildren: () =>
-          import('./tramites/90302/programa-prosec.module').then(
-            (m) => m.ProgramaProsecModule
-          ),
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
   },
-  
-];
+  {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      ),
+  },
+  {
+            path: 'programa-prosec',
+            loadChildren: () =>
+              import('./tramites/90302/programa-prosec.module').then(
+                (m) => m.ProgramaProsecModule
+              ),
+  },
+]
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
