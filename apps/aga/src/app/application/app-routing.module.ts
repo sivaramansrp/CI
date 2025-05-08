@@ -164,8 +164,9 @@ const ROUTES: Routes = [
   {
     path: 'attention-Of-Renewal',
     loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
+      import('./tramites/40403/atencionDeRenovacion.module').then(
+        (m) => m.AtencionDeRenovacionModule
+
       ),
   },
   {
@@ -194,6 +195,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/6101/junta-tecnica.module').then(
         (m) => m.JuntaTecnicaModule
+      )
+  },
+  {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
       )
   },
   {
@@ -249,6 +257,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/40402/codigo-transportista.module').then(
         (m) => m.CodigoTransportistaModule)
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule),
   }
 ];
 
