@@ -123,12 +123,18 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'garantia',
+    loadChildren: () =>
+      import('./tramites/31101/garantia.module').then(
+        (m) => m.GarantiaModule
+      ),
+  },
+  {
     path: 'aviso-opcion-seguro-global',
     loadChildren: () =>
       import('./tramites/32515/aviso-opcion-seguro-global.module').then(
-        (m) => m.AvisoOpcionSeguroGlobalModule
-      ),
-  },
+        (m) => m.AvisoOpcionSeguroGlobalModule),
+  }
 ];
 
 @NgModule({
