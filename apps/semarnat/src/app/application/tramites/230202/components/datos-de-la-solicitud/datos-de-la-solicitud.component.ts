@@ -10,7 +10,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
 import { map, merge, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -96,16 +96,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Lista de entidades seleccionadas.
    */
   selectEntidades: string[] = [];
-
-  /**
-   * Lista de fechas seleccionadas.
-   */
-  fechasSeleccionadas: Catalogo[] = [];
-
-  /**
-   * Lista de datos de fechas.
-   */
-  fechasDatos: Catalogo[] = [];
 
   /**
    * Lista de catálogos disponibles para géneros.
@@ -357,7 +347,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         colonia: [
           this.solicitudState?.colonia,
           Validators.required,
-        ]
+        ],
+        fechasSeleccionadas: [this.solicitudState?.fechasSeleccionadas, Validators.required]
       }),
     });
 
@@ -524,6 +515,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   aduanaSeleccion(): void {
     const ADUANA = this.solicitudForm.get('reexportacionForm.aduana')?.value;
+    console.log(ADUANA);
     this.store.setAduana(ADUANA);
   }
 
@@ -553,6 +545,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   descripcionProductoSeleccion(): void {
     const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    console.log(DESCRIPCIONPRODUCTO);
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
@@ -650,6 +643,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         funcion: (): void => this.crossList.toArray()[index].quitar('t'),
       },
     ];
+  }
+
+  /**
+   * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
+   *
+   * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
+   */
+  get fechasSeleccionadas(): FormArray {
+    return this.reexportacionForm.get('fechasSeleccionadas') as FormArray;
+  }
+
+  set fechasSeleccionadas(fechas: FormArray) {
+    this.reexportacionForm.setControl('fechasSeleccionadas', fechas);
+  }
+
+  /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  changeCrosslist(fechas: string[]): void {
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.store.setFechasSeleccionadas(fechas);
   }
 
   /**

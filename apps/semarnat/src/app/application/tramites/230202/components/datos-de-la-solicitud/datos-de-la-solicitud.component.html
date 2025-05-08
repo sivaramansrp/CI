@@ -35,6 +35,8 @@
           [fechas]="selectRangoDias"
           [label]="paisDeOrigenLabel"
           [botones]="paisDeOrigenBotons"
+          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <br />
         <label class="form-label"

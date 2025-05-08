@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { DatosSolicitud } from '../models/datos-tramite.model';
+import { DatosDetalle, DatosSolicitud } from '../models/datos-tramite.model';
 
 /**
  * Interfaz que representa un catálogo genérico.
@@ -26,12 +26,12 @@ export interface Catalogo {
 export interface Solicitud230202State {
   numeroDeCertificado: Catalogo[] | null;
   aduana: Catalogo[] | null;
-  fechasSeleccionadas: Catalogo[] | null;
+  fechasSeleccionadas: string[];
   pais: Catalogo[] | null;
   entidades: Catalogo[] | null;
   descripcionProducto: Catalogo[] | null;
   datosSolicitud: DatosSolicitud[];
-  datosDetalle: Catalogo[] | null;
+  datosDetalle: DatosDetalle[];
   fraccionArancelaria: string;
   descripcionFraccionArancelaria: string;
   cantidad: string;
@@ -91,7 +91,7 @@ export function createInitialState(): Solicitud230202State {
   return {
     numeroDeCertificado: null,
     aduana: null,
-    fechasSeleccionadas: null,
+    fechasSeleccionadas: [],
     pais: null,
     entidades: null,
     descripcionProducto: null,
@@ -161,7 +161,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]) {
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({
       ...state,
       fechasSeleccionadas,
@@ -182,7 +182,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setDescripcionProducto(descripcionProducto: Catalogo[]) {
+  public setDescripcionProducto(descripcionProducto: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       descripcionProducto,
@@ -196,7 +196,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
   
-  public setDatosDetalle(datosDetalle: Catalogo[]) {
+  public setDatosDetalle(datosDetalle: DatosDetalle[]) {
     this.update((state) => ({
       ...state,
       datosDetalle,
