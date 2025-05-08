@@ -63,7 +63,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
     /** 
     * Subject para destruir las suscripciones.
     */
-   private destruirNotificador$: Subject<void> = new Subject();
+    private destruirSuscripcion$: Subject<void> = new Subject();
 
     constructor(
         private fb: FormBuilder,
@@ -126,7 +126,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
                 catchError((_error) => {
                     return _error;
                 }),
-                takeUntil(this.destruirNotificador$) // Asegura que la suscripción se cancele al destruir el componente
+                takeUntil(this.destruirSuscripcion$) // Asegura que la suscripción se cancele al destruir el componente
             )
             .subscribe();
     }
@@ -157,18 +157,18 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
                 catchError((_error) => {
                     return _error;
                 }),
-                takeUntil(this.destruirNotificador$) // Asegura que la suscripción se cancele al destruir el componente
+                takeUntil(this.destruirSuscripcion$) // Asegura que la suscripción se cancele al destruir el componente
             )
             .subscribe();
     }
 
-     /**
-   * Se ejecuta al destruir el componente.
-   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
-   */
+    /**
+  * Se ejecuta al destruir el componente.
+  * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+  */
     ngOnDestroy(): void {
-        this.destruirNotificador$.next();
-        this.destruirNotificador$.complete();
+        this.destruirSuscripcion$.next();
+        this.destruirSuscripcion$.complete();
     }
 
     /**
