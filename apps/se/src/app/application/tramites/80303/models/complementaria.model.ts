@@ -39,24 +39,30 @@ export interface Federatario {
   EstadoDistrito?: string;
 }
 
+
 /**
-* Representa la información de un federatario.
-* 
-* @interface FederatarioRealizaranLasOperaciones
-* @property {string} [Calle] - Calle del federatario.
-* @property {string} [NumeroExterior] - Número exterior.
-* @property {string} [NumeroInterior] - Número interior.
-* @property {string} [CodigoPostal] - Código postal.
-* @property {string} [Colonia] - Colonia.
-* @property {string} [Localidad] - Localidad.
-* @property {string} [MunicipioDelegacion] - Municipio o Delegación.
-* @property {string} [EstadoDistrito] - Estado o Distrito Federal.
-* @property {string} [Pais] - País.
-* @property {string} [RFC] - Registro Federal de Contribuyente (RFC).
-* @property {string} [DomicilioFiscal] - Domicilio fiscal del solicitante.
-* @property {string} [DenominacionSocial] - Denominación o razón social.
-* @property {string} [Estatus] - Estatus.
-*/
+ * Interfaz utilizada para proporcionar los tipos de encabezados de tabla y listas
+ * en el componente `tabladynamica`.
+ * 
+ * Esta interfaz define las propiedades necesarias para representar la información
+ * relacionada con los federatarios que realizarán las operaciones, incluyendo datos
+ * de dirección, identificación fiscal y estatus.
+ * 
+ * Propiedades:
+ * - Calle: (Opcional) La calle donde se encuentra el federatario.
+ * - NumeroExterior: (Opcional) El número exterior del domicilio.
+ * - NumeroInterior: (Opcional) El número interior del domicilio.
+ * - CodigoPostal: (Opcional) El código postal del domicilio.
+ * - Colonia: (Opcional) La colonia donde se encuentra el federatario.
+ * - Localidad: (Opcional) La localidad donde se encuentra el federatario.
+ * - MunicipioDelegacion: (Opcional) El municipio o delegación donde se encuentra el federatario.
+ * - EstadoDistrito: (Opcional) El estado o distrito donde se encuentra el federatario.
+ * - Pais: (Opcional) El país donde se encuentra el federatario.
+ * - RFC: (Opcional) Registro Federal de Contribuyentes del federatario.
+ * - DomicilioFiscal: (Opcional) El domicilio fiscal registrado del federatario.
+ * - DenominacionSocial: (Opcional) La denominación social del federatario.
+ * - Estatus: (Opcional) El estatus actual del federatario.
+ */
 export interface FederatarioRealizaranLasOperaciones {
   Calle?: string;
   NumeroExterior?: string;
