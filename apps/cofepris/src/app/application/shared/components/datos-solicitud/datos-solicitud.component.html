@@ -8,7 +8,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="alternarControlesDeFormulario()"
+          (click)="abrirModal()"
         >
           Seleccionar establecimiento
         </button>
@@ -65,8 +65,16 @@
   </form>
   <app-domicillo 
     [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
-    [isAduanasEntradaVisible]="isAduanasEntradaVisible">
+    [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
+    [configuracionVisibilidad]="configuracionVisibilidad"
+    [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible">
   </app-domicillo>
   <app-manifiestos></app-manifiestos>
   <app-representante-legal-rfc></app-representante-legal-rfc>
 </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }

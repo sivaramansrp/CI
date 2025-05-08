@@ -58,7 +58,7 @@ export class AgregarDestinatarioFinalComponent
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
    * @property {FormGroup} agregarDestinatarioFinal
    */
-  agregarDestinatarioFinal: FormGroup;
+  agregarDestinatarioFinal!: FormGroup;
 
   /**
    * Datos de catálogo de países.
@@ -134,6 +134,27 @@ export class AgregarDestinatarioFinalComponent
   >();
 
   /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+  public elementosDeshabilitados: string[] = [];
+
+  /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+  public elementosNoRequeridos:string[]=[]
+
+  /**
+   * Arreglo que almacena los elementos requeridos.
+   * @type {string[]}
+   */
+  public elementosRequeridos: string[] = [];
+
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -147,35 +168,7 @@ export class AgregarDestinatarioFinalComponent
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
-    this.agregarDestinatarioFinal = this.fb.group({
-      tipoPersona: ['', Validators.required],
-      rfc: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(13),
-        ],
-      ],
-      nombres: ['', Validators.required],
-      denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-    });
-    this.mostrarCamposNoContribuyente =
-      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    //constructor necesario para el servicio
   }
 
   /**
@@ -193,26 +186,37 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    }
     const NUEVO_DESTINATARIO: Destinatario = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
-        this.agregarDestinatarioFinal.value.primerApellido
-      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
-      rfc: this.agregarDestinatarioFinal.value.rfc,
+      nombreRazonSocial:nombreRazonSocial,
+      rfc: VALOR_FORMULARIO.rfc,
       curp: '',
       telefono:
-        `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
-      correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
-      calle: this.agregarDestinatarioFinal.value.calle,
-      numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
-      numeroInterior: this.agregarDestinatarioFinal.value.numeroInterior || '',
-      pais: this.agregarDestinatarioFinal.value.pais,
-      colonia: this.agregarDestinatarioFinal.value.colonia,
-      municipioAlcaldia: this.agregarDestinatarioFinal.value.municipio,
-      localidad: this.agregarDestinatarioFinal.value.localidad,
+        `${VALOR_FORMULARIO.lada} ${VALOR_FORMULARIO.telefono}`.trim(),
+      correoElectronico: VALOR_FORMULARIO.correoElectronico,
+      calle: VALOR_FORMULARIO.calle,
+      numeroExterior: VALOR_FORMULARIO.numeroExterior,
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais,
+      colonia: VALOR_FORMULARIO.colonia,
+      municipioAlcaldia: VALOR_FORMULARIO.municipio,
+      localidad: VALOR_FORMULARIO.localidad,
       entidadFederativa: '',
-      estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
-      codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
-      coloniaEquivalente: this.agregarDestinatarioFinal.value.codigoPostal,
+      estadoLocalidad: VALOR_FORMULARIO.estado,
+      codigoPostal: VALOR_FORMULARIO.codigoPostal,
+      coloniaEquivalente: VALOR_FORMULARIO.codigoPostal,
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -227,6 +231,10 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.cargarDatos();
+    this.validarElementos();
+    this.crearAgregarFormularioAgregarDestinatarioFinal();
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -276,6 +284,142 @@ export class AgregarDestinatarioFinalComponent
       .subscribe((data) => {
         this.coloniasDatos = data;
       });
+  }
+
+
+  /**
+   * @method crearAgregarFormularioAgregarDestinatarioFinal
+   * @description
+   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
+   * It sets up the form controls with their default values, validation rules, and disabled states 
+   * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
+   * @returns {void} This method does not return any value.
+   */
+  crearAgregarFormularioAgregarDestinatarioFinal(): void {
+    this.agregarDestinatarioFinal = this.fb.group({
+      tipoPersona: ['', Validators.required],
+      rfc: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      nombres: [
+        {
+          value: this.elementosDeshabilitados.includes('nombres')
+            ? 'EUROFOODZDEMEXICO'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('nombres'),
+        },
+        [Validators.required, Validators.maxLength(200)],
+      ],
+      denominacionRazon: ['', Validators.required],
+      primerApellido: [
+        {
+          value: this.elementosDeshabilitados.includes('pais')
+            ? 'GONZALES'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        [Validators.required],
+      ],
+      segundoApellido: [
+        {
+          value: this.elementosDeshabilitados.includes('segundoApellido')
+            ? 'PINAL'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('segundoApellido'),
+        },
+      ],
+      pais: [
+        {
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        Validators.required,
+      ],
+      estado: ['', Validators.required],
+      municipio: ['', Validators.required],
+      localidad: ['', Validators.required],
+      codigoPostal: ['', Validators.required],
+      colonia: [
+        '',
+        !this.elementosNoRequeridos.includes('colonia')
+          ? [Validators.required]
+          : [],
+      ],
+      calle: [
+        '',
+        this.elementosRequeridos.includes('calle')
+          ? [Validators.required]
+          : [],
+      ],
+      numeroExterior: [
+        '',
+        this.elementosRequeridos.includes('numeroExterior')
+          ? [Validators.required]
+          : [],
+      ],
+      numeroInterior: [''],
+      lada: ['', Validators.required],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.required, Validators.email],
+      ],
+    });
+  }
+
+  /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+  validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260207:
+      case 260209:
+      case 260208:
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['colonia'];
+        break;
+      case 260201:
+        this.elementosDeshabilitados = [
+          'pais',
+          'estado',
+          'municipio',
+          'telefono',
+          'correoElectronico',
+          'nombres',
+          'primerApellido',
+          'segundoApellido',
+        ];
+        this.elementosNoRequeridos = ['localidad', 'colonia'];
+        break;
+        case 260219:
+          this.elementosRequeridos = ['calle', 'numeroExterior'];
+          this.elementosDeshabilitados = ['pais'];
+          this.elementosNoRequeridos = ['colonia'];
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+        this.elementosNoRequeridos = [];
+        this.elementosRequeridos = [];
+    }
   }
 
   /**

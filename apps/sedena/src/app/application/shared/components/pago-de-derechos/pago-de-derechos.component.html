@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <ng-titulo titulo="Pago de derechos"></ng-titulo>
+
+  <form [formGroup]="pagoDerechosForm">
+    <div class="row">
+      <!-- Clave de referencia -->
+      <div class="col-md-8">
+        <label for="claveReferencia" class="form-label"
+          >Clave de referencia<span *ngIf="campoObligatorio">*</span>:</label
+        >
+        <input
+          type="text"
+          id="claveReferencia"
+          class="form-control"
+          formControlName="claveReferencia"
+        />
+      </div>
+    </div>
+    <div class="row g-3">
+      <!-- Cadena de la dependencia -->
+      <div class="col-md-8">
+        <label for="cadenaDependencia" class="form-label"
+          >Cadena de la dependencia<span *ngIf="campoObligatorio">*</span>:</label
+        >
+        <input
+          type="text"
+          id="cadenaDependencia"
+          class="form-control"
+          formControlName="cadenaDependencia"
+        />
+      </div>
+
+      <!-- Estado (using <app-catalogo-select>) -->
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="bancoDatos"
+          formControlName="banco"
+          [label]="'Banco*'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+      <!-- Llave de pago -->
+      <div class="col-md-4">
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoObligatorio">*</span>:</label>
+        <input
+          type="text"
+          id="llavePago"
+          class="form-control"
+          formControlName="llavePago"
+        />
+      </div>
+
+      <!-- Fecha de pago -->
+      <div class="col-md-4">
+        <input-fecha
+          [datos]="fechaInicioInput"
+          name="fechaPago"
+          (valorCambiado)="onFechaCambiada($event)"
+          [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
+        ></input-fecha>
+      </div>
+
+      <!-- Importe de pago -->
+      <div class="col-md-4">
+        <label for="importePago" class="form-label">Importe de pago<span *ngIf="campoObligatorio">*</span>:</label>
+        <input
+          type="text"
+          id="importePago"
+          class="form-control"
+          formControlName="importePago"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            (click)="onReset()"
+          >
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

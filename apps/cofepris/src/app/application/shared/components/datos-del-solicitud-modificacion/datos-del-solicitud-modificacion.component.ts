@@ -29,7 +29,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
-import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, TEXTOS } from '../../constantes/aviso-de-funcionamiento.enum';
+import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG, TEXTOS } from '../../constantes/aviso-de-funcionamiento.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
@@ -144,11 +144,16 @@ eliminarPedimento(borrar: boolean): void {
     this.pedimentos.splice(this.elementoParaEliminar, 1);
   }
 }
+
   /**
    * @input showPreFillingOptions
    * Indica si se deben mostrar las opciones de prellenado.
    */
   @Input() showPreFillingOptions: boolean = true; 
+  /**
+   * Indica si se debe mostrar el checkbox de AIFA.
+   */
+  @Input() showAifaCheckbox: boolean = true; 
   /**
    * Referencia al modal del establecimiento.
    */
@@ -159,6 +164,9 @@ eliminarPedimento(borrar: boolean): void {
    */
   @ViewChild('establecimientoModalButton', { static: false })
   establecimientoModalButton!: ElementRef;
+  @ViewChild('modalAddAgentMercancias', { static: false })
+  modalAddAgentMercancias!: ElementRef;
+
  /**
    * Fecha de caducidad para el formulario.
    */
@@ -168,6 +176,7 @@ eliminarPedimento(borrar: boolean): void {
    */
    modalInstance!: Modal;
 
+
    /**
     * Formulario para gestionar mercancías.
     */
@@ -176,6 +185,7 @@ eliminarPedimento(borrar: boolean): void {
    * Instancia del modal del establecimiento.
    */
   establecimientoModalInstance!: Modal;
+  modalAddAgentMercanciasInstance!: Modal;
 
   /**
    * Datos del catálogo SCIAN.
@@ -206,15 +216,8 @@ eliminarPedimento(borrar: boolean): void {
    */
    public modal: string = 'modal';
 
-   /**
-    * Formulario principal.
-    */
-   form!: FormGroup;
+  
  
-   /**
-    * Formulario de solicitud.
-    */
-   solicitudForm!: FormGroup;
 
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
@@ -366,10 +369,7 @@ eliminarPedimento(borrar: boolean): void {
    */
   estado: Catalogo[] = [];
 
-  /**
-   * Textos de alerta.
-   */
-  TEXTOS = ALERT;
+ 
 
   /**
    * Clase de alerta.
@@ -384,15 +384,12 @@ eliminarPedimento(borrar: boolean): void {
   /**
    * Datos cargados dinámicamente para la tabla SCIAN.
    */
-  datosData: ScianData[] = [];
+  datosData: ScianModel[] = [];
   /**
    * Enum para la selección de tablas.
    */
   tipoSeleccionTabla = TablaSeleccion;
-  /**
-   * Formulario de domicilio.
-   */
-  domicilio!: FormGroup;
+  
   /**
    * Formulario de establecimiento.
    */
@@ -424,12 +421,11 @@ eliminarPedimento(borrar: boolean): void {
     if (this.establecimientoModal) {
       this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
     }
+    if (this.modalAddAgentMercancias) {
+      this.modalAddAgentMercanciasInstance = new Modal(this.modalAddAgentMercancias.nativeElement); 
+    }
   }
 
-  /**
-   * Formulario para gestionar el representante legal.
-   */
-  representanteLegal!: FormGroup;
   /**
    * Texto de los manifiestos.
    */
@@ -457,13 +453,11 @@ eliminarPedimento(borrar: boolean): void {
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios.
-   * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260904Query Consulta de datos del trámite.
    * @param tramite260904Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
@@ -478,11 +472,40 @@ eliminarPedimento(borrar: boolean): void {
   ngOnInit(): void {
     this.loadScian();
     this.loadEstadoData();
-    this.crearFormulario();
+    this.crearAgregarFormulario();
+    this.establecerDeshabilitado();
+    this.estadoDelServicio();
   
+  }
+  estadoDelServicio():void{
+    this.establecimientoService
+    .getJustificationData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data: PropietarioTipoPersona[]) => {
+      this.genericOptions = data; // Bind the fetched data
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
+    });
+  }
+  /**
+   * Método de limpieza del componente.
+   * Se utiliza para liberar recursos y evitar fugas de memoria.
+   */
+  crearAgregarFormulario():void{
+
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
-      observaciones: ['', [Validators.required, Validators.maxLength(2000)]],
+      observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
       establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_FISICA)],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
@@ -528,26 +551,20 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
-    this.establecimientoService
-      .getJustificationData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
-        this.genericOptions = data; // Bind the fetched data
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
-      });
   }
+/**
+ * Deshabilita el campo "observaciones" del formulario de domicilio
+ */
+establecerDeshabilitado(): void {
+ this.domicilioEstablecimiento.get('ideGenerica1')?.valueChanges.subscribe((value) => {
+  if (value === 'modificacion') {
+    this.domicilioEstablecimiento.get('observaciones')?.enable();
+  } else {
+    this.domicilioEstablecimiento.get('observaciones')?.disable();
+  }
+});
 
+  }
   /**
  * Alterna el estado colapsable de la sección "Uno".
  * 
@@ -572,19 +589,52 @@ eliminarPedimento(borrar: boolean): void {
         this.scianJson = resp;
       });
   }
-  loadEstadoData(): void {
-    this.establecimientoService
-      .getEstadodata()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: Catalogo[]) => {
-        this.estado = resp;
-      });
-  }
+ /**
+ * @method loadEstadoData
+ * @description
+ * Este método carga los datos del catálogo de estados desde el servicio `EstablecimientoService`.
+ * Utiliza un observable para suscribirse a los datos y los almacena en la propiedad `estado`.
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
+ * 
+ * @returns void
+ */
+loadEstadoData(): void {
+  this.establecimientoService
+    .getEstadodata()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp: Catalogo[]) => {
+      this.estado = resp;
+    });
+}
 
+/**
+ * @method cerrarModal
+ * @description
+ * Este método cierra el modal activo utilizando la instancia del modal de Bootstrap.
+ * Verifica si la instancia del modal (`modalInstance`) está definida antes de intentar cerrarlo.
+ * 
+ * @returns void
+ */
+cerrarModal(): void {
+  if (this.modalInstance) {
+    this.modalInstance.hide();
+  }
+}
+  /**
+   * Actualiza el estado del formulario según los cambios en los controles.
+   * @param controlName Nombre del control que cambió.
+   */
+  onContriloChange(controlName: string): void {
+    const UPDATED_VALUE = {
+      [controlName]: this.scianForm.get(controlName)?.value,
+    };
+    
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Carga los datos del catálogo de justificación.
    */
-  onControlChange(controlName: string): void {
+  enCambioDeControl(controlName: string): void {
     
     const UPDATED_VALUE = {
       [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
@@ -596,7 +646,7 @@ eliminarPedimento(borrar: boolean): void {
    * Actualiza el estado del formulario según los cambios en los controles.
    * @param controlName Nombre del control que cambió.
    */
-  onControlChangeForm(controlName: string): void {
+  enControlCambioFormulario(controlName: string): void {
   
     const UPDATED_VALUE = {
       [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
@@ -642,6 +692,7 @@ eliminarPedimento(borrar: boolean): void {
 
       // Agregar el nuevo dato a la tabla
       this.personaparas.push(SCIAN_DATA);
+      this.datosData = [...this.personaparas];
 
       // Limpiar el formulario
       this.scianForm.reset();
@@ -650,7 +701,46 @@ eliminarPedimento(borrar: boolean): void {
       this.closeScianModal();
     }
   }
+   /**
+    * compo docs
+     * @description
+     * Este método guarda los datos de una mercancía ingresados en el formulario `formMercancias`.
+     * Si el formulario es válido, se crea un objeto `MERCANCIA` con los valores del formulario,
+     * se agrega a la tabla de datos `mercanciasTablaDatos`, y luego se reinicia el formulario.
+     */
 
+  
+  guardarMarcancia(): void {
+    if (this.formMercancias.valid) {
+      const MERCANCIA: MercanciasInfo = {
+        clasificacion: this.formMercancias.get('clasificacion')?.value,
+        especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+        denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+        denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+        denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+        formaFarmaceutica: this.formMercancias.get('tipoDeProducto')?.value,
+        estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+        fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+        descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+        unidadUMT: this.formMercancias.get('UMT')?.value,
+        cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+        unidad: this.formMercancias.get('UMC')?.value,
+        cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+        presentacion: this.formMercancias.get('presentacion')?.value,
+        numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+        paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+        paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+        tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+        usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      };
+  
+      // Add the new data to the table
+      this.mercanciasTablaDatos.push(MERCANCIA);
+      // Reset the form
+      this.formMercancias.reset();
+      this.cerrarModalMercancía();
+    }
+  }
   /**
    * Abre el modal SCIAN.
    */
@@ -665,10 +755,24 @@ eliminarPedimento(borrar: boolean): void {
     this.modalInstance.hide();
   }
 
+   /**
+   * Abre el modal SCIAN.
+   */
+   abrirModalMercancia(): void {
+    this.modalAddAgentMercanciasInstance.show();
+  }
+
+  /**
+   * Cierra el modal SCIAN.
+   */
+  cerrarModalMercancía(): void {
+    this.modalAddAgentMercanciasInstance.hide();
+  }
+
   /**
    * Configuración de columnas para la tabla de datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+  configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -676,35 +780,9 @@ eliminarPedimento(borrar: boolean): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  /**
-   * Habilita todos los controles del formulario si están deshabilitados.
-   * @returns {void}
-   */
-  public toggleFormControls(): void {
-    Object.keys(this.solicitudForm.controls).forEach((controlName) => {
-      const CONTROL = this.solicitudForm.get(controlName);
-      if (CONTROL?.disabled) {
-        CONTROL.enable();
-      }
-    });
-  }
+
   /**
    * Método para crear el formulario.
    */
-  crearFormulario(): void {
-    this.solicitudForm = this.fb.group({
-      ideGenerica1: ['', [Validators.required]],
-      justificacionId: ['', [Validators.required]],
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
-    });
-
- 
-  }
+  
 }

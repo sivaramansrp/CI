@@ -29,7 +29,6 @@ export * from './core/enums/tipoPersona.enum';
 export * from './core/estados/seccion.store';
 export * from './core/estados/terceros.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
-export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
@@ -120,6 +119,20 @@ export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enu
 export * from './tramites/constantes/120602/datos-empresa.enum';
 export * from './tramites/constantes/120602/datos-empresa.enum';
 export * from './tramites/constantes/aviso-privacidad.enum';
+
+export * from './core/services/120602/empresa-frontera-solicitud.enum';
+
+export * from './core/estados/seccion.store';
+export * from './tramites/pages/firma-page/firma-page.component';
+export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
+export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
+export * from './tramites/components/acuse/acuse.component';
+export * from './tramites/components/consulta-generica/bandeja/bandeja.component';
+
+export * from './core/models/shared/configuracion-columna.model';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/constantes/constantes';
 export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
@@ -132,3 +145,20 @@ export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
+export * from './core/models/shared/datos-generales.model';
+export * from './core/enums/constantes-alertas.enum';
+export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './core/services/231001/materia-prima-formservice.service';
+export * from './core/services/231001/administrar-residuos.service';
+export * from './core/services/shared/tramite-folio/tramite-folio.service';
+export * from './core/models/260303/certificados-licencias-permisos.model';
+export * from './core/models/260701/certificados-licencias.model';
+export * from './tramites/components/notificaciones/notificaciones.component';
+
+export * from './tramites/components/select-catalogos/select-catalogos.component';
+export * from './core/models/31602/comercio-exterior.model';
+export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
+
+export {TramiteDetails} from './core/models/tramiteDetails'
+export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
+export { enviroment } from './enviroments/enviroment';

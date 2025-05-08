@@ -1,20 +1,20 @@
 export interface Cupo {
-    cupo: number;               // The amount of the "cupo" as a number
-    nombreProducto: string;      // The product name as a string
-    nombreSubproducto: string;  // The subproduct name as a string
+    cupo: number;// The amount of the "cupo" as a number
+    nombreProducto: string;// The product name as a string
+    nombreSubproducto: string;// The subproduct name as a string
     mecanismoAsignacion: string; // The mechanism of assignment as a string
-    tipoCupo: string;           // The type of "cupo" as a string
+    tipoCupo: string;// The type of "cupo" as a string
   }
   
   export interface Facturas {
-    numeroDeFactura: string;  // The number of the invoice (string)
-    importeInicial: string;   // The initial amount (string)
-    saldoaDevolver?: string;  // The amount to be refunded (string, optional as it may be empty)
+    numeroDeFactura: string;// The number of the invoice (string)
+    importeInicial: string;// The initial amount (string)
+    saldoaDevolver?: string;// The amount to be refunded (string, optional as it may be empty)
   }
   
   export interface Facturase {
-    numeroDeFactura: string;  // The number of the invoice (string)
-    importeInicial: string;   // The initial amount (string)
+    numeroDeFactura: string;// The number of the invoice (string)
+    importeInicial: string;// The initial amount (string)
   
   }
   

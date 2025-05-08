@@ -117,6 +117,12 @@ export class TercerosRelacionadosComponent implements OnInit {
   public habilitarFacturador = true;
 
   /**
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos que son obligatorios en el formulario.
+   */
+  @Input() public elementosRequeridos!: string[];
+
+  /**
    * @constructor
    * Inyecta los servicios de router, rutas activas y store del trámite.
    *
@@ -125,7 +131,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    // No se necesita lógica de inicialización adicional.
+   }
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
@@ -175,4 +183,15 @@ export class TercerosRelacionadosComponent implements OnInit {
       ? false
       : true;
   }
+
+  /**
+    * Verifica si un campo es requerido según la configuración de campos requeridos.
+    *
+    * @param {string} campo - Nombre del campo a verificar.
+    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+    */
+  esCampoRequerido(campo: string): boolean {
+    return this.elementosRequeridos?.includes(campo) ?? false;
+  }
+  
 }

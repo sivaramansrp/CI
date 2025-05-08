@@ -10,6 +10,7 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { MuestrasDeToxicosRoutingModule } from './muestras-de-toxicos-routing.module';
@@ -41,7 +42,8 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent,
     DatosSolicitudComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDerechosComponent
+    PagoDerechosComponent,
+    AvisoDePrivacidadComponent
   ],
   providers: [ToastrService,
     CatalogosService,

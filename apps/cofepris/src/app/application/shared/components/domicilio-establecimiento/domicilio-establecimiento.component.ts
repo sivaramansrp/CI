@@ -1,6 +1,7 @@
 import {
   CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
 } from '../../constantes/datos-domicilio-legal.enum';
 import {
@@ -22,6 +23,13 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {
+  ConfiguracionVisibilidad,
+  MERCANCIAS_DATA,
+  MercanciasInfo,
+  NICO_TABLA,
+  NicoInfo,
+} from '../../models/datos-domicilio-legal.model';
+import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from '../../estados/stores/datos-domicilio-legal.store';
@@ -32,12 +40,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/datos-domicilio-legal.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -73,13 +75,17 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+/**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
@@ -102,6 +108,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  /**
+   * Configuración de visibilidad de los campos.
+   */
+  @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
+
   /**
    * Constructor del componente.
    * @param fb
@@ -291,6 +302,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Objeto que representa la configuración de etiquetas para la selección de país de origen.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "País de origen".
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+   */
+  public paisDeOrigen: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionados',
+  };
+  /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
@@ -321,6 +342,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
+      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
     this.formAgente = this.fb.group({
