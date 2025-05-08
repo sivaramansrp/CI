@@ -274,7 +274,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
-                Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.&nbsp;<input class="form-check-input" type="checkbox" id="previstas"
+                Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.<input class="form-check-input ml-15" type="checkbox" id="previstas"
                     formControlName="previstas" (change)="setValoresStore(datosComunesForma,'previstas', 'setPrevistas')"/>
             </div>
         </div>
@@ -331,8 +331,8 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
-                <input class="form-check-input" type="checkbox" id="esquemaIntegralCertificacion"
-                    formControlName="esquemaIntegralCertificacion" (change)="setValoresStore(datosComunesForma,'esquemaIntegralCertificacion', 'setEsquemaIntegralCertificacion')"/> &nbsp; <span class="danger">*</span>Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.
+                <input class="form-check-input mr-15" type="checkbox" id="esquemaIntegralCertificacion"
+                    formControlName="esquemaIntegralCertificacion" (change)="setValoresStore(datosComunesForma,'esquemaIntegralCertificacion', 'setEsquemaIntegralCertificacion')"/> <span class="danger">*</span>Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.
 
                     @if(datosComunesForma.controls['esquemaIntegralCertificacion'].invalid && datosComunesForma.controls['esquemaIntegralCertificacion'].touched){
                         <div class="d-grid">
@@ -345,7 +345,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
-                <input class="form-check-input" type="checkbox" id="modificadasRevocadas"
+                <input class="form-check-input mr-15" type="checkbox" id="modificadasRevocadas"
                     formControlName="esquemaIntegralCertificacion" (change)="setValoresStore(datosComunesForma,'modificadasRevocadas', 'setModificadasRevocadas')"/> &nbsp; <span class="danger">*</span>Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.
 
                     @if(datosComunesForma.controls['modificadasRevocadas'].invalid && datosComunesForma.controls['modificadasRevocadas'].touched){

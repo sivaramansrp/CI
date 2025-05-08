@@ -21,13 +21,13 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
  * Permite la captura y validación de datos relacionados con seguridad, auditorías y planes de emergencia.
  */
 @Component({
-  selector: 'app-profiles-domocilio-dela',
+  selector: 'app-planeacion-de-la-seguridad',
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
-  templateUrl: './profiles-domocilio-dela.component.html',
-  styleUrls: ['./profiles-domocilio-dela.component.scss'],
+  templateUrl: './planeacion-de-la-seguridad.component.html',
+  styleUrls: ['./planeacion-de-la-seguridad.component.scss'],
 })
-export class ProfilesDomocilioDelaComponent implements OnInit, OnDestroy {
+export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
   /**
    * @property {string[]} opcionDeBotonDeRadio
    * @description

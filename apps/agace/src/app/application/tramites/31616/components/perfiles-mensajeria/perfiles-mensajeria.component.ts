@@ -30,7 +30,7 @@ import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.c
 import { FECHA_DE_PAGO } from '../../constantes/perfiles.enum';
 import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
 import { ManejoInvestigacionComponent } from '../manejo-investigacion/manejo-investigacion.component';
-import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
+import { PlaneacionDelaSeguridadComponent } from '../planeacion-de-la-seguridad/planeacion-de-la-seguridad.component';
 import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
 import { SeguridadInformacionDocumentacionComponent } from '../seguridad-informacion-documentacion/seguridad-informacion-documentacion.component';
 import { SeguridadLosVehiculosComponent } from '../seguridad-los-vehiculos/seguridad-los-vehiculos.component';
@@ -55,7 +55,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ProfilesDomocilioDelaComponent,
+    PlaneacionDelaSeguridadComponent,
     SeguridadFisicaComponent,
     ControlesFisicoComponent,
     SociosComercialesComponent,
