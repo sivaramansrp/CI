@@ -1,0 +1,15 @@
+{
+    "labelNombre": "Nombre de la institución de crédito que emite el documento",
+    "required": true,
+    "primerOpcion": "Seleccione un valor",
+    "catalogos": [
+        {
+            "id": 1,
+            "descripcion": "BANCO SANTANDER (MEXICO) S.A., INSTITUCION DE BANCA MULTIPLE, GRUPO FINAN("
+        },
+        {
+            "id": 2,
+            "descripcion": "BANCO SANTANDER (MEXICO) S.A., INSTITUCION DE BANCA MULTIPLE, GRUPO FINAN( - 1"
+        }
+    ]
+}
