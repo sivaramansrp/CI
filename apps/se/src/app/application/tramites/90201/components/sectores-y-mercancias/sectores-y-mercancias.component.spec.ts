@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SectoresYMercanciasComponent } from './sectores-y-mercancias.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SectoresYMercanciasComponent', () => {
   let component: SectoresYMercanciasComponent;
@@ -7,7 +8,7 @@ describe('SectoresYMercanciasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SectoresYMercanciasComponent],
+      imports: [SectoresYMercanciasComponent,HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SectoresYMercanciasComponent);
