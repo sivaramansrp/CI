@@ -439,13 +439,19 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
+  },
+  {
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(
         (m) => m.RegistroComoEmpresaModule
       ),
   },
-  
 ];
 
 @NgModule({
