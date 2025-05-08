@@ -75,6 +75,13 @@ const ROUTES: Routes = [
       ).then((m) => m.ManifiestoAereoModule),
   },
   {
+    path: 'consulta-aviso-acreditacion',
+    loadChildren: () =>
+      import(
+        './tramites/32101/Consulta-Aviso-Acreditacion.module'
+      ).then((m) => m.ConsultaAvisoAcreditacionModule),
+  },
+  {
     path: 'aviso-traslado',
     loadChildren: () =>
       import('./tramites/32503/aviso-traslado.module').then(
@@ -113,6 +120,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/31616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule
+      ),
+  },
+  {
+    path: 'renovacion-comercializadora',
+    loadChildren: () =>
+      import('./tramites/31801/renovacion-comercializadora.module').then(
+        (m) => m.RenovacionComercializadoraModule
       ),
   },
 ];

@@ -109,6 +109,7 @@ export interface TableData {
 
 export interface TableBodyData {
   tbodyData: string[];
+  selected?: boolean;
 }
 
 export interface DatosPageAcuse {
