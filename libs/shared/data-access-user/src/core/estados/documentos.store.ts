@@ -9,6 +9,10 @@ export interface DocumentosState {
     catalogoDocumentosRequeridos: DocumentoState[];
     catalogoDocumentosOpcionales: DocumentoState[];
 }
+
+/**
+ * Model para el estado de cada documento
+ */
 export interface DocumentoState {
     id: number;
     descripcion: string;
