@@ -1,4 +1,4 @@
-import {AbstractControl, FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,ValidatorFn,Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,ValidatorFn} from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud32102State, Tramite32102Store } from '../../../../estados/tramites/tramite32102.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -6,18 +6,19 @@ import { CommonModule } from '@angular/common';
 import { Solicitud32102Enum } from '../../constants/solicitud32101.enum';
 import {TituloComponent} from '@libs/shared/data-access-user/src';
 import { Tramite32102Query } from '../../../../estados/queries/tramite32102.query';
-
 /**
- * Componente que gestiona la solicitud del trámite 31803.
- * Contiene la lógica para inicializar el formulario, manejar eventos y comunicarse con el estado global.
+ * Componente que representa la solicitud en el contexto del trámite 32102.
+ * Este componente utiliza un formulario reactivo para gestionar los datos
+ * relacionados con el aviso de extensión y permite la interacción con el estado
+ * del trámite a través de un store y un query.
  */
 @Component({
   selector: 'app-solicitud',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule],
   providers: [],
-  templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.scss',
+  templateUrl: './solicitud.component.html',
+  styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
