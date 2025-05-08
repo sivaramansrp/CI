@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
@@ -8,7 +8,7 @@ import { Tramite240112Query } from '../../estados/tramite240112Query.query';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit {
+export class TercerosRelacionadosContenedoraComponent implements OnInit,OnDestroy {
   /**
      * Observable para limpiar las suscripciones activas al destruir el componente.
      * @property {Subject<void>} destroy$
@@ -59,4 +59,23 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
           this.proveedorTablaDatos = data;
         });
     }
+
+      /**
+   * @override
+   * @method ngOnDestroy
+   * @description Este método se ejecuta automáticamente cuando el componente se destruye. 
+   * Se utiliza para realizar tareas de limpieza, como completar observables o liberar recursos.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   * 
+   */
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

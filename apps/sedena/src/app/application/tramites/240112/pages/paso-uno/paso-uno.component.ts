@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite240112Query } from '../../estados/tramite240112Query.query';
+import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit,OnDestroy {
    /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -14,6 +17,14 @@ export class PasoUnoComponent {
    * @default 1
    */
    indice: number = 1;
+   /**
+      * @property destroyNotifier$
+      * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
+      * Helps prevent memory leaks.
+      * @type {Subject<void>}
+      */
+     private destroyNotifier$: Subject<void> = new Subject();
+   
 
    /**
     * Lista de las secciones del formulario, cada sección tiene su índice, título y componente asociado.
@@ -32,7 +43,23 @@ export class PasoUnoComponent {
      { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
      { index: 4, title: 'Pago de derechos', component: 'pago-de-derechos' }
    ];
- 
+     /**
+      * Initializes the component with required query and store for state management.
+      *
+      * @param tramite240112Query Query to access procedure state.
+      * @param tramite240112Store Store to update procedure state.
+      */
+     constructor(
+       private tramite240112Query: Tramite240112Query,
+       private tramite240112Store: Tramite240112Store // eslint-disable-next-line no-empty-function
+     ) {}
+  ngOnInit(): void {
+     this.tramite240112Query.getTabSeleccionado$
+       .pipe(takeUntil(this.destroyNotifier$))
+       .subscribe((tab) => {
+         this.indice = tab ?? 1; 
+       });
+   }
    /**
     * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
     * Este método se utiliza para navegar entre las diferentes pestañas del formulario.
@@ -44,5 +71,24 @@ export class PasoUnoComponent {
     */
    seleccionaTab(i: number): void {
      this.indice = i;
+     this.tramite240112Store.updateTabSeleccionado(i);
    }
+  /**
+   * @override
+   * @method ngOnDestroy
+   * @description Este método se ejecuta automáticamente cuando el componente se destruye. 
+   * Se utiliza para realizar tareas de limpieza, como completar observables o liberar recursos.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   * 
+   */
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

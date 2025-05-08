@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
+import { Tramite240112Query } from '../../estados/tramite240112Query.query';
+import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
 @Component({
   selector: 'app-pago-de-derechoc',
@@ -39,6 +41,8 @@ export class PagoDeDerechocComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     constructor(
+          private tramiteQuery: Tramite240112Query,
+          private tramiteStore: Tramite240112Store
     ) // eslint-disable-next-line no-empty-function
     {}
   
@@ -50,12 +54,11 @@ export class PagoDeDerechocComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     ngOnInit(): void {
-      console.log('ngOnInit PagoDerechosComponent');
-      // this.tramiteQuery.getPagoDerechos$
-      //   .pipe(takeUntil(this.destroy$))
-      //   .subscribe((data) => {
-      //     this.pagoDerechoFormState = data;
-      //   });
+      this.tramiteQuery.getPagoDerechos$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.pagoDerechoFormState = data;
+        });
     }
   
     /**
@@ -78,7 +81,6 @@ export class PagoDeDerechocComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     updatePagoDerechos(event: PagoDerechosFormState): void {
-      console.log('updatePagoDerechos', event);
-      // this.tramiteStore.updatePagoDerechosFormState(event);
+      this.tramiteStore.updatePagoDerechosFormState(event);
     }
 }
