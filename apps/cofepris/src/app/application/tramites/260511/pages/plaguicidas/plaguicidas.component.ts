@@ -10,6 +10,10 @@ import { TercerosFabricanteService } from '../../../../shared/services/terceros-
 import { TercerosFabricanteState } from '../../../../shared/estados/stores/terceros-fabricante.store';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
+/**
+ * Interfaz para definir la estructura de los botones de acción en el asistente.
+ * Contiene la acción y el valor del botón.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
