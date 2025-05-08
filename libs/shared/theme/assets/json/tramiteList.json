@@ -66,7 +66,7 @@
     "id": 10,
     "tramite": 10303,
     "linkDashboard": "/aga/donaciones-extranjeras/solicitud",
-    "linkDepartment": "/aga/donaciones-extranjeras/solicitud",
+    "linkDepartment": "/pago/donaciones-extranjeras/solicitud",
     "department": "aga"
   },
   {
@@ -101,7 +101,7 @@
     "id": 15,
     "tramite": 30901,
     "linkDashboard": "/aga/muestras-mercancias/renovaciones",
-    "linkDepartment": "/aga/muestras-mercancias/renovaciones",
+    "linkDepartment": "/pago/muestras-mercancias/renovaciones",
     "department": "aga"
   },
   {
@@ -122,7 +122,7 @@
     "id": 18,
     "tramite": 32501,
     "linkDashboard": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
-    "linkDepartment": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+    "linkDepartment": "/pago/mercancias-desmontadas-o-sin-montar/solicitud",
     "department": "agace"
   },
   {
@@ -423,7 +423,7 @@
     "id": 61,
     "tramite": 130118,
     "linkDashboard": "/se/pexim/solicitud",
-    "linkDepartment": "/se/pexim/solicitud",
+    "linkDepartment": "/pago/pexim/solicitud",
     "department": "se"
   },
   {
@@ -479,7 +479,7 @@
     "id": 69,
     "tramite": 150102,
     "linkDashboard": "/se/reporte-anual/solicitud",
-    "linkDepartment": "/se/reporte-anual/solicitud",
+    "linkDepartment": "/pago/reporte-anual/solicitud",
     "department": "se"
   },
   {
@@ -535,14 +535,14 @@
     "id": 77,
     "tramite": 220501,
     "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
-    "linkDepartment": "/agriculture/sagarpa/datosdelasolicitud",
+    "linkDepartment": "/pago/sagarpa/datosdelasolicitud",
     "department": "agriculture"
   },
   {
     "id": 78,
     "tramite": 220502,
     "linkDashboard": "/agriculture/inspeccion-fisica/pantallas",
-    "linkDepartment": "/agriculture/inspeccion-fisica/pantallas",
+    "linkDepartment": "/pago/inspeccion-fisica/pantallas",
     "department": "agriculture"
   },
   {
@@ -591,7 +591,7 @@
     "id": 85,
     "tramite": 260101,
     "linkDashboard": "/cofepris/importacion-productos/productos",
-    "linkDepartment": "/cofepris/importacion-productos/productos",
+    "linkDepartment": "/pago/importacion-productos/productos",
     "department": "cofepris"
   },
   {
@@ -681,8 +681,8 @@
   {
     "id": 98,
     "tramite": 260601,
-    "linkDashboard": "/cofepris/aviso-sanitario/datosde-la-solicitud",
-    "linkDepartment": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+    "linkDashboard": "/cofepris/aviso-sanitario/datos-de-la-solicitud",
+    "linkDepartment": "/pago/aviso-sanitario/datos-de-la-solicitud",
     "department": "cofepris"
   },
   {
@@ -906,7 +906,7 @@
     "id": 130,
     "tramite": 40201,
     "linkDashboard": "/aga/transportacion-maritima/asignar-caat-maritimo",
-    "linkDepartment": "/aga/transportacion-maritima/asignar-caat-maritimo",
+    "linkDepartment": "/pago/transportacion-maritima/asignar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -962,7 +962,7 @@
     "id": 138,
     "tramite": 32401,
     "linkDashboard": "/agace/manifiesto-aereo/solicitar-requiremento",
-    "linkDepartment": "/agace/manifiesto-aereo/solicitar-requiremento",
+    "linkDepartment": "/pago/manifiesto-aereo/solicitar-requiremento",
     "department": "agace"
   },
   {
@@ -1298,21 +1298,21 @@
     "id": 186,
     "tramite": 202,
     "linkDashboard": "/aga/prestadores-servicio/maniobras-mercancias",
-    "linkDepartment": "/aga/prestadores-servicio/maniobras-mercancias",
+    "linkDepartment": "/pago/prestadores-servicio/maniobras-mercancias",
     "department": "aga"
   },
   {
     "id": 187,
     "tramite": 6101,
     "linkDashboard": "/aga/junta-tecnica/solicitud",
-    "linkDepartment": "/aga/junta-tecnica/solicitud",
+    "linkDepartment": "/pago/junta-tecnica/solicitud",
     "department": "aga"
   },
   {
     "id": 188,
     "tramite": 11102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/modificacion-donaciones-immex/solicitante",
+    "linkDepartment": "/pago/modificacion-donaciones-immex/solicitante",
     "department": "aga"
   },
   {
@@ -1354,7 +1354,7 @@
     "id": 194,
     "tramite": 40202,
     "linkDashboard": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
-    "linkDepartment": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
+    "linkDepartment": "/pago/modificacion-transportacion-maritima/modificar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -1381,15 +1381,15 @@
   {
     "id": 198,
     "tramite": 31101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/garantia/solicitud",
+    "linkDepartment": "/pago/garantia/solicitud",
     "department": "agace"
   },
   {
     "id": 199,
     "tramite": 31301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/endoso-garantia/solicitud",
+    "linkDepartment": "/pago/endoso-garantia/solicitud",
     "department": "agace"
   },
   {
@@ -1717,8 +1717,8 @@
   {
     "id": 246,
     "tramite": 80301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-modificacion/registro-modificacion",
+    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {
@@ -2060,8 +2060,8 @@
   {
     "id": 295,
     "tramite": 90304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/solicitud-modificaciones",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/solicitud-modificaciones",
     "department": "se"
   },
   {
@@ -3117,8 +3117,8 @@
   {
     "id": 447,
     "tramite": 32515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-opcion-seguro-global/solicitante",
+    "linkDepartment": "/pago/aviso-opcion-seguro-global/solicitante",
     "department": "agace"
   },
   {
