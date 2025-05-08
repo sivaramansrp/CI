@@ -814,8 +814,8 @@
   {
     "id": 117,
     "tramite": 110214,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-inicialmente-certificado/solicitante",
+    "linkDepartment": "/pago/validar-inicialmente-certificado/solicitante",
     "department": "se"
   },
   {
