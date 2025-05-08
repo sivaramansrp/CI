@@ -115,7 +115,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
     /** Obtiene todos los pendientes desde el backend y aplica la paginación inicial */
     public getPendientesTabla(): void {
         this.accionesServcios = [TablaAcciones.EDITAR];
-        const SUB = this.servicioFuncionario.getListaPendientes()
+        this.servicioFuncionario.getListaPendientes()
             .pipe(
                 map((data) => {
                     this.todosPendientesOriginales = data;
