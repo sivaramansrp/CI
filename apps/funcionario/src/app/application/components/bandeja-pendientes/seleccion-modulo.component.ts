@@ -1,4 +1,4 @@
-import { catchError, map, Subscription } from 'rxjs';
+import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     ConfiguracionColumna,
@@ -60,8 +60,11 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
 
     /** Configuración de columnas de la tabla */
     public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = CONFIGURACION_ENCABEZADO_PENDIENTES;
-    /** Propiedad para manejar la suscripción*/
-    private subscription: Subscription = new Subscription();
+    /** 
+    * Subject para destruir las suscripciones.
+    */
+   private destruirNotificador$: Subject<void> = new Subject();
+
     constructor(
         private fb: FormBuilder,
         private servicioFuncionario: TablerosService
@@ -122,10 +125,10 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
                 }),
                 catchError((_error) => {
                     return _error;
-                })
+                }),
+                takeUntil(this.destruirNotificador$) // Asegura que la suscripción se cancele al destruir el componente
             )
             .subscribe();
-        this.subscription.add(SUB);
     }
 
     /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
@@ -141,7 +144,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
         //son valores predefinidos como el formulario fueron declarados
         //eslint-disable-next-line @typescript-eslint/naming-convention
         const { folio, info, fechaInicio, fechaFinal } = this.FormBusqueda.value;
-        const SUB = this.servicioFuncionario
+        this.servicioFuncionario
             .getListaPendientes(folio || undefined, info || undefined, fechaInicio || undefined, fechaFinal || undefined)
             .pipe(
                 map((data) => {
@@ -153,17 +156,19 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
                 }),
                 catchError((_error) => {
                     return _error;
-                })
+                }),
+                takeUntil(this.destruirNotificador$) // Asegura que la suscripción se cancele al destruir el componente
             )
             .subscribe();
-        this.subscription.add(SUB);
     }
 
-    /** Método del ciclo de vida para limpiar recursos 
-     * Cancela todas las suscripciones
-    */
+     /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.destruirNotificador$.next();
+        this.destruirNotificador$.complete();
     }
 
     /**
