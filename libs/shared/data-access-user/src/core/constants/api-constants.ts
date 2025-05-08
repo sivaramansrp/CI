@@ -48,3 +48,9 @@ export const RFC_QUERY = '{rfc}'
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
  */
 export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
+
+/** 
+ * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
+ * @param TRAMITE el trámite seleccionado por el usuario.
+ * @see 
+*/
