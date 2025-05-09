@@ -7,6 +7,7 @@ import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
+import { REGEX_TELEFONO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/solicitud.model';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
@@ -89,7 +90,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
       agregarEnlaceCargo: [this.solicitud32605State.agregarEnlaceCargo],
       agregarEnlaceTelefono: [
         this.solicitud32605State.telefono,
-        [Validators.required, Validators.pattern(/^\d{10}$/)],
+        [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
       ],
       agregarEnlaceCorreoElectronico: [
         this.solicitud32605State.correoElectronico,
