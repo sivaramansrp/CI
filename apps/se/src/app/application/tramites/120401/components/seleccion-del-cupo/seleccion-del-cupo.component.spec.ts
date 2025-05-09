@@ -25,10 +25,11 @@ class MockTramite120401Store {}
 
 @Injectable()
 class MockTramite120401Query {
-  regimen$ = {};
-  tratado$ = {};
-  producto$ = {};
-  subproducto$ = {};
+  tramiteState$ = observableOf({ datos: [] });
+  regimen$ = observableOf(null);
+  tratado$ = observableOf(null);
+  producto$ = observableOf(null);
+  subproducto$ = observableOf(null);;
 }
 
 

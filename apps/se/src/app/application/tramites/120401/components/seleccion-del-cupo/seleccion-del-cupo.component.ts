@@ -1,35 +1,19 @@
+import { Catalogo, CatalogoSelectComponent,TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { NgIf } from '@angular/common';
-
-
-
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-
+import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { CONFIGURACION_CUPOS_DISPONIBLES_TABLA } from '../../constants/asignacion-directa-cupo.enums';
+import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
-import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
-import { SeleccionDelCupoTabla} from '../../models/asignacion-directa-cupo.model'
+import { NgIf } from '@angular/common';
+import { SeleccionDelCupoTabla } from '../../models/asignacion-directa-cupo.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
 import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente para la selección del cupo en el sistema.
@@ -46,8 +30,8 @@ import { takeUntil } from 'rxjs';
     NgIf,
     TablaDinamicaComponent,
     AlertComponent,
-    DescripcionDelCupoComponent
-],
+    DescripcionDelCupoComponent,
+  ],
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
 })
@@ -57,7 +41,6 @@ import { takeUntil } from 'rxjs';
  * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
  */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
- 
   /**
    * Indica si se debe mostrar la descripción del cupo.
    * Esta propiedad controla la visibilidad de la sección
@@ -71,12 +54,12 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   filaSeleccionada: SeleccionDelCupoTabla | null = null;
   /**
    * Indica si la descripción del elemento es visible o no.
-   * 
+   *
    * @type {boolean}
    * @default false
    */
-  DescipcionDelVisible=false;
-  
+  DescipcionDelVisible = false;
+
   /**
    * Configuración para la tabla que muestra los cupos disponibles.
    * Esta propiedad es un arreglo de configuraciones de columnas, donde cada columna
@@ -87,8 +70,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * `CONFIGURACION_CUPOS_DISPONIBLES_TABLA`.
    */
   configuracionTabla: ConfiguracionColumna<SeleccionDelCupoTabla>[] =
-      CONFIGURACION_CUPOS_DISPONIBLES_TABLA;
-  
+    CONFIGURACION_CUPOS_DISPONIBLES_TABLA;
+
   /**
    * Arreglo que contiene los datos de la tabla de selección del cupo.
    * Cada elemento del arreglo es de tipo `SeleccionDelCupoTabla`.
@@ -122,17 +105,35 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   /**
    * Datos de la selección del cupo obtenidos desde el servicio.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  seleccionDelCupo: any;
+  seleccionDelCupo: Catalogo[] = [];
 
   /**
    * Observable para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * @property {Observable<Catalogo | null>} regimen$
+   * Observable que emite el valor actual del régimen seleccionado en el estado.
+   */
   regimen$: Observable<Catalogo | null> = this.tramite120401Query.regimen$;
+
+  /**
+   * @property {Observable<Catalogo | null>} tratado$
+   * Observable que emite el valor actual del tratado seleccionado en el estado.
+   */
   tratado$: Observable<Catalogo | null> = this.tramite120401Query.tratado$;
+
+  /**
+   * @property {Observable<Catalogo | null>} producto$
+   * Observable que emite el valor actual del producto seleccionado en el estado.
+   */
   producto$: Observable<Catalogo | null> = this.tramite120401Query.producto$;
+
+  /**
+   * @property {Observable<Catalogo | null>} subproducto$
+   * Observable que emite el valor actual del subproducto seleccionado en el estado.
+   */
   subproducto$: Observable<Catalogo | null> =
     this.tramite120401Query.subproducto$;
 
@@ -143,17 +144,16 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: SeleccionDelCupoService,
-    private asignacionDirectaCupoPersonasFisicasPrimeraVezService: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
+    private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
     private tramite120401Store: Tramite120401Store,
     private tramite120401Query: Tramite120401Query
   ) {
-    this.asignacionDirectaCupoPersonasFisicasPrimeraVezService.obtenerRespuestaPorUrl(
-      this,
-      'datos',
-      '/120401/asignacion.json'
-    );
-    // Constructor
+    this.service.obtenerRespuestaPorUrl('datos', '/120401/asignacion.json');
+    this.tramite120401Query.tramiteState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        this.datos = state.datos;
+      });
   }
 
   /**
@@ -167,29 +167,18 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.loadTratado();
     this.loadProducto();
 
-    this.regimen$.subscribe((regimen) => {
-      if (regimen) {
-        this.seleccionForm.get('regimen')?.setValue(regimen);
-      }
-    });
-
-    this.tratado$.subscribe((tratado) => {
-      if (tratado) {
-        this.seleccionForm.get('tratado')?.setValue(tratado);
-      }
-    });
-
-    this.producto$.subscribe((producto) => {
-      if (producto) {
-        this.seleccionForm.get('producto')?.setValue(producto);
-      }
-    });
-
-    this.subproducto$.subscribe((subproducto) => {
-      if (subproducto) {
-        this.seleccionForm.get('subproducto')?.setValue(subproducto);
-      }
-    });
+    this.tramite120401Query.tramiteState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        if (state) {
+          this.seleccionForm.patchValue({
+            regimen: state.regimen,
+            tratado: state.tratado,
+            producto: state.producto,
+            subproducto: state.subproducto,
+          });
+        }
+      });
   }
 
   /**
@@ -221,9 +210,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.service
       .getRegimen()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.regimen = data.data;
+      .subscribe((data: Catalogo[]) => {
+        this.regimen = data;
       });
   }
 
@@ -235,9 +223,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.service
       .getTratado()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.tratado = data.tratado;
+      .subscribe((data: Catalogo[]) => {
+        this.tratado = data;
       });
   }
 
@@ -249,10 +236,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.service
       .getProducto()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.producto = data.data;
-        this.subproducto = data.data;
+      .subscribe((data: Catalogo[]) => {
+        this.producto = data;
+        this.subproducto = data;
       });
   }
 
@@ -308,9 +294,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja la selección de una fila en la tabla de selección del cupo.
-   * 
+   *
    * @param fila - Objeto de tipo `SeleccionDelCupoTabla` que representa la fila seleccionada.
-   * 
+   *
    * Este método actualiza la propiedad `filaSeleccionada` con la fila proporcionada
    * y alterna el estado de visibilidad de la descripción del cupo mediante la propiedad
    * `mostrarDescripcionDelCupo`.

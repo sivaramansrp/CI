@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
  
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { SeleccionDelCupoTabla } from '../../models/asignacion-directa-cupo.model';
 
 
 /**
@@ -18,6 +19,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  * @property {string} cantidadSolicitada - Cantidad solicitada en el trámite.
  */
 export interface Tramite120401State {
+  datos : SeleccionDelCupoTabla[];
   entidad: Catalogo | null;
   representacion: Catalogo | null;
   regimen: Catalogo | null;
@@ -43,6 +45,7 @@ export interface Tramite120401State {
  */
 export function createInitialState(): Tramite120401State {
   return {
+    datos:[],
     entidad: null,
     representacion: null,
     regimen: null,

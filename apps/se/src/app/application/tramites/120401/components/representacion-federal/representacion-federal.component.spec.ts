@@ -9,10 +9,13 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 import { FormBuilder } from '@angular/forms';
-import { RepresentacionFederalService } from '@ng-mf/data-access-user';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { HttpClientModule } from '@angular/common/http';
+
+@Injectable()
+class MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService {}
 
 @Injectable()
 class MockTramite120401Store {}
@@ -23,20 +26,20 @@ class MockTramite120401Query {
   representacion$ = {};
 }
 
-
 describe('RepresentacionFederalComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RepresentacionFederalComponent, HttpClientModule],
+      imports: [ FormsModule, ReactiveFormsModule , RepresentacionFederalComponent,HttpClientModule],
       declarations: [
+    
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        RepresentacionFederalService,
+        { provide: AsignacionDirectaCupoPersonasFisicasPrimeraVezService, useClass: MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService },
         { provide: Tramite120401Store, useClass: MockTramite120401Store },
         { provide: Tramite120401Query, useClass: MockTramite120401Query }
       ]
@@ -47,6 +50,11 @@ describe('RepresentacionFederalComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
@@ -55,25 +63,23 @@ describe('RepresentacionFederalComponent', () => {
     component.initializeForm = jest.fn();
     component.loadEntidad = jest.fn();
     component.loadRepresentacion = jest.fn();
-    component.entidad$ = component.entidad$ || {};
-    component.entidad$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
-    component.representacionForm = component.representacionForm || {};
-    component.representacionForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+    component.service = component.service || {};
+    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
+    component.service.getRepresentacion = jest.fn().mockReturnValue(observableOf({}));
+    component.tramite120401Query = component.tramite120401Query || {};
+    component.tramite120401Query.tramiteState$ = observableOf({
+      entidad: {},
+      representacion: {}
     });
-    component.representacion$ = component.representacion$ || {};
-    component.representacion$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
+    component.representacionForm = component.representacionForm || {};
+    component.representacionForm.patchValue = jest.fn();
     component.ngOnInit();
     // expect(component.initializeForm).toHaveBeenCalled();
     // expect(component.loadEntidad).toHaveBeenCalled();
     // expect(component.loadRepresentacion).toHaveBeenCalled();
-    // expect(component.entidad$.subscribe).toHaveBeenCalled();
-    // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.representacion$.subscribe).toHaveBeenCalled();
+    // expect(component.service.getEntidad).toHaveBeenCalled();
+    // expect(component.service.getRepresentacion).toHaveBeenCalled();
+    // expect(component.representacionForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -101,9 +107,9 @@ describe('RepresentacionFederalComponent', () => {
 
   it('should run #loadRepresentacion()', async () => {
     component.service = component.service || {};
-    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
+    component.service.getRepresentacion = jest.fn().mockReturnValue(observableOf({}));
     component.loadRepresentacion();
-    // expect(component.service.getEntidad).toHaveBeenCalled();
+    // expect(component.service.getRepresentacion).toHaveBeenCalled();
   });
 
   it('should run #getEntidad()', async () => {

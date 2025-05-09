@@ -9,8 +9,15 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DescripcionDelCupoComponent } from './descripcion-del-cupo.component';
 import { FormBuilder } from '@angular/forms';
-import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
+import { HttpClient,HttpClientModule } from '@angular/common/http';
+
+@Injectable()
+class MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService {
+  getDescripcionDelCupo() {
+    return observableOf({});
+  }
+}
 
 
 describe('DescripcionDelCupoComponent', () => {
@@ -19,13 +26,13 @@ describe('DescripcionDelCupoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,  DescripcionDelCupoComponent, HttpClientModule],
+      imports: [ FormsModule, ReactiveFormsModule, DescripcionDelCupoComponent, HttpClientModule],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        DescripcionDelCupoService
+        { provide: AsignacionDirectaCupoPersonasFisicasPrimeraVezService, useClass: MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService }
       ]
     }).overrideComponent(DescripcionDelCupoComponent, {
 
@@ -33,7 +40,6 @@ describe('DescripcionDelCupoComponent', () => {
     fixture = TestBed.createComponent(DescripcionDelCupoComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -64,23 +70,20 @@ describe('DescripcionDelCupoComponent', () => {
   });
 
   it('should run #loadDescripcionDelCupo()', async () => {
-    component.service = component.service || {};
-    component.service.getDescripcionDelCupo = jest.fn().mockReturnValue(observableOf({
-      claveDelCupo: {},
-      mecanismoDeAsignacion: {},
-      descripcionDelProducto: {},
-      unidadDeMedida: {},
-      regimenAduanero: {},
-      fechaDeInicioDeVigenciaDelCupo: {},
-      fechaDeFinDeVigenciaDelCupo: {},
-      fraccionesArancelarias: {},
-      tratadoAcuerdo: {},
-      paises: {}
-    }));
     component.form = component.form || {};
     component.form.patchValue = jest.fn();
+    component.data = component.data || {};
+    component.data.claveDelCupo = 'claveDelCupo';
+    component.data.mecanismoDeAsignacion = 'mecanismoDeAsignacion';
+    component.data.descripcionDelProducto = 'descripcionDelProducto';
+    component.data.unidadDeMedida = 'unidadDeMedida';
+    component.data.regimenAduanero = 'regimenAduanero';
+    component.data.fechaDeInicioDeVigenciaDelCupo = 'fechaDeInicioDeVigenciaDelCupo';
+    component.data.fechaDeFinDeVigenciaDelCupo = 'fechaDeFinDeVigenciaDelCupo';
+    component.data.fraccionesArancelarias = 'fraccionesArancelarias';
+    component.data.tratadoAcuerdo = 'tratadoAcuerdo';
+    component.data.paises = 'paises';
     component.loadDescripcionDelCupo();
-    // expect(component.service.getDescripcionDelCupo).toHaveBeenCalled();
     // expect(component.form.patchValue).toHaveBeenCalled();
   });
 

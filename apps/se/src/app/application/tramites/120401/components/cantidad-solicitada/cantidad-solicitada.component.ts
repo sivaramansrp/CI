@@ -42,6 +42,12 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Observable que emite la cantidad solicitada asociada al trámite 120401.
+   * Puede emitir un valor de tipo `string` o `null` si no hay una cantidad disponible.
+   * 
+   * @observable
+   */
   cantidadSolicitada$: Observable<string | null> =
     this.tramite120401Query.cantidadSolicitada$;
 

@@ -61,19 +61,6 @@
       <h4> Cupos disponibles</h4>
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla"  (filaClic)="listaDeFilaSeleccionada($event)"
       [datos]="datos"></app-tabla-dinamica>
-
-      <!-- <table class="table table-striped centered-table">
-        <tbody>
-          <tr *ngIf="seleccionDelCupo">
-            <td class="column-25 start-td">{{ seleccionDelCupo.description }}</td>
-            <td>{{ seleccionDelCupo.assignmentType }}</td>
-            <td class="column-25">
-              {{ seleccionDelCupo.codes }}
-            </td>
-            <td class="end-td">{{ seleccionDelCupo.quota }}</td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
   </div>
 <app-descripcion-del-cupo *ngIf="mostrarDescripcionDelCupo">

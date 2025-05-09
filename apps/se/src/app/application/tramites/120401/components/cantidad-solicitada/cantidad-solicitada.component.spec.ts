@@ -20,14 +20,16 @@ class MockTramite120401Query {
   cantidadSolicitada$ = {};
 }
 
+
+
 describe('CantidadSolicitadaComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule , CantidadSolicitadaComponent ],
-      declarations: [ ],
+      imports: [ FormsModule, ReactiveFormsModule ,CantidadSolicitadaComponent],
+      declarations: [      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -41,10 +43,6 @@ describe('CantidadSolicitadaComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();

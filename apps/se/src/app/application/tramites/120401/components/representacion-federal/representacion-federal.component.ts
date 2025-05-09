@@ -34,10 +34,10 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
-  RepresentacionFederalService,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
 
@@ -94,8 +94,22 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public representacion: Catalogo[] = [];
 
+  /**
+   * @property {Observable<Catalogo | null>} entidad$
+   * @description
+   * Observable que emite la entidad federativa seleccionada desde el store.
+   * Se utiliza para sincronizar el estado de la entidad en el formulario.
+   *
+   * @access public
+   */
   entidad$: Observable<Catalogo | null> = this.tramite120401Query.entidad$;
 
+  /**
+   * Observable que emite un objeto de tipo `Catalogo` o `null`,
+   * representando la información de la representación federal asociada.
+   *
+   * Se obtiene a través de la consulta `tramite120401Query.representacion$`.
+   */
   representacion$: Observable<Catalogo | null> =
     this.tramite120401Query.representacion$;
 
@@ -109,7 +123,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: RepresentacionFederalService,
+    private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
     private tramite120401Store: Tramite120401Store,
     private tramite120401Query: Tramite120401Query
   ) {
@@ -130,17 +144,45 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.loadEntidad();
     this.loadRepresentacion();
 
-    this.entidad$.subscribe((entidad) => {
-      if (entidad) {
-        this.representacionForm.get('entidad')?.setValue(entidad);
-      }
-    });
+    /**
+     * Carga la información de las entidades federativas desde el servicio
+     * y la asigna a la propiedad `entidad` para poblar el formulario.
+     */
+    this.service
+      .getEntidad()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Catalogo[]) => {
+        this.entidad = data;
+      });
 
-    this.representacion$.subscribe((representacion) => {
-      if (representacion) {
-        this.representacionForm.get('representacion')?.setValue(representacion);
-      }
-    });
+    /**
+     * Carga la información de las representaciones federales desde el servicio
+     * y la asigna a la propiedad `representacion` para poblar el formulario.
+     */
+    this.service
+      .getRepresentacion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Catalogo[]) => {
+        this.representacion = data;
+      });
+
+    /**
+     * Suscribe al estado del trámite desde `tramiteState$` y actualiza los valores
+     * del formulario reactivo `representacionForm` con los datos del estado.
+     *
+     * Si el estado contiene valores para `entidad` y `representacion`, estos
+     * se asignan automáticamente a los campos correspondientes del formulario.
+     */
+    this.tramite120401Query.tramiteState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        if (state) {
+          this.representacionForm.patchValue({
+            entidad: state.entidad,
+            representacion: state.representacion,
+          });
+        }
+      });
   }
 
   /**
@@ -187,8 +229,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.service
       .getEntidad()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
+      .subscribe((data: Catalogo[]) => {
         this.entidad = data;
       });
   }
@@ -198,10 +239,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   loadRepresentacion(): void {
     this.service
-      .getEntidad()
+      .getRepresentacion()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
+      .subscribe((data: Catalogo[]) => {
         this.representacion = data;
       });
   }

@@ -3,17 +3,15 @@
  * Se encarga de mostrar información específica sobre el cupo y su configuración.
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { CommonModule } from '@angular/common';
-
-import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
-
+import { DescripcionDelCupo } from '../../models/asignacion-directa-cupo.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 /**
  * Componente que representa la descripción detallada de un cupo.
  * Se encarga de mostrar información específica sobre el cupo y su configuración.
@@ -30,9 +28,6 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    * Formulario reactivo que contiene la información de la descripción del cupo.
    */
   form!: FormGroup;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
   /**
    * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
@@ -46,9 +41,10 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: DescripcionDelCupoService
+    private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
   ) {
-    // Constructor
+    this.service
+      .getDescripcionDelCupo(this.data);
   }
 
   /**
@@ -56,7 +52,9 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.loadDescripcionDelCupo();
+    setTimeout(() => {
+      this.loadDescripcionDelCupo();
+    }, 800);
   }
 
   /**
@@ -67,7 +65,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  
+
   /**
    * Crea e inicializa el formulario con campos deshabilitados por defecto.
    */
@@ -89,25 +87,35 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
   /**
    * Carga la información de la descripción del cupo desde el servicio y la asigna al formulario.
    */
-  loadDescripcionDelCupo(): void {
-    this.service
-      .getDescripcionDelCupo()
-      .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.form.patchValue({
-          claveDelCupo: data.claveDelCupo,
-          mecanismoDeAsignacion: data.mecanismoDeAsignacion,
-          descripcionDelProducto: data.descripcionDelProducto,
-          unidadDeMedida: data.unidadDeMedida,
-          regimenAduanero: data.regimenAduanero,
-          fechaDeInicioDeVigenciaDelCupo: data.fechaDeInicioDeVigenciaDelCupo,
-          fechaDeFinDeVigenciaDelCupo: data.fechaDeFinDeVigenciaDelCupo,
-          fraccionesArancelarias: data.fraccionesArancelarias,
-          tratadoAcuerdo: data.tratadoAcuerdo,
-          paises: data.paises,
-        });
-      });
+  
+  public data: DescripcionDelCupo = {
+    claveDelCupo: '',
+    mecanismoDeAsignacion: '',
+    descripcionDelProducto: '',
+    unidadDeMedida: '',
+    regimenAduanero: '',
+    fechaDeInicioDeVigenciaDelCupo: '',
+    fechaDeFinDeVigenciaDelCupo: '',
+    fraccionesArancelarias: '',
+    tratadoAcuerdo: '',
+    paises: '',
+  };
+  /**
+   * Carga la información de la descripción del cupo desde el objeto `data` y la asigna al formulario.
+   */
+  loadDescripcionDelCupo(): void {    
+    this.form.patchValue({
+      claveDelCupo: this.data.claveDelCupo,
+      mecanismoDeAsignacion: this.data.mecanismoDeAsignacion,
+      descripcionDelProducto: this.data.descripcionDelProducto,
+      unidadDeMedida: this.data.unidadDeMedida,
+      regimenAduanero: this.data.regimenAduanero,
+      fechaDeInicioDeVigenciaDelCupo: this.data.fechaDeInicioDeVigenciaDelCupo,
+      fechaDeFinDeVigenciaDelCupo: this.data.fechaDeFinDeVigenciaDelCupo,
+      fraccionesArancelarias: this.data.fraccionesArancelarias,
+      tratadoAcuerdo: this.data.tratadoAcuerdo,
+      paises: this.data.paises,
+    });
   }
   
 }
