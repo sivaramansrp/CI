@@ -1,52 +1,49 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { SolicitantePageComponent } from './solicitante-page.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SolicitantePageComponent } from './solicitante-page.component';
 
 describe('SolicitantePageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitantePageComponent>;
+  let component: SolicitantePageComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, SolicitantePageComponent, HttpClientTestingModule ],
-      declarations: [
-        
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule 
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-
-      ]
-    }).overrideComponent(SolicitantePageComponent, {
-
+      declarations: [
+        SolicitantePageComponent
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: []
     }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #seleccionaTab()', async () => {
-
     component.seleccionaTab({});
-
   });
 
   it('should run #getValorIndice()', async () => {
     component.obtenerNombreDelTítulo = jest.fn();
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
     component.getValorIndice({
       valor: {},
       accion: {}
@@ -56,15 +53,10 @@ describe('SolicitantePageComponent', () => {
   });
 
   it('should run #obtenerNombreDelTítulo()', async () => {
-    component.pasos = component.pasos || {};
-    component.pasos['1'] = {
-      titulo: {}
-    };
-    component.pasos['2'] = {
-      titulo: {}
+    component.pasos = {
+      '1': { titulo: {} },
+      '2': { titulo: {} }
     };
     component.obtenerNombreDelTítulo({});
-
   });
-
 });

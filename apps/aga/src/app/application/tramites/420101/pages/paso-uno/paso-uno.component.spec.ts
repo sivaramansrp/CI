@@ -1,52 +1,45 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Injectable
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { Tramite420101Query } from '../../estados/tramite420101Query.query';
+import { Tramite420101Store } from '../../estados/tramite420101Store.store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
+@Injectable()
+class MockTramite420101Query {}
 
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+@Injectable()
+class MockTramite420101Store {}
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: PasoUnoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule 
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      declarations: [
+        PasoUnoComponent 
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-
+        { provide: Tramite420101Query, useClass: MockTramite420101Query },
+        { provide: Tramite420101Store, useClass: MockTramite420101Store }
       ]
-    }).overrideComponent(PasoUnoComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -55,8 +48,26 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should run #ngOnInit()', async () => {
+    component.tramite420101Query = component.tramite420101Query || {};
+    component.tramite420101Query.getTabSeleccionado$ = observableOf({});
+    component.ngOnInit();
   });
 
+  it('should run #seleccionaTab()', async () => {
+    component.tramite420101Store = component.tramite420101Store || {};
+    component.tramite420101Store.updateTabSeleccionado = jest.fn();
+    component.seleccionaTab({});
+    expect(component.tramite420101Store.updateTabSeleccionado).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {
+      next: jest.fn(),
+      complete: jest.fn()
+    };
+    component.ngOnDestroy();
+
+    
+  });
 });
