@@ -18,6 +18,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
@@ -75,7 +76,8 @@ export class RepresentacionComponent implements OnInit {
    */
   constructor(private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -116,6 +118,7 @@ export class RepresentacionComponent implements OnInit {
       entidad: [ this.solicitudState?.entidad , Validators.required],
       representacion: [ this.solicitudState?.representacion , Validators.required],
     });
+    this.formularioRegistroService.registrarFormulario('frmRepresentacion', this.frmRepresentacion);
   }
 
     /**
