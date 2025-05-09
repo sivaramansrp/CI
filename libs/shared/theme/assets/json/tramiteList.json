@@ -4191,5 +4191,12 @@
     "linkDashboard": "/se/immex-modificacion/registro-modificacion",
     "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
     "department": "se"
+  },
+  {
+    "id": 601,
+    "tramite": 31603,
+    "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud31603",
+    "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud31603",
+    "department": "agace"
   }
 ]
