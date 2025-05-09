@@ -348,7 +348,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.colonia,
           Validators.required,
         ],
-        fechasSeleccionadas: [this.solicitudState?.fechasSeleccionadas, Validators.required]
+        fechasSeleccionadas: this.fb.array([]),
       }),
     });
 
@@ -650,10 +650,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   get fechasSeleccionadas(): FormArray {
     return this.reexportacionForm.get('fechasSeleccionadas') as FormArray;
-  }
-
-  set fechasSeleccionadas(fechas: FormArray) {
-    this.reexportacionForm.setControl('fechasSeleccionadas', fechas);
   }
 
   /**
