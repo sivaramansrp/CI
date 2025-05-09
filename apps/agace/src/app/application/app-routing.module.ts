@@ -115,6 +115,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'cancelacion-garantia',
+    loadChildren: () =>
+      import('./tramites/31401/cancelacion-garantia.module').then(
+        (m) => m.CancelacionGarantiaModule
+      ),
+  },
 ];
 
 @NgModule({

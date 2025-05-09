@@ -11,9 +11,13 @@
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
-                        <label class="form-label" [for]="item.id">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        @if (item.labelNombre) {
+                          <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            @if(item.tooltipQuestionCircle) {
+                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                            }
+                          </label>
+                          }
 
                         <input
                           class="form-control"
@@ -39,9 +43,14 @@
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
-                        <label class="form-label" [for]="item.id">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        
+                        @if (item.labelNombre) {
+                          <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            @if(item.tooltipQuestionCircle) {
+                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                            }
+                          </label>
+                          }
 
                         <input
                           class="form-control"
@@ -65,8 +74,13 @@
                 } @case ('textarea') {
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
-                      <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
-
+                      @if (item.labelNombre) {
+                      <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                        @if(item.tooltipQuestionCircle) {
+                          <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                        }
+                      </label>
+                      }
                       <textarea
                         class="form-control"
                         name="{{ item.labelNombre }}"
@@ -99,6 +113,7 @@
                           [placeholder]="item.marcadorDePosicion || ''" 
                           [isDisabled]="item.desactivado"
                           name=""
+                          [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-catalogo-select>
                         
@@ -147,15 +162,20 @@
                     @if (item.mostrar !== false) {
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
-                          <label class="form-label" [for]="item.id">{{
-                            item.labelNombre
-                          }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                          @if (item.labelNombre) {
+                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                              @if(item.tooltipQuestionCircle) {
+                                <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                              }
+                            </label>
+                          }
                           <app-input-radio
                             [radioOptions]="item.opciones || []"
                             id="{{item.id}}"
                             formControlName="{{item.campo}}"
                             [layout]="item.layout ? item.layout : 'vertical'"
                             [isRequired]="seRequiere(item.campo)"
+                            [gridLayout]="item.gridLayout ?? false"
                             (valueChange)="eventoDeCambioDeValor($event, item.campo)"
                           ></app-input-radio>
                           
@@ -166,6 +186,7 @@
                     @if (item.mostrar !== false) {
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <input-fecha
+                          id="{{item.id}}"
                           [setFecha]="forma.get(item.campo)?.value"
                           [datos]="obtenerInformacionDeFecha(item)"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
@@ -182,7 +203,36 @@
                   } @case ('') {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="min-height">
                     </div>
+                  } @case ('checkbox-multiple') {
+                    @if (item.mostrar !== false) {
+                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
+                          @if (item.labelNombre) {
+                            <label class="form-label">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                              @if(item.tooltipQuestionCircle) {
+                                <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                              }
+                            </label>
+                          }
+                          <div *ngFor="let opcion of item.opciones" class="checkbox-multiple-group w-100">
+                            <input
+                              type="checkbox"
+                              [id]="item.id"
+                              [disabled]="item.desactivado"
+                              [readonly]="item.soloLectura"
+                              [checked]="forma.get(item.campo)?.value?.includes(opcion.value)"
+                              (change)="enCheckboxMultipleCambiar($event, item.campo, opcion.value)"
+                            />
+                            <p>{{ opcion.label }}</p>
+                          </div>
+                          <validadores-de-formularios
+                            [forma]="forma"
+                            [controlDeFormulario]="item.campo"
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                      </div>
+                    }
                   }
+                  
             }
     }
   </form>

@@ -2123,8 +2123,8 @@
   {
     "id": 304,
     "tramite": 31401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/cancelacion-garantia/pantallas",
+    "linkDepartment": "/pago/cancelacion-garantia/pantallas",
     "department": "agace"
   },
   {

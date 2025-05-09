@@ -13,3 +13,12 @@
   .radio-label {
     margin-left: 15px; /* Adjust the value as needed */
   }
+
+  .fw-bold {
+    font-weight: 600;
+  }
+
+  .radio-row {
+    display: flex;
+    justify-content: flex-start;
+  }
