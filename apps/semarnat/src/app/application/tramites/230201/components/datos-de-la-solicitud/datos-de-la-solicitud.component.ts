@@ -60,7 +60,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos disponibles para el número de certificado.
    */
-  numeroDeCertificado!: Catalogo[];
+  paisDeProcedencia!: Catalogo[];
 
   /**
    * Lista de catálogos disponibles para aduanas.
@@ -98,7 +98,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   selectEntidades: string[] = [];
 
   /**
-   * Lista de catálogos disponibles para géneros.
+   * Lista de catálogos disponibles para géneros .
    */
   genero!: Catalogo[];
 
@@ -290,15 +290,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el grupo de formulario de exención de impuestos.
    */
-  get reexportacionForm(): FormGroup {
-    return this.solicitudForm.get('reexportacionForm') as FormGroup;
+  get exportacionForm(): FormGroup {
+    return this.solicitudForm.get('exportacionForm') as FormGroup;
   }
 
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
-      reexportacionForm: this.fb.group({
-        numeroDeCertificado: [
-          this.solicitudState?.numeroDeCertificado,
+      exportacionForm: this.fb.group({
+        paisDeProcedencia: [
+          this.solicitudState?.paisDeProcedencia,
           [Validators.required],
         ],
         aduana: [this.solicitudState?.aduana, [Validators.required]],
@@ -380,11 +380,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
-    const NUMERODECERTIFICADO$ = this.phytosanitaryReexportacionService
-      .getNumeroDeCertificado()
+    const PAIS_DE_PROCEDENCIA$ = this.phytosanitaryReexportacionService
+      .getPaisDeProcedencia()
       .pipe(
         map((resp) => {
-          this.numeroDeCertificado = resp.data;
+          this.paisDeProcedencia = resp.data;
         })
       );
 
@@ -473,7 +473,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       );
 
     merge(
-      NUMERODECERTIFICADO$,
+      PAIS_DE_PROCEDENCIA$,
       ADUANA$,
       PAIS$,
       ENTIDADES$,
@@ -502,11 +502,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Maneja la selección del número de certificado.
    * Obtiene el valor del formulario y lo establece en el store.
    */
-  numeroDeCertificadoSeleccion(): void {
-    const NUMERODECERTIFICADO = this.solicitudForm.get(
-      'reexportacionForm.numeroDeCertificado'
+  paisDeProcedenciaSeleccion(): void {
+    const PAISE_DE_PROCEDENCIA = this.solicitudForm.get(
+      'reexportacionForm.paisDeProcedencia'
     )?.value;
-    this.store.setNumeroDeCertificado(NUMERODECERTIFICADO);
+    this.store.setpaisDeProcedencia(PAISE_DE_PROCEDENCIA);
   }
 
   /**
@@ -649,11 +649,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
    */
   get fechasSeleccionadas(): FormArray {
-    return this.reexportacionForm.get('fechasSeleccionadas') as FormArray;
+    return this.exportacionForm.get('fechasSeleccionadas') as FormArray;
   }
 
   set fechasSeleccionadas(fechas: FormArray) {
-    this.reexportacionForm.setControl('fechasSeleccionadas', fechas);
+    this.exportacionForm.setControl('fechasSeleccionadas', fechas);
   }
 
   /**

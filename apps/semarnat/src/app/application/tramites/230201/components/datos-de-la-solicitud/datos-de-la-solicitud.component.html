@@ -1,20 +1,7 @@
 <div class="mt-4">
   <form [formGroup]="solicitudForm">
     <div class="col-md-12">
-      <ng-container formGroupName="reexportacionForm">
-        <div class="row">
-          <div class="col-md-8">
-            <app-catalogo-select
-              [catalogo]="numeroDeCertificado"
-              [label]="'Número de certificado fitosanitario de reexportación'"
-              formControlName="numeroDeCertificado"
-              [required]="true"
-              (change)="numeroDeCertificadoSeleccion()"
-              name="numeroDeCertificado"
-            >
-            </app-catalogo-select>
-          </div>
-        </div>
+      <ng-container formGroupName="exportacionForm">
         <ng-titulo titulo="Aduana"></ng-titulo>
         <div class="row">
           <div class="col-md-8">
@@ -25,6 +12,19 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="paisDeProcedencia"
+              [label]="'País de procedencia'"
+              formControlName="paisDeProcedencia"
+              [required]="true"
+              name="paisDeProcedencia"
+              [disabled]=true
             >
             </app-catalogo-select>
           </div>
@@ -106,7 +106,7 @@
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
+              (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
           </div>
         </div>
@@ -132,7 +132,7 @@
               formControlName="numeroYDescripcion"
               id="numeroYDescripcion"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
+              (change)="setValoresStore(exportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
           </div>
         </div>
@@ -147,7 +147,7 @@
               formControlName="codigoPostal"
               id="codigoPostal"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'codigoPostal', 'setCodigoPostal')"
+              (change)="setValoresStore(exportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
           </div>
           <div class="col-md-4">
@@ -170,7 +170,7 @@
               formControlName="calle"
               id="calle"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'calle', 'setCalle')"
+              (change)="setValoresStore(exportacionForm, 'calle', 'setCalle')"
             />
           </div>
         </div>
@@ -184,7 +184,7 @@
               formControlName="colonia"
               id="colonia"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'colonia', 'setColonia')"
+              (change)="setValoresStore(exportacionForm, 'colonia', 'setColonia')"
             />
           </div>
           <div class="col-md-4">
@@ -196,7 +196,7 @@
               formControlName="numeroExterior"
               id="numeroExterior"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'numeroExterior', 'setNumeroExterior')"
+              (change)="setValoresStore(exportacionForm, 'numeroExterior', 'setNumeroExterior')"
             />
           </div>
           <div class="col-md-4">
@@ -208,7 +208,7 @@
               formControlName="numeroInterior"
               id="numeroInterior"
               [required]="true"
-              (change)="setValoresStore(reexportacionForm, 'numeroInterior', 'setNumeroInterior')"
+              (change)="setValoresStore(exportacionForm, 'numeroInterior', 'setNumeroInterior')"
             />
           </div>
         </div>

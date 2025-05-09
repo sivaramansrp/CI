@@ -79,7 +79,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.solicitudForm).toBeDefined();
     expect(component.agregarMercanciasForm).toBeDefined();
     expect(
-      component.solicitudForm.get('reexportacionForm.numeroDeCertificado')
+      component.solicitudForm.get('reexportacionForm.paisDeProcedencia')
         ?.value
     ).toBe('123');
   });

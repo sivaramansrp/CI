@@ -19,8 +19,8 @@ export class PhytosanitaryReexportacionService {
     // El constructor se utiliza para la inyección de dependencias.
   }
   
-  getNumeroDeCertificado(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/230201/numeroDeCertificado.json');
+  getPaisDeProcedencia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230201/paisDeProcedencia.json');
   }
 
   getAduana(): Observable<RespuestaCatalogos> {

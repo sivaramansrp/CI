@@ -25,7 +25,7 @@ export interface Catalogo {
  * Interfaz que representa el estado inicial de la solicitud 230201.
  */
 export interface Solicitud230201State {
-  numeroDeCertificado: Catalogo[] | null;
+  paisDeProcedencia: Catalogo[] | null;
   aduana: Catalogo[] | null;
   fechasSeleccionadas: string[];
   pais: Catalogo[] | null;
@@ -95,7 +95,7 @@ export interface Solicitud230201State {
  */
 export function createInitialState(): Solicitud230201State {
   return {
-    numeroDeCertificado: null,
+    paisDeProcedencia: [{id: 0, descripcion: 'paisDeProcedencia'}],
     aduana: null,
     fechasSeleccionadas: [],
     pais: null,
@@ -151,10 +151,10 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
    * Establece la lista de numeroDeCertificado en el estado.
    * @param numeroDeCertificado Lista de numeroDeCertificado.
    */
-  public setNumeroDeCertificado(numeroDeCertificado: Catalogo[]): void {
+  public setpaisDeProcedencia(numeroDeCertificado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      numeroDeCertificado,
+      paisDeProcedencia: numeroDeCertificado,
     }));
   }
 

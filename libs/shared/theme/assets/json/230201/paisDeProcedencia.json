@@ -1,0 +1,12 @@
+
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "ESTADOS UNIDOS MEXICANOS"
+    }
+    
+  ],
+  "message": "País de procedencia"
+}
