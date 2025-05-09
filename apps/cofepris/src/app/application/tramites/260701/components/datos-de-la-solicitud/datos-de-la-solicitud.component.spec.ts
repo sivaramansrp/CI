@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 describe('DatosDeLaSolicitudComponent', () => {
@@ -32,7 +33,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent,HttpClientTestingModule],
       providers: [
         { provide: Tramite260701Store, useValue: tramite260701StoreMock },
         { provide: Tramite260701Query, useValue: tramite260701QueryMock },
