@@ -61,7 +61,7 @@ export const INPUT_FECHA_FIN = {
  * Arreglo que describe los campos del formulario para la información del cupo.
  * Cada objeto define un campo específico, sus atributos y comportamiento.
  */
-export const INFORMACION_DESCRPCION_CUPO = [
+export const INFORMACION_DESCRIPCION_CUPO = [
   {
     id: 'regimenAduanero',
     labelNombre: 'Régimen aduanero',

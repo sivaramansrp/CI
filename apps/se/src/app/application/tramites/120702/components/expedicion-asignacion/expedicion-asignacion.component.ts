@@ -13,7 +13,6 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  INFORMACION_DESCRPCION_CUPO,
   INPUT_FECHA_FIN,
   INPUT_FECHA_INICIO,
 } from '../../constantes/expedicion-certificados-frontera.enum';
@@ -54,11 +53,6 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Formulario reactivo que contiene los campos del formulario de asignación.
    */
   public asignacionForm!: FormGroup;
-
-  /**
-   * Información de los campos dinámicos de formulario para la sección de descripción del cupo.
-   */
-  public informacionFormData = INFORMACION_DESCRPCION_CUPO;
 
   /**
    * Subject utilizado para destruir suscripciones al destruir el componente.

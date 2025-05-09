@@ -8,7 +8,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import {
-  INFORMACION_DESCRPCION_CUPO,
+  INFORMACION_DESCRIPCION_CUPO,
 } from '../../constantes/expedicion-certificados-frontera.enum';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 
@@ -38,7 +38,7 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
   /**
    * Arreglo con los metadatos para construir dinámicamente el formulario de descripción del cupo.
    */
-  public informacionFormData = INFORMACION_DESCRPCION_CUPO;
+  public informacionFormData = INFORMACION_DESCRIPCION_CUPO;
 
   /**
    * Subject usado para destruir las suscripciones activas al destruir el componente.
