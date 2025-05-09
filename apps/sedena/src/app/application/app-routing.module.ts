@@ -132,6 +132,13 @@ const ROUTES: Routes = [
       import(
       './tramites/240122/permiso-extraordinario-exportacion-explosivo.module'
       ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
+  },
+  {
+    path:'modificacion-exportacion',
+    loadChildren: () =>
+      import(
+        './tramites/240321/modificacion-exportacion.module'
+      ).then((m) => m.ModificacionExportacionModule),
   }
 ];
 

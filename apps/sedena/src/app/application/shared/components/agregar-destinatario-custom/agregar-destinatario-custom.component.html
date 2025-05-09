@@ -1,5 +1,9 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar destinatraio (destino final)"></ng-titulo>
+
+  <ng-titulo *ngIf="!isDestinatarioModificar" titulo="Agregar destinatraio (destino final)"></ng-titulo>
+
+  <ng-titulo *ngIf="isDestinatarioModificar" titulo="Modificar destinatario (destino final)"></ng-titulo>
+  
   <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>

@@ -3908,8 +3908,8 @@
   {
     "id": 560,
     "tramite": 240321,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/modificacion-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/modificacion-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {

@@ -5,7 +5,7 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,PROVEEDOR_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
@@ -80,6 +80,28 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {EventEmitter<Proveedor[]>}
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
+  /**
+   * @property actualizaExistenteEnProveedorDatos
+   * @description Evento que emite una lista de objetos `Proveedor` hacia el componente padre.
+   * Se utiliza para actualizar un proveedor existente en la tabla.
+   * @type {EventEmitter<Proveedor[]>}
+   */
+
+  @Output() actualizaExistenteEnProveedorDatos= new EventEmitter<Proveedor[]>();
+
+  /**
+   * @property proveedorTablaDatos
+   * @description Datos de la tabla de proveedores.
+   * Se utiliza para mostrar la información de los proveedores en el componente.
+   * @type {Proveedor[]}
+   */
+  
+  
+  @Input() proveedorTablaDatos: Proveedor[] = [];
+
+  isProveedorModificar: boolean = false;
+
+  
 
 
   /**
@@ -242,9 +264,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
     this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.isProveedorModificar= PROVEEDOR_TITULO_CUSTOM.includes(this.idProcedimiento);
     this.campoObligatorioChange();
     if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
+    }
+    if(this.proveedorTablaDatos.length > 0) {
+      this.agregarProveedorForm.patchValue(this.proveedorTablaDatos[0]);
+      this.tipoPersonaCambioDeValor('Moral');
+      this.terecerosNacionalidadCambioDeValor('Nacional');
     }
     this.nacionalidadOpciones();
   }
@@ -321,7 +349,12 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    this.updateProveedorTablaDatos.emit(this.proveedores);
+    if(this.proveedorTablaDatos.length > 0) {
+      this.actualizaExistenteEnProveedorDatos.emit(this.proveedores);
+    }
+    else{
+      this.updateProveedorTablaDatos.emit(this.proveedores);
+    }
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
   }
@@ -382,9 +415,11 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240121:
+      case NUMERO_TRAMITE.TRAMITE_240321:
         this.tercerosNacionalidadOpciones =
           TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break;
+      
       default:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
 
