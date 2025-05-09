@@ -9,7 +9,7 @@ import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styles: ``,
+  styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements AfterViewInit {
   constructor(private router: Router) {

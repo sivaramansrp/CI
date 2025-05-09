@@ -36,10 +36,10 @@
     <ng-titulo titulo="Datos del dictamen que se presenta" />
     <div class="row mt-5">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del periodo reportado'" formControlName="ano" (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) "></app-catalogo-select>
+        <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [placeholder]="'Selecciona un valor'" [label]="'Año del periodo reportado*'" formControlName="ano" (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) "></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [label]="'Mes del periodo reportado'" formControlName="mes" (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) "></app-catalogo-select>
+        <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [placeholder]="'Selecciona un valor'" [label]="'Mes del periodo reportado*'" formControlName="mes" (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) "></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [setFecha]="avisoForm.get('fechaElaboracion')?.value" [datos]="fechaInitialInput" (valorCambiado)="cambioFechaInitial($event)"></input-fecha>
