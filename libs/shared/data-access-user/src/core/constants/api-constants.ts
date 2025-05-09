@@ -49,8 +49,14 @@ export const RFC_QUERY = '{rfc}'
  */
 export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
 
+/**
+ * Indica el número de trámite a consultar.
+ */
+export const TRAMITE = '{numeroTramite}';
+
 /** 
  * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
  * @param TRAMITE el trámite seleccionado por el usuario.
- * @see 
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
 */
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos` 

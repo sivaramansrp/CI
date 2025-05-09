@@ -1,6 +1,9 @@
+import { API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../constants/api-constants";
+import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { enviroment } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+import { enviroment } from "../../../../enviroments/enviroment";
 
 @Injectable({
     providedIn: 'root',
@@ -10,9 +13,29 @@ export class CatalogoDocumentosService {
 
     constructor(
         private http: HttpClient,
-    ) { 
-        this.host = `${enviroment.}`
+    ) {
+        this.host = `${enviroment.API_HOST}/api`;
     }
+
+    getDocumentosObligatorios(tramite: string, params: ParametrosGetDocumentos): Observable<CatalogoDocumentosResponse> {
+        const ENDPOINT = `${this.host}/${API_GET_DOCUMENTOS_OBLIGATORIOS.replace(TRAMITE, tramite)}`;
+
+        return this.http.get<CatalogoDocumentosResponse>(ENDPOINT, {
+            params: {
+                idSolicitud: params.idSolicitud,
+                especifico: params.especifico,
+            }
+        }).pipe(
+            map((response) => {
+                return response;
+            }),
+            catchError(() => {
+                const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
+                return throwError(() => ERROR);
+            })
+        )
+    }
+
 
 
 }
