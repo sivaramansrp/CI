@@ -54,6 +54,12 @@
             </table>
         </div>
     </div>
+    <div *ngIf="mostrarBotones" class="col-md-12">
+        <div class="d-flex justify-content-lg-end h1">
+            <button class="btn btn-primary ms-2" type="button" (click)="GuardarFormar()">Guardar y firmar</button>
+            <button type="button" class="btn btn-default ms-2">Guardar</button>
+        </div>
+    </div>
 </div>
 <section>
     <lib-modal-funciones [abrirModal]="abrirModal"  [titulo]="'Anexar nuevo documento'" [descripcion]="descripcionModal"

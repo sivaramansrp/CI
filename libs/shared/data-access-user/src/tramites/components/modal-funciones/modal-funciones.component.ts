@@ -130,4 +130,9 @@ export class ModalFuncionesComponent implements OnChanges {
       this.archivoSeleccionado.emit(this.archivo);
     }
   }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.cerrar.emit();
+  }
 }
