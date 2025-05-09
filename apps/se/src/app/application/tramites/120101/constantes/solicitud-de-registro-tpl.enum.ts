@@ -763,6 +763,25 @@ export const RADIO_INDICAR = [
   }
 ];
 
+/**
+  * @constant FORMULARIO_MODAL_INSUMOS
+  * @description
+  * Configuración de los campos del formulario dinámico para la sección "Modal Insumos".
+  * 
+  * Detalles:
+  * - Define los campos que se renderizan dinámicamente en el formulario.
+  * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+  * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+  * 
+  * Campos:
+  * - `descripcion`: Campo de texto para ingresar la descripción del insumo.
+  * - `fraccion`: Campo de texto para ingresar la fracción arancelaria.
+  * - `descfraccion`: Campo de selección para describir la fracción arancelaria.
+  * - `Pais`: Campo de selección para especificar el país de origen.
+  * 
+  * @example
+  * const formulario = FORMULARIO_MODAL_INSUMOS.map(campo => crearControl(campo));
+  */
 export const FORMULARIO_MODAL_INSUMOS = [
   {
       id: 'descripcion',

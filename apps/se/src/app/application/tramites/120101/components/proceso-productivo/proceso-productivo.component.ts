@@ -140,7 +140,7 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
     });
     this.obtenerDatosEstados();
     if (this.solicitudDeRegistroState?.['indicar']) {
-      this.sobreElCambioDeSeleccion(this.solicitudDeRegistroState?.['indicar'], 'indicar')
+      this.sobreElCambioDeSeleccion(this.solicitudDeRegistroState?.['indicar'] as string | number, 'indicar')
     } else {
       this.sobreElCambioDeSeleccion('1', 'indicar')
     }

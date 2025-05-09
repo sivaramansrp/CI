@@ -185,7 +185,7 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
             this.solicitudDeRegistroState !== null &&
             'cuerpoTabla' in this.solicitudDeRegistroState
           ) {
-            const DATOS = this.solicitudDeRegistroState['cuerpoTabla'] || [];
+            const DATOS = this.solicitudDeRegistroState['cuerpoTabla'] as InstrumentoCupoTPLForm[] || [];
             DATOS.forEach((item: InstrumentoCupoTPLForm) => {
               const IS_ALREADY_ADDED = this.cuerpoTabla.some((i: InstrumentoCupoTPLForm) => i.id === (item.id ?? -1));
               if (!IS_ALREADY_ADDED) {
