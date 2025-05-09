@@ -480,6 +480,13 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+    path: 'ampliacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90202/ampliacion-prosec-productor.module').then(
+        (m) => m.AmpliacionProsecProductorModule
+      ),
+  },
 ];
 
 

@@ -1,24 +1,18 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import DomiciliosTabla from 'libs/shared/theme/assets/json/90201/domicilios-de-plantas-tabla.json';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-
-
+import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
+import DomiciliosTabla from 'libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
 /**
- * Componente DomiciliosDePlantas que se utiliza para mostrar y gestionar los DomiciliosDePlantas.
+ * Componente que representa la sección de domicilios de plantas en el formulario.
+ * Este componente incluye un formulario reactivo y una tabla dinámica para mostrar los domicilios.
  * 
- * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
- * ReactiveFormsModule para mostrar información y permitir al usuario seleccionar y agregar tratados.
- * 
- * @component
+ * @export
+ * @class DomiciliosDePlantasComponent
  */
-
 @Component({
   selector: 'app-domicilios-de-plantas',
   standalone: true,
@@ -27,8 +21,6 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
   styleUrl: './domicilios-de-plantas.component.scss',
 })
 export class DomiciliosDePlantasComponent {
-
-
   /**
    * Un grupo de formularios que representa los domicilios de las plantas.
    * Este formulario se utiliza para capturar y validar la información de los domicilios.
@@ -47,23 +39,26 @@ export class DomiciliosDePlantasComponent {
    * @property {Function} clave - Función que recibe un elemento y devuelve el valor correspondiente a la columna.
    * @property {number} orden - El orden en que se mostrará la columna en la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Calle', clave: (item: any) => item.calle, orden: 1 },
-    { encabezado: 'Número exterior', clave: (item: any) => item.numero, orden: 2 },
-    { encabezado: 'Número interior', clave: (item: any) => item.interior, orden: 3 },
-    { encabezado: 'Código postal', clave: (item: any) => item.postal, orden: 4 },
-    { encabezado: 'Colonia', clave: (item: any) => item.colonia, orden: 5 },
-    { encabezado: 'Municipio o alcaldía', clave: (item: any) => item.municipio, orden: 6 },
+  public configuracionTabla: ConfiguracionColumna<DomiciliosDePlantasTabla>[] = [
+    { encabezado: 'Calle', clave: (item: DomiciliosDePlantasTabla) => item.calle, orden: 1 },
+    { encabezado: 'Número exterior', clave: (item: DomiciliosDePlantasTabla) => item.numero, orden: 2 },
+    { encabezado: 'Número interior', clave: (item: DomiciliosDePlantasTabla) => item.interior, orden: 3 },
+    { encabezado: 'Código postal', clave: (item: DomiciliosDePlantasTabla) => item.postal, orden: 4 },
+    { encabezado: 'Colonia', clave: (item: DomiciliosDePlantasTabla) => item.colonia, orden: 5 },
+    { encabezado: 'Municipio o alcaldía', clave: (item: DomiciliosDePlantasTabla) => item.municipio, orden: 6 },
     { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 },
-  ];
+    { encabezado: 'País', clave: (fila: DomiciliosDePlantasTabla) => fila.pais, orden: 8 },
+    { encabezado: 'Registro', clave: (fila: DomiciliosDePlantasTabla) => fila.registro, orden: 9 },
+    { encabezado: 'Registro federal de contribuyentes', clave: (fila: DomiciliosDePlantasTabla) => fila.registroFederalDeContribuyentes, orden: 10 },
+    { encabezado: 'Razón social', clave: (fila: DomiciliosDePlantasTabla) => fila.razonSocial, orden: 11 },
+    { encabezado: 'Domicilio fiscal del solicitante', clave: (fila: DomiciliosDePlantasTabla) => fila.domicilioFiscalDelSolicitante, orden: 12 },
+];
 
   /**
    * Un arreglo de objetos `DomiciliosDePlantasTabla` que representa la tabla de domicilios.
    * Inicializado con los valores de `DomiciliosTabla`.
    */
   public domiciliosTabla: DomiciliosDePlantasTabla[] = DomiciliosTabla;
-
-
 
   /**
    * Constructor de DomiciliosDePlantasComponent.
@@ -88,7 +83,4 @@ export class DomiciliosDePlantasComponent {
       actividadProductiva: [{value: '',disabled: true}]
     });
   }
-
-
-
 }

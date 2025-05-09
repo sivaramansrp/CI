@@ -1,0 +1,31 @@
+export interface AcuseTablaDatos {
+  no: string;
+  documento: string;
+  descargar: string;
+}
+
+export interface ProductorIndirectoTabla {
+  registro: string;
+  denominacion: string;
+  correo: string;
+}
+
+export interface DomiciliosDePlantasTabla {
+   calle: string;
+   numero: string;
+   interior: string;
+   postal: string;
+   colonia: string;
+  municipio: string;
+  estado: string;
+  pais: string;
+   registro: string;
+   registroFederalDeContribuyentes: string;
+   razonSocial: string;
+   domicilioFiscalDelSolicitante: string;
+}
+
+export interface SectoresTabla {
+  sectores: string;
+  claveDel: string;
+}
