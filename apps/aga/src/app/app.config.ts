@@ -3,6 +3,7 @@ import { appRoutes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { ENVIRONMENT } from './environments/environment';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { APPINJECT } from './app.inject';
 
@@ -17,5 +18,6 @@ export const APPCONFIG: ApplicationConfig = {
     provideRouter(appRoutes),
     provideHttpClient(),
     { provide: APPINJECT, useValue: ENVIRONMENT },
+    provideAnimations()
   ],
 };

@@ -1,9 +1,10 @@
 
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal'; // Agrega esto
 import { appRoutes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { ENVIRONMENT } from './environments/environment';
 
@@ -20,5 +21,6 @@ export const APPCONFIG: ApplicationConfig = {
   provideAnimations(),
   provideToastr(),
   { provide: APPINJECT, useValue: ENVIRONMENT },
+  BsModalService
   ],
 };
