@@ -5,6 +5,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { OpinionesStates, SolicitudOpinionesState } from '../../../estados/evaluacion-solicitud/opiniones.store';
 import { CommonModule } from '@angular/common';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-dependencias.json';
+import { Router } from '@angular/router';
 import { SolicitudOpinionesQuery } from '../../../estados/queries/opiniones.query';
 
 @Component({
@@ -39,6 +40,11 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
    * dependiendo de si hay opiniones capturadas o no.
    */
   visualizaTabla: boolean = true;
+/**
+ * Declaración de variable para controlar la visualización de los botones
+ * Se utiliza para mostrar u ocultar los botones de enviar y cancelar
+ */
+  visualizaBotones: boolean = false;
 
   /**
    * Estado de la opinión.
@@ -60,7 +66,8 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private opinionesStates: OpinionesStates,
-    private solicitudOpinionesQuery: SolicitudOpinionesQuery
+    private solicitudOpinionesQuery: SolicitudOpinionesQuery,
+    private router: Router
   ) {
   }
 
@@ -124,6 +131,7 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
     if (this.formCapturaOpinion.valid) {
       if (this.opinionesSeleccionados.length === 0) {
         this.opinionesSeleccionados = [];
+        this.visualizaBotones = true;
       }
       this.visualizaTabla = true;
       this.opinionesStates.setValorDesplegableOpinion(this.visualizaTabla ?? false);
@@ -160,5 +168,9 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
       justificacion: OPINION.justificacion,
     });
     this.eliminarOpinion(index);
+  }
+
+  enviarOpiniones(){
+     this.router.navigate(['funcionario/firma-electronica']);
   }
 }
