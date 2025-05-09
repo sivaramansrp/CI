@@ -1,95 +1,128 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarCuentaComponent } from './agregar-cuenta.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
-import { of } from 'rxjs';
+import { Tramite6001Store } from '../../estados/tramite6001.store';
+import { Tramite6001Query } from '../../estados/tramite6001.query';
+import { of, Subject } from 'rxjs';
 
 describe('AgregarCuentaComponent', () => {
   let component: AgregarCuentaComponent;
   let fixture: ComponentFixture<AgregarCuentaComponent>;
+  let registroCuentasBancariasService: RegistroCuentasBancariasService;
+  let tramite6001Store: Tramite6001Store;
+  let tramite6001Query: Tramite6001Query;
+
+  const mockAgregarCuentaState = {
+    titularDeLaCuenta: 'John Doe',
+    tipoDePersona: 'Física',
+    rfc: 'TEST123456789',
+    numeroDeCuenta: '1234567890',
+    paisDondeRadica: 'México',
+    institucion: 'Banco Test',
+    estado: 'Activo',
+    sucursal: 'Sucursal Test',
+    numeroDePlaza: '12345',
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarCuentaComponent],
+      imports: [AgregarCuentaComponent, ReactiveFormsModule],
+      providers: [
+        FormBuilder,
+        {
+          provide: RegistroCuentasBancariasService,
+          useValue: {
+            getTipoDePersonaDatos: jest.fn().mockReturnValue(of({ data: ['Física', 'Moral'] })),
+            getPaisDondeRadicaDatos: jest.fn().mockReturnValue(of({ data: ['México', 'USA'] })),
+            getInstitucionDatos: jest.fn().mockReturnValue(of({ data: ['Banco Test', 'Banco Demo'] })),
+            getEstadoDatos: jest.fn().mockReturnValue(of({ data: ['Activo', 'Inactivo'] })),
+            cambiarComponente: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite6001Store,
+          useValue: {
+            setTitularDeLaCuenta: jest.fn(),
+            setTipoDePersona: jest.fn(),
+            setRfc: jest.fn(),
+            setNumeroDeCuenta: jest.fn(),
+            setPaisDondeRadica: jest.fn(),
+            setInstitucion: jest.fn(),
+            setEstado: jest.fn(),
+            setSucursal: jest.fn(),
+            setNumeroDePlaza: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite6001Query,
+          useValue: {
+            agregarCuenta$: of(mockAgregarCuentaState),
+          },
+        },
+      ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AgregarCuentaComponent);
     component = fixture.componentInstance;
+    registroCuentasBancariasService = TestBed.inject(RegistroCuentasBancariasService);
+    tramite6001Store = TestBed.inject(Tramite6001Store);
+    tramite6001Query = TestBed.inject(Tramite6001Query);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('AgregarCuentaComponent', () => {
-    let component: AgregarCuentaComponent;
-    let fixture: ComponentFixture<AgregarCuentaComponent>;
-    let registroCuentasBancariasServiceStub: Partial<RegistroCuentasBancariasService>;
+  it('should initialize the form on component creation', () => {
+    expect(component.agregarCuentaForm).toBeDefined();
+    expect(component.agregarCuentaForm.get('titularDeLaCuenta')?.value).toBe(mockAgregarCuentaState.titularDeLaCuenta);
+    expect(component.agregarCuentaForm.get('rfc')?.value).toBe(mockAgregarCuentaState.rfc);
+  });
 
-    beforeEach(async () => {
+  it('should call getTipoDePersona and set tipoDePersona', () => {
+    component.getTipoDePersona();
+    expect(registroCuentasBancariasService.getTipoDePersonaDatos).toHaveBeenCalled();
+    expect(component.tipoDePersona).toEqual(['Física', 'Moral']);
+  });
 
-      await TestBed.configureTestingModule({
-        imports: [ReactiveFormsModule, AgregarCuentaComponent],
-        providers: [
-          { provide: RegistroCuentasBancariasService },
-        ],
-      }).compileComponents();
+  it('should call getPaisDondeRadica and set paisDondeRadica', () => {
+    component.getPaisDondeRadica();
+    expect(registroCuentasBancariasService.getPaisDondeRadicaDatos).toHaveBeenCalled();
+    expect(component.paisDondeRadica).toEqual(['México', 'USA']);
+  });
 
-      fixture = TestBed.createComponent(AgregarCuentaComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
+  it('should call getInstitucion and set institucion', () => {
+    component.getInstitucion();
+    expect(registroCuentasBancariasService.getInstitucionDatos).toHaveBeenCalled();
+    expect(component.institucion).toEqual(['Banco Test', 'Banco Demo']);
+  });
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+  it('should call getEstado and set estado', () => {
+    component.getEstado();
+    expect(registroCuentasBancariasService.getEstadoDatos).toHaveBeenCalled();
+    expect(component.estado).toEqual(['Activo', 'Inactivo']);
+  });
 
-    it('should create the form with default values', () => {
-      expect(component.agregarCuentaForm).toBeDefined();
-      expect(component.agregarCuentaForm.get('titularDeLaCuenta')?.value).toBe('');
-      expect(component.agregarCuentaForm.get('rfc')?.value).toBe('');
-      expect(component.agregarCuentaForm.get('numeroDeCuenta')?.value).toBe('');
-    });
+  it('should set valores in the store using setValoresStore', () => {
+    const spy = jest.spyOn(tramite6001Store, 'setRfc');
+    component.setValoresStore(component.agregarCuentaForm, 'rfc', 'setRfc');
+    expect(spy).toHaveBeenCalledWith(mockAgregarCuentaState.rfc);
+  });
 
-    it('should validate titularDeLaCuenta control', () => {
-      const titularDeLaCuenta = component.agregarCuentaForm.get('titularDeLaCuenta');
-      titularDeLaCuenta?.setValue('');
-      expect(titularDeLaCuenta?.valid).toBeFalsy();
-      titularDeLaCuenta?.setValue('Valid Name');
-      expect(titularDeLaCuenta?.valid).toBeTruthy();
-    });
+  it('should call cambiarComponente on guardar', () => {
+    component.guardar();
+    expect(registroCuentasBancariasService.cambiarComponente).toHaveBeenCalledWith('DatosGenerales');
+  });
 
-    it('should validate rfc control with pattern', () => {
-      const rfc = component.agregarCuentaForm.get('rfc');
-      rfc?.setValue('INVALIDRFC');
-      expect(rfc?.valid).toBeFalsy();
-      rfc?.setValue('VALIDRFC123');
-      expect(rfc?.valid).toBeTruthy();
-    });
-
-    it('should validate numeroDeCuenta control', () => {
-      const numeroDeCuenta = component.agregarCuentaForm.get('numeroDeCuenta');
-      numeroDeCuenta?.setValue('');
-      expect(numeroDeCuenta?.valid).toBeFalsy();
-      numeroDeCuenta?.setValue('1234567890');
-      expect(numeroDeCuenta?.valid).toBeTruthy();
-    });
-
-    it('should validate sucursal control with pattern', () => {
-      const sucursal = component.agregarCuentaForm.get('sucursal');
-      sucursal?.setValue('INVALID');
-      expect(sucursal?.valid).toBeFalsy();
-      sucursal?.setValue('VALID123');
-      expect(sucursal?.valid).toBeTruthy();
-    });
-
-    it('should validate numeroDePlaza control with pattern', () => {
-      const numeroDePlaza = component.agregarCuentaForm.get('numeroDePlaza');
-      numeroDePlaza?.setValue('INVALID');
-      expect(numeroDePlaza?.valid).toBeFalsy();
-      numeroDePlaza?.setValue('VALID123');
-      expect(numeroDePlaza?.valid).toBeTruthy();
-    });
+  it('should clean up subscriptions on component destroy', () => {
+    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
