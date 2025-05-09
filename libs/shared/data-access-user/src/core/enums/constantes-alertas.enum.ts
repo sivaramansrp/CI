@@ -23,11 +23,25 @@ export const CONSTANTES = {
   EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/,
 };
 
+/**
+ * Contiene constantes de texto utilizadas para mostrar mensajes e instrucciones en la interfaz de usuario.
+ * Estas constantes están diseñadas para ser reutilizadas en diferentes partes de la aplicación.
+ * @property {string} INSTRUCCIONES - Instrucciones generales para el usuario para la carga de documentos.
+ * @property {string} ADJUNTAR - Mensaje que indica cómo adjuntar un nuevo documento.
+ * @property {string} ADJUNTAR_DOCUMENTOS - Mensaje que indica las características que debe cumplir el documento a adjuntar.
+ * @property {string} ADJUNTAR_WARNING - Mensaje que advierte sobre el tiempo de carga del documento.
+ * @property {string} DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA - Mensaje relacionado con la responsabilidad solidaria del residente en territorio nacional.
+ * @property {string} SELECCION_UN_CRITERIO_DE_BUSQUEDA - Mensaje que indica que se debe seleccionar un criterio de búsqueda.
+ * @property {string} REQUISITOS_GUARDADOS_CORRECTAMENTE - Mensaje que indica que los requisitos se han guardado correctamente.   
+ * @property {string} INSTRUCCIONES_AGREGAR_NUEVO - Instrucciones para agregar un nuevo documento.
+ */
 export const TEXTOS = {
-  INSTRUCCIONES: `<h6>Instrucciones</h6>
-  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-  <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
-  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
+  INSTRUCCIONES: `<h5>Nota: </h5>
+  <ul>
+    <li>De acuerdo al caso particular, algunos documentos podrían ser obligatorios</li>
+    <li>En caso de que no requieras algún documento, selecciónalo y elimínalo</li>
+    <li>Si necesitas anexar más de un documento del mismo tipo, da clic en el botón <i class="bi bi-plus-circle-fill"></i> para agregar cuantos necesites.</li>
+  </ul>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   ADJUNTAR_DOCUMENTOS: `<p>Para poder adjuntar tu documento, deberá cumplir las signuientes características:</p>
   <p><b>•</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código java script, etc.</p>
