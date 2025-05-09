@@ -1,0 +1,202 @@
+<div class="container">
+  <div class="row mt-5" *ngIf="mostrarOpcionesDePrellenado">
+    <div class="col-md-12">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
+            <h4 class="panel-title">
+              <a aria-label="Repeat"><i class="bi bi-repeat" aria-hidden="true"></i></a>
+            </h4>
+            <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()"> </button>
+          </div>
+          @if(plegable){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+              <div class="row">
+
+                <div class=" d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary">
+                    Cargar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div [formGroup]="datosSolicitudForm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="form-label" for="justificacion">Justificación*:</label>
+          <textarea class="form-control custom-textarea" id="justificacion" formControlName="justificacion"
+            (change)="setValoresStore(datosSolicitudForm, 'justificacion', 'setJustificacion')"></textarea>
+        </div>
+        @if(datosSolicitudForm.controls['justificacion'].invalid && datosSolicitudForm.controls['justificacion'].touched) {
+          <div class="d-grid">
+            @if(datosSolicitudForm.controls['justificacion'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <ng-titulo titulo="Datos del trámite a realizar" />
+
+
+    <div class="row pb-20">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="aduana">Aduana de ingreso:</label>
+          <input class="form-control" id="aduana" formControlName="aduana" type="text"
+            (change)="setValoresStore(datosSolicitudForm, 'aduana', 'setAduana')" />
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria:</label>
+          <input class="form-control" id="oficina" formControlName="oficina" type="text"
+            (change)="setValoresStore(datosSolicitudForm, 'oficina', 'setOficina')" />
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="punto">Punto de inspección:</label>
+          <input class="form-control" id="punto" formControlName="punto" type="text"
+            (change)="setValoresStore(datosSolicitudForm, 'punto', 'setPunto')" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="clave">Clave UCON*:</label>
+          <input class="form-control" id="clave" formControlName="clave" type="number"
+            (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
+        </div>
+        @if(datosSolicitudForm.controls['clave'].invalid && datosSolicitudForm.controls['clave'].touched) {
+          <div class="d-grid">
+            @if(datosSolicitudForm.controls['clave'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [required]="false"
+            name="establecimiento" formControlName="establecimiento"
+            (change)="setValoresStore(datosSolicitudForm, 'establecimiento', 'setEstablecimiento')"
+            data-bs-toggle="modal"
+                    data-bs-target="#modalAgregarMercancias">
+          </app-catalogo-select>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [required]="true"
+            name="veterinario" formControlName="veterinario"
+            (change)="setValoresStore(datosSolicitudForm, 'veterinario', 'setVeterinario')">
+          </app-catalogo-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="guia">Número de guía:</label>
+          <input class="form-control" id="guia" formControlName="guia" type="number"
+            (change)="setValoresStore(datosSolicitudForm, 'guia', 'setGuia')" />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen"
+            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')">
+          </app-catalogo-select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row m-0">
+      <ng-titulo titulo="Tipo de mercancía*:" />
+      <p class="fw-medium">Captura de datos de mercancía*:</p>
+      <app-input-radio
+      id="capturaMercancia"
+      formControlName="capturaMercancia"
+      [radioOptions]="opcionDeBotonDeRadio"
+      [selectedValue]="valorSeleccionado"
+      [layout]="'vertical'"
+      (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
+    >
+    </app-input-radio>
+
+    <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
+    </div>
+
+    <div class="row m-0">
+      <h6>Mercancías</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias"
+        [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
+    </div>
+
+
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-default">Modificar</button>
+      <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-3">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <label class="header">Establecimiento TIF</label>
+            <div class="modal-body">
+              Los datos del destinatario previamente capturados, serán sustituidos por los datos del Establecimiento TIE
+            </div>
+            <div class="modal-footer custom-footer d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-default"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary" data-bs-dismiss="modal" #closeModal
+              >
+                Agregar
+              </button>
+            </div>
+        </div>
+    </div>
+</div>
