@@ -311,6 +311,10 @@ export interface SolicitudCatologoSelectLista {
   tipoDeInstalacion: CatalogosSelect;
 }
 
+/**
+ * Denominación de la entidad o empresa.
+ * Representa el nombre o razón social de la entidad que tiene los empleados.
+ */
 export interface NumeroDeEmpleados {
   /**
    * Denominación de la entidad o empresa.
@@ -448,6 +452,10 @@ export interface Domicilios {
   idRecinto?: string;
 }
 
+/**
+ * Nombre del inventario.
+ * Representa el nombre del inventario o producto registrado.
+ */
 export interface Inventarios {
   /**
    * Nombre del inventario.
@@ -468,6 +476,7 @@ export interface Inventarios {
   anexo24: string;
 }
 
+/** Identificador del miembro en la empresa */
 export interface SeccionSociosIC {
   /** Identificador del miembro en la empresa */
   idMiembroEmpresa?: string;

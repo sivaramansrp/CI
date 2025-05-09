@@ -46,6 +46,14 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   /** Evento para emitir el objeto EnlaceOperativo al componente padre */
   @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
 
+  /**
+   * Constructor de la clase que inicializa las dependencias necesarias.
+   *
+   * @param fb - Constructor de formularios reactivos.
+   * @param solicitudService - Servicio para obtener y gestionar los datos de la solicitud.
+   * @param solicitud32605Store - Store de Akita para el estado de la solicitud 32605.
+   * @param solicitud32605Query - Consulta (query) de Akita para acceder al estado de la solicitud 32605.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
