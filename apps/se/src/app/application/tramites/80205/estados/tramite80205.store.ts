@@ -122,6 +122,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'ampliacion-servicios', resettable: true })
 export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
+  /**
+   * Constructor de la clase AmpliacionServiciosStore.
+   * Inicializa el estado del store con el estado inicial definido.
+   */
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
