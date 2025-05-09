@@ -136,6 +136,11 @@ It will show tasks that you can run with Nx.
 # Environment Build Commands - Host 
 - UI Build-Microfrontend host Environments
     - All department to be map in the module-federation.manifest.json
+    - Each department has the dev/prod/qa environement
+        - environment.ts
+        - evnironment-qa.ts
+        - environment-prod.ts
+    - All department url has to map in each environemnt
     - Local Dev Environment
         - apps\dashboard\src\app\environments\environment.ts
     - QA Environment 
