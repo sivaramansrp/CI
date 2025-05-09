@@ -13,7 +13,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
 /**
  * Interfaz para definir la estructura de los botones de acción en el asistente.
  * Contiene la acción y el valor del botón.
- */
+ * Representa la acción y el valor asociados con un botón.
+*/
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -95,34 +96,27 @@ export class PlaguicidasComponent implements OnDestroy {
   }
 
   /**
-   * Maneja la acción del botón "Continuar" en el asistente.
-   * Cambia el paso actual al siguiente paso.
+   * Obtiene el estado de los datos del domicilio legal desde el servicio `datosDomicilioLegalService`.
+   * 
+   * @returns {DatosDomicilioLegalState} El estado actual de los datos del domicilio legal.
+   * 
+   * @remarks
+   * Este método utiliza un observable para suscribirse al estado proporcionado por el servicio.
+   * Sin embargo, debido a la naturaleza asíncrona de los observables, el valor retornado puede no reflejar
+   * el estado actualizado en el momento de la ejecución. Es importante manejar este comportamiento
+   * adecuadamente si se requiere el estado más reciente.
    */
   getDatosDomicilioLegalState(): DatosDomicilioLegalState {
-    let PAYLOAD = {} as DatosDomicilioLegalState;
-    this.datosDomicilioLegalService
-      .getDatosDomicilioLegalState()
+    let PAYLOAD= {} as DatosDomicilioLegalState
+    this.datosDomicilioLegalService.getDatosDomicilioLegalState()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
-        PAYLOAD = state;
+         PAYLOAD = state;
       });
-    return PAYLOAD;
+      return PAYLOAD;
   }
 
-  /**
-   * Maneja la acción del botón "Continuar" en el asistente.
-   * Cambia el paso actual al siguiente paso.
-   */
-  getSolicitudPagoBancoState(): SolicitudPagoBancoState {
-    let PAYLOAD = {} as SolicitudPagoBancoState;
-    this.pagoBancoService
-      .getSolicitudPagoBancoState()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((state) => {
-        PAYLOAD = state;
-      });
-    return PAYLOAD;
-  }
+
 
   /**
    * Maneja la acción del botón "Continuar" en el asistente.
@@ -142,6 +136,25 @@ export class PlaguicidasComponent implements OnDestroy {
   /**
    * Maneja la acción del botón "Continuar" en el asistente.
    * Cambia el paso actual al siguiente paso.
+   * Obtiene el estado de la solicitud de pago en el banco.
+   * 
+   * Este método utiliza el servicio `pagoBancoService` para suscribirse al estado
+   * de la solicitud de pago en el banco y devuelve un objeto del tipo `SolicitudPagoBancoState`.
+   * 
+   * @returns {SolicitudPagoBancoState} El estado de la solicitud de pago en el banco.
+   */
+  getSolicitudPagoBancoState():SolicitudPagoBancoState{
+  let PAYLOAD= {} as SolicitudPagoBancoState
+    this.pagoBancoService.getSolicitudPagoBancoState()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+         PAYLOAD = state;
+      });
+      return PAYLOAD;
+  }
+
+  /**
+   * Lógica de limpieza para desuscribirse de los observables cuando el componente es destruido.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
