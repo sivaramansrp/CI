@@ -59,6 +59,12 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
   styleUrl: './servicios.component.scss',
   host: { hostID: crypto.randomUUID().toString() },
 })
+/**
+ * Componente para gestionar los servicios en el trámite 80102.
+ * Este componente permite visualizar y manejar los datos de los servicios, así como sus encabezados.
+ *
+ * @export ServiciosComponent
+ */
 export class ServiciosComponent implements OnInit, OnDestroy {
   /**
    * Índice de la pestaña.

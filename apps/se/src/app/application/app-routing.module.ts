@@ -432,6 +432,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'validar-inicialmente-certificado',
+    loadChildren: () =>
+      import('./tramites/110214/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
+  {
     path: 'registro-modificacion', 
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
@@ -460,6 +467,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/90304/prosec.module').then(
+        (m) => m.ProsecModule
+      ),
+  },
+  {
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(
@@ -467,6 +481,7 @@ const ROUTES: Routes = [
       ),
   },
 ];
+
 
 
 @NgModule({
