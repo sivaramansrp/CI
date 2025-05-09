@@ -11,7 +11,10 @@ import { Location } from '@angular/common';
   styleUrl: './proveedor-por-archivo-vista.component.scss',
 })
 /**
- * Componente para la vista de proveedor por archivo.
+ * Componente para la vista de proveedores por archivo.
+ * Este componente permite gestionar la visualización y anexar documentos relacionados con los proveedores.
+ *
+ * @export ProveedorPorArchivoVistaComponent
  */
 export class ProveedorPorArchivoVistaComponent {
 

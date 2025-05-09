@@ -116,6 +116,26 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-comercializadora',
+    loadChildren: () =>
+      import('./tramites/31801/renovacion-comercializadora.module').then(
+        (m) => m.RenovacionComercializadoraModule
+      ),
+  },
+  {
+    path: 'garantia',
+    loadChildren: () =>
+      import('./tramites/31101/garantia.module').then(
+        (m) => m.GarantiaModule
+      ),
+  },
+  {
+    path: 'aviso-opcion-seguro-global',
+    loadChildren: () =>
+      import('./tramites/32515/aviso-opcion-seguro-global.module').then(
+        (m) => m.AvisoOpcionSeguroGlobalModule),
+  },
+  {
     path: 'aviso-mercancia',
     loadChildren: () =>
       import('./tramites/32509/aviso-de-mercancia.module').then(
