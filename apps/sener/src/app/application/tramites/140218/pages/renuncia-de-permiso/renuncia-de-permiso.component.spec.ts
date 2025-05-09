@@ -3,6 +3,7 @@ import { RenunciaDePermisoComponent } from './renuncia-de-permiso.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
 import { AccionBoton } from '@libs/shared/data-access-user/src';
+import { MODIFICACION_PERMISO_DATA } from '../../constantes/renuncia-de-permiso.enum';
 
 describe('RenunciaDePermisoComponent', () => {
   let component: RenunciaDePermisoComponent;
@@ -33,6 +34,15 @@ describe('RenunciaDePermisoComponent', () => {
 
   it('should initialize default values', () => {
     expect(component.infoAlert).toBe('alert-info');
+  });
+  
+
+  it('should initialize msgData with MODIFICACION_PERMISO_DATA', () => {
+    expect(component.msgData).toBe(MODIFICACION_PERMISO_DATA);
+  })
+
+  it('should initialize default values', () => {
+    expect(component.infoAlert).toBe('alert-info');
     expect(component.indice).toBe(1);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
@@ -42,24 +52,21 @@ describe('RenunciaDePermisoComponent', () => {
     const mockFormValues = {
       solicitante: { nombre: 'Test' },
       datosSolicitud: [],
-      tercerosRelacionados: [],
-      pagoDeDerechos: [],
-      tramitesAsociados: [],
     };
-    // (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
+    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
 
     const action: AccionBoton = { accion: 'cont', valor: 2 };
 
     component.getValorIndice(action);
 
-    // expect(component.payload).toEqual(mockFormValues);
+    expect(component.payload).toEqual(mockFormValues);
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('should call wizard.atras on non-"cont" action', () => {
     const action: AccionBoton = { accion: 'back', valor: 3 };
-    // (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue({});
+    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue({});
 
     component.getValorIndice(action);
 
@@ -70,7 +77,7 @@ describe('RenunciaDePermisoComponent', () => {
   it('should ignore out-of-range valor', () => {
     const action: AccionBoton = { accion: 'cont', valor: 10 };
     component.getValorIndice(action);
-    expect(component.indice).toBe(1); // still the default
+    expect(component.indice).toBe(1); 
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
@@ -92,18 +99,20 @@ describe('RenunciaDePermisoComponent', () => {
       pagoDeDerechos: [],
       tramitesAsociados: [],
     };
-    // (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
+    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
 
-    // const result = component.collectAllFormValues();
+    const result = component.collectAllFormValues();
 
-    // expect(result.pasoUno).toEqual(mockFormValues);
+    expect(result.pasoUno).toEqual(mockFormValues);
   });
 
   it('should return empty object if pasoUnoComponent is not initialized in collectAllFormValues()', () => {
     component.pasoUnoComponent = undefined as any;
 
-    // const result = component.collectAllFormValues();
+    const result = component.collectAllFormValues();
 
-    // expect(result).toEqual({});
+    expect(result).toEqual({});
   });
+
+  
 });

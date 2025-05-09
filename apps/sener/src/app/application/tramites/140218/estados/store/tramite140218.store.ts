@@ -2,46 +2,41 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 export interface DatosSolicitudState {
-    /**
-     * Genericos relacionados con la solicitud.
-     */
-    genericos: string;
-    folioTramite:string;
-    tipoSolicitud:string;
-    regimen:string;
-    clasificacionRegimen:string;
-    periodoVigencia:string;
-    unidadMedida:string;
-    fraccionArancelaria:string;
-    cantidadAutorizada:string;
-    valorAutorizado:string;
-    nico:string;
-    descripcionNico:string;
-    acotacion:string;
-    permisoDesde:string;
-    permisoHasty:string;
-    motivoRenuncia:string
+  folioTramite: string; // Número de folio del trámite
+  tipoSolicitud: string; // Tipo de solicitud
+  regimen: string; // Régimen asociado
+  clasificacionRegimen: string; // Clasificación del régimen
+  periodoVigencia: string; // Periodo de vigencia
+  unidadMedida: string; // Unidad de medida
+  fraccionArancelaria: string; // Fracción arancelaria
+  cantidadAutorizada: string; // Cantidad autorizada
+  valorAutorizado: string; // Valor autorizado
+  nico: string; // Número de Identificación Comercial (NICO)
+  descripcionNico: string; // Descripción del NICO
+  acotacion: string; // Acotación
+  permisoDesde: string; // Fecha de inicio del permiso
+  permisoHasty: string; // Fecha de fin del permiso
+  motivoRenuncia: string; // Motivo de renuncia
 }
 
 export function createInitialState(): DatosSolicitudState {
   return {
-    genericos: '', 
-    folioTramite:'',
-    tipoSolicitud:'',
-    regimen:'',
-    clasificacionRegimen:'',
-    periodoVigencia:'',
-    unidadMedida:'',
-    fraccionArancelaria:'',
-    cantidadAutorizada:'',
-    valorAutorizado:'',
-    nico:'',
-    descripcionNico:'',
-    acotacion:'',
-    permisoDesde:'',
-    permisoHasty:'',
-    motivoRenuncia:''
-};
+    folioTramite: '', // Número de folio del trámite
+    tipoSolicitud: '', // Tipo de solicitud
+    regimen: '', // Régimen asociado
+    clasificacionRegimen: '', // Clasificación del régimen
+    periodoVigencia: '', // Periodo de vigencia
+    unidadMedida: '', // Unidad de medida
+    fraccionArancelaria: '', // Fracción arancelaria
+    cantidadAutorizada: '', // Cantidad autorizada
+    valorAutorizado: '', // Valor autorizado
+    nico: '', // Número de Identificación Comercial (NICO)
+    descripcionNico: '', // Descripción del NICO
+    acotacion: '', // Acotación
+    permisoDesde: '', // Fecha de inicio del permiso
+    permisoHasty: '', // Fecha de fin del permiso
+    motivoRenuncia: '' // Motivo de renuncia
+  };
 }
 
 @Injectable({
@@ -52,24 +47,14 @@ export function createInitialState(): DatosSolicitudState {
 
 
 export class Tramite140218Store extends Store<DatosSolicitudState> {
-  /**
-   * Constructor de la clase que inicializa el estado con valores predeterminados.
-   */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Actualiza el estado con el RFC.
-   * @param rfc El RFC a establecer.
+   * Establece el número de folio del trámite.
+   * @param folioTramite - Número de folio del trámite.
    */
-  public setGenericos(genericos: string): void {
-    this.update((state) => ({
-      ...state,
-      genericos,
-    }));
-  }
-
   public setFolioTramite(folioTramite: string): void {
     this.update((state) => ({
       ...state,

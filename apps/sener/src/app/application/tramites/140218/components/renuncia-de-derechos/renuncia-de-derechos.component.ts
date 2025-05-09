@@ -1,27 +1,80 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { MANIFIESTO_ACEPTACION_HTML } from '../../constantes/renuncia-de-permiso.enum';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatosSolicitudState, Tramite140218Store } from '../../estados/store/tramite140218.store';
-import renuncia from '@libs/shared/theme/assets/json/140218/renuncia.json'
-import { Tramite140218Query } from '../../estados/query/tramite140218.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, takeUntil} from 'rxjs';
+import { Subject } from 'rxjs';
+
+import { DatosSolicitudState } from '../../estados/store/tramite140218.store';
+
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import renuncia from '@libs/shared/theme/assets/json/140218/renuncia.json';
+
+import { MANIFIESTO_ACEPTACION_HTML } from '../../constantes/renuncia-de-permiso.enum';
+import { Tramite140218Query } from '../../estados/query/tramite140218.query';
+import { Tramite140218Store } from '../../estados/store/tramite140218.store';
+
+/**
+ * @class RenunciaDeDerechosComponent
+ * @description Componente para gestionar la funcionalidad de renuncia de derechos en el trámite 140218.
+ * Este componente utiliza un formulario reactivo para capturar y mostrar información relacionada
+ * con la renuncia de derechos, además de interactuar con el estado del almacén y las consultas del trámite.
+ * 
+ * @remarks
+ * Este componente implementa los ganchos de ciclo de vida `OnInit` y `OnDestroy` para inicializar
+ * y limpiar los recursos utilizados, respectivamente. También incluye métodos para configurar
+ * el formulario, establecer valores iniciales y actualizar el estado del almacén.
+ * 
+ * @example
+ * <app-renuncia-de-derechos></app-renuncia-de-derechos>
+ * 
+ * @implements OnInit
+ * @implements OnDestroy
+ */
 @Component({
   selector: 'app-renuncia-de-derechos',
   standalone: true,
-  imports: [CommonModule,TituloComponent,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule],
   templateUrl: './renuncia-de-derechos.component.html',
   styleUrl: './renuncia-de-derechos.component.scss',
 })
-export class RenunciaDeDerechosComponent implements OnInit{
+export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para la renuncia de derechos.
+   * Este formulario contiene los campos necesarios para capturar y mostrar
+   * la información relacionada con la renuncia de derechos.
+   */
   renunciaDerechosForm!: FormGroup;
+
+  /**
+   * Texto del manifiesto de aceptación en formato HTML.
+   * Este texto se utiliza para mostrar el contenido del manifiesto
+   * en la interfaz de usuario.
+   */
   manifestoText = MANIFIESTO_ACEPTACION_HTML;
 
+  /**
+   * Notificador para destruir las suscripciones activas.
+   * Este Subject se utiliza para gestionar la limpieza de las suscripciones
+   * y evitar fugas de memoria en el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
+  /**
+   * Estado de la solicitud.
+   * Este objeto contiene la información relacionada con el estado actual
+   * de la solicitud en el flujo del trámite.
+   */
   public solicitudState!: DatosSolicitudState;
+
+  /**
+   * Constructor de la clase RenunciaDeDerechosComponent.
+   * 
+   * @param formBuilder - Servicio para construir y gestionar formularios reactivos.
+   * @param tramite140218Store - Almacén para gestionar el estado relacionado con el trámite 140218.
+   * @param tramite140218Query - Servicio para consultar el estado del trámite 140218.
+   */
   constructor(
     private formBuilder: FormBuilder,
     private tramite140218Store: Tramite140218Store,
@@ -30,37 +83,49 @@ export class RenunciaDeDerechosComponent implements OnInit{
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
+  /**
+   * Método de inicialización del componente.
+   * Este método se ejecuta al inicializar el componente y se encarga
+   * de crear y configurar el formulario reactivo para la renuncia de derechos.
+   */
   ngOnInit(): void {
     this.crearAgregarFormulario();
   }
 
-  crearAgregarFormulario(){
+  /**
+   * Método para crear y configurar el formulario reactivo de renuncia de derechos.
+   * Este método inicializa el formulario con los valores actuales del estado de la solicitud
+   * y deshabilita los campos que no deben ser editables por el usuario.
+   */
+  crearAgregarFormulario():void {
     this.tramite140218Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState as DatosSolicitudState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as DatosSolicitudState;
+        })
+      )
+      .subscribe();
+
     this.renunciaDerechosForm = this.formBuilder.group({
       folioTramite: [this.solicitudState.folioTramite],
-      tipoSolicitud:[this.solicitudState.tipoSolicitud],
-      regimen:[this.solicitudState.regimen],
-      clasificacionRegimen:[this.solicitudState.clasificacionRegimen],
-      periodoVigencia:[this.solicitudState.periodoVigencia],
-      unidadMedida:[this.solicitudState.unidadMedida],
-      fraccionArancelaria:[this.solicitudState.fraccionArancelaria],
-      cantidadAutorizada:[this.solicitudState.cantidadAutorizada],
-      valorAutorizado:[this.solicitudState.valorAutorizado],
-      nico:[this.solicitudState.nico],
-      descripcionNico:[this.solicitudState.descripcionNico],
-      acotacion:[this.solicitudState.acotacion],
-      permisoDesde:[this.solicitudState.permisoDesde],
-      permisoHasty:[this.solicitudState.permisoHasty],
-      motivoRenuncia:[]
+      tipoSolicitud: [this.solicitudState.tipoSolicitud],
+      regimen: [this.solicitudState.regimen],
+      clasificacionRegimen: [this.solicitudState.clasificacionRegimen],
+      periodoVigencia: [this.solicitudState.periodoVigencia],
+      unidadMedida: [this.solicitudState.unidadMedida],
+      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
+      cantidadAutorizada: [this.solicitudState.cantidadAutorizada],
+      valorAutorizado: [this.solicitudState.valorAutorizado],
+      nico: [this.solicitudState.nico],
+      descripcionNico: [this.solicitudState.descripcionNico],
+      acotacion: [this.solicitudState.acotacion],
+      permisoDesde: [this.solicitudState.permisoDesde],
+      permisoHasty: [this.solicitudState.permisoHasty],
+      motivoRenuncia: []
     });
 
+    // Deshabilitar campos no editables
     this.renunciaDerechosForm.get('permisoHasty')?.disable();
     this.renunciaDerechosForm.get('folioTramite')?.disable();
     this.renunciaDerechosForm.get('tipoSolicitud')?.disable();
@@ -76,6 +141,39 @@ export class RenunciaDeDerechosComponent implements OnInit{
     this.renunciaDerechosForm.get('acotacion')?.disable();
     this.renunciaDerechosForm.get('permisoDesde')?.disable();
 
+    /**
+     * @method setRenunciaDerechosForm
+     * @description Establece los valores iniciales en el formulario `renunciaDerechosForm` 
+     * utilizando los datos proporcionados en `renuncia.formData`.
+     * 
+     * @remarks
+     * Este método asigna valores a múltiples controles del formulario, asegurando que 
+     * cada campo sea inicializado correctamente con los datos correspondientes.
+     * 
+     * @void
+     * Este método no retorna ningún valor.
+     */
+    this.setRenunciaDerechosForm();
+
+    // Actualizar el estado del almacén con los datos del formulario
+    this.updateStoreWithFormData();
+  }
+
+
+  /**
+   * @method setRenunciaDerechosForm
+   * @description Establece los valores iniciales en el formulario `renunciaDerechosForm` 
+   * utilizando los datos proporcionados en `renuncia.formData`.
+   * 
+   * @remarks
+   * Este método asigna valores a múltiples controles del formulario, asegurando que 
+   * cada campo sea inicializado correctamente con los datos correspondientes.
+   * 
+   * @void
+   * Este método no retorna ningún valor.
+   */
+  setRenunciaDerechosForm():void {
+    // Establecer valores iniciales en el formulario
     this.renunciaDerechosForm.get('permisoHasty')?.setValue(renuncia.formData.permisoHasty);
     this.renunciaDerechosForm.get('folioTramite')?.setValue(renuncia.formData.folioTramite);
     this.renunciaDerechosForm.get('tipoSolicitud')?.setValue(renuncia.formData.tipoSolicitud);
@@ -90,10 +188,14 @@ export class RenunciaDeDerechosComponent implements OnInit{
     this.renunciaDerechosForm.get('descripcionNico')?.setValue(renuncia.formData.descripcionNico);
     this.renunciaDerechosForm.get('acotacion')?.setValue(renuncia.formData.acotacion);
     this.renunciaDerechosForm.get('permisoDesde')?.setValue(renuncia.formData.permisoDesde);
-    this.updateStoreWithFormData();
   }
 
-  private updateStoreWithFormData(): void {
+  /**
+   * Método para actualizar el estado del almacén con los datos del formulario.
+   * Este método toma los valores actuales del formulario reactivo y los utiliza
+   * para actualizar el estado del almacén relacionado con el trámite 140218.
+   */
+  updateStoreWithFormData(): void {
     const UPDATE_PAGO_FORM: DatosSolicitudState = {
       ...this.solicitudState,
       permisoHasty: this.renunciaDerechosForm.get('permisoHasty')?.value,
@@ -112,5 +214,13 @@ export class RenunciaDeDerechosComponent implements OnInit{
       permisoDesde: this.renunciaDerechosForm.get('permisoDesde')?.value,
     };
     this.tramite140218Store.update(UPDATE_PAGO_FORM);
+  }
+
+   /**
+   * Gancho de ciclo de vida OnDestroy
+   */
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
