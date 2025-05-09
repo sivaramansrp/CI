@@ -25,7 +25,7 @@ import { Tramite230202Query } from '../../estados/tramite230202.query';
 @Component({
   selector: 'app-terceros',
   templateUrl: './terceros.component.html',
-  styleUrl: './terceros.component.scss',
+  styleUrls: ['./terceros.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -203,6 +203,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.formularioDestinatario = this.formBuilder.group({});
     this.agregarMercanciasForm = this.formBuilder.group({
       nacionalidad: [{ value: 'nacional', disabled: true }, Validators.required],
+      entidadFederativa: ['', Validators.required],
       tipoPersona: ['', Validators.required],
       razonSocial: ['', Validators.maxLength(250)],
       nombre: ['', Validators.maxLength(200)],

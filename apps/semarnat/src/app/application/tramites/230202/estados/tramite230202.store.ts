@@ -169,6 +169,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza las fechas seleccionadas en el estado.
+   * @param {string[]} fechasSeleccionadas - Lista de fechas seleccionadas.
+   */
   public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({
       ...state,
@@ -176,6 +180,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de países en el estado.
+   * @param {Catalogo[]} pais - Lista de países.
+   */
   public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -183,6 +191,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de entidades en el estado.
+   * @param {Catalogo[]} entidades - Lista de entidades.
+   */
   public setEntidades(entidades: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -190,6 +202,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la descripción del producto en el estado.
+   * @param {Catalogo[]} descripcionProducto - Lista de descripciones del producto.
+   */
   public setDescripcionProducto(descripcionProducto: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -197,13 +213,21 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de la solicitud en el estado.
+   * @param {DatosSolicitud[]} datosSolicitud - Lista de datos de la solicitud.
+   */
   public setDatosSolicitud(datosSolicitud: DatosSolicitud[]): void {
     this.update((state) => ({
       ...state,
       datosSolicitud,
     }));
   }
-  
+
+  /**
+   * Actualiza los datos de detalle en el estado.
+   * @param {DatosDetalle[]} datosDetalle - Lista de datos de detalle.
+   */
   public setDatosDetalle(datosDetalle: DatosDetalle[]): void {
     this.update((state) => ({
       ...state,
@@ -211,6 +235,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la fracción arancelaria en el estado.
+   * @param {string} fraccionArancelaria - Fracción arancelaria.
+   */
   public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
@@ -218,6 +246,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la descripción de la fracción arancelaria en el estado.
+   * @param {string} descripcionFraccionArancelaria - Descripción de la fracción arancelaria.
+   */
   public setDescripcionFraccionArancelaria(
     descripcionFraccionArancelaria: string
   ): void {
@@ -227,6 +259,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la cantidad en el estado.
+   * @param {string} cantidad - Cantidad.
+   */
   public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
@@ -234,6 +270,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la cantidad en letras en el estado.
+   * @param {string} cantidadLetra - Cantidad en letras.
+   */
   public setCantidadLetra(cantidadLetra: string): void {
     this.update((state) => ({
       ...state,
@@ -241,6 +281,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de géneros en el estado.
+   * @param {Catalogo[]} genero - Lista de géneros.
+   */
   public setGenero(genero: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -248,6 +292,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de especies en el estado.
+   * @param {Catalogo[]} especie - Lista de especies.
+   */
   public setEspecie(especie: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -255,6 +303,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de nombres comunes en el estado.
+   * @param {Catalogo[]} nombreComun - Lista de nombres comunes.
+   */
   public setNombreComun(nombreComun: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -262,6 +314,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la unidad de medida en el estado.
+   * @param {Catalogo[]} unidadDeMedida - Lista de unidades de medida.
+   */
   public setUnidadDeMedida(unidadDeMedida: Catalogo[]): void {
     this.update((state) => ({
       ...this.getValue(),
@@ -269,6 +325,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el lugar de entrada en el estado.
+   * @param {string} lungarDeEntrada - Lugar de entrada.
+   */
   public setLungarDeEntrada(lungarDeEntrada: string): void {
     this.update((state) => ({
       ...state,
@@ -276,6 +336,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el medio de transporte en el estado.
+   * @param {Catalogo[]} medioDeTransporte - Lista de medios de transporte.
+   */
   public setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -283,6 +347,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el número y descripción en el estado.
+   * @param {string} numeroYDescripcion - Número y descripción.
+   */
   public setNumeroYDescripcion(numeroYDescripcion: string): void {
     this.update((state) => ({
       ...state,
@@ -290,6 +358,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el código postal en el estado.
+   * @param {string} codigoPostal - Código postal.
+   */
   public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
@@ -297,6 +369,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la lista de estados en el estado.
+   * @param {Catalogo[]} estado - Lista de estados.
+   */
   public setEstado(estado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -304,6 +380,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la calle en el estado.
+   * @param {string} calle - Calle.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
@@ -311,6 +391,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el número exterior en el estado.
+   * @param {string} numeroExterior - Número exterior.
+   */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
@@ -318,6 +402,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza el número interior en el estado.
+   * @param {string} numeroInterior - Número interior.
+   */
   public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
@@ -325,6 +413,10 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza la colonia en el estado.
+   * @param {string} colonia - Colonia.
+   */
   public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
@@ -410,7 +502,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    * 
    * Actualiza el estado con la entidad federativa seleccionada.
    *
-   * {string} entidadFederativa - La entidad federativa seleccionada.
+   * @param {string} entidadFederativa - La entidad federativa seleccionada.
    */
   public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
@@ -423,9 +515,8 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    * 
    * Actualiza el estado con el estado del popup de terceros.
    *
-   * {boolean} tercerosPopupState - El estado del popup de terceros.
+   * @param {boolean} tercerosPopupState - El estado del popup de terceros.
    */
-
   public setTercerosPopupState(tercerosPopupState: boolean): void {
     this.update((state) => ({
       ...state,
@@ -433,12 +524,11 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  
   /**
    * 
    * Actualiza el estado con la lista de destinatarios.
    *
-   * {DestinatarioConfiguracionItem[]} datosTabla - La lista de destinatarios.
+   * @param {DestinatarioConfiguracionItem[]} destinatarios - La lista de destinatarios.
    */
   setDatosDestinatario(destinatarios: DestinatarioConfiguracionItem[]): void {
     this.update((state) => ({

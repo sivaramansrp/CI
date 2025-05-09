@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-pago-de-derecho',
   templateUrl: './pago-de-derecho.component.html',
-  styleUrl: './pago-de-derecho.component.scss',
+  styleUrls: ['./pago-de-derecho.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
