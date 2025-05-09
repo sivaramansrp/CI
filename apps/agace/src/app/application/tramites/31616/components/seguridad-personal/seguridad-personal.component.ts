@@ -5,6 +5,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/tramites/constantes/31616/datos-comunes.enum';
+import { TEXTOS_ESTATICOS_SEGURIDAD_PERSONAL } from '../../constantes/texto-estatico-tres.enum';
 import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries/tramite31616_perfilesMensajeria.query';
 
 /**
@@ -24,6 +25,10 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
   styleUrl: './seguridad-personal.component.scss'
 })
 export class SeguridadPersonalComponent implements OnInit,OnDestroy{
+  /**
+ * Contiene los textos estáticos utilizados en la vista, definidos en el archivo de constantes.
+ */
+  public textos = TEXTOS_ESTATICOS_SEGURIDAD_PERSONAL
 
   /**
    * Formulario reactivo que contiene los campos relacionados con la seguridad del personal.

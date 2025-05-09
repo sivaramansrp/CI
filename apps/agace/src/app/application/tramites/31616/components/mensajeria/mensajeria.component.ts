@@ -9,6 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
+import { TEXTOS_ESTATICOS_MENSAJERIA } from '../../constantes/texto-estatico.enum';
 import { Tramite31616MensajeriaQuery } from '../../../../estados/queries/tramite31616_mensajeria.query';
 import productivo from '@libs/shared/theme/assets/json/31616/productivo.json';
 /**
@@ -33,6 +34,10 @@ import productivo from '@libs/shared/theme/assets/json/31616/productivo.json';
   encapsulation: ViewEncapsulation.None
 })
 export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+ * Contiene los textos estáticos utilizados en la vista, definidos en el archivo de constantes.
+ */
+  public textos = TEXTOS_ESTATICOS_MENSAJERIA
 
   /** Formulario principal de la sección de mensajería */
   public mensajeriaGroup!: FormGroup;

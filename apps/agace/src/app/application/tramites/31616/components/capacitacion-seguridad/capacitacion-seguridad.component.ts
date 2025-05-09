@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Solicitud31616PerfilesMensajeriaState, Tramite31616PerfilesMensajeriaStore } from '../../../../estados/tramites/tramite31616_perfilesMensajeria.store';
 import { Subject, map , takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { TEXTOS_ESTATICOS } from '../../constantes/texto-estatico.enum';
 import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries/tramite31616_perfilesMensajeria.query';
 
 /**
@@ -21,6 +22,10 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
   styleUrl: './capacitacion-seguridad.component.scss'
 })
 export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
+  /**
+ * Contiene los textos estáticos utilizados en la vista, definidos en el archivo de constantes.
+ */
+  public textos = TEXTOS_ESTATICOS
 
   /**
    * Formulario reactivo que contiene los campos relacionados con la capacitación.

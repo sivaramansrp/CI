@@ -37,6 +37,7 @@ import { SeguridadLosVehiculosComponent } from '../seguridad-los-vehiculos/segur
 import { SeguridadPersonalComponent } from '../seguridad-personal/seguridad-personal.component';
 import { SeguridadProcesosComponent } from '../seguridad-procesos/seguridad-procesos.component';
 import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
+import { TEXTOS_ESTATICOS_MENSAJERIA } from '../../constantes/texto-estatico.enum';
 import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries/tramite31616_perfilesMensajeria.query';
 
 /**
@@ -72,6 +73,10 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
   styleUrls: ['./perfiles-mensajeria.component.scss'],
 })
 export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
+    /**
+   * Contiene los textos estáticos utilizados en la vista, definidos en el archivo de constantes.
+   */
+    public textos = TEXTOS_ESTATICOS_MENSAJERIA
   /**
    * Formulario reactivo que agrupa los campos principales del perfil de mensajería.
    *

@@ -13,6 +13,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/tramites/constantes/31616/datos-comunes.enum';
+import { TEXTOS_ESTATICOS_CONTROLES_FISICO } from '../../constantes/texto-estatico.enum';
 import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31616_perfiles.query';
 /**
  * @component ControlesFisicoComponent
@@ -29,6 +30,10 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   styleUrl: './controles-fisico.component.scss',
 })
 export class ControlesFisicoComponent implements OnInit, OnDestroy {
+   /**
+   * Contiene los textos estáticos utilizados en la vista, definidos en el archivo de constantes.
+   */
+    public textos = TEXTOS_ESTATICOS_CONTROLES_FISICO
   /**
    * @property {string[]} opcionDeBotonDeRadio
    * @description

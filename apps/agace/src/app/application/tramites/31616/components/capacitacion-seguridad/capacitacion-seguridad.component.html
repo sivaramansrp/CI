@@ -2,56 +2,20 @@
     <form [formGroup]="capacitacion">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
-                <p>Debe contar con un programa documento de concientización sobre amenazas diseñado y por el Comité de
-                    Seguridad para reconocer y crear conciencia sobre las amenazas de terroristas y contrabandistas en
-                    cada punto de la cadena de suministros. El programa de capacitación debe ser integral y cubrir todos
-                    los requisitos de seguridad del Programa Operador Económico Autorizado. Los empleados
-                    administrativos y operativos deben que conocer los procedimientos establecidos de la empresa de
-                    mensajería y paquetería para considerar una situación de riesgo y saber cómo denunciarla. Se debe
-                    brindar capacitación específica a los empleados que por sus funciones se encuentran en contacto
-                    directo con las mercancías y/o los medios de transporte, así como a los empleados que se encuentren
-                    en áreas críticas y/o sensibles determinadas bajo su análisis de riesgo (áreas de seguridad, carga y
-                    descarga; así como también a aquellos que reciben y abren mensajería y paquetería, entre otros).</p>
+                <p>{{textos.paraca1}}</p>
             </div>
         </div>
 
         <!-- 10.1-Capacitacion-y-concientizacion-sobre-amenazas -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">10.1 Capacitación y concientización sobre amenazas.</h4>
+                <h4 class="para-title">{{textos.encabezamiento1}}</h4>
                 <p>
-                    La empresa de mensajería y paquetería debe contar con un programa de capacitación y concientización
-                    de las políticas de seguridad en la cadena de suministros dirigido a todos sus empleados y,
-                    adicionalmente, poner a su disposición material informativo respecto de los procedimientos
-                    establecidos en la empresa para considerar una situación que amenace su seguridad y saber cómo
-                    denunciarla.
+                    {{textos.paraca2}}
                 </p>
-                <p>De igual forma, se debe ofrecer capacitación específica conforme a sus funciones para ayudar a los
-                    empleados a mantener la integridad de la carga, realizar la revisión de contenedores, remolques y/o
-                    semirremolques con fines agrícolas y de seguridad, recepción y revisión de mensajería y paquetería,
-                    prevención de operaciones con recursos de procedencia ilícita (lavado dinero, financiamiento al
-                    terrorismo, etcétera), cómo reconocer y cómo reportar conspiraciones internas, proteger los
-                    controles de acceso, así como capacitación referente a contrabando, robo de mercancía, colocación de
-                    sellos y candados de alta seguridad (método de inspección VVTT), prevención sobre contaminación
-                    visible de plagas, etcétera. Estos temas deben establecerse como parte de la inducción de nuevos
-                    empleados y mantener periódicamente programas de actualización. La capacitación de actualización
-                    debe realizarse periódicamente, después de un incidente de seguridad y cuando haya cambios en los
-                    procedimientos de la empresa.</p>
-                <p>Aunado a los programas de capacitación en seguridad, se debe incluir un programa de concientización
-                    sobre consumo de alcohol y drogas. También, difundir y capacitar al personal sobre las políticas,
-                    procedimientos y normas de ciberseguridad de la empresa (robo, fuga, hackeo y/o secuestro de
-                    información), incluyendo el acceso al equipo de cómputo y sistemas mediante contraseñas o frases, el
-                    personal que opera y administra los sistemas de tecnología de seguridad debe recibir capacitación
-                    relacionada a su operación y mantenimiento, incluyendo autoformación a través de manuales operativos
-                    y otros métodos. Estos temas deben establecerse como parte de la inducción de nuevos empleados y
-                    mantener periódicamente programas de actualización.</p>
-                <p>Los programas de capacitac deben fomentar la participación activa de los empleados en los controles y
-                    mecanismos de seguridad, así como mantener registros de todos los esfuerzos de capacitación que haya
-                    brindado la empresa y la relación de quienes participaron en ellos (videos, fotografías, minutas,
-                    listas de asistencia, intranet u otro sistema, material didáctico, presentaciones en PowerPoint,
-                    folletos, etcétera). Los registros de capacitación deben incluir la fecha de la capacitación, los
-                    nombres de los asistentes, los temas impartidos, además de tener medidas para verificar que la
-                    capacitación brindada cumplió con todos los objetivos de capacitación.</p>
+                <p>{{textos.paraca3}}</p>
+                <p>{{textos.paraca4}}</p>
+                <p>{{textos.paraca5}}</p>
             </div>
 
             <div class="row mt-2 alert-text">
@@ -67,18 +31,11 @@
                     <ul>
                         <div class="centered-list-wrapper">
                             <ol type="a">
-                                <li>Signos de compartimentos ocultos.</li>
-                                <li>Contrabando oculto en compartimentos naturales.</li>
-                                <li>Señales de contaminación por plagas.</li>
-                                <li>Procedimientos a seguir si se encuentra algo durante una inspección del medio de
-                                    transporte o si ocurre un incidente de seguridad durante el tránsito.</li>
-                                <li>La capacitación sobre revisiones agrícolas debe abarcar las medidas de prevención de
-                                    plagas, los requisitos reglamentarios aplicables a los materiales de embalaje de
-                                    madera en concordancia con la Norma Internacional de Medidas Fitosanitarias No.15
-                                    denominada Reglamentación del embalaje de madera utilizado en el Comercio
-                                    Internacional, las cuales emanan de la Organización de las Naciones Unidas para la
-                                    Alimentación y la Agricultura y la identificación de la madera infestada
-                                </li>
+                                <li>{{textos.listaDePedidos1}}</li>
+                                <li>{{textos.listaDePedidos2}}</li>
+                                <li>{{textos.listaDePedidos3}}</li>
+                                <li>{{textos.listaDePedidos4}}</li>
+                                <li>{{textos.listaDePedidos5}}</li>
                             </ol>
                         </div>
                     </ul>
@@ -89,15 +46,9 @@
         <!-- 10.2-Concientización-los-operadores-transporte -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">10.2 Concientización a los operadores de los medios de transporte.</h4>
+                <h4 class="para-title">{{textos.encabezamiento2}}</h4>
                 <p>
-                    La empresa debe dar a conocer a los operadores de los medios de transporte que utiliza para el
-                    traslado de las mercancías que se destinarán al comercio exterior, las políticas de seguridad
-                    respecto de procedimientos de inspección agrícola y de seguridad de medios de transporte, de carga y
-                    descarga, manejo de incidentes de seguridad, cambio de candados en caso de inspección por otras
-                    autoridades, entre otros, que se tengan implementados. Los operadores y el personal que realiza
-                    inspecciones agrícolas y de seguridad de medios de transporte, deben estar capacitados para
-                    inspeccionar los vehículos de carga con dichos fines.
+                    {{textos.paraca6}}
                 </p>
             </div>
 

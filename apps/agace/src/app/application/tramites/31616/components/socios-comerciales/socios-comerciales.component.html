@@ -2,28 +2,10 @@
     <form [formGroup]="sociosComercialesForm">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
-                <p>La empresa debe contar con procedimientos escritos y verificables para la selección y contratación de
-                    nuevos socios comerciales y monitoreo de los socios con los que ya se encuentra trabajando, como:
-                    transportistas (largo recorrido, de cruce o transfer, Ex Works, subcontratados, etcétera), para el
-                    traslado y/o distribución de mercancías objeto de comercio exterior, agentes aduanales, proveedores
-                    de tercerización logística (3PL/4PL), almacenes, empresas de sub-maquila, fabricantes, vendedores,
-                    proveedores de partes y materias primas nacionales y extranjeros, directos e indirectos, proveedores
-                    de servicios de limpieza, seguridad privada, contratación de personal, proveedores de sellos de alta
-                    seguridad, recolección y reciclaje, proveedores de sistemas y Tecnologías de la Información, entre
-                    otros), y de acuerdo a su análisis de riesgo, exigir que cumplan con las medidas de seguridad para
-                    fortalecer la cadena de suministros internacional.
+                <p>{{textos.paraca1}}
                 </p>
                 <p>
-                    El análisis de riesgo que realice la empresa respecto a sus socios comerciales (clientes y
-                    proveedores), deberá incluir riesgos relacionados con la identificación de actividades relacionadas
-                    con el lavado de dinero y la financiación del terrorismo. Adicionalmente, la empresa debe de tener
-                    una política y un programa de cumplimiento social documentado entre sus empleados y socios
-                    comerciales que, como mónimo, aborde cómo la empresa garantiza que los bienes, insumos o mercancías
-                    nacionales e importadas a México para la elaboración de su producto final, no fueron extraídos,
-                    producidos o fabricados, total o parcialmente, con formas prohibidas de trabajo, es decir, forzoso u
-                    obligado, incluido el trabajo infantil forzoso u obligatorio al amparo del artículo 23.6 del T-MEC y
-                    el Acuerdo que establece las mercancías cuya importación está sujeta a regulación a cargo de la
-                    Secretaría del Trabajo y Previsión Social, publicado en el DOF el 17 de febrero de 2023.
+                    {{textos.paraca2}}
                 </p>
             </div>
         </div>
@@ -31,47 +13,24 @@
         <!-- 4.1-Criterios-de-selección -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">4.1 Criterios de selección.</h4>
+                <h4 class="para-title">{{textos.encabezamiento1}}</h4>
                 <p>
-                    Deben existir procedimientos documentados para la selección, seguimiento o renovación de relaciones
-                    comerciales con los asociados de negocio o proveedores, que incluyan entrevistas, verificación de
-                    referencias, métodos de evaluación y uso de la información proporcionada. La información derivada de
-                    la investigación y/o evaluación de los asociados de negocio y/o proveedores deberá documentarse y
-                    estar integrada un expediente (físico o electrónico). El procedimiento para la selección de socios
-                    comerciales deberá incluir, indicadores para detectar clientes o proveedores que podrían no ser
-                    legítimos o con domicilios no localizados. Si la investigación y/o evaluación de algún socio
-                    comercial conduce a dudas sustanciales sobre la veracidad de sus operaciones o servicios, la empresa
-                    deberá evitar su contratación y, en su caso, notificar a su especialista de seguridad o contacto del
-                    Programa Operador Económico Autorizado y a la autoridad correspondiente sobre sus sospechas.
+                    {{textos.paraca3}}
                 </p>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
                     <ul>
-                        <li><span class="danger">*</span>Anexe el procedimiento documentado para la selección y
-                            contratación de huevos socios comerciales y monitoreo de los socios con los que ya se
-                            encuentra trabajando esto comprende cualquier tipo de proveedor que tenga una relación
-                            comercial con la empresa y en su caso, con la tercerizadora de servicios, en su cadena de
-                            suministros (es en el siguiente sub-estándar donde se solicita diferenciar aquellos de
-                            riesgo en su cadena de suministros), asegúrese de incluir los siguientes puntos:
+                        <li><span class="danger">*</span>{{textos.paraca4}}
                             <div class="centered-list-wrapper">
                                 <ol type="a">
                                     <li>Qué información es requerida a su socio comercial.</li>
                                     <li>Qué aspectos son revisados e investigados.</li>
-                                    <li>Los indicadores para identificar clientes o proveedores que podrían no ser
-                                        legítimos (pagos por encima de la tarifa estándar, en efectivo tener poco
-                                        conocimiento de la mercancía que se va a enviar ser evasivo información de
-                                        contacto mínima (teléfono celular, puntos de contacto, correos electrónicos,
-                                        entre otros); empresas de reciente creación o negocios sin historial comercial,
-                                        etcétera) o con domicilios no localizados. Este punto refiere a señalar todas
-                                        aquellas alertas para determinar que un socio comercial no es confiable y así,
-                                        realizar una investigación más profunda y evaluar si se debe trabajar con él.
+                                    <li>{{textos.paraca5}}
                                     </li>
-                                    <li>Indicar si mantiene un expediente físico o electrónico de cada uno de sus socios
-                                        comerciales, así como la información que debe contener.</li>
-                                    <li>Señalar de qué manera se evalúan los servicios de su socio comercial y qué
-                                        puntos revisa.</li>
+                                    <li>Indicar si mantiene un expediente físico o electrónico de cada uno de sus socios comerciales, así como la información que debe contener.</li>
+                                    <li>Señalar de qué manera se evalúan los servicios de su socio comercial y qué puntos revisa.</li>
                                 </ol>
                             </div>
                         </li>
@@ -89,8 +48,7 @@
                                     <li>Referencias comerciales (en su caso).</li>
                                     <li>Contratos, acuerdos y/o convenios de confidencialidad y políticas de seguridad.
                                     </li>
-                                    <li>En su caso, certificado o número de certificación en los programas de seguridad
-                                        a los que pertenezca.</li>
+                                    <li>En su caso, certificado o número de certificación en los programas de seguridad a los que pertenezca.</li>
                                 </ol>
                             </div>
                         </li>
@@ -100,11 +58,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueLleva">
-                    <span class="danger">*</span>Indique cómo lleva a cabo su programa de cumplimiento social entre sus
-                    empleados y socios comerciales que, como mínimo, aborde cómo la empresa garantiza que los bienes,
-                    insumos o mercancías nacionales e importadas a México para la elaboración de su producto final, no
-                    fueron extraídos, producidos o fabricados, total o parcialmente, con formas prohibidas de trabajo,
-                    es decir, forzoso u obligado y cómo lo documenta.
+                    <span class="danger">*</span>{{textos.etiqueta}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueLleva" formControlName="indiqueLleva" (change)="setValoresStore(sociosComercialesForm,'indiqueLleva','setIndiqueLleva')"></textarea>
             </div>
@@ -121,47 +75,19 @@
         <!-- 4.2-Requerimientos-en-seguridad -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">4.2 Requerimientos en seguridad.</h4>
+                <h4 class="para-title">{{textos.encabezamiento2}}</h4>
                 <p>
-                    La empresa debe contar con un procedimiento documentado en el que, de acuerdo a su análisis de
-                    riesgo, solicite requisitos adicionales en materia de seguridad a aquellos socios comerciales que
-                    intervengan en su cadena de suministro, ya sea como proveedores de materiales para la elaboración,
-                    empaque o embalaje de las mercancías que sean objeto de comercio exterior, así como de los
-                    proveedores de servicios de transporte (largo recorrido, de cruce o transfer, Ex Works,
-                    subcontratados, etcétera), para el traslado y/o distribución de mercancías objeto de comercio
-                    exterior, agentes aduanales, proveedores de tercerización logística (3PL, logística de terceros o
-                    4PL, principal proveedor de logística), almacenes, empresas de sub-maquila, fabricantes, vendedores,
-                    proveedores de partes y materias primas nacionales y extranjeros, directos e indirectos, proveedores
-                    de servicios de limpieza, seguridad privada, contratación de personal, proveedores de sellos de alta
-                    seguridad, recolección y reciclaje, proveedores de sistemas y Tecnologías de la Información, entre
-                    otros.
+                    {{textos.paraca6}}
                 </p>
-                <p>Los requisitos deberán estar basados en el Perfil de la empresa establecido por la AGACE, o en caso
-                    de existir, el Perfil específico para cada actor de la cadena de suministros que le corresponda.</p>
-                <p>La empresa debe solicitar a sus socios comerciales la documentación que acredite y compruebe que
-                    cumple con los estándares mínimos de seguridad establecidos en el Perfil de la empresa, ya sea a
-                    través de una declaración escrita emitida por el representante legal del socio, convenios o
-                    cláusulas contractuales, respaldado con documentación que avale el cumplimiento de los requisitos
-                    establecidos en el Programa de Operador Económico Autorizado. Para el caso de la empresa
-                    Tercerizadora de Servicios que cuente con socios comerciales contratados para prestar en su nombre
-                    los servicios de gestión aduanera, almacenaje, manejo, traslado y/o distribución de mercancías
-                    objeto de comercio exterior, deberán estar inscritos en el Registro en el Esquema de Certificación
-                    de Empresas, en las modalidades de Operador Económico Autorizado y Socio Comercial Certificado en
-                    cualquiera de sus rubros o contar con el Programa CTPAT, otorgado por la CBP. De igual manera, la
-                    empresa debe tener en cuenta y conocer los requisitos específicos del Programa Operador Económico
-                    Autorizado que serán aplicables a cada uno de sus socios comerciales, en función de su actividad
-                    dentro de la cadena de suministro.
+                <p>Los requisitos deberán estar basados en el Perfil de la empresa establecido por la AGACE, o en caso de existir, el Perfil específico para cada actor de la cadena de suministros que le corresponda.</p>
+                <p>{{textos.paraca7}}
                 </p>
-                <p>En el caso de los socios comerciales de la empresa que presten sus servicios en el interior de las
-                    instalaciones, deberán estar obligados al cumplimiento de estos requerimientos de seguridad en la
-                    cadena de suministro.</p>
+                <p>En el caso de los socios comerciales de la empresa que presten sus servicios en el interior de las instalaciones, deberán estar obligados al cumplimiento de estos requerimientos de seguridad en la cadena de suministro.</p>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaProcedimiento">
-                    <span class="danger">*</span>Describa el procedimiento que indique cómo lleva a cabo la
-                    identificación de socios comerciales que requieran el cumplimiento de estándares mínimos en materia
-                    de seguridad.
+                    <span class="danger">*</span>Describa el procedimiento que indique cómo lleva a cabo la identificación de socios comerciales que requieran el cumplimiento de estándares mínimos en materia de seguridad.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaProcedimiento" formControlName="describaProcedimiento" (change)="setValoresStore(sociosComercialesForm,'describaProcedimiento','setDescribaProcedimiento')"></textarea>
             </div>
@@ -176,10 +102,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueSocios">
-                    <span class="danger">*</span>Indique los socios comerciales que deben cumplir con requisitos en
-                    materia de seguridad, y mencione que tipo de proveedores son estos (transportistas para el traslado
-                    y/o distribución de mercancías objeto de comercio exterior, almacenes, servicio de custodia, empresa
-                    de seguridad privada, agentes aduanales, etcétera).
+                    <span class="danger">*</span>{{textos.etiqueta2}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueSocios" formControlName="indiqueSocios" (change)="setValoresStore(sociosComercialesForm,'indiqueSocios','setIndiqueSocios')"></textarea>
             </div>
@@ -194,9 +117,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueForma">
-                    <span class="danger">*</span>Indique de qué forma documental (convenios, acuerdos, cláusulas
-                    contractuales y/o adendas), asegura que sus socios comerciales cumplan con los requisitos en materia
-                    de seguridad.
+                    <span class="danger">*</span>Indique de qué forma documental (convenios, acuerdos, cláusulas contractuales y/o adendas), asegura que sus socios comerciales cumplan con los requisitos en materia de seguridad.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueForma" formControlName="indiqueForma" (change)="setValoresStore(sociosComercialesForm,'indiqueForma','setIndiqueForma')"></textarea>
             </div>
@@ -211,10 +132,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueExisten">
-                    <span class="danger">*</span>Indique si existen convenios, acuerdos, cláusulas contractuales y/o
-                    adendas, respecto a la implementación de medidas de seguridad con sus proveedores de servicios al
-                    interior de su empresa, tales como: seguridad privada, comedor, jardinería, servicios de limpieza y
-                    mantenimiento, proveedores de Tecnología de la Información, etcétera.
+                    <span class="danger">*</span>{{textos.etiqueta3}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueExisten" formControlName="indiqueExisten" (change)="setValoresStore(sociosComercialesForm,'indiqueExisten','setIndiqueExisten')"></textarea>
             </div>
@@ -229,10 +147,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueCuenta">
-                    <span class="danger">*</span>Indique si cuenta con socios comerciales que se les exija pertenecer a
-                    un programa de seguridad de la cadena de suministros (por ejemplo: CTPAT o algún otro Programa de
-                    Operador Económico Autorizado de la OMA), así como la información y documentación que le son
-                    solicitadas.
+                    <span class="danger">*</span>Indique si cuenta con socios comerciales que se les exija pertenecer a un programa de seguridad de la cadena de suministros (por ejemplo: CTPAT o algún otro Programa de Operador Económico Autorizado de la OMA), así como la información y documentación que le son solicitadas.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCuenta" formControlName="indiqueCuenta" (change)="setValoresStore(sociosComercialesForm,'indiqueCuenta','setIndiqueCuenta')"></textarea>
             </div>
@@ -249,31 +164,18 @@
         <!-- 4.3-Revisiones-socio-comercial -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">4.3 Revisiones del socio comercial.</h4>
+                <h4 class="para-title">{{textos.encabezamiento3}}</h4>
                 <p>
-                    La empresa de mensajería y paquetería, a través del Comité de Seguridad debe realizar evaluaciones
-                    periódicas y derivadas situaciones de riesgo, de los procesos e instalaciones de los asociados de
-                    negocios con base a un análisis riesgo, para garantizar que cuentan con estándares mínimos en
-                    materia de seguridad requeridos por la empresa basados en el Programa Operador Económico Autorizado,
-                    mantener registros de las mismas, que permitan constatar que los procesos y medidas de seguridad se
-                    están ejecutando, así como del seguimiento correspondiente.
+                    {{textos.paraca8}}
                 </p>
-                <p>Cuando se encuentren inconsistencias, la empresa deberá comunicarlo a su socio o proveedor y
-                    proporcionar un período justificado para atender las observaciones identificadas o áreas de
-                    oportunidad, en caso contrario, tener las medidas necesarias para sancionarla.</p>
-                <p>Realizar evaluaciones de seguridad de los socios comerciales es importante para garantizar que exista
-                    un programa de seguridad sólido y funcione correctamente, es por eso que, además de un procedimiento
-                    documentado, debe existir un programa o calendario para la ejecución de dichas revisiones o
-                    evaluaciones de seguridad priorizando a los socios que son más críticos conforme a su análisis de
-                    riesgo. Si un miembro no es evaluado y la empresa desconoce si los procesos e instalaciones de sus
-                    socios comerciales funcionan correctamente, ponen en riesgo su cadena de suministro.
+                <p>{{textos.paraca9}}</p>
+                <p>{{textos.paraca10}}
                 </p>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="procedimientoRealizar">
-                    <span class="danger">*</span>Describir el procedimiento para realizar evaluaciones para verificación
-                    de los requisitos materia (procesos e instalaciones) de sus socios comerciales.
+                    <span class="danger">*</span>Describir el procedimiento para realizar evaluaciones para verificaciónde los requisitos materia (procesos e instalaciones) de sus socios comerciales.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="procedimientoRealizar" formControlName="procedimientoRealizar" (change)="setValoresStore(sociosComercialesForm,'procedimientoRealizar','setProcedimientoRealizar')"></textarea>
             </div>
@@ -288,8 +190,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label id="indiquePeriodicidad">
-                    <span class="danger">*</span>Indique la periodicidad con la que realiza las visitas al socio
-                    comercial (estas deben de ser por lo menos una vez al año y derivadas de situaciones de riesgo).
+                    <span class="danger">*</span>Indique la periodicidad con la que realiza las visitas al sociocomercial (estas deben de ser por lo menos una vez al año y derivadas de situaciones de riesgo).
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiquePeriodicidad" formControlName="indiquePeriodicidad" (change)="setValoresStore(sociosComercialesForm,'indiquePeriodicidad','setIndiquePeriodicidad')"></textarea>
             </div>
@@ -304,8 +205,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaComo">
-                    <span class="danger">*</span>Describa cómo se lleva a cabo el programa o calendario para la
-                    ejecución de las revisiones de seguridad.
+                    <span class="danger">*</span>Describa cómo se lleva a cabo el programa o calendario para la ejecución de las revisiones de seguridad.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaComo" formControlName="describaComo" (change)="setValoresStore(sociosComercialesForm,'describaComo','setDescribaComo')"></textarea>
             </div>
@@ -320,8 +220,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="comoAseguran">
-                    <span class="danger">*</span>Cómo aseguran los formularios y la documentación relacionada con la
-                    importación y/o exportación para evitar el uso no autorizado.
+                    <span class="danger">*</span>Cómo aseguran los formularios y la documentación relacionada con la importación y/o exportación para evitar el uso no autorizado.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="comoAseguran" formControlName="comoAseguran" (change)="setValoresStore(sociosComercialesForm,'comoAseguran','setComoAseguran')"></textarea>
             </div>
@@ -336,9 +235,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueFormatos">
-                    <span class="danger">*</span>Indique el o los formatos de verificación tendrán que estar debidamente
-                    requisitados, colocando la fecha, nombre y cargo de quienes participan en la revisión, firmas,
-                    etcétera.
+                    <span class="danger">*</span>Indique el o los formatos de verificación tendrán que estar debidamente requisitados, colocando la fecha, nombre y cargo de quienes participan en la revisión, firmas, etcétera.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueFormatos" formControlName="indiqueFormatos" (change)="setValoresStore(sociosComercialesForm,'indiqueFormatos','setIndiqueFormatos')"></textarea>
             </div>
@@ -353,8 +250,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senalarMedidas">
-                    <span class="danger">*</span>Señalar qué medidas de acción se toman en caso de que los socios
-                    comerciales no cumplan con los requisitos de seguridad establecidos.
+                    <span class="danger">*</span>Señalar qué medidas de acción se toman en caso de que los socios comerciales no cumplan con los requisitos de seguridad establecidos.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senalarMedidas" formControlName="senalarMedidas" (change)="setValoresStore(sociosComercialesForm,'senalarMedidas','setSenalarMedidas')" ></textarea>
             </div>
@@ -369,10 +265,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="casoSocios">
-                    <span class="danger">*</span>En caso de contar con socios comerciales con la certificación de C-TPAT
-                    u otro programa de certificación de seguridad en la cadena de suministros, indique la periodicidad
-                    con la que es revisado su estatus y las acciones que toma en caso de detectarse que este suspendido
-                    y/o cancelado.
+                    <span class="danger">*</span>En caso de contar con socios comerciales con la certificación de C-TPAT u otro programa de certificación de seguridad en la cadena de suministros, indique la periodicidad con la que es revisado su estatus y las acciones que toma en caso de detectarse que este suspendido y/o cancelado.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="casoSocios" (change)="setValoresStore(sociosComercialesForm,'casoSocios','setCasoSocios')"></app-input-radio>

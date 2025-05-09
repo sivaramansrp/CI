@@ -2,33 +2,22 @@
     <form [formGroup]="seguridadFisicaForm">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
-                <p>La empresa de mensajería y paquetería debe contar con mecanismos establecidos y procesos documentados
-                    para impedir, detectar o disuadir la entrada de personal no autorizado a las instalaciones. Todas
-                    las áreas sensibles de la empresa, deben tener barreras físicas, elementos de control y disuasión
-                    contra el acceso no autorizado.</p>
+                <p>{{textos.paraca1}}</p>
             </div>
         </div>
 
         <!-- 2.1-Instalaciones-recipiente  -->
         <div class="row mt-3">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.1 Instalaciones.</h4>
+                <h4 class="para-title">{{textos.encabezamiento1}}</h4>
                 <p>
-                    Las instalaciones deben estar construidas con materiales que puedan resistir accesos no autorizados.
-                    Se deben realizar inspecciones periódicas documentadas para mantener la integridad de las
-                    estructuras y en el caso de haberse detectado una irregularidad, efectuar la reparación
-                    correspondiente y lo antes posible por parte del personal designado para estas tareas. Asimismo, se
-                    deben tener identificados plenamente los límites territoriales, así como los diversos accesos, rutas
-                    internas y la ubicación de los edificios.
+                    {{textos.paraca2}}
                 </p>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueMateriales">
-                    <span class="danger">*</span>Indique los materiales predominantes con los que se encuentra
-                    construida la instalación (por
-                    ejemplo: de estructura de metal y paredes de lámina, paredes de ladrillo, concreto, malla ciclónica,
-                    entre otros).
+                    <span class="danger">*</span>{{textos.etiqueta}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueMateriales" formControlName="indiqueMateriales" (change)="setValoresStore(seguridadFisicaForm,'indiqueMateriales','setIndiqueMateriales')"></textarea>
             </div>
@@ -84,7 +73,7 @@
         <!-- 2.2-Accesos-en-puertas-recipiente  -->
         <div class="row mt-4"label>
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.2 Accesos en puertas y casetas</h4>
+                <h4 class="para-title">{{textos.encabezamiento2}}</h4>
                 <p>
                     Las puertas de entrada o salida de personal y/o vehículos deben ser atendidas, controladas,
                     vigiladas y/o supervisadas. La cantidad de puertas de acceso debe mantenerse al mínimo necesario. El
@@ -162,15 +151,9 @@
         <!-- 2.3-Bardas-perimetrales-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.3 Bardas perimetrales.</h4>
+                <h4 class="para-title">{{textos.encabezamiento3}}</h4>
                 <p>
-                    Las bardas perimetrales y/o barreras periféricas deben instalarse para asegurar los parámetros de
-                    las instalaciones de la empresa, con base en un análisis de riesgo. Se deben utilizar cercas,
-                    barreras interiores o un mecanismo para identificar y segregar la carga internacional, así como la
-                    de alto valor y peligrosa. Estas deben ser inspeccionadas regularmente y llevar un registro de la
-                    revisión con la finalidad de asegurar su integridad e identificar daños, mismos que deben repararse
-                    lo antes posible por parte del personal designado para estas
-                    tareas.
+                    {{textos.paraca3}}
                     <br />
                 </p>
                 <i>Las áreas de almacenaje, alto valor, peligrosas, y/o de acceso restringido, deben estar claramente
@@ -343,12 +326,9 @@
         <!-- 2.4-Estacionamientos-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.4 Estacionamientos.</h4>
+                <h4 class="para-title">{{textos.encabezamiento4}}</h4>
                 <p>
-                    El acceso a los estacionamientos de las instalaciones debe ser controlado y monitoreado por el
-                    personal de seguridad o designado para esta tarea. Se debe prohibir que los vehículos privados (de
-                    empleados, visitantes, proveedores, contratistas, entre otros), se estacionen dentro de las áreas de
-                    manejo y almacenaje de la mercancía, así como en áreas adyacentes..
+                    {{textos.paraca4}}
                 </p>
             </div>
 
@@ -439,14 +419,9 @@
         <!-- 2.5-Control-de-llaves-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.5 Control de llaves y dispositivos de cerraduras.</h4>
+                <h4 class="para-title">{{textos.encabezamiento5}}</h4>
                 <p>
-                    Las ventanas, puertas y cercas interiores y exteriores, de acuerdo a su análisis de riesgo, deben
-                    asegurarse con dispositivos de cierre. La empresa debe contar con un procedimiento documentado para
-                    el manejo y control de Ilaves y/o dispositivos de cierre de las áreas interiores que se hayan
-                    considerado como críticas. Asimismo, deben llevar un registro y establecer un control a través de
-                    cartas responsivas firmadas por las personas que cuentan con Ilaves o accesos autorizados conforme a
-                    su nivel de responsabilidad y labores dentro su área de trabajo.
+                    {{textos.paraca5}}
                 </p>
             </div>
 
@@ -460,9 +435,7 @@
             </div>
 
             <div class="mt-4 alert-text">
-                <span class="danger">*</span>Anexar los procedimientos documentados para el manejo, y control de llaves
-                y/o dispositivos de cierre, asegúrese<br />
-                Asegúrese que incluya los siguientes puntos:
+                <span class="danger">*</span>{{textos.paraca6}}
                 <div class="centered-list-wrapper">
                     <ol type="a">
                         <li>Responsables de administrar y controlar la seguridad de las llaves.</li>
@@ -479,13 +452,9 @@
         <!-- 2.6-Alumbrado-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.6 Alumbrado.</h4>
+                <h4 class="para-title">{{textos.encabezamiento6}}</h4>
                 <p>
-                    El alumbrado dentro y fuera de las instalaciones debe permitir una clara identificación de personas,
-                    material y/o equipo que ahí se encuentre, incluyendo las siguientes áreas: entradas y salidas, áreas
-                    de manejo, carga, descarga y almacenaje de la mercancía, bardas perimetrales y/o periféricas, cercas
-                    interiores y áreas de estacionamiento, debiendo contar con un sistema de emergencia y/o respaldo en
-                    las áreas sensibles.
+                    {{textos.paraca7}}
                 </p>
             </div>
 
@@ -560,11 +529,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="queManera">
-                    <span class="danger">*</span>De qué manera se cerciora que el sistema de iluminación sea el
-                    apropiado en cada una de las áreas del recinto fiscalizado, así como que tenga continuidad ante la
-                    falta de suministro en cada una de las áreas de la instalación y con especial énfasis de las áreas
-                    consideradas como críticas y/o sensibles, de manera que permita una clara identificación del
-                    personal, material y/o equipo que abarca.
+                    <span class="danger">*</span>{{textos.paraca8}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="queManera" formControlName="queManera" (change)="setValoresStore(seguridadFisicaForm,'queManera','setQueManera')"></textarea>
             </div>
@@ -581,12 +546,9 @@
         <!-- 2.7-Aparatos-de-comunicación-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.7 Aparatos de comunicación.</h4>
+                <h4 class="para-title">{{textos.encabezamiento7}}</h4>
                 <p>
-                    La empresa debe contar con aparatos y/o sistemas de comunicación con la finalidad de contactar de
-                    forma inmediata al personal de seguridad y/o con las autoridades, en caso de ocurrir una situación
-                    de emergencia y seguridad. Adicionalmente, se debe contar con un sistema de respaldo y verificar su
-                    buen funcionamiento de manera periódica.
+                    {{textos.paraca9}}
                 </p>
             </div>
 
@@ -609,10 +571,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueOperativo">
-                    <span class="danger">*</span>Indique si el personal operativo y administrativo cuenta o dispone de
-                    aparatos (teléfonos fijos, móviles, botones de alerta y/o emergencia) para comunicarse con el
-                    personal de seguridad y/o con quien corresponda. (Estos deberán estar accesibles a los usuarios,
-                    para poder tener una pronta reacción).
+                    <span class="danger">*</span>{{textos.etiqueta2}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueOperativo" formControlName="indiqueOperativo" (change)="setValoresStore(seguridadFisicaForm,'indiqueOperativo','setIndiqueOperativo')"></textarea>
             </div>
@@ -706,39 +665,15 @@
         <!-- 2.8-Sistemas-de-alarma-recipiente  -->
         <div class="row mt-4">
             <div class="col-md-12 text-container">
-                <h4 class="para-title">2.8 Sistemas de alarma y circuito cerrado de televisión y video vigilancia
-                    (CCTV).</h4>
+                <h4 class="para-title">{{textos.encabezamiento8}}</h4>
                 <p>
-                    Los sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de
-                    seguridad, se deben utilizar para vigilar, notificar o disuadir accesos no autorizados y actividades
-                    prohibidas en las instalaciones y demás áreas consideradas sensibles, notificar al área
-                    correspondiente, además de utilizarse como herramienta de prueba en investigaciones derivadas de
-                    algún incidente de seguridad.
+                    {{textos.paraca10}}
                 </p>
                 <p class="mt-2">
-                    Estos sistemas y tecnologías de seguridad, deben colocarse de acuerdo a un análisis de riesgo previo
-                    de tal forma que se mantengan vigiladas, monitoreadas y supervisadas las áreas que impliquen el
-                    manejo, carga, descarga, almacenaje de las mercancías, inspecciones de seguridad a los vehículos de
-                    carga, así como del acceso de personal, visitantes, proveedores, vehículos de pasajeros y de carga y
-                    demás áreas consideradas sensibles de forma permanente e ininterrumpida de conformidad con lo
-                    establecido para dicho efecto por la ANAM y operación simultánea con la aduana o área que se trate.
-                    Lo anterior resulta aplicable en los casos en las que las empresas de mensajería y paquetería estén
-                    ubicadas dentro de un recinto fiscalizado y/o fuera de él.
+                    {{textos.paraca11}}
                 </p>
                 <p class="mt-2">
-                    Dichos sistemas deben permitir una clara identificación del área o ambiente que vigila y mantener un
-                    respaldo de las grabaciones por lo menos de un mes, considerando que, en el caso de que sus procesos
-                    logísticos excedan este periodo, deberá aumentar el periodo del mantenimiento de estos respaldos,
-                    con la finalidad de tener los elementos necesarios para deslindar las responsabilidades
-                    correspondientes en caso de un incidente de seguridad. La empresa de mensajería y paquetería debe
-                    contar con un procedimiento documentado de operación. Para el caso de los sistemas de alarma y de
-                    circuito cerrado de televisión y video vigilancia y las tecnologías de seguridad, deben incluir la
-                    supervisión del buen estado del equipo, la verificación de la correcta posición de las cámaras,
-                    indicar la frecuencia con la que debe realizar el respaldo de las grabaciones al menos por sesenta
-                    días de conformidad con la regla 2.3.8., para aquellos que cuenten con autorizaciones de recinto
-                    fiscalizado y recinto fiscalizado estratégico, para los demás casos deberá de ser el plazo de
-                    grabación al menos de treinta días, así como los responsables de su operación. Dichos sistemas y
-                    toda la infraestructura de tecnología de seguridad deberán tener un acceso restringido.
+                    {{textos.paraca12}}
                 </p>
                 <p class="mt-2">
                     Anexe un layout o mapa de distribución de las cámaras de seguridad.
@@ -747,12 +682,7 @@
 
             <div class="col-md-12 text-container mt-2">
                 <label for="cuentaDocumentado">
-                    <span class="danger">*</span>Indique si cuenta con un procedimiento documentado para la operación
-                    del CCTV, que incluya la supervisión del buen estado del equipo, la verificación de la correcta
-                    posición de las cámaras, el mantenimiento para el respaldo de las grabaciones al menos por sesenta
-                    días de conformidad con la regla 2.3.8., para aquellos que cuenten con autorizaciones de recin
-                    fiscalizado y recinto fiscalizado estratégico, para los demás casos deberá de ser el plazo de
-                    grabación al menos de treinta días.
+                    <span class="danger">*</span>{{textos.etiqueta3}}
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="cuentaDocumentado" (change)="setValoresStore(seguridadFisicaForm,'cuentaDocumentado','setCuentaDocumentado')"></app-input-radio>
@@ -800,10 +730,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaSistemas">
-                    <span class="danger">*</span>Describa el procedimiento documentado para la operación de los
-                    sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de
-                    seguridad, (este debe revisarse y actualizarse anualmente y de acuerdo con el análisis de riesgo o
-                    las circunstancias)
+                    <span class="danger">*</span>{{textos.etiqueta4}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaSistemas" formControlName="describaSistemas" (change)="setValoresStore(seguridadFisicaForm,'describaSistemas','setDescribaSistemas')"></textarea>
             </div>
@@ -818,10 +745,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCamaras">
-                    <span class="danger">*</span>Indicar el número de cámaras de seguridad de los sistemas de alarma y
-                    de circuito cerrado de televisión y video vigilancia instaladas, y su ubicación por áreas (Detalle
-                    si cubre las zonas de embarque y descarga, incluyendo los puntos de entrada y salida de las
-                    instalaciones, para cubrir el movimiento de vehículos e individuos)
+                    <span class="danger">*</span>{{textos.etiqueta5}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indicarCamaras" formControlName="indicarCamaras" (change)="setValoresStore(seguridadFisicaForm,'indicarCamaras','setIndicarCamaras')"></textarea>
             </div>
@@ -852,9 +776,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senalarUbicacion">
-                    <span class="danger">*</span>Señalar la ubicación de los sistemas de alarma y de circuito cerrado de
-                    televisión y video vigilancia y las tecnologías de seguridad, dónde se localizan los monitores,
-                    quién los revisa
+                    <span class="danger">*</span>{{textos.etiqueta6}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senalarUbicacion" formControlName="senalarUbicacion" (change)="setValoresStore(seguridadFisicaForm,'senalarUbicacion','setSenalarUbicacion')"></textarea>
             </div>
@@ -869,9 +791,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueHorarios">
-                    <span class="danger">*</span>Indique los horarios de operación, y en su caso, si existen estaciones
-                    de monitoreo remoto. Toda la infraestructura de tecnología de seguridad debe estar protegida
-                    físicamente contra el acceso no autorizado
+                    <span class="danger">*</span>{{textos.etiqueta7}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueHorarios" formControlName="indiqueHorarios" (change)="setValoresStore(seguridadFisicaForm,'indiqueHorarios','setIndiqueHorarios')"></textarea>
             </div>
@@ -950,9 +870,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueCerrado">
-                    <span class="danger">*</span>Indique si los sistemas de alarma y de circuito cerrado de televisión y
-                    video vigilancia y las tecnologías de seguridad se encuentran respaldadas por una planta de poder
-                    eléctrica.
+                    <span class="danger">*</span>{{textos.etiqueta8}}
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiqueCerrado" (change)="setValoresStore(seguridadFisicaForm,'indiqueCerrado','setIndiqueCerrado')"></app-input-radio>
@@ -993,9 +911,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCircuito">
-                    <span class="danger">*</span>Indicar si adicionalmente a los sistemas de alarma y de circuito
-                    cerrado de televisión y video vigilancia utiliza algún otro tipo de tecnología para robustecer las
-                    medidas de seguridad con las que ya cuenta.
+                    <span class="danger">*</span>{{textos.etiqueta9}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indicarCircuito" formControlName="indicarCircuito" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuito','setIndicarCircuito')"></textarea>
             </div>
@@ -1010,13 +926,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describaImplementado">
-                    <span class="danger">*</span>Describa el procedimiento que se ha implementado para probar e
-                    inspeccionar de manera regular los sistemas de alarma y de circuito cerrado de televisión y video
-                    vigilancia y las tecnologías de seguridad y asegurar su buen funcionamiento. Los resultados de las
-                    inspecciones y las pruebas de funcionamiento deben estar documentadas, al igual que las acciones
-                    correctivas necesarias (estas se deben implementar lo antes posible). Adicionalmente, que los
-                    resultados documentados de estas inspecciones se mantengan durante un tiempo suficiente para fines
-                    de auditoría.
+                    <span class="danger">*</span>{{textos.etiqueta10}}
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describaImplementado" formControlName="describaImplementado" (change)="setValoresStore(seguridadFisicaForm,'describaImplementado','setDescribaImplementado')"></textarea>
             </div>
@@ -1031,9 +941,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indicarCircuitoCerrado">
-                    <span class="danger">*</span>Indicar si el proveedor de alarmas y sistemas de alarma y de circuito
-                    cerrado de televisión y video vigilancia tiene acceso a las cámaras de seguridad, si es el encargado
-                    de realizar el monitoreo de las mismas
+                    <span class="danger">*</span>{{textos.etiqueta11}}
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indicarCircuitoCerrado" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuitoCerrado','setIndicarCircuitoCerrado')"></app-input-radio>
