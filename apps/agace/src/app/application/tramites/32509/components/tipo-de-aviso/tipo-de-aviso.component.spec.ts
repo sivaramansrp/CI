@@ -1,107 +1,155 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf } from 'rxjs';
-
 import { TipoDeAvisoComponent } from './tipo-de-aviso.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DestruccionStore } from '../../estados/Tramite32509.store';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
-import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
-
-@Injectable()
-class MockDestruccionStore {
-  metodoNombre = jest.fn();
-  update = jest.fn(); // Assuming your component calls an 'update' method
-}
-
-@Injectable()
-class MockDestruccionQuery {
-  selectDestruccion$ = observableOf({});
-}
-
-@Injectable()
-class MockSeccionLibStore {}
-
-@Injectable()
-class MockSeccionLibQuery {
-  selectSeccionState$ = observableOf({});
-}
+import { SeccionLibStore, SeccionLibQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('TipoDeAvisoComponent', () => {
-  let fixture: ComponentFixture<TipoDeAvisoComponent>;
   let component: TipoDeAvisoComponent;
-  let formBuilder: FormBuilder;
-  let destruccionStore: MockDestruccionStore;
-  let destruccionQuery: MockDestruccionQuery;
-  let seccionLibQuery: MockSeccionLibQuery;
+  let fixture: ComponentFixture<TipoDeAvisoComponent>;
+  let mockDestruccionStore: Partial<DestruccionStore>;
+  let mockDestruccionQuery: Partial<DestruccionQuery>;
+  let mockSeccionLibStore: Partial<SeccionLibStore>;
+  let mockSeccionLibQuery: Partial<SeccionLibQuery>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        TipoDeAvisoComponent,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  beforeEach(async () => {
+    mockDestruccionStore = {
+      setTipoDeAviso: jest.fn(),
+    };
+    mockDestruccionQuery = {
+      selectDestruccion$: of({
+        tipoDeAviso: '',
+        nombre: '',
+        rfc: '',
+        entidadFederativa: '',
+        alcaldiaMunicipo: '',
+        colonia: '',
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        codigoPostal: '',
+        cartaCupo: '',
+        numeraDeAcuse: '',
+        destruccionMercancia: '',
+        merccanciaEntidadFederativa: '',
+        merccanciaAlcaldiaMunicipo: '',
+        merccanciaColonia: '',
+        merccanciaCalle: '',
+        merccanciaNumeroExterior: '',
+        merccanciaNumeroInterior: '',
+        merccanciaCodigoPostal: '',
+        destruir: '',
+        tarifa: '',
+        destruccionEntidadFederativa: '',
+        destruccionAlcaldiaMunicipo: '',
+        destruccionColonia: '',
+        destruccionCalle: '',
+        destruccionNumeroExterior: '',
+        destruccionNumeroInterior: '',
+        destruccionCodigoPostal: '',
+        destruccionHora: '',
+        desturccionProceso: '',
+        casofortuito: '',
+        donoMercancia: '',
+        condicionesMateriales: '',
+        caboDestruccionFecha: '',
+      }),
+    };
+    mockSeccionLibStore = {};
+    mockSeccionLibQuery = {
+      selectSeccionState$: of({
+        seccion: [true, false], // Adjusted to match the expected boolean[] type
+        formaValida: [true], // Adjusted to match the expected boolean[] type
+      }),
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [TipoDeAvisoComponent],
+      imports: [ReactiveFormsModule, TituloComponent],
       providers: [
         FormBuilder,
-        { provide: DestruccionStore, useClass: MockDestruccionStore },
-        { provide: DestruccionQuery, useClass: MockDestruccionQuery },
-        { provide: SeccionLibStore, useClass: MockSeccionLibStore },
-        { provide: SeccionLibQuery, useClass: MockSeccionLibQuery }
-      ]
+        { provide: DestruccionStore, useValue: mockDestruccionStore },
+        { provide: DestruccionQuery, useValue: mockDestruccionQuery },
+        { provide: SeccionLibStore, useValue: mockSeccionLibStore },
+        { provide: SeccionLibQuery, useValue: mockSeccionLibQuery },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     }).compileComponents();
-
-    fixture = TestBed.createComponent(TipoDeAvisoComponent);
-    component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
-    destruccionStore = TestBed.inject(DestruccionStore) as unknown as MockDestruccionStore;
-    destruccionQuery = TestBed.inject(DestruccionQuery) as MockDestruccionQuery;
-    seccionLibQuery = TestBed.inject(SeccionLibQuery) as MockSeccionLibQuery;
-    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    fixture.destroy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TipoDeAvisoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('should initialize the form on init', () => {
     component.ngOnInit();
-    expect(component.avisoForm instanceof FormGroup).toBeTruthy();
+    expect(component.avisoForm).toBeDefined();
+    expect(component.avisoForm.get('tipoDeAviso')?.value).toBe('test');
   });
 
-  it('should call store.update with form values when setValoresStore is called', () => {
-    component.avisoForm = formBuilder.group({
-      tipoDeAviso: ['testValue'],
-      nombre: ['testName'],
-      rfc: ['testRFC'],
-      // Add other form controls as needed
-    });
-  
-    const mockElement = {
-      getAttribute: (name: string) => name,
-      querySelector: (selector: string) => ({ value: component.avisoForm.get(selector.substring(1))?.value || '' })
-    } as any;
-  
-    const mockEvent = 'nombre'; // Pass a string instead of an empty object
-    const mockFormDirective = 'update'; // Mock the directive or method name as a string
-  
-    component.setValoresStore(mockElement, mockEvent, mockFormDirective);
-  
-    expect(destruccionStore.update).toHaveBeenCalledWith({
-      tipoDeAviso: 'testValue',
-      nombre: 'testName',
-      rfc: 'testRFC',
-      // Add expectations for other form values
-    });
-    expect(destruccionStore.metodoNombre).not.toHaveBeenCalled(); // Ensure the old expectation is removed
+  it('should update the form value when cambioFecha is called', () => {
+    const newDate = '2023-10-01';
+    component.cambioFecha(newDate);
+    expect(component.avisoForm.get('caboDestruccionFecha')?.value).toBe(newDate);
+    expect(component.DestruccionFecha).toBe(newDate);
   });
 
-  // Keep other relevant tests (cambioFecha, avisoValorRadio, etc.)
-  // ...
+  it('should update avisoValor when avisoValorRadio is called', () => {
+    const controlName = 'tipoDeAviso';
+    const value = 'new_value';
+    component.avisoValorRadio(controlName, value);
+    expect(component.avisoForm.get(controlName)?.value).toBe(value);
+    expect(component.avisoValor).toBe(value);
+  });
+
+  it('should handle file selection in onCambioDeArchivo', () => {
+    const mockFile = new File(['content'], 'test-file.txt', { type: 'text/plain' });
+    const event = {
+      target: {
+        files: [mockFile],
+      },
+    } as unknown as Event;
+
+    component.onCambioDeArchivo(event);
+    expect(component.archivoMedicamentos).toBe(mockFile);
+    expect(component.etiquetaDeArchivo).toBe('test-file.txt');
+  });
+
+  it('should reset etiquetaDeArchivo if no file is selected', () => {
+    const event = {
+      target: {
+        files: [],
+      },
+    } as unknown as Event;
+  
+    component.onCambioDeArchivo(event);
+    expect(component.archivoMedicamentos).toBeNull();
+    expect(component.etiquetaDeArchivo).toBe('Sin archivo seleccionados'); // Use the correct default value
+  });
+
+  it('should call store method when setValoresStore is invoked', () => {
+    const form = component.avisoForm;
+    form.patchValue({ tipoDeAviso: 'test_value' });
+    component.setValoresStore(form, 'tipoDeAviso', 'setTipoDeAviso');
+    expect(mockDestruccionStore.setTipoDeAviso).toHaveBeenCalledWith('test_value');
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
 });
