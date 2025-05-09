@@ -8,7 +8,7 @@ import { Tramite240112Store } from '../../estados/tramite240112Store.store';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnInit,OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
    /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -19,8 +19,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    indice: number = 1;
    /**
       * @property destroyNotifier$
-      * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
-      * Helps prevent memory leaks.
+      * @description Observable que notifica para cancelar suscripciones activas cuando el componente se destruye.
+      * Ayuda a prevenir fugas de memoria.
       * @type {Subject<void>}
       */
      private destroyNotifier$: Subject<void> = new Subject();
@@ -44,10 +44,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
      { index: 4, title: 'Pago de derechos', component: 'pago-de-derechos' }
    ];
      /**
-      * Initializes the component with required query and store for state management.
+      * Inicializa el componente con las consultas y el store necesarios para la gestión del estado.
       *
-      * @param tramite240112Query Query to access procedure state.
-      * @param tramite240112Store Store to update procedure state.
+      * @param tramite240112Query Consulta para acceder al estado del trámite.
+      * @param tramite240112Store Store para actualizar el estado del trámite.
       */
      constructor(
        private tramite240112Query: Tramite240112Query,
