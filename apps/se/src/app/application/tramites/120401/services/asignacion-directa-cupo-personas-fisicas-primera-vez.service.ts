@@ -27,9 +27,20 @@ import { Tramite120401Store } from '../estados/tramites/tramite120401.store';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AsignacionDirectaCupoPersonasFisicasPrimeraVezService {
+  /**
+   * Sujeto que emite un evento cuando el servicio se destruye.
+   * Esto se utiliza para limpiar las suscripciones activas y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Constructor de la clase AsignacionDirectaCupoPersonasFisicasPrimeraVezService.
+   * 
+   * @param httpServicios - Servicio HttpClient para realizar solicitudes HTTP.
+   * @param tramite120401Store - Almacén que gestiona el estado del trámite 120401.
+   */
   constructor(
     private httpServicios: HttpClient,
     public tramite120401Store: Tramite120401Store
