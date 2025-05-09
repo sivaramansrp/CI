@@ -6,6 +6,10 @@ export interface FederatariosYPlantasConfiguration<T> {
   TablaEncabezado: ConfiguracionColumna<T>[];
 }
 
+export interface ExpresasConfiguration<T> {
+  TablaSeleccion: TablaSeleccion;
+  TablaEncabezado: ConfiguracionColumna<T>[];
+}
 export interface FederatariosEncabezado {
   nombre: string;
   primerApellido: string;
@@ -155,6 +159,15 @@ export interface PlantasImmex {
   domicilioDelSolicitante: string;
   razonSocial: string;
 }
+
+export interface EmpresasEXtranjeras {
+  taxId: string;
+  nombreDelEmpresa: string;
+  pais: string;
+  direccion: string;
+}
+
+
 export const PLANTAS_IMMEX: {
   encabezado: string;
   clave: (ele: PlantasImmex) => string;
@@ -225,6 +238,29 @@ export const PLANTAS_IMMEX: {
     clave: (ele: PlantasImmex): string => ele.razonSocial,
     orden: 13,
   },
+];
+
+export const EXPRESAS_EXTRANJERAS= [
+  {
+    encabezado: 'Tax ID',
+    clave: (ele: EmpresasEXtranjeras): string => ele.taxId,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre del empresa',
+    clave: (ele: EmpresasEXtranjeras): string => ele.nombreDelEmpresa,
+    orden: 2,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: EmpresasEXtranjeras): string => ele.pais,
+    orden: 3,
+  },
+  {
+    encabezado: 'Dirección',
+    clave: (ele: EmpresasEXtranjeras): string => ele.direccion,
+    orden: 3,
+  }
 ];
 
 export const TEXTO_DE_ALERTA = `Si no se encuentran plantas con los criterios de búsqueda, el domicilio marcado como fiscal, será tomado para tal efecto, lo cual estará sujeto a aprobación al momento de la visita domiciliaria`;

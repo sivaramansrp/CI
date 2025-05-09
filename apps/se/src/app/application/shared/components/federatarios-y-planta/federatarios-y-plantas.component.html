@@ -2,8 +2,8 @@
   <ng-titulo titulo="Datos de los federatarios" />
   <form [formGroup]="federatariosFormGroup">
     <div class="row">
-      <formas-dinamicas [forma]="federatariosFormGroup" [formularioDatos]="representanteLegalFormData" 
-       ></formas-dinamicas>
+      <formas-dinamicas [forma]="federatariosFormGroup"
+        [formularioDatos]="representanteLegalFormData"></formas-dinamicas>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-default me-2">Eliminar</button>
@@ -21,35 +21,59 @@
       </div>
       <div class="row">
         <div class="col">
-          <app-tabla-dinamica
-            [configuracionTabla]="federatariosConfig.TablaEncabezado"
-            [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion"
-            [datos]="federatariosDatos"
-          ></app-tabla-dinamica>
+          <app-tabla-dinamica [configuracionTabla]="federatariosConfig.TablaEncabezado"
+            [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion" [datos]="federatariosDatos"></app-tabla-dinamica>
         </div>
       </div>
     </div>
   </div>
-
+ 
+  <div class="row" *ngIf="esExpresasVisible">
+    <div class="col">
+      <ng-titulo titulo="Empresas extranjeras" />
+      <form [formGroup]="expresasFormGroup">
+        <div class="row">
+          <formas-dinamicas [forma]="expresasFormGroup"
+            [formularioDatos]="expresasFormData"></formas-dinamicas>
+          <div class="row mt-5">
+            <div class="col-12 container text-end mt-5">
+              <button class="btn btn-default me-2">Eliminar</button>
+              <button class="btn btn-primary" (click)="aggregarExpresasDatos()">
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    </div>
+    <div class="row" *ngIf="esExpresasVisible">
+      <div class="col">
+        <div class="row">
+          <h5>Empresas extranjeras:</h5>
+        </div>
+        <div class="row">
+          <div class="col">
+            <app-tabla-dinamica [configuracionTabla]="ExpresasConfig.TablaEncabezado"
+              [tipoSeleccionTabla]="ExpresasConfig.TablaSeleccion" [datos]="expresasDatos"></app-tabla-dinamica>
+          </div>
+        </div>
+      </div>
+    </div>
+  
   <div class="row">
     <div class="col">
       <div class="row">
         <div class="col">
-          <ng-titulo
-            titulo="Datos de las plantas donde se realizaran las operaciones IMMEX"
-          />
+          <ng-titulo titulo="Datos de las plantas donde se realizaran las operaciones IMMEX" />
         </div>
       </div>
       <div class="row">
         <div class="col">
           <div class="row">
             <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="estadoOptions"
-                [label]="'Estado'"
-                [required]="true"
-                name="estado"
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Estado'" [required]="true"
+                name="estado"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
@@ -66,19 +90,17 @@
           <div class="row">
             <div class="col">
               <div class="row">
-                <div class="col"><h5>Plantas disponibles:</h5></div>
+                <div class="col">
+                  <h5>Plantas disponibles:</h5>
+                </div>
               </div>
               <div class="row">
                 <div class="col">
-                  <app-tabla-dinamica
-                    [configuracionTabla]="
+                  <app-tabla-dinamica [configuracionTabla]="
                       plantasDisponiblesConfig.TablaEncabezado
-                    "
-                    [tipoSeleccionTabla]="
+                    " [tipoSeleccionTabla]="
                       plantasDisponiblesConfig.TablaSeleccion
-                    "
-                    [datos]="plantasDisponiblesDatos"
-                  ></app-tabla-dinamica>
+                    " [datos]="plantasDisponiblesDatos"></app-tabla-dinamica>
                 </div>
               </div>
               <div class="row">
@@ -97,57 +119,47 @@
           </div>
           <div class="row">
             <div class="row">
-              <div class="col"><h5>Plantas Immex:</h5></div>
+              <div class="col">
+                <h5>Plantas Immex:</h5>
+              </div>
             </div>
             <div class="row">
               <div class="col">
-                <app-tabla-dinamica
-                  [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
+                <app-tabla-dinamica [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
                   [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
-                  [datos]="plantasImmexDatos"
-                ></app-tabla-dinamica>
+                  [datos]="plantasImmexDatos"></app-tabla-dinamica>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="d-flex flex-row flex-wrap">
               <div class="p-2">
-                <button
-                  class="btn btn-primary"
-                  (click)="irAAcciones('../complementar-plantas-acciones')"
-                >
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complementarPlanta"
+                  (click)="abrirDialogoComplementarPlanta()">
                   Complementar planta
                 </button>
               </div>
               <div class="p-2">
-                <button
-                  class="btn btn-primary"
-                  (click)="irAAcciones('../montos-inversion-acciones')"
-                >
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#montos"
+                  (click)="abrirDialogoMontos()">
                   Montos de inversión
                 </button>
               </div>
               <div class="p-2">
-                <button
-                  class="btn btn-primary"
-                  (click)="irAAcciones('../empleados-acciones')"
-                >
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empleadosAcciones"
+                (click)="abrirDialogoempleadosAcciones()">
                   Empleados
                 </button>
               </div>
               <div class="p-2">
-                <button
-                  class="btn btn-primary"
-                  (click)="irAAcciones('../capacidad-instalada-acciones')"
-                >
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#capacidadInstalada"
+                (click)="abrirDialogocapacidadInstalada()" >
                   Capacidad Instalada
                 </button>
               </div>
               <div class="p-2">
-                <button
-                  class="btn btn-primary"
-                  (click)="irAAcciones('../proveedor-por-archivo')"
-                >
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargaPorPrchivo"
+                (click)="abrirDialogocargaPorPrchivo()" >
                   Carga por archivo
                 </button>
               </div>
@@ -158,23 +170,61 @@
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="estadoOptions"
-                [label]="'Representación federal*'"
-                [required]="true"
-                name="estado"
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal*'" [required]="true"
+                name="estado"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="estadoOptions"
-                [label]="'Actividad productiva'"
-                [required]="true"
-                name="estado"
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true"
+                name="estado"></app-catalogo-select>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="complementarPlanta" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-complementar-planta></app-complementar-planta>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="montos" tabindex="-1" aria-labelledby="montosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-montos-de-inversion></app-montos-de-inversion>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="empleadosAcciones" tabindex="-1" aria-labelledby="empleadosAccionesLable" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-empleados></app-empleados>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="capacidadInstalada" tabindex="-1" aria-labelledby="capacidadInstaladaLable" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-capacidad-instalada></app-capacidad-instalada>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="cargaPorPrchivo" tabindex="-1" aria-labelledby="cargaPorPrchivoLable" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <anexar-documentos></anexar-documentos>
       </div>
     </div>
   </div>

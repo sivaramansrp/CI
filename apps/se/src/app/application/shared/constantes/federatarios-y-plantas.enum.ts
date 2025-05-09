@@ -128,3 +128,69 @@ export const DATOS_FEDERATARIOS = [
   },
 ];
 
+export const EXPRESAS = [
+  {
+    id: 'taxId',
+    labelNombre: 'Tax ID',
+    campo: 'taxId',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    solo_lectura: false,
+    validadores: [
+      {
+        tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    margin_top: 3
+  },
+  {
+    id: 'nombreDelEmpresa',
+    labelNombre: 'Nombre de la Empresa',
+    campo: 'nombreDelEmpresa',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    solo_lectura: false,
+    validadores: [
+      {
+        tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    margin_top: 3
+  },
+  {
+    id: 'pais',
+    labelNombre: 'País',
+    campo: 'pais',
+    clase: 'col-md-12',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'direccion',
+    labelNombre: 'Dirección',
+    campo: 'direccion',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    solo_lectura: false,
+    validadores: [
+      {
+        tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    margin_top: 5
+  }
+];
