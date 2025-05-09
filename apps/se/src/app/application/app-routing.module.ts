@@ -438,6 +438,20 @@ const ROUTES: Routes = [
         (m) => m.ExpedicionCertificadoAsignacionModule
       ),
   },  {
+    path: 'immex-modificacion',
+    loadChildren: () =>
+      import('./tramites/80306/immexModification.module').then(
+        (m) => m.ImmexModificationModule
+      ),  
+   },
+   {
+    path: 'validar-inicialmente-certificado',
+    loadChildren: () =>
+      import('./tramites/110214/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
+  {
     path: 'registro-modificacion', 
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
