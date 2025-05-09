@@ -12,6 +12,12 @@
             formControlName="tipoDeAviso"
             [selectedValue]="avisoValor"
             (valueChange)="avisoValorRadio('tipoDeAviso', $event.toString())"
+            (change)="
+                setValoresStore(
+                avisoForm,
+                'tipoDeAviso',
+                'setTipoDeAviso'
+                )"
             ></app-input-radio>
             </div>
         </div>

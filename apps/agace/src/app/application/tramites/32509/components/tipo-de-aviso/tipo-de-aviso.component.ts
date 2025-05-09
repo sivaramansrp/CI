@@ -1,5 +1,5 @@
 import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, MENSAJE, TEXTO } from '../../constantes/destruccion-o-donacion';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
@@ -14,7 +14,7 @@ import { DestruccionQuery } from '../../estados/Tramite32509.query';
   templateUrl: './tipo-de-aviso.component.html',
   styleUrl: './tipo-de-aviso.component.scss',
 })
-export class TipoDeAvisoComponent implements OnInit {
+export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} avisoForm - Formulario reactivo para capturar los datos del aviso.
    */
@@ -129,7 +129,7 @@ export class TipoDeAvisoComponent implements OnInit {
    */
   initActionBuilder(): void {
     this.avisoForm = this.fb.group({
-      tipoDeAviso: [this.destruccionState],
+      tipoDeAviso: [this.destruccionState.tipoDeAviso],
       nombre: [this.destruccionState.nombre, Validators.required],
       rfc: [this.destruccionState.rfc, Validators.required],
       entidadFederativa: [this.destruccionState.entidadFederativa, Validators.required],
@@ -231,4 +231,16 @@ export class TipoDeAvisoComponent implements OnInit {
       VALOR
     );
   }
+
+  /**
+   * Limpia las suscripciones activas cuando el componente es destruido.
+   * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

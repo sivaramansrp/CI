@@ -110,7 +110,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el tipo de aviso en el estado.
      * @param {string} tipoDeAviso - Tipo de aviso.
      */
-    public setTipoDeAviso(tipoDeAviso: string) {
+    public setTipoDeAviso(tipoDeAviso: string): void {
         this.update((state) => ({
             ...state,
             tipoDeAviso,
@@ -122,7 +122,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el nombre en el estado.
      * @param {string} nombre - Nombre del solicitante.
      */
-    public setNombre(nombre: string) {
+    public setNombre(nombre: string): void {
         this.update((state) => ({
             ...state,
             nombre,
@@ -134,7 +134,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el RFC en el estado.
      * @param {string} rfc - RFC del solicitante.
      */
-    public setRfc(rfc: string) {
+    public setRfc(rfc: string): void {
         this.update((state) => ({
             ...state,
             rfc,
@@ -146,7 +146,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza la entidad federativa en el estado.
      * @param {string} entidadFederativa - Entidad federativa.
      */
-    public setEntidadFederativa(entidadFederativa: string) {
+    public setEntidadFederativa(entidadFederativa: string): void {
         this.update((state) => ({
             ...state,
             entidadFederativa,
@@ -158,7 +158,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza la alcaldía o municipio en el estado.
      * @param {string} alcaldiaMunicipo - Alcaldía o municipio.
      */
-    public setAlcaldiaMunicipo(alcaldiaMunicipo: string) {
+    public setAlcaldiaMunicipo(alcaldiaMunicipo: string): void {
         this.update((state) => ({
             ...state,
             alcaldiaMunicipo,
@@ -170,7 +170,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza la colonia en el estado.
      * @param {string} colonia - Colonia.
      */
-    public setColonia(colonia: string) {
+    public setColonia(colonia: string): void {
         this.update((state) => ({
             ...state,
             colonia,
@@ -182,7 +182,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza la calle en el estado.
      * @param {string} calle - Calle.
      */
-    public setCalle(calle: string) {
+    public setCalle(calle: string): void {
         this.update((state) => ({
             ...state,
             calle,
@@ -194,7 +194,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el número exterior en el estado.
      * @param {string} numeroExterior - Número exterior.
      */
-    public setNumeroExterior(numeroExterior: string) {
+    public setNumeroExterior(numeroExterior: string): void {
         this.update((state) => ({
             ...state,
             numeroExterior,
@@ -206,7 +206,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el número interior en el estado.
      * @param {string} numeroInterior - Número interior.
      */
-    public setNumeroInterior(numeroInterior: string) {
+    public setNumeroInterior(numeroInterior: string): void {
         this.update((state) => ({
             ...state,
             numeroInterior,
@@ -218,7 +218,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @description Actualiza el código postal en el estado.
      * @param {string} codigoPostal - Código postal.
      */
-    public setCodigoPostal(codigoPostal: string) {
+    public setCodigoPostal(codigoPostal: string): void {
         this.update((state) => ({
             ...state,
             codigoPostal,
@@ -233,7 +233,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setCartaCupo('nuevoValorCartaCupo');
      */
-    public setCartaCupo(cartaCupo: string) {
+    public setCartaCupo(cartaCupo: string): void {
         this.update((state) => ({
             ...state,
             cartaCupo,
@@ -248,7 +248,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setNumeraDeAcuse('nuevoValorNumeraDeAcuse');
      */
-    public setNumeraDeAcuse(numeraDeAcuse: string) {
+    public setNumeraDeAcuse(numeraDeAcuse: string): void {
         this.update((state) => ({
             ...state,
             numeraDeAcuse,
@@ -263,7 +263,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionMercancia('nuevoValorDestruccionMercancia');
      */
-    public setDestruccionMercancia(destruccionMercancia: string) {
+    public setDestruccionMercancia(destruccionMercancia: string): void {
         this.update((state) => ({
             ...state,
             destruccionMercancia,
@@ -278,7 +278,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaEntidadFederativa('nuevoValorEntidadFederativa');
      */
-    public setMerccanciaEntidadFederativa(merccanciaEntidadFederativa: string) {
+    public setMerccanciaEntidadFederativa(merccanciaEntidadFederativa: string): void {
         this.update((state) => ({
             ...state,
             merccanciaEntidadFederativa,
@@ -293,7 +293,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaAlcaldiaMunicipo('nuevoValorAlcaldiaMunicipo');
      */
-    public setMerccanciaAlcaldiaMunicipo(merccanciaAlcaldiaMunicipo: string) {
+    public setMerccanciaAlcaldiaMunicipo(merccanciaAlcaldiaMunicipo: string): void {
         this.update((state) => ({
             ...state,
             merccanciaAlcaldiaMunicipo,
@@ -308,7 +308,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaColonia('nuevoValorColonia');
      */
-    public setMerccanciaColonia(merccanciaColonia: string) {
+    public setMerccanciaColonia(merccanciaColonia: string): void {
         this.update((state) => ({
             ...state,
             merccanciaColonia,
@@ -323,7 +323,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaCalle('nuevoValorCalle');
      */
-    public setMerccanciaCalle(merccanciaCalle: string) {
+    public setMerccanciaCalle(merccanciaCalle: string): void {
         this.update((state) => ({
             ...state,
             merccanciaCalle,
@@ -338,7 +338,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaNumeroExterior('nuevoValorNumeroExterior');
      */
-    public setMerccanciaNumeroExterior(merccanciaNumeroExterior: string) {
+    public setMerccanciaNumeroExterior(merccanciaNumeroExterior: string): void {
         this.update((state) => ({
             ...state,
             merccanciaNumeroExterior,
@@ -353,7 +353,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaNumeroInterior('nuevoValorNumeroInterior');
      */
-    public setMerccanciaNumeroInterior(merccanciaNumeroInterior: string) {
+    public setMerccanciaNumeroInterior(merccanciaNumeroInterior: string): void {
         this.update((state) => ({
             ...state,
             merccanciaNumeroInterior,
@@ -368,7 +368,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setMerccanciaCodigoPostal('nuevoValorCodigoPostal');
      */
-    public setMerccanciaCodigoPostal(merccanciaCodigoPostal: string) {
+    public setMerccanciaCodigoPostal(merccanciaCodigoPostal: string): void {
         this.update((state) => ({
             ...state,
             merccanciaCodigoPostal,
@@ -383,7 +383,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruir('nuevoValor');
      */
-    public setDestruir(destruir: string) {
+    public setDestruir(destruir: string): void {
         this.update((state) => ({
             ...state,
             destruir,
@@ -398,7 +398,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setTarifa('nuevoValorTarifa');
      */
-    public setTarifa(tarifa: string) {
+    public setTarifa(tarifa: string): void {
         this.update((state) => ({
             ...state,
             tarifa,
@@ -413,7 +413,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionEntidadFederativa('nuevoValorEntidadFederativa');
      */
-    public setDestruccionEntidadFederativa(destruccionEntidadFederativa: string) {
+    public setDestruccionEntidadFederativa(destruccionEntidadFederativa: string): void {
         this.update((state) => ({
             ...state,
             destruccionEntidadFederativa,
@@ -428,7 +428,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionAlcaldiaMunicipo('nuevoValorAlcaldiaMunicipo');
      */
-    public setDestruccionAlcaldiaMunicipo(destruccionAlcaldiaMunicipo: string) {
+    public setDestruccionAlcaldiaMunicipo(destruccionAlcaldiaMunicipo: string): void {
         this.update((state) => ({
             ...state,
             destruccionAlcaldiaMunicipo,
@@ -443,7 +443,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionColonia('nuevoValorColonia');
      */
-    public setDestruccionColonia(destruccionColonia: string) {
+    public setDestruccionColonia(destruccionColonia: string): void {
         this.update((state) => ({
             ...state,
             destruccionColonia,
@@ -456,7 +456,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * @param {string} destruccionCalle - El nuevo valor para la propiedad `destruccionCalle`.
      * @memberof Tramite32509Store
      */
-    public setDestruccionCalle(destruccionCalle: string) {
+    public setDestruccionCalle(destruccionCalle: string): void {
         this.update((state) => ({
             ...state,
             destruccionCalle,
@@ -471,7 +471,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionNumeroExterior('nuevoValorNumeroExterior');
      */
-    public setDestruccionNumeroExterior(destruccionNumeroExterior: string) {
+    public setDestruccionNumeroExterior(destruccionNumeroExterior: string): void {
         this.update((state) => ({
             ...state,
             destruccionNumeroExterior,
@@ -486,7 +486,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionNumeroInterior('nuevoValorNumeroInterior');
      */
-    public setDestruccionNumeroInterior(destruccionNumeroInterior: string) {
+    public setDestruccionNumeroInterior(destruccionNumeroInterior: string): void {
         this.update((state) => ({
             ...state,
             destruccionNumeroInterior,
@@ -501,7 +501,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionCodigoPostal('nuevoValorCodigoPostal');
      */
-    public setDestruccionCodigoPostal(destruccionCodigoPostal: string) {
+    public setDestruccionCodigoPostal(destruccionCodigoPostal: string): void {
         this.update((state) => ({
             ...state,
             destruccionCodigoPostal,
@@ -516,7 +516,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDestruccionHora('nuevoValorHora');
      */
-    public setDestruccionHora(destruccionHora: string) {
+    public setDestruccionHora(destruccionHora: string): void {
         this.update((state) => ({
             ...state,
             destruccionHora,
@@ -531,7 +531,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDesturccionProceso('nuevoValorProceso');
      */
-    public setDesturccionProceso(desturccionProceso: string) {
+    public setDesturccionProceso(desturccionProceso: string): void {
         this.update((state) => ({
             ...state,
             desturccionProceso,
@@ -546,7 +546,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setCasofortuito('nuevoValorCasoFortuito');
      */
-    public setCasofortuito(casofortuito: string) {
+    public setCasofortuito(casofortuito: string): void {
         this.update((state) => ({
             ...state,
             casofortuito,
@@ -561,7 +561,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setDonoMercancia('nuevoValorDonoMercancia');
      */
-    public setDonoMercancia(donoMercancia: string) {
+    public setDonoMercancia(donoMercancia: string): void {
         this.update((state) => ({
             ...state,
             donoMercancia,
@@ -576,7 +576,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setCondicionesMateriales('nuevoValorCondicionesMateriales');
      */
-    public setCondicionesMateriales(condicionesMateriales: string) {
+    public setCondicionesMateriales(condicionesMateriales: string): void {
         this.update((state) => ({
             ...state,
             condicionesMateriales,
@@ -591,7 +591,7 @@ export class DestruccionStore extends Store<DestruccionState> {
      * // Ejemplo de uso:
      * store.setCaboDestruccionFecha('nuevoValorFecha');
      */
-    public setCaboDestruccionFecha(caboDestruccionFecha: string) {
+    public setCaboDestruccionFecha(caboDestruccionFecha: string): void {
         this.update((state) => ({
             ...state,
             caboDestruccionFecha,
