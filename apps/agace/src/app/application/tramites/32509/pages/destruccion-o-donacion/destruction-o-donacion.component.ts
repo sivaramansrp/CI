@@ -8,7 +8,7 @@ import { PASOS } from '../../constantes/destruccion-o-donacion';
 @Component({
   selector: 'app-destruction-o-donacion',
   templateUrl: './destruction-o-donacion.component.html',
-  styleUrl: './destruction-o-donacion.component.css',
+  styleUrl: './destruction-o-donacion.component.scss',
 })
 export class DestructionODonacionComponent {
   /**

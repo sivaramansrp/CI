@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, InputRadioComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, InputFechaComponent, InputRadioComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AvisoDeMercanciaRoutingModule } from './aviso-de-mercancia-routing.module';
 import { CommonModule } from '@angular/common';
 import { DestructionODonacionComponent } from './pages/destruccion-o-donacion/destruction-o-donacion.component';
@@ -29,7 +29,9 @@ import { TipoDeAvisoComponent } from './components/tipo-de-aviso/tipo-de-aviso.c
     RouterModule,
     ReactiveFormsModule,
     TituloComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    AlertComponent,
+    InputFechaComponent,
   ]
 })
 export class AvisoDeMercanciaModule { }
