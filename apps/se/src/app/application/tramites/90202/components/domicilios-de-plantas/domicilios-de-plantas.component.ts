@@ -1,11 +1,9 @@
+import { ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
-import DomiciliosTabla from 'libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
+import DomiciliosTabla from '@libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
 /**
  * Componente que representa la sección de domicilios de plantas en el formulario.
  * Este componente incluye un formulario reactivo y una tabla dinámica para mostrar los domicilios.
@@ -46,7 +44,7 @@ export class DomiciliosDePlantasComponent {
     { encabezado: 'Código postal', clave: (item: DomiciliosDePlantasTabla) => item.postal, orden: 4 },
     { encabezado: 'Colonia', clave: (item: DomiciliosDePlantasTabla) => item.colonia, orden: 5 },
     { encabezado: 'Municipio o alcaldía', clave: (item: DomiciliosDePlantasTabla) => item.municipio, orden: 6 },
-    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 },
+    { encabezado: 'Estado', clave: (item: DomiciliosDePlantasTabla) => item.estado, orden: 7 },
     { encabezado: 'País', clave: (fila: DomiciliosDePlantasTabla) => fila.pais, orden: 8 },
     { encabezado: 'Registro', clave: (fila: DomiciliosDePlantasTabla) => fila.registro, orden: 9 },
     { encabezado: 'Registro federal de contribuyentes', clave: (fila: DomiciliosDePlantasTabla) => fila.registroFederalDeContribuyentes, orden: 10 },
@@ -77,7 +75,7 @@ export class DomiciliosDePlantasComponent {
    * - `representacionFederal`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
    * - `actividadProductiva`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
    */
-  public establecerFormDomiciliosDePlantas() {
+  public establecerFormDomiciliosDePlantas(): void {
     this.formDomiciliosDePlantas = this.fb.group({
       representacionFederal: [{value: '',disabled: true}],
       actividadProductiva: [{value: '',disabled: true}]
