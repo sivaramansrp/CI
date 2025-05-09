@@ -1,6 +1,6 @@
+import { AutorizacionProsecStore, ProsecState } from "../estados/autorizacion-prosec.store";
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
-import { AutorizacionProsecStore, ProsecState } from "../estados/autorizacion-prosec.store";
 
 
 /**

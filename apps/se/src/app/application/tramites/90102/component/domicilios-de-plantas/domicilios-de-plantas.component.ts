@@ -10,14 +10,6 @@
  * @import { ProsecService } from '../../../../core/services/90102/prosec.module';
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import {
   AlertComponent,
   Catalogo,
@@ -25,26 +17,33 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { Subject } from 'rxjs';
-import { tap } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { ProsecService } from '../../services/prosec.service';
-import { TEXTO } from '../../constantes/prosec.module';
-import { FilaPlantas } from '../../models/prosec.module';
 import {
   AutorizacionProsecStore,
   ProsecState,
 } from '../../estados/autorizacion-prosec.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { FilaPlantas } from '../../models/prosec.module';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ProsecService } from '../../services/prosec.service';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { TEXTO } from '../../constantes/prosec.module';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { delay } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
@@ -197,7 +196,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    if ((this.domiciliosState.formaValida[0].descripcion = 'AllValida')) {
+    if (this.domiciliosState.formaValida[0]?.descripcion === 'AllValida') {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     } else {
@@ -210,12 +209,13 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     campo: string,
     metodoNombre: keyof AutorizacionProsecStore
   ): void {
+    // Cambiado el tipo "any" por "unknown" para cumplir con las reglas de TypeScript
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
-    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(VALOR);
+    (this.AutorizacionProsecStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   initActionFormBuild(): void {
+    // Se asegura que el formulario se inicialice correctamente con las validaciones necesarias
     this.forma = this.fb.group({
       modalidad: [this.domiciliosState.modalidad],
       Estado: [this.domiciliosState.Estado, Validators.required],
@@ -284,7 +284,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @method obtenserLista
    * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
    */
-  obtenerLista() {
+  obtenerLista(): void {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
@@ -307,7 +307,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   recuperarDatos(): void {
     this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
-      next: (response: any) => {
+      next: (response: { plantasDatos: FilaPlantas[] }) => {
         if (response && Array.isArray(response.plantasDatos)) {
           this.plantasDatos = response.plantasDatos;
         }
