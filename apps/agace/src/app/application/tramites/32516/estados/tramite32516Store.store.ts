@@ -54,7 +54,7 @@ export function createInitialState(): TramiteState {
  * el estado de la solicitud y las mercancías.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'cambio-modalidad' })
+@StoreConfig({ name: 'acta-de-hechos' })
 export class TramiteStore extends Store<TramiteState> {
       /**
      * @constructor

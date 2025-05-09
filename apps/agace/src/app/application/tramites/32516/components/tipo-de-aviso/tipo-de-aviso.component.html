@@ -16,14 +16,8 @@
         <div class="form-group d-flex align-items-center">
           <label>&iquest;Acudió la ADACE?</label>
           <div class="form-check ms-3">
-            <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
-              id="acudioSi" value="1">
-            <label class="form-check-label" for="acudioSi">Si</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input" type="radio" name="capacidadAlmacenamiento" formControlName="capacidadAlmacenamiento"
-              id="acudioNo" value="0">
-            <label class="form-check-label" for="acudioNo">No</label>
+            <app-input-radio [radioOptions]="radioOpcion" formControlName="capacidadAlmacenamiento"
+                             [layout]="'horizontal'"></app-input-radio>
           </div>
         </div>
       </div>
@@ -48,16 +42,8 @@
         <div class="form-group d-flex align-items-center">
           <label>&iquest;Cuenta con el ID de transacci&oacute;n de VUCEM por la presentaci&oacute;n del aviso de
             destrucci&oacute;n?</label>
-          <div class="form-check ms-3">
-            <input class="form-check-input" type="radio" formControlName="cantidadBienes" name="cantidadBienes" id="acudioSi"
-              value="1" required>
-            <label class="form-check-label" for="acudioSi">Si</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input" type="radio" formControlName="cantidadBienes" name="cantidadBienes" id="acudioNo"
-              value="0" required>
-            <label class="form-check-label" for="acudioNo">No</label>
-          </div>
+            <app-input-radio [radioOptions]="radioOpcion" formControlName="cantidadBienes"
+            [layout]="'horizontal'"></app-input-radio>
         </div>
       </div>
     </div>

@@ -76,4 +76,13 @@ export class CatalogosService {
       map(response => response.data)
     );
   }
+
+    /**
+   * Obtiene las opciones para el radio button de exención de pago.
+   * @returns {RadioOpcion[]} Lista de opciones para el radio button.
+   */
+    RadioOpcion = [
+      { label: 'Sí', value: 'true' },
+      { label: 'No', value: 'false' }
+    ];
 }

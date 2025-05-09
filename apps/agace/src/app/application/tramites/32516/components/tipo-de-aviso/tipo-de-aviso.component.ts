@@ -11,6 +11,7 @@ import { FormGroup } from '@angular/forms';
 import { HECHOS_SERVICIO } from '../../modelos/acta-de-hechos.model';
 import { HechosInfo } from '../../modelos/acta-de-hechos.model';
 import { HechosTablaServicios } from '../../servicios/hechos-tabla.service';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -43,7 +44,8 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    InputRadioComponent
   ],
   templateUrl: './tipo-de-aviso.component.html',
   styleUrls: ['./tipo-de-aviso.component.scss'],
@@ -111,6 +113,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
     private seccion!: SeccionLibState;
 
+    /**
+ * Opciones para el componente de radio buttons.
+ * Contiene un arreglo de objetos con etiquetas y valores para las opciones.
+ * @property {Array<{ label: string; value: string }>} radioOpcion
+ */
+
+    radioOpcion: { label: string; value: string }[] = [];
+
   /**
    * Constructor del componente.
    * Inicializa servicios y el formulario reactivo.
@@ -177,6 +187,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.handleConditionalValidation();
     this.obtenerListasDesplegables();
     this.obtenerLevantarActaDesplegables();
+    this.radioOpcion = this.catalogosService.RadioOpcion;
 
         /**
  * Se suscribe a los cambios en el estado de la solicitud de trámite.
@@ -258,6 +269,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   obtenerHechosSelectList(): void {
     this.catalogosService
     .obtenerMenuDesplegable('acta-de-hechos.json')
+    .pipe(takeUntil(this.unsubscribe$))
     .subscribe({
       next: (data: Catalogo[]) => {
         this.actaDeHechos = data;
@@ -283,6 +295,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     obtenerLevantarActaSelectList(): void {
       this.catalogosService
         .obtenerLevantarActaDesplegable('levantar.json')
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: Catalogo[]) => {
           this.levantarActa = data;
         });
