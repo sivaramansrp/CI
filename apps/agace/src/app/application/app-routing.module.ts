@@ -116,6 +116,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-de-ampliacion',
+    loadChildren: () =>
+      import('./tramites/32102/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule
+      ),
+  },
+  {
     path: 'renovacion-comercializadora',
     loadChildren: () =>
       import('./tramites/31801/renovacion-comercializadora.module').then(
