@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/dashboard
 
 # Build the application
-RUN npx nx build dashboard --configuration=production --skip-nx-cache --verbose
+RUN npx nx build dashboard --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/dashboard" && test -f "/app/dist/apps/dashboard/index.html" || exit 1
@@ -69,13 +69,14 @@ COPY --from=node /app/dist/apps/dashboard .
 
 # Create health check file
 RUN echo "OK" > /usr/share/nginx/html/health.txt
+RUN echo "OK" > /usr/share/nginx/html/health
 
 # Expose port 80
 EXPOSE 80
 
 # Configure health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget -q --spider http://localhost/health.txt || exit 1
+  CMD wget -q --spider http://localhost/health.txt || wget -q --spider http://localhost/health || exit 1
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

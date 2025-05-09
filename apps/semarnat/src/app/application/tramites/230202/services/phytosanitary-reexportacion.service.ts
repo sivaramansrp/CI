@@ -1,9 +1,9 @@
+import { MetaInfo, Respuesta, RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite230202Store } from '../estados/tramite230202.store';
-import { RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +27,15 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/aduanaIngresara.json');
   }
 
-  getPais() {
+  getPais(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/pais.json');
   }
 
-  getEntidades() {
+  getMetaInfo(): Observable<Respuesta<MetaInfo>> {
+    return this.http.get<Respuesta<MetaInfo>>('assets/json/230202/solicitudDatosInfo.json');
+  }
+
+  getEntidades(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/entidades.json');
   }
 

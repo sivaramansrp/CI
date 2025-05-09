@@ -35,6 +35,8 @@
           [fechas]="selectRangoDias"
           [label]="paisDeOrigenLabel"
           [botones]="paisDeOrigenBotons"
+          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <br />
         <label class="form-label"
@@ -65,12 +67,13 @@
               [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
               [configuracionTabla]="encabezadoDeTabla"
               [datos]="datosSolicitud"
+              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
             ></app-tabla-dinamica>
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Modificar</button>
-          <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default" (click)="modificar()">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3" (click)="eliminar()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
@@ -220,6 +223,7 @@
   tabindex="-1"
   aria-labelledby="modalAgregarMercanciasLabel"
   aria-hidden="true"
+  #modalAgregarMercancias
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -328,8 +332,7 @@
               <button
                 type="button"
                 class="btn btn-default"
-                data-bs-dismiss="modal"
-                #closeModal
+                (click)="eliminarDetalle()"
               >
                 Eliminar detalle
               </button>
@@ -349,6 +352,7 @@
                 [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                 [configuracionTabla]="encabezadoDeTablaDetalle"
                 [datos]="datosDetalle"
+                (listaDeFilaSeleccionada)="onSelectedRows($event)"
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -366,6 +370,34 @@
             </div>
           </ng-container>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="modalConfirmacion"
+  aria-labelledby="modalConfirmacionLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  #modalConfirmacion
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <label>Seleccione la descripcion<br />del producto</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          #closeModal
+        >
+          Acceptar
+        </button>
       </div>
     </div>
   </div>

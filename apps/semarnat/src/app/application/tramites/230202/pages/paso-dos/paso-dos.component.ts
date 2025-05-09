@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -8,58 +7,61 @@ import {
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import documentList from '@libs/shared/theme/assets/json/10302/document-list.json';
 
 /**
- * Componente que representa el paso dos del trámite.
+ * Componente que representa la funcionalidad de la paso dos 32201.
  */
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
-  imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent],
+  imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constante que contiene los textos utilizados en el componente.
-   * @type {any}
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Lista de tipos de documentos disponibles para el trámite.
-   * @type {Catalogo[]}
+   * Arreglo que contiene los tipos de documentos disponibles.
    */
   tiposDocumentos: Catalogo[] = [];
 
   /**
-   * Clase CSS para mostrar alertas informativas.
-   * @type {string}
+   * Clase CSS para mostrar una alerta informativa.
    */
   infoAlert = 'alert-info';
 
   /**
-   * Catálogo de documentos disponibles para el trámite.
-   * @type {Catalogo[]}
+   * Arreglo que contiene el catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Observable para manejar la destrucción de suscripciones */
-  private destroy$: Subject<void> = new Subject<void>();
+  /**
+   * Arreglo que contiene los documentos seleccionados.
+   */
+  documentosSeleccionados: Catalogo[] = [];
+
+  /**
+   * Sujeto para notificar la destrucción del componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
+   * @param catalogosServices Servicio para obtener los catálogos.
    */
   constructor(private catalogosServices: CatalogosService) {
-    // Constructor utilizado para la inyección de dependencias.
+    // Constructor no vacío para evitar el error de ESLint.
   }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Se encarga de obtener los tipos de documentos y establecer los documentos seleccionados por defecto.
+   * Método de inicialización del componente.
+   * Se ejecuta al inicializar el componente y obtiene los tipos de documentos.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
@@ -67,39 +69,37 @@ export class PasoDosComponent implements OnInit {
 
   /**
    * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
-   * Utiliza el servicio `CatalogosService` para obtener los datos.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        /**
-         * Callback que se ejecuta cuando la solicitud es exitosa.
-         * @param resp Respuesta del servicio con los tipos de documentos.
-         */
         next: (resp): void => {
-          if (resp.length > 0) {
+          if (Array.isArray(resp) && resp.length > 0) {
             this.catalogoDocumentos = resp;
+          } else {
+            console.error(
+              'Unexpected response format for tipos de documentos',
+              resp
+            );
           }
         },
-        /**
-         * Callback que se ejecuta cuando ocurre un error en la solicitud.
-         * @param _error Error devuelto por el servicio.
-         */
         error: (_error): void => {
-          return _error;
+          console.error(
+            'Error al obtener el catálogo de tipos de documentos',
+            _error
+          );
         },
       });
   }
 
   /**
-   * Método que se llama cuando el componente es destruido.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   * @returns void
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
    */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
