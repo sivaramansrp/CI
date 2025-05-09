@@ -1,44 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
+import { provideToastr, ToastrService } from 'ngx-toastr'; // Import ToastrService and provideToastr
 import { TercerosComponent } from './terceros.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
-import { Tramite230901Store } from '../../estados/store/tramite230901.store';
-import { Tramite230901Query } from '../../estados/query/tramite230901.query';
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enum';
+import { TemplateRef } from '@angular/core';
 
-describe('TercerosComponent', () => {
+describe('PasoDosComponent', () => {
   let component: TercerosComponent;
   let fixture: ComponentFixture<TercerosComponent>;
-  let tramite230901StoreMock: any;
-  let tramite230901QueryMock: any;
-  let autorizacionesDeVidaSilvestreServiceMock: any;
 
   beforeEach(async () => {
-    tramite230901StoreMock = {
-      setEntidadFederativa: jest.fn(),
-      setTercerosPopupState: jest.fn(),
-    };
-
-    tramite230901QueryMock = {
-      selectSolicitud$: of({
-        entidadFederativa: 'MORELOS',
-      }),
-    };
-
-    autorizacionesDeVidaSilvestreServiceMock = {
-      inicializaTercerosDatosCatalogos: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      declarations: [TercerosComponent],
-      imports: [ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent],
+      imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent], // Import standalone components
+      declarations: [],
       providers: [
-        { provide: Tramite230901Store, useValue: tramite230901StoreMock },
-        { provide: Tramite230901Query, useValue: tramite230901QueryMock },
-        { provide: AutorizacionesDeVidaSilvestreService, useValue: autorizacionesDeVidaSilvestreServiceMock },
-        FormBuilder,
+        CatalogosService,
+        provideHttpClient(), // Provide HttpClient
+        ToastrService, // Provide ToastrService
+        provideToastr({
+          positionClass: 'toast-top-right', // Example configuration for Toastr
+        }),
       ],
     }).compileComponents();
 
@@ -47,73 +29,77 @@ describe('TercerosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and tablaDatos on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formularioDestinatario).toBeDefined();
-    expect(component.formularioDestinatario.get('entidadFederativa')?.value).toBe('MORELOS');
-    expect(component.datosTabla).toEqual([{ pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', ciudad: '---', entidadFederativa: 'MORELOS', domicilio: 'prueba', codigoPostal: 96533 }]);
-  });
-
-  it('should call inicializaTercerosDatosCatalogos on ngOnInit', () => {
-    component.ngOnInit();
-    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaTercerosDatosCatalogos).toHaveBeenCalled();
-  });
-
-  it('should handle changes in entidadFederativa and update the store', () => {
-    component.ngOnInit();
-    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
-    component.manejarCambioEntidadFederativa();
-    expect(tramite230901StoreMock.setEntidadFederativa).toHaveBeenCalledWith('MORELOS');
-    expect(component.datosTabla.length).toBe(1);
-  });
-
-  it('should not add duplicate entries to tablaDatos', () => {
-    component.ngOnInit();
-    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
-    component.manejarCambioEntidadFederativa();
-    component.manejarCambioEntidadFederativa();
-    expect(component.datosTabla.length).toBe(1);
-  });
-
-  it('should handle fila seleccionada and enable modificar button', () => {
-    const mockRow: DestinatarioConfiguracionItem = {
-      pais: 'MEXICO',
-      ciudad: 'Cuernavaca',
-      entidadFederativa: 'MORELOS',
-      domicilio: 'Calle 123',
-      codigoPostal: 62000,
-    };
-    component.manejarFilaSeleccionada([mockRow]);
-    expect(component.botonModificarHabilitado).toBe(true);
-  });
-
-  it('should disable modificar button when no fila is seleccionada', () => {
-    component.manejarFilaSeleccionada([]);
-    expect(component.botonModificarHabilitado).toBe(false);
-  });
-
-  it('should open the popup and update the store', () => {
-    component.abrirPopup();
-    expect(component.popupAbierto).toBe(true);
-    expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(true);
-  });
-
-  it('should close the popup and update the store', () => {
-    component.cerrarPopup();
-    expect(component.popupAbierto).toBeFalsy();
-    expect(component.popupCerrado).toBeFalsy();
-    expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(false);
-  });
-
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
+  it('should call crearFormularioDestinatario and cargarDatos on ngOnInit', () => {
+  const crearFormularioDestinatarioSpy = jest.spyOn(component, 'crearFormularioDestinatario');
+  const cargarDatosSpy = jest.spyOn(component, 'cargarDatos');
+  component.ngOnInit();
+  expect(crearFormularioDestinatarioSpy).toHaveBeenCalled();
+  expect(cargarDatosSpy).toHaveBeenCalled();
 });
+
+it('should initialize agregarMercanciasForm in crearFormularioDestinatario', () => {
+  component.crearFormularioDestinatario();
+  expect(component.agregarMercanciasForm).toBeDefined();
+  expect(component.agregarMercanciasForm.get('nacionalidad')?.value).toBe('nacional');
+});
+
+it('should update validators on onTipoPersonaChange', () => {
+  component.crearFormularioDestinatario();
+  component.onTipoPersonaChange('fisica');
+  expect(component.agregarMercanciasForm.get('nombre')?.validator).toBeDefined();
+  expect(component.agregarMercanciasForm.get('razonSocial')?.validator).toBeNull();
+});
+
+it('should update filaSeleccionada and botonModificarHabilitado on manejarFilaSeleccionada', () => {
+  const mockRow: DestinatarioConfiguracionItem = {
+    pais: 1, ciudad: 'CDMX', domicilio: 'Calle 123', codigoPostal: 12345,
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    razonSocial: '',
+    paisStr: ''
+  }; // Assuming 1 corresponds to 'Mexico'
+  component.manejarFilaSeleccionada([mockRow]);
+  expect(component.filaSeleccionada).toEqual([mockRow]);
+  expect(component.botonModificarHabilitado).toBe(true);
+});
+
+it('should open popup on abrirPopup if botonModificarHabilitado is true', () => {
+  component.botonModificarHabilitado = true;
+  component.abrirPopup();
+  expect(component.popupAbierto).toBe(true);
+});
+
+it('should close popup on cerrarPopup', () => {
+  component.cerrarPopup();
+  expect(component.popupAbierto).toBe(false);
+  expect(component.popupCerrado).toBe(false);
+});
+
+it('should open modal on abrirModal', () => {
+  const modalServiceSpy = jest.spyOn(component['modalService'], 'show');
+  const templateRef = {} as TemplateRef<unknown>;
+  component.abrirModal(templateRef);
+  expect(modalServiceSpy).toHaveBeenCalledWith(templateRef, { class: 'modal-xl' });
+});
+
+it('should return true if form control is invalid and touched in isInvalid', () => {
+  component.crearFormularioDestinatario();
+  component.agregarMercanciasForm.get('pais')?.markAsTouched();
+  expect(component.isInvalid('pais')).toBe(true);
+});
+
+it('should clean up subscriptions on ngOnDestroy', () => {
+  const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+  const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+  component.ngOnDestroy();
+  expect(destroyNotifierSpy).toHaveBeenCalled();
+  expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+});
+
+});
+

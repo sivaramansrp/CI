@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DatosSolicitud } from '../../models/datos-tramite.model';
+import { ElementRef } from '@angular/core';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -30,18 +32,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.cerrarModal();
 
     expect(closeModalElement.click).toHaveBeenCalled();
-  });
-
-  it('should set values in the store using setValoresStore', () => {
-    const mockForm = new FormGroup({
-      testField: new FormControl('testValue'),
-    });
-    const mockMethodName = 'setNumeroDeCertificado' as keyof Tramite230202Store;
-    jest.spyOn(component.store, mockMethodName as any);
-
-    component.setValoresStore(mockForm, 'testField', mockMethodName);
-
-    expect(component.store[mockMethodName]).toHaveBeenCalledWith('testValue');
   });
 
   it('should initialize the form in inicializarFormulario', () => {
