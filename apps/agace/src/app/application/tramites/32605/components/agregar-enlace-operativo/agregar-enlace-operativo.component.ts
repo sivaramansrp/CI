@@ -18,7 +18,10 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
+/**
+ * Componente para agregar un enlace operativo.
+ * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
+ */
 @Component({
   selector: 'app-agregar-enlace-operativo',
   standalone: true,
@@ -26,11 +29,23 @@ import { takeUntil } from 'rxjs';
   templateUrl: './agregar-enlace-operativo.component.html',
   styleUrl: './agregar-enlace-operativo.component.scss',
 })
+/**
+ * Componente para agregar un enlace operativo.
+ * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
+ */
 export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para capturar los datos del enlace operativo */
   agregarEnlaceOperativoForm!: FormGroup;
+
+  /** Subject para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Estado actual de la solicitud */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+
+  /** Evento para emitir el objeto EnlaceOperativo al componente padre */
   @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
+
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -38,6 +53,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     public solicitud32605Query: Solicitud32605Query
   ) {}
 
+  /** Inicializa el formulario y suscribe al estado de la solicitud */
   ngOnInit(): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
@@ -74,6 +90,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
       agregarEnlaceSuplente: [this.solicitud32605State.agregarEnlaceSuplente],
     });
 
+    /** Escucha los cambios en el estado de la solicitud y actualiza el formulario */
     this.solicitud32605Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -101,6 +118,10 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Llama al servicio para obtener los datos del representante legal
+   * y actualiza el estado con esos datos.
+   */
   buscarTerceroNacionalIDC(): void {
     if (this.agregarEnlaceOperativoForm.get('rfcTercero')?.value) {
       this.solicitudService
@@ -123,31 +144,40 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Actualiza el RFC del tercero en el store */
   actualizarRfcTercero(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarRfcTercero(VALOR);
   }
 
+  /** Actualiza el teléfono en el store */
   actualizarTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTelefono(VALOR);
   }
 
+  /** Actualiza el correo electrónico en el store */
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
   }
 
+  /** Actualiza el cargo en el store */
   agregarEnlaceCargo(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarEnlaceCargo(VALOR);
   }
 
+  /** Actualiza el valor del campo suplente en el store */
   actualizarEnlaceSuplente(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud32605Store.actualizarEnlaceSuplente(VALOR);
   }
 
+  /**
+   * Construye el objeto EnlaceOperativo con los valores del formulario
+   * y lo emite al componente padre.
+   */
   aceptarEnlaceSuplente(): void {
     const OBJETO_JSON: EnlaceOperativo = {
       rfc: this.agregarEnlaceOperativoForm.get('agregarEnlaceRfc')?.value,
@@ -183,6 +213,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     this.agregarEnlaceOperativo.emit(OBJETO_JSON);
   }
 
+  /** Finaliza todas las suscripciones para evitar fugas de memoria */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -31,6 +31,11 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente principal para gestionar los datos de importador y exportador
+ * en el formulario, incluyendo la integración con transportistas y validaciones
+ * dinámicas.
+ */
 @Component({
   selector: 'app-importador-exportador',
   standalone: true,
@@ -48,20 +53,63 @@ import { takeUntil } from 'rxjs';
   styleUrl: './importador-exportador.component.scss',
 })
 export class ImportadorExportadorComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para el componente importador-exportador */
   importadorExportadorForm!: FormGroup;
+
+  /** Sujeto que maneja la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Opciones de radio para la selección de valores */
   sinoOpcion: InputRadio = {} as InputRadio;
+  /**
+   * Representa una opción de radio para el reconocimiento mutuo.
+   * Se utiliza para manejar las opciones relacionadas con el mutuo en el formulario.
+   */
   mutuo: InputRadio = {} as InputRadio;
+
+  /**
+   * Representa una opción de radio para la clasificación de la información.
+   * Se utiliza para manejar las opciones relacionadas con la clasificación de la información en el formulario.
+   */
   clasificacionInformacion: InputRadio = {} as InputRadio;
+
+  /** Estado de la solicitud */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+
+  /** Fechas de inicio y pago de la solicitud */
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_INICIO;
+  /**
+   * Fecha de pago asociada a la solicitud.
+   * Se inicializa con el valor constante `FECHA_DE_PAGO` que contiene la fecha predeterminada de pago.
+   */
   fechaDePago: InputFecha = FECHA_DE_PAGO;
+
+  /** Configuración y lista de transportistas */
   transportistasTabla = TablaSeleccion.CHECKBOX;
+  /**
+   * Configuración de las columnas para la tabla de transportistas.
+   * Se inicializa con la configuración predeterminada definida en `TRANSPORTISTAS_CONFIGURACION`.
+   */
   transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] =
     TRANSPORTISTAS_CONFIGURACION;
+
+  /**
+   * Lista de transportistas disponibles para ser seleccionados en el formulario.
+   * Se llena dinámicamente con los datos de transportistas obtenidos desde el servicio.
+   */
   transportistasLista: TransportistasTable[] = [];
+
+  /** Referencia a la vista del modal de transportistas */
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
+
+  /**
+   * Constructor del componente
+   * @param fb FormBuilder para crear formularios reactivos
+   * @param solicitudService Servicio para manejar la lógica de solicitudes
+   * @param solicitud32605Store Store para manejar el estado de la solicitud
+   * @param solicitud32605Query Consulta para obtener el estado de la solicitud
+   */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -72,6 +120,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     this.conseguirTransportistasLista();
   }
 
+  /**
+   * Método llamado al inicializar el componente, configura el formulario con los valores del estado de solicitud
+   */
   ngOnInit(): void {
     this.importadorExportadorForm = this.fb.group({
       '2042': [this.solicitud32605State[2042]],
@@ -113,6 +164,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Obtiene las opciones de radio desde el servicio de solicitud
+   */
   conseguirOpcionDeRadio(): void {
     this.solicitudService
       .conseguirOpcionDeRadio()
@@ -126,6 +180,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene la lista de transportistas desde el servicio de solicitud
+   */
   conseguirTransportistasLista(): void {
     this.solicitudService
       .conseguirTransportistasLista()
@@ -137,38 +194,73 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Actualiza el valor de la propiedad 2042 en el store
+   * @param evento Nuevo valor para la propiedad
+   */
   actualizar2042(evento: string | number): void {
     this.solicitud32605Store.actualizar2042(evento);
   }
 
+  /**
+   * Actualiza el valor de la propiedad 2043 en el store
+   * @param evento Nuevo valor para la propiedad
+   */
   actualizar2043(evento: string | number): void {
     this.solicitud32605Store.actualizar2043(evento);
   }
 
+  /**
+   * Actualiza el valor de la propiedad 2044 en el store
+   * @param evento Nuevo valor para la propiedad
+   */
   actualizar2044(evento: string | number): void {
     this.solicitud32605Store.actualizar2044(evento);
   }
 
+  /**
+   * Actualiza la fecha de inicio del comercio en el store
+   * @param evento Fecha de inicio del comercio
+   */
   actualizarFechaInicioComercio(evento: string): void {
     this.solicitud32605Store.actualizarFechaInicioComercio(evento);
   }
 
+  /**
+   * Actualiza la fecha de pago en el store
+   * @param evento Fecha de pago
+   */
   actualizarFechaPago(evento: string): void {
     this.solicitud32605Store.actualizarFechaPago(evento);
   }
 
+  /**
+   * Actualiza el monto de la solicitud en el store
+   * @param evento Monto de la solicitud
+   */
   actualizarMonto(evento: string): void {
     this.solicitud32605Store.actualizarMonto(evento);
   }
 
+  /**
+   * Actualiza las operaciones bancarias en el store
+   * @param evento Operaciones bancarias
+   */
   actualizarOperacionesBancarias(evento: string): void {
     this.solicitud32605Store.actualizarOperacionesBancarias(evento);
   }
 
+  /**
+   * Actualiza la llave de pago en el store
+   * @param evento Llave de pago
+   */
   actualizarLlavePago(evento: string): void {
     this.solicitud32605Store.actualizarLlavePago(evento);
   }
 
+  /**
+   * Muestra el modal para agregar un nuevo transportista
+   */
   agregarTransportistaModel(): void {
     if (this.transportistaElement) {
       const MODAL_INSTANCE = new Modal(this.transportistaElement.nativeElement);
@@ -176,10 +268,17 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Agrega un transportista a la lista
+   * @param evento Datos del transportista
+   */
   transportistasDatos(evento: TransportistasTable): void {
     this.transportistasLista.push(evento);
   }
 
+  /**
+   * Método llamado al destruir el componente, limpia las suscripciones
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

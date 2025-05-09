@@ -23,6 +23,11 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/** Selector del componente, utilizado para integrarlo en el HTML
+ *  Indica que este componente es independiente (standalone) y no depende de un módulo Angular específico
+ *  Importación de módulos necesarios para el componente
+ *  Servicios que estarán disponibles para este componente
+ */
 @Component({
   selector: 'app-seccion-subcontratados',
   standalone: true,
@@ -36,22 +41,46 @@ import { takeUntil } from 'rxjs';
   templateUrl: './seccion-subcontratados.component.html',
   styleUrl: './seccion-subcontratados.component.scss',
 })
+/** Selector del componente, utilizado para integrarlo en el HTML
+ *  Indica que este componente es independiente (standalone) y no depende de un módulo Angular específico
+ *  Importación de módulos necesarios para el componente
+ *  Servicios que estarán disponibles para este componente
+ */
 export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para manejar los datos de los subcontratados */
   subcontratadosForm!: FormGroup;
+
+  /** Sujeto para manejar la destrucción de observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Objeto que contiene la información del bimestre */
   bimestre: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Estado que contiene los datos de la solicitud */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+
+  /** Emisor de eventos con los datos de subcontratados */
   @Output() seccionSubcontratados = new EventEmitter<NumeroDeEmpleados>();
+
   constructor(
+    /** Servicio para crear formularios reactivos */
     public fb: FormBuilder,
+
+    /** Servicio para gestionar las solicitudes */
     public solicitudService: SolicitudService,
+
+    /** Store para gestionar el estado de la solicitud 32605 */
     public solicitud32605Store: Solicitud32605Store,
+
+    /** Query para obtener datos del store de solicitud 32605 */
     public solicitud32605Query: Solicitud32605Query
   ) {
+    /** Obtiene la lista de catálogos cuando se inicializa el componente */
     this.conseguirSolicitudCatologoSelectLista();
   }
 
   ngOnInit(): void {
+    /** Inicializa el formulario reactivo con validadores */
     this.subcontratadosForm = this.fb.group({
       subcontrataRFCBusqueda: [
         '',
@@ -72,11 +101,12 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       subcontrataBimestre: ['', [Validators.required]],
     });
 
+    /** Suscripción al estado de la solicitud para actualizar el formulario con los datos */
     this.solicitud32605Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$), // Asegura que la suscripción se cancele al destruir el componente
         map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+          this.solicitud32605State = respuesta; // Asigna el estado a la variable
           this.subcontratadosForm.patchValue({
             subcontrataRFCBusqueda:
               this.solicitud32605State.subcontrataRFCBusqueda,
@@ -91,6 +121,7 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /** Método para obtener la lista de catálogos de solicitud */
   conseguirSolicitudCatologoSelectLista(): void {
     this.solicitudService
       .conseguirSolicitudCatologoSelectLista()
@@ -102,12 +133,14 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Método para buscar la información de subcontratados por RFC */
   buscarRFC(): void {
     this.solicitudService
       .conseguirSeccionSubcontratados()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: SeccionSubcontratados) => {
+          /** Actualiza el estado del RFC y la razón social con los datos obtenidos */
           this.solicitud32605Store.actualizarSubcontrataRFC(
             respuesta.subcontrataRFC
           );
@@ -118,30 +151,36 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Método para actualizar el RFC de búsqueda en el store */
   actualizarSubcontrataRFCBusqueda(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarSubcontrataRFCBusqueda(VALOR);
   }
 
+  /** Método para actualizar el RFC de la subcontratista en el store */
   actualizarSubcontrataRFC(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarSubcontrataRFC(VALOR);
   }
 
+  /** Método para actualizar la razón social de la subcontratista en el store */
   actualizarSubcontrataRazonSocial(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarSubcontrataRazonSocial(VALOR);
   }
 
+  /** Método para actualizar el número de empleados en el store */
   actualizarSubcontrataEmpleados(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarSubcontrataEmpleados(VALOR);
   }
 
+  /** Método para actualizar el bimestre en el store */
   actualizarSubcontrataBimestre(evento: Catalogo): void {
     this.solicitud32605Store.actualizarSubcontrataBimestre(evento.id);
   }
 
+  /** Método para emitir los datos del formulario al componente padre */
   cerrarModal(): void {
     const OBJETO_JSON = {
       denominacion: this.subcontratadosForm.get('subcontrataRazonSocial')
@@ -152,11 +191,12 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       bimestre: this.subcontratadosForm.get('subcontrataBimestre')?.value,
     };
 
-    this.seccionSubcontratados.emit(OBJETO_JSON);
+    this.seccionSubcontratados.emit(OBJETO_JSON); // Emite los datos al componente padre
   }
 
+  /** Método que se ejecuta cuando el componente se destruye, cancelando la suscripción */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.next(); // Desactiva la suscripción
+    this.destroy$.complete(); // Completa el sujeto de destrucción
   }
 }

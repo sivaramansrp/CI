@@ -18,19 +18,37 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Decorador que define el componente 'AgregarTransportistasComponent'.
+ * Incluye configuración de selector, template, estilos y módulos importados.
+ */
 @Component({
   selector: 'app-agregar-transportistas',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
-  providers: [],
   templateUrl: './agregar-transportistas.component.html',
   styleUrl: './agregar-transportistas.component.scss',
 })
+/**
+ * Decorador que define el componente 'AgregarTransportistasComponent'.
+ * Incluye configuración de selector, template, estilos y módulos importados.
+ */
 export class AgregarTransportistasComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para capturar datos del transportista */
   transportistaCertificacionForm!: FormGroup;
+
+  /** Sujeto utilizado para cancelar suscripciones y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Estado actual de la solicitud obtenido desde el store */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+
+  /** Evento que emite los datos del transportista seleccionado al componente padre */
   @Output() transportistasDatos = new EventEmitter<TransportistasTable>();
+
+  /**
+   * Constructor del componente. Se inyectan los servicios necesarios para formularios y gestión de estado.
+   */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -38,6 +56,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     public solicitud32605Query: Solicitud32605Query
   ) {}
 
+  /**
+   * Ciclo de vida ngOnInit: inicializa el formulario y se suscribe al estado de la solicitud.
+   */
   ngOnInit(): void {
     this.transportistaCertificacionForm = this.fb.group({
       transportistaRFC: [
@@ -79,62 +100,86 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       transportistaIdCaat: [this.solicitud32605State.transportistaIdCaat],
     });
 
+    /** Se suscribe al estado de la solicitud para mantener sincronizado el formulario */
     this.solicitud32605Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
         map((respuesta: Solicitud32605State) => {
           this.solicitud32605State = respuesta;
           this.transportistaCertificacionForm.patchValue({
-            transportistaRFC: this.solicitud32605State.transportistaIdRFC,
-            transportistaRFCModifTrans:
-              this.solicitud32605State.transportistaRFCModifTrans,
-            transportistaRazonSocial:
-              this.solicitud32605State.transportistaIdRazonSocial,
-            transportistaDomicilio:
-              this.solicitud32605State.transportistaDomicilio,
-            transportistaCaat: this.solicitud32605State.transportistaCaat,
+            transportistaRFC: respuesta.transportistaIdRFC,
+            transportistaRFCModifTrans: respuesta.transportistaRFCModifTrans,
+            transportistaRazonSocial: respuesta.transportistaIdRazonSocial,
+            transportistaDomicilio: respuesta.transportistaDomicilio,
+            transportistaCaat: respuesta.transportistaCaat,
           });
         })
       )
       .subscribe();
   }
 
+  /**
+   * Actualiza el RFC del transportista en el store.
+   */
   actualizarTransportistaRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTransportistaRFC(VALOR);
   }
 
+  /**
+   * Actualiza el RFC modificado del transportista en el store.
+   */
   actualizarTransportistaRFCModifTrans(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTransportistaRFCModifTrans(VALOR);
   }
 
+  /**
+   * Actualiza la razón social del transportista en el store.
+   */
   actualizarTransportistaRazonSocial(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTransportistaRazonSocial(VALOR);
   }
 
+  /**
+   * Actualiza el domicilio del transportista en el store.
+   */
   actualizarTransportistaDomicilio(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTransportistaDomicilio(VALOR);
   }
 
+  /**
+   * Actualiza el CAAT del transportista en el store.
+   */
   actualizarTransportistaCaat(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTransportistaCaat(VALOR);
   }
 
+  /**
+   * Verifica si un control del formulario es inválido y ha sido tocado.
+   * @param id ID del control del formulario
+   * @returns booleano que indica si el campo es inválido
+   */
   noEsValido(id: string): boolean | undefined {
     const CONTROL = this.transportistaCertificacionForm.get(id);
     return CONTROL?.invalid && CONTROL?.touched;
   }
 
+  /**
+   * Ejecuta la búsqueda del transportista si el RFC ha sido ingresado.
+   */
   selectBuscarTransportista(): void {
     if (this.transportistaCertificacionForm.get('transportistaRFC')?.value) {
       this.conseguirTransportistasLista();
     }
   }
 
+  /**
+   * Llama al servicio para obtener la lista de transportistas y actualiza el store.
+   */
   conseguirTransportistasLista(): void {
     this.solicitudService
       .conseguirTransportistasLista()
@@ -154,6 +199,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Prepara un objeto con los datos del transportista y lo emite al componente padre.
+   */
   aceptarTransportista(): void {
     const OBJETO_JSON: TransportistasTable = {
       rfc: this.transportistaCertificacionForm.get('transportistaRFCModifTrans')
@@ -169,6 +217,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.transportistasDatos.emit(OBJETO_JSON);
   }
 
+  /**
+   * Ciclo de vida ngOnDestroy: finaliza el observable para prevenir fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

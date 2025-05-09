@@ -47,6 +47,12 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente principal para la gestión de datos comunes de la solicitud.
+ * Este componente se encarga de mostrar y gestionar las secciones relacionadas
+ * con miembros de la empresa, subcontratados, instalaciones principales y otros
+ * datos necesarios en el flujo de la solicitud.
+ */
 @Component({
   selector: 'app-datos-comunes',
   standalone: true,
@@ -68,72 +74,117 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.scss',
 })
+/**
+ * Componente principal para la gestión de datos comunes de la solicitud.
+ * Este componente se encarga de mostrar y gestionar las secciones relacionadas
+ * con miembros de la empresa, subcontratados, instalaciones principales y otros
+ * datos necesarios en el flujo de la solicitud.
+ */
 export class DatosComunesComponent implements OnInit, OnDestroy {
+  /** Formulario principal que contiene los datos comunes del componente */
   datosComunesForm!: FormGroup;
+
+  /** Subject para manejar la destrucción del componente y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Modelo para la opción de tipo sí/no representado como radio button */
   sinoOpcion: InputRadio = {} as InputRadio;
+
+  /** Catálogo para el sector productivo */
   sectorProductivo: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Catálogo para el tipo de servicio */
   servicio: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Catálogo para seleccionar el bimestre */
   bimestre: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Catálogo con opción para indicar "todos" */
   indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Estado actual del formulario 32605 */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+
+  /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
   numeroDeEmpleadosTabla = TablaSeleccion.CHECKBOX;
+
+  /** Configuración de columnas para la tabla de número de empleados */
   numeroDeEmpleadosConfiguracionColumnas: ConfiguracionColumna<NumeroDeEmpleados>[] =
     NUMERO_DE_EMPLEADOS_CONFIGURACION;
+
+  /** Lista completa de número de empleados */
   numeroDeEmpleadosLista: NumeroDeEmpleados[] = [] as NumeroDeEmpleados[];
+
+  /** Lista de empleados seleccionados en la tabla */
   seleccionarNumeroDeEmpleadosLista: NumeroDeEmpleados[] =
     [] as NumeroDeEmpleados[];
-  /** Configuración de columnas para domicilios */
+
+  /** Configuración de columnas para la tabla de domicilios */
   domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] =
     DOMICILIOS_CONFIGURACION_COLUMNAS;
 
-  /** Datos de los domicilios */
+  /** Datos de los domicilios disponibles */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
 
+  /** Domicilios seleccionados por el usuario */
   seleccionarDomiciliosDatos: Domicilios[] = [] as Domicilios[];
 
+  /** Configuración de columnas para la tabla de inventarios */
   inventariosConfiguracionColumnas: ConfiguracionAporteColumna<Inventarios>[] =
     INVENTARIOS_CONFIGURACION;
 
+  /** Datos de inventarios registrados */
   inventariosDatos: Inventarios[] = [] as Inventarios[];
 
+  /** Inventarios seleccionados por el usuario */
   seleccionarInventarios: Inventarios[] = [] as Inventarios[];
 
   /** Configuración de columnas para la sección de socios IC */
   seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
     SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
 
-  /** Lista de socios IC */
+  /** Lista de socios IC registrados */
   listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
+  /** Lista de socios IC seleccionados por el usuario */
   seleccionarListaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
   /**
-   * Referencia al modal para agregar mercancías.
+   * Referencia al modal para agregar miembros de la empresa.
    */
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
   modalElement!: ElementRef;
 
+  /**
+   * Referencia al modal de la sección de subcontratados.
+   */
   @ViewChild('modalSeccionSubcontratados', { static: false })
   modalSeccionSubcontratadosElement!: ElementRef;
 
+  /**
+   * Referencia al modal de instalaciones principales.
+   */
   @ViewChild('modalInstalacionesPrincipales', { static: false })
   modalInstalacionesPrincipalesElement!: ElementRef;
 
   /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
+   * Notificación utilizada para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * Elemento a eliminar de la tabla de pedimentos.
+   * Índice o identificador del elemento que se desea eliminar de la tabla de pedimentos.
    */
   elementoParaEliminar!: number;
+
   /**
-   * Array con los datos de los pedimentos.
-   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   * Lista de pedimentos ingresados por el usuario.
    */
   pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -145,6 +196,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.conseguirInventarios();
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Inicializa el formulario `datosComunesForm` con valores del estado actual
+   * y suscribe a los cambios del store para mantener los datos sincronizados.
+   */
   ngOnInit(): void {
     this.datosComunesForm = this.fb.group({
       catseleccionados: [this.solicitud32605State.catseleccionados],
@@ -181,6 +237,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       actualmente1: [this.solicitud32605State.actualmente1],
     });
 
+    /**
+     * Suscripción al estado de solicitud en el store para mantener
+     * sincronizados los datos del formulario con el estado global.
+     */
     this.solicitud32605Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -230,6 +290,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Método para obtener la opción de radio (sí/no) desde el servicio.
+   * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
+   */
   conseguirOpcionDeRadio(): void {
     this.solicitudService
       .conseguirOpcionDeRadio()
@@ -241,6 +305,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método para obtener los catálogos del formulario desde el servicio.
+   * Se asignan los valores correspondientes a sus propiedades.
+   */
   conseguirSolicitudCatologoSelectLista(): void {
     this.solicitudService
       .conseguirSolicitudCatologoSelectLista()
@@ -255,6 +323,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método para obtener los datos de inventarios desde el servicio.
+   * Los resultados se asignan a la propiedad `inventariosDatos`.
+   */
   conseguirInventarios(): void {
     this.solicitudService
       .conseguirInventarios()
@@ -266,7 +338,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Muestra el modal para agregar miembros de la empresa */
+  /**
+   * Muestra el modal para agregar miembros de la empresa.
+   * Se utiliza el elemento del DOM referenciado como modalElement.
+   */
   agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -274,6 +349,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Muestra el modal para agregar subcontratados a la empresa.
+   * Utiliza el elemento referenciado como modalSeccionSubcontratadosElement.
+   */
   agregarSubcontratados(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
@@ -283,6 +362,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Muestra el modal para agregar instalaciones principales de la empresa.
+   * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
+   */
   agregarInstalacionesPrincipales(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
@@ -292,7 +375,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Actualiza los datos de un miembro de la empresa */
+  /**
+   * Actualiza la lista de miembros de la empresa con un nuevo registro recibido como evento.
+   * También actualiza el store y agrega un objeto pedimento por defecto.
+   * Muestra un modal con mensaje de éxito al usuario.
+   *
+   * @param {SeccionSociosIC} evento - Datos del nuevo miembro de la empresa.
+   */
   eventoActualizarMiembro(evento: SeccionSociosIC): void {
     this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, evento];
     this.solicitud32605Store.actualizarListaSeccionSociosIC(
@@ -313,13 +402,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   * Muestra una notificación en forma de modal con el mensaje proporcionado.
+   * También almacena el índice de un elemento que se desea eliminar.
    *
-   * @param {number} i - El índice del elemento a eliminar.
-   *
-   * @remarks
-   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
-   * y se abre el modal para mostrar un aviso al usuario.
+   * @param {string} mensaje - El mensaje a mostrar en el modal.
+   * @param {number} [i=0] - El índice del elemento a eliminar (opcional, por defecto 0).
    */
   abrirModal(mensaje: string, i: number = 0): void {
     this.nuevaNotificacion = {
@@ -337,6 +424,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /**
+   * Agrega un nuevo subcontratado a la lista y actualiza el estado global en el store.
+   *
+   * @param {NumeroDeEmpleados} evento - Datos del subcontratado a agregar.
+   */
   seccionSubcontratados(evento: NumeroDeEmpleados): void {
     this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, evento];
     this.solicitud32605Store.actualizarNumeroDeEmpleadosLista(
@@ -344,6 +436,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Agrega una nueva instalación principal a la lista y actualiza el store.
+   * También agrega un objeto pedimento por defecto y muestra un mensaje de éxito.
+   *
+   * @param {Domicilios} evento - Datos de la instalación principal a agregar.
+   */
   instalacionesPrincipales(evento: Domicilios): void {
     this.domiciliosDatos = [...this.domiciliosDatos, evento];
     this.solicitud32605Store.actualizarDomiciliosDatos(this.domiciliosDatos);
@@ -360,52 +458,102 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.abrirModal('Datos guardados correctamente.');
     this.pedimentos.push(PEDIMENTO);
   }
-
+  /**
+   * Actualiza el valor del catálogo seleccionado en el estado global.
+   *
+   * @param {Catalogo} valor - Elemento del catálogo seleccionado.
+   */
   actualizarCatseleccionados(valor: Catalogo): void {
     this.solicitud32605Store.actualizarCatseleccionados(valor.id);
   }
 
+  /**
+   * Actualiza el servicio seleccionado en el estado global.
+   *
+   * @param {Catalogo} valor - Elemento del catálogo correspondiente al servicio.
+   */
   actualizarServicio(valor: Catalogo): void {
     this.solicitud32605Store.actualizarServicio(valor.id);
   }
 
+  /**
+   * Actualiza el campo '190' en el estado global.
+   *
+   * @param {string | number} valor - Valor numérico o de texto para el campo 190.
+   */
   actualizar190(valor: string | number): void {
     this.solicitud32605Store.actualizar190(valor);
   }
 
+  /**
+   * Actualiza el campo '191' en el estado global.
+   *
+   * @param {string | number} valor - Valor numérico o de texto para el campo 191.
+   */
   actualizar191(valor: string | number): void {
     this.solicitud32605Store.actualizar191(valor);
   }
 
+  /**
+   * Actualiza el campo '199' en el estado global.
+   *
+   * @param {string | number} valor - Valor numérico o de texto para el campo 199.
+   */
   actualizar199(valor: string | number): void {
     this.solicitud32605Store.actualizar199(valor);
   }
 
+  /**
+   * Actualiza el número de empleados ingresado.
+   *
+   * @param {Event} valor - Evento de entrada del usuario.
+   */
   actualizarEmpleados(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarEmpleados(VALOR);
   }
 
+  /**
+   * Actualiza el valor del bimestre seleccionado en el estado global.
+   *
+   * @param {Catalogo} valor - Elemento del catálogo correspondiente al bimestre.
+   */
   actualizarBimestre(valor: Catalogo): void {
     this.solicitud32605Store.actualizarBimestre(valor.id);
   }
 
+  /**
+   * Actualiza el campo '2034' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 2034.
+   */
   actualizar2034(valor: string | number): void {
     this.solicitud32605Store.actualizar2034(valor);
   }
 
+  /**
+   * Actualiza el campo '236' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 236.
+   */
   actualizar236(valor: string | number): void {
     this.solicitud32605Store.actualizar236(valor);
   }
 
+  /**
+   * Actualiza el campo '237' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 237.
+   */
   actualizar237(valor: string | number): void {
     this.solicitud32605Store.actualizar237(valor);
   }
 
-  // actualizar238(valor: string | number): void {
-  //   this.solicitud32605Store.actualizar238(valor);
-  // }
-
+  /**
+   * Actualiza el campo '239' y, si el valor es 1, agrega un pedimento y muestra una advertencia.
+   *
+   * @param {string | number} valor - Valor para el campo 239.
+   */
   actualizar239(valor: string | number): void {
     this.solicitud32605Store.actualizar239(valor);
     if (valor === 1) {
@@ -426,99 +574,181 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza el campo '240' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 240.
+   */
   actualizar240(valor: string | number): void {
     this.solicitud32605Store.actualizar240(valor);
   }
 
+  /**
+   * Actualiza el campo '243' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 243.
+   */
   actualizar243(valor: string | number): void {
     this.solicitud32605Store.actualizar243(valor);
   }
 
+  /**
+   * Actualiza el campo '244' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 244.
+   */
   actualizar244(valor: string | number): void {
     this.solicitud32605Store.actualizar244(valor);
   }
 
+  /**
+   * Actualiza el campo '245' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 245.
+   */
   actualizar245(valor: string | number): void {
     this.solicitud32605Store.actualizar245(valor);
   }
 
+  /**
+   * Actualiza el valor seleccionado en el campo "indique todos" en el estado global.
+   *
+   * @param {Catalogo} valor - Elemento del catálogo correspondiente.
+   */
   actualizarIndiqueTodos(valor: Catalogo): void {
     this.solicitud32605Store.actualizarIndiqueTodos(valor.id);
   }
 
+  /**
+   * Actualiza el campo '246' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo 246.
+   */
   actualizar246(valor: string | number): void {
     this.solicitud32605Store.actualizar246(valor);
   }
 
+  /**
+   * Actualiza el valor del archivo 1 desde un input file.
+   *
+   * @param {Event} valor - Evento de cambio del input.
+   */
   actualizarFile1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarFile1(VALOR);
   }
 
+  /**
+   * Actualiza el valor del archivo 2 desde un input file.
+   *
+   * @param {Event} valor - Evento de cambio del input.
+   */
   actualizarFile2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarFile2(VALOR);
   }
 
+  /**
+   * Actualiza el campo '247' en el estado global.
+   */
   actualizar247(valor: string | number): void {
     this.solicitud32605Store.actualizar247(valor);
   }
 
+  /**
+   * Actualiza el campo '248' en el estado global.
+   */
   actualizar248(valor: string | number): void {
     this.solicitud32605Store.actualizar248(valor);
   }
 
+  /**
+   * Actualiza el valor del campo de identificación.
+   */
   actualizarIdentificacion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarIdentificacion(VALOR);
   }
 
+  /**
+   * Actualiza el valor del lugar de radicación.
+   */
   actualizarLugarDeRadicacion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarLugarDeRadicacion(VALOR);
   }
 
+  /**
+   * Actualiza el campo '249' en el estado global.
+   */
   actualizar249(valor: string | number): void {
     this.solicitud32605Store.actualizar249(valor);
   }
 
+  /**
+   * Actualiza el campo '250' en el estado global.
+   */
   actualizar250(valor: string | number): void {
     this.solicitud32605Store.actualizar250(valor);
   }
 
+  /**
+   * Actualiza el campo '251' en el estado global.
+   */
   actualizar251(valor: string | number): void {
     this.solicitud32605Store.actualizar251(valor);
   }
 
+  /**
+   * Actualiza el valor del checkbox 1.
+   */
   actualizarCheckbox1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
     this.solicitud32605Store.actualizarCheckbox1(VALOR);
   }
 
+  /**
+   * Actualiza el valor del checkbox 2.
+   */
   actualizarCheckbox2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
     this.solicitud32605Store.actualizarCheckbox2(VALOR);
   }
 
+  /**
+   * Actualiza el valor del checkbox 3.
+   */
   actualizarCheckbox3(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
     this.solicitud32605Store.actualizarCheckbox3(VALOR);
   }
 
+  /**
+   * Actualiza el campo 'Actualmente2' en el estado global.
+   */
   actualizarActualmente2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarActualmente2(VALOR);
   }
 
+  /**
+   * Actualiza el campo 'Actualmente1' en el estado global.
+   */
   actualizarActualmente1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarActualmente1(VALOR);
   }
 
+  /**
+   * Guarda la selección de inventarios hecha por el usuario.
+   */
   seleccionarInventariosDatos(evento: Inventarios[]): void {
     this.seleccionarInventarios = evento;
   }
 
+  /**
+   * Elimina los inventarios seleccionados de la lista.
+   */
   eliminarInventariosDatos(): void {
     if (this.seleccionarInventarios.length > 0) {
       this.seleccionarInventarios.forEach((elemento) => {
@@ -532,10 +762,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda la selección de socios hecha por el usuario.
+   */
   seleccionarlistaSeccionSociosIC(evento: SeccionSociosIC[]): void {
     this.seleccionarListaSeccionSociosIC = evento;
   }
 
+  /**
+   * Elimina los socios seleccionados de la lista.
+   */
   eliminarlistaSeccionSociosIC(): void {
     if (this.seleccionarListaSeccionSociosIC.length > 0) {
       this.seleccionarListaSeccionSociosIC.forEach((elemento) => {
@@ -549,10 +785,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda la selección de domicilios hecha por el usuario.
+   */
   seleccionarDomiciliosDato(evento: Domicilios[]): void {
     this.seleccionarDomiciliosDatos = evento;
   }
 
+  /**
+   * Elimina los domicilios seleccionados de la lista.
+   */
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
       this.seleccionarDomiciliosDatos.forEach((elemento) => {
@@ -566,10 +808,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda la selección de número de empleados hecha por el usuario.
+   */
   seleccionarNumeroDeEmpleadosDato(evento: NumeroDeEmpleados[]): void {
     this.seleccionarNumeroDeEmpleadosLista = evento;
   }
 
+  /**
+   * Elimina los registros de número de empleados seleccionados.
+   */
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
       this.seleccionarNumeroDeEmpleadosLista.forEach((elemento) => {
@@ -583,6 +831,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Limpia y completa la señal de destrucción para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

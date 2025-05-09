@@ -57,53 +57,59 @@ import { takeUntil } from 'rxjs';
  * mostrar los datos obtenidos del servicio `SolicitudService`.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
-  /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
-   */
+  /** Notificación que se mostrará al usuario */
   public nuevaNotificacion!: Notificacion;
 
-  /**
-   * Elemento a eliminar de la tabla de pedimentos.
-   */
+  /** Elemento para eliminar de la tabla de pedimentos */
   elementoParaEliminar!: number;
 
+  /** Formulario reactivo para gestionar la información de los terceros relacionados */
   tercerosRelacionadosForm!: FormGroup;
+
   /** Tipo de selección para la tabla (por defecto: UNDEFINED) */
   tipoSeleccionTabla = TablaSeleccion.UNDEFINED;
 
+  /** Tipo de selección para la tabla de enlace operativo (por defecto: CHECKBOX) */
   enlaceOperativoTabla = TablaSeleccion.CHECKBOX;
+
+  /** Lista de pedimentos */
   pedimentos: Array<Pedimento> = [];
+
+  /** Datos seleccionados para el enlace operativo */
   seleccionEnlaceOperativoDatos: EnlaceOperativo[] = [] as EnlaceOperativo[];
 
+  /** Configuración de las columnas de la tabla de enlace operativo */
   enlaceOperativoConfiguracionColumnas: ConfiguracionColumna<EnlaceOperativo>[] =
     ENLACE_OPERATIVO_CONFIGURACION;
 
+  /** Lista de enlaces operativos */
   enlaceOperativosLista: EnlaceOperativo[] = [] as EnlaceOperativo[];
 
+  /** Referencia al componente de enlace operativo para abrir el modal */
   @ViewChild('agregarEnlaceOperativo', { static: false })
   modificacionEnlaceOperativoElement!: ElementRef;
 
-  /**
-   * Configuración de columnas que se mostrarán en la tabla.
-   * Cada columna tiene un encabezado, una clave para obtener
-   * el valor desde el modelo y un orden para su disposición.
-   */
+  /** Configuración de las columnas para la tabla de notificaciones */
   configuracionColumnas: ConfiguracionColumna<RecibirNotificaciones>[] =
     RECIBIR_NOTIFICACIONES_CONFIGURACION;
 
-  /** Lista de objetos `RecibirNotificaciones` que se mostrarán en la tabla */
+  /** Lista de notificaciones que el tercero puede recibir */
   orecibirNotificacionesLista: RecibirNotificaciones[] =
     [] as RecibirNotificaciones[];
 
-  /** Subject utilizado para gestionar la destrucción de suscripciones */
+  /** Subject que controla la destrucción de las suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
 
+  /** Estado de la solicitud actual */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
 
   /**
-   * Constructor que inyecta el servicio `SolicitudService` y
-   * realiza la carga inicial de los datos.
-   * @param solicitudService Servicio para obtener datos de terceros
+   * Constructor del componente, inyecta el servicio `SolicitudService` y
+   * realiza las cargas iniciales de datos.
+   *
+   * @param solicitudService Servicio que maneja las solicitudes
+   * @param solicitud32605Store Almacena el estado de la solicitud
+   * @param solicitud32605Query Consulta el estado de la solicitud
    */
   constructor(
     private fb: FormBuilder,
@@ -115,6 +121,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.conseguirRecibirNotificaciones();
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo con los valores actuales de la solicitud.
+   */
   ngOnInit(): void {
     this.tercerosRelacionadosForm = this.fb.group({
       idPersonaSolicitud: [this.solicitud32605State.idPersonaSolicitud],
@@ -156,6 +166,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Método que obtiene la lista de notificaciones que puede recibir el tercero.
+   */
   conseguirRecibirNotificaciones(): void {
     this.solicitudService
       .conseguirRecibirNotificaciones()
@@ -165,6 +178,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método que obtiene los datos de enlace operativo para ser mostrados en la tabla.
+   */
   conseguirEnlaceOperativoDatos(): void {
     this.solicitudService
       .conseguirEnlaceOperativoDatos()
@@ -174,6 +190,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método que busca los datos de un tercero por su RFC.
+   */
   buscarTerceroNacionalIDC(): void {
     if (this.tercerosRelacionadosForm.get('rfcTercero')?.value) {
       this.solicitudService
@@ -196,21 +215,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Métodos para actualizar los valores en el store */
   actualizarRfcTercero(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarRfcTercero(VALOR);
   }
 
+  /** Métodos para actualizar los valores en el store */
   actualizarTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarTelefono(VALOR);
   }
 
+  /** Métodos para actualizar los valores en el store */
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
   }
 
+  /**
+   * Abre el modal para guardar datos del enlace operativo.
+   */
   guardarDatosEnlaceOperativo(): void {
     if (this.modificacionEnlaceOperativoElement) {
       const MODAL_INSTANCE = new Modal(
@@ -220,6 +245,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda la modificación del enlace operativo en el modal.
+   */
   guardarModificacionEnlaceOperativo(): void {
     if (this.modificacionEnlaceOperativoElement) {
       const MODAL_INSTANCE = new Modal(
@@ -229,10 +257,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Selecciona un enlace operativo para su modificación.
+   */
   seleccionEnlaceOperativo(evento: EnlaceOperativo[]): void {
     this.seleccionEnlaceOperativoDatos = evento;
   }
 
+  /**
+   * Cierra la notificación mostrada al usuario.
+   */
   cerrarDialogoEnlaceOperativo(): void {
     if (this.seleccionEnlaceOperativoDatos.length > 0) {
       this.enlaceOperativosLista = this.enlaceOperativosLista.filter(
@@ -241,6 +275,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método que agrega un enlace operativo y un pedimento vacío a la lista de enlace operativos.
+   * Abre un modal de notificación si no se cumple la condición de registro.
+   *
+   * @param evento El objeto de tipo EnlaceOperativo que se va a agregar a la lista
+   */
   agregarEnlaceOperativo(evento: EnlaceOperativo): void {
     const PEDIMENTO = {
       patente: 0,
@@ -262,6 +302,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Método que abre un modal para mostrar una notificación con el mensaje proporcionado.
+   *
+   * @param mensaje El mensaje que se mostrará en la notificación
+   * @param i Índice opcional para indicar qué elemento se eliminará (por defecto 0)
+   */
   abrirModal(mensaje: string, i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
