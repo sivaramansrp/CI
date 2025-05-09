@@ -1,101 +1,57 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { RegistroService } from '../../services/registro.service';
-
-@Injectable()
-class MockRegistroService {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CuposService } from '../../services/cupos.service';
+import { of } from 'rxjs';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import {
+  PERSONA_MORAL_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let cuposServiceMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [{ provide: RegistroService, useClass: MockRegistroService }],
-    })
-      .overrideComponent(PasoUnoComponent, {})
-      .compileComponents();
+  beforeEach(async () => {
+    cuposServiceMock = {
+      obtenerCatalogoEntidades: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Entidad 1' }])),
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoUnoComponent],
+      imports: [SolicitanteComponent,HttpClientModule],
+      providers: [{ provide: CuposService, useValue: cuposServiceMock }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.registro = component.registro || {};
-    component.registro.getCatalogoById = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
-    component.ngOnInit();
-    expect(component.registro.getCatalogoById).toHaveBeenCalled();
-  });
+  it('should initialize persona and domicilioFiscal on ngAfterViewInit', () => {
+    const solicitanteMock = {
+      obtenerTipoPersona: jest.fn(),
+    };
+    component.solicitante = solicitanteMock as unknown as SolicitanteComponent;
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
     component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
+
+    expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
+    expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
+    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should update indice on seleccionaTab', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 });

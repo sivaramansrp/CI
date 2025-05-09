@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CuposRoutingModule } from './cupos-routing.module';
@@ -27,7 +27,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule, 
     BtnContinuarComponent,
     SolicitanteComponent
-   
-  ]
+  ],
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class CuposModule { }

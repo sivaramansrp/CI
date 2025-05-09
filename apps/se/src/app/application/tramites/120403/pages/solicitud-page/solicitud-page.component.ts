@@ -1,15 +1,12 @@
 import {
-  BtnContinuarComponent,
+  AVISO,
   DatosPasos,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -42,6 +39,10 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
+  /**
+   * Texto del aviso de privacidad.
+   */
+avisoPrivacidad  = AVISO.Aviso;
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.

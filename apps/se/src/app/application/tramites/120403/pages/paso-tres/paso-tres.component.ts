@@ -2,7 +2,7 @@ import {
   FirmaElectronicaComponent,
   TramiteFolioService,
 } from '@ng-mf/data-access-user';
-import { catchError, map, Subscription } from 'rxjs';
+import { catchError, map, ReplaySubject, Subscription, takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
@@ -13,17 +13,18 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
-  })
+})
 export class PasoTresComponent {
-   /**
-   * Suscripción para obtener el trámite.
+
+  /**
+   * Componente de firma electrónica.
    */
-   obtienerTramiteSubscriber!: Subscription;
-   /**
-    * Tipo de persona.
-    */
-   tipoPersona!: number;
- 
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+ * Tipo de persona.
+ */
+  tipoPersona!: number;
+
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
@@ -48,7 +49,7 @@ export class PasoTresComponent {
       // Obtiene el número de trámite
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
-        .pipe(
+        .pipe((takeUntil(this.destroyed$)),
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
@@ -60,13 +61,12 @@ export class PasoTresComponent {
         .subscribe();
     }
   }
-   /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-   ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
+  /**
+  * Método de limpieza que se ejecuta cuando el componente se destruye.
+  */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
 }

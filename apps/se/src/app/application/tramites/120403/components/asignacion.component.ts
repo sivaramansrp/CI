@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, SharedModule, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ANO_CATALOGO, FECHA_FINAL, FECHA_INICIAL, RADIO_OPCIONS } from '../models/registro.model';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, SharedModule, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ANO_CATALOGO, FECHA_FIN, RADIO_OPCIONS } from '../models/registro.model';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
 import { CuposService } from '../services/cupos.service';
+import { Solicitud120403State, Tramite120403Store } from '../state/Tramite120403.store';
+import { Tramite120403Query } from '../state/Tramite120403.query';
 
 @Component({
   selector: 'app-asignacion',
@@ -18,15 +20,47 @@ export class AsignacionComponent implements OnInit, OnDestroy {
   radioOpcions = RADIO_OPCIONS;
   valorSeleccionado: string = '';
   public anoCatalogo = ANO_CATALOGO;
-  fechaInicialInput: InputFecha = FECHA_INICIAL;
-  fechaFinalInput: InputFecha = FECHA_FINAL;
+  fechaFinInput = FECHA_FIN;
+  public solicitudState!: Solicitud120403State;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  mostrarVigencia: boolean = false;
+  mostrarMonto: boolean = false;
 
-  
-  constructor(private cupos: CuposService) { }
+  constructor(private cupos: CuposService,
+    public fb: FormBuilder,
+    private store: Tramite120403Store,
+    private query: Tramite120403Query,
+    private validacionesService: ValidacionesFormularioService
+  ) { }
 
   ngOnInit(): void {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
     this.obtenerDatosEstado();
+  }
+  
+  buscar(): void {
+    if(this.mostrarVigencia = this.asignacionForm.get('asignacionRadio')?.value === 'vigencia'){
+      this.mostrarVigencia = true;
+      this.mostrarMonto = false;
+    }else if(this.mostrarMonto = this.asignacionForm.get('asignacionRadio')?.value === 'monto'){
+      this.mostrarVigencia = false;
+      this.mostrarMonto = true;
+    }
+  }
+
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.asignacionForm.patchValue({
+      fechaFin: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.asignacionForm, 'fechaFin', 'setFechaFin');
   }
 
   public obtenerDatosEstado(): void {
@@ -37,8 +71,54 @@ export class AsignacionComponent implements OnInit, OnDestroy {
         this.anoCatalogo.catalogos = resp as Catalogo[];
       });
   }
+  /**
+    * Valida el formulario y marca todos los campos como tocados si es inválido.
+    */
+  validarDestinatarioFormulario(): void {
+    if (this.asignacionForm.invalid) {
+      this.asignacionForm.markAllAsTouched();
+    }
+  }
 
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo a verificar.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo a actualizar.
+   * @param metodoNombre Nombre del método del almacén para actualizar el estado.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite120403Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Configura el formulario con los valores iniciales del estado.
+   */
+  donanteDomicilio(): void {
+    this.asignacionForm = this.fb.group({
+      asignacionRadio: [this.solicitudState?.asignacionRadio],
+      asignacionsolitud: [this.solicitudState?.asignacionsolitud, [Validators.required]],
+      numTramite: [this.solicitudState?.numTramite, [Validators.required]],
+      fechaFin: [this.solicitudState?.fechaFin, [Validators.required]],
+      ampliar: [this.solicitudState?.ampliar, [Validators.required]],
+    });
+  }
   ngOnDestroy(): void {
-
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
