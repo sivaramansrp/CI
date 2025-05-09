@@ -18,6 +18,10 @@
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
           (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de información</a>
       </li>
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+          (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
+      </li>
     </ul>
     <ng-container>
       @switch (indice) {
@@ -27,6 +31,9 @@
       @case (2) {
       <app-requerimiento-informacion></app-requerimiento-informacion>
       }
+      @case (3) {
+        <app-solicitar-opinion></app-solicitar-opinion>
+        }
       }
     </ng-container>
   </div>
