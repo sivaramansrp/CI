@@ -9,6 +9,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ProsecComponent } from './pages/prosec/prosec.component';
+import { SectoresYMercanciasComponent } from "../../shared/components/sectores-y-mercancias/sectores-y-mercancias.component";
+import { DomiciliosDePlantasComponent } from './component/domicilios-de-plantas/domicilios-de-plantas.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { ProsecComponent } from './pages/prosec/prosec.component';
     SolicitanteComponent,
     TituloComponent,
     WizardComponent,
-  ],
+    SectoresYMercanciasComponent,
+    DomiciliosDePlantasComponent,
+    ReactiveFormsModule,
+],
   providers: [
     ToastrService,
     CatalogosService,

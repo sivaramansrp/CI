@@ -18,7 +18,13 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      } }
+      } 
+      @case (2) {
+        <app-domicilios-de-plantas></app-domicilios-de-plantas>
+    }
+    @case (3) {
+        <app-sectores-y-mercancias></app-sectores-y-mercancias>
+        }}
     </ng-container>
   </div>
 </div>
