@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DomicilloDelComponent } from './domicillo-del.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DomicilloDelComponent', () => {
   let component: DomicilloDelComponent;
@@ -8,7 +9,7 @@ describe('DomicilloDelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DomicilloDelComponent, ReactiveFormsModule],
+      imports: [DomicilloDelComponent, ReactiveFormsModule,HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilloDelComponent);
@@ -103,5 +104,77 @@ describe('DomicilloDelComponent', () => {
     component.ngOnDestroy();
     expect(destroyedSpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should call agregar("t") on the first CrosslistComponent when "Agregar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[0];
+    component.paisDeProcedenciaBotons[0].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
+  });
+
+  it('should call agregar("") on the first CrosslistComponent when "Agregar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[0];
+    component.paisDeProcedenciaBotons[1].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
+  });
+
+  it('should call quitar("") on the first CrosslistComponent when "Restar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[0];
+    component.paisDeProcedenciaBotons[2].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
+  });
+
+  it('should call quitar("t") on the first CrosslistComponent when "Restar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[0];
+    component.paisDeProcedenciaBotons[3].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
+  });
+
+  it('should call agregar("t") on the second CrosslistComponent when "Agregar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[1];
+    component.paisDeProcedenciaBotonsDos[0].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
+  });
+  
+  it('should call agregar("") on the second CrosslistComponent when "Agregar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[1];
+    component.paisDeProcedenciaBotonsDos[1].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
+  });
+  
+  it('should call quitar("") on the second CrosslistComponent when "Restar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[1];
+    component.paisDeProcedenciaBotonsDos[2].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
+  });
+  
+  it('should call quitar("t") on the second CrosslistComponent when "Restar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[1];
+    component.paisDeProcedenciaBotonsDos[3].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
+  });
+
+  it('should call agregar("t") on the third CrosslistComponent when "Agregar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[2];
+    component.paisDeProcedenciaBotonsTres[0].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
+  });
+  
+  it('should call agregar("") on the third CrosslistComponent when "Agregar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[2];
+    component.paisDeProcedenciaBotonsTres[1].funcion();
+    expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
+  });
+  
+  it('should call quitar("") on the third CrosslistComponent when "Restar selección" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[2];
+    component.paisDeProcedenciaBotonsTres[2].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
+  });
+  
+  it('should call quitar("t") on the third CrosslistComponent when "Restar todos" is clicked', () => {
+    const mockCrosslist = component.crossList.toArray()[2];
+    component.paisDeProcedenciaBotonsTres[3].funcion();
+    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
   });
 });

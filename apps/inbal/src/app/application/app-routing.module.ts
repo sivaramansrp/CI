@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-importacion-plastica',
+    loadChildren: () =>
+      import('./tramites/270301/aviso-importacion-plastica.module').then(
+        (m) => m.AvisoImportacionPlasticaModule
+      ),
+  },
+  {
     path: 'informacion-arte-exportar',
     loadChildren: () =>
       import('./tramites/270101/exportar-ilustraciones.module').then(

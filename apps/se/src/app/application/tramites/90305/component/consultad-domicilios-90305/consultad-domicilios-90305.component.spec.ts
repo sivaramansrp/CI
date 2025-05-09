@@ -28,8 +28,7 @@ describe('ConsultadDomicilios90305Component', () => {
     } as unknown as jest.Mocked<ProsecModificacionServiceTsService>;
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
-      declarations: [ConsultadDomicilios90305Component],
+      imports: [ConsultadDomicilios90305Component, CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       providers: [
         FormBuilder,
         { provide: ProsecModificacionServiceTsService, useValue: mockService },
