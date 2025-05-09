@@ -8,6 +8,7 @@ import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 })
 export class ProsecService {
   url: string = '../../../../../assets/json/90101/';
+  url2: string = '../../../../../assets/json/90102/';
 
   constructor(private readonly http: HttpClient) { }
   /**
@@ -22,7 +23,7 @@ export class ProsecService {
   }
 
   obtenerTablaDatos(fileName: string): Observable<any[]> {
-    const jsonUrl = this.url + fileName;
+    const jsonUrl = this.url2 + fileName;
       return this.http.get<any[]>(jsonUrl);
   }
 }

@@ -4,19 +4,13 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="modalidad">Selecciona la modalidad</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="modalidad"  
-                    placeholder="Selecciona la modalidad"
-                    formControlName="modalidad"
-                    (change)="
+                    <input type="text" value="" class="form-control" id="modalidad"
+                        placeholder="Selecciona la modalidad" formControlName="modalidad" (change)="
                         setValoresStore(
                         forma,
                         'modalidad',
                         'setModalidad'
-                        )" 
-                    >
+                        )">
                 </div>
             </div>
         </div>
@@ -32,13 +26,13 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true" formControlName="Estado" name="Estado"
-                (change)="
+                <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true"
+                    formControlName="Estado" name="Estado" (change)="
                     setValoresStore(
                     forma,
                     'Estado',
                     'setEstado'
-                    )" >
+                    )">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4"></div>
@@ -47,9 +41,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" [ngClass]="{'enable-scrollbar': true}">
                 <h6>Datos de las plantas donde se realizarán las operaciones PROSEC disponibles:</h6>
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" ></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos">
+                </app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">
@@ -60,27 +56,28 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" ></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'" [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" 
-                (change)="
+                <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'"
+                    [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" (change)="
                 setValoresStore(
                 forma,
                 'RepresentacionFederal',
                 'setRepresentacionFederal'
-                )" ></app-catalogo-select>
+                )"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true" formControlName="ActividadProductiva" name="ActividadProductiva" 
-                (change)="
+                <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true"
+                    formControlName="ActividadProductiva" name="ActividadProductiva" (change)="
                 setValoresStore(
                 forma,
                 'ActividadProductiva',
                 'setActividadProductiva'
-                )"  ></app-catalogo-select>
+                )"></app-catalogo-select>
             </div>
         </div>
     </form>

@@ -2,18 +2,29 @@
  * @component DomiciliosDePlantasComponent
  * @description Este componente es responsable de manejar los domicilios de plantas.
  * Incluye la lógica para obtener y gestionar los datos de las plantas, así como los catálogos relacionados.
- * 
+ *
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
  * @import { TEXTO } from '../../../../shared/constantes/prosec/prosec.module';
  * @import { Catalogo } from '../../../../core/models/shared/catalogos.model';
- * @import { ProsecService } from '../../../../core/services/90101/prosec.module';
+ * @import { ProsecService } from '../../../../core/services/90102/prosec.module';
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
@@ -25,21 +36,31 @@ import { map } from 'rxjs';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { ProsecService } from '../../pages/services/prosec.service';
+import { ProsecService } from '../../services/prosec.service';
 import { TEXTO } from '../../constantes/prosec.module';
 import { FilaPlantas } from '../../models/prosec.module';
-import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { AUtorizacionProsecQuery } from '../../pages/queries/autorizacion-prosec.query';
+import {
+  AutorizacionProsecStore,
+  ProsecState,
+} from '../../estados/autorizacion-prosec.store';
+import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrls: ['./domicilios-de-plantas.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, TituloComponent, AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent ]
+  imports: [
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+  ],
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
-
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las plantas.
    */
@@ -73,12 +94,10 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   private domiciliosState!: ProsecState;
 
-  private seccionState!: SeccionLibState
+  private seccionState!: SeccionLibState;
 
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
-    { encabezado: 'Calle', 
-      clave: (fila) => fila.calle, 
-      orden: 1 },
+    { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 1 },
     {
       encabezado: 'Número exterior',
       clave: (fila) => fila.numeroExterior,
@@ -104,11 +123,36 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       clave: (fila) => fila.municipioOAlcaldia,
       orden: 6,
     },
+    {
+      encabezado: 'País',
+      clave: (fila) => fila.pais,
+      orden: 7,
+    },
+    {
+      encabezado: 'Registro',
+      clave: (fila) => fila.registro,
+      orden: 8,
+    },
+    {
+      encabezado: 'Registro federal de contribuyentes',
+      clave: (fila) => fila.registroFederalDeContribuyentes,
+      orden: 9,
+    },
+    {
+      encabezado: 'Razón social',
+      clave: (fila) => fila.razonSocial,
+      orden: 10,
+    },
+    {
+      encabezado: 'Domicilio fiscal del solicitante',
+      clave: (fila) => fila.domicilioFiscalDelSolicitante,
+      orden: 11,
+    },
   ];
 
   constructor(
-    private readonly fb: FormBuilder, 
-    private ProsecService: ProsecService, 
+    private readonly fb: FormBuilder,
+    private ProsecService: ProsecService,
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
@@ -140,22 +184,23 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.seccionStore.establecerFormaValida([false]);
 
     this.forma.statusChanges
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            delay(10),
-            tap((_value) => {
-              if (this.forma.valid) {
-                this.AutorizacionProsecStore.setFormaValida([{ id: 1, descripcion: "Valida" }])
-              }
-            })
-          )
-          .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.forma.valid) {
+            this.AutorizacionProsecStore.setFormaValida([
+              { id: 1, descripcion: 'Valida' },
+            ]);
+          }
+        })
+      )
+      .subscribe();
 
-    if(this.domiciliosState.formaValida[0].descripcion = 'AllValida'){
+    if ((this.domiciliosState.formaValida[0].descripcion = 'AllValida')) {
       this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true])
-    }
-    else{
+      this.seccionStore.establecerFormaValida([true]);
+    } else {
       this.seccionStore.establecerFormaValida([false]);
     }
   }
@@ -167,29 +212,22 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     console.log(VALOR);
-    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
-      VALOR
-    );
+    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   initActionFormBuild(): void {
     this.forma = this.fb.group({
-      modalidad: [
-        this.domiciliosState.modalidad,
-      ],
-      Estado: [
-        this.domiciliosState.Estado,
-        Validators.required
-      ],
+      modalidad: [this.domiciliosState.modalidad],
+      Estado: [this.domiciliosState.Estado, Validators.required],
       RepresentacionFederal: [
         this.domiciliosState.RepresentacionFederal,
-        Validators.required
+        Validators.required,
       ],
       ActividadProductiva: [
         this.domiciliosState.ActividadProductiva,
-        Validators.required
-      ]
-    })
+        Validators.required,
+      ],
+    });
   }
 
   /**
@@ -204,9 +242,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.estadoSeleccionar = [];
-      }
-    }
-  );
+      },
+    });
   }
 
   /**
@@ -221,7 +258,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.RepresentacionFederal = [];
-      }
+      },
     });
   }
 
@@ -230,22 +267,24 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de actividad productiva desde el servicio.
    */
   obtenerListaActividad(): void {
-    this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
+    this.ProsecService.obtenerMenuDesplegable(
+      'actividad_productiva.json'
+    ).subscribe({
       next: (data) => {
         this.ActividadProductiva = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.ActividadProductiva = [];
-      }
+      },
     });
   }
 
-   /**
+  /**
    * @method obtenserLista
    * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
    */
-   obtenerLista() {
+  obtenerLista() {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
@@ -257,7 +296,9 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   fedralSeleccion(RepresentacionFederal: Catalogo): void {
-    this.AutorizacionProsecStore.setRepresentacionFederal([RepresentacionFederal]);
+    this.AutorizacionProsecStore.setRepresentacionFederal([
+      RepresentacionFederal,
+    ]);
   }
 
   productivaSeleccion(ActividadProductiva: Catalogo): void {
@@ -268,12 +309,12 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.plantasDatos)) {
-          this.plantasDatos = response.plantasDatos
-        } 
+          this.plantasDatos = response.plantasDatos;
+        }
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
-      }
+      },
     });
   }
 
@@ -281,5 +322,4 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
 }

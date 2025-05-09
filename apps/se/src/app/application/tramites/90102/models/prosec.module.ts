@@ -43,6 +43,11 @@ export interface FilaPlantas {
   codigoPostal: number;
   colonia: string;
   municipioOAlcaldia: string;
+  pais: string;
+  registro: string;
+  registroFederalDeContribuyentes: string;
+  razonSocial : string;
+  domicilioFiscalDelSolicitante: string;
 }
 
 export interface FilaProductos {
