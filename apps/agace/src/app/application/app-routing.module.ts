@@ -123,6 +123,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'garantia',
+    loadChildren: () =>
+      import('./tramites/31101/garantia.module').then(
+        (m) => m.GarantiaModule
+      ),
+  },
+  {
+    path: 'aviso-opcion-seguro-global',
+    loadChildren: () =>
+      import('./tramites/32515/aviso-opcion-seguro-global.module').then(
+        (m) => m.AvisoOpcionSeguroGlobalModule),
+  },
+  {
     path: 'importador-y-o-exportador',
     loadChildren: () =>
       import('./tramites/32605/importador-y-o-exportador.module').then(

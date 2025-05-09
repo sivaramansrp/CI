@@ -6,7 +6,19 @@ import {
 } from '../modelos/subfabricante.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-
+/**
+ * @function createInitialState
+ * @description Crea el estado inicial para el trámite 80207.
+ * 
+ * @returns {Tramite80207State} El estado inicial del trámite 80207.
+ * 
+ * @property {InfoRegistro} infoRegistro - Información del registro inicial, incluyendo modalidad, folio y año.
+ * @property {DatosSubcontratista} datosSubcontratista - Información del subcontratista, incluyendo RFC y estado.
+ * @property {Object} formaValida - Validación de la forma, indicando si los datos del subcontratista son válidos.
+ * @property {boolean} formaValida.esDatosSubcontratistaValido - Indica si los datos del subcontratista son válidos.
+ * @property {Array} plantasBuscadas - Lista inicial de plantas buscadas (vacía por defecto).
+ * @property {Array} plantasSubfabricantesAgregar - Lista inicial de plantas subfabricantes a agregar (vacía por defecto).
+ */
 export function createInitialState(): Tramite80207State {
   const INFO_REGISTRO: InfoRegistro = {
     modalidad: '',
@@ -40,7 +52,16 @@ export function createInitialState(): Tramite80207State {
 @Injectable({
   providedIn: 'root',
 })
+
 @StoreConfig({ name: 'tramite-80207', resettable: true })
+
+/**
+ * @description
+ * Este archivo contiene la definición de la clase `Tramites80207Store`, que extiende la funcionalidad de la clase `Store` 
+ * para gestionar el estado relacionado con los trámites del tipo 80207. Proporciona métodos para actualizar y manipular 
+ * diferentes propiedades del estado, como información de registro, datos de subcontratistas, plantas subfabricantes, 
+ * validación de formularios y más.
+ **/
 export class Tramites80207Store extends Store<Tramite80207State> {
   /**
    * Actualiza el estado del store con la información del registro proporcionada.
@@ -109,6 +130,12 @@ export class Tramites80207Store extends Store<Tramite80207State> {
     })
   }
 
+  /**
+   * Establece la lista de plantas buscadas en el estado de la tienda.
+   *
+   * @param plantasBuscadas - Un arreglo de objetos del tipo `SubfabricanteDireccionModelo` 
+   * que representa las plantas buscadas.
+   */
   setPlantasBuscadas(plantasBuscadas:SubfabricanteDireccionModelo[]):void{
     this.update((state) => ({
       ...state,
@@ -116,6 +143,17 @@ export class Tramites80207Store extends Store<Tramite80207State> {
     }));
   }
 
+    /**
+     * Elimina las plantas especificadas de la lista de plantasSubfabricantesAgregar en el estado.
+     *
+     * @param eliminarPlantas - Un arreglo de objetos del tipo `SubfabricanteDireccionModelo` que representa
+     * las plantas que se deben eliminar. Se comparan las propiedades `calle` de los objetos para determinar
+     * cuáles eliminar.
+     *
+     * @remarks
+     * Este método actualiza el estado utilizando el patrón inmutable, creando una nueva lista de plantas
+     * que excluye las plantas especificadas en el parámetro `eliminarPlantas`.
+     */
     eliminarPlantas(eliminarPlantas:SubfabricanteDireccionModelo[]): void {
       this.update(state => {
         const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 

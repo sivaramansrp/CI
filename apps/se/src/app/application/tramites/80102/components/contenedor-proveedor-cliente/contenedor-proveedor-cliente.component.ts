@@ -18,7 +18,15 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
 })
 
 /**
- * Componente contenedor de proveedor cliente.
+ * @component
+ * @name ContenedorProveedorClienteComponent
+ * @description Componente encargado de gestionar los datos de proveedores y clientes en el trámite 80102.
+ * Este componente permite visualizar y manejar los datos de los proveedores y clientes, así como sus encabezados.
+ *
+ * @usageNotes
+ * Este componente utiliza servicios de consulta (`Tramite80102Query`) para manejar y observar los datos 
+ * relacionados con los proveedores y clientes. Además, implementa el ciclo de vida de Angular para limpiar 
+ * las suscripciones al destruirse.
  */
 export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
   /**
