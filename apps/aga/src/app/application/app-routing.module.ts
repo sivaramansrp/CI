@@ -265,6 +265,13 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
+  },
+  {
     path: 'concluir-relacion',
     loadChildren: () =>
       import('./tramites/420102/concluir-relacion.module').then(
