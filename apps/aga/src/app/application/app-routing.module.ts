@@ -164,8 +164,9 @@ const ROUTES: Routes = [
   {
     path: 'attention-Of-Renewal',
     loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
+      import('./tramites/40403/atencionDeRenovacion.module').then(
+        (m) => m.AtencionDeRenovacionModule
+
       ),
   },
   {
@@ -197,6 +198,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
+      )
+  },
+  {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
       import('./tramites/40202/modificacion-transportacion-maritima.module').then(
@@ -217,7 +225,7 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  {
+  { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -229,6 +237,38 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
+      ),
+  },
+  {
+    path:'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/570102/registro-solicitud-desistimiento.module').then(
+        (m) => m.RegistroSolicitudDesistimientoModule
+      ),
+    },
+    {
+    path: 'registro-del-codigo',
+      loadChildren: () =>
+        import('./tramites/40401/tramite40401.module').then(
+          (m) => m.Tramite40401Module),
+  },
+  {
+    path: 'codigo-transportista',
+    loadChildren: () => 
+      import('./tramites/40402/codigo-transportista.module').then(
+        (m) => m.CodigoTransportistaModule)
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule),
+  },
+  {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule
       ),
   }
 ];

@@ -1,6 +1,7 @@
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
 };
 
 // Expresión regular para verificar si la entrada comienza con espacios
@@ -390,3 +391,18 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
  * - "!@#" (no comienza con un carácter válido)
  */
 export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
+
+/**
+ * Expresión regular para validar archivos con formato Excel.
+ * 
+ * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
+ * - `.xls`: Formato de archivo Excel 97-2003.
+ * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
+ * 
+ * Desglose de la expresión regular:
+ * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
+ * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
+ * - `$`: Aserción para el final de la cadena.
+ * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
+ */
+export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;

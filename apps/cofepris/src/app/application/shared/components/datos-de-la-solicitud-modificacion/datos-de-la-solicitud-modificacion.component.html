@@ -1,0 +1,320 @@
+<div class="container">
+  <form [formGroup]="datosSolicitudform">
+    <div>
+      <div>
+        <label class="mt-5 mb-3">
+          Seleccione el tipo de operación que desea realizar*:
+        </label>
+
+        <app-input-radio [radioOptions]="datosGenericos" [isRequired]="true" [layout]="'horizontal'"
+          formControlName="genericos"
+          (change)="actualizarValoresStore(datosSolicitudform,'genericos', 'setGenericos')"></app-input-radio>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <div>
+            <label for="observaciones"> Justificación</label>
+            <span class="require">*</span>
+          </div>
+          <div>
+            <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
+              placeholder="Justificación"
+              (change)="actualizarValoresStore(datosSolicitudform,'observaciones', 'setObservaciones')"
+              required></textarea>
+            <div
+              *ngIf="datosSolicitudform.get('observaciones')?.touched && datosSolicitudform.get('observaciones')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="insumos; else noInsumos">
+        <section>
+          <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
+        </section>
+      </ng-container>
+      <ng-template #noInsumos>
+        <section>
+      <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="abrirModal()">
+            Seleccionar establecimiento
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
+            <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
+              formControlName="establecimientoRazonSocial"
+              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoRazonSocial', 'setEstablecimientoRazonSocial')" />
+            <div
+              *ngIf="datosSolicitudform.get('establecimientoRazonSocial')?.touched && datosSolicitudform.get('establecimientoRazonSocial')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+            <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
+              formControlName="establecimientoCorreoElectronico"
+              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoCorreoElectronico', 'setEstablecimientoCorreoElectronico')" />
+            <div
+              *ngIf="datosSolicitudform.get('establecimientoCorreoElectronico')?.touched && datosSolicitudform.get('establecimientoCorreoElectronico')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+     </section>
+     </ng-template>
+      <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoDomicilioCodigoPostal">Código postal*:</label>
+            <input class="form-control" type="text" id="establecimientoDomicilioCodigoPostalId"
+              formControlName="establecimientoDomicilioCodigoPostal"
+              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoDomicilioCodigoPostal', 'setEstablecimientoDomicilioCodigoPostal')" />
+            <div
+              *ngIf="datosSolicitudform.get('establecimientoDomicilioCodigoPostal')?.touched && datosSolicitudform.get('establecimientoDomicilioCodigoPostal')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <app-catalogo-select [catalogo]="estado" [label]="'Estado'" name="estado" [required]="true"
+              formControlName="establecimientoEstados"
+              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoEstados', 'setEstablecimientoEstados')">
+            </app-catalogo-select>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía*:</label>
+            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase
+              formControlName="descripcionMunicipio"
+              (change)="actualizarValoresStore(datosSolicitudform,'descripcionMunicipio', 'setDescripcionMunicipio')" />
+            <div
+              *ngIf="datosSolicitudform.get('descripcionMunicipio')?.touched && datosSolicitudform.get('descripcionMunicipio')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5" *ngIf="!insumos">
+        <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      </div>
+      <div class="row mt-5" *ngIf="insumos">
+        <ng-alert [CONTENIDO]="TEXTOS_INSUMOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="localidad">Localidad:</label>
+            <input class="form-control" type="text" id="localidad" formControlName="localidad"
+              (change)="actualizarValoresStore(datosSolicitudform,'localidad', 'setLocalidad')" />
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establishomentoColonias">Colonias:</label>
+            <input class="form-control" type="text" id="establishomentoColoniasId"
+              formControlName="establishomentoColonias"
+              (change)="actualizarValoresStore(datosSolicitudform,'establishomentoColonias', 'setEstablishomentoColonias')" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="calle">Calle*:
+              <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
+              (change)="actualizarValoresStore(datosSolicitudform,'calle', 'setCalle')" />
+            <div *ngIf="datosSolicitudform.get('calle')?.touched && datosSolicitudform.get('calle')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1">
+          <div class="form-group">
+            <label class="form-label" for="lada">Lada:</label>
+            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada"
+              (change)="actualizarValoresStore(datosSolicitudform,'lada', 'setLada')" />
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="form-label" for="telefono">Teléfono*:</label>
+            <input class="form-control" type="text" id="telefono" appUppercase formControlName="telefono"
+              (change)="actualizarValoresStore(datosSolicitudform,'telefono', 'setTelefono')" />
+            <div *ngIf="datosSolicitudform.get('telefono')?.touched && datosSolicitudform.get('telefono')?.invalid"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" class="mt-5">
+        <div class="form-group">
+          <label class="form-label" for="scian">S.C.I.A.N.*:</label>
+          <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
+          </app-tabla-dinamica>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-default btn-space me-2">Eliminar</button>
+        <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
+          (click)="mostrarModeloClave()">
+          Agregar
+        </button>
+      </div>
+      <div class="row align-item-center">
+        <div class="col-md-4 mt-5">
+          <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
+            formControlName="avisoCheckbox"
+            (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
+              <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
+                data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+              formControlName="noLicenciaSanitaria"
+              (change)="actualizarValoresStore(datosSolicitudform,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
+            [tooltipQuestionCircle]="true" formControlName="regimen"
+            (change)="actualizarValoresStore(datosSolicitudform,'regimen', 'setRegimen')"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+          <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
+            name="aduanasEntradas" formControlName="aduanasEntradas"
+            (change)="actualizarValoresStore(datosSolicitudform,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
+        </div>
+      </div>
+      <div class="row mt-5" *ngIf="!insumos">
+        <div class="col-md-4 ms-auto">
+          <lib-input-check [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'" [id]="'aifaCheckbox'"
+            [required]="true" formControlName="aifaCheckbox"
+            (change)="actualizarValoresStore(datosSolicitudform,'aifaCheckbox', 'setAifaCheckbox')"></lib-input-check>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mt-5">
+          <h4>Mercancías*:</h4>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+          [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+        <div class="container text-end mt-5">
+          <button class="btn btn-default me-2">Modificar</button>
+          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" *ngIf="insumos">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+  <form [formGroup]="manifiestosRepresentanteForm">
+    <ng-titulo titulo="Manifiestos y declaraciones" />
+    <div class="form-check bg-light p-0">
+      <div class="alert alert-info content-with-checkbox py-6">
+        <input formControlName="manifests" type="checkbox" id="manifiesto"
+          (change)="actualizarValoresStore(manifiestosRepresentanteForm,'manifests', 'setManifests')" />
+        <span class="fw-bold align-middle"> *</span>
+        <div>{{ mensajeManifiestos }} </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>
+        Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:
+      </label>
+      <app-input-radio [radioOptions]="informacionConfidencialRadioOption" [isRequired]="true" [layout]="'horizontal'"
+        [gap]="'50px'" formControlName="informacionConfidencialRadio"
+        (change)="actualizarValoresStore(manifiestosRepresentanteForm,'informacionConfidencialRadio', 'setInformacionConfidencialRadio')"></app-input-radio>
+    </div>
+  </form>
+  @if (insumos) {
+    <section>
+    <app-representante-legal-rfc></app-representante-legal-rfc>
+  </section>
+  }
+  
+</div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}
+
+
+<div class="modal fade" #establecimientoModal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="scianForm">
+        <div class="modal-body">
+          <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
+          <div class="row">
+            <div class="col-md-8">
+              <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'" formControlName="scian"
+                (change)="actualizarValoresStore(scianForm,'scian', 'setScian')"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
+              <input type="text" id="descripcionScianId" formControlName="descripcionScian" class="form-control"
+                (change)="actualizarValoresStore(scianForm,'descripcionScian', 'setDescripcionScian')" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()">
+            Limpiar
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" (click)="guardarScian()">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
