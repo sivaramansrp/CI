@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ClaveScianComponent } from './clave-scian.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ClaveScianComponent', () => {
   let component: ClaveScianComponent;
@@ -8,7 +9,7 @@ describe('ClaveScianComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, ClaveScianComponent],
+      imports: [ReactiveFormsModule, ClaveScianComponent,HttpClientTestingModule],
       declarations: [],
     }).compileComponents();
 
