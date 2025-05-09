@@ -7,14 +7,15 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { EmpresasSubmanufacturerasComponent } from './empresas-subfabricante.component';
+import { EmpresasSubFabricanteComponent } from './empresas-subfabricante.component';
 import { FormBuilder } from '@angular/forms';
-import { SubManufacturerService } from '../../servicios/servicios-subfabricante.service';
+import { SubfabricanteService } from '../../servicios/servicios-subfabricante.service';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
 import { Tramites80207Store } from '../../estados/tramite80207.store';
 
 @Injectable()
-class MockSubManufacturerService {}
+class MockSubfabricanteService {}
+
 
 @Injectable()
 class MockTramites80207Queries {}
@@ -42,13 +43,13 @@ class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-describe('EmpresasSubmanufacturerasComponent', () => {
+describe('EmpresasSubFabricanteComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,EmpresasSubmanufacturerasComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule,EmpresasSubFabricanteComponent, ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -56,14 +57,14 @@ describe('EmpresasSubmanufacturerasComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: SubManufacturerService, useClass: MockSubManufacturerService },
+        { provide: SubfabricanteService, useClass: MockSubfabricanteService },
         { provide: Tramites80207Queries, useClass: MockTramites80207Queries },
         { provide: Tramites80207Store, useClass: MockTramites80207Store }
       ]
-    }).overrideComponent(EmpresasSubmanufacturerasComponent, {
+    }).overrideComponent(EmpresasSubFabricanteComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(EmpresasSubmanufacturerasComponent);
+    fixture = TestBed.createComponent(EmpresasSubFabricanteComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -135,12 +136,12 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should run #obtenerDatosDeRegistro()', async () => {
-    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
-    component.subManufacturerDatoService.getDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.subfabricanteDatosService = component.subfabricanteDatosService || {};
+    component.subfabricanteDatosService.getDatos = jest.fn().mockReturnValue(observableOf({}));
     component.store = component.store || {};
     component.store.setInfoRegistro = jest.fn();
     component.obtenerDatosDeRegistro();
-    expect(component.subManufacturerDatoService.getDatos).toHaveBeenCalled();
+    expect(component.subfabricanteDatosService.getDatos).toHaveBeenCalled();
     expect(component.store.setInfoRegistro).toHaveBeenCalled();
   });
 
@@ -159,23 +160,23 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should run #obtenerListaEstado()', async () => {
-    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
-    component.subManufacturerDatoService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({
+    component.subfabricanteDatosService = component.subfabricanteDatosService || {};
+    component.subfabricanteDatosService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({
       data: {}
     }));
     component.obtenerListaEstado();
-    expect(component.subManufacturerDatoService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.subfabricanteDatosService.obtenerListaEstado).toHaveBeenCalled();
   });
 
   it('should run #obtenerSubfabricantesDisponibles()', async () => {
-    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
-    component.subManufacturerDatoService.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({
+    component.subfabricanteDatosService = component.subfabricanteDatosService || {};
+    component.subfabricanteDatosService.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({
       length: {}
     }));
     component.store = component.store || {};
     component.store.setPlantasBuscadas = jest.fn();
     component.obtenerSubfabricantesDisponibles();
-    expect(component.subManufacturerDatoService.getSubfabricantesDisponibles).toHaveBeenCalled();
+    expect(component.subfabricanteDatosService.getSubfabricantesDisponibles).toHaveBeenCalled();
   });
 
   it('should run #obtenerRegistroSeleccionado()', async () => {
