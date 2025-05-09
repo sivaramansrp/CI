@@ -221,6 +221,16 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     this.agregarEnlaceOperativo.emit(OBJETO_JSON);
   }
 
+  /**
+   * Verifica si un campo del formulario no es válido.
+   * @param id Identificador del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   */
+  noEsValido(id: string): boolean | undefined {
+    const CONTROL = this.agregarEnlaceOperativoForm.get(id);
+    return CONTROL?.invalid && CONTROL?.touched;
+  }
+
   /** Finaliza todas las suscripciones para evitar fugas de memoria */
   ngOnDestroy(): void {
     this.destroy$.next();

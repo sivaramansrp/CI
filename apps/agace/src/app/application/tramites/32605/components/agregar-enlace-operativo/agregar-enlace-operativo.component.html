@@ -17,6 +17,9 @@
           formControlName="agregarEnlaceRfcTercero"
           (change)="actualizarRfcTercero($event)"
         />
+        <div *ngIf="noEsValido('agregarEnlaceRfcTercero')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-8">
         <div class="form-group mt-5 pull-left">
@@ -41,6 +44,9 @@
           name="rfc"
           formControlName="agregarEnlaceRfc"
         />
+        <div *ngIf="noEsValido('agregarEnlaceRfc')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-4">
@@ -53,6 +59,9 @@
           name="nombre"
           formControlName="agregarEnlaceNombre"
         />
+        <div *ngIf="noEsValido('agregarEnlaceNombre')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="apellidoPaterno"
@@ -66,6 +75,9 @@
           name="apellidoPaterno"
           formControlName="agregarEnlaceApellidoPaterno"
         />
+        <div *ngIf="noEsValido('agregarEnlaceApellidoPaterno')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="apellidoMaterno"
