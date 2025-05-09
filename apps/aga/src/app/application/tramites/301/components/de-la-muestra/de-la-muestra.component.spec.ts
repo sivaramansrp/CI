@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DeLaMuestraComponent } from './de-la-muestra.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
 describe('DeLaMuestraComponent', () => {
