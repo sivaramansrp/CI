@@ -28,6 +28,7 @@ module.exports = {
    filename: 'remoteAppEntry.js',
    exposes: {
     './Module': 'apps/funcionario/src/app/application/app.module.ts',
+    './Routes': 'apps/funcionario/src/app/remote-entry/entry.routes.ts'
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
