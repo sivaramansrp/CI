@@ -17,8 +17,8 @@ import { Tramite32102Query } from '../../../../estados/queries/tramite32102.quer
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule],
   providers: [],
-  templateUrl: './solicitud.component.html',
-  styleUrl: './solicitud.component.scss',
+  templateUrl: './Solicitud.component.html',
+  styleUrl: './Solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
