@@ -55,10 +55,10 @@ export class CancelacionStore extends Store<CancelacionState> {
     }
 
     /**
-   * Set a value dynamically in the store by field name.
-   * @param fieldName The name of the field to update.
-   * @param value The value to set.
-   */
+     * Establece un valor dinámicamente en el store por el nombre del campo.
+     * @param fieldName El nombre del campo a actualizar.
+     * @param value El valor a establecer.
+     */
   public setDynamicFieldValue(fieldName: string, value: any): void {
     this.update((state) => ({
       ...state,
