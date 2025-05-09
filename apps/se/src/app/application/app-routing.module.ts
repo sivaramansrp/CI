@@ -432,13 +432,6 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  {
-    path: 'registro-solicitudModule',
-    loadChildren: () =>
-      import('./tramites/140102/registro-de-solicitud.module').then(
-        (m) => m.RegistroDeSolicitudModule
-      ),
-    },
     {
     path: 'immex-modificacion',
     loadChildren: () =>
@@ -488,6 +481,13 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+    path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  }
 ];
 
 
