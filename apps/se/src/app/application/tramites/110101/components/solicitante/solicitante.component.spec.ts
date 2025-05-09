@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import mockData from '../../../../../assets/json/110101/solicitante-mockdata.json';
+import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
+
+import { Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 
 import { SolicitanteComponent } from './solicitante.component';
 
@@ -11,12 +13,10 @@ fdescribe('SolicitanteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // REMOVE declarations array since it's a standalone component
-      imports: [SolicitanteComponent, ReactiveFormsModule], // ADD it here instead
+      imports: [SolicitanteComponent, ReactiveFormsModule], 
       providers: [FormBuilder],
     })
     .compileComponents();
-    
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -50,5 +50,22 @@ fdescribe('SolicitanteComponent', () => {
     expect(compiled.querySelector('#denominacion').readOnly).toBeTruthy();
     expect(compiled.querySelector('#actividad-economica').readOnly).toBeTruthy();
     expect(compiled.querySelector('#correo-electronico').readOnly).toBeTruthy();
+  });
+
+  it('should update the store with form values', () => {
+    component.solicitudForm.setValue({
+      rfc: 'TEST123456789',
+      denominacion: 'Test Denominacion',
+      actividadEconomica: 'Test Actividad',
+      correoElectronico: 'test@example.com',
+    });
+  
+    component['updateStore']();
+  
+    const store = TestBed.inject(Tramite110101Store);
+    expect(store.setRfc).toHaveBeenCalledWith('TEST123456789');
+    expect(store.setDenominacion).toHaveBeenCalledWith('Test Denominacion');
+    expect(store.setActividadEconomica).toHaveBeenCalledWith('Test Actividad');
+    expect(store.setCorreoElectronico).toHaveBeenCalledWith('test@example.com');
   });
 });

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DeLaMuestraComponent } from './de-la-muestra.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
 describe('DeLaMuestraComponent', () => {
@@ -14,8 +13,7 @@ describe('DeLaMuestraComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        TituloComponent,
-        SelectCatalogosComponent,
+        TituloComponent,       
         CatalogoSelectComponent,DeLaMuestraComponent
       ],
       declarations: [],
@@ -70,14 +68,14 @@ describe('DeLaMuestraComponent', () => {
   it('should validate the form when folio is empty', () => {
     const folioControl = component.Informaciondela.get('datosImportadorExportador.folio');
     folioControl?.setValue('');
-    expect(folioControl?.valid).toBeFalse();
+    expect(folioControl?.valid).toBeFalsy();
     expect(folioControl?.hasError('required')).toBeTruthy();
   });
 
   it('should validate the form when mercancia is empty', () => {
     const mercanciaControl = component.Informaciondela.get('datosImportadorExportador.mercancia');
     mercanciaControl?.setValue('');
-    expect(mercanciaControl?.valid).toBeFalse();
+    expect(mercanciaControl?.valid).toBeFalsy();
     expect(mercanciaControl?.hasError('required')).toBeTruthy();
   });
 
