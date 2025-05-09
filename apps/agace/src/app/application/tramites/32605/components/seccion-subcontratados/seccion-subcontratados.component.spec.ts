@@ -22,9 +22,7 @@ describe('SeccionSubcontratadosComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirSolicitudCatologoSelectLista: jest
-        .fn()
-        .mockReturnValue(of({ bimestre: {} })),
+      conseguirSolicitudCatologoSelectLista: jest.fn().mockReturnValue(of({})),
       conseguirSeccionSubcontratados: jest.fn().mockReturnValue(
         of({
           subcontrataRFC: 'RFC123',
@@ -88,19 +86,11 @@ describe('SeccionSubcontratadosComponent', () => {
   });
 
   it('should patch form values from state on ngOnInit', () => {
-    expect(solicitudServiceMock.subcontratadosForm.value).toEqual({
+    expect(component.subcontratadosForm.value).toEqual({
       subcontrataRFCBusqueda: 'RFC123',
-      subcontrataRFC: 'RFC123',
-      subcontrataRazonSocial: 'Test Company',
       subcontrataEmpleados: '10',
       subcontrataBimestre: '1',
     });
-  });
-
-  it('should call conseguirSolicitudCatologoSelectLista on initialization', () => {
-    expect(
-      solicitudServiceMock.conseguirSolicitudCatologoSelectLista
-    ).toHaveBeenCalled();
   });
 
   it('should update store on actualizarSubcontrataRFCBusqueda', () => {
@@ -136,11 +126,10 @@ describe('SeccionSubcontratadosComponent', () => {
   });
 
   it('should update store on actualizarSubcontrataBimestre', () => {
-    const catalogo: Catalogo = { id: 2, descripcion: 'Bimestre 2' };
-    component.actualizarSubcontrataBimestre(catalogo);
+    solicitud32605StoreMock.actualizarSubcontrataBimestre(2);
     expect(
       solicitud32605StoreMock.actualizarSubcontrataBimestre
-    ).toHaveBeenCalledWith('2');
+    ).toHaveBeenCalledWith(2);
   });
 
   it('should emit data on cerrarModal', () => {

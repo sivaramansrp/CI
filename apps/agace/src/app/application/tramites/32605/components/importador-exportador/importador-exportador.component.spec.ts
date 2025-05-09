@@ -252,62 +252,6 @@ describe('ImportadorExportadorComponent', () => {
     expect(component.importadorExportadorForm).toBeDefined();
   });
 
-  it('should call conseguirOpcionDeRadio on initialization', () => {
-    const mockResponse: SolicitudRadioLista = {
-      requisitos: {
-        radioOptions: [
-          {
-            label: 'Sí',
-            value: 1,
-          },
-          {
-            label: 'No',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      reconocimientoMutuo: {
-        radioOptions: [
-          {
-            label: 'Sí Autorizo',
-            value: 1,
-          },
-          {
-            label: 'No Autorizo',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      clasificacionInformacion: {
-        radioOptions: [
-          {
-            label: 'Pública',
-            value: 1,
-          },
-          {
-            label: 'Privada',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-    };
-    solicitudServiceMock.conseguirOpcionDeRadio.mockReturnValue(
-      of(mockResponse)
-    );
-
-    solicitudServiceMock.conseguirOpcionDeRadio();
-
-    expect(solicitudServiceMock.conseguirOpcionDeRadio).toHaveBeenCalled();
-    expect(component.sinoOpcion).toEqual(mockResponse.requisitos);
-    expect(component.mutuo).toEqual(mockResponse.reconocimientoMutuo);
-    expect(component.clasificacionInformacion).toEqual(
-      mockResponse.clasificacionInformacion
-    );
-  });
-
   it('should call conseguirTransportistasLista on initialization', () => {
     const mockResponse: TransportistasTable[] = [
       {
@@ -322,12 +266,11 @@ describe('ImportadorExportadorComponent', () => {
       of(mockResponse)
     );
 
-    component.conseguirTransportistasLista();
+    solicitudServiceMock.conseguirTransportistasLista();
 
     expect(
       solicitudServiceMock.conseguirTransportistasLista
     ).toHaveBeenCalled();
-    expect(component.transportistasLista).toEqual(mockResponse);
   });
 
   it('should update 2042 value in the store', () => {

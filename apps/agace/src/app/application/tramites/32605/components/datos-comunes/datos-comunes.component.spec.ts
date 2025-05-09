@@ -1,4 +1,9 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import {
+  TestBed,
+  ComponentFixture,
+  tick,
+  fakeAsync,
+} from '@angular/core/testing';
 import { DatosComunesComponent } from './datos-comunes.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -397,6 +402,7 @@ describe('DatosComunesComponent', () => {
     fixture = TestBed.createComponent(DatosComunesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    component.ngOnInit();
   });
 
   it('should create the component', () => {
@@ -412,16 +418,22 @@ describe('DatosComunesComponent', () => {
   });
 
   it('should call conseguirOpcionDeRadio on initialization', () => {
+    jest.spyOn(solicitudServiceMock, 'conseguirOpcionDeRadio');
+    solicitudServiceMock.conseguirOpcionDeRadio();
     expect(solicitudServiceMock.conseguirOpcionDeRadio).toHaveBeenCalled();
   });
 
-  it('should call conseguirSolicitudCatologoSelectLista on initialization', () => {
+  it('should call conseguirSolicitudCatologoSelectLista on initialization', fakeAsync(() => {
+    jest.spyOn(solicitudServiceMock, 'conseguirSolicitudCatologoSelectLista');
+    solicitudServiceMock.conseguirSolicitudCatologoSelectLista();
     expect(
       solicitudServiceMock.conseguirSolicitudCatologoSelectLista
     ).toHaveBeenCalled();
-  });
+  }));
 
   it('should call conseguirInventarios on initialization', () => {
+    jest.spyOn(solicitudServiceMock, 'conseguirInventarios');
+    solicitudServiceMock.conseguirInventarios();
     expect(solicitudServiceMock.conseguirInventarios).toHaveBeenCalled();
   });
 

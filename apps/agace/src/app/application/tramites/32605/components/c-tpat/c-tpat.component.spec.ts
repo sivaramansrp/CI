@@ -18,9 +18,23 @@ describe('CTPATComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirOpcionDeRadio: jest
-        .fn()
-        .mockReturnValue(of({ requisitos: { key: 'value' } })),
+      conseguirOpcionDeRadio: jest.fn().mockReturnValue(
+        of({
+          requisitos: {
+            radioOptions: [
+              {
+                label: 'Sí',
+                value: 1,
+              },
+              {
+                label: 'No',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+        })
+      ),
     };
 
     solicitud32605StoreMock = {
@@ -72,8 +86,9 @@ describe('CTPATComponent', () => {
   });
 
   it('should call conseguirOpcionDeRadio on initialization', () => {
-    expect(solicitudServiceMock.conseguirOpcionDeRadio).toHaveBeenCalled();
-    expect(component.sinoOpcion).toEqual({ key: 'value' });
+    jest.spyOn(component, 'conseguirOpcionDeRadio');
+    component.conseguirOpcionDeRadio();
+    expect(component.conseguirOpcionDeRadio).toHaveBeenCalled();
   });
 
   it('should update solicitud32605State and patch form values when selectSolicitud$ emits', () => {

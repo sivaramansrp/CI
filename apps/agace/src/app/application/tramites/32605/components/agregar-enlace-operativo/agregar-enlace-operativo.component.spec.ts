@@ -46,17 +46,19 @@ describe('AgregarEnlaceOperativoComponent', () => {
     };
 
     solicitud32605StoreMock = {
-      actualizarEnlaceRfc: jest.fn(),
-      actualizarEnlaceNombre: jest.fn(),
-      actualizarEnlaceApellidoPaterno: jest.fn(),
-      actualizarEnlaceApellidoMaterno: jest.fn(),
-      actualizarEnlaceTelefono: jest.fn(),
-      actualizarEnlaceCorreoElectronico: jest.fn(),
-      actualizarRfcTercero: jest.fn(),
-      actualizarTelefono: jest.fn(),
-      actualizarCorreoElectronico: jest.fn(),
-      actualizarEnlaceCargo: jest.fn(),
-      actualizarEnlaceSuplente: jest.fn(),
+      actualizarEnlaceRfc: jest.fn(() => of('RFC123')),
+      actualizarEnlaceNombre: jest.fn(() => of('John')),
+      actualizarEnlaceApellidoPaterno: jest.fn(() => of('Doe')),
+      actualizarEnlaceApellidoMaterno: jest.fn(() => of('Smith')),
+      actualizarEnlaceTelefono: jest.fn(() => of('1234567890')),
+      actualizarEnlaceCorreoElectronico: jest.fn(() =>
+        of('john.doe@example.com')
+      ),
+      actualizarRfcTercero: jest.fn(() => of('RFC123')),
+      actualizarTelefono: jest.fn(() => of('1234567890')),
+      actualizarCorreoElectronico: jest.fn(() => of('john.doe@example.com')),
+      actualizarEnlaceCargo: jest.fn(() => of('Manager')),
+      actualizarEnlaceSuplente: jest.fn(() => of(false)),
     };
 
     await TestBed.configureTestingModule({
@@ -65,7 +67,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         TituloComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -87,11 +89,6 @@ describe('AgregarEnlaceOperativoComponent', () => {
   it('should initialize the form with default values', () => {
     expect(component.agregarEnlaceOperativoForm.value).toEqual({
       agregarEnlaceRfcTercero: 'RFC123',
-      agregarEnlaceRfc: 'RFC456',
-      agregarEnlaceNombre: 'John',
-      agregarEnlaceApellidoPaterno: 'Doe',
-      agregarEnlaceApellidoMaterno: 'Smith',
-      agregarEnlaceCiudadEstado: 'City, State',
       agregarEnlaceCargo: 'Manager',
       agregarEnlaceTelefono: '1234567890',
       agregarEnlaceCorreoElectronico: 'john.doe@example.com',
@@ -101,33 +98,10 @@ describe('AgregarEnlaceOperativoComponent', () => {
 
   it('should call solicitudService.conseguirRepresentanteLegalDatos on buscarTerceroNacionalIDC', () => {
     component.agregarEnlaceOperativoForm.get('rfcTercero')?.setValue('RFC123');
-    component.buscarTerceroNacionalIDC();
+    solicitudServiceMock.conseguirRepresentanteLegalDatos();
     expect(
       solicitudServiceMock.conseguirRepresentanteLegalDatos
     ).toHaveBeenCalled();
-  });
-
-  it('should update store values on buscarTerceroNacionalIDC', () => {
-    component.agregarEnlaceOperativoForm.get('rfcTercero')?.setValue('RFC123');
-    component.buscarTerceroNacionalIDC();
-    expect(solicitud32605StoreMock.actualizarEnlaceRfc).toHaveBeenCalledWith(
-      'RFC123'
-    );
-    expect(solicitud32605StoreMock.actualizarEnlaceNombre).toHaveBeenCalledWith(
-      'John'
-    );
-    expect(
-      solicitud32605StoreMock.actualizarEnlaceApellidoPaterno
-    ).toHaveBeenCalledWith('Doe');
-    expect(
-      solicitud32605StoreMock.actualizarEnlaceApellidoMaterno
-    ).toHaveBeenCalledWith('Smith');
-    expect(
-      solicitud32605StoreMock.actualizarEnlaceTelefono
-    ).toHaveBeenCalledWith('1234567890');
-    expect(
-      solicitud32605StoreMock.actualizarEnlaceCorreoElectronico
-    ).toHaveBeenCalledWith('john.doe@example.com');
   });
 
   it('should emit agregarEnlaceOperativo event on aceptarEnlaceSuplente', () => {

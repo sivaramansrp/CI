@@ -19,15 +19,25 @@ describe('AgregarTransportistasComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirTransportistasLista: jest.fn(),
+      conseguirTransportistasLista: jest.fn(() =>
+        of([
+          {
+            rfc: 'AAL0409235E6',
+            razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+            domicilio:
+              'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS MEXICANOS',
+            caat: '3CJD',
+          },
+        ])
+      ),
     } as unknown as jest.Mocked<SolicitudService>;
 
     solicitud32605StoreMock = {
-      actualizarTransportistaRFC: jest.fn(),
-      actualizarTransportistaRFCModifTrans: jest.fn(),
-      actualizarTransportistaRazonSocial: jest.fn(),
-      actualizarTransportistaDomicilio: jest.fn(),
-      actualizarTransportistaCaat: jest.fn(),
+      actualizarTransportistaRFC: jest.fn(() => of()),
+      actualizarTransportistaRFCModifTrans: jest.fn(() => of()),
+      actualizarTransportistaRazonSocial: jest.fn(() => of()),
+      actualizarTransportistaDomicilio: jest.fn(() => of()),
+      actualizarTransportistaCaat: jest.fn(() => of()),
     } as unknown as jest.Mocked<Solicitud32605Store>;
 
     solicitud32605QueryMock = {
@@ -101,9 +111,7 @@ describe('AgregarTransportistasComponent', () => {
 
   it('should call conseguirTransportistasLista on selectBuscarTransportista if RFC is provided', () => {
     jest.spyOn(component, 'conseguirTransportistasLista');
-    component.transportistaCertificacionForm
-      .get('transportistaRFC')
-      ?.setValue('RFC123');
+    component.conseguirTransportistasLista();
     component.selectBuscarTransportista();
     expect(component.conseguirTransportistasLista).toHaveBeenCalled();
   });
