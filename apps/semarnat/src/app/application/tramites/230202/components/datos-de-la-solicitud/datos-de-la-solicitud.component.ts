@@ -380,7 +380,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
-    const NUMERODECERTIFICADO$ = this.phytosanitaryReexportacionService
+    const NUMERO_DE_CERTIFICADO$ = this.phytosanitaryReexportacionService
       .getNumeroDeCertificado()
       .pipe(
         map((resp) => {
@@ -414,7 +414,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryReexportacionService
+    const DESCRIPCION_PRODUCTO$ = this.phytosanitaryReexportacionService
       .getDescripcionProducto()
       .pipe(
         map((resp) => {
@@ -442,7 +442,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
     );
 
-    const NOMBRECOMUN$ = this.phytosanitaryReexportacionService
+    const NOMBRE_COMUN$ = this.phytosanitaryReexportacionService
       .getNombreComun()
       .pipe(
         map((resp) => {
@@ -450,14 +450,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const UNIDADDEMEDIDA$ = this.phytosanitaryReexportacionService
+    const UNIDAD_DE_MEDIDA$ = this.phytosanitaryReexportacionService
       .getUnidadDeMedida().pipe(
         map((resp) => {
           this.unidadDeMedida = resp.data;
         })
       );
 
-    const MEDIODETRANSPORTE$ = this.phytosanitaryReexportacionService
+    const MEDIO_DE_TRANSPORTE$ = this.phytosanitaryReexportacionService
       .getMedioDeTransporte()
       .pipe(
         map((resp) => {
@@ -473,17 +473,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       );
 
     merge(
-      NUMERODECERTIFICADO$,
+      NUMERO_DE_CERTIFICADO$,
       ADUANA$,
       PAIS$,
       ENTIDADES$,
-      DESCRIPCIONPRODUCTO$,
+      DESCRIPCION_PRODUCTO$,
       FRACCION$,
       GENERO$,
       ESPECIE$,
-      NOMBRECOMUN$,
-      UNIDADDEMEDIDA$,
-      MEDIODETRANSPORTE$,
+      NOMBRE_COMUN$,
+      UNIDAD_DE_MEDIDA$,
+      MEDIO_DE_TRANSPORTE$,
       ESTADO$
     )
       .pipe(takeUntil(this.destroyNotifier$))
@@ -503,10 +503,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   numeroDeCertificadoSeleccion(): void {
-    const NUMERODECERTIFICADO = this.solicitudForm.get(
+    const NUMERO_DE_CERTIFICADO = this.solicitudForm.get(
       'reexportacionForm.numeroDeCertificado'
     )?.value;
-    this.store.setNumeroDeCertificado(NUMERODECERTIFICADO);
+    this.store.setNumeroDeCertificado(NUMERO_DE_CERTIFICADO);
   }
 
   /**
@@ -543,8 +543,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   descripcionProductoSeleccion(): void {
-    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
-    this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
+    const DESCRIPCION_PRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    this.store.setDescripcionProducto(DESCRIPCION_PRODUCTO);
   }
 
   /**
@@ -581,10 +581,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   nombreComunSeleccion(): void {
-    const NOMBRECOMUN = this.solicitudForm.get(
+    const NOMBRE_COMUN = this.solicitudForm.get(
       'datosMercancia.nombreComun'
     )?.value;
-    this.store.setNombreComun(NOMBRECOMUN);
+    this.store.setNombreComun(NOMBRE_COMUN);
   }
 
   /**
@@ -592,10 +592,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   unidadDeMedidaSeleccion(): void {
-    const UNIDADDEMEDIDA = this.solicitudForm.get(
+    const UNIDAD_DE_MEDIDA = this.solicitudForm.get(
       'reexportacionForm.unidadDeMedida'
     )?.value;
-    this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
+    this.store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
   /**
@@ -603,10 +603,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   medioDeTransporteSeleccion(): void {
-    const MEDIODETRANSPORTE = this.solicitudForm.get(
+    const MEDIO_DE_TRANSPORTE = this.solicitudForm.get(
       'reexportacionForm.medioDeTransporte'
     )?.value;
-    this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
+    this.store.setMedioDeTransporte(MEDIO_DE_TRANSPORTE);
   }
 
   /**

@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MediodetransporteService } from './medio-de-transporte.service';
-import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('MediodetransporteService', () => {
   let service: MediodetransporteService;
@@ -9,7 +8,7 @@ describe('MediodetransporteService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Provide a mock HTTP client
+      imports: [HttpClientTestingModule], 
       providers: [MediodetransporteService],
     });
 
@@ -18,7 +17,7 @@ describe('MediodetransporteService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure there are no outstanding requests
+    httpMock.verify(); 
   });
 
   it('should be created', () => {

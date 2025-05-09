@@ -11,7 +11,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 /**
- * Componente que representa la funcionalidad de la paso dos 32201.
+ * Componente que representa la funcionalidad de la paso dos 230202.
  */
 @Component({
   selector: 'paso-dos',
