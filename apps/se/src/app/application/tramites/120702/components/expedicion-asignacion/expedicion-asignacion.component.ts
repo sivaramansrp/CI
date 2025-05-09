@@ -199,6 +199,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       tbodyData: [MONTO_A_EXPEDIR],
     };
     this.montoTablaFilaDatos.push(MONTO_A_EXPEDIR_FILA);
+    this.montoTablaFilaDatos = JSON.parse(JSON.stringify(this.montoTablaFilaDatos));
 
     const TOTAL_A_EXPEDIR = this.asignacionForm.get('totalAExpedir')?.value || 0;
     this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL_A_EXPEDIR + MONTO_A_EXPEDIR);

@@ -28,8 +28,7 @@ describe('Sector90305Component', () => {
     } as ProsecModificacionServiceTsService;
 
     await TestBed.configureTestingModule({
-      declarations: [Sector90305Component],
-      imports: [CommonModule, TablaDinamicaComponent, TituloComponent],
+      imports: [Sector90305Component, CommonModule, TablaDinamicaComponent, TituloComponent],
       providers: [{ provide: ProsecModificacionServiceTsService, useValue: mockService }],
     }).compileComponents();
 
