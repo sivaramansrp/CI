@@ -24,3 +24,19 @@ export function validadorDeFecha(): ValidatorFn {
     return IS_VALID ? null : { 'invalidDate': { value: control.value } };
   };
 }
+
+/**
+ * Representa la información de una sustancia sensible.
+ *
+ * @interface SustanciaSensible
+ * @property {string} [numeroCAS] - Número CAS.
+ * @property {string} [cas] - Código C.A.S.
+ * @property {string} [descripcionNoArancelaria] - Descripción no arancelaria.
+ * @property {string} [nombreQuimico] - Nombre químico.
+ */
+export interface SustanciaSensible {
+  numeroCAS?: string;
+  cas?: string;
+  descripcionNoArancelaria?: string;
+  nombreQuimico?: string;
+}

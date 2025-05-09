@@ -1,6 +1,6 @@
+import { PagoDerechosState, SustanciaSensible } from "../models/tramies230401.models";
 import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
-import { PagoDerechosState } from "../models/tramies230401.models";
 
 /**
  * Representa el estado de una solicitud específica.
@@ -31,6 +31,7 @@ import { PagoDerechosState } from "../models/tramies230401.models";
  * @property {number} cantidad - Cantidad.
  * @property {string} cantidadLetra - Cantidad en letras.
  * @property {string} unidadDeMedida - Unidad de medida.
+ * @property {SustanciaSensible[]} sustanciasSensiblesTablaDatos - Lista de sustancias sensibles con sus detalles.
  */
 export interface Solicitud230401State {
   tipoSolicitud: string;
@@ -57,7 +58,8 @@ export interface Solicitud230401State {
   cantidad: number;
   cantidadLetra: string;
   unidadDeMedida: string;
-  pagoDerechosState: PagoDerechosState
+  pagoDerechosState: PagoDerechosState;
+  sustanciasSensiblesTablaDatos: SustanciaSensible[];
 }
 
 /**
@@ -91,6 +93,7 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     cantidad: 1,
     cantidadLetra: 'Uno',
     unidadDeMedida: '',
+    sustanciasSensiblesTablaDatos: [],
     pagoDerechosState: {
       clave: '084001963',
       dependencia: '0100160910791',
@@ -431,4 +434,21 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
       },
     }));
   }
+
+  
+  /**
+   * Agrega un nuevo elemento a la lista de datos de sustancias sensibles en el estado.
+   *
+   * @param sustanciasSensiblesTablaDatos - El objeto de tipo `SustanciaSensible` que se añadirá a la lista existente.
+   * 
+   * Este método actualiza el estado actualizando la propiedad `sustanciasSensiblesTablaDatos` 
+   * con una nueva lista que incluye el nuevo elemento proporcionado.
+   */
+  public setSustanciasSensiblesTablaDatos(sustanciasSensiblesTablaDatos: SustanciaSensible[]): void {
+    this.update((state) => ({
+      ...state,
+      sustanciasSensiblesTablaDatos
+    }));
+  }
+
 }

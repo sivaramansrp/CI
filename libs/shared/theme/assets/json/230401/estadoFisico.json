@@ -4,6 +4,14 @@
       {
         "id": 1,
         "descripcion": "otro"
+      },
+      {
+        "id": 2,
+        "descripcion": "nuevo"
+      },
+      {
+        "id": 3,
+        "descripcion": "antiguo"
       }
     ],
     "message": "Estado Físico"

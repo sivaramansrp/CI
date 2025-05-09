@@ -1,3 +1,5 @@
+import { SustanciaSensible } from "../models/tramies230401.models";
+
 export const CROSLISTA_DE_PAISES: string[] = [
     "AFGANISTÁN (EMIRATO ISLÁMICO)",
     "ALBANIA (REPÚBLICA DE)",
@@ -73,3 +75,26 @@ export const SECCIONES_TRAMITE_230401 = {
     requiereValidacion: true,
   },
 };
+
+export const CONFIGURACION_SUSTANCIAS_SENSIBLES = [
+  {
+    encabezado: 'Número CAS',
+    clave: (ele: SustanciaSensible): string | undefined => ele.numeroCAS,
+    orden: 1,
+  },
+  {
+    encabezado: 'C.A.S',
+    clave: (ele: SustanciaSensible): string | undefined => ele.cas,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción no arancelaria',
+    clave: (ele: SustanciaSensible): string | undefined => ele.descripcionNoArancelaria,
+    orden: 3,
+  },
+  {
+    encabezado: 'Nombre químico',
+    clave: (ele: SustanciaSensible): string | undefined => ele.nombreQuimico,
+    orden: 4,
+  },
+];
