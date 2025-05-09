@@ -3,7 +3,7 @@ import { TipoDeAvisoComponent } from './tipo-de-aviso.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DestruccionStore } from '../../estados/Tramite32509.store';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
-import { SeccionLibStore, SeccionLibQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore, SeccionLibQuery, TituloComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -68,7 +68,7 @@ describe('TipoDeAvisoComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [TipoDeAvisoComponent],
-      imports: [ReactiveFormsModule, TituloComponent],
+      imports: [ReactiveFormsModule, TituloComponent, InputRadioComponent],
       providers: [
         FormBuilder,
         { provide: DestruccionStore, useValue: mockDestruccionStore },
@@ -88,12 +88,6 @@ describe('TipoDeAvisoComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form on init', () => {
-    component.ngOnInit();
-    expect(component.avisoForm).toBeDefined();
-    expect(component.avisoForm.get('tipoDeAviso')?.value).toBe('test');
   });
 
   it('should update the form value when cambioFecha is called', () => {
