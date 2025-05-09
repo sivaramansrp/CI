@@ -1,0 +1,11 @@
+[
+    {
+        "folioTramite": "12345",
+        "tipoDeTramite": "Solicitud",
+        "nombreDeLaTarea": "Revisión de documentos",
+        "fechaDeAsignacion": "2023-10-01",
+        "estadoDeTramite": "En Proceso",
+        "departamento": "Recursos Humanos",
+        "numeroDeProcedimiento": "67890"
+    }
+]

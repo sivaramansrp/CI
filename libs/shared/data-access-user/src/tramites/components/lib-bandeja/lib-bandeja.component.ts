@@ -40,6 +40,7 @@ export class LibBandejaComponent<T> implements OnInit {
 
     public originalConfiguracionTabla: any[] = [];
     public tramiteData: TramiteDetails[] = [];
+    public paisDeOriginColapsable = false;
 
 
     constructor(
@@ -50,6 +51,9 @@ export class LibBandejaComponent<T> implements OnInit {
     }
 
     ngOnInit(): void {
+      if(this.tieneBandeja) {
+        this.hasValidForm = true;
+      }
       this.filterConfiguracionTabla();
     }
 
@@ -83,6 +87,12 @@ export class LibBandejaComponent<T> implements OnInit {
       //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
 
       this.router.navigate([this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento]);
+    }
+
+    public mostrarColapsable(orden:number): void {
+      if (orden === 1) {
+        this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+      }
     }
 
 

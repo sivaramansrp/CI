@@ -52,3 +52,73 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
         habilitado: true
     },
   ];
+
+  export const BANDEJA_DE_TAREAS_PENDIENTES_FORMA = [
+    {
+      id: 'folio',
+      labelNombre: 'Folio',
+      campo: 'folio',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+    },
+    {
+      id: 'informacionAdicional',
+      labelNombre: 'Información adicional',
+      campo: 'informacionAdicional',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+    },
+    {
+      id: 'fechaInicial',
+      labelNombre: 'Fecha inicial',
+      campo: 'fechaInicial',
+      clase: 'col-md-6',
+      tipoInput: 'date',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    },
+    {
+      id: 'fechaFinal',
+      labelNombre: 'Fecha final',
+      campo: 'fechaFinal',
+      clase: 'col-md-6',
+      tipoInput: 'date',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    }
+
+  ];
