@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -7,7 +9,8 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent],
+      imports: [DatosDeLaSolicitudComponent, HttpClientModule],
+      providers: [PhytosanitaryReexportacionService], // Add any necessary providers here
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
