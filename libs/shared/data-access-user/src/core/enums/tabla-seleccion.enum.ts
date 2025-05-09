@@ -9,6 +9,7 @@ export enum TablaSeleccion {
 export enum TablaCampoSeleccion {
   INPUT = 'INPUT',
   DROPDOWN = 'DROPDOWN',
+  CHECKBOX = 'CHECKBOX',
   NONE = 'NONE'
 }
 /**

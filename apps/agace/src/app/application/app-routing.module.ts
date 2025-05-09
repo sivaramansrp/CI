@@ -134,7 +134,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32515/aviso-opcion-seguro-global.module').then(
         (m) => m.AvisoOpcionSeguroGlobalModule),
-  }
+  },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
 ];
 
 @NgModule({

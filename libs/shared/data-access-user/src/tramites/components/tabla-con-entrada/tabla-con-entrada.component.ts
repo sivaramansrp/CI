@@ -193,6 +193,12 @@ export class TablaConEntradaComponent<T> {
     this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
   }
 
+  changeCheckBoxValue(evento: Event, i: number, llave: string): void {
+    const VALUE = (evento.target as HTMLInputElement).value; // Captura el valor ingresado
+    (this.datos[i] as Record<string, any>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
+    this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
+  }
+
   /**
    * Maneja el evento de clic en una fila de la tabla.
    *
