@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PasoUnoComponent } from './paso-uno.component';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SelectCatalogosComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { PasoUnoComponent } from './paso-uno.component';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -23,8 +23,7 @@ describe('PasoUnoComponent', () => {
         TituloComponent,
         BtnContinuarComponent,
         CrosslistComponent,
-        InputCheckComponent,
-        SelectCatalogosComponent,
+        InputCheckComponent,   
         AlertComponent,
         InputFechaComponent,
         AnexarDocumentosComponent,

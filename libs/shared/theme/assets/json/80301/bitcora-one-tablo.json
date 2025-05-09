@@ -1,0 +1,25 @@
+{
+    "bitacora": [
+      {
+        "tipo_modificacion": "Actualización",
+        "fecha_modificacion": "2025-02-25 10:30:00",
+        "valores_anteriores": {
+          "precio": 100
+        },
+        "valores_nuevos": {
+          "precio": 120
+        }
+      },
+      {
+        "tipo_modificacion": "Eliminación",
+        "fecha_modificacion": "2025-02-26 08:45:00",
+        "valores_anteriores": {
+          "cantidad": 200
+        },
+        "valores_nuevos": {
+          "cantidad": 0
+        }
+      }
+    ]
+  }
+  

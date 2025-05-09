@@ -24,23 +24,23 @@ metadata:
 data:
   module-federation.manifest.json: |
     {
-      "login": "https://vucem-dev.example.com/login",
-      "aga": "https://vucem-dev.example.com/aga", 
-      "agriculture": "https://vucem-dev.example.com/agriculture",
-      "se": "https://vucem-dev.example.com/se",
-      "semarnat": "https://vucem-dev.example.com/semarnat",
-      "agace": "https://vucem-dev.example.com/agace",
-      "funcionario": "https://vucem-dev.example.com/funcionario",
-      "cofepris": "https://vucem-dev.example.com/cofepris",
-      "amecafe": "https://vucem-dev.example.com/amecafe",
-      "sener": "https://vucem-dev.example.com/sener",
-      "inbal": "https://vucem-dev.example.com/inbal",
-      "sedena": "https://vucem-dev.example.com/sedena",
-      "profepa": "https://vucem-dev.example.com/profepa",
-      "crt": "https://vucem-dev.example.com/crt",
-      "inah": "https://vucem-dev.example.com/inah",
-      "bandejas": "https://vucem-dev.example.com/bandejas",
-      "stps": "https://vucem-dev.example.com/stps"
+      "login": "https://front.v30.ultrasist.net/login/remoteAppEntry.js",
+      "aga": "https://front.v30.ultrasist.net/aga/remoteAppEntry.js", 
+      "agriculture": "https://front.v30.ultrasist.net/agriculture/remoteAppEntry.js",
+      "se": "https://front.v30.ultrasist.net/se/remoteAppEntry.js",
+      "semarnat": "https://front.v30.ultrasist.net/semarnat/remoteAppEntry.js",
+      "agace": "https://front.v30.ultrasist.net/agace/remoteAppEntry.js",
+      "funcionario": "https://front.v30.ultrasist.net/funcionario/remoteAppEntry.js",
+      "cofepris": "https://front.v30.ultrasist.net/cofepris/remoteAppEntry.js",
+      "amecafe": "https://front.v30.ultrasist.net/amecafe/remoteAppEntry.js",
+      "sener": "https://front.v30.ultrasist.net/sener/remoteAppEntry.js",
+      "inbal": "https://front.v30.ultrasist.net/inbal/remoteAppEntry.js",
+      "sedena": "https://front.v30.ultrasist.net/sedena/remoteAppEntry.js",
+      "profepa": "https://front.v30.ultrasist.net/profepa/remoteAppEntry.js",
+      "crt": "https://front.v30.ultrasist.net/crt/remoteAppEntry.js",
+      "inah": "https://front.v30.ultrasist.net/inah/remoteAppEntry.js",
+      "bandejas": "https://front.v30.ultrasist.net/bandejas/remoteAppEntry.js",
+      "stps": "https://front.v30.ultrasist.net/stps/remoteAppEntry.js"
     }
 ---
 # Deployment for VUCEM Microfrontends
@@ -920,12 +920,21 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+    # Add Cache-Control headers for Module Federation - CRITICAL FOR MODULE FEDERATION
     nginx.ingress.kubernetes.io/configuration-snippet: |
       # Add CORS headers
       add_header 'Access-Control-Allow-Origin' '*' always;
       add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
       add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization' always;
       add_header 'Access-Control-Max-Age' 1728000;
+      
+      # Ensure remoteAppEntry.js files are never cached - THIS IS CRITICAL FOR MODULE FEDERATION
+      if ($request_uri ~* \/remoteAppEntry\.js$) {
+        add_header Cache-Control "no-store, no-cache, must-revalidate" always;
+        add_header Pragma "no-cache" always;
+        expires -1;
+      }
+      
       # Handle OPTIONS preflight requests
       if ($request_method = 'OPTIONS') {
         add_header 'Access-Control-Allow-Origin' '*';
@@ -1097,9 +1106,9 @@ spec:
             name: stps-svc-${ENV}
             port:
               number: 80
-      # Backend API
-      - path: /api
-        pathType: Prefix
+      # Module Federation specific paths - IMPORTANT FOR FEDERATION TO WORK
+      - path: /remoteAppEntry.js
+        pathType: Exact
         backend:
           service:
             name: vucem-backend-svc
