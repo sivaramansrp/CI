@@ -259,8 +259,8 @@ const ROUTES: Routes = [
   {
     path: 'registrar-proveedores',
     loadChildren: () =>
-      import('./tramites/420101/registrar-proveedores-routing.module').then(
-        (m) => m.RegistrarProveedoresRoutingModule),
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
   }
 ];
 

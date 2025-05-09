@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { RegistrarDeProveedoresComponent } from '../../components/registrar-de-proveedores/registrar-de-proveedores.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
 import { Tramite420101Store } from '../../estados/tramite420101Store.store';
 
@@ -14,12 +11,6 @@ import { Tramite420101Store } from '../../estados/tramite420101Store.store';
  */
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    RegistrarDeProveedoresComponent
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
