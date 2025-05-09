@@ -483,6 +483,13 @@ const ROUTES: Routes = [
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
+},
 {   
   path: 'exportacion-materias-primas-estupefacientes',
   loadChildren: () =>
