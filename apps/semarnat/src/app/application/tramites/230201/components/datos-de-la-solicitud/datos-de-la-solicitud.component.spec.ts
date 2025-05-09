@@ -50,7 +50,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should initialize the form in inicializarFormulario', () => {
     component.solicitudState = {
-      numeroDeCertificado: '123',
+      paisDeProcedencia: '123',
       aduana: 'Test Aduana',
       pais: 'Test Pais',
       entidades: 'Test Entidades',

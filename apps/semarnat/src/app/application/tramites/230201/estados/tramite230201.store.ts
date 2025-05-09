@@ -148,13 +148,13 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
   }
 
   /**
-   * Establece la lista de numeroDeCertificado en el estado.
-   * @param numeroDeCertificado Lista de numeroDeCertificado.
+   * Establece la lista de paisDeProcedencia en el estado.
+   * @param paisDeProcedencia Lista de paisDeProcedencia.
    */
-  public setpaisDeProcedencia(numeroDeCertificado: Catalogo[]): void {
+  public setpaisDeProcedencia(paisDeProcedencia: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      paisDeProcedencia: numeroDeCertificado,
+      paisDeProcedencia: paisDeProcedencia,
     }));
   }
 
