@@ -1,0 +1,12 @@
+{
+    "datos": [
+        {
+            "idTransaccionVUCEM": "TX123456789",
+            "cantidad": "100",
+            "pesoKg": "2500.75",
+            "descripcionUnidadMedida": "Kilogramos",
+            "descripcion": "Carga de productos electrónicos"
+          }
+       
+    ]
+}

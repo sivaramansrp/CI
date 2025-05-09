@@ -989,8 +989,8 @@
   {
     "id": 142,
     "tramite": 32507,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/entrega-acta-solicitante",
+    "linkDepartment": "/pago/entrega-acta-solicitante",
     "department": "agace"
   },
   {
