@@ -1,18 +1,36 @@
+/**
+ * Representa la respuesta de un catálogo básico.
+ */
 export interface CatalogoResponse {
+  /** Identificador único del catálogo. */
   id: number;
+  /** Descripción del catálogo. */
   descripcion: string;
 }
 
+/**
+ * Representa una respuesta en formato JSON con datos adicionales.
+ */
 export interface JSONResponse {
+  /** Identificador único del elemento. */
   id: number;
+  /** Descripción del elemento. */
   descripcion: string;
+  /** Código asociado al elemento. */
   codigo: string;
+  /** Datos adicionales en formato string. */
   data: string;
 }
 
+/**
+ * Representa la respuesta de un conjunto de catálogos.
+ */
 export interface RespuestaCatalogos {
+  /** Código de estado de la respuesta. */
   code: number;
+  /** Lista de catálogos incluidos en la respuesta. */
   data: Catalogo[];
+  /** Mensaje asociado a la respuesta. */
   message: string;
 }
 
@@ -28,10 +46,15 @@ export interface RespuestaCatalogos {
  * @property {number} [relacionadaAcotacionId] - Identificador opcional relacionado con una acotación específica.
  */
 export interface Catalogo {
+  /** Identificador único del catálogo. */
   id: number;
+  /** Descripción del catálogo. */
   descripcion: string;
+  /** Clave opcional del catálogo. */
   clave?: string;
+  /** Tamaño opcional del catálogo. */
   relacionadaUmtId?: number;
+  /** Identificador relacionado con acotación opcional. */
   relacionadaAcotacionId?: number;
 }
 
@@ -57,30 +80,54 @@ export interface CatalogoDocumento extends Catalogo {
   cargado?: boolean;
 }
 
+/**
+ * Representa un catálogo de países.
+ */
 export interface CatalogoPaises {
+  /** Identificador único del país. */
   id: number;
+  /** Código ISO del país. */
   codigoIso: string;
+  /** Nombre del país. */
   nombre: string;
 }
 
+/**
+ * Representa un encabezado de tabla para un acuse.
+ */
 export interface HeaderTablaAcuse {
+  /** Clave que corresponde a una propiedad de BodyTablaAcuse. */
   key: keyof BodyTablaAcuse;
+  /** Valor asociado al encabezado. */
   valor: string;
 }
 
+/**
+ * Representa el cuerpo de una tabla de acuse.
+ */
 export interface BodyTablaAcuse {
+  /** Identificador único del acuse. */
   id: number;
+  /** Identificador del documento asociado. */
   idDocumento: string;
+  /** Nombre del documento. */
   documento: string;
+  /** URL del PDF asociado al documento. */
   urlPdf: string;
 }
 
+/**
+ * Representa la respuesta de documentos requeridos.
+ */
 export interface RespuestaDocuemntosRequeridos {
+  /** Identificador único del documento requerido. */
   id: number;
+  /** Indica si el documento es requerido. */
   requerido: boolean;
+  /** Tipo de documento requerido. */
   tipoDocumento: string;
+  /** Nombre del archivo asociado al documento. */
   nombreArchivo: string;
+  /** Estatus del documento requerido. */
   estatus: string;
 }
-
-

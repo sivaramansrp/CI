@@ -814,8 +814,8 @@
   {
     "id": 117,
     "tramite": 110214,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-inicialmente-certificado/solicitante",
+    "linkDepartment": "/pago/validar-inicialmente-certificado/solicitante",
     "department": "se"
   },
   {
@@ -1570,8 +1570,8 @@
   {
     "id": 225,
     "tramite": 260516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/operación-de-maquila-submaquila/plaguicidas",
+    "linkDepartment": "/pago/operación-de-maquila-submaquila/plaguicidas",
     "department": "cofepris"
   },
   {

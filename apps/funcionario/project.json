@@ -29,8 +29,15 @@
             "output": "./assets/"
           }
         ],
-        "styles": ["apps/funcionario/src/styles.scss"],
-        "scripts": [],
+        "styles": [
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "libs/shared/theme/assets/styles/main.scss"
+        ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        ],
         "customWebpackConfig": {
           "path": "apps/funcionario/webpack.config.ts"
         }

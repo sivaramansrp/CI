@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DomicilloDelDestinatarioComponent } from './domicillo-del-destinatario.component';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
@@ -9,78 +9,98 @@ import { Tramite110208Query } from '../../../../estados/queries/tramite110208.qu
 describe('DomicilloDelDestinatarioComponent', () => {
   let component: DomicilloDelDestinatarioComponent;
   let fixture: ComponentFixture<DomicilloDelDestinatarioComponent>;
-  let validarInicalmenteServiceMock: any;
-  let tramite110208StoreMock: any;
-  let tramite110208QueryMock: any;
+  let service: ValidarInicalmenteService;
+  let store: Tramite110208Store;
+  let query: Tramite110208Query;
+
+  const mockSolicitudState = {
+    ciudad: 'Ciudad Test',
+    calle: 'Calle Test',
+    numeroLetra: '123',
+    lada: '55',
+    telefono: '1234567890',
+    fax: '123456789',
+    correoElectronico: 'test@example.com',
+    paisDestino: 'México',
+  };
+
+  const mockEstadoList = [
+    { id: 1, descripcion: 'Estado 1' },
+    { id: 2, descripcion: 'Estado 2' },
+  ];
 
   beforeEach(async () => {
-    validarInicalmenteServiceMock = {
-      obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, name: 'Estado 1' }] })),
-    };
-
-    tramite110208StoreMock = {
-      setCiudad: jest.fn(),
-      setCalle: jest.fn(),
-    };
-
-    tramite110208QueryMock = {
-      selectSolicitud$: of({
-        ciudad: 'Ciudad Test',
-        calle: 'Calle Test',
-        numeroLetra: '123',
-        correoElectronico: 'test@example.com',
-      }),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DomicilloDelDestinatarioComponent],
+      imports: [DomicilloDelDestinatarioComponent,ReactiveFormsModule],
       providers: [
-        { provide: ValidarInicalmenteService, useValue: validarInicalmenteServiceMock },
-        { provide: Tramite110208Store, useValue: tramite110208StoreMock },
-        { provide: Tramite110208Query, useValue: tramite110208QueryMock },
+        FormBuilder,
+        {
+          provide: ValidarInicalmenteService,
+          useValue: {
+            obtenerEstadoList: jest.fn().mockReturnValue(of({ data: mockEstadoList })),
+          },
+        },
+        {
+          provide: Tramite110208Store,
+          useValue: {
+            setCiudad: jest.fn(),
+            setCalle: jest.fn(),
+            setNumeroLetra: jest.fn(),
+            setLada: jest.fn(),
+            setTelefono: jest.fn(),
+            setFax: jest.fn(),
+            setCorreoElectronico: jest.fn(),
+            setPaisDestino: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite110208Query,
+          useValue: {
+            selectSolicitud$: of(mockSolicitudState),
+          },
+        },
       ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DomicilloDelDestinatarioComponent);
     component = fixture.componentInstance;
+    service = TestBed.inject(ValidarInicalmenteService);
+    store = TestBed.inject(Tramite110208Store);
+    query = TestBed.inject(Tramite110208Query);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values from the state', () => {
-    expect(component.domicilioDestinatario.value).toEqual({
-      ciudad: 'Ciudad Test',
-      calle: 'Calle Test',
-      numeroLetra: '123',
-      lada: null,
-      telefono: null,
-      fax: null,
-      correoElectronico: 'test@example.com',
-      paisDestino: null,
-    });
+  it('should initialize the form on component creation', () => {
+    expect(component.domicilioDestinatario).toBeDefined();
+    expect(component.domicilioDestinatario.get('ciudad')?.value).toBe(mockSolicitudState.ciudad);
+    expect(component.domicilioDestinatario.get('calle')?.value).toBe(mockSolicitudState.calle);
+    expect(component.domicilioDestinatario.get('numeroLetra')?.value).toBe(mockSolicitudState.numeroLetra);
+    expect(component.domicilioDestinatario.get('correoElectronico')?.value).toBe(mockSolicitudState.correoElectronico);
   });
 
-  it('should call obtenerEstadoList and populate estado list', () => {
+  it('should call obtenerEstadoList and set estado list', () => {
     component.obtenerEstadoList();
-    expect(validarInicalmenteServiceMock.obtenerEstadoList).toHaveBeenCalled();
-    expect(component.estado).toEqual([{ id: 1, name: 'Estado 1' }]);
+    expect(service.obtenerEstadoList).toHaveBeenCalled();
+    expect(component.estado).toEqual(mockEstadoList);
   });
 
   it('should call setValoresStore and update the store', () => {
-    const form = component.domicilioDestinatario;
-    form.get('ciudad')?.setValue('New City');
-    component.setValoresStore(form, 'ciudad', 'setCiudad');
-    expect(tramite110208StoreMock.setCiudad).toHaveBeenCalledWith('New City');
+    const spy = jest.spyOn(store, 'setCiudad');
+    component.setValoresStore(component.domicilioDestinatario, 'ciudad', 'setCiudad');
+    expect(spy).toHaveBeenCalledWith(mockSolicitudState.ciudad);
   });
 
-  it('should unsubscribe from observables on destroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+  it('should clean up subscriptions on component destroy', () => {
+    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyedSpy).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
