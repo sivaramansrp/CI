@@ -220,7 +220,8 @@ export class RegimenAduaneroComponent implements OnInit, OnDestroy {
   * const fechaConfig = RegimenAduaneroComponent.obtenerInformacionDeFecha;
   * console.log(fechaConfig.labelNombre); // 'Fecha de fin de vigencia'
   */
-  static get obtenerInformacionDeFecha(): InputFecha {
+  // eslint-disable-next-line class-methods-use-this
+  get obtenerInformacionDeFecha(): InputFecha {
     const DATOS = {
         labelNombre: 'Fecha de fin de vigencia', 
         required: true,

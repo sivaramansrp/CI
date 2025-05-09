@@ -46,22 +46,6 @@ export const TIPO_DE_GARANTIA_NOTA = `<p><strong>Nota: </strong>Es importante se
   * console.log(TIPO_SECTOR);
   */
 export const TIPO_SECTOR = [
-    {
-      id: 'fecha_inicio',
-      labelNombre: 'Fecha inicio',
-      campo: 'fecha_inicio',
-      clase: 'col-md-4',
-      tipoInput: 'date',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [
-          { tipo: 'required' }
-      ],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      habilitado: true
-  },
   {
     id: 'tipoSector',
     labelNombre: '',
