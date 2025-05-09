@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SeleccionModuloComponent } from './seleccion-modulo.component';
+import { BandejaPendientesComponent } from './seleccion-modulo.component';
 
-describe('SeleccionModuloComponent', () => {
-  let component: SeleccionModuloComponent;
-  let fixture: ComponentFixture<SeleccionModuloComponent>;
+describe('BandejaPendientesComponent', () => {
+  let component: BandejaPendientesComponent;
+  let fixture: ComponentFixture<BandejaPendientesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SeleccionModuloComponent],
+      imports: [BandejaPendientesComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SeleccionModuloComponent);
+    fixture = TestBed.createComponent(BandejaPendientesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

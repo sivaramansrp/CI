@@ -1,0 +1,40 @@
+{
+   "mercanciaTable": {
+        "tableHeader": [
+            "Tipo de mercancía",
+            "Cantidad",
+            "Unidad de medida de Comercialización",
+            "Año de importación temporal",
+            "Modelo",
+            "Marco",
+            "Numero de serie",
+            "Condición de la mercancía"
+        ],
+        "tableBody": [
+            {
+                "tbodyData": [
+                    "muebels",
+                    "22",
+                    "Caja",
+                    "1964",
+                    "model2",
+                    "marco2",
+                    "1245678",
+                    "Usado"
+                ]
+            },
+            {
+                "tbodyData": [
+                    "muebels1",
+                    "221",
+                    "Caja1",
+                    "19641",
+                    "model21",
+                    "marco21",
+                    "12456781",
+                    "Usado1"
+                ]
+            }
+        ]
+    }
+}
