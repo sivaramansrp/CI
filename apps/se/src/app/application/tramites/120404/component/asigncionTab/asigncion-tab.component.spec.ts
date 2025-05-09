@@ -1,106 +1,122 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, of } from 'rxjs';
-
-
-import { SolicitanteasigncionserviceService } from '@ng-mf/data-access-user';
-// import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-
-
-
 import { AsignciontabComponent } from './asigncion-tab.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
+import { Tramite120404Store } from '../../estados/store/tramite120404.store';
+import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
 
 describe('AsignciontabComponent', () => {
   let component: AsignciontabComponent;
   let fixture: ComponentFixture<AsignciontabComponent>;
-  let service: jest.Mocked<SolicitanteasigncionserviceService>;
+  let service: SolicitanteasigncionserviceService;
+  let store: Tramite120404Store;
+  let query: Tramite120404Query;
+
+  const mockSolicitanteList = [
+    { id: 1, descripcion: 'Option 1' },
+    { id: 2, descripcion: 'Option 2' },
+  ];
+
+  const mockTramiteState = {
+    numTramite: '12345',
+    asignacionsolitud: 'Test Solicitud',
+    asignacionRadio: true,
+  };
 
   beforeEach(async () => {
-    const SERVICESPY = jest.fn(() => ({
-      getAsigncion: jest.fn()
-    }))();
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [AsignciontabComponent],
+      imports: [AsignciontabComponent,ReactiveFormsModule],
       providers: [
-        { provide: SolicitanteasigncionserviceService, useValue:SERVICESPY}
-      ]
+        FormBuilder,
+        {
+          provide: SolicitanteasigncionserviceService,
+          useValue: {
+            getAsigncion: jest.fn().mockReturnValue(of(mockSolicitanteList)),
+          },
+        },
+        {
+          provide: Tramite120404Store,
+          useValue: {
+            setNumTramite: jest.fn(),
+            setAsignacionsolitud: jest.fn(),
+            setAsignacionRadio: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite120404Query,
+          useValue: {
+            selectTramite120404$: of(mockTramiteState),
+          },
+        },
+      ],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(AsignciontabComponent);
-    component = fixture.componentInstance;
-    service = TestBed.inject(SolicitanteasigncionserviceService) as jest.Mocked<SolicitanteasigncionserviceService>;
   });
 
-  it('should create', () => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AsignciontabComponent);
+    component = fixture.componentInstance;
+    service = TestBed.inject(SolicitanteasigncionserviceService);
+    store = TestBed.inject(Tramite120404Store);
+    query = TestBed.inject(Tramite120404Query);
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form', () => {
-    component.ngOnInit();
+  it('should initialize the form on component creation', () => {
     expect(component.asignacionForm).toBeDefined();
-    expect(component.asignacionForm.get('datosRegimen')).toBeDefined();
+    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.value).toBe('');
+    expect(component.asignacionForm.get('datosRegimen')?.get('numTramite')?.value).toBe('');
+    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.value).toBe(false);
   });
 
-  it('should call loadComboUnidadMedida on init', () => {
-    jest.spyOn(component, 'loadComboUnidadMedida');
-    component.ngOnInit();
-    expect(component.loadComboUnidadMedida).toHaveBeenCalled();
-  });
-
-  it('should load combo unidad medida', () => {
-    const MOCKDATA: Catalogo[] = [{ id: 1, descripcion: 'Test' }];
-    service.getAsigncion.mockReturnValue(of(MOCKDATA));
-
+  it('should call loadComboUnidadMedida and set solicitanteList', () => {
     component.loadComboUnidadMedida();
     expect(service.getAsigncion).toHaveBeenCalled();
-    expect(component.solicitanteList).toEqual(MOCKDATA);
+    expect(component.solicitanteList).toEqual(mockSolicitanteList);
   });
 
-  it('should check if form control is invalid', () => {
-    component.ngOnInit();
-    const CONTROL = component.asignacionForm.get('datosRegimen.asignacionsolitud');
-    CONTROL?.markAsTouched();
-    CONTROL?.setErrors({ required: true });
-
-    expect(component.isInvalid('asignacionsolitud')).toBeTruthy();
+  it('should call enPatchFormData and patch form values from the store', () => {
+    component.enPatchFormData();
+    expect(component.asignacionForm.get('datosRegimen')?.get('numTramite')?.value).toBe(mockTramiteState.numTramite);
+    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.value).toBe(mockTramiteState.asignacionsolitud);
+    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.value).toBe(mockTramiteState.asignacionRadio);
   });
 
-  it('should submit the form if valid', () => {
-    jest.spyOn(console, 'log');
-    component.ngOnInit();
-    component.asignacionForm.get('datosRegimen')?.setValue({
-      asignacionsolitud: 'test',
-      numTramite: '123'
-    });
+  it('should call setValoresStore and update the store', () => {
+    const spy = jest.spyOn(store, 'setNumTramite');
+    component.setValoresStore(component.asignacionForm, 'numTramite', 'setNumTramite');
+    expect(spy).toHaveBeenCalledWith('');
+  });
 
+  it('should return true if a form control is invalid and touched', () => {
+    const control = component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud');
+    control?.markAsTouched();
+    control?.setErrors({ required: true });
+    expect(component.isInvalid('asignacionsolitud')).toBe(true);
+  });
+
+  it('should return null if a form control does not exist', () => {
+    expect(component.isInvalid('nonExistentControl')).toBeNull();
+  });
+
+  it('should handle form submission when valid', () => {
+    const spy = jest.spyOn(component, 'buscar');
+    component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.setValue('Test');
+    component.asignacionForm.get('datosRegimen')?.get('numTramite')?.setValue('12345');
+    component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.setValue(true);
     component.buscar();
-    expect(console.log).toHaveBeenCalledWith('Formulario enviado:', component.asignacionForm.value);
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should not submit the form if invalid', () => {
-    jest.spyOn(console, 'log');
-    component.ngOnInit();
-
-    component.buscar();
-    expect(console.log).toHaveBeenCalledWith('Formulario no válido');
-  });
-
-  it('should clean up on destroy', () => {
-    // const DESTROYED$ = {
-    //   next: jest.fn(),
-    //   complete: jest.fn()
-    // };
-    const DESTROYED$ = new Subject<void>();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (component as any).DESTROYED$ =DESTROYED$ ;
-
+  it('should clean up subscriptions on component destroy', () => {
+    const spyNext = jest.spyOn(component['destroyed$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(DESTROYED$.next).toHaveBeenCalled();
-    expect(DESTROYED$.complete).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
