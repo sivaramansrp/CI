@@ -5,6 +5,16 @@ import {
   ServicioInmex,
 } from '../models/autorizacion-programa-nuevo.model';
 
+/**
+ * @const PASOS
+ * @description Representa los pasos necesarios para completar un proceso de autorización.
+ * Cada paso incluye un índice, un título, y estados que indican si está activo o completado.
+ * 
+ * @property {number} indice - El número de orden del paso en el proceso.
+ * @property {string} titulo - El título descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está actualmente activo.
+ * @property {boolean} completado - Indica si el paso ha sido completado.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -25,11 +35,36 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * @const TITULOMENSAJE
+ * @description Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén).
+ * @type {string}
+ */
 export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+
+/**
+ * @const TEXTOS_REQUISITOS
+ * @description La constante contiene un mensaje informativo que indica que la solicitud ha sido registrada con un número temporal.
+ * Este número no tiene validez legal y solo sirve para identificar la solicitud. Un folio oficial será asignado al momento de firmar la solicitud.
+ * @type {string}
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * @constant CONFIGURACION_DOMICILIOS
+ * @description Configuración de los domicilios para el programa IMMEX. 
+ * Contiene un arreglo de objetos que representan las columnas de una tabla, 
+ * cada objeto incluye un encabezado, una clave que es una función para obtener el valor correspondiente, 
+ * y el orden en el que se deben mostrar las columnas.
+ * 
+ * @property {string} encabezado - El título de la columna en la tabla.
+ * @property {Function} clave - Función que recibe un objeto de tipo `ServicioInmex` y devuelve el valor correspondiente.
+ * @property {number} orden - El orden en el que se debe mostrar la columna.
+ *
+ **/
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
@@ -58,6 +93,19 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 5,
   },
 ];
+
+/**
+ * @constant CONFIGURACION_SERVICIO_IMMEX
+ * @description Configuración de los servicios IMMEX. 
+ * Contiene un arreglo de objetos que representan las columnas de una tabla, 
+ * cada objeto incluye un encabezado, una clave que es una función para obtener el valor correspondiente, 
+ * y el orden en el que se deben mostrar las columnas.
+ * 
+ * @property {string} encabezado - El título de la columna en la tabla.
+ * @property {Function} clave - Función que recibe un objeto de tipo `Servicio` y devuelve el valor correspondiente.
+ * @property {number} orden - El orden en el que se debe mostrar la columna.
+ * 
+ * **/
 export const CONFIGURACION_SERVICIO_IMMEX = [
   {
     encabezado: 'Descripión del servicio',
@@ -71,6 +119,17 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
   },
 ];
 
+/**
+ * @constant CONFIGURACION_EMPRESA_ECTRANJERA
+ * @description Configuración de los datos de empresas extranjeras. 
+ * Contiene un arreglo de objetos que representan las columnas de una tabla, 
+ * cada objeto incluye un encabezado, una clave que es una función para obtener el valor correspondiente, 
+ * y el orden en el que se deben mostrar las columnas.
+ * 
+ * @property {string} encabezado - El título de la columna en la tabla.
+ * @property {Function} clave - Función que recibe un objeto de tipo `DatosEmpresaExtranjera` y devuelve el valor correspondiente.
+ * @property {number} orden - El orden en el que se debe mostrar la columna.
+ * */
 export const CONFIGURACION_EMPRESA_ECTRANJERA = [
   {
     encabezado: 'Tax ID',
@@ -97,6 +156,22 @@ export const CONFIGURACION_EMPRESA_ECTRANJERA = [
     orden: 2,
   },
 ];
+
+/**
+ * @constant FORMA_EMPRESA_ECTRANJERA
+ * @description Configuración del formulario para capturar datos de empresas extranjeras. 
+ * Contiene un arreglo de objetos que representan los campos del formulario, 
+ * cada objeto incluye el nombre del campo, su clase CSS, el tipo de entrada, si es obligatorio, 
+ * y el orden en el que se deben mostrar los campos.
+ * 
+ * @property {string} labelNombre - El nombre del campo que se mostrará como etiqueta en el formulario.
+ * @property {string} campo - El identificador del campo en el modelo de datos.
+ * @property {string} class - La clase CSS que define el diseño del campo en el formulario.
+ * @property {string} tipo_input - El tipo de entrada del campo (por ejemplo, texto, selección, área de texto).
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {number} orden - El orden en el que se debe mostrar el campo en el formulario.
+ * @property {Array<any>} [opciones] - Opciones disponibles para campos de tipo selección (opcional).
+ * */
 export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   {
     labelNombre: 'Tax ID',
@@ -133,6 +208,22 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   },
 ];
 
+/**
+ * @constant FORMA_SOCIO_ACCIONISTAS
+ * @description Configuración del formulario para capturar datos de socios o accionistas. 
+ * Contiene un arreglo de objetos que representan los campos del formulario, 
+ * cada objeto incluye el nombre del campo, su clase CSS, el tipo de entrada, si es obligatorio, 
+ * y el orden en el que se deben mostrar los campos.
+ * 
+ * @property {string} labelNombre - El nombre del campo que se mostrará como etiqueta en el formulario.
+ * @property {string} campo - El identificador del campo en el modelo de datos.
+ * @property {string} class - La clase CSS que define el diseño del campo en el formulario.
+ * @property {string} tipo_input - El tipo de entrada del campo (por ejemplo, texto, selección, área de texto).
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {number} orden - El orden en el que se debe mostrar el campo en el formulario.
+ * @property {Array<any>} [opciones] - Opciones disponibles para campos de tipo selección (opcional).
+ * @property {Array<any>} [opcionesCatalogo] - Opciones disponibles para campos de tipo catálogo (opcional).
+ * */
 export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   {
     labelNombre: 'Tax ID',
@@ -186,6 +277,22 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   },
 ];
 
+/**
+ * @constant FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS
+ * @description Configuración del formulario para capturar datos de socios o accionistas extranjeros. 
+ * Contiene un arreglo de objetos que representan los campos del formulario, 
+ * cada objeto incluye el nombre del campo, su clase CSS, el tipo de entrada, si es obligatorio, 
+ * y el orden en el que se deben mostrar los campos.
+ * 
+ * @property {string} labelNombre - El nombre del campo que se mostrará como etiqueta en el formulario.
+ * @property {string} campo - El identificador del campo en el modelo de datos.
+ * @property {string} class - La clase CSS que define el diseño del campo en el formulario.
+ * @property {string} tipo_input - El tipo de entrada del campo (por ejemplo, texto, selección, área de texto).
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {number} orden - El orden en el que se debe mostrar el campo en el formulario.
+ * @property {Array<any>} [opciones] - Opciones disponibles para campos de tipo selección (opcional).
+ * @property {Array<any>} [opcionesCatalogo] - Opciones disponibles para campos de tipo catálogo (opcional).
+ * */
 export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
   {
     labelNombre: 'Nombre',
@@ -247,6 +354,20 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
   },
 ];
 
+/**
+ * @constant FORMA_SOCIO
+ * @description Configuración del formulario para capturar datos de socios. 
+ * Contiene un arreglo de objetos que representan los campos del formulario, 
+ * cada objeto incluye el nombre del campo, su clase CSS, el tipo de entrada, si es obligatorio, 
+ * y el orden en el que se deben mostrar los campos.
+ * 
+ * @property {string} labelNombre - El nombre del campo que se mostrará como etiqueta en el formulario.
+ * @property {string} campo - El identificador del campo en el modelo de datos.
+ * @property {string} class - La clase CSS que define el diseño del campo en el formulario.
+ * @property {string} tipo_input - El tipo de entrada del campo (por ejemplo, texto, selección, área de texto).
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {number} orden - El orden en el que se debe mostrar el campo en el formulario.
+ * */
 export const FORMA_SOCIO: DatosCatalago[] = [
   {
     labelNombre: 'Registro Federal de Contribuyentes',
@@ -258,6 +379,14 @@ export const FORMA_SOCIO: DatosCatalago[] = [
   },
 ];
 
+/**
+ * @constant TIPO_FORMA
+ * @description Enum que representa diferentes tipos de formas o categorías.
+ * 
+ * @property {number} DEFAULT - Valor por defecto.
+ * @property {number} TIPO_PERSONA - Tipo de persona.
+ * @property {number} NATIONALIDAD_MEXICANA - Nacionalidad mexicana.
+ */
 export enum TIPO_FORMA {
   DEFAULT = 1,
   TIPO_PERSONA = 2,

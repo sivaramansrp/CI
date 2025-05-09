@@ -57,8 +57,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label" for="ciudad">Ciudad*:</label>
-                        <input type="text" class="form-control" id="ciudad" fromControlName="ciudad" name="ciudad"
-                            [required]="true">
+                        <input type="text" class="form-control" id="ciudad" formControlName="ciudad" name="ciudad"
+                            [required]="true" (input)="actualizarCiudad()">
                     </div>
 
                     <div class="col-md-4">
