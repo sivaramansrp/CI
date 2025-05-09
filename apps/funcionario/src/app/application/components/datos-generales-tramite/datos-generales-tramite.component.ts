@@ -72,9 +72,9 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
    */
   inicializaFormTramite(): void {
     this.FormTramite = this.fb.group({
-      numeroDeTramite: [''],
-      tipoDeSolicitud: [''],
-      diasHabilesTranscurridos: [''],
+      numeroDeTramite: [{ value: '', disabled: true }],
+       tipoDeSolicitud: [{ value: '', disabled: true }],
+      diasHabilesTranscurridos: [{ value: '', disabled: true }],
       tareasActivas: [[]]
     });
   }
