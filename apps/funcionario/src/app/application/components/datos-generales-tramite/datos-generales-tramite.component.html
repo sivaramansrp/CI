@@ -11,7 +11,7 @@
         <div class="col-md-6">
           <label for="folio" class="form-label text-title">Folio del trámite:</label>
           <input type="text" id="numeroDeTramite" formControlName="numeroDeTramite"
-            class="form-control font-weight-titulo text-title" placeholder="Folio del trámite"/>
+            class="form-control font-weight-titulo text-title" placeholder="Folio del trámite" />
         </div>
 
         <div class="col-md-6">
@@ -23,30 +23,30 @@
         <div class="col-md-6">
           <label for="diasHabiles" class="form-label text-title">Días hábiles transcurridos:</label>
           <input type="text" id="diasHabiles" formControlName="diasHabilesTranscurridos"
-            class="form-control font-weight-titulo text-title" placeholder="Días hábiles transcurridos"/>
+            class="form-control font-weight-titulo text-title" placeholder="Días hábiles transcurridos" />
         </div>
       </div>
-    <div class="row">
-      <div class="col-12">
-        <label class="form-label text-title">Tareas activas:</label>
-        <table class="table table-striped table-bordered table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Tarea</th>
-              <th scope="col">Asignado A</th>
-              <th scope="col">Fecha de asignación</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tarea of tareas">
-              <td>{{ tarea.nombreTarea }}</td>
-              <td>{{ tarea.asignadoA }}</td>
-              <td>{{ tarea.fechaAsignacion }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-12">
+          <label class="form-label text-title">Tareas activas:</label>
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Tarea</th>
+                <th scope="col">Asignado A</th>
+                <th scope="col">Fecha de asignación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tarea of tareas">
+                <td>{{ tarea.nombreTarea }}</td>
+                <td>{{ tarea.asignadoA }}</td>
+                <td>{{ tarea.fechaAsignacion }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </form>
   </div>
 </div>

@@ -73,7 +73,7 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
   inicializaFormTramite(): void {
     this.FormTramite = this.fb.group({
       numeroDeTramite: [{ value: '', disabled: true }],
-       tipoDeSolicitud: [{ value: '', disabled: true }],
+      tipoDeSolicitud: [{ value: '', disabled: true }],
       diasHabilesTranscurridos: [{ value: '', disabled: true }],
       tareasActivas: [[]]
     });
@@ -93,7 +93,7 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
           this.FormTramite.get('diasHabilesTranscurridos')?.setValue(data.diasHabilesTranscurridos);
           this.FormTramite.get('tareasActivas')?.setValue(data.tareasActivas);
           this.tareas = data.tareasActivas;
-          
+
         }),
         catchError((_error) => {
           console.error('Error al consultar datos del trámite', _error);
