@@ -7,6 +7,10 @@ import { Router } from '@angular/router';
 import { datosDeLaTabla } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 
+/**
+ * Componente `RegistroModificacionComponent` utilizado para gestionar y mostrar la información relacionada.
+ * Este componente es independiente (standalone) y puede ser utilizado en diferentes partes de la aplicación.
+ */
 @Component({
   selector: 'app-registro-modificacion',
   standalone: true,
@@ -28,7 +32,7 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
    */
   constructor(
     private router: Router,
-    private solicitudService: SolicitudService
+    public solicitudService: SolicitudService
   ) {}
 
   /**

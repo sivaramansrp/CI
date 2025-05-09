@@ -9,6 +9,10 @@ import { ToastrService } from 'ngx-toastr';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
 import { SolicitudService } from '../../services/solicitud.service';
 
+/**
+ * Componente `BitacoraComponent` utilizado para mostrar y gestionar la bitácora de actividades.
+ * Este componente es independiente (standalone) y utiliza varios módulos y servicios.
+ */
 @Component({
   selector: 'app-bitacora',
   templateUrl: './bitacora.component.html',
@@ -32,6 +36,7 @@ export class BitacoraComponent implements OnDestroy {
 
   /**
    * Configuración de las columnas de la tabla que muestra la bitácora.
+   * Esta configuración define cómo se mostrarán los datos en la tabla.
    * @type {ConfiguracionColumna<Bitacora>[]}
    */
   configuracionTabla: ConfiguracionColumna<Bitacora>[] =
@@ -39,11 +44,23 @@ export class BitacoraComponent implements OnDestroy {
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
+   * Estos datos se muestran en la tabla de la bitácora.
    * @type {Bitacora[]}
    */
   datos: Bitacora[] = [];
 
-  constructor( public solicitudService: SolicitudService, private toastr: ToastrService ) {
+  /**
+   * Constructor del componente `BitacoraComponent`.
+   * Inicializa el servicio de solicitudes y el servicio de notificaciones (Toastr).
+   * También realiza la suscripción para obtener los datos de la bitácora.
+   *
+   * @param {SolicitudService} solicitudService - Servicio para gestionar las solicitudes.
+   * @param {ToastrService} toastr - Servicio para mostrar notificaciones al usuario.
+   */
+  constructor(
+    public solicitudService: SolicitudService,
+    private toastr: ToastrService
+  ) {
     this.solicitudService
       .obtenerBitacora()
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.

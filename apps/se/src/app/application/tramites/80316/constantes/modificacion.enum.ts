@@ -1,5 +1,9 @@
 import { Anexo, Bitacora, Complimentaria, DatosDelModificacion, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from "../models/datos-tramite.model";
 
+/**
+ * Pasos del proceso de modificación.
+ * Define los pasos que el usuario debe completar para realizar una modificación.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -21,6 +25,10 @@ export const PASOS = [
   },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para la modificación.
+ * Define cómo se mostrarán los datos relacionados con la modificación en la tabla.
+ */
 export const CONFIGURACION_MODIFICACION = [
     { encabezado: 'Id', 
       clave: (ele: DatosDelModificacion) => ele.id, 
@@ -81,6 +89,9 @@ export const CONFIGURACION_MODIFICACION = [
     },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para los accionistas.
+ */
 export const CONFIGURACION_ACCIONISTAS = [
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
@@ -104,6 +115,9 @@ export const CONFIGURACION_ACCIONISTAS = [
   },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para los federatarios.
+ */
 export const CONFIGURACION_FEDERETARIOS = [
   {
     encabezado: 'Nombre',
@@ -127,6 +141,9 @@ export const CONFIGURACION_FEDERETARIOS = [
   }
 ];
 
+/**
+ * Configuración de las columnas de la tabla para las operaciones.
+ */
 export const CONFIGURACION_OPERACIONES = [
   {
     encabezado: 'Calle',
@@ -158,45 +175,11 @@ export const CONFIGURACION_OPERACIONES = [
     clave: (ele: Operacions) : string | undefined => ele.localidad,
     orden: 6,
   }
-  // },
-  // {
-  //   encabezado: 'Municipio o Delegación',
-  //   clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
-  //   orden: 7,
-  // },
-  // {
-  //   encabezado: 'Estado o Distrito Federal',
-  //   clave: (ele: Operacions) : string | undefined => ele.estado,
-  //   orden: 8,
-  // },
-  // {
-  //   encabezado: 'País',
-  //   clave: (ele: Operacions) : string | undefined => ele.pais,
-  //   orden: 9,
-  // },
-  // {
-  //   encabezado: 'Registro Federal de Contribuyente(RFC)',
-  //   clave: (ele: Operacions) : string | undefined => ele.rfc,
-  //   orden: 10,
-  // },
-  // {
-  //   encabezado: 'Domicilio fiscal del solicitante',
-  //   clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
-  //   orden: 11,
-  // },
-  // {
-  //   encabezado: 'Denominación o razón social',
-  //   clave: (ele: Operacions) : string | undefined => ele.razonSocial,
-  //   orden: 12,
-  // },
-
-  // {
-  //   encabezado: 'Estatus',
-  //   clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
-  //   orden: 13,
-  // },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para la bitácora.
+ */
 export const CONFIGURACION_BITACORA_TABLA = [
   {
     encabezado: 'Tipo modificación',
@@ -220,6 +203,9 @@ export const CONFIGURACION_BITACORA_TABLA = [
   },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para los anexos.
+ */
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
@@ -261,24 +247,35 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
   },
 ];
 
+/**
+ * Título del mensaje mostrado al registrar una solicitud de modificación.
+ */
 export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+
+/**
+ * Texto mostrado al registrar una solicitud de modificación.
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * Configuración de las columnas de la tabla para las empresas.
+ * Define cómo se mostrarán los datos relacionados con las empresas en la tabla.
+ */
 export const CONFIGURACION_EMPRESAS = [
   {
-    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    encabezado: 'Registro Federal de Contribuyente (RFC)',
     clave: (ele: Empresas): string | undefined => ele.rfc,
     orden: 1,
   },
   {
-    encabezado: 'razón social',
+    encabezado: 'Razón Social',
     clave: (ele: Empresas): string | undefined => ele.razonSocial,
     orden: 2,
   },
   {
-    encabezado: 'calle',
+    encabezado: 'Calle',
     clave: (ele: Empresas): string | undefined => ele.calle,
     orden: 3,
   },
@@ -326,9 +323,13 @@ export const CONFIGURACION_EMPRESAS = [
     encabezado: 'Estatus',
     clave: (ele: Empresas): string | undefined => ele.estatus ? 'Activada' : 'Baja',
     orden: 12,
-  }
+  },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para las plantas.
+ * Define cómo se mostrarán los datos relacionados con las plantas en la tabla.
+ */
 export const CONFIGURACION_PLANTAS = [
   {
     encabezado: 'Calle',
@@ -359,9 +360,13 @@ export const CONFIGURACION_PLANTAS = [
     encabezado: 'Municipio o Delegación',
     clave: (ele: Plantas): string | undefined => ele.delegacionMunicipio,
     orden: 6,
-  }
+  },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para los servicios.
+ * Define cómo se mostrarán los datos relacionados con los servicios en la tabla.
+ */
 export const CONFIGURACION_SERVICIOS = [
   {
     encabezado: 'Descripción del servicio',
@@ -382,9 +387,13 @@ export const CONFIGURACION_SERVICIOS = [
     encabezado: 'Estatus',
     clave: (ele: Servicios): string | undefined => ele.estatus,
     orden: 4,
-  }
+  },
 ];
 
+/**
+ * Configuración de las columnas de la tabla para las fracciones sensibles.
+ * Define cómo se mostrarán los datos relacionados con las fracciones sensibles en la tabla.
+ */
 export const CONFIGURACION_FRACCION_SENSIBLE = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',

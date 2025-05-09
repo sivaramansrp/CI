@@ -24,8 +24,8 @@ describe('DatosAnexosComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(DatosAnexosComponent);
     component = fixture.debugElement.componentInstance;
-    component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerAnexo = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService = component.solicitudService || {};
+    component.solicitudService.obtenerAnexo = jest.fn().mockReturnValue(observableOf({}));
 
   });
 

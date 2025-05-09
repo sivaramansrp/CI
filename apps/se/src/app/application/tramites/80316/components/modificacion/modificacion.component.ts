@@ -8,6 +8,10 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
 import { DatosDelModificacion } from '../../models/datos-tramite.model';
 
+/**
+ * Componente `ModificacionComponent` utilizado para gestionar y mostrar los datos relacionados con la modificación de un trámite.
+ * Este componente es independiente (standalone) y utiliza formularios reactivos, tablas dinámicas y catálogos.
+ */
 @Component({
   selector: 'app-modificacion',
   standalone: true,
@@ -23,6 +27,15 @@ import { DatosDelModificacion } from '../../models/datos-tramite.model';
   styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent implements OnInit, OnDestroy {
+  /**
+   * Constructor del componente `ModificacionComponent`.
+   * Inicializa los servicios necesarios para gestionar el estado del trámite y los datos de modificación.
+   * 
+   * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
+   * @param {SolicitudService} solicitudService - Servicio para gestionar las solicitudes.
+   * @param {Tramite80316Store} tramite80316Store - Store para gestionar el estado del trámite.
+   * @param {Tramite80316Query} tramite80316Query - Query para consultar el estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudService,
@@ -31,26 +44,42 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * Grupo de formulario para el formulario de solicitud.
+   * Grupo de formulario para el formulario de modificación.
+   * Contiene los campos necesarios para gestionar los datos del trámite.
+   * 
+   * @type {FormGroup}
    */
   modificacionForm!: FormGroup;
 
   /**
    * Observable para notificar la destrucción del componente.
    * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
+   * 
+   * @type {Subject<void>}
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado actual del trámite.
    * Contiene los datos relacionados con la modificación del trámite.
+   * 
+   * @type {Solicitud80316State}
    */
   public derechoState: Solicitud80316State = {} as Solicitud80316State;
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
+   * 
+   * @type {DatosDelModificacion[]}
    */
   datosTabla: DatosDelModificacion[] = [];
+
+  /**
+   * Catálogo de actividades productivas.
+   * Contiene las opciones disponibles para seleccionar una actividad productiva.
+   * 
+   * @type {Catalogo[]}
+   */
   actividadProductiva!: Catalogo[];
 
   /**
@@ -58,13 +87,15 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
-    this.tramite80316Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.derechoState = {
-            ...this.derechoState,
-            ...seccionState,
-          };
-        })).subscribe();
+    this.tramite80316Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.derechoState = {
+          ...this.derechoState,
+          ...seccionState,
+        };
+      })
+    ).subscribe();
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.inicializaCatalogos();
@@ -89,11 +120,17 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite y los valores del formulario.
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+    this.solicitudService.getDatosModificacion().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((datos) => {
       (this.tramite80316Store.setDatosModificacion as (valor: unknown) => void)(datos);
     });
   }
 
+  /**
+   * Inicializa los catálogos necesarios para el formulario.
+   * Carga los datos de actividades productivas desde el servicio.
+   */
   private inicializaCatalogos(): void {
     const ACTIVIDADPRODUCTIVA$ = this.solicitudService.getActividadProductiva().pipe(
       map((resp) => {
@@ -108,16 +145,21 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     .subscribe();
   }
 
-  actividadProductivaSeleccion():void {
+  /**
+   * Método que se ejecuta cuando se selecciona una actividad productiva.
+   * Actualiza el estado del trámite con la actividad seleccionada.
+   */
+  actividadProductivaSeleccion(): void {
     const ACTIVIDADPRODUCTIVA = this.modificacionForm.get('actividadProductiva')?.value;
     this.tramite80316Store.setActividadProductiva(ACTIVIDADPRODUCTIVA);
   }
 
   /**
-   * Establecer valores en el store del trámite.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo.
-   * @param metodoNombre Nombre del método en el store.
+   * Establece valores en el store del trámite.
+   * 
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Nombre del campo en el formulario.
+   * @param {keyof Tramite80316Store} metodoNombre - Nombre del método en el store.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80316Store): void {
     const VALOR = form.get(campo)?.value;
@@ -132,5 +174,4 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
     this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
   }
-
 }

@@ -7,6 +7,10 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Anexo, FraccionSensible } from '../../models/datos-tramite.model';
 
+/**
+ * Componente `DatosAnexosComponent` utilizado para gestionar y mostrar los datos de los anexos.
+ * Este componente es independiente (standalone) y utiliza varios módulos y servicios relacionados.
+ */
 @Component({
   selector: 'app-datos-anexos',
   templateUrl: './datos-anexos.component.html',
@@ -26,6 +30,7 @@ export class DatosAnexosComponent implements OnDestroy {
 
   /**
    * Configuración de las columnas de la tabla para los anexos.
+   * Define cómo se mostrarán los datos de los anexos en la tabla.
    * @type {ConfiguracionColumna<Anexo>[]}
    */
   configuracionTablaAnexo: ConfiguracionColumna<Anexo>[] =
@@ -33,13 +38,15 @@ export class DatosAnexosComponent implements OnDestroy {
 
   /**
    * Configuración de las columnas de la tabla para los anexos de importación.
+   * Define cómo se mostrarán los datos de los anexos de importación en la tabla.
    * @type {ConfiguracionColumna<Anexo>[]}
    */
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
   /**
-   * Configuración de las columnas de la tabla para los Fraccion Sensible.
+   * Configuración de las columnas de la tabla para las fracciones sensibles.
+   * Define cómo se mostrarán los datos de las fracciones sensibles en la tabla.
    * @type {ConfiguracionColumna<FraccionSensible>[]}
    */
   configuracionFraccionSensible: ConfiguracionColumna<FraccionSensible>[] =
@@ -47,23 +54,32 @@ export class DatosAnexosComponent implements OnDestroy {
 
   /**
    * Datos de los anexos obtenidos desde el servicio.
+   * Estos datos se muestran en la tabla de anexos.
    * @type {Anexo[]}
    */
   datosAnexo: Anexo[] = [];
 
   /**
    * Datos de los anexos de importación obtenidos desde el servicio.
+   * Estos datos se muestran en la tabla de anexos de importación.
    * @type {Anexo[]}
    */
   datosImportacion: Anexo[] = [];
 
   /**
-   * Datos de Fraccion Sensible.
-   * @type {Anexo[]}
+   * Datos de las fracciones sensibles obtenidos desde el servicio.
+   * Estos datos se muestran en la tabla de fracciones sensibles.
+   * @type {FraccionSensible[]}
    */
   datosFraccionSensible: FraccionSensible[] = [];
 
-
+  /**
+   * Constructor del componente `DatosAnexosComponent`.
+   * Inicializa los servicios necesarios y carga los datos de los anexos y fracciones sensibles.
+   * 
+   * @param {SolicitudService} solicitudService - Servicio para gestionar las solicitudes.
+   * @param {ToastrService} toastr - Servicio para mostrar notificaciones al usuario.
+   */
   constructor(
     public solicitudService: SolicitudService,
     private toastr: ToastrService 
@@ -92,16 +108,16 @@ export class DatosAnexosComponent implements OnDestroy {
   }
 
   /**
-   * Método que obtiene los anexos complementarios desde el servicio.
-   * Asigna los `datosFraccionSensible`.
+   * Método que obtiene las fracciones sensibles desde el servicio.
+   * Asigna los datos a la variable `datosFraccionSensible`.
    */
   obteneFraccionSensible(): void {
     this.solicitudService
-      .obteneFraccionSensible() // Llama al servicio para obtener los anexos.
+      .obteneFraccionSensible() // Llama al servicio para obtener las fracciones sensibles.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
         (data: FraccionSensible[]) => {
-          this.datosFraccionSensible = [...data]; 
+          this.datosFraccionSensible = [...data]; // Almacena los datos de fracciones sensibles.
         },
         () => {
           this.toastr.error('Error al cargar'); // Manejo de errores.

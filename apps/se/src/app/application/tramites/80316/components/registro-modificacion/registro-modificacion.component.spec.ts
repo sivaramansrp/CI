@@ -3,7 +3,7 @@ import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroModificacionComponent } from './registro-modificacion.component';
 import { Router } from '@angular/router';
-import { ImmerModificacionService } from '../../service/immer-modificacion.service';
+import { SolicitudService } from '../../services/solicitud.service';
 
 @Injectable()
 class MockRouter {
@@ -11,7 +11,7 @@ class MockRouter {
 }
 
 @Injectable()
-class MockImmerModificacionService {}
+class solicitudService {}
 
 describe('RegistroModificacionComponent', () => {
   let fixture: ComponentFixture<RegistroModificacionComponent>;
@@ -26,7 +26,7 @@ describe('RegistroModificacionComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useClass: MockRouter },
-        { provide: ImmerModificacionService, useClass: MockImmerModificacionService }
+        { provide: solicitudService, useClass: SolicitudService }
       ]
     }).overrideComponent(RegistroModificacionComponent, {
 

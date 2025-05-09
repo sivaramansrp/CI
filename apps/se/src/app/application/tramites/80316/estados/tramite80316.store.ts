@@ -16,19 +16,68 @@ export interface Solicitud80316State {
    */
   datosSolicitante: DatosSolicitante;
 
+  /**
+   * Lista de plantas a dar de alta.
+   */
   altaPlanta: Catalogo[];
+
+  /**
+   * Estado seleccionado.
+   */
   estado: Catalogo;
+
+  /**
+   * Estado de validación del formulario.
+   * Las claves son los nombres de los campos y los valores indican si son válidos.
+   */
   formaValida: { [key: string]: boolean };
+
+  /**
+   * RFC del solicitante.
+   */
   rfc: string;
+
+  /**
+   * Información federal del solicitante.
+   */
   federal: string;
+
+  /**
+   * Tipo de trámite.
+   */
   tipo: string;
+
+  /**
+   * Programa seleccionado.
+   */
   programa: string;
+
+  /**
+   * Actividad actual del solicitante.
+   */
   actividadActual: string;
+
+  /**
+   * Lista de actividades productivas.
+   */
   actividadProductiva: Catalogo[] | null;
+
+  /**
+   * Tipo de persona seleccionada.
+   */
   tipoDePersona: Catalogo[] | null;
+
+  /**
+   * RFC del importador/exportador.
+   */
   RFCImpExp: string;
 }
 
+/**
+ * Crea el estado inicial de la solicitud 80316.
+ *
+ * @returns {Solicitud80316State} - Estado inicial de la solicitud.
+ */
 export function createInitialState(): Solicitud80316State {
   return {
     datosSolicitante: {
@@ -53,7 +102,6 @@ export function createInitialState(): Solicitud80316State {
     formaValida: {
       entidadFederativa: false,
     },
-    
   };
 }
 
@@ -62,10 +110,19 @@ export function createInitialState(): Solicitud80316State {
 })
 @StoreConfig({ name: 'tramite80316', resettable: true })
 export class Tramite80316Store extends Store<Solicitud80316State> {
+  /**
+   * Constructor de la clase `Tramite80316Store`.
+   * Inicializa el estado con los valores predeterminados.
+   */
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * Establece las actividades productivas en el estado.
+   *
+   * @param {Catalogo[]} actividadProductiva - Lista de actividades productivas.
+   */
   public setActividadProductiva(actividadProductiva: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -74,13 +131,11 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece el estado en el almacén.
+   * Establece el estado seleccionado en el almacén.
    *
-   * @param {Catalogo} estado - El estado que se va a establecer en el almacén.
-   *
-   * @returns {void} - No devuelve ningún valor.
+   * @param {Catalogo} estado - Estado a establecer.
    */
-  setEstado(estado: Catalogo): void {
+  public setEstado(estado: Catalogo): void {
     this.update((state) => ({
       ...state,
       estado,
@@ -88,13 +143,11 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece el alta de plantas en el almacén.
+   * Establece las plantas a dar de alta en el estado.
    *
-   * @param {Catalogo[]} altaPlanta - Un array de objetos `Catalogo` que representa las plantas a dar de alta.
-   *
-   * @returns {void} - No devuelve ningún valor.
+   * @param {Catalogo[]} altaPlanta - Lista de plantas.
    */
-  setaltaPlanta(altaPlanta: Catalogo[]): void {
+  public setaltaPlanta(altaPlanta: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       altaPlanta,
@@ -102,13 +155,11 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece el estado de validación del formulario en el almacén.
+   * Establece el estado de validación del formulario.
    *
-   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
-   *
-   * @returns {void} - No devuelve ningún valor.
+   * @param {Object} formaValida - Objeto con los estados de validación de los campos.
    */
-  setFormValida(formaValida: { [key: string]: boolean }): void {
+  public setFormValida(formaValida: { [key: string]: boolean }): void {
     this.update((state) => {
       const IS_VALID = { ...state.formaValida, ...formaValida };
       return {
@@ -119,9 +170,9 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece los datos del solicitante en el estado de la tienda.
+   * Establece los datos del solicitante en el estado.
    *
-   * @param datosSolicitante - Objeto que contiene la información del solicitante.
+   * @param {DatosSolicitante} datosSolicitante - Datos del solicitante.
    */
   public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
@@ -131,9 +182,9 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece los datos de modificación en el estado de la tienda.
+   * Establece los datos de modificación en el estado.
    *
-   * @param datosModificacion - Objeto que contiene los datos de modificación que se deben actualizar en el estado.
+   * @param {DatosModificacion} datosModificacion - Datos de modificación.
    */
   public setDatosModificacion(datosModificacion: DatosModificacion): void {
     this.update((state) => ({
@@ -143,9 +194,9 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Establece el tipo de búsqueda en el estado de la tienda.
+   * Establece el tipo de búsqueda en el estado.
    *
-   * @param tipoBusqueda - El tipo de búsqueda que se desea establecer.
+   * @param {string} tipoBusqueda - Tipo de búsqueda.
    */
   public setTipoBusqueda(tipoBusqueda: string): void {
     this.update((state) => ({
@@ -154,13 +205,23 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
     }));
   }
 
-  setTipoDePersona(tipoDePersona: Catalogo[]): void {
+  /**
+   * Establece el tipo de persona en el estado.
+   *
+   * @param {Catalogo[]} tipoDePersona - Lista de tipos de persona.
+   */
+  public setTipoDePersona(tipoDePersona: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       tipoDePersona,
     }));
   }
 
+  /**
+   * Establece el RFC del importador/exportador en el estado.
+   *
+   * @param {string} RFCImpExp - RFC del importador/exportador.
+   */
   public setRFCImpExp(RFCImpExp: string): void {
     this.update((state) => ({
       ...state,
@@ -169,7 +230,7 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
-   * Limpia los datos de la solicitud
+   * Limpia el estado de la solicitud.
    */
   public limpiarSolicitud(): void {
     this.reset();

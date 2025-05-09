@@ -1,19 +1,66 @@
+/**
+ * Representa los datos del solicitante.
+ */
 export interface DatosSolicitante {
+  /**
+   * RFC del solicitante.
+   */
   rfc: string;
+
+  /**
+   * Denominación o razón social del solicitante.
+   */
   denominacion: string;
+
+  /**
+   * Actividad económica del solicitante.
+   */
   actividadEconomica: string;
+
+  /**
+   * Correo electrónico del solicitante.
+   */
   correoElectronico: string;
 }
 
+/**
+ * Representa los datos de modificación de un trámite.
+ */
 export interface DatosModificacion {
+  /**
+   * RFC del solicitante.
+   */
   rfc: string;
+
+  /**
+   * Información federal del solicitante.
+   */
   federal: string;
+
+  /**
+   * Tipo de trámite.
+   */
   tipo: string;
+
+  /**
+   * Programa seleccionado.
+   */
   programa: string;
+
+  /**
+   * Actividad actual del solicitante.
+   */
   actividadActual: string;
+
+  /**
+   * Actividad productiva seleccionada.
+   */
   actividadProductiva: string | null;
 }
 
+/**
+ * Representa los datos de una modificación para mostrar en una tabla.
+ */
 export interface DatosDelModificacion {
   id?: number;
   calle?: string;
@@ -30,20 +77,59 @@ export interface DatosDelModificacion {
   desEstatus?: string;
 }
 
+/**
+ * Representa los datos complementarios de un trámite.
+ */
 export interface Complimentaria {
+  /**
+   * RFC del accionista.
+   */
   rfc?: string;
+
+  /**
+   * Nombre del accionista.
+   */
   nombre?: string;
+
+  /**
+   * Primer apellido del accionista.
+   */
   apellidoPrimer?: string;
+
+  /**
+   * Segundo apellido del accionista.
+   */
   apellidoSegundo?: string;
 }
 
+/**
+ * Representa los datos de un federatario.
+ */
 export interface Federetarios {
+  /**
+   * Nombre del federatario.
+   */
   nombre?: string;
+
+  /**
+   * Apellido paterno del federatario.
+   */
   apellidoPaterno?: string;
+
+  /**
+   * Apellido materno del federatario.
+   */
   apellidoMaterno?: string;
+
+  /**
+   * Número del acta asociada al federatario.
+   */
   numeroActa?: string;
 }
 
+/**
+ * Representa los datos de una operación.
+ */
 export interface Operacions {
   id?: number;
   calle?: string; // Calle de la dirección
@@ -54,13 +140,34 @@ export interface Operacions {
   colonia?: string; // Colonia
 }
 
+/**
+ * Representa los datos de una bitácora.
+ */
 export interface Bitacora {
+  /**
+   * Tipo de modificación registrada en la bitácora.
+   */
   tipoModificion: string;
+
+  /**
+   * Fecha de la modificación registrada.
+   */
   fetchModificion: string;
+
+  /**
+   * Valores anteriores antes de la modificación.
+   */
   valoresAnteriores: string;
+
+  /**
+   * Valores nuevos después de la modificación.
+   */
   valoresNuevos: string;
 }
 
+/**
+ * Representa los datos de una empresa.
+ */
 export interface Empresas {
   id?: number;
   rfc?: string;
@@ -77,6 +184,9 @@ export interface Empresas {
   estatus?: boolean;
 }
 
+/**
+ * Representa los datos de una planta.
+ */
 export interface Plantas {
   calle?: string;
   numeroExterior?: string;
@@ -86,6 +196,9 @@ export interface Plantas {
   delegacionMunicipio?: string;
 }
 
+/**
+ * Representa los datos de un servicio.
+ */
 export interface Servicios {
   id?: number;
   descripciondeservicio?: string;
@@ -94,6 +207,9 @@ export interface Servicios {
   estatus?: string;
 }
 
+/**
+ * Representa los datos de una fracción sensible.
+ */
 export interface FraccionSensible {
   id?: number;
   fraccionArancelariaExportacion?: number;
@@ -102,6 +218,9 @@ export interface FraccionSensible {
   unidadMedidaTarifaria?: string;
 }
 
+/**
+ * Representa los datos de un anexo.
+ */
 export interface Anexo {
   tipoFraccion?: string;
   fraccionArancelariaExportacion?: string;
@@ -110,6 +229,9 @@ export interface Anexo {
   valoresAnteriores?: string;
 }
 
+/**
+ * Representa los datos de una tabla.
+ */
 export interface datosDeLaTabla {
   id: number;
   folioDePrograma: string;

@@ -18,6 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Complimentaria, Empresas, Federetarios, Operacions, Plantas, Servicios } from '../../models/datos-tramite.model';
 
+/**
+ * Componente `DatosComplimentariaComponent` utilizado para gestionar y mostrar los datos relacionados con la información complementaria.
+ * Este componente es independiente (standalone) y utiliza varios módulos y servicios relacionados.
+ */
 @Component({
   selector: 'app-datos-complimentaria',
   templateUrl: './datos-complimentaria.component.html',
@@ -61,20 +65,20 @@ export class DatosComplimentariaComponent implements OnDestroy {
     CONFIGURACION_OPERACIONES;
 
   /**
-   * Configuración de las columnas de la tabla para las Empresas.
+   * Configuración de las columnas de la tabla para las empresas.
    * @type {ConfiguracionColumna<Empresas>[]}
    */
   configuracionEmpresas: ConfiguracionColumna<Empresas>[] =
     CONFIGURACION_EMPRESAS;
 
   /**
-   * Configuración de las columnas de la tabla para las Plantas.
+   * Configuración de las columnas de la tabla para las plantas.
    * @type {ConfiguracionColumna<Plantas>[]}
    */
   configuracionPlantas: ConfiguracionColumna<Plantas>[] = CONFIGURACION_PLANTAS;
 
   /**
-   * Configuración de las columnas de la tabla para las Servicios.
+   * Configuración de las columnas de la tabla para los servicios.
    * @type {ConfiguracionColumna<Servicios>[]}
    */
   configuracionServicios: ConfiguracionColumna<Servicios>[] =
@@ -93,55 +97,62 @@ export class DatosComplimentariaComponent implements OnDestroy {
   datosOperacions: Operacions[] = [];
 
   /**
-   * Datos de las Empresas obtenidos desde el servicio.
+   * Datos de las empresas obtenidos desde el servicio.
    * @type {Empresas[]}
    */
   datosEmpresas: Empresas[] = [];
 
   /**
-   * Datos de las Plantas obtenidos desde el servicio.
+   * Datos de las plantas obtenidos desde el servicio.
    * @type {Plantas[]}
    */
   datosPlantas: Plantas[] = [];
 
   /**
-   * Datos de las Servicios obtenidos desde el servicio.
+   * Datos de los servicios obtenidos desde el servicio.
    * @type {Servicios[]}
    */
   datosServicios: Servicios[] = [];
 
   /**
-   * Datos de la complimentaria obtenidos desde el servicio.
+   * Datos de la información complementaria obtenidos desde el servicio.
    * @type {Complimentaria[]}
    */
   datosComplimentaria: Complimentaria[] = [];
 
+  /**
+   * Constructor del componente `DatosComplimentariaComponent`.
+   * Inicializa los servicios necesarios y carga los datos de información complementaria, federetarios, operaciones, empresas, plantas y servicios.
+   * 
+   * @param {SolicitudService} solicitudService - Servicio para gestionar las solicitudes.
+   * @param {ToastrService} toastr - Servicio para mostrar notificaciones al usuario.
+   */
   constructor(
     public solicitudService: SolicitudService,
     private toastr: ToastrService
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.
     this.obtenerOperacions(); // Carga las operaciones.
-    this.obtenerComplimentaria(); // Carga los datos de complimentaria.
+    this.obtenerComplimentaria(); // Carga los datos de información complementaria.
     this.obtenerEmpresas(); // Carga las empresas.
     this.obtenerPlantas(); // Carga las plantas.
     this.obtenerServicios(); // Carga los servicios.
   }
 
   /**
-   * Método que obtiene los datos de complimentaria desde el servicio.
+   * Método que obtiene los datos de información complementaria desde el servicio.
    * Asigna los datos obtenidos a la variable `datosComplimentaria`.
    */
   obtenerComplimentaria(): void {
     this.solicitudService
-      .obtenerComplimentaria() // Llama al servicio para obtener los datos de complimentaria.
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .obtenerComplimentaria()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Complimentaria[]) => {
-          this.datosComplimentaria = [...data]; // Almacena los datos de complimentaria.
+          this.datosComplimentaria = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar los datos de complimentaria'); // Manejo de errores.
+          this.toastr.error('Error al cargar los datos de complimentaria');
         }
       );
   }
@@ -152,14 +163,14 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   obtenerFederetarios(): void {
     this.solicitudService
-      .obtenerFederetarios() // Llama al servicio para obtener los datos de federetarios.
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .obtenerFederetarios()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Federetarios[]) => {
-          this.datosFederetarios = [...data]; // Almacena los datos de federetarios.
+          this.datosFederetarios = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar los federetarios'); // Manejo de errores.
+          this.toastr.error('Error al cargar los federetarios');
         }
       );
   }
@@ -170,68 +181,68 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   obtenerOperacions(): void {
     this.solicitudService
-      .obtenerOperacion() // Llama al servicio para obtener los datos de operaciones.
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .obtenerOperacion()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Operacions[]) => {
-          this.datosOperacions = [...data]; // Almacena los datos de operaciones.
+          this.datosOperacions = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+          this.toastr.error('Error al cargar las operaciones');
         }
       );
   }
 
   /**
-   * Método que obtiene los datos de Empresas desde el servicio.
+   * Método que obtiene los datos de empresas desde el servicio.
    * Asigna los datos obtenidos a la variable `datosEmpresas`.
    */
   obtenerEmpresas(): void {
     this.solicitudService
       .obtenerEmpresas()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Empresas[]) => {
           this.datosEmpresas = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar las Empresas');
+          this.toastr.error('Error al cargar las empresas');
         }
       );
   }
 
   /**
-   * Método que obtiene los datos de Plantas desde el servicio.
+   * Método que obtiene los datos de plantas desde el servicio.
    * Asigna los datos obtenidos a la variable `datosPlantas`.
    */
   obtenerPlantas(): void {
     this.solicitudService
       .obtenerPlantas()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Plantas[]) => {
           this.datosPlantas = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar las Empresas');
+          this.toastr.error('Error al cargar las plantas');
         }
       );
   }
 
   /**
-   * Método que obtiene los datos de Plantas desde el servicio.
+   * Método que obtiene los datos de servicios desde el servicio.
    * Asigna los datos obtenidos a la variable `datosServicios`.
    */
   obtenerServicios(): void {
     this.solicitudService
       .obtenerServicios()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Servicios[]) => {
           this.datosServicios = [...data];
         },
         () => {
-          this.toastr.error('Error al cargar las Empresas');
+          this.toastr.error('Error al cargar los servicios');
         }
       );
   }
@@ -241,7 +252,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
-    this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
   }
 }

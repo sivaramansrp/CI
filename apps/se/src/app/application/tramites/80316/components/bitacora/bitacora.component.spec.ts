@@ -24,8 +24,8 @@ describe('BitacoraComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(BitacoraComponent);
     component = fixture.debugElement.componentInstance;
-    component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerBitacora = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService = component.solicitudService || {};
+    component.solicitudService.obtenerBitacora = jest.fn().mockReturnValue(observableOf({}));
   });
 
   it('debería ejecutar #constructor()', () => {
