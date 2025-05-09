@@ -16,9 +16,20 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
+
 /**
- * Componente para agregar complementos.
- */
+ * @component
+ * @name AggregarComplimentosComponent
+ * @description
+ * Componente encargado de gestionar los datos y operaciones relacionadas con los complementos 
+ * en el trámite 80102. Este componente permite agregar, modificar y eliminar accionistas 
+ * nacionales y extranjeros, así como validar el formulario de complementos.
+ * 
+ * @usageNotes
+ * Este componente utiliza servicios de estado y consultas (`Tramite80102Store` y `Tramite80102Query`) 
+ * para manejar y observar los datos de los complementos. Además, implementa el ciclo de vida de Angular 
+ * para limpiar las suscripciones al destruirse.
+ * */
 export class AggregarComplimentosComponent implements OnDestroy {
   /**
    * Datos de los complementos.
