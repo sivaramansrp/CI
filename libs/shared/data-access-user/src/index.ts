@@ -10,6 +10,7 @@ export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export { TablaExpandibleComponent } from './tramites/components/tabla-expandible/tabla-expandible.component';
 export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';

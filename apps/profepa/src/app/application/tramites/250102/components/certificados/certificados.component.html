@@ -1,1 +1,19 @@
-<p>certificados works!</p>
+<div class="container">
+    <ng-titulo titulo="Permisos o certificados CITES o autorizaciones de vida silvestre" />
+    <div class="col-md-12 mt-3">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+            [datos]="permisosDatos">
+        </app-tabla-dinamica>
+    </div>
+
+    <div class="col-md-12 d-flex justify-content-end align-items-end">
+        <div class="btn-group">
+            <button class="btn btn-danger ms-3" type="button">
+                Eliminar
+            </button>
+            <button class="btn btn-primary ms-3" type="button">
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>
