@@ -12,102 +12,102 @@ import { FormsModule } from '@angular/forms';
 })
 export class TablaExpandibleComponent<T, N> {
   /**
-   * Output event emitted when a row is clicked.
+   * Evento de salida emitido cuando se hace clic en una fila.
    */
   @Output() filaClic = new EventEmitter<T>();
 
   /**
-   * Type of selection for the table (CHECKBOX, RADIO, etc.)
+   * Tipo de selección para la tabla (CHECKBOX, RADIO, etc.)
    */
   @Input() tipoSeleccionTabla!: TablaSeleccion;
   
   /**
-   * Reference to the TablaSeleccion enum for use in the template
+   * Referencia al enum TablaSeleccion para usar en la plantilla
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * Configuration for the main table columns
+   * Configuración para las columnas de la tabla principal
    */
   @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
 
   /**
-   * Configuration for the nested table columns
+   * Configuración para las columnas de la tabla anidada
    */
   @Input() configuracionTablaAnidada: ConfiguracionColumna<N>[] = [];
 
   /**
-   * Data for the main table
+   * Datos para la tabla principal
    */
   @Input() datos: T[] = [];
 
   /**
-   * Function to get nested data for a specific row
+   * Función para obtener datos anidados para una fila específica
    */
   @Input() obtenerDatosAnidados!: (item: T) => N[];
 
   /**
-   * Unique identifier for the table
+   * Identificador único para la tabla
    */
   @Input() tableId!: string;
 
   /**
-   * Input selection value
+   * Valor de selección de entrada
    */
-  private _inputSelection!: number;
+  private _seleccionEntrada!: number;
   
   @Input()
-  set inputSelection(value: number) {
-    this._inputSelection = value;
-    this.idFilaSeleccionada = value;
+  set inputSelection(valor: number) {
+    this._seleccionEntrada = valor;
+    this.idFilaSeleccionada = valor;
   }
 
   /**
-   * Event emitted when a row is selected
+   * Evento emitido cuando se selecciona una fila
    */
   @Output() filaSeleccionada: EventEmitter<T> = new EventEmitter<T>(true);
 
   /**
-   * Event emitted when multiple rows are selected
+   * Evento emitido cuando se seleccionan múltiples filas
    */
   @Output() listaDeFilaSeleccionada: EventEmitter<T[]> = new EventEmitter<T[]>(true);
 
   /**
-   * Event emitted when a value is toggled
+   * Evento emitido cuando se alterna un valor
    */
   @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
 
   /**
-   * ID of the selected row
+   * ID de la fila seleccionada
    */
   idFilaSeleccionada!: number;
 
   /**
-   * Array of selected row indices
+   * Array de índices de filas seleccionadas
    */
   filasSeleccionadas: number[] = [];
 
   /**
-   * Tracks which rows are expanded
+   * Rastrea qué filas están expandidas
    */
-  expandedRows: Set<number> = new Set();
+  filasExpandidas: Set<number> = new Set();
 
   /**
-   * Gets the ordered configuration for the columns
+   * Obtiene la configuración ordenada para las columnas
    */
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
   }
 
   /**
-   * Gets the ordered configuration for the nested columns
+   * Obtiene la configuración ordenada para las columnas anidadas
    */
   obtenerConfiguracionAnidadaOrdenada(): ConfiguracionColumna<N>[] {
     return this.configuracionTablaAnidada.sort((a, b) => a.orden - b.orden);
   }
 
   /**
-   * Handles row selection
+   * Maneja la selección de filas
    */
   seleccionarFila(id: number, fila: T): void {
     this.idFilaSeleccionada = id;
@@ -115,17 +115,17 @@ export class TablaExpandibleComponent<T, N> {
   }
 
   /**
-   * Handles checkbox state changes
+   * Maneja los cambios de estado de los checkboxes
    */
-  cambiarEstadoCheckbox(event: Event, indice: number): void {
-    const CHECKBOX = event.target as HTMLInputElement;
-    const ROW = this.datos[indice];
+  cambiarEstadoCheckbox(evento: Event, indice: number): void {
+    const CHECKBOX = evento.target as HTMLInputElement;
+    const FILA = this.datos[indice];
     
     if (CHECKBOX?.checked) {
       if (!this.filasSeleccionadas.includes(indice)) {
         this.filasSeleccionadas.push(indice);
       }
-      this.filaSeleccionada.emit(ROW);
+      this.filaSeleccionada.emit(FILA);
     } else {
       const IDX = this.filasSeleccionadas.indexOf(indice);
       if (IDX > -1) {
@@ -139,10 +139,10 @@ export class TablaExpandibleComponent<T, N> {
   }
 
   /**
-   * Handles select/deselect all checkbox
+   * Maneja el checkbox de seleccionar/deseleccionar todos
    */
-  seleccionarDeseleccionarTodos(event: Event): void {
-    const CHECKBOX = event.target as HTMLInputElement;
+  seleccionarDeseleccionarTodos(evento: Event): void {
+    const CHECKBOX = evento.target as HTMLInputElement;
 
     if (CHECKBOX.checked) {
       this.filasSeleccionadas = this.datos.map((_, indice) => indice);
@@ -156,36 +156,36 @@ export class TablaExpandibleComponent<T, N> {
   }
 
   /**
-   * Handles row click event
+   * Maneja el evento de clic en una fila
    */
-  onFilaClic(data: T): void {
-    this.filaClic.emit(data);
+  onFilaClic(datos: T): void {
+    this.filaClic.emit(datos);
   }
 
   /**
-   * Toggles a value in a row
+   * Alterna un valor en una fila
    */
-  cambiarValor(row: any): void {
-    this.alternarValor.emit(row);
+  cambiarValor(fila: any): void {
+    this.alternarValor.emit(fila);
   }
 
   /**
-   * Toggles row expansion
+   * Alterna la expansión de una fila
    */
-  toggleExpandRow(index: number, event: Event): void {
-    event.stopPropagation();
+  alternarExpandirFila(indice: number, evento: Event): void {
+    evento.stopPropagation();
     
-    if (this.expandedRows.has(index)) {
-      this.expandedRows.delete(index);
+    if (this.filasExpandidas.has(indice)) {
+      this.filasExpandidas.delete(indice);
     } else {
-      this.expandedRows.add(index);
+      this.filasExpandidas.add(indice);
     }
   }
 
   /**
-   * Checks if a row is expanded
+   * Verifica si una fila está expandida
    */
-  isRowExpanded(index: number): boolean {
-    return this.expandedRows.has(index);
+  estaFilaExpandida(indice: number): boolean {
+    return this.filasExpandidas.has(indice);
   }
 }

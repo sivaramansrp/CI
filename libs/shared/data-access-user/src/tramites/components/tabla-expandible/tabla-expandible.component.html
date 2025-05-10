@@ -2,7 +2,6 @@
   <table id="{{tableId}}" class="table table-striped table-bordered">
     <thead>
       <tr>
-        <!-- Combined selection and expansion column -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <th class="selection-expansion-column">Selección</th>
         }
@@ -17,30 +16,25 @@
         <th class="selection-expansion-column">Acción</th>
         }
         @else {
-        <!-- Only expansion column if no selection type -->
         <th class="expansion-column"></th>
         }
         
-        <!-- Dynamic headers -->
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
       </tr>
     </thead>
     <tbody>
-      <!-- Dynamic rows with nested tables -->
       <ng-container *ngFor="let fila of datos; let i=index">
-        <!-- Main row -->
         <tr (click)="onFilaClic(datos[i])">
-          <!-- Combined selection and expansion cell -->
           @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
           <td class="selection-expansion-column">
             <div class="d-flex align-items-center">
               <input class="cursor-pointer me-2" type="radio" name="filaSeleccionada" [(ngModel)]="idFilaSeleccionada"
                 [value]="i" (change)="seleccionarFila(i, fila)" [checked]="idFilaSeleccionada === i"
                 aria-label="Seleccionar" />
-              <button class="btn btn-sm expansion-btn" (click)="toggleExpandRow(i, $event)">
-                <i class="bi" [ngClass]="isRowExpanded(i) ? 'bi-dash' : 'bi-plus'"></i>
+              <button class="btn btn-sm expansion-btn" (click)="alternarExpandirFila(i, $event)">
+                <i class="bi" [ngClass]="estaFilaExpandida(i) ? 'bi-dash' : 'bi-plus'"></i>
               </button>
             </div>
           </td>
@@ -51,8 +45,8 @@
               <input class="cursor-pointer me-2" type="checkbox" name="filaSeleccionada" [value]="i"
                 (change)="cambiarEstadoCheckbox($event,i )" [checked]="filasSeleccionadas.includes(i)"
                 aria-label="Seleccionar" />
-              <button class="btn btn-sm expansion-btn" (click)="toggleExpandRow(i, $event)">
-                <i class="bi" [ngClass]="isRowExpanded(i) ? 'bi-dash' : 'bi-plus'"></i>
+              <button class="btn btn-sm expansion-btn" (click)="alternarExpandirFila(i, $event)">
+                <i class="bi" [ngClass]="estaFilaExpandida(i) ? 'bi-dash' : 'bi-plus'"></i>
               </button>
             </div>
           </td>
@@ -62,29 +56,26 @@
             <div class="d-flex align-items-center">
               <button id="button" class="cursor-pointer btn btn-primary me-2" type="button" name="filaSeleccionada" [value]="i"
                 (click)="cambiarValor(fila)" aria-label="Seleccionar">BAJA</button>
-              <button class="btn btn-sm expansion-btn" (click)="toggleExpandRow(i, $event)">
-                <i class="bi" [ngClass]="isRowExpanded(i) ? 'bi-dash' : 'bi-plus'"></i>
+              <button class="btn btn-sm expansion-btn" (click)="alternarExpandirFila(i, $event)">
+                <i class="bi" [ngClass]="estaFilaExpandida(i) ? 'bi-dash' : 'bi-plus'"></i>
               </button>
             </div>
           </td>
           }
           @else {
-          <!-- Only expansion cell if no selection type -->
           <td class="expansion-column">
-            <button class="btn btn-sm expansion-btn" (click)="toggleExpandRow(i, $event)">
-              <i class="bi" [ngClass]="isRowExpanded(i) ? 'bi-dash' : 'bi-plus'"></i>
+            <button class="btn btn-sm expansion-btn" (click)="alternarExpandirFila(i, $event)">
+              <i class="bi" [ngClass]="estaFilaExpandida(i) ? 'bi-dash' : 'bi-plus'"></i>
             </button>
           </td>
           }
           
-          <!-- Dynamic cells -->
           <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
             {{ col.clave(fila) || ' ' }}
           </td>
         </tr>
-        
-        <!-- Expanded nested table row -->
-        <tr *ngIf="isRowExpanded(i)" class="nested-table-row">
+
+        <tr *ngIf="estaFilaExpandida(i)" class="nested-table-row">
           <td [attr.colspan]="configuracionTabla.length + 1">
             <div class="nested-table-container">
               <table class="table table-bordered nested-table">
@@ -96,9 +87,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let nestedItem of obtenerDatosAnidados(fila)">
+                  <tr *ngFor="let elementoAnidado of obtenerDatosAnidados(fila)">
                     <td *ngFor="let col of obtenerConfiguracionAnidadaOrdenada()">
-                      {{ col.clave(nestedItem) || ' ' }}
+                      {{ col.clave(elementoAnidado) || ' ' }}
                     </td>
                   </tr>
                   <tr *ngIf="obtenerDatosAnidados(fila).length === 0">
