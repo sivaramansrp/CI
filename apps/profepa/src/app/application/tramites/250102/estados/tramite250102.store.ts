@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { TablaDatos} from '../models/flora-fauna.models';
+import { Detalle, Producto, TablaDatos} from '../models/flora-fauna.models';
 
 /**
  * Estado del trámite con clave 250101. Contiene toda la información capturada
@@ -85,6 +85,10 @@ export interface Tramite250102State {
   origen: string;
   /** Lugar de procedencia del producto. */
   procedencia: string;
+    /** Lista de productos agregados */
+    productos: Producto[];
+    /** Detalles de cada producto, almacenados como entradas de mapa */
+    detalles: [number, Detalle[]][];
 }
 
 
@@ -175,6 +179,10 @@ export function createInitialState(): Tramite250102State {
     origen: '',
     /** Lugar de procedencia (vacío). */
     procedencia: '',
+     /** Lista vacía para los productos */
+     productos: [],
+     /** Lista vacía para los detalles de productos */
+     detalles: [],
   };
 }
 
@@ -561,6 +569,22 @@ public setFraccion(fraccion: string): void {
     ...state,
     fraccion,
   }));
+}
+
+/**
+   * Establece la lista de productos en el estado.
+   * @param productos Lista de productos
+   */
+public setProductos(productos: Producto[]): void {
+  this.update((state) => ({ ...state, productos }));
+}
+
+/**
+ * Establece los detalles de los productos en el estado.
+ * @param detalles Entradas de mapa con detalles de productos
+ */
+public setDetalles(detalles: [number, Detalle[]][]): void {
+  this.update((state) => ({ ...state, detalles }));
 }
 
 /**

@@ -2,15 +2,20 @@
     <ng-titulo titulo="Descripción del producto" />
     <div class="row">
         <h6>Descripción del producto:*</h6>
-        <app-tabla-expandible [datos]="producto" [configuracionTabla]="configuracionTabla"
-            [configuracionTablaAnidada]="configuracionMercanciasTabla" [obtenerDatosAnidados]="getDetalle"
-            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [tableId]="'products-table'"
-            (filaSeleccionada)="onProductSelected($event)"></app-tabla-expandible>
+        <app-tabla-expandible 
+            [datos]="producto" 
+            [configuracionTabla]="configuracionTabla"
+            [configuracionTablaAnidada]="configuracionMercanciasTabla" 
+            [obtenerDatosAnidados]="obtenerDatosAnidados"
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
+            [tableId]="'products-table'"
+            (filaSeleccionada)="onProductSelected($event)">
+        </app-tabla-expandible>
     </div>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
         <button type="button" class="btn btn-danger">Borrar</button>
-        <button type="button" class="btn btn-default ms-3">Guardor datos</button>
+        <button type="button" class="btn btn-default ms-3">Guardar datos</button>
         <button type="button" class="btn btn-primary ms-3" (click)="mercancias()">Agregar</button>
     </div>
 </div>
@@ -107,12 +112,12 @@
       <div class="col-md-12 mt-5 d-flex justify-content-end">    
    
         <button type="button" class="btn btn-default ms-3">Borrar</button>    
-        <button type="button" class="btn btn-primary ms-3"  (click)="detalleData()" >Agregar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="detalleData()">Agregar</button>
       </div>
  
     </form>
     <div class="row">
-        <h6>Fraccion:*</h6>
+        <h6>fraccion:*</h6>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionMercanciasTabla"
           [datos]="fraccionData"
@@ -127,10 +132,8 @@
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">    
    
-        <button type="button" class="btn btn-default ms-3" (click)="detalleCancelar()" >Cancelar</button>    
-        <button type="button" class="btn btn-primary ms-3"  (click)="detalleGuardar()"   >Guardar</button>
+        <button type="button" class="btn btn-default ms-3" (click)="detalleCancelar()">Cancelar</button>    
+        <button type="button" class="btn btn-primary ms-3" (click)="detalleGuardar()">Guardar</button>
       </div>
- 
-
-</div>
-</app-modal> 
+    </div>
+</app-modal>
