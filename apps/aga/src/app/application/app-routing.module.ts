@@ -155,6 +155,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
+  {
     path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then(

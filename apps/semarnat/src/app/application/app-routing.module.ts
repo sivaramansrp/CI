@@ -47,6 +47,11 @@ const ROUTES: Routes = [
     path: 'aviso-de-reciclaje',
     loadChildren: () =>
       import('./tramites/231003/aviso-de-reciclaje.module').then((m) => m.AvisoDeReciclajeModule),
+  },
+  {
+    path: 'aviso-retorno',
+    loadChildren: () =>
+      import('./tramites/231002/aviso-retorno.module').then((m) => m.AvisoRetornoModule),
   }
 ];
 
