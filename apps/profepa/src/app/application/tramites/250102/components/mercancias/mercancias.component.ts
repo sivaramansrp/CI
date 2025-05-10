@@ -16,6 +16,10 @@ import {
   Producto 
 } from '../../models/flora-fauna.models';
 
+/**
+ * Componente para gestionar las mercancías en el trámite 250102.
+ * Permite agregar, visualizar y gestionar productos y sus detalles.
+ */
 @Component({
   selector: 'app-mercancias',
   standalone: true,
@@ -34,121 +38,97 @@ import {
 })
 export class MercanciasComponent implements OnInit, OnDestroy {
 
-  // Formulario reactivo que gestiona la entrada de datos de mercancías
+  /** Formulario reactivo que gestiona la entrada de datos de mercancías */
   formMercancias!: FormGroup;
 
-  /**
-  * Catálogo de descripciones. Usado para seleccionar la descripción de la mercancía.
-  */
+  /** Catálogo de descripciones de mercancías */
   descripcion: Catalogo[] = catalogoDatos.descripcion;
 
-  /**
-   * Catálogo de fracciones arancelarias. Se utiliza para seleccionar la fracción correspondiente.
-   */
+  /** Catálogo de fracciones arancelarias */
   fraccion: Catalogo[] = catalogoDatos.fraccion;
 
-  /**
-   * Catálogo de unidades de medida. Permite seleccionar la unidad en la que se mide la mercancía.
-   */
+  /** Catálogo de unidades de medida */
   medida: Catalogo[] = catalogoDatos.medida;
-  /**
-   * Catálogo de géneros. Se usa para seleccionar el género biológico de la especie.
-   */
+
+  /** Catálogo de géneros biológicos */
   genero: Catalogo[] = catalogoDatos.genero;
-  /**
-   * Catálogo de especies. Permite seleccionar la especie correspondiente del producto.
-   */
+
+  /** Catálogo de especies */
   especie: Catalogo[] = catalogoDatos.especie;
-  /**
-   * Catálogo de nombres comunes. Se utiliza para seleccionar el nombre común de la especie o mercancía.
-   */
+
+  /** Catálogo de nombres comunes */
   comun: Catalogo[] = catalogoDatos.comun;
 
-  /**
-   * Catálogo del origen de la mercancía. Indica si es nacional o extranjero, entre otras opciones.
-   */
+  /** Catálogo de países de origen */
   origen: Catalogo[] = catalogoDatos.origen;
-  /**
-   * Catálogo de procedencias. Describe el lugar de origen más específico de la mercancía (ej. país, región).
-   */
+
+  /** Catálogo de países de procedencia */
   procedencia: Catalogo[] = catalogoDatos.procedencia;
-  /**
-  * Arreglo que almacena los detalles de las fracciones de mercancías.
-  * 
-  * @type {Detalle[]}
-  * @description Este arreglo se llena con los datos de las fracciones arancelarias de las mercancías 
-  * que se van a procesar o que se encuentran registradas en el sistema.
-  */
+
+  /** Arreglo que almacena los detalles de las fracciones de mercancías */
   fraccionData: Detalle[] = [];
   
-  /**
- * Lista de productos agregados por el usuario. Cada elemento representa una mercancía distinta.
- */
+  /** Lista de productos agregados por el usuario */
   producto: Producto[] = [];
 
-  selectedProduct: Producto | null = null;
+  /** Producto seleccionado actualmente en la tabla */
+  productoSeleccionado: Producto | null = null;
 
+  /** Enumeración para los tipos de selección de tabla */
   TablaSeleccion = TablaSeleccion;
 
-  // Use the imported configuration from the models file
+  /** Configuración de columnas para la tabla de productos */
   configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
 
-  // Use the imported configuration from the models file
+  /** Configuración de columnas para la tabla de detalles de mercancías */
   configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
-  // Map to store details for each product
-  detalleMap: Map<number, Detalle[]> = new Map();
+  /** Mapa que almacena los detalles para cada producto */
+  mapaDetalles: Map<number, Detalle[]> = new Map();
 
-  /**
- * Indica si el modal para agregar mercancías está visible o no.
- */
-  showMercanciasModal = false;
+  /** Indica si el modal para agregar mercancías está visible */
+  mostrarModalMercancias = false;
 
-  /**
- * Notificador para manejar el ciclo de vida del componente y limpiar las suscripciones.
- * 
-*/
-  private destroyNotifier$: Subject<void> = new Subject();
+  /** Notificador para limpiar las suscripciones */
+  private notificadorDestruccion$: Subject<void> = new Subject();
 
-  /**
-   * Estado de la solicitud que contiene información relevante sobre el trámite.
-   * @description Esta variable mantiene el estado de la solicitud del trámite y se utiliza para 
-   * obtener los datos relacionados con la mercancía en el formulario, como descripción, fracción, cantidad, etc.
-   */
+  /** Estado de la solicitud del trámite */
   public solicitudState!: Tramite250102State;
 
-  constructor(private fb: FormBuilder,
+  /**
+   * Constructor del componente
+   */
+  constructor(
+    private fb: FormBuilder,
     private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query) { }
+    private tramite250102Query: Tramite250102Query
+  ) { }
 
+  /**
+   * Inicializa el componente, configura el formulario y obtiene el estado
+   */
   ngOnInit(): void {
-    // Get the current state from the store
+    // Obtener el estado actual del store
     this.tramite250102Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.notificadorDestruccion$),
         map((seccionState) => {
           this.solicitudState = seccionState as Tramite250102State;
           
-          // If we have products in the state, load them
+          // Si tenemos productos en el estado, los cargamos
           if (this.solicitudState.productos && this.solicitudState.productos.length > 0) {
             this.producto = [...this.solicitudState.productos];
           }
           
-          // If we have details in the state, load them
+          // Si tenemos detalles en el estado, los cargamos
           if (this.solicitudState.detalles) {
-            console.log('Loading details from state:', this.solicitudState.detalles);
-            this.detalleMap = new Map(this.solicitudState.detalles);
+            this.mapaDetalles = new Map(this.solicitudState.detalles);
           }
         })
       )
       .subscribe();
 
-    /**
-     * Inicializa el formulario `formMercancias` con los valores de estado de la solicitud.
-     * El formulario está compuesto por varios campos, todos ellos requeridos. 
-     * Estos campos corresponden a la información de la mercancía, como descripción, fracción arancelaria, 
-     * cantidad, medida, entre otros, que provienen del estado de la solicitud (`solicitudState`).
-     */
+    // Inicializa el formulario con los valores del estado
     this.formMercancias = this.fb.group({
       descripcion: [this.solicitudState?.descripcion || '', Validators.required],
       fraccion: [this.solicitudState?.fraccion || '', Validators.required],
@@ -162,59 +142,48 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       procedencia: [this.solicitudState?.procedencia || '', Validators.required]
     });
 
-    // Deshabilita el campo 'arancelaria' en el formulario.
+    // Deshabilita el campo 'arancelaria' en el formulario
     this.formMercancias.get('arancelaria')?.disable();
   }
 
   /**
-   * Function to get product details for a specific product
-   * This is the function that will be passed to the TablaExpandibleComponent
-   * 
-   * @param product - The product to get details for
-   * @returns An array of details for the product
+   * Función para obtener los detalles de un producto específico
    */
-  obtenerDatosAnidados = (product: Producto): Detalle[] => {
-    if (!product || !product.id) {
-      console.warn('Invalid product or product ID:', product);
-      return [];
-    }
-    console.log(`detalleMap:`, this.detalleMap);
-    const details = this.detalleMap.get(product.id);
-    
-    if (!details || details.length === 0) {
-      console.log(`No details found for product ${product.id}`);
+  obtenerDatosAnidados = (producto: Producto): Detalle[] => {
+    if (!producto || !producto.id) {
+      console.warn('Producto o ID de producto inválido:', producto);
       return [];
     }
     
-    console.log(`Found ${details.length} details for product ${product.id}:`, details);
-    return details;
+    const detalles = this.mapaDetalles.get(producto.id);
+    
+    if (!detalles || detalles.length === 0) {
+      return [];
+    }
+    
+    return detalles;
   };
 
   /**
-   * Handle product selection
+   * Maneja la selección de un producto en la tabla
    */
-  onProductSelected(product: Producto): void {
-    this.selectedProduct = product;
-    console.log('Selected product:', product);
+  alSeleccionarProducto(producto: Producto): void {
+    this.productoSeleccionado = producto;
   }
 
   /**
-   * Método que agrega un detalle de mercancía al array `fraccionData`.
-   * Obtiene los valores del formulario y los mapea a los valores correspondientes 
-   * de los catálogos de fracción, medida, etc.
-   * 
-   * @returns {void}
+   * Agrega un detalle de mercancía al array fraccionData
    */
-  detalleData(): void {
-    // Validate form values
+  agregarDetalle(): void {
+    // Validar valores del formulario
     if (!this.formMercancias.valid) {
-      console.error('Form is not valid');
+      console.error('El formulario no es válido');
       return;
     }
     
     const DETALLE_FORMDATA: Detalle = {
       fraccionArancelaria: this.fraccion.find(item => item.id === Number(this.formMercancias.value.fraccion))?.descripcion || '',
-      cantidad: this.formMercancias.value.cantidad.toString(), // Convert to string to match Detalle interface
+      cantidad: this.formMercancias.value.cantidad.toString(),
       unidadMedida: this.medida.find(item => item.id === Number(this.formMercancias.value.medida))?.descripcion || '',
       nombreCientifico: this.genero.find(item => item.id === Number(this.formMercancias.value.genero))?.descripcion || '',
       nombreComun: this.comun.find(item => item.id === Number(this.formMercancias.value.comun))?.descripcion || '',
@@ -223,134 +192,102 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     };
 
     this.fraccionData.push(DETALLE_FORMDATA);
-    console.log('Added detail:', DETALLE_FORMDATA);
-    console.log('Current fraccionData:', this.fraccionData);
   }
 
   /**
-   * Método que establece los valores en el store correspondiente, 
-   * utilizando un método de store basado en el campo y el valor del formulario.
-   * 
-   * @param {FormGroup} form - El formulario con los valores a guardar.
-   * @param {string} campo - El campo del formulario que se va a guardar en el store.
-   * @param {keyof Tramite250102Store} metodoNombre - El nombre del método en el store que se ejecutará.
-   * @returns {void}
+   * Establece los valores en el store correspondiente
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite250102Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite250102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  establecerValoresStore(formulario: FormGroup, campo: string, nombreMetodo: keyof Tramite250102Store): void {
+    const VALOR = formulario.get(campo)?.value;
+    (this.tramite250102Store[nombreMetodo] as (value: unknown) => void)(VALOR);
   }
 
-   /**
-   * Método que cancela la operación actual y oculta el modal de mercancías.
-   * 
-   * @returns {void}
+  /**
+   * Cancela la operación actual y oculta el modal de mercancías
    */
-   detalleCancelar(): void {
-    // Reset the form
+  cancelarDetalle(): void {
+    // Reiniciar el formulario
     this.formMercancias.reset();
-    // Clear the fraccionData array
+    // Limpiar el array de fraccionData
     this.fraccionData = [];
-    // Muestra u oculta el modal de mercancías
-    this.showMercanciasModal = !this.showMercanciasModal;
+    // Mostrar u ocultar el modal de mercancías
+    this.mostrarModalMercancias = !this.mostrarModalMercancias;
   }
   
   /**
-   * Método que guarda los datos de un producto y cierra el modal de mercancías.
-   * 
-   * @returns {void}
+   * Guarda los datos de un producto y cierra el modal de mercancías
    */
-/**
- * Método que guarda los datos de un producto y cierra el modal de mercancías.
- * 
- * @returns {void}
- */
-/**
- * Método que guarda los datos de un producto y cierra el modal de mercancías.
- * 
- * @returns {void}
- */
-detalleGuardar(): void {
-  if (this.fraccionData.length === 0) {
-    console.error('No details to save');
-    return;
+  guardarDetalle(): void {
+    if (this.fraccionData.length === 0) {
+      console.error('No hay detalles para guardar');
+      return;
+    }
+    
+    // Validar que tengamos una descripción seleccionada
+    if (!this.formMercancias.value.descripcion) {
+      console.error('No se ha seleccionado una descripción');
+      return;
+    }
+    
+    const nuevoIdProducto = this.generarId();
+    
+    const PRODUCTO_FORMDATA: Producto = {
+      id: nuevoIdProducto,
+      descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion || '',
+    };
+    
+    // Agregar el nuevo producto al array
+    this.producto.push(PRODUCTO_FORMDATA);
+    
+    // Crear una copia profunda del array fraccionData
+    const copiaDetalles = [...this.fraccionData.map(detalle => ({...detalle}))];
+    
+    // Almacenar los detalles para este producto específico
+    this.mapaDetalles.set(nuevoIdProducto, copiaDetalles);
+   
+    // Crear una copia tipada correctamente de las entradas para pasar al store
+    const entradasDetalles: [number, Detalle[]][] = Array.from(this.mapaDetalles.entries()).map(
+      ([clave, valor]) => [clave, [...valor]] as [number, Detalle[]]
+    );
+    
+    // Actualizar el store con el nuevo producto y detalles
+    this.tramite250102Store.setProductos([...this.producto]);
+    this.tramite250102Store.setDetalles(entradasDetalles);
+        
+    // Reiniciar el formulario
+    this.formMercancias.reset();
+    
+    // Limpiar el array de fraccionData
+    this.fraccionData = [];
+    
+    // Mostrar u ocultar el modal de mercancías
+    this.mostrarModalMercancias = !this.mostrarModalMercancias;
   }
-  
-  // Validate that we have a description selected
-  if (!this.formMercancias.value.descripcion) {
-    console.error('No description selected');
-    return;
-  }
-  
-  const newProductId = this.generateId();
-  
-  const PRODUCTO_FORMDATA: Producto = {
-    id: newProductId,
-    descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion || '',
-  };
-  
-  // Add the new product to the array
-  this.producto.push(PRODUCTO_FORMDATA);
-  
-  // Create a deep copy of the fraccionData array to ensure it's not affected by future changes
-  const detailsCopy = [...this.fraccionData.map(detail => ({...detail}))];
-  
-  // Store the details for this specific product
-  this.detalleMap.set(newProductId, detailsCopy);
-  
-  console.log('Saved product:', PRODUCTO_FORMDATA);
-  console.log('Saved details:', detailsCopy);
-  console.log('Current detalle map before store update:', this.detalleMap);
-  
-  // Create a properly typed tuple array for the entries
-  const detalleEntries: [number, Detalle[]][] = Array.from(this.detalleMap.entries()).map(
-    ([key, value]) => [key, [...value]] as [number, Detalle[]]
-  );
-  
-  // Update the store with the new product and details
-  this.tramite250102Store.setProductos([...this.producto]);
-  this.tramite250102Store.setDetalles(detalleEntries);
-  
-  console.log('Current detalle map after store update:', this.detalleMap);
-  
-  // Reset the form
-  this.formMercancias.reset();
-  
-  // Clear the fraccionData array
-  this.fraccionData = [];
-  
-  // Muestra u oculta el modal de mercancías
-  this.showMercanciasModal = !this.showMercanciasModal;
-}
-
 
   /**
-   * Método que alterna la visibilidad del modal para agregar mercancías.
-   * 
-   * @returns {void}
+   * Alterna la visibilidad del modal para agregar mercancías
    */
-  mercancias(): void {
-    // Reset the form when opening the modal
-    if (!this.showMercanciasModal) {
+  abrirModalMercancias(): void {
+    // Reiniciar el formulario al abrir el modal
+    if (!this.mostrarModalMercancias) {
       this.formMercancias.reset();
       this.fraccionData = [];
     }
-    this.showMercanciasModal = !this.showMercanciasModal;
+    this.mostrarModalMercancias = !this.mostrarModalMercancias;
   }
   
   /**
    * Genera un ID único para nuevos elementos
-   * @returns {number} ID generado
    */
-  private generateId(): number {
+  private generarId(): number {
     return Date.now() + Math.floor(Math.random() * 1000);
   }
   
   /**
-   * Cleanup on component destruction
+   * Limpia recursos al destruir el componente
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }
