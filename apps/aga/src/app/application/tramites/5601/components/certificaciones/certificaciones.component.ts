@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -13,7 +13,7 @@ import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 @Component({
   selector: 'app-certificaciones',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
   templateUrl: './certificaciones.component.html',
   styleUrl: './certificaciones.component.scss',
 })
@@ -45,10 +45,10 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    */
   public certificacionState!: Tramite5601State;
 
-    /**
-   * Un Subject que emite un valor `void` cuando el componente es destruido.
-   * Se utiliza para gestionar y limpiar suscripciones, evitando fugas de memoria.
-   */
+  /**
+ * Un Subject que emite un valor `void` cuando el componente es destruido.
+ * Se utiliza para gestionar y limpiar suscripciones, evitando fugas de memoria.
+ */
   private destroyed$: Subject<void> = new Subject();
 
   public pagoDeDerechosFormData = FORMULARIO_CERTIFICACION_DETALLES;
@@ -71,26 +71,19 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.tramite5601Query.selectCertificacion$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.certificacionState = seccionState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.certificacionState = seccionState;
+        })
+      )
+      .subscribe();
   }
-  
-  /**
-   * Muestra un modal si el checkbox está seleccionado.
-   * @param event - Evento del checkbox.
-   */
-  mostrarModalSiSeleccionado(event: Event): void {
-    const CHECKBOX = event.target as HTMLInputElement;
-    if (CHECKBOX.checked) {
-      this.tituloModal = TITULO_MODAL; // Asigna el título del modal.
-      this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal.
-      this.abrirModal(); // Abre el modal.
-    }
+
+  mostrarModalSiSeleccionado(): void {
+    this.tituloModal = TITULO_MODAL; // Asigna el título del modal.
+    this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal.
+    this.abrirModal(); // Abre el modal.
   }
 
   /**
@@ -135,7 +128,7 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
     (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método del store con el valor.
   }
 
-  
+
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
@@ -147,17 +140,20 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+      if (event.campo === 'tieneCertificacion') {
+        this.mostrarModalSiSeleccionado();
+      }
     }
   }
 
 
-    /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyed$ para cancelar las suscripciones activas.
-   */
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+  /**
+ * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+ * Este método completa el observable destroyed$ para cancelar las suscripciones activas.
+ */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 
 }
