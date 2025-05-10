@@ -34,6 +34,7 @@ export interface Requisito {
  * Representa la información básica de un producto relacionado al trámite.
  */
 export interface Producto {
+  id: number;
   /** Descripción general del producto (puede ser indefinida). */
   descripcion: string | undefined;
 }

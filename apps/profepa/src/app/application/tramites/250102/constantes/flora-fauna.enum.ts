@@ -1,3 +1,5 @@
+import { Detalle } from "../models/flora-fauna.models";
+
 /** Constante que representa las etapas del proceso de flora y fauna. */
 export const FLORA_FAUNA = [
   {
@@ -123,28 +125,28 @@ export const MERCANCIAS_COLUMNA = [
   }
 ];
 
-export const DETALLE_COLUMNA = [
-  {
-    encabezado: 'Fracción arancelaria',
-    clave: (detail : Detalle) => detail.fraccionArancelaria,
-    orden: 1
-  },
-  {
-    encabezado: 'Descripción de la fracción arancelaria',
-    clave: (detail : Detalle) => detail.descripcionFraccionArancelaria,
-    orden: 2
-  },
-  {
-    encabezado: 'Cantidad',
-    clave: (detail : Detalle) => detail.cantidad,
-    orden: 3
-  },
-  {
-    encabezado: 'Unidad de medida',
-    clave: (detail : Detalle) => detail.unidadMedida,
-    orden: 4
-  }
-];
+// export const DETALLE_COLUMNA = [
+//   {
+//     encabezado: 'Fracción arancelaria',
+//     clave: (detail : Detalle) => detail.fraccionArancelaria,
+//     orden: 1
+//   },
+//   {
+//     encabezado: 'Descripción de la fracción arancelaria',
+//     clave: (detail : Detalle) => detail.descripcionFraccionArancelaria,
+//     orden: 2
+//   },
+//   {
+//     encabezado: 'Cantidad',
+//     clave: (detail : Detalle) => detail.cantidad,
+//     orden: 3
+//   },
+//   {
+//     encabezado: 'Unidad de medida',
+//     clave: (detail : Detalle) => detail.unidadMedida,
+//     orden: 4
+//   }
+// ];
 
 /**
  * Configuración de las columnas para la tabla de permisos.
@@ -185,13 +187,5 @@ export interface ClavesDePermisos {
 export interface DescripcionMercancia {
   id: number;
   descripcionMercancia: string;
-}
-
-export interface Detalle {
-  id: number;
-  fraccionArancelaria: string;
-  descripcionFraccionArancelaria: string;
-  cantidad: number;
-  unidadMedida: string;
 }
 

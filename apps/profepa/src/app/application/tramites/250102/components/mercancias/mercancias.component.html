@@ -2,8 +2,8 @@
     <ng-titulo titulo="Descripción del producto" />
     <div class="row">
         <h6>Descripción del producto:*</h6>
-        <app-tabla-expandible [datos]="products" [configuracionTabla]="mercanciasColumnas"
-            [configuracionTablaAnidada]="detailColumns" [obtenerDatosAnidados]="getDetalle"
+        <app-tabla-expandible [datos]="producto" [configuracionTabla]="configuracionTabla"
+            [configuracionTablaAnidada]="configuracionMercanciasTabla" [obtenerDatosAnidados]="getDetalle"
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [tableId]="'products-table'"
             (filaSeleccionada)="onProductSelected($event)"></app-tabla-expandible>
     </div>
@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<!-- <app-modal [active]="showMercanciasModal">
+<app-modal [active]="showMercanciasModal">
     <div>
     <ng-titulo titulo="Mercancías sin CFI" />
     <form [formGroup]="formMercancias">
@@ -112,11 +112,11 @@
  
     </form>
     <div class="row">
-        <h6>fraccion:*</h6>
+        <h6>Fraccion:*</h6>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionMercanciasTabla"
           [datos]="fraccionData"
-          [tipoSeleccionTabla]="checkbox"
+          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
         ></app-tabla-dinamica>
         
         <nav aria-label="Page navigation example">
@@ -133,4 +133,4 @@
  
 
 </div>
-</app-modal> -->
+</app-modal> 
