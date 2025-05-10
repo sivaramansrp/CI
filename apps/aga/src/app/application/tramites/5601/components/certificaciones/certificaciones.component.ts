@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import {Subject,map,takeUntil } from 'rxjs';
-import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
+import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
 import { CommonModule } from '@angular/common';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 /**
  * Componente para gestionar las certificaciones, incluyendo su visualización y edición.
@@ -13,7 +14,7 @@ import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 @Component({
   selector: 'app-certificaciones',
   standalone: true,
-  imports: [CommonModule,TituloComponent,InputCheckComponent,ReactiveFormsModule],
+  imports: [CommonModule,TituloComponent,InputCheckComponent,ReactiveFormsModule,FormasDinamicasComponent],
   templateUrl: './certificaciones.component.html',
   styleUrl: './certificaciones.component.scss',
 })
@@ -51,6 +52,8 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    */
   private destroyed$: Subject<void> = new Subject();
 
+  public pagoDeDerechosFormData = FORMULARIO_CERTIFICACION_DETALLES;
+
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -67,23 +70,15 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y suscribe al estado de certificación.
    */
   ngOnInit(): void {
-    // Suscribirse al estado de certificación desde el query
+
     this.tramite5601Query.selectCertificacion$
     .pipe(
-      takeUntil(this.destroyed$), // Finaliza la suscripción cuando el componente se destruye
-      map((certificacionState) => {
-        // Actualiza el estado de certificación local
-        this.certificacionState = certificacionState;
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.certificacionState = seccionState;
       })
     )
     .subscribe();
-
-    // Configura el formulario reactivo con los valores iniciales del estado
-    this.formularioCertificacion = this.fb.group({
-      tieneCertificacion: [this.certificacionState.tieneCertificacion], // Campo para indicar si tiene certificación
-      certificacionEmpresa: [this.certificacionState.certificacionEmpresa], // Campo para la certificación de la empresa
-      otraCertificacion: [this.certificacionState.otraCertificacion], // Campo para otra certificación
-    });
   }
   
   /**
@@ -129,14 +124,6 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
     this.cerrarModal();
   }
 
-  /**
-   * Maneja el cambio en el campo 'tieneCertificacion' del formulario.
-   * @param event - Evento del cambio.
-   */
-  onTieneCertificacionChange(event: Event): void {
-    this.mostrarModalSiSeleccionado(event); // Muestra el modal si es necesario.
-    this.setValoresStore(this.formularioCertificacion, 'tieneCertificacion', 'setTieneCertificacion'); // Actualiza el store.
-  }
 
   /**
    * Actualiza un valor en el store basado en el formulario.
@@ -148,6 +135,22 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value; // Obtiene el valor del campo.
     (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método del store con el valor.
   }
+
+  
+  public forma: FormGroup = new FormGroup({
+    ninoFormGroup: new FormGroup({}),
+  });
+
+  get ninoFormGroup(): FormGroup {
+    return this.forma.get('ninoFormGroup') as FormGroup;
+  }
+
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
 
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

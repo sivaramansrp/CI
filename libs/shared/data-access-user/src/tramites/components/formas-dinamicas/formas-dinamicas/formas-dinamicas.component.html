@@ -11,9 +11,10 @@
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
-                        <label class="form-label" [for]="item.id">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        <label class="form-label" [for]="item.id" *ngIf="item.labelNombre">
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}:
+                        </label>
+
 
                         <input
                           class="form-control"
@@ -123,9 +124,10 @@
                           [required]="seRequiere(item.campo)"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
-                        <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        <label class="form-label" [for]="item.id" style="margin-left: 10px;" *ngIf="item.labelNombre">
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}:
+                        </label>
+
                       </div>
                     </div>
                     }

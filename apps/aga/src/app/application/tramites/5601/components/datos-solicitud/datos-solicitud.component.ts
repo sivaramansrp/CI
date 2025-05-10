@@ -98,7 +98,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((datosSolicitudState) => {
-          this.DatosSolicitudState = datosSolicitudState;
+          // this.DatosSolicitudState = datosSolicitudState;
         })
       )
       .subscribe();
