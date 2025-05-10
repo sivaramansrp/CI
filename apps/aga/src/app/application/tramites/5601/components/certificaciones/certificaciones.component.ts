@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
 import { CommonModule } from '@angular/common';
@@ -14,7 +13,7 @@ import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 @Component({
   selector: 'app-certificaciones',
   standalone: true,
-  imports: [CommonModule,TituloComponent,InputCheckComponent,ReactiveFormsModule,FormasDinamicasComponent],
+  imports: [CommonModule,ReactiveFormsModule,FormasDinamicasComponent],
   templateUrl: './certificaciones.component.html',
   styleUrl: './certificaciones.component.scss',
 })
