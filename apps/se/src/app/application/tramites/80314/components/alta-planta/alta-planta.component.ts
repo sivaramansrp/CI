@@ -8,8 +8,8 @@ import { ComplementariaImmexComponent } from '../complementaria-immex/complement
 import { DomicilioInfo } from '../../estados/models/plantas-consulta.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite80306Query } from '../../estados/tramite80306.query';
-import { Tramite80306Store } from '../../estados/tramite80306.store';
+import { Tramite80314Query } from '../../estados/tramite80314.query';
+import { Tramite80314Store } from '../../estados/tramite80314.store';
 
 @Component({
   selector: 'app-alta-planta',
@@ -88,8 +88,8 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public modificionService: ImmerModificacionService,
     private toastr: ToastrService,
-    private store: Tramite80306Store,
-    private tramiteQuery: Tramite80306Query
+    private store: Tramite80314Store,
+    private tramiteQuery: Tramite80314Query
   ) {
 
     // Inicialización del formulario para la entidad federativa.

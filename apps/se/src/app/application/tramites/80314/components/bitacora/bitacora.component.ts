@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+} from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../estados/models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
@@ -58,7 +61,10 @@ export class BitacoraComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.modificionService.obtenerBitacora().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+    this.modificionService
+      .obtenerBitacora()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
         (data: Bitacora[]) => {
           this.datos = [...data];
         },

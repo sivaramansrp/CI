@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
@@ -14,13 +18,13 @@ class MockModificacionSolicitudeService {}
 
 @Injectable()
 class MockTramite80306Store {
-  setFormValida = function() {};
+  setFormValida = function () {};
 }
 
 @Injectable()
 class MockTramite80306Query {
   selectEstado$ = observableOf({
-    id: {}
+    id: {},
   });
   selectBuscarDomicilios$ = {};
   selectAltaPlanta$ = {};
@@ -37,32 +41,61 @@ class MockToastrService {
 
 describe('AltaPlantaComponent', () => {
   let fixture: ComponentFixture<AltaPlantaComponent>;
-  let component: { ngOnDestroy: () => void; formulario: { get?: any; }; formularioControl: any; cargarEstados: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; modificionService: { obtenerListaEstado?: any; }; store: { setaltaPlanta?: any; aggregarDomicilios?: any; eliminarDomicilios?: any; setEstado?: any; }; seleccionarDomicilios: (arg0: {}) => void; domiciliosSeleccionados: string[]; aplicarAccion: () => void; eliminarPlantas: () => void; tipoEstadoSeleccion: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: {
+    ngOnDestroy: () => void;
+    formulario: { get?: any };
+    formularioControl: any;
+    cargarEstados: jest.Mock<any, any, any> | (() => void);
+    ngOnInit: () => void;
+    modificionService: { obtenerListaEstado?: any };
+    store: {
+      setaltaPlanta?: any;
+      aggregarDomicilios?: any;
+      eliminarDomicilios?: any;
+      setEstado?: any;
+    };
+    seleccionarDomicilios: (arg0: {}) => void;
+    domiciliosSeleccionados: string[];
+    aplicarAccion: () => void;
+    eliminarPlantas: () => void;
+    tipoEstadoSeleccion: (arg0: {}) => void;
+    destroyNotifier$: { next?: any; complete?: any };
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AltaPlantaComponent ],
-      declarations: [        
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule, AltaPlantaComponent],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: ImmerModificacionService, useClass: MockModificacionSolicitudeService },
+        {
+          provide: ImmerModificacionService,
+          useClass: MockModificacionSolicitudeService,
+        },
         ToastrService,
         { provide: Tramite80306Store, useClass: MockTramite80306Store },
-        { provide: Tramite80306Query, useClass: MockTramite80306Query }
-      ]
-    }).overrideComponent(AltaPlantaComponent, {
-
-      set: { providers: [{ provide: ImmerModificacionService, useClass: MockModificacionSolicitudeService },
-{ provide: ToastrService, useClass: MockToastrService }] }    
-    }).compileComponents();
+        { provide: Tramite80306Query, useClass: MockTramite80306Query },
+      ],
+    })
+      .overrideComponent(AltaPlantaComponent, {
+        set: {
+          providers: [
+            {
+              provide: ImmerModificacionService,
+              useClass: MockModificacionSolicitudeService,
+            },
+            { provide: ToastrService, useClass: MockToastrService },
+          ],
+        },
+      })
+      .compileComponents();
     fixture = TestBed.createComponent(AltaPlantaComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () {};
     fixture.destroy();
   });
 
@@ -85,7 +118,9 @@ describe('AltaPlantaComponent', () => {
 
   it('should run #cargarEstados()', async () => {
     component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({}));
+    component.modificionService.obtenerListaEstado = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.store = component.store || {};
     component.store.setaltaPlanta = jest.fn();
     component.cargarEstados();
@@ -94,9 +129,7 @@ describe('AltaPlantaComponent', () => {
   });
 
   it('should run #seleccionarDomicilios()', async () => {
-
     component.seleccionarDomicilios({});
-
   });
 
   it('should run #aplicarAccion()', async () => {
@@ -136,5 +169,4 @@ describe('AltaPlantaComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
-
 });

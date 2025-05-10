@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroModificacionComponent } from './registro-modificacion.component';
 import { Router } from '@angular/router';
@@ -7,7 +11,7 @@ import { ImmerModificacionService } from '../../service/immer-modificacion.servi
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate() {}
 }
 
 @Injectable()
@@ -15,28 +19,38 @@ class MockImmerModificacionService {}
 
 describe('RegistroModificacionComponent', () => {
   let fixture: ComponentFixture<RegistroModificacionComponent>;
-  let component: { ngOnDestroy: () => void; llenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: {
+    ngOnDestroy: () => void;
+    llenarLaTabla: jest.Mock<any, any, any>;
+    ngOnInit: () => void;
+    destroyNotifier$: { next?: any; complete?: any };
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RegistroModificacionComponent ],
-      declarations: [
-        
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RegistroModificacionComponent,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Router, useClass: MockRouter },
-        { provide: ImmerModificacionService, useClass: MockImmerModificacionService }
-      ]
-    }).overrideComponent(RegistroModificacionComponent, {
-
-    }).compileComponents();
+        {
+          provide: ImmerModificacionService,
+          useClass: MockImmerModificacionService,
+        },
+      ],
+    })
+      .overrideComponent(RegistroModificacionComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(RegistroModificacionComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () {};
     fixture.destroy();
   });
 

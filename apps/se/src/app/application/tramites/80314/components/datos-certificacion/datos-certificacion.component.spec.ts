@@ -6,30 +6,27 @@ import { FormBuilder } from '@angular/forms';
 
 describe('DatosCertificacionComponent', () => {
   let fixture: ComponentFixture<DatosCertificacionComponent>;
-  let component: { ngOnDestroy: () => void; };
+  let component: { ngOnDestroy: () => void };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosCertificacionComponent ],
+      imports: [FormsModule, ReactiveFormsModule, DatosCertificacionComponent],
       declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder
-      ]
-    }).overrideComponent(DatosCertificacionComponent, {
-
-    }).compileComponents();
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder],
+    })
+      .overrideComponent(DatosCertificacionComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(DatosCertificacionComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () {};
     fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-
 });

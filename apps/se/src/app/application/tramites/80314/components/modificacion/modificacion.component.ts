@@ -1,13 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud80306State, Tramite80306Store } from '../../../../estados/tramites/tramite80306.store';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  Solicitud80314State,
+  Tramite80314Store,
+} from '../../../../estados/tramites/tramite80314.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { Tramite80306Query } from '../../../../estados/queries/tramite80306.query';
+import { Tramite80314Query } from '../../../../estados/queries/tramite80314.query';
 
 @Component({
   selector: 'app-modificacion',
@@ -26,8 +39,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private solicitudService: ImmerModificacionService,
-    private tramite80306Store: Tramite80306Store,
-    private tramite80306Query: Tramite80306Query
+    private tramite80314Store: Tramite80314Store,
+    private tramite80314Query: Tramite80314Query
   ) {}
 
   /**
@@ -45,7 +58,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Estado actual del trámite.
    * Contiene los datos relacionados con la modificación del trámite.
    */
-  public derechoState: Solicitud80306State = {} as Solicitud80306State;
+  public derechoState: Solicitud80314State = {} as Solicitud80314State;
 
   /**
    * Representa la tabla de selección utilizada en el componente de modificación.
@@ -53,13 +66,13 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * en el contexto de los trámites específicos.
    */
   TablaSeleccion = TablaSeleccion;
-  
 
   /**
    * Configuración de las columnas de la tabla dinámica.
    * Define las propiedades de cada columna, como encabezado, clave y orden.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] = CONFIGURACION_MODIFICACION;
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] =
+    CONFIGURACION_MODIFICACION;
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
@@ -71,13 +84,17 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
-    this.tramite80306Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
+    this.tramite80314Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.derechoState = {
             ...this.derechoState,
             ...seccionState,
           };
-        })).subscribe();
+        })
+      )
+      .subscribe();
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
@@ -109,8 +126,15 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite y los valores del formulario.
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-        (this.tramite80306Store.setDatosModificacion as (valor: unknown) => void)(datos);
+    this.solicitudService
+      .getDatosModificacion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        (
+          this.tramite80314Store.setDatosModificacion as (
+            valor: unknown
+          ) => void
+        )(datos);
         this.setFormValues();
       });
   }
@@ -127,20 +151,30 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * this.loadDatosTablaData();
    */
   loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) =>
-    {
-      this.datosTabla = data;
-    });
+    this.solicitudService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.datosTabla = data;
+      });
   }
 
   /**
    * Establece los valores del formulario utilizando los datos de modificación.
    */
   setFormValues(): void {
-    this.modificacionForm.get('rfc')?.setValue(this.derechoState?.datosModificacion?.rfc);
-    this.modificacionForm.get('federal')?.setValue(this.derechoState?.datosModificacion?.federal);
-    this.modificacionForm.get('tipo')?.setValue(this.derechoState?.datosModificacion?.tipo);
-    this.modificacionForm.get('programa')?.setValue(this.derechoState?.datosModificacion?.programa);
+    this.modificacionForm
+      .get('rfc')
+      ?.setValue(this.derechoState?.datosModificacion?.rfc);
+    this.modificacionForm
+      .get('federal')
+      ?.setValue(this.derechoState?.datosModificacion?.federal);
+    this.modificacionForm
+      .get('tipo')
+      ?.setValue(this.derechoState?.datosModificacion?.tipo);
+    this.modificacionForm
+      .get('programa')
+      ?.setValue(this.derechoState?.datosModificacion?.programa);
   }
 
   /**
@@ -149,9 +183,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @param campo Nombre del campo.
    * @param metodoNombre Nombre del método en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80306Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite80314Store
+  ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite80306Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+    (this.tramite80314Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
-
 }

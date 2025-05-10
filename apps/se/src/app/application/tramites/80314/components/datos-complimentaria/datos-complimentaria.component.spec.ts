@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosComplimentariaComponent } from './datos-complimentaria.component';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -19,29 +23,55 @@ class MockToastrService {
 
 describe('DatosComplimentariaComponent', () => {
   let fixture: ComponentFixture<DatosComplimentariaComponent>;
-  let component: { ngOnDestroy: () => void; solicitudService: { obtenerComplimentaria?: any; obtenerFederetarios?: any; obtenerOperacion?: any; obtenerPlanta?: any; obtenerServicios?: any; }; toastr: { error?: any; }; obtenerComplimentaria: () => void; obtenerFederetarios: () => void; obtenerOperacions: () => void; obtenerPlanta: () => void; obtenerServicios: () => void; destroyNotifier$: { next?: any; unsubscribe?: any; }; };
+  let component: {
+    ngOnDestroy: () => void;
+    solicitudService: {
+      obtenerComplimentaria?: any;
+      obtenerFederetarios?: any;
+      obtenerOperacion?: any;
+      obtenerPlanta?: any;
+      obtenerServicios?: any;
+    };
+    toastr: { error?: any };
+    obtenerComplimentaria: () => void;
+    obtenerFederetarios: () => void;
+    obtenerOperacions: () => void;
+    obtenerPlanta: () => void;
+    obtenerServicios: () => void;
+    destroyNotifier$: { next?: any; unsubscribe?: any };
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosComplimentariaComponent ],
-      declarations: [
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule, DatosComplimentariaComponent],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-        ToastrService
-      ]
-    }).overrideComponent(DatosComplimentariaComponent, {
-
-      set: { providers: [{ provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-{ provide: ToastrService, useClass: MockToastrService }] }    
-    }).compileComponents();
+        {
+          provide: ImmerModificacionService,
+          useClass: MockImmerModificacionService,
+        },
+        ToastrService,
+      ],
+    })
+      .overrideComponent(DatosComplimentariaComponent, {
+        set: {
+          providers: [
+            {
+              provide: ImmerModificacionService,
+              useClass: MockImmerModificacionService,
+            },
+            { provide: ToastrService, useClass: MockToastrService },
+          ],
+        },
+      })
+      .compileComponents();
     fixture = TestBed.createComponent(DatosComplimentariaComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () {};
     fixture.destroy();
   });
 
@@ -51,7 +81,9 @@ describe('DatosComplimentariaComponent', () => {
 
   it('should run #obtenerComplimentaria()', async () => {
     component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerComplimentaria = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerComplimentaria = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.obtenerComplimentaria();
@@ -61,7 +93,9 @@ describe('DatosComplimentariaComponent', () => {
 
   it('should run #obtenerFederetarios()', async () => {
     component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerFederetarios = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerFederetarios = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.obtenerFederetarios();
@@ -71,7 +105,9 @@ describe('DatosComplimentariaComponent', () => {
 
   it('should run #obtenerOperacions()', async () => {
     component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerOperacion = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerOperacion = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.obtenerOperacions();
@@ -81,7 +117,9 @@ describe('DatosComplimentariaComponent', () => {
 
   it('should run #obtenerPlanta()', async () => {
     component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerPlanta = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerPlanta = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.obtenerPlanta();
@@ -91,7 +129,9 @@ describe('DatosComplimentariaComponent', () => {
 
   it('should run #obtenerServicios()', async () => {
     component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerServicios = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerServicios = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.obtenerServicios();
@@ -107,5 +147,4 @@ describe('DatosComplimentariaComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
   });
-
 });

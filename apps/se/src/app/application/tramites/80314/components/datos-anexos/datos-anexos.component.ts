@@ -1,6 +1,12 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
+import {
+  CONFIGURACION_ANEXOS_IMPORTACION,
+  CONFIGURACION_ANEXOS_TABLA,
+} from '../../constantes/modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+} from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -52,7 +58,7 @@ export class DatosAnexosComponent implements OnDestroy, OnInit {
 
   constructor(
     public solicitudService: ImmerModificacionService,
-    private toastr: ToastrService 
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
