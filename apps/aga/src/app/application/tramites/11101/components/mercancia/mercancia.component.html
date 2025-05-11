@@ -18,7 +18,8 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="descripcion">Descripcion*:</label>
-                    <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion" readonly ></textarea>
+                    <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion"
+                        readonly></textarea>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="valor">valor*:</label>
@@ -84,15 +85,11 @@
             </div>
         </div>
     </div>
-    <!-- <div class="row align-items-center">
-        <label for="Persona física extranjero">Persona física extranjera:</label>
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-                    [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
-                    [datos]="personaFisicaExtranjeraTabla"></app-tabla-dinamica>
-            </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                [datos]="DiscripccionDeLaMercanciaForm"></app-tabla-dinamica>
         </div>
-        <app-table-pagination></app-table-pagination>
-    </div> -->
+    </div>
 </div>

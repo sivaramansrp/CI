@@ -272,7 +272,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'Fronteriza',
+    path: 'fronteriza',
     loadChildren: () =>
       import('./tramites/11101/Donación-Franja-Fronteriza.module').then(
         (m) => m.DonacionFranjaFronterizaModule),

@@ -64,13 +64,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  tramite40402Query: any;
   seccion: unknown;
 
   /**
    * Constructor del componente.
-   * @param tramite40402Query - Consulta para obtener datos del estado del trámite.
-   * @param tramite40402Store - Almacén para gestionar el estado del trámite.
+   * @param tramite11101Query - Consulta para obtener datos del estado del trámite.
+   * @param tramite11101Store - Almacén para gestionar el estado del trámite.
    */
   constructor(
     private tramite11101Query: Tramite11101Query,
@@ -91,7 +90,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.asignarSecciones();
   }
 
   /**
@@ -126,22 +124,4 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Método para asignar las secciones existentes al store.
-   * Inicializa las secciones y su estado de validación.
-   */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-
-    for (const LLAVE_SECCION of Object.keys(
-      SECCIONES_TRAMITE_11101.PASO_1
-    ) as Array<keyof typeof SECCIONES_TRAMITE_11101.PASO_1>) {
-      SECCIONES.push(SECCIONES_TRAMITE_11101.PASO_1[LLAVE_SECCION]);
-      FORMA_VALIDA.push(false);
-    }
-
-    this.tramite11101Store.establecerSeccion(SECCIONES);
-    this.tramite11101Store.establecerFormaValida(FORMA_VALIDA);
-  }
 }

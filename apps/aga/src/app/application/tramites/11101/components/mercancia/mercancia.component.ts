@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TablePaginationComponent, TituloComponent,TablaDinamicaComponent,TablaSeleccion } from '@libs/shared/data-access-user/src';
-
+import { TablePaginationComponent, TituloComponent,TablaDinamicaComponent,TablaSeleccion, TableComponent } from '@libs/shared/data-access-user/src';
+import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
 @Component({
     selector: 'app-mercancia',
     templateUrl: './mercancia.component.html',
     standalone: true,
-    imports: [TituloComponent, ReactiveFormsModule, TablePaginationComponent, TablaDinamicaComponent], 
+    imports: [TituloComponent, ReactiveFormsModule, TablePaginationComponent, TablaDinamicaComponent,TableComponent], 
 })
 export class MercanciaComponent implements OnInit {
-    // Removed incorrect usage of TablaSeleccion
+    TablaSeleccion = TablaSeleccion;
+
     mercanciaForm!:FormGroup 
+
+    DiscripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
+    
     constructor(private fb:FormBuilder) { }
     ngOnInit(): void {
         this.mercanciaForm = this.fb.group({

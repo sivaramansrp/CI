@@ -2116,8 +2116,8 @@
   {
     "id": 303,
     "tramite": 11101,
-    "linkDashboard": "/pago/Fronteriza/solicitud",
-    "linkDepartment": "/pago/Fronteriza/solicitud",
+    "linkDashboard": "/pago/fronteriza/solicitud",
+    "linkDepartment": "/pago/fronteriza/solicitud",
     "department": "aga"
   },
   {

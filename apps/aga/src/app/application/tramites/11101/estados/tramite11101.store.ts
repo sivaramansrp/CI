@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { PersonaFisicaExtranjeraForm, PersonaMoralExtranjeraForm } from '../models/transportacion-maritima.model';
+import { DiscripccionDeLaMercanciaForm } from '../models/transportacion-maritima.model';
 
 /**
  * Modelo de estado para el trámite 40402.
@@ -90,23 +90,22 @@ export interface Tramitenacionales11101State {
      */
     numeroInteriorPFE?: string;
 
-
       /**
-       * Tabla de personas físicas extranjeras.
-       * @type {PersonaFisicaExtranjeraForm[]}
+       * Tabla de descripción de la mercancía.
+       * @type {DiscripccionDeLaMercanciaForm[]}
        */
-      personaFisicaExtranjeraTabla?: PersonaFisicaExtranjeraForm[];
+      DiscripccionDeLaMercanciaTabla?: DiscripccionDeLaMercanciaForm[];
   
       /**
        * Tabla de personas morales extranjeras.
        * @type {PersonaMoralExtranjeraForm[]}
        */
-      personaMoralExtranjeraTabla?: PersonaMoralExtranjeraForm[];
+      DiscripccionDeLaMercanciaForm?: DiscripccionDeLaMercanciaForm[];
           /**
      * Denominación de la persona moral extranjera.
      * @type {string}
      */
-    denominacionPME?: string;
+      denominacionPME?: string;
 
     /**
      * Correo electrónico de la persona moral extranjera.
@@ -198,8 +197,7 @@ export function createTramiteState(): Tramitenacionales11101State {
     numeroExteriorPFE: '',
     numeroInteriorPFE: '',
 
-    personaFisicaExtranjeraTabla: [],
-    personaMoralExtranjeraTabla: [],
+    DiscripccionDeLaMercanciaTabla: [],
 
     denominacionPME: '',
     correoPME: '',
@@ -221,7 +219,7 @@ export function createTramiteState(): Tramitenacionales11101State {
  * Almacén de estado para gestionar los datos relacionados con el trámite 40402.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite40402', resettable: true })
+@StoreConfig({ name: 'tramite11101', resettable: true })
 export class Tramite11101Store extends Store<Tramitenacionales11101State> {
   /**
    * Constructor del almacén.
@@ -403,10 +401,10 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
      * @param personaFisicaExtranjeraTabla - Tabla de persona física extranjera.
      * @description Establece la tabla de persona física extranjera en el estado.
      */
-    public setPersonaFisicaExtranjeraTabla(personaFisicaExtranjeraTabla: PersonaFisicaExtranjeraForm[]): void {
+    public setPersonaFisicaExtranjeraTabla(DiscripccionDeLaMercanciaTabla: DiscripccionDeLaMercanciaForm[]): void {
         this.update((state) => ({
             ...state,
-            personaFisicaExtranjeraTabla,
+            DiscripccionDeLaMercanciaTabla,
         }));
     }
 
@@ -415,10 +413,10 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
        * @param personaMoralExtranjeraTabla - Tabla de persona moral extranjera.
        * @description Establece la tabla de persona moral extranjera en el estado.
        */
-      public setPersonaMoralExtranjeraTabla(personaMoralExtranjeraTabla: PersonaMoralExtranjeraForm[]): void {
+      public setPersonaMoralExtranjeraTabla(DiscripccionDeLaMercanciaTabla: DiscripccionDeLaMercanciaForm[]): void {
           this.update((state) => ({
               ...state,
-              personaMoralExtranjeraTabla,
+              DiscripccionDeLaMercanciaTabla,
           }));
       }
  

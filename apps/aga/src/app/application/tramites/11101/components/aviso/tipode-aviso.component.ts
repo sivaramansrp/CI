@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import mockData from '@libs/shared/theme/assets/json/11101/aviso-mockdata.json';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './tipode-aviso.component.html',
     styleUrls: ['./tipode-aviso.component.scss'],
     standalone: true,
-    imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule]
+    imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule,TableComponent]
 })
 export class TipodeAvisoComponent implements OnInit {
     isManualSelected: boolean = false;

@@ -15,8 +15,6 @@ class MockTramite11101Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
-
-
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
@@ -77,14 +75,5 @@ describe('SolicitantePageComponent', () => {
 
     component.getValorIndice({ valor: 1, accion: 'prev' });
     expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `asignarSecciones` asigne las secciones correctamente.
-   */
-  it('should assign sections correctly using asignarSecciones()', () => {
-    (component as any).asignarSecciones();
-    expect(tramite11101StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(tramite11101StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });
