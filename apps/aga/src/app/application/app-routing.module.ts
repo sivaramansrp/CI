@@ -255,7 +255,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
-  }
+  },
+  {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10703/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  },
 ];
 
 @NgModule({
