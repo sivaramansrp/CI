@@ -3,13 +3,67 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 export interface Tramite5601State {
-    [key: string]: any;
-}
+    // formularioCertificacion
+    tieneCertificacion: boolean;
+    certificacionEmpresa: string;
+    otraCertificacion: string;
 
+    // formulario
+    aduana: string;
+    seccionAduanera: string;
+    tipoOperacion: string;
+    fechaOperacion: string;
+    motivoDespachoDomicilio: string;
+    observaciones: string;
+
+    // formularioMercancia
+    especificacionesMercancia: string;
+    descripcionMercancia: string;
+    tipoMoneda: string;
+    valorMercancia: string;
+
+    // formularioLogistica
+    esquemasControlSeguridad: string;
+    distanciaRutaTiempos: string;
+
+    // formularioUbicacionMercancia
+    direccion: string;
+    telefono: string;
+    distanciaAduana: string;
+    referencias: string;
+
+    // Index signature for dynamic keys
+    [key: string]: unknown;
+}
 
 export function createInitialState(): Tramite5601State {
-    return {};
+    return {
+        tieneCertificacion: false,
+        certificacionEmpresa: '',
+        otraCertificacion: '',
+
+        aduana: '',
+        seccionAduanera: '',
+        tipoOperacion: '',
+        fechaOperacion: '',
+        motivoDespachoDomicilio: '',
+        observaciones: '',
+
+        especificacionesMercancia: '',
+        descripcionMercancia: '',
+        tipoMoneda: '',
+        valorMercancia: '',
+
+        esquemasControlSeguridad: '',
+        distanciaRutaTiempos: '',
+
+        direccion: '',
+        telefono: '',
+        distanciaAduana: '',
+        referencias: ''
+    };
 }
+
 
 /**
  * Marca esta clase como un servicio inyectable en Angular.
@@ -43,15 +97,14 @@ export class Tramite5601Store extends Store<Tramite5601State> {
         super(createInitialState());
     }
 
-    /**
-   * Set a value dynamically in the store by field name.
-   * @param fieldName The name of the field to update.
-   * @param value The value to set.
-   */
-  public setDynamicFieldValue(fieldName: string, value: any): void {
-    this.update((state) => ({
-      ...state,
-      [fieldName]: value,
-    }));
-  }
-  }
+    public setDynamicFieldValue<TKey extends keyof Tramite5601State>(
+        fieldName: TKey,
+        value: Tramite5601State[TKey]
+    ): void {
+        this.update((state) => ({
+            ...state,
+            [fieldName]: value,
+        }));
+    }
+
+}
