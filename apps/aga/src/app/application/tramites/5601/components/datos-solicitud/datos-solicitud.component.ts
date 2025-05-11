@@ -2,8 +2,10 @@ import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
+import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
 import { CommonModule } from '@angular/common';
+import { FORMULARIO_LOGISTICA_OPERACIONES, FORMULARIO_DETALLES, MERCANCIA_DETALLES } from '../../constantes/tramite5601.enum';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 import seleccionarOpciones from '@libs/shared/theme/assets/json/5601/selector-5601.json'
 /**
@@ -13,7 +15,7 @@ import seleccionarOpciones from '@libs/shared/theme/assets/json/5601/selector-56
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule, TituloComponent,FormasDinamicasComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
@@ -23,17 +25,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Formulario principal para los datos de la solicitud.
    */
   formulario!: FormGroup;
-
-  /**
-   * Formulario para los datos relacionados con la mercancía.
-   */
-  formularioMercancia!: FormGroup;
-
-  /**
-   * Formulario para los datos relacionados con la logística.
-   */
-  formularioLogistica!: FormGroup;
-
   /**
    * Formulario para los datos relacionados con la ubicación de la mercancía.
    */
@@ -75,6 +66,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  */
   private destroyed$: Subject<void> = new Subject();
 
+  public formularioDatosSolicitud = FORMULARIO_DETALLES;
+
+  public formularioDatosMercancia = MERCANCIA_DETALLES;
+
+  public formularioLogisticaOperaciones = FORMULARIO_LOGISTICA_OPERACIONES;
+
+  
+
   /**
    * Constructor del componente.
    * Inicializa los catálogos y servicios necesarios.
@@ -89,61 +88,101 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tipoMoneda = seleccionarOpciones?.tipoMoneda;
   }
 
+
+  public forma: FormGroup = new FormGroup({
+    ninoFormGroup: new FormGroup({}),
+  });
+
+  public formularioMercancia: FormGroup = new FormGroup({
+    mercanciaFormGroup: new FormGroup({}),
+  });
+
+  public formularioLogistica: FormGroup = new FormGroup({
+    logisticaFormGroup: new FormGroup({}),
+  });
+
+  get formularioFormGroup(): FormGroup {
+    return this.forma.get('ninoFormGroup') as FormGroup;
+  }
+
+  get datosMercanciaFormGroup(): FormGroup {
+    return this.formularioMercancia.get('mercanciaFormGroup') as FormGroup;
+  }
+
+  get formularioLogisticaFormGroup(): FormGroup {
+    return this.formularioLogistica.get('logisticaFormGroup') as FormGroup;
+  }
+
+
   /**
    * Método del ciclo de vida de Angular que se llama al inicializar el componente.
    * Configura los formularios y suscribe a los cambios en el estado del trámite.
    */
   ngOnInit(): void {
-    this.tramite5601Query.selectCertificacion$
+      this.tramite5601Query.selectCertificacion$
       .pipe(
         takeUntil(this.destroyed$),
         map((datosSolicitudState) => {
-          // this.DatosSolicitudState = datosSolicitudState;
+          this.DatosSolicitudState = datosSolicitudState;
         })
       )
       .subscribe();
 
-    // Configuración del formulario principal
-    this.formulario = this.fb.group({
-      aduana: [this.DatosSolicitudState.aduana, Validators.required],
-      seccionAduanera: [this.DatosSolicitudState.seccionAduanera],
-      tipoOperacion: [this.DatosSolicitudState.tipoOperacion, Validators.required],
-      fechaOperacion: [this.DatosSolicitudState.fechaOperacion, Validators.required],
-      motivoDespachoDomicilio: [this.DatosSolicitudState.motivoDespachoDomicilio, Validators.required],
-      observaciones: [this.DatosSolicitudState.observaciones]
-    });
+      this.formularioDatosSolicitud = FORMULARIO_DETALLES.map(campo => {
+        switch (campo.id) {
+          case 'aduana':
+            return { ...campo, opciones: this.aduanas };
+          case 'seccionAduanera':
+            return { ...campo, opciones: this.seccionAduanera };
+          case 'tipoOperacion':
+            return { ...campo, opciones: this.tipoOperacion };
+          case 'tipoMoneda':
+              return { ...campo, opciones: this.tipoMoneda };
+          default:
+            return campo;
+        }
+      });
+
+      this.formularioDatosMercancia = MERCANCIA_DETALLES.map(campo => {
+        switch (campo.id) {
+          case 'tipoMoneda':
+              return { ...campo, opciones: this.tipoMoneda };
+          default:
+            return campo;
+        }
+      });
 
     // Configuración del formulario de mercancía
-    this.formularioMercancia = this.fb.group({
-      especificacionesMercancia: [this.DatosSolicitudState.especificacionesMercancia, Validators.required],
-      descripcionMercancia: [this.DatosSolicitudState.descripcionMercancia, Validators.required],
-      tipoMoneda: [this.DatosSolicitudState.tipoMoneda, Validators.required],
-      valorMercancia: [this.DatosSolicitudState.valorMercancia, Validators.required],
-    });
+    // this.formularioMercancia = this.fb.group({
+    //   especificacionesMercancia: [this.DatosSolicitudState.especificacionesMercancia, Validators.required],
+    //   descripcionMercancia: [this.DatosSolicitudState.descripcionMercancia, Validators.required],
+    //   tipoMoneda: [this.DatosSolicitudState.tipoMoneda, Validators.required],
+    //   valorMercancia: [this.DatosSolicitudState.valorMercancia, Validators.required],
+    // });
 
     // Configuración del formulario de logística
-    this.formularioLogistica = this.fb.group({
-      esquemasControlSeguridad: [this.DatosSolicitudState.esquemasControlSeguridad, Validators.required],
-      distanciaRutaTiempos: [this.DatosSolicitudState.distanciaRutaTiempos, Validators.required],
-    });
+    // this.formularioLogistica = this.fb.group({
+    //   esquemasControlSeguridad: [this.DatosSolicitudState.esquemasControlSeguridad, Validators.required],
+    //   distanciaRutaTiempos: [this.DatosSolicitudState.distanciaRutaTiempos, Validators.required],
+    // });
 
     // Configuración del formulario de ubicación de mercancía
-    this.formularioUbicacionMercancia = this.fb.group({
-      direccion: [this.DatosSolicitudState.direccion, Validators.required],
-      telefono: [this.DatosSolicitudState.telefono, Validators.required],
-      distanciaAduana: [this.DatosSolicitudState.distanciaAduana, Validators.required],
-      referencias: [this.DatosSolicitudState.referencias, Validators.required],
-    });
+    // this.formularioUbicacionMercancia = this.fb.group({
+    //   direccion: [this.DatosSolicitudState.direccion, Validators.required],
+    //   telefono: [this.DatosSolicitudState.telefono, Validators.required],
+    //   distanciaAduana: [this.DatosSolicitudState.distanciaAduana, Validators.required],
+    //   referencias: [this.DatosSolicitudState.referencias, Validators.required],
+    // });
   }
 
-  /**
-   * Método que se ejecuta al cambiar el tipo de operación.
-   * Actualiza el estado para mostrar la fecha de operación y guarda el valor en el store.
-   */
+
   alCambiarTipoOperacion(): void {
-    this.mostrarFechaOperacion = true;
-    this.setValoresStore(this.formulario, 'tipoOperacion', 'setTipoOperacion');
+    const CAMPO_FECHA_OPERACION = this.formularioDatosSolicitud.find(f => f.campo === 'fechaOperacion');
+    if (CAMPO_FECHA_OPERACION) {
+      CAMPO_FECHA_OPERACION.mostrar = true;
+    }
   }
+  
 
   /**
    * Método genérico para actualizar valores en el store.
@@ -155,6 +194,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+
+      if (event.campo === 'tipoOperacion') {
+        this.alCambiarTipoOperacion();
+      }
+    }
+  }
+  
 
   /**
 * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

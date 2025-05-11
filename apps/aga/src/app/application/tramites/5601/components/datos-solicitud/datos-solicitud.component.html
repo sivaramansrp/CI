@@ -1,4 +1,5 @@
-<form [formGroup]="formulario">
+<!-- <form [formGroup]="formulario">
+
     <div class="container">
         <div class="row mb-3">
             <div class="col-md-6">
@@ -47,8 +48,21 @@
             </div>
         </div>
     </div>
-</form>
-<form [formGroup]="formularioMercancia">
+</form> -->
+<form [formGroup]="forma">
+    <div class="row mb-3">
+      <formas-dinamicas
+        [forma]="formularioFormGroup"
+        [formularioDatos]="formularioDatosSolicitud"
+        [estado]="DatosSolicitudState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>
+  
+
+
+ <!-- <form [formGroup]="formularioMercancia">
     <div class="container">
         <ng-titulo titulo="Datos de la mercancía" />
 
@@ -91,8 +105,22 @@
             </div>
         </div>
     </div>
-</form>
-<form [formGroup]="formularioLogistica">
+</form> -->
+
+
+<form [formGroup]="formularioMercancia">
+    <div class="row mb-3">
+      <formas-dinamicas
+        formularioTitulo="Datos de la mercancía"
+        [forma]="datosMercanciaFormGroup"
+        [formularioDatos]="formularioDatosMercancia"
+        [estado]="DatosSolicitudState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>
+
+<!-- <form [formGroup]="formularioLogistica">
     <div class="container">
         <ng-titulo titulo="Logística de las operaciones" />
         <div class="row mb-3">
@@ -119,8 +147,21 @@
             </div>
         </div>
     </div>
-</form>
-<form [formGroup]="formularioUbicacionMercancia">
+</form> -->
+
+<form [formGroup]="formularioLogistica">
+    <div class="row mb-3">
+      <formas-dinamicas
+        formularioTitulo="Logística de las operaciones"
+        [forma]="formularioLogisticaFormGroup"
+        [formularioDatos]="formularioLogisticaOperaciones"
+        [estado]="DatosSolicitudState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>
+
+<!-- <form [formGroup]="formularioUbicacionMercancia">
     <div class="container">
         <ng-titulo titulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante" />
 
@@ -165,4 +206,4 @@
             </div>
         </div>
     </div>
-</form>
+</form>  -->
