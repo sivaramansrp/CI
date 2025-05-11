@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FORMULARIO_DETALLES,FORMULARIO_LOGISTICA_OPERACIONES,MERCANCIA_DETALLES, UBICACION_MERCANCIA } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
+import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
