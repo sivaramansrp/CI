@@ -15,7 +15,7 @@ class MockTramite11101Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
-describe('SolicitantePageComponent', () => {
+fdescribe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
   let Tramite11101QueryMock: jest.Mocked<Tramite11101Query>;

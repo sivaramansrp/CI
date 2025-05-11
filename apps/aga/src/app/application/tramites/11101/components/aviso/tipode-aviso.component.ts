@@ -1,23 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import mockData from '@libs/shared/theme/assets/json/11101/aviso-mockdata.json';
-import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { CommonModule } from '@angular/common';
+import { MercanciaComponent } from '../mercancia/mercancia.component';
+import mockData from '@libs/shared/theme/assets/json/11101/aviso-mockdata.json';
+
+
 @Component({
     selector: 'app-tipode-aviso',
     templateUrl: './tipode-aviso.component.html',
     styleUrls: ['./tipode-aviso.component.scss'],
     standalone: true,
-    imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule,TableComponent]
+    imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, TableComponent]
 })
 export class TipodeAvisoComponent implements OnInit {
+    /**
+     * Indica si el modo manual está seleccionado.
+     * @type {boolean}
+     */
     isManualSelected: boolean = false;
+
+    /**
+     * Indica si la carga masiva está habilitada.
+     * @type {boolean}
+     */
     CargaMasiva: boolean = false;
+
+    /**
+     * Formulario reactivo para capturar los datos del aviso.
+     * @type {FormGroup}
+     */
     avisoForm!: FormGroup;
-    constructor(private fb: FormBuilder) { }
+
+    /**
+     * Constructor de la clase. Inicializa el FormBuilder.
+     * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
+     */
+    constructor(private formBuilder: FormBuilder) {}
+
+    /**
+     * Método de inicialización del componente.
+     * Configura el formulario reactivo con los campos necesarios.
+     */
     ngOnInit(): void {
-        this.avisoForm = this.fb.group({
+        this.avisoForm = this.formBuilder.group({
             numeroderegistro: [''],
             NobmreDenominationRazonSocial: [''],
             rfctaxid: [''],
@@ -33,9 +59,11 @@ export class TipodeAvisoComponent implements OnInit {
             entrecalle: [''],
             ycalle: [''],
         });
-        this.setFormValues();
     }
 
+    /**
+     * Establece los valores del formulario utilizando datos simulados.
+     */
     setFormValues(): void {
         this.avisoForm.get('numeroderegistro')?.setValue(mockData.numeroderegistro);
         this.avisoForm.get('NobmreDenominationRazonSocial')?.setValue(mockData.NobmreDenominationRazonSocial);
@@ -53,16 +81,12 @@ export class TipodeAvisoComponent implements OnInit {
         this.avisoForm.get('ycalle')?.setValue(mockData.ycalle);
     }
 
-    setManual(value: boolean): void {
-        if (this.isManualSelected) {
-            this.CargaMasiva = false;
-            this.isManualSelected = value;
-        } else {
-            this.CargaMasiva = true;
-            this.isManualSelected = value;
-        }
-        console.log('Manual selected:', this.isManualSelected);
+    /**
+     * Cambia el modo entre manual y carga masiva.
+     * @param {boolean} isManual - Indica si el modo manual debe ser seleccionado.
+     */
+    setManual(isManual: boolean): void {
+        this.isManualSelected = isManual;
+        this.CargaMasiva = !isManual;
     }
-
-
 }

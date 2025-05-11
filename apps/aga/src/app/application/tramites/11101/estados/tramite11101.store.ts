@@ -1,7 +1,7 @@
+import { DiscripccionDeLaMercanciaForm } from '../models/transportacion-maritima.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { DiscripccionDeLaMercanciaForm } from '../models/transportacion-maritima.model';
 
 /**
  * Modelo de estado para el trámite 40402.

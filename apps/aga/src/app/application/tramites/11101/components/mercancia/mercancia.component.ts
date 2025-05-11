@@ -1,21 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TablePaginationComponent, TituloComponent,TablaDinamicaComponent,TablaSeleccion, TableComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent, TablaSeleccion, TableComponent, TablePaginationComponent, TituloComponent, } from '@libs/shared/data-access-user/src';
 import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
+
 @Component({
     selector: 'app-mercancia',
     templateUrl: './mercancia.component.html',
     standalone: true,
-    imports: [TituloComponent, ReactiveFormsModule, TablePaginationComponent, TablaDinamicaComponent,TableComponent], 
+    imports: [TituloComponent, ReactiveFormsModule, TablePaginationComponent, TablaDinamicaComponent, TableComponent], 
 })
 export class MercanciaComponent implements OnInit {
+    /**
+     * Enumeración para la selección de tablas.
+     * @type {typeof TablaSeleccion}
+     */
     TablaSeleccion = TablaSeleccion;
 
-    mercanciaForm!:FormGroup 
+    /**
+     * Formulario reactivo para capturar los datos de la mercancía.
+     * @type {FormGroup}
+     */
+    mercanciaForm!: FormGroup;
 
+    /**
+     * Lista de descripciones de la mercancía.
+     * @type {DiscripccionDeLaMercanciaForm[]}
+     */
     DiscripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
     
-    constructor(private fb:FormBuilder) { }
+    /**
+     * Constructor de la clase. Inicializa el FormBuilder.
+     * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+     */
+    constructor(private fb: FormBuilder) { }
+
+    /**
+     * Método de inicialización del componente.
+     * Configura el formulario reactivo con los campos necesarios y establece valores iniciales.
+     */
     ngOnInit(): void {
         this.mercanciaForm = this.fb.group({
             estado: [''],
@@ -35,6 +57,10 @@ export class MercanciaComponent implements OnInit {
         });
         this.setFormValues();
     }
+
+    /**
+     * Establece los valores iniciales del formulario de mercancía.
+     */
     setFormValues(): void {
         this.mercanciaForm.get('estado')?.setValue('Nuevo');
         this.mercanciaForm.get('cantidad')?.setValue(1);

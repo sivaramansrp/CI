@@ -19,7 +19,6 @@ describe('SolicitanteComponent', () => {
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
 
-    // Initialize the form group
     component.solicitudForm = formBuilder.group({
       rfc: [''],
       denominacion: [''],

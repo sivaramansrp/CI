@@ -1,23 +1,23 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { MercanciaComponent } from './mercancia.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MercanciaComponent } from './mercancia.component';
 
-// describe('MercanciaComponent', () => {
-//     let component: MercanciaComponent;
-//     let fixture: ComponentFixture<MercanciaComponent>;
+describe('MercanciaComponent', () => {
+    let component: MercanciaComponent;
+    let fixture: ComponentFixture<MercanciaComponent>;
 
-//     beforeEach(async () => {
-//         await TestBed.configureTestingModule({
-//             imports: [MercanciaComponent],
-//         }).compileComponents();
-//     });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [MercanciaComponent],
+        }).compileComponents();
+    });
 
-//     beforeEach(() => {
-//         fixture = TestBed.createComponent(MercanciaComponent);
-//         component = fixture.componentInstance;
-//         fixture.detectChanges();
-//     });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(MercanciaComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-//     it('should create', () => {
-//         expect(component).toBeTruthy();
-//     });
-// });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});
