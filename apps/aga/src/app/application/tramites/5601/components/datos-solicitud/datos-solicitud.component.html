@@ -1,209 +1,30 @@
-<!-- <form [formGroup]="formulario">
-
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" formControlName="aduana"
-                (change)="setValoresStore(formulario, 'aduana', 'setAduana')">
-                </app-catalogo-select>
-            </div>
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="seccionAduanera" [label]="'Sección Aduanera'"
-                    formControlName="seccionAduanera" (change)="setValoresStore(formulario, 'seccionAduanera', 'setSeccionAduanera')">
-                </app-catalogo-select>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="tipoOperacion" [label]="'Tipo de operación'" [required]="true"
-                    formControlName="tipoOperacion" (change)="alCambiarTipoOperacion()">
-                </app-catalogo-select>
-            </div>
-            <div class="col-md-6" *ngIf="mostrarFechaOperacion">
-                <label for="fechaOperacion" class="form-label">Fecha de operación*:</label>
-                <input class="form-control" type="date" id="fechaOperacion" formControlName="fechaOperacion" />
-                @if(formulario.controls['fechaOperacion'].invalid && formulario.controls['fechaOperacion'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="motivoDespachoDomicilio">Motivo o justificación de despacho a
-                    domicilio*:</label>
-                <textarea class="form-control h-25" id="motivoDespachoDomicilio" rows="3"
-                    formControlName="motivoDespachoDomicilio" (change)="setValoresStore(formulario, 'motivoDespachoDomicilio', 'setMotivoDespachoDomicilio')" id="motivoDespachoDomicilio" placeholder=""
-                    title="motivoDespachoDomicilio"></textarea>
-                @if(formulario.controls['motivoDespachoDomicilio'].invalid &&
-                formulario.controls['motivoDespachoDomicilio'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-            <div class="col-md-6">
-                <label for="observaciones">Observaciones</label>
-                <textarea class="form-control h-25" id="observaciones" rows="3" formControlName="observaciones" (change)="setValoresStore(formulario, 'observaciones', 'setObservaciones')"
-                    id="observaciones" placeholder="" title="observaciones"></textarea>
-            </div>
-        </div>
-    </div>
-</form> -->
 <form [formGroup]="forma">
     <div class="row mb-3">
-      <formas-dinamicas
-        [forma]="formularioFormGroup"
-        [formularioDatos]="formularioDatosSolicitud"
-        [estado]="DatosSolicitudState"
-        (emitirCambioDeValor)="establecerCambioDeValor($event)"
-      ></formas-dinamicas>
+        <formas-dinamicas [forma]="formularioFormGroup" [formularioDatos]="formularioDatosSolicitud"
+            [estado]="DatosSolicitudState" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
-  </form>
-  
-
-
- <!-- <form [formGroup]="formularioMercancia">
-    <div class="container">
-        <ng-titulo titulo="Datos de la mercancía" />
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="valorMercancia">Valor de la mercancía*:</label>
-                <input class="form-control" type="text" id="valorMercancia" formControlName="valorMercancia" (change)="setValoresStore(formularioMercancia, 'valorMercancia', 'setValorMercancia')" />
-                @if(formularioMercancia.controls['valorMercancia'].invalid &&
-                formularioMercancia.controls['valorMercancia'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="tipoMoneda" [label]="'Tipo de moneda'" [required]="true"
-                    formControlName="tipoMoneda" (change)="setValoresStore(formularioMercancia, 'tipoMoneda', 'setTipoMoneda')">
-                </app-catalogo-select>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="motivoDespachoDomicilio">Nombre o descripción comercial de la mercancía*:</label>
-                <textarea class="form-control h-25" rows="3"
-                    formControlName="descripcionMercancia" (change)="setValoresStore(formularioMercancia, 'descripcionMercancia', 'setDescripcionMercancia')" id="descripcionMercancia" placeholder=""
-                    title="descripcionMercancia"></textarea>
-                @if(formularioMercancia.controls['descripcionMercancia'].invalid &&
-                formularioMercancia.controls['descripcionMercancia'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-            <div class="col-md-6">
-                <label for="observaciones">Descripción detallada y/o especificaciones técnicas de la
-                    mercancía*:</label>
-                <textarea class="form-control h-25" id="especificacionesMercancia" rows="3"
-                    formControlName="especificacionesMercancia" (change)="setValoresStore(formularioMercancia, 'especificacionesMercancia', 'setEspecificacionesMercancia')" placeholder="" title="observaciones"></textarea>
-                @if(formularioMercancia.controls['especificacionesMercancia'].invalid &&
-                formularioMercancia.controls['especificacionesMercancia'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-    </div>
-</form> -->
-
+</form>
 
 <form [formGroup]="formularioMercancia">
     <div class="row mb-3">
-      <formas-dinamicas
-        formularioTitulo="Datos de la mercancía"
-        [forma]="datosMercanciaFormGroup"
-        [formularioDatos]="formularioDatosMercancia"
-        [estado]="DatosSolicitudState"
-        (emitirCambioDeValor)="establecerCambioDeValor($event)"
-      ></formas-dinamicas>
+        <formas-dinamicas formularioTitulo="Datos de la mercancía" [forma]="datosMercanciaFormGroup"
+            [formularioDatos]="formularioDatosMercancia" [estado]="DatosSolicitudState"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
-  </form>
-
-<!-- <form [formGroup]="formularioLogistica">
-    <div class="container">
-        <ng-titulo titulo="Logística de las operaciones" />
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="esquemasControlSeguridad
-                ">Señale los esquemas de control y seguridad de las operaciones*:</label>
-                <textarea class="form-control h-25" id="esquemasControlSeguridad" rows="3"
-                    formControlName="esquemasControlSeguridad" (change)="setValoresStore(formularioLogistica, 'esquemasControlSeguridad', 'setEsquemasControlSeguridad')" placeholder=""
-                    title="esquemasControlSeguridad"></textarea>
-                @if(formularioLogistica.controls['esquemasControlSeguridad'].invalid &&
-                formularioLogistica.controls['esquemasControlSeguridad'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-            <div class="col-md-6">
-                <label for="distanciaRutaTiempos">Indique distancia, ruta y tiempos de las
-                    operaciones*:</label>
-                <textarea class="form-control h-25" id="distanciaRutaTiempos" rows="3"
-                    formControlName="distanciaRutaTiempos" (change)="setValoresStore(formularioLogistica, 'distanciaRutaTiempos', 'setDistanciaRutaTiempos')" placeholder="" title="distanciaRutaTiempos"></textarea>
-                @if(formularioLogistica.controls['distanciaRutaTiempos'].invalid &&
-                formularioLogistica.controls['distanciaRutaTiempos'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-    </div>
-</form> -->
+</form>
 
 <form [formGroup]="formularioLogistica">
     <div class="row mb-3">
-      <formas-dinamicas
-        formularioTitulo="Logística de las operaciones"
-        [forma]="formularioLogisticaFormGroup"
-        [formularioDatos]="formularioLogisticaOperaciones"
-        [estado]="DatosSolicitudState"
-        (emitirCambioDeValor)="establecerCambioDeValor($event)"
-      ></formas-dinamicas>
+        <formas-dinamicas formularioTitulo="Logística de las operaciones" [forma]="formularioLogisticaFormGroup"
+            [formularioDatos]="formularioLogisticaOperaciones" [estado]="DatosSolicitudState"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
-  </form>
+</form>
 
-<!-- <form [formGroup]="formularioUbicacionMercancia">
-    <div class="container">
-        <ng-titulo titulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante" />
-
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="direccion">Dirección*:</label>
-                <input class="form-control" type="text" id="direccion" formControlName="direccion" (change)="setValoresStore(formularioUbicacionMercancia, 'direccion', 'setDireccion')" />
-                @if(formularioUbicacionMercancia.controls['direccion'].invalid &&
-                formularioUbicacionMercancia.controls['direccion'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="telefono">Teléfono*:</label>
-                <input class="form-control" type="text" id="telefono" formControlName="telefono" (change)="setValoresStore(formularioUbicacionMercancia, 'telefono', 'setTelefono')"/>
-                @if(formularioUbicacionMercancia.controls['telefono'].invalid &&
-                formularioUbicacionMercancia.controls['telefono'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="distanciaAduana">Distancia a la aduana (km):*</label>
-                <input class="form-control" type="text" id="distanciaAduana" formControlName="distanciaAduana" (change)="setValoresStore(formularioUbicacionMercancia, 'distanciaAduana', 'setDistanciaAduana')"/>
-                @if(formularioUbicacionMercancia.controls['distanciaAduana'].invalid &&
-                formularioUbicacionMercancia.controls['distanciaAduana'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="referencias">Referencias*:</label>
-                <input class="form-control" type="text" id="referencias" formControlName="referencias" (change)="setValoresStore(formularioUbicacionMercancia, 'referencias', 'setReferencias')"/>
-                @if(formularioUbicacionMercancia.controls['referencias'].invalid &&
-                formularioUbicacionMercancia.controls['referencias'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-            </div>
-        </div>
+<form [formGroup]="formularioUbicacion">
+    <div class="row mb-3">
+        <formas-dinamicas formularioTitulo="Lugar en que se encuentra la mercancía en el domicilio del solicitante"
+            [forma]="formularioUbicacionFormGroup" [formularioDatos]="formularioUbicacionMercancia"
+            [estado]="DatosSolicitudState" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
-</form>  -->
+</form>

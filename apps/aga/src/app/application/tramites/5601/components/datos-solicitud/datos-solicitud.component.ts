@@ -1,10 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FORMULARIO_DETALLES,FORMULARIO_LOGISTICA_OPERACIONES,MERCANCIA_DETALLES, UBICACION_MERCANCIA } from '../../constantes/tramite5601.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite5601State, Tramite5601Store } from '../../estados/stores/tramite5601new.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { FORMULARIO_LOGISTICA_OPERACIONES, FORMULARIO_DETALLES, MERCANCIA_DETALLES } from '../../constantes/tramite5601.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 import seleccionarOpciones from '@libs/shared/theme/assets/json/5601/selector-5601.json'
@@ -15,20 +15,11 @@ import seleccionarOpciones from '@libs/shared/theme/assets/json/5601/selector-56
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule, TituloComponent,FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule,FormasDinamicasComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
-
-  /**
-   * Formulario principal para los datos de la solicitud.
-   */
-  formulario!: FormGroup;
-  /**
-   * Formulario para los datos relacionados con la ubicación de la mercancía.
-   */
-  formularioUbicacionMercancia!: FormGroup;
 
   /**
    * Catálogo de aduanas disponibles.
@@ -72,6 +63,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   public formularioLogisticaOperaciones = FORMULARIO_LOGISTICA_OPERACIONES;
 
+  public formularioUbicacionMercancia = UBICACION_MERCANCIA
+
   
 
   /**
@@ -101,6 +94,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     logisticaFormGroup: new FormGroup({}),
   });
 
+  public formularioUbicacion: FormGroup = new FormGroup({
+    ubicacionFormGroup: new FormGroup({}),
+  });
+
   get formularioFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
@@ -111,6 +108,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   get formularioLogisticaFormGroup(): FormGroup {
     return this.formularioLogistica.get('logisticaFormGroup') as FormGroup;
+  }
+
+  get formularioUbicacionFormGroup(): FormGroup {
+    return this.formularioUbicacion.get('ubicacionFormGroup') as FormGroup;
   }
 
 
@@ -151,28 +152,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
             return campo;
         }
       });
-
-    // Configuración del formulario de mercancía
-    // this.formularioMercancia = this.fb.group({
-    //   especificacionesMercancia: [this.DatosSolicitudState.especificacionesMercancia, Validators.required],
-    //   descripcionMercancia: [this.DatosSolicitudState.descripcionMercancia, Validators.required],
-    //   tipoMoneda: [this.DatosSolicitudState.tipoMoneda, Validators.required],
-    //   valorMercancia: [this.DatosSolicitudState.valorMercancia, Validators.required],
-    // });
-
-    // Configuración del formulario de logística
-    // this.formularioLogistica = this.fb.group({
-    //   esquemasControlSeguridad: [this.DatosSolicitudState.esquemasControlSeguridad, Validators.required],
-    //   distanciaRutaTiempos: [this.DatosSolicitudState.distanciaRutaTiempos, Validators.required],
-    // });
-
-    // Configuración del formulario de ubicación de mercancía
-    // this.formularioUbicacionMercancia = this.fb.group({
-    //   direccion: [this.DatosSolicitudState.direccion, Validators.required],
-    //   telefono: [this.DatosSolicitudState.telefono, Validators.required],
-    //   distanciaAduana: [this.DatosSolicitudState.distanciaAduana, Validators.required],
-    //   referencias: [this.DatosSolicitudState.referencias, Validators.required],
-    // });
   }
 
 

@@ -226,4 +226,64 @@ export const MERCANCIA_DETALLES = [
       habilitado: true
     }
   ];
+
+  export const UBICACION_MERCANCIA= [
+    {
+      id: 'direccion',
+      labelNombre: 'Dirección',
+      campo: 'direccion',
+      clase: 'col-md-12',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [{ tipo: 'required' }],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    },
+    {
+      id: 'telefono',
+      labelNombre: 'Teléfono',
+      campo: 'telefono',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [{ tipo: 'required' }],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    },
+    {
+      id: 'distanciaAduana',
+      labelNombre: 'Distancia a la aduana (km)',
+      campo: 'distanciaAduana',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [{ tipo: 'required' }],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    },
+    {
+      id: 'referencias',
+      labelNombre: 'Referencias',
+      campo: 'referencias',
+      clase: 'col-md-12',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [{ tipo: 'required' }],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    }
+  ];
+  
   
