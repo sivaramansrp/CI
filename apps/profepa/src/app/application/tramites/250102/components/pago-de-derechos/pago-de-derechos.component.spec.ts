@@ -154,7 +154,7 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDerechosForm.controls['importe'].setValue('5678');
     component.setValoresStore(component.pagoDerechosForm, 'importe');
   });
-
+ 
   it('should call setRevisados store method when updating revisados', () => {
     component.pagoDerechosForm.controls['revisados'].setValue(false);
     component.setValoresStore(component.pagoDerechosForm, 'revisados');
