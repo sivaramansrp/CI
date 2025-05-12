@@ -1,5 +1,3 @@
-import { Detalle } from "../models/flora-fauna.models";
-
 /** Constante que representa las etapas del proceso de flora y fauna. */
 export const FLORA_FAUNA = [
   {

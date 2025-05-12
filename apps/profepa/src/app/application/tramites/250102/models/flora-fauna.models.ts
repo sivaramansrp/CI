@@ -302,6 +302,14 @@ export const CONFIGURATION_TABLA_REQUISITOS = [
   },
 ];
 
+export const CERTIFICADO_MODAL_TABLA = [
+  {
+    encabezado: 'Certificado',
+    clave: (item: CertificadoModal) => item.certificado,
+    orden: 1
+  }
+];
+
 /**
  * Representa los datos de las columnas de una tabla de certificados.
  * Contiene un arreglo con los nombres de las columnas que se mostrarán en la tabla.
@@ -320,3 +328,10 @@ export interface DestinatarioTablaDatos {
   columns: string[];
 }
 
+/**
+ * Interfaz que define la estructura de los datos de certificados para el modal.
+ */
+export interface CertificadoModal {
+  id: number;
+  certificado: string;
+}
