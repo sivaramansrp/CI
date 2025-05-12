@@ -59,7 +59,7 @@
     "id": 9,
     "tramite": 10301,
     "linkDashboard": "/aga/importador-exportador/solicitud",
-    "linkDepartment": "/pago/importador-exportador/solicitud",
+    "linkDepartment": "/aga/importador-exportador/solicitud",
     "department": "aga"
   },
   {
@@ -899,7 +899,7 @@
     "id": 129,
     "tramite": 10302,
     "linkDashboard": "/aga/exencion-impuestos/solicitud",
-    "linkDepartment": "/pago/exencion-impuestos/solicitud",
+    "linkDepartment": "/aga/exencion-impuestos/solicitud",
     "department": "aga"
   },
   {
