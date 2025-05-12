@@ -10,6 +10,7 @@ import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
 import { Tramite103Query } from '../estados/tramite103.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/103/mercancia-table.json';
+import { RADIO_OPCIONS } from '../constants/exencion-impuestos.enum';
 
 /**
  * Componente para la gestión de exención de impuestos
@@ -137,10 +138,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio
    */
-  radioOpcions = [
-    { label: 'Sí', value: 'sí' },
-    { label: 'No', value: 'no' }
-  ];
+  radioOpcions = RADIO_OPCIONS;
 
   /**
    * Constructor del componente
