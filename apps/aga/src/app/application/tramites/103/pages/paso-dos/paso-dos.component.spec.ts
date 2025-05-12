@@ -5,7 +5,6 @@ import { of, Subject, throwError } from 'rxjs';
 import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent, AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-// Mock the JSON import
 jest.mock('@libs/shared/theme/assets/json/103/document-list.json', () => ({
   documentosSeleccionados: [
     {
@@ -123,7 +122,6 @@ describe('PasoDosComponent', () => {
     });
 
     it('should unsubscribe from observables on ngOnDestroy', () => {
-      // Mock a subscription to test unsubscription
       const mockSubscription = { unsubscribe: jest.fn() };
       component['destroy$'] = { next: jest.fn(), complete: jest.fn() } as any;
       

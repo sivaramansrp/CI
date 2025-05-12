@@ -10,25 +10,20 @@ describe('ExencionImpuestosService', () => {
   let httpMock: HttpTestingController;
   let mockStore: Partial<Tramite103Store>;
 
-  // Mock catalog item
   const mockCatalogo: Catalogo = {
     id: 1,
     descripcion: 'Test Item Description',
     clave: 'TEST001',
-    tam: 'M',
-    dpi: '300',
     relacionadaUmtId: 5,
     relacionadaAcotacionId: 10
   };
 
-  // Mock data for catalog responses
   const mockCatalogResponse: RespuestaCatalogos = {
     code: 200,
     data: [mockCatalogo],
     message: 'Success'
   };
 
-  // Mock data for mercancia based on the interface
   const mockMercanciaData: DatosDelMercancia = {
     id: 1,
     tipoDeMercancia: 'Electrónica',
@@ -56,7 +51,6 @@ describe('ExencionImpuestosService', () => {
 
   beforeEach(() => {
     mockStore = {
-      // Add any store methods used by the service
     };
 
     TestBed.configureTestingModule({
