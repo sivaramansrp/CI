@@ -1,0 +1,11 @@
+<div class="container field-height">
+    <div class="row">
+        <formas-dinamicas [formularioTitulo]="'Datos de la solicitud'" [forma]="datosImportacionTemporalFormulario"
+            [formularioDatos]="formularioDatosSolicitud" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+</div>
+@if(showDatosRetornoProrroga){
+<app-datos-retorno-prorroga></app-datos-retorno-prorroga>
+}
+<app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
