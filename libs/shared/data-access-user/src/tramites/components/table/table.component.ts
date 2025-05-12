@@ -87,7 +87,7 @@ export class TableComponent implements OnInit, OnChanges {
    * @param data - Arreglo de elementos a los que se desea asegurar la propiedad `selected`.
    * @returns Un nuevo arreglo con los elementos actualizados.
    */
-  private agregarSeleccion(data: any[]): any[] {
+  private agregarSeleccion(data: TableBodyData[]): TableBodyData[] {
     if (!this.tableData) {
       this.tableData = { tableHeader: [], tableBody: [] };
     }

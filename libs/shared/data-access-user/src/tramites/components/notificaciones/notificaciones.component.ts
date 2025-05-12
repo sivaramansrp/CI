@@ -3,9 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewC
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ToastrService } from 'ngx-toastr';
 import { PreviewDocumentoComponent } from '../preview-documento/preview-documento.component';
-import { title } from 'process';
+import { ToastrService } from 'ngx-toastr';
 
 
 /**

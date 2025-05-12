@@ -1,5 +1,4 @@
 import {
-  CatalogoDocumento,
   CatalogoPaises,
   CatalogoResponse,
   RespuestaCatalogos,
