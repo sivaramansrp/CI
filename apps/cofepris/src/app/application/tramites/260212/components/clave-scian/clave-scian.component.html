@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Instalaciones</h5>
+        </div>
+        <div class="modal-body">
+            <ng-container>
+                <ng-titulo titulo="Clave S.C.I.A.N"></ng-titulo>
+                <form [formGroup]="claveForm">
+                    <div class="row m-2">
+                        <div class="col-md-6 padding-align">
+                            <app-catalogo-select [catalogo]="clave" [label]="'Clave S.C.I.A.N*:'" [required]="true"
+                                name="clave" formControlName="clave" (change)="getMunicipios()">
+                            </app-catalogo-select>
+                        </div>
+                        <div class="col-md-6">
+                            <app-catalogo-select [catalogo]="clave" [label]="'Descripción del S.C.I.A.N*:'"
+                                [required]="true" name="descripcion" formControlName="descripcion">
+                            </app-catalogo-select>
+                        </div>
+                    </div>
+                </form>
+            </ng-container>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-dark">Limpiar</button>
+            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+            <button type="button" class="btn btn-success">Agregar</button>
+        </div>
+    </div>
+</div>

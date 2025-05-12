@@ -1,6 +1,7 @@
 import { Login, TokenResponse } from '../../../models/shared/inicio-sesion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
@@ -9,9 +10,16 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class InicioSesionService {
   urlServer = enviroment.URL_SERVER;
 
-  constructor(private http: HttpClient) {}
+  constructor(public http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
-  obtenerToken(body: Login) {
+  /**
+   * Obtiene un token de autenticación enviando las credenciales de inicio de sesión.
+   * @param body - Objeto con las credenciales de inicio de sesión.
+   * @returns Observable que emite la respuesta con el token de autenticación.
+   */
+  obtenerToken(body: Login): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.urlServer}/login`, body);
   }
 }

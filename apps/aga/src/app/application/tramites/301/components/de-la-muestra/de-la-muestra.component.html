@@ -1,33 +1,49 @@
-
-
 <div class="container">
-    <ng-titulo titulo="Información de la muestra en despacho" />
-    <form [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
-        <div formGroupName="datosImportadorExportador">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="form-group" >
-               
-                 <app-catalogo-select [catalogo]="mercancia" formControlName="mercancia" [label]="'¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?'"
-          [required]="true" name="mercancia"  (change)="mercanciaSeleccion()" ></app-catalogo-select>
-              </div>
-            </div>
-          
-  
-          
-          
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="folio">Folio anterior:  </label>
-                <input class="form-control" id="folio" formControlName="folio"  type="text">
-              </div>
-            </div>
+  <ng-titulo titulo="Información de la muestra en despacho" />
+  <form [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
+    <div formGroupName="datosImportadorExportador">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="mercancia"
+              formControlName="mercancia"
+              [label]="
+                '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?'
+              "
+              [required]="true"
+              name="mercancia"
+              (change)="
+                mercanciaSeleccion();
+                setValoresStore(
+                  Informaciondela,
+                  'datosImportadorExportador.mercancia',
+                  'setMercancia'
+                )
+              "
+            ></app-catalogo-select>
           </div>
         </div>
-       
-          
-        
 
-    </form>
-    
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="folio">Folio anterior: </label>
+            <input
+              class="form-control"
+              id="folio"
+              formControlName="folio"
+              type="text"
+              (change)="
+                setValoresStore(
+                  Informaciondela,
+                  'datosImportadorExportador.folio',
+                  'setFolio'
+                )
+              "
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>

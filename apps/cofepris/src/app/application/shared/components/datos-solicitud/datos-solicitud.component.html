@@ -1,0 +1,80 @@
+<div class="container">
+  <form [formGroup]="forma">
+    
+    <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+    <div class="row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4 d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="abrirModal()"
+        >
+          Seleccionar establecimiento
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="rfcDel"
+            >RFC del responsable sanitario:</label
+          >
+          <input
+            class="form-control"
+            id="rfcDel"
+            placeholder=""
+            type="text"
+            [disabled]="true"
+            formControlName="rfcDel"
+            (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
+          />
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="denominacion"
+            >Denominación o razón social*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacion"
+            placeholder=""
+            type="text"
+            formControlName="denominacion"
+            (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo electrónico*:</label>
+          <input
+            class="form-control"
+            id="correo"
+            placeholder=""
+            type="text"
+            formControlName="correo"
+            (change)="setValoresStore(forma, 'correo', 'setCorreo')"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+  <app-domicillo 
+    [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+    [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
+    [configuracionVisibilidad]="configuracionVisibilidad"
+    [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible">
+  </app-domicillo>
+  <app-manifiestos></app-manifiestos>
+  <app-representante-legal-rfc></app-representante-legal-rfc>
+</div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }

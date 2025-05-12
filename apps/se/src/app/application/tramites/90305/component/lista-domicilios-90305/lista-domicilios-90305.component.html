@@ -1,0 +1,34 @@
+<ng-titulo titulo="Lista de domicilios"></ng-titulo>
+<form >
+
+  <app-tabla-dinamica
+  [configuracionTabla]="configuracionTabla"
+  [datos]="personaparas"
+  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+>
+</app-tabla-dinamica>
+<div class="d-flex justify-content-end align-items-center mt-5 mb-5">
+<!-- Primer botón (inicialmente visible) -->
+  <button
+    *ngIf="!showSecondButton"
+    type="button"
+    class="btn btn-primary"
+    name="Buscardomicilios"
+    (click)="toggleButtons()" >
+    Agregar plantas
+  </button>
+
+<!-- Segundo botón (inicialmente oculto, aparece después de hacer clic en el primer botón) -->
+  <button
+    *ngIf="showSecondButton"
+    type="button"
+    class="btn btn-primary"
+    (click)="toggleButtons()">
+    Eliminar plantas
+  </button>
+</div>
+</form>
+
+
+
+<hr *ngIf="showSecondButton" />

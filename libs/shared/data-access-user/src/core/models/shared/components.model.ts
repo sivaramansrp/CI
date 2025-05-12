@@ -85,16 +85,7 @@ export interface AccionesTabla {
   icono: string;
 }
 
-export interface Pedimento {
-  patente: number;
-  pedimento: number;
-  aduana: number;
-  idTipoPedimento: number;
-  descTipoPedimento: string;
-  numero: string;
-  comprobanteValor: string;
-  pedimentoValidado: boolean;
-}
+
 
 export interface DatosRfcResponse {
   rfc: string;
@@ -118,6 +109,7 @@ export interface TableData {
 
 export interface TableBodyData {
   tbodyData: string[];
+  selected?: boolean;
 }
 
 export interface DatosPageAcuse {

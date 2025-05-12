@@ -1,0 +1,29 @@
+[
+    {
+      "taxId": "TKT852014",
+      "razonSocial": "ssss",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "78503",
+      "estado": "texas"
+    },
+    {
+      "taxId": "PRUEBA",
+      "razonSocial": "P",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "78503",
+      "estado": "texas"
+    },
+    {
+      "taxId": "F997498874C",
+      "razonSocial": "lobitos",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "54543545 ",
+      "estado": " madagascar"
+    }
+  ]

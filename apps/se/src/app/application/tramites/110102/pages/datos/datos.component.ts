@@ -1,5 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PASOS } from '../../constants/exportador-autorizado.enum';
+
+
+/**
+ * Interface representing an action button.
+ */
+export interface AccionBoton {
+  /**
+   * The action to be performed by the button.
+   */
+  accion: string;
+
+  /**
+   * The value associated with the action.
+   */
+  valor: number;
+}
 /**
  * Componente DatosComponent.
  *
@@ -13,18 +31,47 @@ import { Component } from '@angular/core';
 })
 export class DatosComponent {
 
+ /**
+   * Reference to the WizardComponent.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
-   * Índice de la pestaña actualmente seleccionada.
-   * Inicializado a 1 por defecto.
+   * Lista de pasos para el asistente (wizard) de asignación directa.
+   */
+  pantallasPasos: ListaPasosWizard[] = PASOS;
+ 
+  /**
+   * Índice actual del paso en el asistente.
    */
   indice: number = 1;
+ 
+  /**
+   * Clase CSS para aplicar estilos específicos a los elementos de la interfaz.
+   */
+  class: string = 'alert-danger';
+
+    /**
+   * The data for the steps in the wizard.
+   */
+    datosPasos: DatosPasos = {
+      nroPasos: this.pantallasPasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
 
   /**
-   * Método para seleccionar una pestaña específica.
-   *
-   * @param i El índice de la pestaña a seleccionar.
+   * Updates the index value based on the action button event.
+   * @param e The action button event containing the action and value.
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  public getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
 }

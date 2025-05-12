@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row">
+      <ul class="nav menu-tabs">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
+        </li>
+        <li [ngClass]="indice === 2 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(2)">Datos del tramite</a>
+        </li>
+      </ul>
+  
+      <ng-container>
+        @switch (indice) {
+            @case (1) {
+            <solicitante></solicitante>
+            }
+            @case (2) {
+            <datos-del-tramite></datos-del-tramite>
+            }
+        }
+      </ng-container>
+    </div>
+  </div>

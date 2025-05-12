@@ -1,0 +1,60 @@
+<div class="container pago-de-derechos-container">
+
+  <ng-titulo titulo="Pago de derechos" />
+
+  <form [formGroup]="pagoDerechos">
+    <div class="row d-flex pago-de-derechos-form-container">
+      <div class="col-md-4 mt-5">
+        <div class="form-group">
+          <label class="form-label" for="claveDeReferncia">Clave de referencia:</label>
+          <input class="form-control" type="text" id="claveDeReferncia" formControlName="claveDeReferncia"
+            (input)="updateClaveDeReferncia()" />
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <div class="form-group">
+          <label class="form-label" for="cadenaDeLaDependencia">Cadena de la dependencia:</label>
+          <input class="form-control" type="text" id="cadenaDeLaDependencia" formControlName="cadenaDeLaDependencia"
+            (input)="updateCadenaDeLaDependencia()" />
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="dropdownData" [label]="'Banco'" [required]="true" name="dropdownData"
+            id="banco" formControlName="banco" (change)="getMunicipios()"></app-catalogo-select>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <div class="form-group">
+          <label class="form-label" for="llaveDePago">Llave de pago:</label>
+          <input class="form-control" type="text" id="llaveDePago" formControlName="llaveDePago"
+            (input)="updateLlaveDePago()" />
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <div class="input-group">
+          <input-fecha [setFecha]="pagoDerechos.get('fechaDePago')?.value" [datos]="fechaFinalInput"
+            (valorCambiado)="cambioFechaDePago($event)"></input-fecha>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <div class="form-group">
+          <label class="form-label" for="importeDePago">Importe de pago:</label>
+          <input class="form-control" type="text" id="importeDePago" formControlName="importeDePago"
+            (input)="updateImporteDePago()" />
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- borrar datos button -->
+  <div class="col-md-12 text-end mt-3">
+    <button class="btn btn-danger">Borrar datos del pago</button>
+  </div>
+
+</div>

@@ -1,0 +1,319 @@
+<div class="container mt-5">
+  <form class="container" [formGroup]="formularioEmpresa">
+    <ng-titulo titulo="Capturar certificado Kimberley"></ng-titulo>
+  
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="especifique" class="form-label"
+          >Certificado emitidos aprobados:</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="especifique"
+          formControlName="especifique"
+          readonly
+          [disabled]="true"
+        />
+      </div>
+    </div>
+  
+    <div class="row mb-3">
+      <ng-titulo titulo="Datos generales del certificado Kimberley"></ng-titulo>
+      <div class="col-md-6">
+        <label class="form-label" for="numero"
+          >Número del certificado Kimberley:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="numero"
+          formControlName="numero"
+          [ngClass]="{ 'is-invalid': isInvalid('numero') }"
+          (change)="setValoresStore(formularioEmpresa, 'numero', 'setNumero')"
+        />
+        <div *ngIf="isInvalid('numero')" class="invalid-feedback">
+          Este campo es obligatorio.
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <app-catalogo-select
+          [catalogo]="paisesEmisores"
+          [label]="'País emisor del certificado Kimberley:'"
+          [required]="true"
+          formControlName="tipoEmpresa"
+          (change)="onTipoEmpresaChange($event)"
+        ></app-catalogo-select>
+        <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
+          Debe seleccionar un tipo de empresa.
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <label class="form-label" for="nombre"
+          >Nombre en inglés del país emisor del certificado Kimberley:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          formControlName="nombre"
+          [ngClass]="{ 'is-invalid': isInvalid('nombre') }"
+          (change)="setValoresStore(formularioEmpresa, 'nombre', 'setNombre')"
+
+        />
+        <div *ngIf="isInvalid('nombre')" class="invalid-feedback">
+          Este campo es obligatorio.
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mixed Checkbox -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="lineaCheckbox"
+            formControlName="lineaCheckbox"
+            [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox') }"
+            (change)="onLineaCheckboxChange($event)"            />
+          <label class="form-check-label" for="lineaCheckbox">
+            <span>Mixed</span>
+          </label>
+          <div *ngIf="isInvalid('lineaCheckbox')" class="invalid-feedback">
+            Debe seleccionar esta opción.
+          </div>
+        </div>
+      </div>
+  
+      <!-- País de origen -->
+      <div class="col-md-6">
+        <app-catalogo-select
+          [catalogo]="paisesEmisores"
+          [label]="'País de origen:'"
+          [required]="true"
+          formControlName="paisOrigen"
+          (change)="
+            setValoresStore(formularioEmpresa, 'paisOrigen', 'setPaisOrigen')
+          "
+        ></app-catalogo-select>
+        <div *ngIf="isInvalid('paisOrigen')" class="invalid-feedback">
+          Debe seleccionar un país de origen.
+        </div>
+      </div>
+    </div>
+  </form>
+  
+  <form [formGroup]="datosDelExportador">
+    <div>
+      <ng-titulo titulo="Datos del exportador"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="nombreExportador"
+              >Nombre exportador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="nombreExportador"
+              formControlName="nombreExportador"
+              libUppercase
+              aria-labelledby="nombreExportador"
+              (change) = "getNombreExportador()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="direccionExportador"
+              >Dirección exportador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="direccionExportador"
+              formControlName="direccionExportador"
+              placeholder="PRUEBAS QA CDMX"
+              libUppercase
+              aria-labelledby="direccionExportador"
+              (change) = "getDireccionExportador()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDelImportador">
+    <div>
+      <ng-titulo titulo="Datos del importador"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportador"
+              >Nombre importador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="nombreImportador"
+              formControlName="nombreImportador"
+              libUppercase
+              aria-labelledby="nombreImportador"
+              (change) = "getNombreImportador()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="direccionImportador"
+              >Dirección importador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="direccionImportador"
+              formControlName="direccionImportador"
+              placeholder=""
+              libUppercase
+              aria-labelledby="direccionImportador"
+              (change) = "getDireccionImportador()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDeLaRemesa">
+    <div>
+      <ng-titulo titulo="Datos de la remesa"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="numeroEnLetraDeLosLotes"
+              >Número en letra de los lotes*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroEnLetraDeLosLotes"
+              formControlName="numeroEnLetraDeLosLotes"
+              libUppercase
+              aria-labelledby="numeroEnLetraDeLosLotes"
+              (change) = "getNumeroEnLetraDeLosLotes()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="numeroEnLetraDeLosLotesEnIngles"
+              >Número en letra de los lotes en ingles*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroEnLetraDeLosLotesEnIngles"
+              formControlName="numeroEnLetraDeLosLotesEnIngles"
+              placeholder=""
+              libUppercase
+              aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
+              (change) = "getNumeroEnLetraDeLosLotesEnIngles()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="numeroDeFactura"
+              >Número de factura*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroDeFactura"
+              formControlName="numeroDeFactura"
+              placeholder=""
+              libUppercase
+              aria-labelledby="numeroDeFactura"
+              (change) = "getNumeroDeFactura()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDeLosDiamantes">
+    <div>
+      <ng-titulo titulo="Datos de los diamantes"></ng-titulo>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="cantidadEnQuilates"
+              >Cantidad en Quilates*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="cantidadEnQuilates"
+              formControlName="cantidadEnQuilates"
+              libUppercase
+              aria-labelledby="cantidadEnQuilates"
+              (change) = "getCantidadEnQuilates()"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="valorDeLosDiamantes"
+              >Valor de los diamantes*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="valorDeLosDiamantes"
+              formControlName="valorDeLosDiamantes"
+              placeholder=""
+              libUppercase
+              aria-labelledby="valorDeLosDiamantes"
+              (change) = "getValorDeLosDiamantes()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-6 col-sm-6"></div>
+        <div class="col-md-6 col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary me-2" type="button">
+              VistaPrevia
+            </button>
+            <button class="btn btn-primary me-2" type="button">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

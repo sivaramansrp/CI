@@ -12,5 +12,5 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
-  ]
+, "src/app/application/tramites/230101/components/solicitud/solicitud.component.spec.ts"  ]
 }

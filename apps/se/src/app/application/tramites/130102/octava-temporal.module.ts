@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -5,13 +6,13 @@ import { OctavaTemporalRoutingModule } from './octava-temporal-routing.module';
 
 import { CriterioDeDictComponent } from './component/criterio-de-dict/criterio-de-dict.component';
 import { DetosDelLaMarcaciaComponent } from './component/datos-de-la-mercacia/datos-de-la-mercacia.component';
-import { DetosDelTramiteComponent } from './component/detos-del-tramite/detos-del-tramite.component';
+import { DetosDelTramiteComponent } from './component/datos-del-tramite/datos-del-tramite.component';
 import { PaisProcendenciaComponent } from './component/pais-procendencia/pais-procendencia.component';
 import { SolicitanteOctavaTemporalComponent } from './component/solicitante-octava-temporal/solicitante-octava-temporal.component';
 
 import { PartidasDeLaComponent } from './component/partidas-de-la/partidas-de-la.component';
 import { RepresentacionComponent } from './component/representacion/representacion.component';
-import { UsoEspicificoComponent } from './component/uso-espicifico/uso-espicifico.component';
+import { UsoEspicificoComponent } from './component/uso-especifico/uso-especifico.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
 
@@ -24,7 +25,11 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import { provideHttpClient } from '@angular/common/http';
 
+import { AlertComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+
+import { PasoTresComponent } from './component/paso-tres/paso-tres.component' 
 
 @NgModule({
   declarations: [
@@ -45,7 +50,11 @@ import { provideHttpClient } from '@angular/common/http';
     RepresentacionComponent,
     TituloComponent,
     UsoEspicificoComponent,
-    WizardComponent    
+    WizardComponent,
+    FirmaElectronicaComponent, 
+    SolicitanteComponent,
+    PasoTresComponent,
+    AlertComponent
   ],
   providers: [
     provideHttpClient(),

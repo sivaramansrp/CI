@@ -7,7 +7,9 @@ import { JSONResponse } from '../../../models/shared/catalogos.model';
   providedIn: 'root',
 })
 export class SolicitanteService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
@@ -20,7 +22,6 @@ export class SolicitanteService {
   getDatosGenerales(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
       catchError((error) => {
-        console.log(error);
         return throwError(() => error);
       })
     );

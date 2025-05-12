@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-md-4 form-group">
-    <label class="form-label" for="gafete">Gafete:</label>
-    <input class="form-control" id="gafete" [formControl]="gafete" placeholder="" type="text"
-      [ngClass]="gafeteIsValid ? 'required' : ''">
+    <label class="form-label" for="gafeteRespoDespacho">Gafete:</label>
+    <input class="form-control" id="gafeteRespoDespacho" [formControl]="gafeteRespoDespacho" placeholder="" type="text"
+      [ngClass]="gafeteIsValid ? 'required' : ''" libUppercase>
   </div>
   <div class="col-md-4 d-flex align-items-end">
     <div class="btn-group">
@@ -15,19 +15,19 @@
 <form action="" [formGroup]="personaForm">
   <div class="row mt-5">
     <div class="col-md-4 form-group">
-      <label class="form-label" for="nombre">Nombre(s):</label>
-      <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
-        [ngClass]="isValid('nombre') ? 'required' : ''">
+      <label class="form-label" for="nombreRespoDespacho">Nombre(s):</label>
+      <input class="form-control" id="nombreRespoDespacho" placeholder="" type="text" formControlName="nombreRespoDespacho"
+        [ngClass]="isValid('nombreRespoDespacho') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="form-label" for="primerApellido">Apellido paterno:</label>
-      <input class="form-control" id="primerApellido" placeholder="" type="text" formControlName="primerApellido"
-        [ngClass]="isValid('primerApellido') ? 'required' : ''">
+      <label class="form-label" for="paternoRespoDespacho">Apellido paterno:</label>
+      <input class="form-control" id="paternoRespoDespacho" placeholder="" type="text" formControlName="paternoRespoDespacho"
+        [ngClass]="isValid('paternoRespoDespacho') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="form-label" for="segundoApellido">Apellido materno:</label>
-      <input class="form-control" id="segundoApellido" placeholder="" type="text" formControlName="segundoApellido"
-        [ngClass]="isValid('segundoApellido') ? 'required' : ''">
+      <label class="form-label" for="maternoRespoDespacho">Apellido materno:</label>
+      <input class="form-control" id="maternoRespoDespacho" placeholder="" type="text" formControlName="maternoRespoDespacho"
+        [ngClass]="isValid('maternoRespoDespacho') ? 'required' : ''">
     </div>
   </div>
 </form>
@@ -46,21 +46,45 @@
       </thead>
 
       <tbody>
+        @for (persona of personas; let i = $index; track i) {
         <tr>
-          @for (persona of personas; let i = $index; track i) {
-            <td>{{persona.gafete}}</td>
-            <td>{{persona.nombre}}</td>
-            <td>{{persona.primerApellido}}</td>
-            <td>{{persona.segundoApellido}}</td>
-            <td>
-              <button type="button" class="btn btn-link" (click)="eliminar(i)">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-            </td>
-          }
+          <td>{{persona.gafeteRespoDespacho}}</td>
+          <td>{{persona.nombre}}</td>
+          <td>{{persona.primerApellido}}</td>
+          <td>{{persona.segundoApellido}}</td>
+          <td>
+            <button type="button" class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
+              <i class="bi bi-trash3 bi-c"></i>
+            </button>
+          </td>
         </tr>
+        }
       </tbody>
 
     </table>
+  </div>
+</div>
+
+<!-- Modal error -->
+<div class="modal" [ngClass]="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
+  aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ tituloModal }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>{{ mensajeModal }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="cerrarModal()">
+          Cerrar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

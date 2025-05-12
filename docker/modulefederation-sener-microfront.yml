@@ -1,0 +1,18 @@
+services:
+#----------------------------------------------------------------
+  modulefederation-sener-microfront:
+    image: modulefederation-sener-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/sener/Dockerfile
+    container_name: modulefederation-sener-microfront
+    restart: on-failure
+    expose:
+      - '4217'
+    ports:
+      - "4217:80"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+networks:
+  modulefederation-network:

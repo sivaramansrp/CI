@@ -1,5 +1,5 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
-
+import { Component, Input, OnInit,forwardRef } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -8,9 +8,6 @@ import {
   PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
 } from '../../constantes/solicitante-constantes.enum';
-
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-
 import {
   FormBuilder,
   FormGroup,
@@ -18,13 +15,11 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
-import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
-import { TituloComponent } from '../titulo/titulo.component';
-
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
+import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
+import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { tap } from 'rxjs';
 
@@ -39,7 +34,7 @@ import { tap } from 'rxjs';
   ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class SolicitanteComponent implements OnInit {
   @Input() tabindex!: number;
@@ -61,7 +56,13 @@ export class SolicitanteComponent implements OnInit {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
-  ngOnInit() {
+  /**
+   * @inheritdoc
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `getDatosGenerales` para obtener datos iniciales.
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnInit(): void {
     this.getDatosGenerales();
   }
 
@@ -94,14 +95,14 @@ export class SolicitanteComponent implements OnInit {
   /**
    * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
    */
-  get datosGeneralesForm() {
+  get datosGeneralesForm(): FormGroup {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
   /**
    * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
    */
-  get domicilioFiscalForm() {
+  get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
@@ -125,12 +126,12 @@ export class SolicitanteComponent implements OnInit {
     config: FormularioDinamico[],
     grupoNombre: string
   ): void {
-    const grupo = this.form.get(grupoNombre) as FormGroup;
+    const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const validators = this.getValidators(campo.validators);
-      grupo.addControl(
+      const VALIDATORS = SolicitanteComponent.getValidators(campo.validators);
+      GRUPO.addControl(
         campo.campo,
-        this.fb.control({ value: '', disabled: campo.disabled }, validators)
+        this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
       );
     });
   }
@@ -140,20 +141,20 @@ export class SolicitanteComponent implements OnInit {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: string[]): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
+  static getValidators(validators: string[]): ValidatorFn[] {
+    const FORM_VALIDATOR: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
-        formValidators.push(Validators.required);
+        FORM_VALIDATOR.push(Validators.required);
       } else if (validator.includes('maxLength')) {
-        const max = validator.split(':')[1];
-        formValidators.push(Validators.maxLength(Number(max)));
+        const MAX = validator.split(':')[1];
+        FORM_VALIDATOR.push(Validators.maxLength(Number(MAX)));
       } else if (validator.includes('pattern')) {
-        const pattern = validator.split(':')[1];
-        formValidators.push(Validators.pattern(pattern));
+        const PATTERN = validator.split(':')[1];
+        FORM_VALIDATOR.push(Validators.pattern(PATTERN));
       }
     });
-    return formValidators;
+    return FORM_VALIDATOR;
   }
 
   /**
@@ -166,32 +167,32 @@ export class SolicitanteComponent implements OnInit {
       .pipe(
         tap((response) => {
           if (response) {
-            const datos = JSON.parse(response.data);
-            const datosSolicitante = datos.datosGenerales;
-            const datosDomicilioFiscal = datos.domicilioFiscal;
+            const DATOS = JSON.parse(response.data);
+            const DATOS_SOLICITANTE = DATOS.datosGenerales;
+            const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
 
-            const camposDatosGenerales =
-              this.formServices.obtenerNombresCamposForm(
+            const CAMPOS_DATOS_GENERALES =
+            FormulariosService.obtenerNombresCamposForm(
                 this.datosGeneralesForm
               );
-            const camposDatosDomicilioFiscal =
-              this.formServices.obtenerNombresCamposForm(
+            const CAMPOS_DATOS_DOMICILIO_FISCAL =
+            FormulariosService.obtenerNombresCamposForm(
                 this.domicilioFiscalForm
               );
 
-            camposDatosGenerales.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(
+            CAMPOS_DATOS_GENERALES.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
                 this.datosGeneralesForm,
                 campo,
-                datosSolicitante[campo]
+                DATOS_SOLICITANTE[campo]
               );
             });
 
-            camposDatosDomicilioFiscal.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(
+            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
                 this.domicilioFiscalForm,
                 campo,
-                datosDomicilioFiscal[campo]
+                DATOS_DOMICILIO_FISCAL[campo]
               );
             });
           }

@@ -1,0 +1,31 @@
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{titulo}}</h1>
+                @if(indice === 2) {
+                    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
+                }
+            </div>
+            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+        </div>
+        <div class="row">
+            @switch (indice) {
+                @case (1) {
+                    <app-paso-uno></app-paso-uno>
+                }
+                @case (2) {
+                    <ng-alert [CONTENIDO]="TEXTOS2.Importante"></ng-alert>
+                    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+                }
+                @case (3) {
+                    <app-paso-cuatro></app-paso-cuatro>
+                }
+            }
+            <btn-continuar 
+                [datos]="datosPasos" 
+                (continuarEvento)="getValorIndice($event)">
+            </btn-continuar>
+        </div>
+    </div>
+</div>

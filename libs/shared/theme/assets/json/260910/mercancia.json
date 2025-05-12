@@ -1,0 +1,24 @@
+[
+    {
+        "clasificaionProductos": "MEDICAMENTOS/ FARMACO",
+        "especificarProducto": "II) Homeopaticos",
+        "nombreProductoEspecifico": "QA",
+        "distintiva": "QA",
+        "cientifico": "QA",
+        "tipoProducto": "Materia prima",
+        "farmaceutica": "Capsulas",
+        "fisico": "Solido",
+        "fraccionArancelaria": "04059001",
+        "descripcionFraccionArancelaria": "Grasa butirica deshidratada.",
+        "cantidadUMT": "10,000.00",
+        "umt": "Kilogramo",
+        "cantidadUMC": "12.00",
+        "umc": 500,
+        "presentacionFarmaceutica": "CAJA",
+        "registroSanitario": "123456",
+        "fechaCaducidad": "30/06/2025",
+        "paisDeOrigen": "ANGUIA, ANTARTIDA",
+        "paisDeProcedencia": "ANGUILA, AUSTRIA",
+        "usoEspecifico": "Donaciones, Envasad..."
+    }
+]

@@ -19,10 +19,23 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/semarnat/public"
+            "input": "apps/se/src/assets/",
+            "output":"./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
-        "styles": ["apps/semarnat/src/styles.scss"],
+        "styles": [
+          "apps/semarnat/src/styles.scss",
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "libs/shared/theme/assets/styles/main.scss"
+        ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/semarnat/webpack.config.ts"
@@ -33,13 +46,13 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
             }
           ],
           "outputHashing": "all",

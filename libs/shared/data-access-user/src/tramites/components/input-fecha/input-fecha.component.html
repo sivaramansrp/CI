@@ -11,7 +11,7 @@
           <i class="bi bi-calendar-event"></i></span>
       </div>
     </div>
-    <div class="border" *ngIf="mostrar">
+    <div class="border" *ngIf="mostrar" id="calendario">
       <div class="contenido-botones">
         <div class="izquierda" (click)="changeMount(-1)">
           <i class="bi bi-chevron-left"></i>
@@ -36,7 +36,7 @@
         <li *ngFor="let dia of semana" class="day-name"> {{dia | slice:0:3}}</li>
         <li (click)="clickDay(day)" *ngFor="let day of mountSelect;let first = first"
           [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" class="day"
-          [class.activo]="day?.value == this.Formulario.get('dia')?.value ? 'activo' : ''" class="day">
+          [class.activo]="day?.value === this.Formulario.get('dia')?.value ? 'activo' : ''" class="day">
           <span>{{day?.value}}</span>
         </li>
 

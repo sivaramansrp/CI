@@ -1,0 +1,73 @@
+<div class="container">
+  <form [formGroup]="seleccionForm">
+    <ng-titulo titulo="Selección del cupo"></ng-titulo>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="regimen"
+          [label]="'Régimen aduanero'"
+          name="regimen"
+          formControlName="regimen"
+          (change)="getRegimen()"
+        >
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="tratado"
+          [label]="'Tratado o bloque comercial'"
+          name="tratado"
+          formControlName="tratado"
+          (change)="getTratado()"
+        >
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="producto"
+          [label]="'Nombre de producto'"
+          name="producto"
+          formControlName="producto"
+          (change)="obtenerValorProducto()"
+        >
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="subproducto"
+          [label]="'Nombre del subproducto'"
+          name="subproducto"
+          formControlName="subproducto"
+          (change)="getSubproducto()"
+        >
+        </app-catalogo-select>
+      </div>
+    </div>
+    <hr />
+    <div class="row mt-5 mb-5">
+      <div class="col-md-8"></div>
+      <div class="col-md-4 text-end">
+        <div class="btn-group">
+          <button class="btn btn-primary me-2" type="button">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div>
+    <div class="table-responsive table-wrapper">
+      <table class="table table-striped centered-table">
+        <tbody>
+          <tr *ngIf="seleccionDelCupo">
+            <td class="column-25 start-td">{{ seleccionDelCupo.description }}</td>
+            <td>{{ seleccionDelCupo.assignmentType }}</td>
+            <td class="column-25">
+              {{ seleccionDelCupo.codes }}
+            </td>
+            <td class="end-td">{{ seleccionDelCupo.quota }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

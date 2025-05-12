@@ -1,0 +1,50 @@
+<ng-titulo titulo="Solicitud prórroga para permisos de importación/exportación" />
+<form [formGroup]="prorrogasForm">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="folioResolucion" class="form-label">Folio resolución:</label>
+            <input type="text" class="form-control" formControlName="folioResolucion" id="folioResolucion">
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h6 class="mt-5">Prorrogas:</h6>
+            <app-tabla-dinamica [configuracionTabla]="prorrogasTabla"
+            [datos]="prorrogasTablaDatos"></app-tabla-dinamica>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="cantidad" class="form-label">Cantidad:</label><span class="bi bi-question-circle-fill" title="Cantidad"
+            data-bs-toggle="tooltip"></span>
+            <input type="text" class="form-control" formControlName="cantidad" id="cantidad">
+        </div>
+    </div>
+    <ng-titulo titulo="Datos de la prórroga" />
+    <div class="row">
+        <div class="col-md-4">
+            <label for="prorrogaDel" class="form-label">Prorroga del:</label>
+            <input type="text" class="form-control" formControlName="prorrogaDel" id="prorrogaDel">
+        </div>
+        <div class="col-md-4">
+            <label for="prorrogaAl" class="form-label">Prorroga al*:</label>
+            <input type="text" class="form-control" formControlName="prorrogaAl" id="prorrogaAl">
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="motivoJustificacion">Motivo y/o justificación de las modificaciones*:</label>
+                <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'motivoJustificacion', 'setMotivoJustificacion')"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="otrasDeclaraciones">Otras declaraciones*:</label>
+                <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'otrasDeclaraciones', 'setOtrasDeclaraciones')"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

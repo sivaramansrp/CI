@@ -1,0 +1,340 @@
+<div class="container">
+  <form [formGroup]="partidasDelaMercanciaForm">
+    <div>
+      <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
+      <ng-alert
+        [CONTENIDO]="'Debes capturar una fracción arrancelaria en el campo de texto para que se realice la busqueda y se carguen los datos del catálogo del componente de la lista despegable.'"></ng-alert>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="cantidadPartidasDeLaMercancia">Cantidad*:</label>
+            <input class="form-control" type="text" id="cantidad" formControlName="cantidadPartidasDeLaMercancia"
+              appUppercase aria-labelledby="cantidad"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia', 'setCantidadPartidasDeLaMercancia')" />
+            <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
+                es obligatoria.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo se
+                permiten números.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                18 caracteres.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="fraccionTigiePartidasDeLaMercancia">Fracción arancelaria TIGIE*:</label>
+            <input class="form-control" type="text" id="fraccionTigie"
+              formControlName="fraccionTigiePartidasDeLaMercancia" appUppercase aria-labelledby="fraccionTigie"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia', 'setFraccionTigiePartidasDeLaMercancia')" />
+            <div *ngIf="esInvalido('fraccionTigiePartidasDeLaMercancia')" class="text-danger">
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('required')">Fracción
+                arancelaria TIGIE es obligatoria.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('pattern')">Solo
+                se permiten números.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                18 caracteres.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            
+            <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
+              formControlName="fraccionDescripcionPartidasDeLaMercancia"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia','setFraccionDescripcionPartidasDeLaMercancia' )"></app-catalogo-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="descripcion">Descripción*:</label>
+            <textarea class="form-control height" rows="3" id="descripcion"
+              formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia', 'setDescripcionPartidasDeLaMercancia')"></textarea>
+            <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
+                es obligatoria.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                255 caracteres.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+            <input class="form-control" type="number" id="valorPartidaUSD"
+              formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia', 'setValorPartidaUSDPartidasDeLaMercancia')
+              " />
+            <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
+                campo es obligatorio.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
+                un número válido.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                valor debe ser mayor o igual a 0.</small>
+              <small
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                20 caracteres permitidos.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
+              data-bs-target="#modalCargarArchivo">
+              Cargar archivo
+            </button>
+            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- modal start-->
+  <div #modalRef class="modal fade test-modal" id="modalCargarArchivo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="row">
+            <div class="container mt-5">
+              <ng-titulo titulo="Carger Archivo"> </ng-titulo>
+              <div class="row mb-5">
+                <div class="col-md-12 d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <label for="archivoNacionales" class="form-label me-3">
+                      Archivo:
+                    </label>
+                    <input type="file" id="archivoNacionales" class="form-control w-auto" />
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row btn-row">
+            <div class="col-md-7"></div>
+            <div class="col-md-4 text-end">
+              <div class="btn-group">
+                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                  data-bs-dismiss="modal">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-primary ms-2">Enviar</button>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal end -->
+
+  <div class="row">
+    <div>
+      <h6>Partidas</h6>
+      <div *ngIf="mostrarTabla">
+        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
+          [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+        </app-tabla-dinamica>
+      </div>
+
+      <form [formGroup]="formForTotalCount">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="cantidadTotal">Cantidad total:</label>
+              <input class="form-control" type="number" id="cantidadTotal" formControlName="cantidadTotal"
+                aria-labelledby="cantidadTotal" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="valorTotalUSD">Valor Total USD:</label>
+              <input class="form-control" type="number" id="valorTotalUSD" formControlName="valorTotalUSD"
+                aria-labelledby="valorTotalUSD" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-md-4"></div>
+          <div class="col-md-8">
+            <hr />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-6"></div>
+          <div class="col-md-6 col-sm-6 text-end">
+            <div class="btn-group">
+              <button class="btn btn-primary me-2" type="button">
+                Elimina Partida
+              </button>
+              <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()"
+                data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
+                Mofificar partida
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- modal start-->
+      <div #modalRef class="modal fade test-modal" id="modalModificarPartida" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="container">
+                <form [formGroup]="partidasDelaMercanciaForm">
+                  <div>
+                    <ng-titulo titulo="Modificar partida"></ng-titulo>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="form-label" for="cantidad">Cantidad*:</label>
+                          <input class="form-control" type="text" id="cantidad"
+                            formControlName="cantidadPartidasDeLaMercancia" appUppercase aria-labelledby="cantidad" />
+                          <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
+                              es obligatoria.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo
+                              se permiten números.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              18 caracteres.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="form-label" for="fraccionTigiePartidasDeLaMercancia">Fracción arancelaria TIGIE*:</label>
+                          <input class="form-control" type="text" id="fraccionTigie"
+                            formControlName="fraccionTigiePartidasDeLaMercancia" appUppercase aria-labelledby="fraccionTigie"
+                            (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia', 'setFraccionTigiePartidasDeLaMercancia')" />
+                          <div *ngIf="esInvalido('fraccionTigiePartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('required')">Fracción
+                              arancelaria TIGIE es obligatoria.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('pattern')">Solo
+                              se permiten números.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              18 caracteres.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
+                            formControlName="fraccionDescripcionPartidasDeLaMercancia"
+                            (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia','setFraccionDescripcionPartidasDeLaMercancia' )"></app-catalogo-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label class="form-label" for="descripcion">Descripción*:</label>
+                          <textarea class="form-control height" rows="3" id="descripcion"
+                            formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"></textarea>
+                          <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
+                              es obligatoria.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              255 caracteres.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+                          <input class="form-control" type="number" id="valorPartidaUSD"
+                            formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
+                          <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
+                              campo es obligatorio.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
+                              un número válido.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                              valor debe ser mayor o igual a 0.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              20 caracteres permitidos.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-5">
+                      <div class="col-md-4"></div>
+                      <div class="col-md-8">
+                        <hr />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="row">
+                <div class="col-md-7"></div>
+                <div class="col-md-4 text-end">
+                  <div class="btn-group">
+                    <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                      data-bs-dismiss="modal">
+                      Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary ms-2">Modificar</button>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- </form> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+
+    </div>
+  </div>
+</div>

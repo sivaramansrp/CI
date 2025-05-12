@@ -1,0 +1,40 @@
+<div class="container">
+    <div>
+        <ng-titulo titulo="Datos del certificado"></ng-titulo>
+        <form [formGroup]="datosDelCertificado" novalidate>
+            <div class="row">
+
+                <div class="col-md-12">
+                    <label class="form-label" for="lugar">Lugar *:</label>
+                    <input type="text" class="form-control bg-white" id="lugar" placeholder="Tamaulipas 15 cl: centro"
+                        formControlName="lugar"
+                        [class.is-invalid]="datosDelCertificado.get('lugar')?.touched && datosDelCertificado.get('lugar')?.invalid"
+                        (change)="enCambioDeDatosDelCertificado('lugar')">
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label" for="observaciones">Observaciones:</label>
+                    <textarea class="form-control custom-textarea bg-white" id="observaciones"
+                        placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
+                        [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
+                        (change)="enCambioDeDatosDelCertificado('observaciones')">
+                </textarea>
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+    <h6>Mercancías seleccionadas</h6>
+    <app-tabla-dinamica [configuracionTabla]="arregloConfiguracionTabla" [datos]="datos || []" [tipoSeleccionTabla]="radioDeMesa"
+        (filaSeleccionada)="manejarFilaSeleccionada($event)">
+    </app-tabla-dinamica>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="enModificarFormulario()">
+            Modificar
+        </button>
+    </div>
+
+</div>

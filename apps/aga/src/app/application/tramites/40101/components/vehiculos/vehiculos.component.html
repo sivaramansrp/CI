@@ -1,0 +1,1135 @@
+<div class="container">
+  <div id="divTabIngrSocio" class="tabs mt-5">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          data-bs-toggle="tab"
+          href="#subtabs-3"
+          (click)="selectTab('parquevehicular')"
+          role="tab"
+          aria-controls="subtabs-3"
+          aria-selected="true"
+        >
+          Parque vehicular24234
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="tab"
+          href="#subtabs-4"
+          (click)="selectTab('unidaddearrastre')"
+          role="tab"
+          aria-controls="subtabs-4"
+          aria-selected="false"
+        >
+          Unidad de arrastre
+        </a>
+      </li>
+    </ul>
+    <div class="row mt-5">
+      <h3 *ngIf="activeTab === 'parquevehicular'">{{ selectedTab }}</h3>
+      <h3 *ngIf="activeTab === 'unidaddearrastre'">{{ selectedTab }}</h3>
+      <hr class="red" />
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="subtabs-3" role="tabpanel">
+          <div class="row table-responsive">
+            <div class="col-md-12">
+              <h4 class="extranjeros mt-0">Vehículos:</h4>
+              <table id="dataTable" #dataTable class="table w-95 mx-auto mt-3">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" (change)="toggleAll($event)" />
+                    </th>
+                    <th>ID222</th>
+                    <th>Número de identificación vehicular</th>
+                    <th>Tipo de vehículo</th>
+                    <th>ID de vehículo</th>
+                    <th>Número de Placas</th>
+                    <th>País Emisor</th>
+                    <th>Estado o provincia</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Transponder</th>
+                    <th>Color</th>
+                    <th>Número económico</th>
+                    <th>Número 2da Placa</th>
+                    <th>Estado Emisor 2da Placa</th>
+                    <th>País Emisor 2da Placa</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let vehiculo of vehiculosList$ | async;
+                      let i = index
+                    "
+                  >
+                    <td>
+                      <input type="checkbox" />
+                    </td>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoVin2 }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoTipoVehiculo }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoIdDeVehiculo }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumeroPlacas }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor }}</td>
+                    <td>{{ vehiculo.solicitudDomicilioEstado }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoMarca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoModelo }}</td>
+                    <td>{{ vehiculo.anioVehiculoVEH }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoTransponder }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoColor }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumeroEconomico }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumero2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoEmisor2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoDesc }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Contenido de la tablaDatosGenerales -->
+          <table id="tablaDatosGenerales" class="table w-95 mx-auto">
+            <tr>
+              <td colspan="12">
+                <div id="acciones">
+                  <button
+                    name="AgregarSPFisica"
+                    class="btn btn-primary btn-Agregar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    Agregar
+                  </button>
+                  <button
+                    name="EliminarSPFisica"
+                    class="btn btn-danger me-2 btn-Agregar"
+                  >
+                    Eliminar
+                  </button>
+                  <button class="btn btn-default btn-Agregar" type="button">
+                    Modificar
+                  </button>
+
+                  <!-- puño modal comienza aquí -->
+                  <div
+                    id="myModal"
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body">
+                          <form
+                            [formGroup]="formVehiculo"
+                            (ngSubmit)="onSubmit()"
+                          >
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h3>{{ solicitudTituloDatosVehiculo }}</h3>
+                                <hr class="red" />
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <!-- VIN Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="vinVEH">{{
+                                    labelSolicitudVehiculoVin
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="vinVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoVin2"
+                                    size="30"
+                                    maxlength="17"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues['solicitudVehiculoVin2']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoVin2']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoVin2']
+                                        .touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoVin2'].errors?.['required']"
+                                    >El campo es obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoVin2'].errors?.['pattern']"
+                                    >Solo se permiten números (máx. 17
+                                    dígitos).</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- Tipo de Vehículo Select -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="solicitudVehiculoTipoVehiculo">{{
+                                    labelSolicitudVehiculoTipoVehiculo
+                                  }}</label>
+                                  <span class="require">*</span>
+                                  <div class="anioVehiculoVEH">
+                                    <app-catalogo-select
+                                      [catalogo]="vehiculoArrastr"
+                                      formControlName="solicitudVehiculoTipoVehiculo"
+                                      [required]="true"
+                                      name="solicitudVehiculoTipoVehiculo"
+                                      (change)="conVehiculoArrastre()"
+                                    ></app-catalogo-select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- ID de Vehículo Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="idDeVehiculoVEH">{{
+                                    labelSolicitudVehiculoIdDeVehiculo
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    placeholder="1"
+                                    id="idDeVehiculoVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoIdDeVehiculo"
+                                    size="30"
+                                    maxlength="10"
+                                    readonly
+                                    class="form-control"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <!-- Número de Placas Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="placasVEH">{{
+                                    labelSolicitudVehiculoNumeroPlacas
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="placasVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoNumeroPlacas"
+                                    size="30"
+                                    maxlength="8"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues[
+                                      'solicitudVehiculoNumeroPlacas'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoNumeroPlacas'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoNumeroPlacas'
+                                      ].touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroPlacas'].errors?.['required']"
+                                    >Número de Placas es obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroPlacas'].errors?.['pattern']"
+                                    >Solo se permiten letras y números (máx. 8
+                                    caracteres).</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- País Emisor Select -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="solicitudVehiculoPaisEmisor">{{
+                                    labelSolicitudVehiculoPaisEmisor
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoPaisEmisor"
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+
+                              <!-- Estado Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="estadoVEH">{{
+                                    labelSolicitudDomicilioEstado
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="estadoVEH"
+                                    type="text"
+                                    formControlName="solicitudDomicilioEstado"
+                                    size="30"
+                                    maxlength="20"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues['solicitudDomicilioEstado']
+                                      .invalid &&
+                                    (getFormValues['solicitudDomicilioEstado']
+                                      .dirty ||
+                                      getFormValues['solicitudDomicilioEstado']
+                                        .touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['required']"
+                                    >Estado es obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['maxlength']"
+                                    >Estado no puede exceder 20
+                                    caracteres.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['pattern']"
+                                    >Solo se permiten letras y espacios.</small
+                                  >
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <!-- Marca Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="marcaVEH">{{
+                                    labelSolicitudVehiculoMarca
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="marcaVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoMarca"
+                                    size="30"
+                                    maxlength="100"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues['solicitudVehiculoMarca']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoMarca']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoMarca']
+                                        .touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['required']"
+                                    >La marca del vehículo es
+                                    obligatoria.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['maxlength']"
+                                    >No puede exceder 100 caracteres.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['pattern']"
+                                    >Solo se permiten letras, números, espacios
+                                    y guiones.</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- Modelo Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="modeloVEH">{{
+                                    labelSolicitudVehiculoModelo
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="modeloVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoModelo"
+                                    size="30"
+                                    maxlength="50"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues['solicitudVehiculoModelo']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoModelo']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoModelo']
+                                        .touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['required']"
+                                    >La marca del vehículo es
+                                    obligatoria.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['maxlength']"
+                                    >No puede exceder 20 caracteres.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['pattern']"
+                                    >Solo se permiten letras, números, espacios
+                                    y guiones.</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- Año Vehículo Select -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="anioVehiculoVEH">{{
+                                    labelAnioVEH
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    class="anioVehiculoVEH"
+                                    [catalogo]="VehiculoVEH"
+                                    formControlName="anioVehiculoVEH"
+                                    [required]="true"
+                                    name="anioVehiculoVEH"
+                                    (change)="anioVehiculoveh()"
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <!-- Transponder Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="transponderVEH">{{
+                                    labelSolicitudVehiculoTransponder
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="transponderVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoTransponder"
+                                    size="30"
+                                    maxlength="50"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues[
+                                      'solicitudVehiculoTransponder'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoTransponder'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoTransponder'
+                                      ].touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['required']"
+                                    >El transponder es obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['maxlength']"
+                                    >Máximo 50 caracteres permitidos.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['pattern']"
+                                    >Solo se permiten letras y números.</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- Seleccionar color -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="solicitudVehiculoColor">{{
+                                    labelSolicitudVehiculoColor
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="VehiculoColors"
+                                    formControlName="solicitudVehiculoColor"
+                                    [required]="true"
+                                    name="solicitudVehiculoColor"
+                                    (change)="solicitudVehiculoColor()"
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+
+                              <!-- Número Económico Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="numeroEconomicoVEH">{{
+                                    labelSolicitudVehiculoNumeroEconomico
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div>
+                                  <input
+                                    id="numeroEconomicoVEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoNumeroEconomico"
+                                    size="30"
+                                    maxlength="17"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues[
+                                      'solicitudVehiculoNumeroEconomico'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoNumeroEconomico'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoNumeroEconomico'
+                                      ].touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['required']"
+                                    >Número Económico es obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['maxLength']"
+                                    >Número Económico no debe exceder los 17
+                                    caracteres.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['pattern']"
+                                    >Solo se permiten letras y números.</small
+                                  >
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <!-- Número 2da Placa Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="numeroplaca2VEH">{{
+                                    labelSolicitudVehiculoNumero2daPlaca
+                                  }}</label>
+                                </div>
+                                <div>
+                                  <input
+                                    id="numeroplaca2VEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoNumero2daPlaca"
+                                    size="30"
+                                    maxlength="8"
+                                    class="form-control"
+                                  />
+                                </div>
+                              </div>
+
+                              <!-- Emisor 2da Placa Input -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="emisorplaca2VEH">{{
+                                    labelSolicitudVehiculoEmisor2daPlaca
+                                  }}</label>
+                                  <span
+                                    id="solicitudVehiculoEmisor2daPlacaReq"
+                                    class="require"
+                                    >*</span
+                                  >
+                                </div>
+                                <div>
+                                  <input
+                                    id="emisorplaca2VEH"
+                                    type="text"
+                                    formControlName="solicitudVehiculoEmisor2daPlaca"
+                                    size="30"
+                                    maxlength="20"
+                                    class="form-control"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="
+                                    getFormValues[
+                                      'solicitudVehiculoEmisor2daPlaca'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoEmisor2daPlaca'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoEmisor2daPlaca'
+                                      ].touched)
+                                  "
+                                  class="text-danger"
+                                >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['required']"
+                                    >Emisor de la 2da Placa es
+                                    obligatorio.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['maxLength']"
+                                    >No debe exceder los 20 caracteres.</small
+                                  >
+                                  <small
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['pattern']"
+                                    >Solo se permiten letras y números.</small
+                                  >
+                                </div>
+                              </div>
+
+                              <!-- País Emisor 2da Placa Select -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label
+                                    for="solicitudVehiculoPaisEmisor2daPlaca"
+                                    >{{
+                                      labelSolicitudVehiculoPaisEmisor2daPlaca
+                                    }}</label
+                                  >
+                                  <span
+                                    id="solicitudVehiculoPaisEmisor2daPlacaReq"
+                                    class="require"
+                                    >*</span
+                                  >
+                                </div>
+
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoPaisEmisor2daPlaca"
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor2daPlaca"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <!-- Descripción del Vehículo Textarea -->
+                              <div class="col-md-8">
+                                <div>
+                                  <label for="descOtrosVEH">{{
+                                    labelDescripcionVehiculo
+                                  }}</label>
+                                </div>
+                                <div>
+                                  <textarea
+                                    id="descOtrosVEH"
+                                    formControlName="solicitudVehiculoDesc"
+                                    maxlength="200"
+                                    rows="3"
+                                    cols="60"
+                                    class="form-control"
+                                  >
+                                  </textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row mt-3">
+                              <div class="col-md-3 text-muted">
+                                <div id="lblCamposObligatorios">
+                                  * Campos obligatorios
+                                </div>
+                              </div>
+                              <div class="col-md-9">
+                                <div class="float-end">
+                                  <button
+                                    id="limpiarVehiculo"
+                                    name="limpiar"
+                                    class="mid btn btn-default me-2"
+                                    (click)="limpiarDatosVEHARR()"
+                                  >
+                                    Limpiar
+                                  </button>
+                                  <button
+                                    data-bs-dismiss="modal"
+                                    type="button"
+                                    id="cancelarVehiculo"
+                                    name="cancelar"
+                                    class="cancel btn btn-danger"
+                                  >
+                                    Cancelar
+                                  </button>
+                                  <button
+                                    type="submit"
+                                    id="guardarVehiculo"
+                                    name="guardar"
+                                    class="btn btn-primary"
+                                  >
+                                    Guardar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="tab-pane fade" id="subtabs-4" role="tabpanel">
+          <div class="row table-responsive">
+            <div class="col-md-12">
+              <h4 class="extranjeros mt-2">Unidades de arrastre:</h4>
+              <table id="tablaDatosGenerales2" class="table w-95 mx-auto mt-3">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" (change)="toggleAll($event)" />
+                    </th>
+                    <th>ID</th>
+                    <th>VIN del vehículo</th>
+                    <th>Tipo de unidad de arrastre</th>
+                    <th>Número económico</th>
+                    <th>Número de Placas</th>
+                    <th>País Emisor</th>
+                    <th>Estado o provincia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let data of unidadesdearrastreList$ | async;
+                      let i = index
+                    "
+                  >
+                    <td>
+                      <input type="checkbox" />
+                    </td>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ data.vin2 }}</td>
+                    <td>{{ data.solicitudVehiculoArrastreTipoVehiculo }}</td>
+                    <td>{{ data.numeroEconomico }}</td>
+                    <td>{{ data.numeroPlacas }}</td>
+                    <td>{{ data.paisEmisor }}</td>
+                    <td>{{ data.estado2 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Contenido de la tablaDatosGenerales -->
+          <table id="tablaDatosGenerales" class="table w-95 mx-auto">
+            <tr></tr>
+            <tr>
+              <td colspan="4">
+                <div id="acciones">
+                  <button
+                    class="btn btn-primary btn-Agregar"
+                    (click)="openDialogCapturaSPFisicaValidacion()"
+                  >
+                    Agregar
+                  </button>
+                  <button
+                    name="EliminarSPMoral"
+                    class="btn btn-danger me-2 btn-Agregar"
+                    (click)="eliminarRegistroSelec('socioPersonaMoralCAAT')"
+                  >
+                    Eliminar
+                  </button>
+                  <button class="btn btn-default btn-Agregar" type="button">
+                    Modificar
+                  </button>
+
+                  <!-- Modal -->
+                  <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    #exampleModal
+                  >
+                    <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body">
+                          <form
+                            [formGroup]="formVehiculo"
+                            (ngSubmit)="unidadDeArrastre()"
+                          >
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h3>Datos del Vehículo de Arrastre</h3>
+                                <hr class="red" />
+                              </div>
+                            </div>
+
+                            <!-- Sección VIN-->
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="solicitudVehiculoVin">VIN</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="vinVEHARR"
+                                    formControlName="vin2"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="17"
+                                  />
+                                </div>
+                              </div>
+
+                              <!-- Tipo Vehículo de Arrastre -->
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <app-catalogo-select
+                                    [catalogo]="vehiculoArrastr"
+                                    formControlName="solicitudVehiculoArrastreTipoVehiculo"
+                                    [required]="true"
+                                    name="solicitudVehiculoArrastreTipoVehiculo"
+                                    label="Tipo de Vehículo de Arrastre2"
+                                    (change)="conVehiculoArrastre()"
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+
+                              <!-- ID de Vehículo de Arrastre -->
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label
+                                    for="solicitudVehiculoArrastreIdDeVehiculo"
+                                    >ID de Vehículo de Arrastre</label
+                                  >
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="idDeVehiculoArrastre"
+                                    placeholder="2"
+                                    formControlName="idDeVehiculo"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="10"
+                                    readonly
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Número de Placas, País Emisor, Estado -->
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label
+                                    for="solicitudVehiculoArrastreNumeroPlacas"
+                                    >Número de Placas</label
+                                  >
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="placasVEHARR"
+                                    formControlName="numeroPlacas"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="8"
+                                  />
+                                </div>
+                              </div>
+
+                              <!-- País Emisor Select -->
+                              <div class="col-md-4">
+                                <div>
+                                  <label for="solicitudVehiculoPaisEmisor">{{
+                                    labelSolicitudVehiculoPaisEmisor
+                                  }}</label>
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoPaisEmisor"
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="solicitudDomicilioEstado2"
+                                    >Estado o Provincia</label
+                                  >
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="estadoVEHARR"
+                                    formControlName="estado2"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="20"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Color, Número Económico -->
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <app-catalogo-select
+                                    [catalogo]="VehiculoColors"
+                                    formControlName="solicitudVehiculoColor"
+                                    [required]="true"
+                                    label="Color de vehiculo de arrestre"
+                                    name="solicitudVehiculoColor"
+                                    (change)="solicitudVehiculoColor()"
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="solicitudVehiculoNumeroEconomico"
+                                    >Número Económico</label
+                                  >
+                                  <span class="require">*</span>
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="numeroEconomicoArraVEHARR"
+                                    formControlName="numeroEconomico"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="17"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Número 2da Placa, Emisor 2da Placa, País Emisor 2da Placa -->
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label
+                                    for="solicitudVehiculoArrastreNumero2daPlaca"
+                                    >Número 2da Placa</label
+                                  >
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="numeroplaca2VEHARR"
+                                    formControlName="numero2daPlaca"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="8"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label
+                                    for="solicitudVehiculoArrastreEmisor2daPlaca"
+                                    >Estado emisor de 2da Placa</label
+                                  >
+                                </div>
+                                <div class="form-group">
+                                  <input
+                                    type="text"
+                                    id="emisorplaca2VEHARR"
+                                    formControlName="emisor2daPlaca"
+                                    class="form-control"
+                                    size="30"
+                                    maxlength="20"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label
+                                    for="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                    >País emisor de 2da Placa</label
+                                  >
+                                </div>
+                                <div class="form-group">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                    [required]="true"
+                                    name="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Descripción de la Unidad de Arrastre -->
+                            <div class="row">
+                              <div class="col-md-8">
+                                <div class="form-group">
+                                  <label for="descripci�nUnidadArrastre"
+                                    >Descripción de la unidad de arrastre</label
+                                  >
+                                </div>
+                                <div class="form-group">
+                                  <textarea
+                                    id="descOtrosVEHARR"
+                                    formControlName="desc"
+                                    class="form-control"
+                                    rows="3"
+                                    size="60"
+                                    maxlength="200"
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Campos Obligatorios y Botones -->
+                            <div class="row">
+                              <div
+                                class="col-md-3 text-muted d-flex align-items-center"
+                              >
+                                <div id="lblCamposObligatorios">
+                                  * Campos obligatorios
+                                </div>
+                              </div>
+                              <div class="col-md-9">
+                                <div class="pull-right">
+                                  <button
+                                    type="button"
+                                    id="limpiarVehiculo"
+                                    name="limpiar"
+                                    class="mid btn btn-default"
+                                    (click)="limpiarDatosVEHARR()"
+                                  >
+                                    Limpiar
+                                  </button>
+                                  <button
+                                    data-bs-dismiss="modal"
+                                    type="button"
+                                    id="cancelarVehiculo"
+                                    name="cancelar"
+                                    class="cancel btn btn-danger"
+                                  >
+                                    Cancelar
+                                  </button>
+                                  <button
+                                    type="submit"
+                                    id="guardarVehiculo"
+                                    name="guardar"
+                                    class="btn btn-primary"
+                                  >
+                                    Guardar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

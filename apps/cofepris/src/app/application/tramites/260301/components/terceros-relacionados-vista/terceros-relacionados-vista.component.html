@@ -1,0 +1,202 @@
+<div class="container">
+  <ng-titulo titulo="Terceros relacionados"></ng-titulo>
+
+  <div class="row mt-5">
+    <ng-alert
+      [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
+      [CUSTOMECLASS]="infoAlert"
+    ></ng-alert>
+  </div>
+  <div class="row mt-5">
+    <h6>Fabricante*:</h6>
+  </div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="(fabricanteTablaDatos$ | async) || []"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="navigate(tipoTablaDatos.FABRICANTE)"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5"><h6>Facturador*:</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="(facturadorTablaDatos$ | async) || []"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="navigate(tipoTablaDatos.FACTURADOR)"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5"><h6>Proveedor/ distribudor:</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="(proveedorTablaDatos$ | async) || []"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+      
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="navigate(tipoTablaDatos.PROVEEDOR)"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5"><h6>Certificado analítico :</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="(certificadoTablaDatos$ | async) || []"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="navigate(tipoTablaDatos.CERTIFICADO)"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5"><h6>Otros :</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="(otrasTablaDatos$ | async) || []"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="navigateOtros()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5"></div>
+</div>

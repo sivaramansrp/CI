@@ -9,6 +9,7 @@
 .alert .alert-link,
 .close {
   font-weight: 700;
+  font-size: small;
 }
 
 .alert {
@@ -32,12 +33,13 @@
   }
 }
 
-.alert-dismissable .close,
+
 .alert-dismissible .close {
-  position: relative;
-  top: -2px;
-  right: -21px;
-  color: inherit;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  padding: 1.25rem 1rem;
 }
 
 .alert-success {
@@ -98,8 +100,11 @@
 
 .alert {
   border-width: 2px;
+  padding: 24px
+}
+
+.alert-text-center {
   text-align: center;
-  padding: 20px 15px;
 }
 
 .alert-dismissable,

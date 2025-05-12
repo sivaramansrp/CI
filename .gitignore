@@ -4,6 +4,8 @@
 dist
 tmp
 /out-tsc
+documentation
+coverage
 
 # dependencies
 node_modules
@@ -43,3 +45,13 @@ Thumbs.db
 .angular
 ./.package-lock.json
 .package-lock.json
+.bablerc
+/.vs/frontend/FileContentIndex
+*.sqlite-journal
+/.vs/slnx.sqlite
+/.vs/frontend/v17/.wsuo
+/.vs/frontend/v17/workspaceFileList.bin
+
+**/.claude/settings.local.json
+.vs
+/.vs/VSWorkspaceState.json

@@ -1,0 +1,36 @@
+<div class="container form-container">
+    <ng-titulo titulo="Datos requeridos"></ng-titulo>
+    <div>
+        <form [formGroup]="entidadForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="entidadExterna" class="required-label">Nombre de la entidad externa.</label>
+                    <input type="text" id="entidadExterna" class="form-control" placeholder="PRUEBAS" formControlName="entidadExterna"  maxlength="255" (input)="updateEntidadExterna()" >
+                </div>
+                <div class="col-md-6">
+                    <label for="nombreSolicitanteIPC" class="required-label">Nombre de quien solicita IPC</label>
+                    <input type="text" id="nombreSolicitanteIPC" class="form-control" placeholder="PAGB" formControlName="nombreSolicitanteIPC"  maxlength="255" (input)="updateNombreSolicitanteIPC()">
+                </div>
+                <div class="col-md-6">
+                    <label for="cargoSolicitanteIPC" class="form-label">Cargo de quien solicita IPC</label>
+                    <input type="text" id="cargoSolicitanteIPC" class="form-control" placeholder="PAGB" formControlName="cargoSolicitanteIPC"  maxlength="255" (input)="updateCargoSolicitanteIPC()">
+                </div>
+                <div class="col-md-6">
+                    <label for="folioOficioSolicitudIPC" class="required-label">Folio del oficio de la solicitud IPC</label>
+                    <input type="text" id="folioOficioSolicitudIPC" class="form-control" placeholder="1234567890" formControlName="folioOficioSolicitudIPC" maxlength="30" (input)="updateFolioOficioSolicitudIPC()">
+                </div>
+                <div class="col-md-6">
+                    <label for="fechaSolicitudIPC" class="form-label">Fecha de oficio de la solicitud IPC</label>
+                    <input type="date" id="fechaSolicitudIPC" class="form-control" formControlName="fechaSolicitudIPC"  maxlength="20" 
+                    readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="correoSolicitanteIPC" class="form-label">Correo electrónico de quien solicita IPC</label>
+                    <input type="text" id="correoSolicitanteIPC" class="form-control" formControlName="correoSolicitanteIPC" maxlength="255" (input)="updateCorreoSolicitanteIPC()">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

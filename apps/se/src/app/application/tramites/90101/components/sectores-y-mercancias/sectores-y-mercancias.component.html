@@ -1,0 +1,57 @@
+<div class="container">
+    <form [formGroup]="sectoresYMercancias">
+        <div class="form-group">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
+                (change)="
+                setValoresStore(
+                sectoresYMercancias,
+                'sector',
+                'setSector'
+                )"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class=" text-end mt-5">
+                <button class="btn btn-default me-2">Eliminar sector</button>
+                <button class="btn btn-primary">Agregar sector</button>
+            </div>
+        </div>
+        <div class="row">
+            <h6>Solicitud PROSEC sector plural:</h6>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="sectorColumnsConfiguracion" [datos]="sectors" ></app-tabla-dinamica>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Mercancías a producir"></ng-titulo>
+            </div>
+        </div>
+        <div class="row">
+            <ng-alert [CONTENIDO]="TEXTO"></ng-alert>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label" for="Fraccion_arancelaria">Fracción arancelaria:</label>
+                <input type="text" 
+                value=""
+                class="form-control" 
+                id="Fraccion_arancelaria"  
+                placeholder="Fracción arancelaria"
+                formControlName="Fraccion_arancelaria"
+                (change)="
+                setValoresStore(
+                    sectoresYMercancias,
+                  'Fraccion_arancelaria',
+                  'setFraccionArancelaria'
+                )"
+                >
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class=" text-end mt-5">
+                <button class="btn btn-default me-2">Eliminar</button>
+                <button class="btn btn-primary">Agregar</button>
+            </div>
+        </div>
+    </form>
+</div>

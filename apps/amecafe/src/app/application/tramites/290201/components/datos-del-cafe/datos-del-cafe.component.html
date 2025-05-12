@@ -1,0 +1,248 @@
+<div class="row">
+   <ng-titulo titulo="Lotes" />
+ </div>
+ <div class="col-md-12 scrollable-table-container">
+    <app-tabla-dinamica
+     (filaClic)="onRowClick($event)"
+    [configuracionTabla]="configuracionColumnasoli"
+    [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+     [datos]="tableData"
+     (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+     >
+</app-tabla-dinamica>
+ </div>
+ <div class="col-md-12 d-flex justify-content-end">
+   <div class="btn-group">
+     <button class="btn btn-danger"
+       type="button" [disabled]="!selectedRows" (click)="onDeleteSelectedRows()">Borrar</button>
+       <button class="btn btn-primary"
+       type="button" (click)="onAgregar()">Agregar</button>
+     
+   </div>
+   <div class="btn-group">
+     <button class="btn btn-primary me-2"
+     type="button">Continuar</button>
+   </div>
+</div>
+<div class="container"  *ngIf="esFormularioVisible">
+    <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
+      <ng-titulo titulo="Datos Del Cafe" />
+      <ng-container formGroupName="datosDelTramiteRealizar"> 
+      <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="envasadoenData"
+                formControlName="envasadoen"
+                [catalogo]="envasadoenData.catalogos"
+                [label]="'Envasado en'"
+                [placeholder]="envasadoenData.primerOpcion"
+                [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'envasadoen','setEnvasadoen')"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-8 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="utilizoCafeComoData"
+                formControlName="utilizoCafeComo"
+                [catalogo]="utilizoCafeComoData.catalogos"
+                [label]="'Utilizó cafe como materia prima importada para elaborar este producto?'"
+                [placeholder]="utilizoCafeComoData.primerOpcion"
+                [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'utilizoCafeComo','setUtilizoCafeComo')"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="form-group">
+               <label class="form-label" for="cantidadutilizada">Cantidad utilizada para elaborar este lote de importacion</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada"
+               (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
+               >
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="form-group">
+               <label class="form-label" for="numerodepedimento">Numero de pedimento de importacion</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="numerodepedimento" id="numerodepedimento"
+               (change)="setValoresStore(datosDelTramiteRealizar,'numerodepedimento','setNumerodepedimento')">
+            </div>
+         </div>
+         <div class="col-md-8 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="paisdeimportacionData"
+                formControlName="paisdeimportacion"
+                [catalogo]="paisdeimportacionData.catalogos"
+                [label]="'País de importación'"
+                [placeholder]="paisdeimportacionData.primerOpcion"
+                [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'paisdeimportacion','setPaisdeimportacion')"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-4 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="fraccionarancelariaData"
+                formControlName="fraccionarancelaria"
+                [catalogo]="fraccionarancelariaData.catalogos"
+                [label]="'Fraccion arancelaia'"
+                [placeholder]="fraccionarancelariaData.primerOpcion"
+                [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'fraccionarancelaria','setFraccionarancelaria')"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <ng-titulo titulo="Factura y Cantidad" />
+         <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                   <label class="form-label" for="cantidad">Cantidad</label>
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidad','setCantidad')"
+                   >
+                </div>
+             </div>
+             <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="unidaddemedidaData"
+                    formControlName="unidaddemedida"
+                    [catalogo]="unidaddemedidaData.catalogos"
+                    [label]="'Unidad de medida'"
+                    [placeholder]="unidaddemedidaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'unidaddemedida','setUnidaddemedida')"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+         </div>
+         <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                   <label class="form-label" for="precioapplicable">Precio applicable</label>
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'precioapplicable','setPrecioapplicable')">
+                </div>
+             </div>
+             <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="dolarData"
+                    formControlName="dolar"
+                    [catalogo]="dolarData.catalogos"
+                    [label]="''"
+                    [placeholder]="dolarData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'dolar','setDolar')"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+             <ng-titulo titulo="Marcas" />
+             <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                       <label class="form-label" for="lote">Lote</label>
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote"
+                       (change)="setValoresStore(datosDelTramiteRealizar,'lote','setLote')">
+                    </div>
+                 </div>
+                 <div class="col-md-8 mb-3">
+                    <div class="form-group">
+                       <label class="form-label" for="otrasmarcas">Otras marcas</label>
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="otrasmarcas" id="otrasmarcas"
+                       (change)="setValoresStore(datosDelTramiteRealizar,'otrasmarcas','setOtrasmarcas')">
+                    </div>
+                 </div>
+            </div>
+            <ng-titulo titulo="Caracteristicas Especiales" />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <app-catalogo-select
+                        id="elcafeData"
+                        formControlName="elcafe"
+                        [catalogo]="elcafeData.catalogos"
+                        [label]="'EI cafe tiene caracteristicas especiales?'"
+                        [placeholder]="elcafeData.primerOpcion"
+                        [required]="true"
+                        (change)="setValoresStore(datosDelTramiteRealizar,'elcafe','setElcafe')"
+                      ></app-catalogo-select>
+                    </div>
+                 </div>
+                 </div>
+                 <div class="row">
+                     <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                              <label class="form-label" for="fechaexportacion">Fecha exportacion*:</label>
+                              <input class="form-control" id="fechaexportacion" formControlName="fechaexportacion" type="date"
+                              (change)="setValoresStore(datosDelTramiteRealizar,'fechaexportacion','setFechaexportacion')"/>
+                            </div>
+                      </div>
+                 </div>
+                 <ng-titulo titulo="Transbordo" />
+                 <div class="row">
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <app-catalogo-select
+                                id="paisdetransbordoData"
+                                formControlName="paisdetransbordo"
+                                [catalogo]="paisdetransbordoData.catalogos"
+                                [label]="'Pais de transbordo'"
+                                [placeholder]="paisdetransbordoData.primerOpcion"
+                                [required]="true"
+                                (change)="setValoresStore(datosDelTramiteRealizar,'paisdetransbordo','setPaisdetransbordo')"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                               <app-catalogo-select
+                                id="mediodetransporteData"
+                                formControlName="mediodetransporte"
+                                [catalogo]="mediodetransporteData.catalogos"
+                                [label]="'Medio de transporte'"
+                                [placeholder]="mediodetransporteData.primerOpcion"
+                                [required]="true"
+                                (change)="setValoresStore(datosDelTramiteRealizar,'mediodetransporte','setMediodetransporte')"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="form-label" for="Identificadordel">Identificador del medio de transporte:</label>
+                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"
+                          (change)="setValoresStore(datosDelTramiteRealizar,'Identificadordel','setIdentificadordel')"/>
+                        </div>
+                  </div>
+                 </div>
+                 <ng-titulo titulo="Observaciones" />
+                 <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="observaciones">Observaciones</label>
+                      <textarea class="form-control" id="observaciones" rows="2" height="50"
+                      placeholder="" style="height: 100px" formControlName="observaciones"
+                      (change)="setValoresStore(datosDelTramiteRealizar,'observaciones','setObservaciones')"></textarea>
+                    </div>
+              </div>
+         </div>
+     </div>  
+     <div class="col-md-12 d-flex justify-content-end">      
+          <div class="btn-group">
+            <button class="btn btn-danger"
+              type="button">Cancelar</button>
+              <button class="btn btn-primary me-2"
+              type="button" (click)="onSubmit()">Agregar</button>
+          </div>    
+      </div>
+      </ng-container>
+    </form>
+ </div>
+             

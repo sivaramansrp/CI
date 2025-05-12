@@ -1,0 +1,95 @@
+<ng-titulo titulo="Terceros relacionados"></ng-titulo>
+
+<ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+
+<!--Proveedor Datos-->
+<label class="mb-5">Proveedor*:</label>
+<ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorBodyData"></ng-table>
+
+<div class="row">
+    <div class="col-md-12 text-end mt-4">
+        <button type="button" class="btn btn-primary ms-2" name="agregarProveedor" id="btnagregarAduana"
+            data-bs-toggle="modal" data-bs-target="#modalAgregarProveedor">
+            Agregar
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAgregarProveedor" tabindex="-1" aria-labelledby="modalAgregarProveedorLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agregar proveedor</h4>
+            </div>
+            <div class="modal-body">
+                <app-agregar-proveedor></app-agregar-proveedor>
+            </div>
+            <div class="modal-footer custom-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <button type="button" name="cancelar" class="btn btn-default" data-bs-dismiss="modal"
+                                #closeModal>
+                                Cancelar
+                            </button>
+                            <button type="button" name="limpiarProveedor" class="btn btn-danger ms-2"
+                                (click)="limpiarProveedor()">
+                                Limpiar
+                            </button>
+                            <button type="button" name="guardar" class="btn btn-primary ms-2">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Fabricante Datos-->
+<label class="mb-5 mt-3">Fabricante*:</label>
+<ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteBodyData"></ng-table>
+
+<div class="row">
+    <div class="col-md-12 text-end mt-4">
+        <button type="button" class="btn btn-primary ms-2" name="agregarFabricante" id="btnagregarFabricante"
+            data-bs-toggle="modal" data-bs-target="#modalAgregarFabricante">
+            Agregar
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAgregarFabricante" tabindex="-1" aria-labelledby="modalAgregarFabricanteLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agregar fabricante</h4>
+            </div>
+            <div class="modal-body">
+                <app-agregar-fabricante></app-agregar-fabricante>
+            </div>
+            <div class="modal-footer custom-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <button type="button" name="cancelar" class="btn btn-default" data-bs-dismiss="modal"
+                                #closeModal>
+                                Cancelar
+                            </button>
+                            <button type="button" name="limpiarFabricante" class="btn btn-danger ms-2"
+                                (click)="limpiarFabricante()">
+                                Limpiar
+                            </button>
+                            <button type="button" name="guardar" class="btn btn-primary ms-2">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

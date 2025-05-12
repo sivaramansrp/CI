@@ -14,6 +14,7 @@
           [description]="descriptionData.radio1.description"
           [showDescription]="true"
           formControlName="autorizacionIVAIEPS"
+          (change)="setValoresStore(preOperativeForm,'autorizacionIVAIEPS', 'setAutorizacionIVAIEPS')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -49,7 +50,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_0"
-                value="1"
+                value=""
+                name="regimen_0"
+                formControlName="regimen_0"
+                (change)="setValoresStore(preOperativeForm,'regimen_0', 'setRegimen_0')"
               />
               <label class="form-check-label" for="regimen_0">
                 Importación temporal para la elaboración, transformación o
@@ -70,7 +74,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_1"
-                value="1"
+                value=""
+                name="regimen_1"
+                formControlName="regimen_1"
+                (change)="setValoresStore(preOperativeForm,'regimen_1', 'setRegimen_1')"
               />
               <label class="form-check-label" for="regimen_1">
                 Depósito fiscal para someterse al proceso de ensamble y
@@ -92,7 +99,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_2"
-                value="1"
+                value=""
+                name="regimen_2"
+                formControlName="regimen_2"
+                (change)="setValoresStore(preOperativeForm,'regimen_2', 'setRegimen_2')"
               />
               <label class="form-check-label" for="regimen_2">
                 Elaboración, transformación o reparación en recinto fiscalizado
@@ -112,7 +122,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_3"
-                value="1"
+                value=""
+                name="regimen_3"
+                formControlName="regimen_3"
+                (change)="setValoresStore(preOperativeForm,'regimen_3', 'setRegimen_3')"
               />
               <label class="form-check-label" for="regimen_3">
                 Recinto Fiscalizado Estratégico
@@ -141,6 +154,8 @@
             [label]="'Sector Productivo'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
+            formControlName="sectorProductivo"
+            (change)="setValoresStore(preOperativeForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
         </div>
@@ -149,6 +164,8 @@
             [label]="'Servicio'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
+            formControlName="servicio"
+            (change)="setValoresStore(preOperativeForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
         </div>
@@ -173,6 +190,7 @@
           [description]="descriptionData.radio2.description"
           [showDescription]="true"
           formControlName="preOperativo"
+          (change)="setValoresStore(preOperativeForm,'preOperativo', 'setPreOperativo')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -196,6 +214,7 @@
           [description]="descriptionData.radio3.description"
           [showDescription]="true"
           formControlName="indiqueSi"
+          (change)="setValoresStore(preOperativeForm,'indiqueSi', 'setIndiqueSi')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -218,6 +237,7 @@
           [description]="descriptionData.radio4.description"
           [showDescription]="true"
           formControlName="senale"
+          (change)="setValoresStore(preOperativeForm,'senale', 'setSenale')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -253,6 +273,8 @@
               id="empPropios"
               name="empPropios"
               maxlength="8"
+              formControlName="empPropios"
+              (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
             />
           </div>
         </div>
@@ -261,6 +283,8 @@
             [label]="'Bimestre'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="comboBimestresIDC"
+            formControlName="bimestre"
+            (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
           >
           </app-catalogo-select>
         </div>
@@ -277,6 +301,7 @@
           [description]="descriptionData.radio5.description"
           [showDescription]="true"
           formControlName="senaleSi"
+          (change)="setValoresStore(preOperativeForm,'senaleSi', 'setSenaleSi')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -325,6 +350,10 @@
         <button type="button" class="btn btn-primary btn-space">
           Eliminar
         </button>
+        <button type="button"
+          class="btn btn-default btn-primary">
+          Agregar
+        </button>
       </div>
       <div class="mt-4 form-group">
         <app-input-radio
@@ -337,6 +366,7 @@
           [description]="descriptionData.radio6.description"
           [showDescription]="true"
           formControlName="seMomento"
+          (change)="setValoresStore(preOperativeForm,'seMomento', 'setSeMomento')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -359,6 +389,7 @@
           [description]="descriptionData.radio7.description"
           [showDescription]="true"
           formControlName="cumplir"
+          (change)="setValoresStore(preOperativeForm,'cumplir', 'setCumplir')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -383,6 +414,7 @@
           [description]="descriptionData.radio8.description"
           [showDescription]="true"
           formControlName="indique"
+          (change)="setValoresStore(preOperativeForm,'indique', 'setIndique')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -408,6 +440,7 @@
           [description]="descriptionData.radio9.description"
           [showDescription]="true"
           formControlName="encuentra"
+          (change)="setValoresStore(preOperativeForm,'encuentra', 'setEncuentra')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -430,6 +463,7 @@
           [description]="descriptionData.radio10.description"
           [showDescription]="true"
           formControlName="delMismo"
+          (change)="setValoresStore(preOperativeForm,'delMismo', 'setDelMismo')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -452,6 +486,7 @@
           [description]="descriptionData.radio11.description"
           [showDescription]="true"
           formControlName="senaleMomento"
+          (change)="setValoresStore(preOperativeForm,'senaleMomento', 'setSenaleMomento')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -474,6 +509,7 @@
           [description]="descriptionData.radio12.description"
           [showDescription]="true"
           formControlName="enCaso"
+          (change)="setValoresStore(preOperativeForm,'enCaso', 'setEnCaso')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -491,6 +527,8 @@
         <app-catalogo-select
           [placeholder]="'Seleccione un valor'"
           [catalogo]="comboBimestresIDC"
+          formControlName="comboBimestresIDCSeleccione"
+          (change)="setValoresStore(preOperativeForm,'comboBimestresIDCSeleccione', 'setComboBimestresIDCSeleccione')"
         >
         </app-catalogo-select>
       </div>
@@ -550,6 +588,7 @@
           [description]="descriptionData.radio13.description"
           [showDescription]="true"
           formControlName="ingresar"
+          (change)="setValoresStore(preOperativeForm,'ingresar', 'setIngresar')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -572,6 +611,7 @@
           [description]="descriptionData.radio14.description"
           [showDescription]="true"
           formControlName="encuentraSus"
+          (change)="setValoresStore(preOperativeForm,'encuentraSus', 'setEncuentraSus')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -616,20 +656,21 @@
               type="file"
               id="archivoNacionales"
               class="form-control w-auto"
+              formControlName="archivoNacionales"
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
               Anexar
             </button>
           </div>
         </div>
       </div>
       <div class="form-group d-flex align-items-center gap-2">
-        <label for="registrosQue" class="form-label mb-0"
+        <label for="registrosQue2" class="form-label mb-0"
           >Registros que existen actualmente</label
         >
-        <input type="text" class="form-control w-50" id="registrosQue" />
+        <input type="text" class="form-control w-50" id="registrosQue2" formControlName="registrosQue2" (change)="setValoresStore(preOperativeForm,'registrosQue2', 'setRegistrosQue2')"/>
       </div>
     </div>
 
@@ -666,7 +707,7 @@
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
               Anexar
             </button>
           </div>
@@ -676,7 +717,7 @@
         <label for="registrosQueO" class="form-label mb-0"
           >Registros que existen actualmente.</label
         >
-        <input type="text" class="form-control w-50" id="registrosQue" />
+        <input type="text" class="form-control w-50" id="registrosQue" formControlName="registrosQue" (change)="setValoresStore(preOperativeForm,'registrosQue', 'setRegistrosQue')"/>
       </div>
       <label for="">
         Nota: Los proveedores nacionales que se declaren deberán contar con la
@@ -697,6 +738,7 @@
           [description]="descriptionData.radio15.description"
           [showDescription]="true"
           formControlName="momentoIngresar"
+          (change)="setValoresStore(preOperativeForm,'momentoIngresar', 'setMomentoIngresar')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -722,6 +764,7 @@
           [description]="descriptionData.radio16.description"
           [showDescription]="true"
           formControlName="indiqueCuenta"
+          (change)="setValoresStore(preOperativeForm,'indiqueCuenta', 'setIndiqueCuenta')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -741,7 +784,7 @@
             <label for="nombreDel" class="form-label"
               >Nombre del sistema o datos para su identificación</label
             >
-            <input type="text" class="form-control" id="nombreDel" />
+            <input type="text" class="form-control" id="nombreDel" formControlName="nombreDel" (change)="setValoresStore(preOperativeForm,'nombreDel', 'setNombreDel')"/>
             <div
               *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
@@ -772,7 +815,7 @@
             <label for="lugarDeRadicacion" class="form-label"
               >Lugar de radicación</label
             >
-            <input type="text" class="form-control" id="lugarDeRadicacion" />
+            <input type="text" class="form-control" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" (change)="setValoresStore(preOperativeForm,'lugarDeRadicacion', 'setLugarDeRadicacion')"/>
             <div
               *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
@@ -806,6 +849,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="indiqueCheck"
+                formControlName="indiqueCheck"
+                (change)="setValoresStore(preOperativeForm,'indiqueCheck', 'setIndiqueCheck')"
               /> </span
           ></label>
         </div>
@@ -883,6 +928,7 @@
           [description]="descriptionData.radio17.description"
           [showDescription]="true"
           formControlName="contabilidad"
+          (change)="setValoresStore(preOperativeForm,'contabilidad', 'setContabilidad')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -907,6 +953,7 @@
           [description]="descriptionData.radio18.description"
           [showDescription]="true"
           formControlName="rmfRadio"
+          (change)="setValoresStore(preOperativeForm,'rmfRadio', 'setRmfRadio')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -931,6 +978,7 @@
           [description]="descriptionData.radio19.description"
           [showDescription]="true"
           formControlName="vinculacionRegistroCancelado"
+          (change)="setValoresStore(preOperativeForm,'vinculacionRegistroCancelado', 'setVinculacionRegistroCancelado')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -955,6 +1003,7 @@
           [description]="descriptionData.radio20.description"
           [showDescription]="true"
           formControlName="proveedoresListadoSAT"
+          (change)="setValoresStore(preOperativeForm,'proveedoresListadoSAT', 'setProveedoresListadoSAT')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -1178,3 +1227,20 @@
     </div>
   </div>
 </div>
+
+<ng-template #template>
+  @if(noSeHaSubidoNingunArchivo) {
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Mensaje</h4>
+      <button type="button" class="btn-close close pull-right" aria-label="Close">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      Error,No se ha seleccionado un archivo
+    </div>
+    <div class="modal-footer custom-footer">
+      <button type="button" class="btn btn-default" (click)="cerrar()">Aceptar</button>
+    </div>
+  }
+</ng-template>

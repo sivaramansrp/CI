@@ -1,0 +1,7 @@
+<app-datos-certificado-de [precisa]="precisa" [idioma]="idioma" [idiomaDatos]="(idiomaDatos$ | async) || []"
+  (formDatosCertificadoEvent)="setValoresStore($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
+  (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
+  (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
+  [entidadFederativaDatos]="(entidadFederativas$ | async) || []"
+  [representacionFederalDatos]="(representacionFederal$ | async) || []"
+  [datosFormCertificado]="formDatosCertificadoValues" (formaValida)="setFormValida($event)"></app-datos-certificado-de>

@@ -1,0 +1,226 @@
+<form [formGroup]="modificarDestinatarioForm">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <ng-titulo titulo="Modificar destinatario (destino final)" />
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label" for="">Datos generales</label>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+      <label class="form-label" for="">Tipo persona*:</label>
+      <app-input-radio
+        [radioOptions]="tipoPersonaRadioOptions"
+        [selectedValue]="tipoPublicos"
+        [isRequired]="true"
+        formControlName="tipoPersona"
+        [layout]="'vertical'"
+        (valueChange)="setTipoPersona($event)"
+      >
+      </app-input-radio>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="rfc">R.F.C.*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      </label>
+      <input
+        class="form-control"
+        id="rfc"
+        placeholder=""
+        type="text"
+        formControlName="modificarRFC"
+        (change)="setModificarRFC($event)"
+      />
+    </div>
+    <div class="col-md-8"></div>
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="denominacion"
+        >Denominación/razón social*:</label
+      >
+      <input
+        class="form-control"
+        id="denominacion"
+        placeholder=""
+        type="text"
+        formControlName="denominacion"
+        (change)="setDenominacion($event)"
+      />
+    </div>
+    <div class="col-md-12 mt-5">
+      <label class="form-label" for="domicilio">Domicilio:</label>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="paisCatalogo.catalogos"
+        [label]="paisCatalogo.labelNombre"
+        [placeholder]="paisCatalogo.primerOpcion"
+        [required]="paisCatalogo.required"
+        [isDisabled]="true"
+        formControlName="domicilioPais"
+        (selectionChange)="seleccionaPais($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="estadoCatalogo.catalogos"
+        [label]="estadoCatalogo.labelNombre"
+        [placeholder]="estadoCatalogo.primerOpcion"
+        [required]="estadoCatalogo.required"
+        formControlName="domicilioEstado"
+        (selectionChange)="seleccionaEstado($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="municipioCatalogo.catalogos"
+        [label]="municipioCatalogo.labelNombre"
+        [placeholder]="municipioCatalogo.primerOpcion"
+        [required]="municipioCatalogo.required"
+        formControlName="domicilioMunicipio"
+        (selectionChange)="seleccionaMunicipio($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="localidadCatalogo.catalogos"
+        [label]="localidadCatalogo.labelNombre"
+        [placeholder]="localidadCatalogo.primerOpcion"
+        [required]="localidadCatalogo.required"
+        formControlName="domicilioLocalidad"
+        (selectionChange)="seleccionaLocalidad($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="codigoCatalogo.catalogos"
+        [label]="codigoCatalogo.labelNombre"
+        [placeholder]="codigoCatalogo.primerOpcion"
+        [required]="codigoCatalogo.required"
+        formControlName="domicilioCodigo"
+        (selectionChange)="seleccionaCodigo($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="coloniaCatalogo.catalogos"
+        [label]="coloniaCatalogo.labelNombre"
+        [placeholder]="coloniaCatalogo.primerOpcion"
+        [required]="coloniaCatalogo.required"
+        formControlName="domicilioColonia"
+        (selectionChange)="seleccionaColonia($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="calle">Calle*:</label>
+      <input
+        class="form-control"
+        id="domiciliCalle"
+        placeholder=""
+        type="text"
+        formControlName="domiciliCalle"
+        (change)="setDomiciliCalle($event)"
+      />
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="numeroExterior">Número exterior*:</label>
+      <input
+        class="form-control"
+        id="numeroExterior"
+        placeholder=""
+        type="number"
+        formControlName="domiciliNumeroExterior"
+        (change)="setDomiciliNumeroExterior($event)"
+      />
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="numeroInterior">Número interior*:</label>
+      <input
+        class="form-control"
+        id="numeroInterior"
+        placeholder=""
+        type="number"
+        formControlName="domiciliNumeroInterior"
+        (change)="setDomiciliNumeroInterior($event)"
+      />
+    </div>
+
+    <div class="col-md-1 mt-4">
+      <label class="form-label" for="lada">Lada:</label>
+      <input
+        class="form-control"
+        id="lada"
+        placeholder=""
+        type="number"
+        fomrControlName="domiciliLada"
+        (change)="setDomiciliLada($event)"
+      />
+    </div>
+
+    <div class="col-md-3 mt-4">
+      <label class="form-label" for="telefono">Teléfono:</label>
+      <input
+        class="form-control"
+        id="telefono"
+        placeholder=""
+        type="number"
+        fomrControlName="domiciliTelefono"
+        (change)="setDomiciliTelefono($event)"
+      />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="correoElectronioco"
+        >Correo electrónico:</label
+      >
+      <input
+        class="form-control"
+        id="correoElectronioco"
+        placeholder=""
+        type="text"
+        fomrControlName="domiciliCorreoElectronioco"
+        (change)="setDomiciliCorreoElectronioco($event)"
+      />
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        data-bs-dismiss="modal"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn btn-default ms-3"
+        type="button"
+        (click)="limpiarDestinatario()"
+      >
+        Limpiar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        data-bs-dismiss="modal"
+        (click)="guardarDestinatario()"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
+</form>

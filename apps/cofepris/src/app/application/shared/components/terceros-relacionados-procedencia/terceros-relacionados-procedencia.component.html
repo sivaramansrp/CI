@@ -1,0 +1,29 @@
+<div class="container terceros-relacionados-container">
+  <div>
+    <!-- title -->
+    <ng-titulo titulo="Terceros relacionados" />
+
+    <!-- alert-box -->
+    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+
+    <!-- Fabricante table when on display -->
+    <div class="mt-5">
+      <h5>Informacion de procedencia*</h5>
+      <div class="table-responsive mt-5">
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+
+        <button type="button" class="btn btn-primary" (click)="abrirProcedencia()">
+          Agregar
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="isDatosGeneralesVisible">
+    <app-datos-generales (cancelDatosGenerales)="cerrarProcedencia()"
+      (formularioGuardar)="agregarTabla($event)"></app-datos-generales>
+  </div>

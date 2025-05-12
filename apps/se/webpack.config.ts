@@ -50,5 +50,8 @@ module.exports = {
    })
   }),
   sharedMappings.getPlugin()
- ]
+ ],
+ watchOptions: {
+    ignored: 'node_modules'
+  }
 };

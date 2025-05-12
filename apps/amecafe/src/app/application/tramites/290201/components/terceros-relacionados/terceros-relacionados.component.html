@@ -1,0 +1,104 @@
+<div class="col-md-12">
+    <ng-titulo titulo="Destinatario (destino final)" />
+    <app-tabla-dinamica
+     (filaClic)="onRowClick($event)"
+    [configuracionTabla]="configuracionColumnasoli"
+    [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+     [datos]="tableData"
+     (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+     >
+</app-tabla-dinamica>
+    <div class="btn-group">
+      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="enModificar()">Modificar</button>
+      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)=" onDeleteSelectedRows()">Eliminar</button>
+      <button class="btn btn-primary me-2" type="button">Continuar</button>
+    </div>
+</div>
+
+<div class="container"  *ngIf="esFormularioVisible">
+    <form [formGroup]="destinatarioForm" (ngSubmit)="enEnviar()">
+        <ng-titulo titulo="Datos personales" />
+         <ng-container formGroupName="datosDelTramiteRealizar"> 
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+                  id="fisica" value="fisica"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
+                <label for="fisica">Física</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
+               id="moral" value="moral"
+                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
+                <label for="moral">Moral</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"/>
+              </div>
+            </div>
+            <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="domicilio">Domicilio</label>
+                <textarea class="form-control" id="domicilio" rows="2" height="50"
+                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"
+                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" ></textarea>
+              </div>
+            </div>
+            </div>
+           <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select
+                id="paisData"
+                formControlName="pais"
+                [catalogo]="paisData.catalogos"
+                [label]="'Pais'"
+                [placeholder]="paisData.primerOpcion"
+                [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
+              ></app-catalogo-select>
+             </div>
+           </div>
+            </div>
+             <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="telefono">Telefono:</label>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"/>
+              </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="correoelectronico">Correo electronico:</label>
+                  <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"/>
+                </div>
+            </div>
+
+          </ng-container> 
+            <div class="col-md-12 d-flex justify-content-end">
+              <div class="btn-group">
+                <button class="btn btn-danger"
+                  type="button">Cancelar</button>
+                  <button class="btn btn-primary me-2"
+                  type="button"(click)="onLimpiar()">Limpiar</button>
+                  <button class="btn btn-primary me-2"
+                  type="button" (click)="enEnviar()">Guardar</button>
+              </div>
+            
+          </div>
+    </form>
+</div>

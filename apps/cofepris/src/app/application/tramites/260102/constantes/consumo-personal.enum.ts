@@ -1,0 +1,47 @@
+/**
+ * Define una constante que representa la lista de pasos para un asistente (wizard).
+ * Cada paso incluye su índice, título, estado de actividad y estado de completitud.
+ *
+ * Índice numérico del paso.
+ * Título descriptivo del paso.
+ * Indica si el paso está actualmente activo y visible.
+ * Indica si el paso ha sido completado.
+ */
+export const PASOS = [
+    {
+      indice: 1,
+      titulo: 'Capturar solicitud',
+      activo: true,
+      completado: true,
+    },
+    {
+      indice: 2,
+      titulo: 'Anexar requisitos',
+      activo: false,
+      completado: false,
+    },
+    {
+      indice: 4,
+      titulo: 'Firmar solicitud',
+      activo: false,
+      completado: false,
+    },
+  ];
+
+  /**
+* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
+*/
+export const SECCIONES_TRAMITE_260102 = {
+    PASO_1: {
+      VALIDACION_SECCION_1: false,
+      VALIDACION_SECCION_2: true,
+      VALIDACION_SECCION_3: false,
+      VALIDACION_SECCION_4: false,
+    },
+    PASO_2: {
+      VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+      requiereValidacion: true,
+    },
+  };

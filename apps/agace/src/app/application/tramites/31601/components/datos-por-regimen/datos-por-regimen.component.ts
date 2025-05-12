@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -19,11 +19,13 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { map, merge } from 'rxjs';
 import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TableBodyData } from '@ng-mf/data-access-user';
 
+import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { Subject, map, merge, takeUntil } from 'rxjs';
 /**
  * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
  *
@@ -46,7 +48,7 @@ import { TableBodyData } from '@ng-mf/data-access-user';
     TablePaginationComponent,
   ],
 })
-export class DatosPorRegimenComponent implements OnInit {
+export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   /**
    *Un catálogo de artículos.
    * Esta propiedad contiene una matriz de objetos 'Catalogo', que representan
@@ -149,22 +151,35 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public miembroDeLaEmpresaBodyData: TableBodyData[] = [];
 
+  
   /**
-   * constructor de la clase
-   * Fetch the fetchtiposDocumentos datos
-   * Crea el formulario
-   * @param fb: constructor de formularios
-   * @param validacionesService: Validaciones comunes del formulario.
+   * Estado de la solicitud.
    */
+  public solicitudState!: Solicitud31601State;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+ * Constructor de la clase DatosPorRegimenComponent.
+ * 
+ * @param fb - Constructor de formularios.
+ * @param validacionesService - Servicio de validaciones de formulario.
+ * @param _pantallaSvc - Servicio de pantalla.
+ * @param tramiteAgaceStore - Store de Tramite Agace.
+ * @param tramite31601Store - Store de Tramite 31601.
+ * @param tramite31601Query - Query de Tramite 31601.
+ */
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private _pantallaSvc: ServiciosPantallaService,
-    private tramiteAgaceStore: TramiteAgaceStore
-  ) {
-    this.crearRegimenForm();
-  }
-
+    private tramiteAgaceStore: TramiteAgaceStore,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query
+  ){this.crearRegimenForm();}
   /**
    * Gancho de ciclo de vida que se llama después de inicializar las propiedades enlazadas a datos de una directiva.
    * Este método inicializa catálogos, establece valores de control de formularios, prepara los datos de la pestaña del régimen,
@@ -173,10 +188,10 @@ export class DatosPorRegimenComponent implements OnInit {
    * @memberof DatosPorRegimenComponent
    */
   ngOnInit() {
+    this.crearRegimenForm();
     this.inicializaCatalogos();
-    this.establecervalorcontrolformulario();
     this.regimenTabData();
-    this.getAgregarForm();
+    this.getAgregarForm(); 
   }
 
   /**
@@ -261,61 +276,73 @@ export class DatosPorRegimenComponent implements OnInit {
   }
 
   /**
-   * Crea e inicializa el FormGroup `regimenForm` con varios controles de formulario y sus validadores.
-   * Los controles del formulario incluyen:
-   * - `importaciones`: Un campo requerido para importaciones.
-   * - `infraestructura`: Un campo requerido para infraestructura.
-   * - `ultimosMeses`: Un campo requerido para los últimos meses.
-   * - `operacionesmeses`: Un campo requerido para operaciones en meses.
-   * - `valor`: Un campo requerido para valor.
-   * - `transferencias`: Un campo opcional para transferencias con una longitud máxima de 20.
-   * - `transferenciasVir`: Un campo opcional para transferencias virtuales con una longitud máxima de 7.
-   * - `retornos`: Un campo opcional para retornos con una longitud máxima de 20.
-   * - `retornosSe`: Un campo opcional para retornos secundarios con una longitud máxima de 7.
-   * - `constancias`: Un campo opcional para constancias con una longitud máxima de 20.
-   * - `constanciasDe`: Un campo opcional para detalles de constancias con una longitud máxima de 7.
-   * - `total`: Un campo deshabilitado para total.
-   * - `totals`: Un campo deshabilitado para totales.
-   * - `empleadosPropios`: Un campo requerido para empleados propios.
-   * - `numeroEmpleados`: Un campo requerido para el número de empleados.
-   * - `comboBimestresUno`: Un campo opcional para el primer combo bimestral.
-   * - `comboBimestresDos`: Un campo opcional para el segundo combo bimestral.
-   * - `comboBimestresTres`: Un campo opcional para el tercer combo bimestral.
-   * - `proveedorCumplimiento`: Un campo requerido para proveedor de cumplimiento.
-   * - `declaracionISR`: Un campo requerido para declaración de ISR.
-   * - `cancelacion`: Un campo requerido para cancelación.
-   * - `cumplimientoReglas`: Un campo requerido para cumplimiento de reglas.
-   * - `recintoFiscalizado`: Un campo requerido para recinto fiscalizado.
-   * - `recintoEstrategico`: Un campo requerido para recinto estratégico.
-   * - `cumplimientoLineamientos`: Un campo requerido para cumplimiento de lineamientos.
-   */
+ * Crea e inicializa el FormGroup `regimenForm` con varios controles de formulario y sus validadores.
+ * Los controles del formulario incluyen:
+ * - `importaciones`: Un campo requerido para importaciones.
+ * - `infraestructuraIndique`: Un campo requerido para infraestructura.
+ * - `ultimosMeses`: Un campo requerido para los últimos meses.
+ * - `operacionesmeses`: Un campo requerido para operaciones en meses.
+ * - `valor`: Un campo requerido para valor.
+ * - `transferencias`: Un campo opcional para transferencias con una longitud máxima de 20.
+ * - `transferenciasVir`: Un campo opcional para transferencias virtuales con una longitud máxima de 7.
+ * - `retornos`: Un campo opcional para retornos con una longitud máxima de 20.
+ * - `retornosSe`: Un campo opcional para retornos secundarios con una longitud máxima de 7.
+ * - `constancias`: Un campo opcional para constancias con una longitud máxima de 20.
+ * - `constanciasDe`: Un campo opcional para detalles de constancias con una longitud máxima de 7.
+ * - `total`: Un campo deshabilitado para total.
+ * - `totals`: Un campo deshabilitado para totales.
+ * - `empleadosPropios`: Un campo requerido para empleados propios.
+ * - `numeroEmpleados`: Un campo requerido para el número de empleados.
+ * - `numeroEmpleadosDos`: Un campo requerido para el número de empleados dos.
+ * - `numeroEmpleadosTres`: Un campo requerido para el número de empleados tres.
+ * - `comboBimestresUno`: Un campo opcional para el primer combo bimestral.
+ * - `comboBimestresDos`: Un campo opcional para el segundo combo bimestral.
+ * - `comboBimestresTres`: Un campo opcional para el tercer combo bimestral.
+ * - `proveedorCumplimiento`: Un campo requerido para proveedor de cumplimiento.
+ * - `declaracionISR`: Un campo requerido para declaración de ISR.
+ * - `cancelacion`: Un campo requerido para cancelación.
+ * - `cumplimientoReglas`: Un campo requerido para cumplimiento de reglas.
+ * - `recintoFiscalizado`: Un campo requerido para recinto fiscalizado.
+ * - `recintoEstrategico`: Un campo requerido para recinto estratégico.
+ * - `cumplimientoLineamientos`: Un campo requerido para cumplimiento de lineamientos.
+ */
   public crearRegimenForm() {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.regimenForm = this.fb.group({
-      importaciones: ['', Validators.required],
-      infraestructura: ['', Validators.required],
-      ultimosMeses: ['', Validators.required],
-      operacionesmeses: ['', Validators.required],
-      valor: ['', Validators.required],
-      transferencias: ['', Validators.maxLength(20)],
-      transferenciasVir: ['', Validators.maxLength(7)],
-      retornos: ['', Validators.maxLength(20)],
-      retornosSe: ['', Validators.maxLength(7)],
-      constancias: ['', Validators.maxLength(20)],
-      constanciasDe: ['', Validators.maxLength(7)],
+      importaciones: [this.solicitudState?.importaciones, Validators.required],
+      infraestructuraIndique: [this.solicitudState?.infraestructuraIndique, Validators.required],
+      ultimosMeses: [this.solicitudState?.ultimosMeses, Validators.required],
+      operacionesmeses: [this.solicitudState?.operacionesmeses, Validators.required],
+      valor: [this.solicitudState?.valor, Validators.required],
+      transferencias: [this.solicitudState?.transferencias, Validators.maxLength(20)],
+      transferenciasVir: [this.solicitudState?.transferenciasVir, Validators.maxLength(7)],
+      retornos: [this.solicitudState?.retornos, Validators.maxLength(20)],
+      retornosSe: [this.solicitudState?.retornosSe, Validators.maxLength(7)],
+      constancias: [this.solicitudState?.constancias, Validators.maxLength(20)],
+      constanciasDe: [this.solicitudState?.constanciasDe, Validators.maxLength(7)],
       total: [{ value: '', disabled: true }],
       totals: [{ value: '', disabled: true }],
-      empleadosPropios: ['', Validators.required],
-      numeroEmpleados: ['', Validators.required],
-      comboBimestresUno: [''],
-      comboBimestresDos: [''],
-      comboBimestresTres: [''],
-      proveedorCumplimiento: ['', Validators.required],
-      declaracionISR: ['', Validators.required],
-      cancelacion: ['', Validators.required],
-      cumplimientoReglas: ['', Validators.required],
-      recintoFiscalizado: ['', Validators.required],
-      recintoEstrategico: ['', Validators.required],
-      cumplimientoLineamientos: ['', Validators.required],
+      empleadosPropios: [this.solicitudState?.empleadosPropios, Validators.required],
+      numeroEmpleados: [this.solicitudState?.numeroEmpleados, Validators.required],
+      numeroEmpleadosDos: [this.solicitudState?.numeroEmpleadosDos, Validators.required],
+      numeroEmpleadosTres: [this.solicitudState?.numeroEmpleadosTres, Validators.required],
+      comboBimestresUno: [this.solicitudState?.comboBimestresUno],
+      comboBimestresDos: [this.solicitudState?.comboBimestresDos],
+      comboBimestresTres: [this.solicitudState?.comboBimestresTres],
+      proveedorCumplimiento: [this.solicitudState?.proveedorCumplimiento, Validators.required],
+      declaracionISR: [this.solicitudState?.declaracionISR, Validators.required],
+      cancelacion: [this.solicitudState?.cancelacion, Validators.required],
+      cumplimientoReglas: [this.solicitudState?.cumplimientoReglas, Validators.required],
+      recintoFiscalizado: [this.solicitudState?.recintoFiscalizado, Validators.required],
+      recintoEstrategico: [this.solicitudState?.recintoEstrategico, Validators.required],
+      cumplimientoLineamientos: [this.solicitudState?.cumplimientoLineamientos, Validators.required],
     });
   }
 
@@ -337,21 +364,6 @@ export class DatosPorRegimenComponent implements OnInit {
    * - recintoEstrategico
    * - cumplimientoLineamientos
    */
-  public establecervalorcontrolformulario() {
-    this.regimenForm.get('importaciones')?.setValue('Yes');
-    this.regimenForm.get('infraestructura')?.setValue('Yes');
-    this.regimenForm.get('ultimosMeses')?.setValue('Yes');
-    this.regimenForm.get('operacionesmeses')?.setValue('Yes');
-    this.regimenForm.get('empleadosPropios')?.setValue('Yes');
-    this.regimenForm.get('numeroEmpleados')?.setValue('Yes');
-    this.regimenForm.get('proveedorCumplimiento')?.setValue('Yes');
-    this.regimenForm.get('declaracionISR')?.setValue('Yes');
-    this.regimenForm.get('cancelacion')?.setValue('Yes');
-    this.regimenForm.get('cumplimientoReglas')?.setValue('Yes');
-    this.regimenForm.get('recintoFiscalizado')?.setValue('Yes');
-    this.regimenForm.get('recintoEstrategico')?.setValue('Yes');
-    this.regimenForm.get('cumplimientoLineamientos')?.setValue('Yes');
-  }
 
   /**
    * Actualiza los datos de la tabla de régimen estableciendo los datos de cabecera y cuerpo
@@ -503,4 +515,24 @@ export class DatosPorRegimenComponent implements OnInit {
     this.currentPage = 1;
     this.updatePagination();
   }
+/**
+ * Establece el valor de un campo en el store de Tramite31601.
+ *
+ * @param form - El grupo de formularios que contiene el campo.
+ * @param campo - El nombre del campo cuyo valor se va a establecer.
+ * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+ */
+setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+  const valor = form.get(campo)?.value;
+  (this.tramite31601Store[metodoNombre] as (value: string) => void)(valor);
+}
+
+/**
+ * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+ * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

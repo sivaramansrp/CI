@@ -1,0 +1,298 @@
+import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+
+/**
+ * Interfaz que representa el estado de la solicitud 11204.
+ * Utilizamos esta interfaz para definir la estructura del estado de la solicitud.
+ */
+export interface Solicitud11204State {
+  /**
+   * Menu desplegable.
+   */
+  menuDesplegable: string;
+
+  /**
+   * RFC.
+   */
+  rfc: string;
+
+  /**
+   * Denominación.
+   */
+  denominacion: string;
+
+  /**
+   * Datos del contenedor.
+   */
+  datosDelContenedor: [];
+  
+  /**
+   * Datos del contenedor.
+   */
+  datosDelCsvArchivo: [];
+
+  /**
+   * Tipo de busqueda.
+   */
+  tipoBusqueda: string;
+
+  /**
+   * Aduana.
+   */
+  aduana: string;
+
+  /**
+   * Fecha de ingreso.
+   */
+  fechaIngreso: string;
+
+  /**
+   * Vigencia.
+   */
+  vigencia: string;
+
+  /**
+   * Iniciales del contenedor.
+   */
+  inicialesContenedor: string;
+
+  /**
+   * Numero del contenedor.
+   */
+  numeroContenedor: string;
+
+  /**
+   * Digito de control.
+   */
+  digitoDeControl: string;
+
+  /**
+   * Contenedores.
+   */
+  contenedores: string;
+
+  /**
+   * Menu desplegable de aduana.
+   */
+  aduanaMenuDesplegable: string;
+
+  /**
+   * Fecha de ingreso.
+   */
+  fechaDeIngreso: string;
+
+  /**
+   * Archivo seleccionado.
+   */
+  archivoSeleccionado: string;
+}
+
+/**
+ * Función que crea el estado inicial de la solicitud 11204.
+ * @returns El estado inicial de la solicitud 11204.
+ */
+export function createInitialState(): Solicitud11204State {
+  return {
+    menuDesplegable: '',
+    rfc: '',
+    denominacion: '',
+    datosDelContenedor: [],
+    datosDelCsvArchivo: [],
+    tipoBusqueda: '',
+    aduana: '',
+    inicialesContenedor: '',
+    numeroContenedor: '',
+    digitoDeControl: '',
+    contenedores: '',
+    fechaIngreso: '',
+    vigencia: '',
+    aduanaMenuDesplegable: '',
+    fechaDeIngreso: '',
+    archivoSeleccionado: ''
+  };
+}
+
+/**
+ * Servicio Injectable que gestiona el estado de la solicitud 11204.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+@StoreConfig({ name: 'tramite11204', resettable: true })
+export class Tramite11204Store extends Store<Solicitud11204State> {
+  constructor() {
+    super(createInitialState());
+  }
+
+  /**
+   * Establece el valor del menu desplegable de aduana.
+   * @param aduanaMenuDesplegable Valor del menu desplegable de aduana.
+   */
+  public setAduanaMenuDesplegable(aduanaMenuDesplegable: string): void {
+    this.update((state) => ({
+      ...state,
+      aduanaMenuDesplegable,
+    }));
+  }
+
+  /**
+   * Establece la fecha de ingreso.
+   * @param fechaDeIngreso Fecha de ingreso.
+   */
+  public setFechaDeIngreso(fechaDeIngreso: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaDeIngreso,
+    }));
+  }
+
+  /**
+   * Establece la vigencia.
+   * @param Vigencia Vigencia.
+   */
+  public setVigencia(Vigencia: string): void {
+    this.update((state) => ({
+      ...state,
+      Vigencia,
+    }));
+  }
+
+  /**
+   * Establece el RFC.
+   * @param rfc RFC.
+   */
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc,
+    }));
+  }
+
+  /**
+   * Establece la denominación.
+   * @param denominacion Denominación.
+   */
+  public setDenominacion(denominacion: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacion,
+    }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelContenedor Datos del contenedor.
+   */
+  public setDelContenedor(datosDelContenedor: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelContenedor,
+    }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelCsvArchivo Datos del contenedor.
+   */
+  public setDelCsv(datosDelCsvArchivo: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelCsvArchivo,
+    }));
+  }
+
+  /**
+   * Establece el tipo de busqueda.
+   * @param tipoBusqueda Tipo de busqueda.
+   */
+  public setTipoBusqueda(tipoBusqueda: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoBusqueda,
+    }));
+  }
+
+  /**
+   * Establece la aduana.
+   * @param aduana Aduana.
+   */
+  public setAduana(aduana: string): void {
+    this.update((state) => ({
+      ...state,
+      aduana,
+    }));
+  }
+
+  /**
+   * Establece la fecha de ingreso.
+   * @param fechaIngreso Fecha de ingreso.
+   */
+  public setFechaIngreso(fechaIngreso: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaIngreso,
+    }));
+  }
+
+  /**
+   * Establece las iniciales del contenedor.
+   * @param inicialesContenedor Iniciales del contenedor.
+   */
+  public setInicialesContenedor(inicialesContenedor: string): void {
+    this.update((state) => ({
+      ...state,
+      inicialesContenedor,
+    }));
+  }
+
+  /**
+   * Establece el numero del contenedor.
+   * @param numeroContenedor Numero del contenedor.
+   */
+  public setNumeroContenedor(numeroContenedor: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroContenedor,
+    }));
+  }
+
+  /**
+   * Establece el digito de control.
+   * @param digitoDeControl Digito de control.
+   */
+  public setDigitoDeControl(digitoDeControl: string): void {
+    this.update((state) => ({
+      ...state,
+      digitoDeControl,
+    }));
+  }
+
+  /**
+   * Establece los contenedores.
+   * @param contenedores Contenedores.
+   */
+  public setContenedores(contenedores: string): void {
+    this.update((state) => ({
+      ...state,
+      contenedores,
+    }));
+  }
+
+  /**
+   * Establece el archivo seleccionado.
+   * @param archivoSeleccionado Archivo seleccionado.
+   */
+  public setArchivoSeleccionado(archivoSeleccionado: string): void {
+    this.update((state) => ({
+      ...state,
+      archivoSeleccionado,
+    }));
+  }
+
+  /**
+   * Limpia los datos de la solicitud.
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
+  }
+}

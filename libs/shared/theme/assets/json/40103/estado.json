@@ -1,0 +1,8 @@
+[
+    { "clave": "MX", "descripcion": "Inicial" },
+    { "clave": "US", "descripcion": "Procesando" },
+    { "clave": "CA", "descripcion": "Aprobado " },
+    { "clave": "ES", "descripcion": "Rechazado " }
+   
+  ]
+  

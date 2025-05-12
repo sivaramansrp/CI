@@ -1,0 +1,134 @@
+
+<ng-titulo titulo="Oficio" />
+<div>
+<form [formGroup]="OficioForm" >
+    <div formGroupName="oficioData">
+
+<div class="row"  style="padding-bottom: 20px;" >
+            <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="asignado">  Monto asignado:</label>
+                  <input class="form-control" id="asignado" formControlName="asignado"  type="text">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="monto">Monto expedido:</label>
+                  <input class="form-control" id="monto" formControlName="monto"  type="text">
+                </div>
+              </div>
+        </div>
+
+
+<h6>Certificados disponibles</h6>
+<app-tabla-dinamica 
+
+  [configuracionTabla]="configuracionTabla"
+  [datos]="oficio"
+  [tipoSeleccionTabla]="TablaSeleccion"
+  >
+</app-tabla-dinamica>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">     
+    <li class="page-item"><a class="page-link" href="#">1</a></li>    
+  </ul>
+</nav>
+
+
+
+      <div class="row" style="padding-bottom: 20px;text-align: right;">
+        <div>
+            <button type="button" class="btn btn-primary btn-space" >Seleccionar</button>
+            
+        </div>
+    </div>
+    <h6>Certificados a cancelar</h6>
+    <app-tabla-dinamica 
+
+  [configuracionTabla]="configuracionTabla"
+  [datos]="Certificados"
+  [tipoSeleccionTabla]="TablaSeleccion"
+  >
+</app-tabla-dinamica>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">     
+    <li class="page-item"><a class="page-link" href="#">1</a></li>    
+  </ul>
+</nav>
+      <div class="row" style="padding-bottom: 20px;text-align: right;">
+        <div>
+            <button type="button" class="btn btn-danger btn-space" >Eliminar seleccionado</button>
+            <button type="button" class="btn btn-primary btn-space">Devolver facturas</button>
+            
+        </div>
+    </div>
+   
+        <div class="row"  style="padding-bottom: 20px;" >
+          <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label" for="observaciones"> Motivo de la cancelación:</label>
+                <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
+              
+              </div>
+            </div>
+            </div> 
+
+           
+            <ng-titulo titulo=" Captura monto a favor del certificado" />
+            <div class="row"  style="padding-bottom: 20px;" >
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="cancelar"> *Monto a cancelar (en unidades primarias)</label>
+                  <input class="form-control" id="cancelar" formControlName="cancelar"  type="text">
+                </div>
+              </div>
+                </div>
+                <div class="row" style="padding-bottom: 20px;text-align: right;">
+                <div>
+                <button type="button" class="btn btn-default me-2 btn-space">Agregar</button>
+                <button type="button" class="btn btn-primary me-2">Cerrar</button>
+              </div>
+            </div>
+
+            <h6>Certificados a cancelar</h6>
+            <app-tabla-dinamica 
+
+            [configuracionTabla]="configuracionTabla"
+            [datos]="filteredData"
+            [tipoSeleccionTabla]="TablaSeleccion"
+            >
+          </app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">     
+            <li class="page-item"><a class="page-link" href="#">1</a></li>    
+          </ul>
+        </nav>
+              <div class="row" style="padding-bottom: 20px;text-align: right;">
+                <div>
+                    <button type="button" class="btn btn-danger  btn-space" >Eliminar seleccionado</button>
+                    <button type="button" class="btn btn-primary  btn-space" >Devolver facturas</button>
+                    
+                </div>
+            </div>
+
+                <div class="row"  style="padding-bottom: 20px;" >
+                  <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="form-label" for="observaciones"> Motivo de la cancelación:</label>
+                        <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
+                      
+                      </div>
+                    </div>
+                    </div> 
+      
+       
+      </div>
+      </form>
+    </div>
+  
+
+    <div>
+      <btn-continuar [datos]="datosPasos" ></btn-continuar>
+  
+  
+  </div>

@@ -1,0 +1,224 @@
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { OnInit } from '@angular/core';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Solicitud30901Query } from '../../estados/tramites30901.query';
+import { Solicitud30901State } from '../../estados/tramites30901.store';
+import { Solicitud30901Store } from '../../estados/tramites30901.store';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+/**
+ * Componente para gestionar los datos de prórroga de muestras de mercancías.
+ *
+ * Este componente permite capturar y validar la información relacionada con la solicitud
+ * de prórroga para muestras de mercancías en el trámite 30901.
+ *
+ * @component
+ * @templateUrl ./datos-prorroga-muestras-mercancias.component.html
+ * @styleUrl ./datos-prorroga-muestras-mercancias.component.scss
+ */
+@Component({
+  selector: 'app-datos-prorroga-muestras-mercancias',
+  templateUrl: './datos-prorroga-muestras-mercancias.component.html',
+  styleUrl: './datos-prorroga-muestras-mercancias.component.scss',
+})
+export class DatosProrrogaMuestrasMercanciasComponent
+  implements OnInit, OnDestroy
+{
+  /**
+   * Formulario reactivo para los datos de prórroga de muestras de mercancías.
+   *
+   * Este formulario se utiliza para capturar y validar la información relacionada
+   * con la solicitud de prórroga para muestras de mercancías en el trámite 30901.
+   *
+   * @type {FormGroup}
+   */
+  formDatosProrroga!: FormGroup;
+
+  /**
+   * Etiqueta que representa la vigencia actual.
+   * @type {string}
+   */
+  vigenciaActualLabel: string = 'Vigencia actual';
+  /**
+   * Etiqueta que contiene el texto informativo sobre la fecha actual de inicio y fin de vigencia de la autorización.
+   * @type {string}
+   */
+  vigenciaActualTextoLabel: string =
+    'La fecha actual de inicio y fin de vigencia de su authorización es la siguiente:';
+  /**
+   * Etiqueta para la fecha de inicio de vigencia.
+   * @type {string}
+   */
+  fechaInicioVigenciaLabel: string = 'Fecha de Inicio de Vigencia';
+  /**
+   * Etiqueta para la fecha de fin de vigencia.
+   * @type {string}
+   */
+  fechaFinVigenciaLabel: string = 'Fecha de Fin de Vigencia';
+
+  /**
+   * Configuración para la fecha de fin de vigencia.
+   *
+   * @property {string} labelNombre - Etiqueta para el nombre de la fecha.
+   * @property {boolean} required - Indica si el campo es obligatorio.
+   * @property {boolean} habilitado - Indica si el campo está habilitado.
+   */
+  configuracionFechaFinVigencia: InputFecha = {
+    labelNombre: 'Fecha de Inicio de Vigencia',
+    required: false,
+    habilitado: false,
+  };
+
+  /**
+   * Configuración para la fecha de inicio de vigencia.
+   *
+   * @property {string} labelNombre - Etiqueta del nombre para la fecha de fin de vigencia.
+   * @property {boolean} required - Indica si el campo es obligatorio.
+   * @property {boolean} habilitado - Indica si el campo está habilitado.
+   */
+  configuracionFechaInicioVigencia: InputFecha = {
+    labelNombre: 'Fecha de fin de Vigencia',
+    required: false,
+    habilitado: false,
+  };
+
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+   *
+   * - La variable `darseDeBaja` almacena la suscripción activa,
+   *   la cual puede ser `null` si no hay suscripción.
+   * - El método `ngOnDestroy` se asegura de que la suscripción
+   *   se cancele correctamente cuando el componente se destruya,
+   *   evitando fugas de memoria.
+   */
+  darseDeBaja: Subscription | null = null;
+
+  /**
+   * Estado actual de la solicitud 30901.
+   * Se inicializa como un objeto vacío con la estructura de `Solicitud30901State`.
+   */
+  solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
+
+  /**
+   * Constructor de la clase DatosProrrogaMuestrasMercanciasComponent.
+   *
+   * @param {FormBuilder} fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
+   */
+  constructor(
+    public fb: FormBuilder,
+    public renovacionesMuestrasMercanciasService: RenovacionesMuestrasMercanciasService,
+    public solicitud30901Store: Solicitud30901Store,
+    public solicitud30901Query: Solicitud30901Query
+  ) {
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario `formDatosProrroga` con los campos `fechaInicioVigencia` y `fechaFinVigencia`,
+   * estableciendo valores predeterminados y deshabilitándolos.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.formDatosProrroga = this.fb.group({
+      fechaInicioVigencia: [
+        { value: this.solicitud30901State.fechaInicioVigencia, disabled: true },
+      ],
+      fechaFinVigencia: [
+        { value: this.solicitud30901State.fechaFinVigencia, disabled: true },
+      ],
+    });
+
+    /**
+     * Observable que obtiene las fechas de inicio y fin de vigencia.
+     */
+    this.solicitud30901Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((datos: Solicitud30901State) => {
+          this.solicitud30901State = datos;
+          this.formDatosProrroga.patchValue({
+            fechaInicioVigencia: this.solicitud30901State.fechaInicioVigencia,
+            fechaFinVigencia: this.solicitud30901State.fechaFinVigencia,
+          });
+        })
+      )
+      .subscribe();
+
+    this.getvalidezDeLaAutorizacionDatos();
+  }
+
+  /**
+   * Obtiene los datos de validez de la autorización desde el servicio y actualiza el estado.
+   * Realiza una suscripción al servicio para obtener las opciones desplegables y
+   * actualiza la validez de la autorización en el store.
+   */
+  getvalidezDeLaAutorizacionDatos(): void {
+    this.darseDeBaja = this.renovacionesMuestrasMercanciasService
+      .obtenerOpcionesDesplegables()
+      .subscribe({
+        next: (res: ImportanteCatalogoSeleccion) => {
+          this.solicitud30901Store.setFechaInicioVigencia(
+            res.validezDeLaAutorizacion.fechaInicioVigencia
+          );
+          this.solicitud30901Store.setFechaFinVigencia(
+            res.validezDeLaAutorizacion.fechaFinVigencia
+          );
+        },
+      });
+  }
+
+  /**
+   * Maneja el evento de cambio de fecha de fin de vigencia.
+   *
+   * @param date - La nueva fecha de fin de vigencia en formato de cadena.
+   *
+   * Este método actualiza el valor del campo `fechaInicioVigencia` en el formulario `formDatosProrroga`
+   * con la nueva fecha proporcionada.
+   */
+  onFechaFinVigenciaChange(date: string): void {
+    this.formDatosProrroga.patchValue({
+      fechaInicioVigencia: date,
+    });
+  }
+
+  /**
+   * Maneja el evento de cambio de fecha de inicio.
+   *
+   * @param date - La nueva fecha de inicio en formato de cadena.
+   *
+   * Actualiza el campo `fechaFinVigencia` del formulario `formDatosProrroga` con la nueva fecha proporcionada.
+   */
+  onFechaInicioChange(date: string): void {
+    this.formDatosProrroga.patchValue({
+      fechaFinVigencia: date,
+    });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+  ngOnDestroy(): void {
+    if (this.darseDeBaja) {
+      this.darseDeBaja.unsubscribe();
+      this.darseDeBaja = null;
+    }
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+}

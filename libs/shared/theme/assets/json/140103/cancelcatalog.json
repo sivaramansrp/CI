@@ -1,0 +1,31 @@
+{
+
+    "regimen":[
+        { "id": 1, "descripcion": "Exportacion" }
+       
+      ],
+    "mecanismo": [
+      { "id": 1, "descripcion": "Primero en tiempo primero en der " }
+      
+    ],
+    "tratado": [
+      { "id": 1, "descripcion": "T-MEC" }
+     
+    ],
+    "producto": [
+        { "id": 1, "descripcion": "option1" },
+        { "id": 2, "descripcion": "option2" },
+        { "id": 3, "descripcion": "option3" }
+    ],
+    "subproducto": [
+        { "id": 1, "descripcion": "option1" },
+        { "id": 2, "descripcion": "option2" },
+        { "id": 3, "descripcion": "option3" }
+    ],
+    "representacion": [
+      { "id": 1, "descripcion": "option1" },
+      { "id": 2, "descripcion": "option2" },
+      { "id": 3, "descripcion": "option3" }
+    ]
+  }
+  

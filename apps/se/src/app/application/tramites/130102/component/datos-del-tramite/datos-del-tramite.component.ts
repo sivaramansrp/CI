@@ -1,0 +1,193 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+/**
+ * compo doc
+ * @fileoverview Componente encargado de gestionar la selección de solicitudes y tipos de documentos en un trámite.
+ * @module DetosDelTramiteComponent
+ */
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import {
+  ProductoOption,
+  ProductoResponse,
+} from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+
+import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
+import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+/**
+ * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
+ */
+@Component({
+  selector: 'app-datos-del-tramite',
+  standalone: true,
+  imports: [
+    TituloComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    InputRadioComponent,
+    CatalogoSelectComponent,
+  ],
+  templateUrl: './datos-del-tramite.component.html',
+})
+export class DetosDelTramiteComponent implements OnInit, OnDestroy {
+  /**
+   * Lista de campos de entrada utilizados en el formulario.
+   */
+  inputFields = [
+    {
+      label: 'Régimen al que se destinará la mercancía',
+      placeholder: 'Seleccione un documento',
+      required: true,
+    },
+    {
+      label: 'Clasificación del régimen',
+      placeholder: 'Seleccione un documento',
+      required: true,
+    },
+  ];
+
+  /**
+   * Lista de catálogos disponibles para la selección.
+   */
+  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
+  /**
+   * Formulario reactivo del componente.
+   */
+  formDelTramite!: FormGroup;
+
+  /**
+   * Opciones disponibles para la solicitud.
+   */
+  solicitude: ProductoOption[] = [];
+
+  /**
+   * Lista de tipos de documentos disponibles.
+   */
+  tiposDocumentosArray: Catalogo[] = [];
+
+  /**
+   * Valor seleccionado actualmente.
+   */
+  selectedValue: string | number = 'Inicial';
+
+  /**
+   * Valor predeterminado en la selección.
+   */
+  defaultSelect: string = 'Inicial';
+
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Constructor del componente.
+   * @param {HttpClient} http - Servicio para realizar peticiones HTTP.
+   * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
+   */
+  constructor(private http: HttpClient, private fb: FormBuilder, 
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
+  ) {
+    //constructor
+  }
+
+  /**
+   * Inicializa el componente, configura el formulario y obtiene datos iniciales.
+   */
+  ngOnInit(): void { 
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
+    this.formDelTramite = this.fb.group({
+      solicitud: [''],
+      tipoDocumento: [''],
+      fraccion: [this.solicitudState?.fraccion, [Validators.required]],
+    });
+    this.fetchSolicitudeOptions();
+    this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
+  }
+  /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
+  }
+
+  /**
+   * Maneja los cambios en la opción seleccionada.
+   *
+   * Este método se activa cuando el usuario cambia el valor en el campo correspondiente.
+   *
+   * @param {string | number} value - El nuevo valor seleccionado.
+   *
+   * Este método es para el control de radio de solicitud.
+   */
+  onValueChange(value: string | number): void {
+    this.selectedValue = value;
+
+  }
+
+  /**
+   * Método de marcador de posición para gestionar el tipo de transporte.
+   */
+  tipoTransporte(): void {
+    this.selectedValue = 'Nuevo';
+  }
+
+  /**
+   * Obtiene la lista de opciones de solicitud desde un archivo JSON.
+   */
+  fetchSolicitudeOptions(): void {
+    this.http
+      .get<ProductoResponse>('/assets/json/130102/solicitude-options.json')
+      .subscribe((data) => {
+        this.solicitude = data.options;
+        this.defaultSelect = data.defaultSelect;
+      });
+  }
+
+  
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+}

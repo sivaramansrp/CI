@@ -1,0 +1,239 @@
+import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+
+/**
+ * Representa un catálogo con un identificador y una descripción.
+ */
+export interface Catalogo {
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
+}
+
+/**
+ * Estado inicial para la interfaz del trámite 32508.
+ */
+export interface Solicitud32508State {
+  /** Clave del fiscalizado. */
+  claveFiscalizado: string;
+  /** Tipo de dictamen. */
+  tipoDictamen: string;
+  /** RFC del fiscalizado. */
+  rfc: string;
+  /** Número de inscripción. */
+  numeroInscripcion: string;
+  /** Catálogo de años. */
+  ano: Catalogo[] | null;
+  /** Catálogo de meses. */
+  mes: Catalogo[] | null;
+  /** Opción seleccionada en el radio parcial. */
+  radioParcial: string;
+  /** Opción seleccionada en el radio total. */
+  radioTotal: string;
+  /** Saldo pendiente del dictamen anterior. */
+  saldoPendiente: string;
+  /** Aprovechamiento total a cargo. */
+  aprovechamiento: string;
+  /** Disminución aplicada. */
+  disminucionAplicada: string;
+  /** Saldo pendiente por disminuir. */
+  saldoPendienteDisminuir: string;
+  /** Cantidad pagada. */
+  cantidad: string;
+  /** Llave de pago. */
+  llaveDePago: string;
+  /** Archivos adjuntos. */
+  archivo: File[];
+  /** Fecha de pago. */
+  fechaPago: string;
+  /** Fecha de elaboración. */
+  fechaElaboracion: string;
+}
+
+/**
+ * Crea el estado inicial para la solicitud del trámite 32508.
+ * @returns Estado inicial de tipo `Solicitud32508State`.
+ */
+export function createInitialState(): Solicitud32508State {
+  return {
+    claveFiscalizado: '',
+    tipoDictamen: '',
+    rfc: '',
+    numeroInscripcion: '',
+    ano: null,
+    mes: null,
+    radioParcial: '',
+    radioTotal: '',
+    saldoPendiente: '',
+    aprovechamiento: '',
+    disminucionAplicada: '',
+    saldoPendienteDisminuir: '',
+    cantidad: '',
+    llaveDePago: '',
+    archivo: [],
+    fechaPago: '',
+    fechaElaboracion: '',
+  };
+}
+
+/**
+ * Clase que representa el almacén de estado para el trámite 32508.
+ * Gestiona el estado global de la solicitud y proporciona métodos para actualizarlo.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+@StoreConfig({ name: 'tramite32508', resettable: true })
+export class Tramite32508Store extends Store<Solicitud32508State> {
+  /**
+   * Constructor del almacén.
+   * Inicializa el estado con los valores predeterminados.
+   */
+  constructor() {
+    super(createInitialState());
+  }
+
+  /**
+   * Actualiza la clave del fiscalizado.
+   * @param claveFiscalizado Nueva clave del fiscalizado.
+   */
+  public setClaveFiscalizador(claveFiscalizado: string) {
+    this.update((state) => ({ ...state, claveFiscalizado }));
+  }
+
+  /**
+   * Actualiza el tipo de dictamen.
+   * @param tipoDictamen Nuevo tipo de dictamen.
+   */
+  public setTipoDictamen(tipoDictamen: string) {
+    this.update((state) => ({ ...state, tipoDictamen }));
+  }
+
+  /**
+   * Actualiza el RFC del fiscalizado.
+   * @param rfc Nuevo RFC.
+   */
+  public setRfc(rfc: string) {
+    this.update((state) => ({ ...state, rfc }));
+  }
+
+  /**
+   * Actualiza el número de inscripción.
+   * @param numeroInscripcion Nuevo número de inscripción.
+   */
+  public setNumeroInscripcion(numeroInscripcion: string) {
+    this.update((state) => ({ ...state, numeroInscripcion }));
+  }
+
+  /**
+   * Actualiza el catálogo de años.
+   * @param ano Nuevo catálogo de años.
+   */
+  public setAno(ano: Catalogo[] | null) {
+    this.update((state) => ({ ...state, ano }));
+  }
+
+  /**
+   * Actualiza el catálogo de meses.
+   * @param mes Nuevo catálogo de meses.
+   */
+  public setMes(mes: Catalogo[] | null) {
+    this.update((state) => ({ ...state, mes }));
+  }
+
+  /**
+   * Actualiza la opción seleccionada en el radio parcial.
+   * @param radioPartial Nueva opción seleccionada.
+   */
+  public setRadioPartial(radioParcial: string) {
+    this.update((state) => ({ ...state, radioParcial }));
+  }
+
+  /**
+   * Actualiza la opción seleccionada en el radio total.
+   * @param radioTotal Nueva opción seleccionada.
+   */
+  public setRadioTotal(radioTotal: string) {
+    this.update((state) => ({ ...state, radioTotal }));
+  }
+
+  /**
+   * Actualiza el saldo pendiente del dictamen anterior.
+   * @param saldoPendiente Nuevo saldo pendiente.
+   */
+  public setSaldoPendiente(saldoPendiente: string) {
+    this.update((state) => ({ ...state, saldoPendiente }));
+  }
+
+  /**
+   * Actualiza el aprovechamiento total a cargo.
+   * @param aprovechamiento Nuevo aprovechamiento.
+   */
+  public setAprovechamiento(aprovechamiento: string) {
+    this.update((state) => ({ ...state, aprovechamiento }));
+  }
+
+  /**
+   * Actualiza la disminución aplicada.
+   * @param disminucionAplicada Nueva disminución aplicada.
+   */
+  public setDisminucionAplicada(disminucionAplicada: string) {
+    this.update((state) => ({ ...state, disminucionAplicada }));
+  }
+
+  /**
+   * Actualiza el saldo pendiente por disminuir.
+   * @param saldoPendienteDisminuir Nuevo saldo pendiente por disminuir.
+   */
+  public setSaldoPendienteDisminuir(saldoPendienteDisminuir: string) {
+    this.update((state) => ({ ...state, saldoPendienteDisminuir }));
+  }
+
+  /**
+   * Actualiza la cantidad pagada.
+   * @param cantidad Nueva cantidad pagada.
+   */
+  public setCantidad(cantidad: string) {
+    this.update((state) => ({ ...state, cantidad }));
+  }
+
+  /**
+   * Actualiza la llave de pago.
+   * @param llaveDePago Nueva llave de pago.
+   */
+  public setLlaveDePago(llaveDePago: string) {
+    this.update((state) => ({ ...state, llaveDePago }));
+  }
+
+  /**
+   * Actualiza los archivos adjuntos.
+   * @param archivo Nuevos archivos adjuntos.
+   */
+  public setArchivo(archivo: File[]) {
+    this.update((state) => ({ ...state, archivo }));
+  }
+
+  /**
+   * Actualiza la fecha de pago.
+   * @param fechaPago Nueva fecha de pago.
+   */
+  public setFechaPago(fechaPago: string) {
+    this.update((state) => ({ ...state, fechaPago }));
+  }
+
+  /**
+   * Actualiza la fecha de elaboración.
+   * @param fechaElaboracion Nueva fecha de elaboración.
+   */
+  public setFechaElaboracion(fechaElaboracion: string) {
+    this.update((state) => ({ ...state, fechaElaboracion }));
+  }
+
+  /**
+   * Restaura el estado al valor inicial.
+   */
+  public limpiarSolicitud() {
+    this.reset();
+  }
+}

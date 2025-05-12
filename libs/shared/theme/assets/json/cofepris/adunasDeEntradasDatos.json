@@ -1,0 +1,14 @@
+{
+    "code": 200,
+    "data": [
+      {
+        "id": 101,
+        "descripcion": "ALTAMIRA"
+      },
+      {
+        "id": 102,
+        "descripcion": "CD. JUAREZ" 
+      }
+    ],
+    "message": "Adunas De Entradas Datos"
+  }

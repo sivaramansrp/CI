@@ -1,0 +1,23 @@
+/**
+ * Enumerado con los pasos de la importación de material de investigación científica
+ */
+export const PASOS_IMPORTACION = [
+    {
+        indice: 1,
+        titulo: 'Capturar solicitud',
+        activo: true,
+        completado: true,
+    },
+    {
+        indice: 2,
+        titulo: 'Anexar requisitos',
+        activo: false,
+        completado: false,
+    },
+    {
+        indice: 3,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
+    }
+];

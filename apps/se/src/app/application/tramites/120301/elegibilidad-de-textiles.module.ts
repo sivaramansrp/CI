@@ -1,32 +1,29 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConstanciaDelRegistroComponent } from './components/constancia-del-registro/constancia-del-registro.component';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-routing.module';
+import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormularioAsociacionFacturaComponent } from './components/facturas-asociadas/facturas-asociadas.component';
+import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
+import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { ConstanciaDelRegistroComponent } from './components/constancia-del-registro/constancia-del-registro.component';
-import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { InputCheckComponent } from 'libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
-import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'libs/shared/data-access-user/src/tramites/shared.module';
-import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { RouterModule } from '@angular/router';
-import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
-import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
-import { formularioAsociacionFactura } from './components/facturas-asociadas/facturas-asociadas.component';
-import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -35,7 +32,6 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
     PasoTresComponent,
     PasoUnoComponent,
     ImportadorEnDestinoComponent,
-    PasoCuatroComponent
   ],
   imports: [
     CommonModule,
@@ -49,14 +45,13 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
     SharedModule,
     BtnContinuarComponent,
     CrosslistComponent,
-    SelectCatalogosComponent,
     AlertComponent,
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     RouterModule,
     CapturarFacturasComponent,
-    formularioAsociacionFactura,
+    FormularioAsociacionFacturaComponent,
     HistoricoFabricantesComponent,
     TableComponent,
     CatalogoSelectComponent,

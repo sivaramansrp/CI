@@ -1,0 +1,58 @@
+<div class="container">
+  <form [formGroup]="formReporteAnnual">
+    <ng-titulo titulo="Reporte annual balanza commercial(Capture todas las cantidades en miles de pesos)" />
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="form-label" for="ventasTotales">Ventas totals(a)*:</label>
+          <input
+            type="number"
+            id="ventasTotales"
+            class="form-control"
+            formControlName="ventasTotales"
+            (change)="obtenerVentasTotales($event)"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="totalExportaciones"
+            >Total exportaciones (b)*:</label
+          >
+          <input
+            type="number"
+            id="totalExportaciones"
+            class="form-control"
+            formControlName="totalExportaciones"
+            (input)="obtenerTotalExportaciones($event)"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="totalImportaciones">Total importaciones (c)*:</label>
+          <input
+            type="number"
+            id="totalImportaciones"
+            class="form-control"
+            formControlName="totalImportaciones"
+            (change)="obtenerTotalImportaciones($event)"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="saldo">Saldo b-c:</label>
+          <input
+            type="number"
+            id="saldo"
+            class="form-control"
+            formControlName="saldo"
+          />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="porcentajeExportacion">Porcentaje exportacion b/a*100:</label>
+            <input
+              type="number"
+              id="porcentajeExportacion"
+              class="form-control"
+              formControlName="porcentajeExportacion"
+            />
+          </div>
+      </div>
+  </form>
+</div>

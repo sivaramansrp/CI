@@ -1,0 +1,468 @@
+import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { Component, HostListener, Input, OnInit, Output, forwardRef } from '@angular/core';
+import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
+import { CatalogoSelectComponent } from '../../catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { EventEmitter } from '@angular/core';
+import { InputFecha } from '../../../../../src/core/models/shared/components.model';
+import { InputFechaComponent } from '../../input-fecha/input-fecha.component';
+import { InputRadioComponent } from '../../input-radio/input-radio.component';
+import { TituloComponent } from '../../titulo/titulo.component';
+import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formularios/validadores-de-formularios/validadores-de-formularios.component';
+
+/**
+ * FormasDinamicasComponent es un componente que permite la creación y gestión
+ * de formularios dinámicos en el contexto de trámites. Este componente utiliza
+ * formularios reactivos de Angular para manejar y validar los datos de manera
+ * eficiente. Además, soporta la integración con servicios y estados para obtener
+ * datos dinámicos y mantener la sincronización con el estado global de la aplicación.
+ * 
+ * @component
+ * @selector formas-dinamicas
+ * @standalone true
+ * @imports [
+ *   CommonModule,
+ *   ReactiveFormsModule,
+ *   ValidadoresDeFormulariosComponent,
+ *   CatalogoSelectComponent
+ * ]
+ * @templateUrl ./formas-dinamicas.component.html
+ * @styleUrl ./formas-dinamicas.component.scss
+ */
+@Component({
+  selector: 'formas-dinamicas',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ValidadoresDeFormulariosComponent,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    TituloComponent,
+    InputFechaComponent
+  ],
+  templateUrl: './formas-dinamicas.component.html',
+  styleUrl: './formas-dinamicas.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FormasDinamicasComponent),
+      multi: true
+    }
+  ]
+
+})
+
+export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
+
+  /**
+  * compo doc
+  * @input formularioTitulo
+  * @type {string}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Entrada para manejar el título del formulario
+  */
+  @Input() public formularioTitulo!: string;
+
+  /**
+   * Subtítulo del formulario, generalmente utilizado para proporcionar contexto adicional
+   * o información sobre el propósito o contenido del formulario.
+   */
+  @Input() public formularioSubtitulo!: string;
+
+  /**
+  * compo doc
+  * @input forma
+  * @type {FormGroup}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un formulario reactivo de Angular representado por un FormGroup.
+  * Se utiliza para manejar y validar los datos del formulario en el componente.
+  */
+  @Input() public forma!: FormGroup;
+
+  /**
+  * compo doc
+  * @input formularioDatos
+  * @type {ModeloDeFormaDinamica[]}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un arreglo de objetos de tipo FormularioDinamico.
+  * Se utiliza para definir la estructura y configuración de los formularios dinámicos en el componente.
+  */
+  @Input() public formularioDatos!: ModeloDeFormaDinamica[];
+
+  /**
+  * compo doc
+  * @input estado
+  * @type {{[key: string]: unknown}}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un objeto que representa el estado actual del formulario.
+  * Se utiliza para almacenar valores dinámicos que pueden ser utilizados
+  * para inicializar o actualizar los controles del formulario.
+  */
+  @Input() estado!: {[key: string]: unknown};
+
+  /**
+  * compo doc
+  * @output emitirEventoDeClic
+  * @type {EventEmitter<ModeloDeFormaDinamica>}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un EventEmitter que emite un evento cuando se hace clic en un botón
+  * asociado a un campo dinámico del formulario. El evento emite un objeto de tipo
+  * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
+  * relacionado con el botón clicado.
+  */
+  @Output() emitirEventoDeClic: EventEmitter<ModeloDeFormaDinamica> = new EventEmitter<ModeloDeFormaDinamica>();
+
+  /**
+  * compo doc
+  * @output emitirCambioDeValor
+  * @type {EventEmitter<ModeloDeFormaDinamica>}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un EventEmitter que emite un evento cuando se hace clic en un botón
+  * asociado a un campo dinámico del formulario. El evento emite un objeto de tipo
+  * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
+  * relacionado con el botón clicado.
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+
+  /**
+  * compo doc
+  * valor del ancho de la pantalla.
+  * @type {number}
+  * @memberof FormasDinamicasComponent
+  */
+  public anchoDePantalla!: number;
+
+  public static onChange: (value: Record<string, unknown>) => void = () => {
+  // eslint-disable-next-line no-empty-function
+  };
+  public static onTouched: () => void = () => {
+  // eslint-disable-next-line no-empty-function
+  };
+  
+  /**
+  * compo doc
+  * @constructor
+  * Inicializa una nueva instancia del componente `FormulariosDeCertiRegistroComponent`.
+  * @param fb un servicio que simplifica la creación de formularios reactivos
+  * @param validacionesService servicio que procesa todas las validaciones
+  */
+  constructor(
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) {
+      this.anchoDePantalla = window.innerWidth;
+    }
+
+  /**
+   * compo doc
+  * @method enCambiarTamano
+  * @description
+  * Este método es un manejador de eventos que se ejecuta cuando la ventana del navegador cambia de tamaño.
+  * Utiliza el decorador `@HostListener` para escuchar el evento `resize` del objeto `window`.
+  * Actualiza el valor de la propiedad `anchoDePantalla` con el ancho actual de la ventana. 
+  * @param event - El evento de cambio de tamaño (`resize`) que contiene información sobre el nuevo tamaño de la ventana.
+  */
+  @HostListener('window:resize', ['$event'])
+  enCambiarTamano(event: Event): void {
+    this.anchoDePantalla = (event.target as Window).innerWidth;
+  }
+
+  /**
+   * compo doc
+  * @method obtenerClaseResponsiva
+  * @description
+  * Este método devuelve una clase CSS basada en el ancho de la pantalla.
+  * Si el ancho de la pantalla está entre 768 y 991 píxeles, devuelve 'col-12'.
+  * Si el ancho de la pantalla es mayor a 991 píxeles, devuelve la clase proporcionada como parámetro.
+  * En cualquier otro caso, devuelve 'col-12'.
+  * @param {string} clase - La clase CSS que se debe devolver si el ancho de la pantalla es mayor a 991 píxeles.
+  * @returns {string} - La clase CSS correspondiente según el ancho de la pantalla.
+  */
+  obtenerClaseResponsiva(clase: string): string {
+    if (this.anchoDePantalla >= 768 && this.anchoDePantalla <= 991) {
+      return 'col-12';
+    } else if (this.anchoDePantalla > 991) {
+      return clase;
+    }
+    return 'col-12';
+  }
+
+  /**
+  * compo doc
+  * @method ngOnInit
+  * @description 
+  * El gancho ngOnInit se llama para inicializar el formulario
+  * @memberof FormasDinamicasComponent
+  */
+  ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+
+  /** compo doc
+  * @method inicializarFormulario
+  * @description La función inicializarFormulario se utiliza para crear el formulario 
+  * utilizando los datos del formulario pasados como entrada a este componente
+  */
+  inicializarFormulario(): void {
+    if (!this.formularioDatos || !Array.isArray(this.formularioDatos) || this.formularioDatos.length === 0) {
+      return;
+    }
+  
+    const FORMGROUP: { [key: string]: ReturnType<FormBuilder['control']> } = {};
+    this.formularioDatos.forEach(campo => {
+      if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
+        return;
+      }
+  
+      if (!this.forma?.contains(campo.campo)) {
+        const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
+        FORMGROUP[campo.campo] = this.fb.control(
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
+          { validators: VALIDADORES }
+        );
+      }
+    });
+
+    Object.keys(FORMGROUP).forEach(controlName => {
+      if (!this.forma?.get(controlName)) {
+        this.forma.addControl(controlName, FORMGROUP[controlName]);
+      }
+    });  
+  }
+
+  /**
+  * compo doc
+  * @method obtenerValidadores
+  * @description
+  * Esta función estática se utiliza para generar una lista de validadores de Angular
+  * basados en una lista de validadores proporcionada como entrada.
+  * 
+  * @param {string[]} listaDeValidadores - Un arreglo de cadenas que representan los nombres
+  * de los validadores que se deben aplicar a un campo del formulario.
+  * 
+  * @returns {ValidatorFn[]} - Un arreglo de funciones de validación (`ValidatorFn`) que
+  * pueden ser utilizadas en un formulario reactivo de Angular.
+  * 
+  * @example
+  * const validadores = FormasDinamicasComponent.obtenerValidadores(['required']);
+  * // validadores contendrá [Validators.required]
+  */
+  static obtenerValidadores(listaDeValidadores: Validadores[]): ValidatorFn[] {
+    const VALIDATORS: ValidatorFn[] = [];
+    listaDeValidadores.forEach((validadore: Validadores) => {
+      if (!validadore || !validadore.tipo) {
+        return;
+      }
+      if (validadore.tipo.includes('required')) {
+        VALIDATORS.push(Validators.required);
+      }
+      if (validadore.tipo.includes('minlength') && typeof validadore.valor === 'number') {
+        VALIDATORS.push(Validators.minLength(validadore.valor));
+      }
+      if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
+        VALIDATORS.push(Validators.maxLength(validadore.valor));
+      }
+      if (validadore.tipo.includes('pattern') && validadore.valor instanceof RegExp) {
+        VALIDATORS.push(Validators.pattern(validadore.valor));
+      }
+    });
+    return VALIDATORS;
+  }
+
+  /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.forma, campo);
+  }
+
+  /**
+  * compo doc
+  * @method seRequiere
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param item El nombre del campo que se desea validar.
+  * @returns {boolean} Un valor booleano que indica si el campo es válido.
+  */
+  // eslint-disable-next-line class-methods-use-this
+  public seRequiere(campo: string): boolean {
+    const CONTROL = this.forma.get(campo);
+    if (CONTROL && CONTROL.validator) {
+      const VALIDATOR = CONTROL.validator({} as AbstractControl);
+      return Boolean(VALIDATOR?.['required']);
+    }
+    return false;
+  }
+
+  /**
+  * compo doc
+  * @method onButtonClick
+  * @description
+  * Este método se ejecuta cuando se hace clic en un botón asociado a un campo dinámico.
+  * Verifica si el campo tiene un valor vinculado a otro campo (campo padre).
+  * Si existe un campo padre con valores predefinidos para sus hijos, actualiza los valores
+  * de los campos hijos en el formulario y en el estado de la tienda.
+  * 
+  * @param item - Un objeto de tipo `ModeloDeFormaDinamica` que representa el campo dinámico
+  * asociado al botón que se ha clicado.
+  */
+  public alHacerClicEnElBoton(item: ModeloDeFormaDinamica): void {
+    if (item) {
+      this.emitirEventoDeClic.emit(item);
+    }
+  }
+
+  /**
+  * compo doc
+  * @method eventoDeCambioDeValor
+  * @description
+  * Este método se ejecuta cuando ocurre un cambio en el valor de un campo del formulario.
+  * Detecta el valor del evento, ya sea desde un elemento HTML o directamente desde el evento,
+  * y emite un objeto que contiene el nombre del campo y su nuevo valor.
+  * 
+  * @param event - El evento que contiene el nuevo valor del campo. Puede ser un evento de entrada
+  * (como un cambio en un campo de texto) o un valor directo.
+  * @param campo - El nombre del campo del formulario que ha cambiado.
+  * 
+  * @example
+  * eventoDeCambioDeValor({ target: { value: 'nuevo valor' } }, 'nombreCampo');
+  * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public eventoDeCambioDeValor(event: any, campo: string): void {
+    let VALOR;
+    if (event.target) {
+      VALOR = (event.target as HTMLInputElement).value;
+    } else {
+      VALOR = event;
+    }
+    if (campo && event) {
+      this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
+    }
+  }
+
+  /**
+  * compo doc
+  * @method writeValue
+  * @description
+  * Este método se utiliza para escribir valores en el formulario reactivo del componente.
+  * Es parte de la implementación de la interfaz `ControlValueAccessor` y permite sincronizar
+  * los valores del modelo externo con los controles del formulario interno.
+  * 
+  * @param value - Un objeto que contiene los valores a escribir en el formulario. Cada clave
+  * representa el nombre de un control, y su valor asociado es el valor que se asignará.
+  * 
+  * @example
+  * Si se pasa el objeto `{ nombre: 'Juan', edad: 30 }`, el método añadirá controles llamados
+  * `nombre` y `edad` al formulario (si no existen) y les asignará los valores `'Juan'` y `30`.
+  */
+  writeValue(value: Record<string, unknown>): void {
+    if (value && typeof value === 'object') {
+      Object.keys(value).forEach(key => {
+        const CONTROL = this.forma.get(key);
+        if (!CONTROL) {
+          this.forma.addControl(key, new FormControl(value[key] || null));
+        } else if (value[key] !== undefined) {
+          CONTROL.setValue(value[key], { emitEvent: false });
+        }
+      });
+    }
+  }
+  
+  /**
+ * @method registerOnChange
+ * @description
+ * Este método registra una función de devolución de llamada que se ejecutará cada vez que
+ * los valores del formulario reactivo cambien. Es parte de la implementación de la interfaz
+ * `ControlValueAccessor` y permite la sincronización entre el modelo externo y los valores
+ * internos del formulario.
+ * 
+ * @param fn - Una función de devolución de llamada que recibe como parámetro un objeto
+ * que representa los valores actuales del formulario. Esta función será invocada automáticamente
+ * cuando ocurra un cambio en los valores del formulario.
+ * 
+ * @example
+ * registerOnChange((value) => {
+ *   console.log('Valores del formulario:', value);
+ * });
+ * 
+ * @memberof FormasDinamicasComponent
+ */
+registerOnChange(fn: (value: Record<string, unknown>) => void): void {
+  FormasDinamicasComponent.onChange = fn;
+  this.forma.valueChanges.subscribe(value => {
+    fn(value);
+  });
+}
+
+  /**
+  * @method registerOnTouched
+  * @description
+  * Este método registra una función de devolución de llamada que se ejecutará cuando
+  * el control del formulario sea marcado como "tocado". Es parte de la implementación
+  * de la interfaz `ControlValueAccessor` y permite la sincronización entre el modelo
+  * externo y el estado de "tocado" del formulario.
+  * 
+  * @param fn - Una función de devolución de llamada que se invocará cuando el control
+  * sea marcado como "tocado". Esta función no recibe parámetros.
+  * 
+  * @example
+  * registerOnTouched(() => {
+  *   console.log('El control ha sido tocado');
+  * });
+  * 
+  * @memberof FormasDinamicasComponent
+  */
+  // eslint-disable-next-line class-methods-use-this
+  registerOnTouched(fn: () => void): void {
+    FormasDinamicasComponent.onTouched = fn;
+  }
+
+  /**
+  * @method obtenerInformacionDeFecha
+  * @description
+  * Este método se utiliza para obtener la información de configuración de un campo de tipo fecha 
+  * en el formulario dinámico. Devuelve un objeto que contiene las propiedades necesarias para 
+  * configurar el campo, como el nombre de la etiqueta, si es requerido y si está habilitado.
+  * 
+  * Funcionalidad:
+  * - Verifica si el evento contiene datos válidos.
+  * - Extrae las propiedades `labelNombre`, `required` y `habilitado` del evento.
+  * - Devuelve un objeto con la configuración del campo de fecha.
+  * - Si el evento no es válido, devuelve un objeto con valores predeterminados.
+  * 
+  * @param {ModeloDeFormaDinamica} event - Objeto que contiene la configuración del campo dinámico.
+  * @returns {InputFecha} Objeto con la configuración del campo de fecha.
+  * 
+  * @example
+  * const configuracionFecha = this.obtenerInformacionDeFecha(campoFecha);
+  * console.log(configuracionFecha);
+  * // { labelNombre: 'Fecha de inicio', required: true, habilitado: false }
+  */
+  obtenerInformacionDeFecha(event: ModeloDeFormaDinamica): InputFecha {
+    if (event) {
+      const DATOS = {
+        labelNombre: event.labelNombre, 
+        required: this.seRequiere(event.campo),
+        habilitado: event.habilitado ?? false,
+      };
+      return DATOS;
+    }
+    return { labelNombre: '', required: false, habilitado: false };
+  }
+  
+}

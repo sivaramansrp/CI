@@ -1,7 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { PantallasFormData } from '../../models/220401/servicios-pantallas.model';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class ServiciosPantallasService {
     /**
      * Esta variable se utiliza para almacenar los datos del formulario de las pantallas.
      */
-    public pantallasFormData:  PantallasFormData = {
+    public pantallasFormData: PantallasFormData = {
         solict: [],
         datosDel: [],
         combinacionRequerida: [],
@@ -33,14 +32,16 @@ export class ServiciosPantallasService {
      * constructor de la clase
      * @param http: constructor de HttpClient
      */
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { 
+        // Lógica de inicialización si es necesario
+    }
 
     /**
      * Este método se utiliza para configurar todos los datos del formulario de los componentes.
      * @param key: clave del formulario
      * @param data: datos del formulario
      */
-    setPantallasFormData(key: string, data: object) {
+    setPantallasFormData(key: string, data: object):void {
         this.pantallasFormData = {
             ...this.pantallasFormData,
             [key]: data
@@ -51,7 +52,7 @@ export class ServiciosPantallasService {
      * Este método se utiliza para configurar los datos del formulario en el oyente del tema.
      * @param data: datos del formulario
      */
-    setPantallasFormDataSubject(data: PantallasFormData) {
+    setPantallasFormDataSubject(data: PantallasFormData):void {
         this.pantallasFormSubject.next(data);
     }
 }

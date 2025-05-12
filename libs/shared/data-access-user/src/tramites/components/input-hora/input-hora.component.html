@@ -1,9 +1,3 @@
-<!-- <div class="form-group">
-  <label class="form-label" for="calendar">{{datosHora.labelNombre}} {{datosHora.required ? '*' : ''}}:</label>
-  <input class="form-control" type="text" name="hora" id="hora" [formControl]="hora" placeholder="00:00 (24 hrs)"
-    HoraFormato [ngClass]="isValid ? 'required' : ''" (blur)="onBlurEvent()">
-</div> -->
-
 <div [formGroup]="forma">
   <label class="form-label" [for]="inputId">{{ label }} @if(required){*} :</label>
   <input class="form-control" type="text" name="hora" [id]="inputId" formControlName="hora" placeholder="00:00 (24 hrs)"

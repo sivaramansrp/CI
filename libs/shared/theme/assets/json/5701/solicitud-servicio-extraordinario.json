@@ -33,10 +33,10 @@
         "nombre": ""
       },
       "certificaiones": {
-        "nroRegistro": "",
-        "programaFomento": "",
-        "immex": "",
-        "industriaAutomotriz": "",
+        "desNumeroRegistro": "",
+        "programa": "",
+        "desImmex": "",
+        "desIndustrialAutomotriz": "",
         "tipoEmpresaCertificada": "",
         "idSocioComercial": "",
         "socioComercial": false,

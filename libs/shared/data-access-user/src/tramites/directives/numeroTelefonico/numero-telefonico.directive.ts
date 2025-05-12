@@ -1,23 +1,25 @@
-import { Directive, ElementRef, Host, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
   selector: '[appNumeroTelefonico]',
   standalone: true,
 })
 export class NumeroTelefonicoDirective {
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef) {
+    // Lógica de inicialización si es necesario
+  }
 
   @HostListener('input', ['$event'])
-  onInputChange(event: Event) {
-    const input = this.el.nativeElement as HTMLInputElement;
+  onInputChange(_event: Event): void {
+    const INPUT = this.el.nativeElement as HTMLInputElement;
 
-    let valor = input.value.replace(/\D/g, '');
+    let valor = INPUT.value.replace(/\D/g, '');
 
     if (valor.length > 3 && valor.length <= 6) {
       valor = valor.replace(/(\d{3})(\d+)/, '$1 $2');
     } else if (valor.length > 6) {
       valor = valor.replace(/(\d{3})(\d{3})(\d+)/, '$1 $2 $3');
     }
-    input.value = valor;
+    INPUT.value = valor;
   }
 }

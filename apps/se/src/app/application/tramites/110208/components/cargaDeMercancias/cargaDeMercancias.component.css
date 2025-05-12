@@ -1,0 +1,14 @@
+.width{
+    width: 100%;
+    max-width: 80vw;
+}
+
+.h-70{
+    height: 70px;
+}
+
+.modal-body-height{
+    max-height: 65vh;
+    height: auto;
+    overflow-y: auto;
+}

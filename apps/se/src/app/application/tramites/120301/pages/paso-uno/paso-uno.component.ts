@@ -9,7 +9,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'paso-uno',
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``
 })

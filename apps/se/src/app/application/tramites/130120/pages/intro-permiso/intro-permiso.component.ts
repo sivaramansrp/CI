@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from "libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'apps/se/src/app/application/tramites/130120/models/permiso-importacion-modification.model';
-import { PASOS } from 'apps/se/src/app/application/tramites/130120/constants/permiso-importacion-modification.enum';
+import { BtnContinuarComponent } from "@ng-mf/data-access-user";
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS_CUATRO_STEPS } from '@ng-mf/data-access-user';
 import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 import { PasoTresComponent } from "../paso-tres/paso-tres.component";
 import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;
@@ -23,7 +23,7 @@ interface AccionBoton {
 export class IntroPermisoComponent {
 
   indice = 1;
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS_CUATRO_STEPS;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

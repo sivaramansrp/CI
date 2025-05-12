@@ -1,13 +1,28 @@
-import { NgModule } from '@angular/core';
+import { AcusePageComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { RouterModule, Routes } from '@angular/router';
-import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
+import { NgModule } from '@angular/core';
+
 
 const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
   {
-    path: 'app-seleccion-modulo',
-    component: SeleccionModuloComponent
+    path: '',
+    loadChildren: () =>
+      import('./components/funcionario.module').then(
+        (m) => m.FuncionarioModule
+      ),
   },
+  {
+    path: 'notificaciones',
+    loadChildren: () =>
+      import('./notificaciones/notificaciones.module').then(
+        (m) => m.NotificacionesModule
+      ),
+  },
+  { path: 'firma-electronica',
+    component: FirmaPageComponent
+  },
+  { path: 'acuse', 
+    component: AcusePageComponent }
 ];
 
 @NgModule({

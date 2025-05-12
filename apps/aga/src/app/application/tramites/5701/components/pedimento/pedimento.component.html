@@ -1,19 +1,19 @@
 <div class="row">
   <div class="col-md-4">
     <div class="form-group">
-      <label class="form-label" for="idPedimento">Número de pedimento:</label>
-      <input class="form-control" id="idPedimento" placeholder="" type="text" [formControl]="pedimentoForm"
-        [ngClass]="isValid ? 'required' : ''" appSoloNumeros>
+      <label class="form-label" for="numeroPedimento">Número de pedimento:</label>
+      <input class="form-control" id="numeroPedimento" placeholder="" type="text" [formControl]="pedimentoForm"
+        [ngClass]="isValid ? 'required' : ''" libSoloNumeros>
     </div>
   </div>
   <div class="col-md-4 d-flex align-items-end">
-    <button type="button" class="btn btn-primary" (click)="agregaPedimento()">Agregar</button>
+    <button type="button" class="btn btn-primary" id="btnAgregar" (click)="agregaPedimento()">Agregar</button>
   </div>
 </div>
 
 <div class="row mt-5">
   <div class="col-md-12">
-    <table class="table table-respomsive">
+    <table class="table table-respomsive" id="idTablaPedimento">
       <thead>
         <tr>
           @for (item of hTabla; track $index) {
@@ -23,24 +23,23 @@
       </thead>
       <tbody>
         <tr>
-          @for (item of pedimentos; let i = $index; track i) {
-          <td>{{item.patente}}</td>
-          <td>{{item.pedimento}}</td>
-          <td>{{item.aduana}}</td>
-          <td>{{item.descTipoPedimento}}</td>
-          <td>{{item.numero}}</td>
-          <td>{{item.comprobanteValor}}</td>
-          <td>{{item.pedimentoValidado | booleanoSiNo}}</td>
+
           <td>
-          <td>
-            <button type="button" class="btn btn-link" (click)="eliminar(i)">
+            <button type="button" class="btn btn-link" title="Eliminar" (click)="abrirModal(1)">
               <i class="bi bi-trash3 bi-c"></i>
             </button>
           </td>
-          }
+
         </tr>
 
       </tbody>
     </table>
   </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}

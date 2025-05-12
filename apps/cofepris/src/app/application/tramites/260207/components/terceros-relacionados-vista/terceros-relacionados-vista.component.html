@@ -1,0 +1,6 @@
+<app-terceros-relacionados
+[fabricanteTablaDatos]="(tercerosDatos$ | async)?.fabricanteTablaDatos || []"
+[destinatarioFinalTablaDatos]="(tercerosDatos$ | async)?.destinatarioFinalTablaDatos || []"
+[proveedorTablaDatos]="(tercerosDatos$ | async)?.proveedorTablaDatos || []"
+[facturadorTablaDatos]="(tercerosDatos$ | async)?.facturadorTablaDatos || []"
+></app-terceros-relacionados>

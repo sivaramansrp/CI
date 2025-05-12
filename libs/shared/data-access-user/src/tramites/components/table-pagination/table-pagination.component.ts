@@ -1,6 +1,5 @@
-import { CommonModule } from '@angular/common';
-
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-pagination',
@@ -22,13 +21,14 @@ export class TablePaginationComponent {
     return Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
-  onPageChange(page: number) {
+  onPageChange(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.pageChange.emit(page);
     }
   }
-  onItemsPerPageChange(event: any) {
-    this.itemsPerPage = +event.target.value;
-    this.itemsPerPageChange.emit(this.itemsPerPage);
+  onItemsPerPageChange(event: Event): void {  
+    const TARGET = event.target as HTMLInputElement;
+  this.itemsPerPage = Number(TARGET.value);
+  this.itemsPerPageChange.emit(this.itemsPerPage);
   }
 }

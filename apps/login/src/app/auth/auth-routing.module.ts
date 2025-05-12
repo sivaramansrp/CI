@@ -5,17 +5,7 @@ import { NgModule } from '@angular/core';
 export const ROUTES_AUTH: Routes = [
   {
     path: '',
-    component: AuthPageComponent,
-    children: [
-      { path: 'login',
-        component: AuthPageComponent
-      },
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'login',
-      },
-    ]
+    component: AuthPageComponent
   },
 ];
 

@@ -1,0 +1,106 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { ID_PROCEDIMIENTO } from '../../constants/artefactos-pirotecnicos-ordinarios.enum';
+import { Tramite240119Query } from '../../estados/tramite240119Query.query';
+import { Tramite240119Store } from '../../estados/tramite240119Store.store';
+
+/**
+ * @title Datos del Trámite Contenedora
+ * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
+ * @summary Maneja la suscripción al estado y propaga los cambios a través del store.
+ */
+
+@Component({
+  selector: 'app-datos-del-tramite-contenedora',
+  standalone: true,
+  imports: [CommonModule, DatosDelTramiteComponent],
+  templateUrl: './datos-del-tramite-contenedora.component.html',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
+})
+export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  
+  /**
+   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
+   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   */
+  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  /**
+   * Datos de la tabla de mercancías que se muestran en el formulario.
+   * @property {MercanciaDetalle[]} datosMercanciaTabla
+   */
+  public datosMercanciaTabla: MercanciaDetalle[] = [];
+
+  /**
+   * Estado actual del formulario de datos del trámite.
+   * @property {DatosDelTramiteFormState} datosDelTramiteFormState
+   */
+  public datosDelTramiteFormState!: DatosDelTramiteFormState;
+
+
+  /** @private Sujeto para manejar la destrucción de suscripciones y evitar fugas de memoria. */ 
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240119Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240119Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @returns {void}
+   */
+  constructor(
+    private tramiteQuery: Tramite240119Query,
+    private tramiteStore: Tramite240119Store
+  )
+  {
+     // No hacer nada
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe a los observables del estado para mostrar los datos en la vista.
+   *
+   * @method ngOnInit
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.tramiteQuery.getMercanciaTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.datosMercanciaTabla = data;
+      });
+
+    this.tramiteQuery.getDatosDelTramite$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.datosDelTramiteFormState = data;
+      });
+  }
+  
+  /**
+   * Actualiza el estado del formulario de datos del trámite en el store.
+  *
+  * @method updateDatosDelTramiteFormulario
+  * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
+  * @returns {void}
+  */
+ updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
+   this.tramiteStore.updateDatosDelTramiteFormState(event);
+  }
+  
+    /**
+     * Hook del ciclo de vida que se ejecuta al destruir el componente.
+     * Libera las suscripciones activas para evitar fugas de memoria.
+     *
+     * @method ngOnDestroy
+     * @returns {void}
+     */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
+}

@@ -1,0 +1,173 @@
+<div class="container">
+  <form [formGroup]="datosEstablecimientoForm">
+    <div *ngIf="!mostrarFormularioMercancias">
+      <div class="container mt-4">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrarPlegable()">
+              <h4 class="panel-title spaced-text fs-3"><i class="bi bi-clipboard"></i>
+                Opciones de pre-llenado de Solicitud
+              </h4>
+              <button type="button" class="collpase-button collapsed"></button>
+            </div>
+            @if(plegable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <div class="row">
+                  <ng-alert [CONTENIDO]="DATOS_ALERT.DATOS_SOLICITUD"></ng-alert>
+                </div>
+                <h6 class="text-black">Solicitud</h6>
+                <div class="table-responsive">
+                  <app-tabla-dinamica [configuracionTabla]="configuracionTablaSolicitud" [datos]="solicitudData">
+                  </app-tabla-dinamica>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        <ng-titulo titulo="Datos del establecimiento" />
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-primary">Seleccionar establecimiento</button>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="rfcDelResponsableSanitario">RFC del responsable sanitario:</label>
+              <input class="form-control" type="text" id="rfcDelResponsableSanitario"
+                formControlName="rfcDelResponsableSanitario" (input)="updateRfcDelResponsableSanitario()">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
+              <input class="form-control" type="text" id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial" (input)="updateDenominacionRazonSocial()">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="correoElectronico">Correo electrónico*:
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+              </label>
+              <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"(input)="updateCorreoElectronico()">
+            </div>
+          </div>
+        </div>
+
+        <ng-titulo titulo="Datos del establecimiento" />
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="códigoPostal">Código postal*:</label>
+              <input class="form-control" type="text" id="códigoPostal" formControlName="codigoPostal" (input)="updateCodigoPostal()">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="estado" [label]="'Estado'" [required]="true" name="estado"
+                formControlName="estado" (change)="getEstado()">
+              </app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="municipio">Municipio o alcaldía*:
+              </label>
+              <input type="text" class="form-control" id="municipio" formControlName="municipio" (input)="updateMunicipio()">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="localidad">Localidad:
+              </label>
+              <input type="text" class="form-control" id="localidad" formControlName="localidad" (input)="updateLocalidad()">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="colonia">Colonia:
+              </label>
+              <input type="text" class="form-control" id="colonia" formControlName="colonia" (input)="updateColonia()">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="Calle">Calle:<span class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title" ata-bs-toggle="tooltip"></span>
+              </label>
+              <input type="text" class="form-control" id="Calle" formControlName="calle" (input)="updateCalle()">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row mb-5">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label class="form-label" for="lada">Lada</label>
+              <input class="form-control" type="text" id="lada" formControlName="lada" (input)="updateLada()">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="form-label" for="teléfono">Teléfono</label>
+              <input class="form-control" type="text" id="teléfono" formControlName="telefono" (input)="updateTelefono()">
+            </div>
+          </div>
+        </div>
+
+        <h5 class="fs-4">S.C.I.A.N.*</h5>
+        <div class="table-responsive">
+          <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX">
+          </app-tabla-dinamica>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-end">
+            <button name="eliminarServicio" class="btn btn-danger">
+              Eliminar
+            </button>
+            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()">
+              Agregar
+            </button>
+          </div>
+        </div>
+
+        <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
+
+        <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData"
+          [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED">
+        </app-tabla-dinamica>
+
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" (click)="openMercanciasForm()">
+            Agregar
+          </button>
+          <button class="btn btn-default ms-2">Modificar</button>
+          <button class="btn btn-default ms-2">Eliminar</button>
+        </div>
+
+      </div>
+      <ng-titulo titulo="Manifiestos y declaraciones" />
+      <div class="alert alert-info manifest-box">
+        <input class="form-check-input" type="checkbox" id="datosManifiestos">
+        <p>{{ MANIFIESTOS_ALERT.DATOS_MANIFIESTOS }}</p>
+      </div>
+
+      <app-representante-legal></app-representante-legal>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="mostrarFormularioMercancias">
+  <app-mercancias-table-form (Cancelar)="closeMercanciasForm()"></app-mercancias-table-form>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="mostrarFormularioScian" id="myModal"
+  [ngClass]="{ show: mostrarFormularioScian }" aria-hidden="true">
+  <app-clave-scian (cancel)="cerrarScianFormulario()"></app-clave-scian>
+</div>

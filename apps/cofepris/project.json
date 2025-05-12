@@ -1,0 +1,140 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "cofepris",
+  "prefix": "app",
+  "projectType": "application",
+  "sourceRoot": "apps/cofepris/src",
+  "tags": [
+  ],
+  "targets": {
+      "build": {
+          "configurations": {
+              "development": {
+                  "buildOptimizer": false,
+                  "extractLicenses": false,
+                  "namedChunks": true,
+                  "optimization": false,
+                  "sourceMap": true,
+                  "vendorChunk": true
+              },
+              "production": {
+                  "budgets": [
+                      {
+                          "maximumError": "5mb",
+                          "maximumWarning": "4mb",
+                          "type": "initial"
+                      },
+                      {
+                          "maximumError": "5mb",
+                          "maximumWarning": "4mb",
+                          "type": "anyComponentStyle"
+                      }
+                  ],
+                  "customWebpackConfig": {
+                      "path": "apps/cofepris/webpack.prod.config.ts"
+                  },
+                  "outputHashing": "all"
+              }
+          },
+          "defaultConfiguration": "production",
+          "executor": "@nx/angular:webpack-browser",
+          "options": {
+              "allowedCommonJsDependencies": [
+                  "node-forge",
+                  "moment"
+              ],
+              "assets": [
+                  {
+                      "glob": "**/*",
+                      "input": "apps/cofepris/src/assets/",
+                      "output": "./assets/"
+                  },
+                  {
+                      "glob": "favicon.ico",
+                      "input": "./",
+                      "output": "./"
+                  },
+                  {
+                      "glob": "**/*",
+                      "input": "libs/shared/theme/assets/",
+                      "output": "./assets/"
+                  }
+              ],
+              "customWebpackConfig": {
+                  "path": "apps/cofepris/webpack.config.ts"
+              },
+              "index": "apps/cofepris/src/index.html",
+              "inlineStyleLanguage": "scss",
+              "main": "apps/cofepris/src/main.ts",
+              "outputPath": "dist/apps/cofepris",
+              "polyfills": [
+                  "zone.js"
+              ],
+              "scripts": [
+                  "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              ],
+              "styles": [
+                  "node_modules/bootstrap/scss/bootstrap.scss",
+                  "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+                  "node_modules/ngx-toastr/toastr.css",
+                  "libs/shared/theme/assets/styles/main.scss"
+              ],
+              "tsConfig": "apps/cofepris/tsconfig.app.json"
+          },
+          "outputs": [
+              "{options.outputPath}"
+          ]
+      },
+      "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+              "buildTarget": "cofepris:build"
+          }
+      },
+      "lint": {
+          "executor": "@nx/eslint:lint"
+      },
+      "serve": {
+          "configurations": {
+              "development": {
+                  "buildTarget": "cofepris:build:development"
+              },
+              "production": {
+                  "buildTarget": "cofepris:build:production"
+              }
+          },
+          "defaultConfiguration": "development",
+          "executor": "@nx/angular:dev-server",
+          "options": {
+              "port": 4211,
+              "publicHost": "http://localhost:4211"
+          }
+      },
+      "serve-static": {
+          "configurations": {
+              "development": {
+                  "buildTarget": "cofepris:build:development"
+              },
+              "production": {
+                  "buildTarget": "cofepris:build:production"
+              }
+          },
+          "defaultConfiguration": "production",
+          "executor": "@nx/web:file-server",
+          "options": {
+              "buildTarget": "cofepris:build",
+              "port": 4211,
+              "watch": false
+          }
+      },
+      "test": {
+          "executor": "@nx/jest:jest",
+          "options": {
+              "jestConfig": "apps/cofepris/jest.config.ts"
+          },
+          "outputs": [
+              "{workspaceRoot}/coverage/{projectRoot}"
+          ]
+      }
+  }
+}

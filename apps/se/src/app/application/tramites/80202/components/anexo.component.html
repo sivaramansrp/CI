@@ -1,0 +1,194 @@
+<div class="container">
+  <div class="row">
+    <div class="row mb-2">
+      <div class="com-md-12">
+        <ng-titulo
+          titulo="Fracción
+         arancelaria de importación(sensibles)"
+        />
+      </div>
+      <form [formGroup]="fraccionForm">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="fraccionArancelaria"
+              >Fracción arancelaria:</label
+            >
+            <input
+              class="form-control"
+              id="coordenadas"
+              formControlName="fraccionArancelariaSensibles"
+              placeholder=""
+              type="text"
+              (change)="
+                setValoresStore(
+                  fraccionForm,
+                  'fraccionArancelariaSensibles',
+                  'setFraccionArancelariaSensibles'
+                )
+              "
+            />
+            @if (isValid(fraccionForm,'fraccionArancelariaSensibles')) {
+            <div class="mensaje-error">Fecha no válida, elija otro día</div>
+            }
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row mb-5">
+      <div class="col md-12">
+        <div class="pull-right ms-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Agregar
+          </button>
+        </div>
+        <div class="pull-right ml-2">
+          <button
+            type="button"
+            class="btn btn-default"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tabSelection"
+        [configuracionTabla]="configuracionColumnasSensibles"
+        [datos]="datos"
+      ></app-tabla-dinamica>
+    </div>
+    <div class="row">
+      <div class="com-md-12">
+        <div class="pull-right ml-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Mostrar detalle mercancia
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row mb-2">
+      <div class="com-md-12">
+        <ng-titulo titulo="Fracción arancelaria de importación" />
+      </div>
+      <form [formGroup]="fraccionArancelaria">
+        <div class="row">
+          <div class="mb-6">
+            <div class="col-md-6 form-group">
+              <label class="form-label" for="fraccionArancelaria"
+                >Fracción arancelaria:</label
+              >
+              <input
+                class="form-control"
+                id="coordenadas"
+                formControlName="fraccionArancelaria"
+                placeholder=""
+                type="text"
+                (change)="
+                  setValoresStore(
+                    fraccionArancelaria,
+                    'fraccionArancelaria',
+                    'setFraccionArancelaria'
+                  )
+                "
+              />
+              @if (isValid(fraccionArancelaria,'fraccionArancelaria')) {
+              <div class="mensaje-error">Fecha no válida, elija otro día</div>
+              }
+            </div>
+          </div>
+          <div>
+            <div class="col-md-9 form-group">
+              <label class="form-label" for="descripciondelproducto"
+                >Descripción del producto:</label
+              >
+              <textarea
+                rows="6"
+                class="form-control h-100"
+                id="descripciondelproducto"
+                formControlName="descripciondelproducto"
+                placeholder=""
+                (change)="
+                  setValoresStore(
+                    fraccionArancelaria,
+                    'descripciondelproducto',
+                    'setDescripcionDelProducto'
+                  )
+                "
+              ></textarea>
+              @if (isValid(fraccionArancelaria,'descripciondelproducto')) {
+              <div class="mensaje-error">Fecha no válida, elija otro día</div>
+              }
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row mb-5">
+      <div class="col md-12">
+        <div class="pull-right ms-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Agregar
+          </button>
+        </div>
+        <div class="pull-right ml-2">
+          <button
+            type="button"
+            class="btn btn-default"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tabSelection"
+        [configuracionTabla]="configuracionColumnas"
+        [datos]="datos2"
+      ></app-tabla-dinamica>
+    </div>
+    <div class="row">
+      <div class="com-md-12">
+        <div class="pull-right ml-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            Mostrar detalle mercancía
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

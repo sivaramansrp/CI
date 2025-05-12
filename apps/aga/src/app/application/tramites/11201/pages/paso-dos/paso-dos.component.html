@@ -1,0 +1,73 @@
+<div class="container">
+  <ng-titulo titulo="Ingresar pago de contenedores:" />
+  <form [formGroup]="formSolicitud">
+    <div formGroupName="pagoDeDerechos">
+      <div class="row" style="padding-bottom: 20px">
+        <div class="form-group d-flex align-items-end">
+          <label class="form-label " for="linea">Monto a pagar:</label>
+          <input class="form-control form-control-width" id="montoPagar" formControlName="montoPagar" type="text" />
+        </div>
+        <div class="row" style="padding-left: 40px;
+                padding-right: 30px;
+                padding-top: 20px;
+                padding-bottom: 5px;">
+          <p><b>Una vez realizado el pago se deberá ingresar la información correspondiente de la línea de captura del
+              pago para que sea validada</b></p>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="linea"> Línea de captura*:</label>
+            <input class="form-control" id="linea" formControlName="linea" type="text" (change)="
+                                        setValoresStore(formSolicitud, 'pagoDeDerechos.linea', 'setLinea')" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="monto">monto*:</label>
+            <input class="form-control" id="monto" formControlName="monto" type="text" />
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-bottom: 20px; text-align: right">
+        <div>
+          <button type="button" class="btn btn-default btn-space">
+            Limpiar
+          </button>
+          <button type="button" class="btn btn-primary btn-space">
+            Agregar
+          </button>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="lineaCheckbox" formControlName="lineaCheckbox" (change)="
+                  setValoresStore(
+                    formSolicitud,
+                    'pagoDeDerechos.lineaCheckbox',
+                    'setLineaCheckbox'
+                  )
+                " />
+            <label class="form-check-label" for="lineaCheckbox">
+              <span>linea de captura</span>
+              <span style="margin-left: 60px">Monto</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
+        </ul>
+      </nav>
+
+      <p>
+        <strong>
+          A través del siguiente vinculo puedes ingresar a la página para
+          generar la línea de captura de la constancia que se solicita:
+        </strong>
+      </p>
+      <a href="" target="_blank">Generar línea de captura</a>
+    </div>
+  </form>
+</div>

@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS_303 } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { TEXTOS_303 } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS_303;
 
   tiposDocumentos: Catalogo[] = [];
@@ -20,7 +19,7 @@ export class PasoDosComponent {
     private catalogosServices: CatalogosService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit() : void {
     this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {

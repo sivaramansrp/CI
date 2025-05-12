@@ -1,0 +1,108 @@
+<form [formGroup]="formargrupo">
+    <div class="form">
+      <div class="row">
+        @if (formularioTitulo) {
+            <div class="pt-1">
+                <ng-titulo [titulo]="formularioTitulo" />
+            </div>
+        }
+        @for (item of formularioDatos; track $index) {
+            @if (item.tipo_input === '') {
+                <div [ngClass]="item.class">
+                  <div class="form-group">
+                    <label class="form-label mt-5 mb-3" [for]="item.campo" style="text-align: left !important;">{{
+                      item.labelNombre
+                    }}</label>
+                  </div>
+                </div>
+              } @else if (item.tipo_input === 'text') {
+            <div [ngClass]="item.class" class="mt-5">
+              <div class="form-group">
+                <label class="form-label" [for]="item.campo">{{
+                  item.labelNombre
+                }}</label>
+                @if (item?.validators?.includes('required')) {
+                  <span>*:</span>
+                } @else {
+                  <span>:</span>
+                }
+                <input
+                  class="form-control"
+                  type="text"
+                  [id]="item.campo"
+                  [placeholder]="item.placeholder"
+                  [formControlName]="item.campo"
+                  [required]="item?.validators?.includes('required') ?? false"
+                  [ngClass]="isValid(item.campo) ? 'required' : ''"
+                  (change)="changeInValoresStore(formargrupo, item.campo)"
+                />
+                @if (isValid(item.campo)) {
+                  <div class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
+                  }
+              </div>
+            </div>
+          } @else if (item.tipo_input === 'checkbox') {
+            <div
+              [ngClass]="item.class"
+              style="
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                margin-top: 6rem;
+              "
+            >
+              <div class="form-group w-100">
+                <input
+                  type="checkbox"
+                  [id]="item.campo"
+                  [placeholder]="item.placeholder"
+                  [formControlName]="item.campo"
+                  (change)="changeInValoresStore(formargrupo, item.campo)"
+                />
+                <label class="form-label" [for]="item.campo" style="margin-left: 10px;">{{
+                  item.labelNombre
+                }}</label>
+              </div>
+            </div>
+          } @else if (item.tipo_input === 'textarea') {
+            <div [ngClass]="item.class" class="mt-5">
+              <label for="{{ item.campo }}">{{ item.labelNombre }}</label>
+              @if (item?.validators?.includes('required')) {
+                <span>*:</span>
+              } @else {
+                <span>:</span>
+              }
+              <textarea
+                class="form-control"
+                name="{{ item.labelNombre }}"
+                id="{{ item.labelNombre }}"
+                rows="5"
+                style="height: 100px !important"
+                [formControlName]="item.campo"
+                [required]="item?.validators?.includes('required') ?? false"
+                [ngClass]="isValid(item.campo) ? 'required' : ''"
+                (change)="changeInValoresStore(formargrupo, item.campo)"
+              ></textarea>
+              @if (isValid(item.campo)) {
+                <div class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+                }
+            </div>
+          } @else if (item.tipo_input === 'select-catalogos') {
+            @if ((menuDesplegableDatos || []).length > 0) {
+              <div [ngClass]="item.class" class="mt-5">
+                <app-catalogo-select [catalogo]="menuDesplegableDatos || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+              </div>
+            } @else if (item?.listaDesplegable?.length){
+              <div [ngClass]="item.class" class="mt-5">
+                <app-catalogo-select [catalogo]="item?.listaDesplegable || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+              </div>
+            }
+          }
+       } 
+    </div>
+  </div>
+</form>

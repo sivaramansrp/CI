@@ -14,6 +14,8 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@libs/*": ["libs/*"],
@@ -23,12 +25,20 @@
       "agriculture/Routes": [
         "apps/agriculture/src/app/remote-entry/entry.routes.ts"
       ],
+      "bandejas/Routes": ["apps/bandejas/src/app/remote-entry/entry.routes.ts"],
+      "cofepris/Routes": ["apps/cofepris/src/app/remote-entry/entry.routes.ts"],
+      "crt/Routes": ["apps/crt/src/app/remote-entry/entry.routes.ts"],
       "funcionario/Routes": [
         "apps/funcionario/src/app/remote-entry/entry.routes.ts"
       ],
+      "inah/Routes": ["apps/inah/src/app/remote-entry/entry.routes.ts"],
+      "inbal/Routes": ["apps/inbal/src/app/remote-entry/entry.routes.ts"],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
+      "profepa/Routes": ["apps/profepa/src/app/remote-entry/entry.routes.ts"],
       "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
-      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"]
+      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"],
+      "sener/Routes": ["apps/sener/src/app/remote-entry/entry.routes.ts"],
+      "stps/Routes": ["apps/stps/src/app/remote-entry/entry.routes.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

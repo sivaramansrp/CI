@@ -1,0 +1,157 @@
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
+import { DatosGeneralesComponent } from './datos-generales.component';
+import { FormBuilder } from '@angular/forms';
+import { FitosanitarioService } from '../../service/fitosanitario.service';
+import { TramiteStoreQuery } from '../../estados/tramite220702.query';
+import { TramiteStore } from '../../estados/tramite220702.store';
+import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+
+@Injectable()
+class MockFitosanitarioService { }
+
+@Injectable()
+class MockMedioDeTransporteService { }
+
+@Injectable()
+class MockTramiteStoreQuery { }
+
+@Injectable()
+class MockTramiteStore { }
+
+describe('DatosGeneralesComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, DatosGeneralesComponent,],
+      declarations: [
+
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        FormBuilder,
+        { provide: FitosanitarioService, useClass: MockFitosanitarioService },
+        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
+        { provide: TramiteStore, useClass: MockTramiteStore },
+        SeccionLibQuery,
+        SeccionLibStore
+      ]
+    }).overrideComponent(DatosGeneralesComponent, {
+
+    }).compileComponents();
+    fixture = TestBed.createComponent(DatosGeneralesComponent);
+    component = fixture.debugElement.componentInstance;
+  });
+
+  it('should run #constructor()', async () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
+    component.iniciarFormulario = jest.fn();
+    component.getAduanaDeIngreso = jest.fn();
+    component.getOficinaDeInspeccion = jest.fn();
+    component.getPuntoDeInspeccion = jest.fn();
+    component.getRegimenAlQue = jest.fn();
+    component.getPuntoDeVerificacion = jest.fn();
+    component.getDatosParaMovilizacion = jest.fn();
+    component.getDatos = jest.fn();
+    component.datosGeneralesForm = component.datosGeneralesForm || {};
+    component.datosGeneralesForm.patchValue = jest.fn();
+    component.datosGeneralesForm.statusChanges = observableOf({});
+    component.datosGeneralesForm.value = 'value';
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setSolicitudTramite = jest.fn();
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.ngOnInit();
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.getAduanaDeIngreso).toHaveBeenCalled();
+    expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
+    expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
+    expect(component.getRegimenAlQue).toHaveBeenCalled();
+    expect(component.getPuntoDeVerificacion).toHaveBeenCalled();
+    expect(component.getDatos).toHaveBeenCalled();
+
+   
+  });
+
+  it('should run #iniciarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.iniciarFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #getAduanaDeIngreso()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getAduanaDeIngreso = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getAduanaDeIngreso();
+    expect(component.fitosanitarioService.getAduanaDeIngreso).toHaveBeenCalled();
+  });
+
+  it('should run #getOficinaDeInspeccion()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getOficinaDeInspeccion = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getOficinaDeInspeccion();
+    expect(component.fitosanitarioService.getOficinaDeInspeccion).toHaveBeenCalled();
+  });
+
+  it('should run #getPuntoDeInspeccion()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getPuntoDeInspeccion = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getPuntoDeInspeccion();
+    expect(component.fitosanitarioService.getPuntoDeInspeccion).toHaveBeenCalled();
+  });
+
+  it('should run #getRegimenAlQue()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getRegimenAlQue = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getRegimenAlQue();
+    expect(component.fitosanitarioService.getRegimenAlQue).toHaveBeenCalled();
+  });
+
+  it('should run #getDatosParaMovilizacion()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getDatosParaMovilizacion = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getDatosParaMovilizacion();
+    expect(component.fitosanitarioService.getDatosParaMovilizacion).toHaveBeenCalled();
+  });
+
+  it('should run #getPuntoDeVerificacion()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getPuntoDeVerificacion = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getPuntoDeVerificacion();
+    expect(component.fitosanitarioService.getPuntoDeVerificacion).toHaveBeenCalled();
+  });
+
+});

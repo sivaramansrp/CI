@@ -1,0 +1,58 @@
+.disabled {
+    background-color: var(--bs-secondary-bg);
+    opacity: 1;
+    pointer-events: none;
+}
+
+select {
+    -webkit-appearance: listbox !important;
+}
+
+.page-number {
+    margin-top: 15px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: rgb(158, 153, 153);
+    background-color: #EEEEEE;
+    border: 2px solid #EEEEEE;
+    border-radius: 5px;
+}
+
+.page-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: 15px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+.cargarbtn {
+    width: 100%;
+    margin-bottom: 20px;
+}

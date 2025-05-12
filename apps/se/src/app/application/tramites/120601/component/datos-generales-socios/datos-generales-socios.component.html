@@ -1,0 +1,155 @@
+<div class="container form-container">
+  <ng-titulo titulo="Datos generales socios accionistas" />
+  <div>
+    <form [formGroup]="FormSolicitud">
+      <ng-container formGroupName="datosImportadorExportador">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="nacionalidadMexicana">Nacionalidad mexicana:</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                  type="radio"
+                  id="no"
+                  formControlName="nacionalidad"
+                  value="No"
+                  class="me-4"
+                  (change)="enCambioNacionalidad()"
+                />
+                <label for="no">Si</label>
+              </div>
+              <div class="col-md-6">
+                <input
+                  type="radio"
+                  id="yes"
+                  formControlName="nacionalidad"
+                  value="Yes"
+                  class="me-4"
+                  (change)="enCambioNacionalidad()"
+                />
+                <label for="yes">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoDePersona">Tipo de persona:</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                  type="radio"
+                  id="personaNo"
+                  formControlName="persona"
+                  value="No"
+                  class="me-4"
+                  (change)="enCambioPersona()"
+                />
+                <label for="personaNo">Persona física</label>
+              </div>
+              <div class="col-md-6">
+                <input
+                  type="radio"
+                  id="personaYes"
+                  formControlName="persona"
+                  value="Yes"
+                  class="me-4"
+                  (change)="enCambioPersona()"
+                />
+                <label for="personaYes">Persona moral</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="cadenaDependencia"
+                >Registro federal de contribuyentes*:</label
+              >
+              <input
+                class="form-control"
+                id="cadenaDependencia"
+                formControlName="cadenaDependencia"
+                type="text"
+                libUppercase
+                (change)="enCambioCadenaDependencia()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row mb-5">
+            <div class="col-md-6 col-sm-6"></div>
+            <div class="col-md-6 col-sm-6 text-end">
+              <div class="btn-group">
+                <button class="btn btn-primary ms-2 d-flex" type="button">
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="custom-margin">Socios y Accionistas</h6>
+        <h6>Datos de los socios y/o accionistas:</h6>
+        <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [tipoSeleccionTabla]="tablaCasilla"
+          [datos]="datosSocios"
+        ></app-tabla-dinamica>
+  
+        <div class="row">
+          <div class="row mb-5">
+            <div class="col-md-6 col-sm-6"></div>
+            <div class="col-md-6 col-sm-6 text-end">
+              <div class="btn-group">
+                <button class="btn btn-primary ms-2 d-flex" type="button">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="custom-margin">Socios y Accionistas Extranjeros</h6>
+        <h6>Datos de los socios y/o accionistas:</h6>
+        <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla_Extranjeros"
+          [tipoSeleccionTabla]="tablaCasilla"
+          [datos]="datosExtranjeros"
+        ></app-tabla-dinamica>
+
+        <form [formGroup]="formularioParaConteoTotal">
+          <div class="text-center">
+            <div>
+              <input
+                class="label-width"
+                id="recuentoTotalDeFilas"
+                formControlName="recuentoTotalDeFilas"
+                aria-labelledby="recuentoTotalDeFilas"
+                [disabled]="true"
+              />
+            </div>
+          </div>
+        </form>
+        
+        <div class="row">
+          <div class="row mb-5">
+            <div class="col-md-6 col-sm-6"></div>
+            <div class="col-md-6 col-sm-6 text-end">
+              <div class="btn-group">
+                <button class="btn btn-primary ms-2 d-flex" type="button">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <btn-continuar [datos]="datosPasos"></btn-continuar>
+      </ng-container>
+    </form>
+  </div>
+</div>

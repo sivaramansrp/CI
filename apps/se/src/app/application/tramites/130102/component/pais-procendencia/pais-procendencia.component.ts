@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /**
  * compo doc
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
@@ -8,10 +10,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 
@@ -22,6 +26,12 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import paisProcJson from 'libs/shared/theme/assets/json/130102/pais-procenia.json';
 
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -75,6 +85,17 @@ export class PaisProcendenciaComponent implements OnInit {
   paisProc: Catalogo[] = paisProcJson;
 
   /**
+   * Estado actual de la solicitud 130102, obtenido desde el store.
+   */
+  public solicitudState!: Solicitud130102State;
+
+  /**
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
   botonField = [
@@ -105,18 +126,46 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  // eslint-disable-next-line no-empty-function
+  constructor(private http: HttpClient, private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
+  ) {
+    //constructor
+  }
 
   /**
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
+     this.tramite130102Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {  
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+
     this.paisForm = this.fb.group({
-      bloque: [''],
-      descripcionJustificacion: ['', [Validators.required]],
-      observaciones: [''],
+      bloque: [this.solicitudState?.bloque],
+      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
+      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
     this.fetchPaisProc();
+    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
+  }
+  /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**
@@ -128,9 +177,9 @@ export class PaisProcendenciaComponent implements OnInit {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
-      const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
-      this.fechasDatos.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+      this.fechasDatos.splice(FECHA_VALOR, 1);
     }
   }
 
@@ -143,9 +192,9 @@ export class PaisProcendenciaComponent implements OnInit {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
   }
 
@@ -158,5 +207,18 @@ export class PaisProcendenciaComponent implements OnInit {
       .subscribe((data) => {
         this.paisProc = data;
       });
+  }
+
+   /**
+   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+   * 
+   * @param control - Control del formulario a validar.
+   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+   */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
   }
 }

@@ -1,0 +1,95 @@
+<div class="container">
+    <app-datos-del-destinatario (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)" (formaValida)="setFormValida($event)" [datosForm]="formDatosDelDestinatarioValues"></app-datos-del-destinatario>
+    <app-destinatario (formaValida)="setFormValidaDestinatario($event)" [datosForm]="formDestinatarioValues" (formDestinatarioEvent)="setValoresStoreDe($event)"></app-destinatario>
+    <form [formGroup]="exportadorForm">
+        <div class="row mt-5">
+            <ng-titulo titulo="Datos del representante legal del exportador" />
+            <div class="col-md-7">
+                <label class="form-label" for="lugar">Lugar*:</label>
+              <input type="text" id="lugar" class="form-control" formControlName="lugar"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'lugar',
+                'setLugar'
+                )" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-7">
+                <label class="form-label" for="exportador">Nombre del representante legal del exportador*:</label>
+              <input type="text" id="exportador" class="form-control" formControlName="exportador"
+              (change)="
+              setValoresStore(
+              exportadorForm,
+              'exportador',
+              'setExportador'
+              )"/>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <label class="form-label" for="empresa">Empresa*:</label>
+              <input type="text" id="empresa" class="form-control" formControlName="empresa"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'empresa',
+                'setEmpresa'
+                )" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="cargo">Cargo*:</label>
+              <input type="text" id="cargo" class="form-control" formControlName="cargo"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'cargo',
+                'setCargo'
+                )" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="lada">Lada:</label>
+              <input type="text" id="lada" class="form-control" formControlName="lada"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'lada',
+                'setLada'
+                )" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="telfono">Teléfono*:</label>
+              <input type="text" id="telfono" class="form-control" formControlName="telfono"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'telfono',
+                'setTelfono'
+                )" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <label class="form-label" for="fax">FAX*:</label>
+              <input type="text" id="fax" class="form-control" formControlName="fax"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'fax',
+                'setFax'
+                )" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="correo">Correo electrónico*:</label>
+              <input type="text" id="correo" class="form-control" formControlName="correo"
+              (change)="
+                setValoresStore(
+                exportadorForm,
+                'correo',
+                'setCorreo'
+                )" />
+            </div>
+        </div>
+    </form>
+</div>

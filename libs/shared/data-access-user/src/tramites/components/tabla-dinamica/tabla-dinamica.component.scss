@@ -1,19 +1,43 @@
 .table-wrapper {
-    width: 100%;
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch; 
-  }
-  
-  table {
-    width: 100%; 
-   
-  }
-  
-  .table-responsive {
-    font-size: 13px;
-  }
-  
-  input[type="radio"] {
-    cursor: pointer !important;
-  }
-  
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+
+}
+
+.table-responsive {
+  font-size: 13px;
+}
+
+input[type="radio"] {
+  cursor: pointer !important;
+}
+
+.color-icon-eye {
+  color: #9F803C;
+}
+
+.color-icon-download {
+  color: #6F7271;
+}
+
+.color-icon-edit {
+  color: #9F803C;
+}
+
+.color-icon-trash {
+  color: #9F803C;
+}
+
+.align-icon {
+  text-align: justify;
+  vertical-align: middle;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

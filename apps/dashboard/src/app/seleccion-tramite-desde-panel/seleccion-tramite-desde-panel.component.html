@@ -2,96 +2,33 @@
   <div class="container">
     <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
     <div class="row">
-      <table class="table table-responsive table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Tipo tr&aacute;mite</th>
-            <th>URL</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>5701</td>
-            <td> 
-              <a routerLink="/aga/servicios-extraordinarios/solicitud"
-                >{{ ruta }}/aga/servicios-extraordinarios/solicitud</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>303</td>
-            <td>
-              <a routerLink="/aga/despacho-mercancias/registro/registro"
-                >{{ ruta }}/aga/despacho-mercancias/registro/registro</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>220401</td>
-            <td>
-              <a routerLink="/agriculture/pantallas-extraordinarios"
-                >{{ ruta }}/agriculture/pantallas-extraordinarios</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>130102</td>
-            <td>
-              <a routerLink="/se/octava-temporal/solicitante"
-                >{{ ruta }}/se/octava-temporal/solicitante</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>110101</td>
-            <td>
-              <a routerLink="/se/pantallas/datosdecomponentes"
-                >{{ ruta }}/se/pantallas/datosdecomponentes</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>301</td>
-            <td>
-              <a routerLink="/aga/importante/datosdelasolicitud"
-                >{{ ruta }}/aga/importante/datosdelasolicitud</a
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>120301</td>
-            <td>
-              <a
-                routerLink="/se/elegibilidad-de-textiles/elegibilidad-textiles"
-                >{{
-                  ruta
-                }}/se/elegibilidad-de-textiles/elegibilidad-textiles</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>130120</td>
-            <td>
-              <a routerLink="/se/permiso-importacion/intro-permiso"
-                >{{ ruta }}/se/permiso-importacion/intro-permiso</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>130118</td>
-            <td>
-              <a routerLink="/se/pexim/solicitud">{{ ruta }}/se/pago/pexim/solicitud</a>
-            </td>
-          </tr>
-          <tr>
-            <td>31601</td>
-            <td>
-              <a routerLink="/agace/antecesor/datosdelasolicitud">{{ ruta }}/agace/pago/antecesor/datosdelasolicitud</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="table table-responsive table-striped table-hover">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>departmento</th>
+              <th>Tipo tr&aacute;mite</th>
+              <th>URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(item of tramiteData; track item?.id) { @if(item?.linkDashboard)
+            {
+            <tr>
+              <td>{{ item?.id }}</td>
+              <td>{{ item?.department }}</td>
+              <td>{{ item?.tramite }}</td>
+              <td>
+                <a [routerLink]="item.linkDashboard"
+                  >{{ ruta }}{{ item.linkDashboard }}</a
+                >
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

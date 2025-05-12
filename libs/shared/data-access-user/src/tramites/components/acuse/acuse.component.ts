@@ -1,21 +1,24 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extraordinarios.enum';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../../core/enums/constantes-alertas.enum';
 import { AlertComponent } from '../alert/alert.component';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
-  selector: 'app-component-acuse',
+  selector: 'lib-component-acuse',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent],
+  imports: [CommonModule, AlertComponent],
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })
 export class AcuseComponent implements OnChanges {
+  @Input() titulo!: string;
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
   @Input() folio!: string;
+  @Input() url!: string;
 
   readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
     {
@@ -29,6 +32,9 @@ export class AcuseComponent implements OnChanges {
   ];  
   readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
+  constructor(private router: Router) {
+    // Lógica de inicialización si es necesario
+  }
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
    *
@@ -49,5 +55,9 @@ export class AcuseComponent implements OnChanges {
    */
   verPdf(url: string): void {
     window.open(url, '_blank');
+  }
+
+  salir(): void {
+    this.router.navigate(['funcionario/app-seleccion-modulo']);
   }
 }

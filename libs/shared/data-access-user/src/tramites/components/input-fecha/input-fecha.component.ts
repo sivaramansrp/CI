@@ -1,12 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MESES, SEMANA } from '../../constantes/servicios-extraordinarios.enum';
-
 import * as moment from 'moment';
+import { Component, EventEmitter, HostListener, Input, OnChanges, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CommonModule } from '@angular/common';
 import { InputFecha } from '../../../core/models/shared/components.model';
-
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
 
 @Component({
   selector: 'input-fecha',
@@ -19,7 +17,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent {
+export class InputFechaComponent implements OnChanges {
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();
   @Input() setFecha!: string;
   @Input({required: true}) datos!: InputFecha;
@@ -29,40 +27,39 @@ export class InputFechaComponent {
   semana = SEMANA;
 
   anios: number[] = [];
-  mountSelect!: any[];
+  mountSelect!: { name: string; value: number; indexWeek: number }[];
   mostrar: boolean = false;
   Formulario!: FormGroup;
-
 
   constructor(
     private fb: FormBuilder
   ) {
     moment.locale('es');
     this.generaanios();
-    const fechaActual = moment().format('DD/MM/YYYY');
-    const fecha = fechaActual.split('/');
-    const ObjectDate = moment.utc(`${fecha[2]}-${fecha[1]}-${fecha[0]}`);
-    this.generarFormulario(ObjectDate);
+    const FECHA_ACTUAL = moment().format('DD/MM/YYYY');
+    const FECHA = FECHA_ACTUAL.split('/');
+    const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+    this.generarFormulario(OBJECT_DATE);
   }
 
-  ngOnChanges() {
-    if (this.setFecha != '' && this.setFecha != null) {
-      const fecha = this.setFecha.split('/');
-      const ObjectDate = moment.utc(`${fecha[2]}-${fecha[1]}-${fecha[0]}`);
-      this.generarFormulario(ObjectDate);
+  ngOnChanges():void {
+    if (this.setFecha !== '' && this.setFecha !== null) {
+      const FECHA= this.setFecha.split('/');
+      const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+      this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
       this.Formulario.get('fechaString')?.setValue(
-        moment.utc(ObjectDate).format('DD/MM/YYYY'),
+        moment.utc(OBJECT_DATE).format('DD/MM/YYYY'),
       );
       this.Formulario.controls['fechaString'].disable();
     }
   }
 
-  get fechaString() {
+  get fechaString(): string {
     return this.Formulario.get('fechaString')?.value;
   }
 
-  generarFormulario(fechaActual: moment.Moment) {
+  generarFormulario(fechaActual: moment.Moment): void {
     this.Formulario = this.fb.group({
       dia: [fechaActual.date()],
       mes: [fechaActual.month() + 1],
@@ -77,14 +74,14 @@ export class InputFechaComponent {
     );
   }
 
-  cambioAnio(event: Event) {
+  cambioAnio(event: Event): void {
     this.Formulario.get('anio')?.setValue(
       (event.target as HTMLInputElement).value,
     );
-    const ObjectDate = moment.utc(
+    const OBJECT_DATE= moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
-    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
+    this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
@@ -92,14 +89,14 @@ export class InputFechaComponent {
     );
   }
 
-  cambioMes(event: Event) {
+  cambioMes(event: Event): void {
     this.Formulario.get('mes')?.setValue(
       (event.target as HTMLInputElement).value,
     );
-    const ObjectDate = moment.utc(
+    const OBJECT_DATE= moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
-    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
+    this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
@@ -107,65 +104,66 @@ export class InputFechaComponent {
     );
   }
 
-  generaanios() {
-    const year = moment().year();
-    const inicio = year - 100;
-    const final = year + 100;
-    let contador = inicio;
+  generaanios(): void {
+    const YEAR = moment().year();
+    const INICIO = YEAR - 100;
+    const FINAL = YEAR + 100;
+    let CONTADOR = INICIO;
     do {
-      contador++;
-      this.anios.push(contador);
-    } while (contador != final);
+      CONTADOR++;
+      this.anios.push(CONTADOR);
+    } while (CONTADOR !== FINAL);
   }
 
-  getDayFromDate(mount: number, year: number) {
-    const startDate = moment.utc(
+  getDayFromDate(mount: number, year: number): void {
+    const START_DATE = moment.utc(
       `${year}-${mount.toString().padStart(2, '0')}-01`,
     );
-    const endDate = startDate.clone().endOf('month');
-    const diffDays = endDate.diff(startDate, 'days', true);
-    const numberDays = Math.round(diffDays);
-    const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
-      a = parseInt(a) + 1;
-      const diaFormato = a > 9 ? a : '0' + a;
-      const dayObject = moment(
-        `${year}-${mount.toString().padStart(2, '0')}-${diaFormato}`,
+    const END_DATE = START_DATE.clone().endOf('month');
+    const DIFF_DAYS = END_DATE.diff(START_DATE, 'days', true);
+    const NUMBER_DAYS = Math.round(DIFF_DAYS);
+    const ARRAY_DAYS = Object.keys([...Array(NUMBER_DAYS)]).map((a: string) => {
+      // eslint-disable-next-line radix, no-param-reassign
+      const IN = parseInt(a) + 1;
+      const DIA_FORMATO = IN > 9 ? IN : '0' + IN;
+      const DAY_OBJECT = moment(
+      `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`,
       );
       return {
-        name: dayObject.format('dddd'),
-        value: a,
-        indexWeek: dayObject.isoWeekday(),
+      name: DAY_OBJECT.format('dddd'),
+      value: IN,
+      indexWeek: DAY_OBJECT.isoWeekday(),
       };
     });
-    this.mountSelect = arrayDays;
+    this.mountSelect = ARRAY_DAYS;
   }
 
-  changeMount(flag: any) {
+  changeMount(flag: number): void {
     if (flag < 0) {
-      const prevDate = this.Formulario.get('fechaSeleccionada')
+      const PREV_DATE = this.Formulario.get('fechaSeleccionada')
         ?.value.clone()
         .subtract(1, 'month');
-      this.Formulario.get('mes')?.setValue(prevDate.format('M'));
-      this.Formulario.get('anio')?.setValue(prevDate.format('YYYY'));
-      const ObjectDate = moment.utc(
+      this.Formulario.get('mes')?.setValue(PREV_DATE.format('M'));
+      this.Formulario.get('anio')?.setValue(PREV_DATE.format('YYYY'));
+      const OBJECT_DATE = moment.utc(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
       );
-      this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
+      this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
         this.Formulario.get('anio')?.value,
       );
     } else {
-      const nextDate = this.Formulario.get('fechaSeleccionada')
+      const NEXT_DATE = this.Formulario.get('fechaSeleccionada')
         ?.value.clone()
         .add(1, 'month');
-      this.Formulario.get('mes')?.setValue(nextDate.format('M'));
-      this.Formulario.get('anio')?.setValue(nextDate.format('YYYY'));
-      const ObjectDate = moment.utc(
+      this.Formulario.get('mes')?.setValue(NEXT_DATE.format('M'));
+      this.Formulario.get('anio')?.setValue(NEXT_DATE.format('YYYY'));
+      const OBJECT_DATE= moment.utc(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
       );
-      this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
+      this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
@@ -174,27 +172,58 @@ export class InputFechaComponent {
     }
   }
 
-  clickDay(day: any) {
-    const mountYear =
+  clickDay(day: { name: string; value: number; indexWeek: number }): void {
+    const MOUNT_YEAR =
       this.Formulario.get('fechaSeleccionada')?.value.format('YYYY-MM');
-    const dia = day.value > 9 ? day.value : '0' + day.value;
-    const parse = `${mountYear}-${dia}`;
-    const ObjectDate = moment(parse);
+    const DIA = day.value > 9 ? day.value : '0' + day.value;
+    const PARSE = `${MOUNT_YEAR}-${DIA}`;
+    const OBJECT_DATE = moment(PARSE);
     this.Formulario.get('dia')?.setValue(day.value);
     this.Formulario.controls['fechaString'].enable();
     this.Formulario.get('fechaString')?.setValue(
-      moment.utc(ObjectDate).format('DD/MM/YYYY'),
+      moment.utc(OBJECT_DATE).format('DD/MM/YYYY'),
     );
     this.Formulario.controls['fechaString'].disable();
-    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
+    this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
     this.mostrar = false;
 
     this.valorCambiado.emit(this.Formulario.get('fechaString')?.value);
   }
 
-  mostrarCalendario() {
+  mostrarCalendario(): void {
     if (this.datos.habilitado) {
       this.mostrar = true;
+    }
+  }
+
+  /**
+  * @method onDocumentClick
+  * @description
+  * Este método escucha eventos de clic en el documento para determinar si el usuario hizo clic fuera del calendario. 
+  * Si el clic ocurre fuera del calendario, se oculta el componente del calendario.
+  * 
+  * Funcionalidad:
+  * - Verifica si el calendario está visible (`mostrar`).
+  * - Comprueba si el clic ocurrió fuera del elemento del calendario.
+  * - Si el clic es externo, cambia la propiedad `mostrar` a `false` para ocultar el calendario.
+  * 
+  * @param {Event} event - Evento de clic en el documento.
+  * 
+  * @example
+  * // Si el usuario hace clic fuera del calendario:
+  * this.onDocumentClick(event);
+  * // El calendario se oculta.
+  */
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.mostrar) {
+      return;
+    }
+    const ELEMENTO_OBJETIVO = event.target as HTMLElement;
+    const CALENDARIO = document.querySelector('#calendario');
+    
+    if (CALENDARIO && !CALENDARIO.contains(ELEMENTO_OBJETIVO)) {
+      this.mostrar = false;
     }
   }
 

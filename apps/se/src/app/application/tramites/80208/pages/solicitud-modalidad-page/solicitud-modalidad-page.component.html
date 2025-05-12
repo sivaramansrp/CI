@@ -1,0 +1,21 @@
+
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Registro de solicitud IMMEX modalidad ampliación cambio de modalidad</h1>
+            </div>
+            <app-wizard [listaPasos]="pasos"></app-wizard>
+        </div>
+        <div class="row">
+            @switch (indice) { @case (1) {
+            <app-paso-uno></app-paso-uno>
+            } @case (2) {
+            <app-paso-dos></app-paso-dos>
+            } @case (3) {
+            <app-paso-cuatro></app-paso-cuatro>
+            } }
+            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+        </div>
+    </div>
+</div>

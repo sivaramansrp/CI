@@ -1,5 +1,3 @@
-import { SEMANA } from './servicios-extraordinarios.enum';
-
 export const COOKIE = {
   NOMBRE_COOKIE_ID_USUARIO: 'sg-id-user',
   NOMBRE_COOKIE_ROL: 'sg-rol',
@@ -34,7 +32,22 @@ export const CATALOGOS_ID = {
   CAT_BIMESTRE_DOS: 'bimestre-catalogo-dos',
   CAT_BIMESTRE_TRES: 'bimestre-catalogo-tres',
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
+  CAT_TIPO_TRANSPORTE: 29,
   DATOS_PERSONA_FISICA: 21,
+  CAT_RECINTO: 30,
+  CAT_DESPACHO_LDA: 31,
+  CAT_DESPACHO_DD: 32,
+  CAT_ADUANA: 'aduana',
+  CAT_PAIS: 'pais',
+  CAT_DOCUMENTO_RESIDENCIA: 'documento-residencia',
+  CAT_DESTINO_DONACION: 'destino-donacion',
+  CAT_TIPO_DE_MERCANCIA: 'tipo-de-mercancia',
+  CAT_UMT: 'umt',
+  CAT_UMC: 'umc',
+  CAT_PROCEDENCIA_OTRO: 'procedencia-otro',
+  CAT_CONDICION_MERCANCIA: 'condicion-mercancia',
+  CAT_PAIS_ORIGEN_MEDICAMENTO: 'pais-origen-medicamento',
+  CAT_PAIS_PROCEDENCIA_MEDICAMENTO: 'pais-procedencia-medicamento',
 };
 
 export const TIPO_PERSONA = {

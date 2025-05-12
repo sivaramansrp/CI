@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from "libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component";
+import { FirmaElectronicaComponent } from "@ng-mf/data-access-user";
 
 @Component({
   selector: 'app-paso-cuatro',

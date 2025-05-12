@@ -1,0 +1,42 @@
+<div class="container form-container">
+  <ng-titulo titulo="Datos requeridos"></ng-titulo>
+  <div>
+    <form [formGroup]="cancelacionForm">
+      <label class="required-label">RFC</label>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <input type="text" class="form-control" id="rfcIngresado" placeholder="AAL0409235E6" formControlName="rfcIngresado"  maxlength="13"
+            size="30" (input)="updateRfcIngresado()" />
+          </div>
+        </div>
+      </div>
+      <div class=" text-end mt-5">
+        <button type="button" class="btn btn-primary">Buscar programas</button>
+      </div>
+      <div class="table-container">
+        <div class="table-header pb-2">
+          <h3>Elija el programa del que desea realizar el trámite</h3>
+          <button (click)="alternarContenido()" class="toggle-btn">
+            <i class="bi fs-5 m-1" [ngClass]="{
+                  'bi-chevron-down': !mostrarContenido,
+                  'bi-chevron-up': mostrarContenido
+                }">
+            </i>
+          </button>
+        </div>
+
+        <app-tabla-dinamica *ngIf="mostrarContenido" [configuracionTabla]="configuracionTabla" [datos]="cancelacionData"
+          [tipoSeleccionTabla]="TablaSeleccion.RADIO">
+        </app-tabla-dinamica>
+      </div>
+
+    <div class="mt-5">
+      <label for="message" class="required-label">Motivos</label>
+      <textarea class="form-control" formControlName="motivoCancelacion" rows="5" placeholder="PRUEBAS QA" id="motivoCancelacion" (input)="updateMotivoCancelacion()"></textarea>
+  </div>
+    
+    </form>
+  </div>
+</div>
+

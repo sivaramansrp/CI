@@ -8,9 +8,9 @@ services:
     container_name: modulefederation-libs
     restart: on-failure
     expose:
-      - '4204'
+      - '4203'
     ports:
-      - "4204:80"
+      - "4203:80"
     networks:
       - modulefederation-network
 #----------------------------------------------------------------

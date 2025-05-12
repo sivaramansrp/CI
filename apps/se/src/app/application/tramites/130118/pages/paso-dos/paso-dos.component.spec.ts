@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { AlertComponent, AnexarDocumentosComponent, SolicitanteComponent, TEXTOS, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -8,7 +10,18 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent]
+      declarations: [
+        PasoDosComponent        
+      ],
+      imports: [
+        HttpClientModule,
+        WizardComponent,
+        SolicitanteComponent,
+        TituloComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+        ToastrModule.forRoot()
+      ]
     })
     .compileComponents();
     

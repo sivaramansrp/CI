@@ -1,0 +1,193 @@
+<div [formGroup]="agregarProveedorForm">
+    <div formGroupName="datosGeneralesForm">
+        <h4>Datos generales</h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label" for="tercerosNacionalidad">Terceros nacionalidad*:</label>
+                <app-input-radio [radioOptions]="tercerosNacionalidadOpciones" [isRequired]="true" [layout]="'vertical'"
+                    formControlName="tercerosNacionalidad"
+                    (change)="setValoresStore(datosGeneralesForm,'tercerosNacionalidad', 'setTercerosNacionalidad')"
+                    (valueChange)="onNacionalidadCambio($event)"></app-input-radio>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+                <app-input-radio [radioOptions]="tipoPersonaOpciones" [isRequired]="true" [layout]="'vertical'"
+                    formControlName="tipoPersona"
+                    (change)="setValoresStore(datosGeneralesForm,'tipoPersona', 'setTipoPersona')"
+                    (valueChange)="onTipoPersonaCambio($event)"></app-input-radio>
+            </div>
+        </div>
+
+        <div class="margin-tb">
+            @if(avisoSanitarioState.tercerosNacionalidad === DATOS_CATEGORIAS_TERCEROS.NACIONAL ||
+            avisoSanitarioState.tercerosNacionalidad === ''){
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="rfcProveedor" class="form-label">R.F.C*: <span class="bi bi-question-circle-fill"
+                            title="" data-bs-toggle="tooltip"></span></label>
+                    <input type="text" name="rfcProveedor" id="rfcProveedor" class="form-control"
+                        formControlName="rfcProveedor"
+                        (change)="setValoresStore(datosGeneralesForm,'rfcProveedor', 'setRfcProveedor')">
+                    @if (rfcProveedor.invalid && (rfcProveedor.dirty ||
+                    rfcProveedor.touched)) {
+                    <div class="text-danger">
+                        Este campo es obligatorio
+                    </div>
+                    }
+                </div>
+                <div class="col-md-4">
+                    <label for="curp" class="form-label">C.U.R.P.*:</label>
+                    <input type="text" name="curp" id="curp" class="form-control" formControlName="curp"
+                        (change)="setValoresStore(datosGeneralesForm,'curp', 'setCurp')">
+                </div>
+            </div>
+            }
+            @if(avisoSanitarioState.mostrarRfcBuscarBoton){
+            <div class="row">
+                <div class="col-md-4 text-end mt-3">
+                    <button type="button" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+            }
+            @if(avisoSanitarioState.mostrarCurpBuscarBoton){
+            <div class="row">
+                <div class="col-md-8 text-end mt-3">
+                    <button type="button" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+    @if(mostrarDatosPersonales || avisoSanitarioState.tercerosNacionalidad !== ''){
+    <div formGroupName="datosPersonalesForm" class="mt-5">
+        @if(
+        (avisoSanitarioState.tercerosNacionalidad === DATOS_CATEGORIAS_TERCEROS.NACIONAL &&
+        avisoSanitarioState.tipoPersona !== DATOS_CATEGORIAS_TERCEROS.MORAL ) ||
+        (avisoSanitarioState.tercerosNacionalidad !== '' && avisoSanitarioState.tipoPersona === '' ) ||
+        (avisoSanitarioState.tercerosNacionalidad === DATOS_CATEGORIAS_TERCEROS.EXTRANJERO &&
+        avisoSanitarioState.tipoPersona === DATOS_CATEGORIAS_TERCEROS.FISICA)){
+        <h4>Datos personales</h4>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="proveedorNombre" class="form-label">Nombre(s)*:</label>
+                <input type="text" name="proveedorNombre" id="proveedorNombre" class="form-control"
+                    formControlName="proveedorNombre"
+                    (change)="setValoresStore(datosPersonalesForm,'proveedorNombre', 'setProveedorNombre')">
+            </div>
+            <div class="col-md-4">
+                <label for="proveedorPrimerApellido*: " class="form-label">Primer apellido*:</label>
+                <input type="text" name="proveedorPrimerApellido" id="proveedorPrimerApellido" class="form-control"
+                    formControlName="proveedorPrimerApellido"
+                    (change)="setValoresStore(datosPersonalesForm,'proveedorPrimerApellido', 'setProveedorPrimerApellido')">
+            </div>
+            <div class="col-md-4">
+                <label for="proveedorSegundoApellido" class="form-label">Segundo apellido:</label>
+                <input type="text" name="proveedorSegundoApellido" id="proveedorSegundoApellido" class="form-control"
+                    formControlName="proveedorSegundoApellido"
+                    (change)="setValoresStore(datosPersonalesForm,'proveedorSegundoApellido', 'setProveedorSegundoApellido')">
+            </div>
+        </div>
+        }
+        @if(
+        (avisoSanitarioState.tercerosNacionalidad === DATOS_CATEGORIAS_TERCEROS.NACIONAL &&
+        avisoSanitarioState.tipoPersona === DATOS_CATEGORIAS_TERCEROS.MORAL) ||
+        (avisoSanitarioState.tercerosNacionalidad !== '' && avisoSanitarioState.tipoPersona === '' ) ||
+        (avisoSanitarioState.tercerosNacionalidad === DATOS_CATEGORIAS_TERCEROS.EXTRANJERO &&
+        avisoSanitarioState.tipoPersona === DATOS_CATEGORIAS_TERCEROS.MORAL)){
+        <div class="row">
+            <div class="col-md-8">
+                <label for="proveedorRazonSocial" class="form-label">Denominación/razón social*:</label>
+                <input type="text" name="proveedorRazonSocial" id="proveedorRazonSocial" class="form-control"
+                    formControlName="proveedorRazonSocial"
+                    (change)="setValoresStore(datosPersonalesForm,'proveedorRazonSocial', 'setProveedorRazonSocial')">
+            </div>
+        </div>
+        }
+    </div>
+    }
+
+    <div formGroupName="domicilioForm" class="mt-5">
+        <h4>Domicilio</h4>
+
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="pais" formControlName="cvePais" [label]="'País'" [required]="true"
+                    name="cvePais" (change)="paisSeleccion()" [isDisabled]="avisoSanitarioState.inhabilitarPais"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <label for="domicilioEstado" class="form-label">Estado/localidad*:</label>
+                <input type="text" name="domicilioEstado" id="domicilioEstado" class="form-control"
+                    formControlName="domicilioEstado"
+                    (change)="setValoresStore(domicilioForm,'domicilioEstado', 'setDomicilioEstado')">
+            </div>
+            <div class="col-md-4">
+                <label for="alcaldia" class="form-label">Municipio/alcaldía*:</label>
+                <input type="text" name="alcaldia" id="alcaldia" class="form-control" formControlName="alcaldia"
+                    (change)="setValoresStore(domicilioForm,'alcaldia', 'setAlcaldia')">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="localidad" class="form-label">Localidad*:</label>
+                <input type="text" name="localidad" id="localidad" class="form-control" formControlName="localidad"
+                    (change)="setValoresStore(domicilioForm,'localidad', 'setLocalidad')">
+            </div>
+            <div class="col-md-4">
+                <label for="domicilioCodigoPostal" class="form-label">Código postal o equivalante*:</label>
+                <input type="text" name="domicilioCodigoPostal" id="domicilioCodigoPostal" class="form-control"
+                    formControlName="domicilioCodigoPostal"
+                    (change)="setValoresStore(domicilioForm,'domicilioCodigoPostal', 'setDomicilioCodigoPostal')">
+            </div>
+            <div class="col-md-4">
+                <label for="colonia" class="form-label">Colonia:</label>
+                <input type="text" name="colonia" id="colonia" class="form-control" formControlName="colonia"
+                    (change)="setValoresStore(domicilioForm,'colonia', 'setColonia')">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <label for="domicilioCalle" class="form-label">Calle*: <span class="bi bi-question-circle-fill" title=""
+                        data-bs-toggle="tooltip"></span></label>
+                <input type="text" name="domicilioCalle" id="domicilioCalle" class="form-control"
+                    formControlName="domicilioCalle"
+                    (change)="setValoresStore(domicilioForm,'domicilioCalle', 'setDomicilioCalle')">
+            </div>
+            <div class="col-md-4">
+                <label for="numeroExterior" class="form-label">Número exterior*:</label>
+                <input type="text" name="numeroExterior" id="numeroExterior" class="form-control"
+                    formControlName="numeroExterior"
+                    (change)="setValoresStore(domicilioForm,'numeroExterior', 'setNumeroExterior')">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="numeroInterior" class="form-label">Número interior:</label>
+                <input type="text" name="numeroInterior" id="numeroInterior" class="form-control"
+                    formControlName="numeroInterior"
+                    (change)="setValoresStore(domicilioForm,'numeroInterior', 'setNumeroInterior')">
+            </div>
+            <div class="col-md-1">
+                <label for="domicilioLada" class="form-label">Lada:</label>
+                <input type="text" name="domicilioLada" id="domicilioLada" class="form-control"
+                    formControlName="domicilioLada"
+                    (change)="setValoresStore(domicilioForm,'domicilioLada', 'setDomicilioLada')">
+            </div>
+            <div class="col-md-3">
+                <label for="domicilioTelefono" class="form-label">Teléfono:</label>
+                <input type="text" name="domicilioTelefono" id="domicilioTelefono" class="form-control"
+                    formControlName="domicilioTelefono"
+                    (change)="setValoresStore(domicilioForm,'domicilioTelefono', 'setDomicilioTelefono')">
+            </div>
+            <div class="col-md-4">
+                <label for="domicilioCorreoElectronico" class="form-label">Correo electrónico: <span
+                        class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
+                <input type="text" name="domicilioCorreoElectronico" id="domicilioCorreoElectronico"
+                    class="form-control" formControlName="domicilioCorreoElectronico"
+                    (change)="setValoresStore(domicilioForm,'domicilioCorreoElectronico', 'setDomicilioCorreoElectronico')">
+            </div>
+        </div>
+    </div>
+</div>

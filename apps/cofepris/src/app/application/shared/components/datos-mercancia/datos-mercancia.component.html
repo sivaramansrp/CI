@@ -1,0 +1,381 @@
+<div class="container">
+  <ng-titulo titulo="Datos mercancía"></ng-titulo>
+
+  <form [formGroup]="mercanciaForm">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="ml-2">
+          <app-catalogo-select
+            [catalogo]="clasificacionProductoDatos"
+            formControlName="clasificacionProducto"
+            [label]="'Clasificación del producto'"
+            [required]="true"
+            name="clasificacionProducto"
+          ></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 ml-2">
+        <div class="form-group">
+          <app-catalogo-select
+            [catalogo]="especificarClasificacionProductoDatos"
+            formControlName="especificarClasificacionProducto"
+            [label]="'Especificar clasificación del producto'"
+            [required]="true"
+            name="especificarClasificacionProducto"
+          ></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionEspecificaProducto"
+            >Denominación específica del producto*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionEspecificaProducto"
+            type="text"
+            formControlName="denominacionEspecificaProducto"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionEspecificaProducto')
+                ? 'required'
+                : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
+    @if(elementosAnadidos.includes('marca')){
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="marca">Marca*:</label>
+          <input
+            class="form-control"
+            id="marca"
+            type="text"
+            formControlName="marca"
+            [ngClass]="isValid(mercanciaForm, 'marca') ? 'required' : ''"
+          />
+        </div>
+      </div>
+    </div>
+    } @if(!elementosNoValidos.includes('denominacionDistintiva')) {
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionDistintiva"
+            >Denominación distintiva*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionDistintiva"
+            type="text"
+            formControlName="denominacionDistintiva"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionDistintiva') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
+    } @if(!elementosNoValidos.includes('denominacionComun')){
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionComun"
+            >Denominación o nombre científico*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionComun"
+            type="text"
+            formControlName="denominacionComun"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionComun') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
+    }
+    
+        <div class="row">
+            <div class="col-md-10 ml-2">
+                <app-catalogo-select [catalogo]="tipoProductoDatos" formControlName="tipoProducto" [label]="'Tipo de producto'"
+                    [required]="true" name="tipoProducto"></app-catalogo-select>
+            </div>
+        </div>
+
+        @if(elementosAnadidos.includes('especifique')){
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label class="form-label" for="especifique">Especifique*:</label>
+                        <input class="form-control" id="especifique" type="text" formControlName="especifique"
+                            [ngClass]="isValid(mercanciaForm, 'especifique') ? 'required' : ''">
+                    </div>
+                </div>
+            </div>
+        }
+        @if(!elementosNoValidos.includes('formaFarmaceutica')
+        ) {
+        <div class="row">
+            <div class="col-md-10 ml-2">
+                <app-catalogo-select [catalogo]="formaFarmaceuticaDatos" formControlName="formaFarmaceutica"
+                    [label]="'Forma farmacéutica'" [required]="true" name="formaFarmaceutica"></app-catalogo-select>
+            </div>
+        </div>
+        }
+        @if(!elementosNoValidos.includes('estadoFisico')){
+            <div class="row">
+                <div class="col-md-10 ml-2">
+                    <app-catalogo-select [catalogo]="estadoFisicoDatos" formControlName="estadoFisico"
+                        [label]="'Estado físico'" [required]="true"
+                        name="estadoFisico"></app-catalogo-select>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="form-label" for="fraccionArancelaria">Fracción arancelaria*:</label>
+                    <span class="bi bi-question-circle-fill" title="Fracción arancelaria"
+                    data-bs-toggle="tooltip"></span>
+                    <input class="form-control" id="fraccionArancelaria" type="text" formControlName="fraccionArancelaria"
+                    (change)="cambiarFraccionArancelaria()"
+                        [ngClass]="isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                    <input class="form-control" id="descripcionFraccion" disable type="text" formControlName="descripcionFraccion">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="form-label" for="cantidadUmtValor">Cantidad UMT*:</label>
+                    <input class="form-control" id="cantidadUmtValor" type="text" formControlName="cantidadUmtValor"
+                        [ngClass]="isValid(mercanciaForm, 'cantidadUmtValor') ? 'required' : ''">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="form-label" for="cantidadUmt">UMT*:</label>
+                    <span class="bi bi-question-circle-fill" title="UMT"
+                    data-bs-toggle="tooltip"></span>
+                    <input class="form-control" id="cantidadUmt" type="text" formControlName="cantidadUmt"
+                        [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="form-label" for="cantidadUmcValor">Cantidad UMC*:</label>
+                    <input class="form-control" id="cantidadUmcValor" type="text" formControlName="cantidadUmcValor"
+                        [ngClass]="isValid(mercanciaForm, 'cantidadUmcValor') ? 'required' : ''">
+                </div>
+            </div>
+            <div class="col-md-5 ml-2">
+                <app-catalogo-select [catalogo]="cantidadUmcDatos" formControlName="cantidadUmc" [label]="'UMC'"
+                    [required]="true" [tooltipQuestionCircle]="true" name="cantidadUmc"></app-catalogo-select>
+            </div>
+        </div>
+        @if(!elementosNoValidos.includes('presentacion')){
+            <div class="row">
+                <div class="col-6 ml-1">
+                    <label class="form-label text-start" for="presentacion">
+                        Presentación farmacéutica o tipo de envase*:
+                    </label>
+                    <textarea id="presentacion" class="form-control height" rows="3"
+                        formControlName="presentacion" style="height: 90px;"></textarea>
+                </div>
+            </div>
+        }
+
+          <div class="row">
+            @if(!elementosNoValidos.includes('numeroRegistroSanitario')){
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="form-label" for="numeroRegistroSanitario">Número de registro sanitario:</label>
+                        <input class="form-control" id="numeroRegistroSanitario" type="number" formControlName="numeroRegistroSanitario"
+                            [ngClass]="isValid(mercanciaForm, 'numeroRegistroSanitario') ? 'required' : ''">
+                    </div>
+                </div>
+            }
+            @if(!elementosNoValidos.includes('fechaCaducidad')){
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <ng-container *ngTemplateOutlet="fecha; context: { controlName: 'fechaCaducidad', lableName:'Fecha de caducidad'}"></ng-container>
+                    </div>
+                </div>
+            }
+          </div>
+        
+          <div class="row mt-5">
+            <div class="col-md-12 mt-3">
+              <div class="panel-group ficha-collapse" id="accordion">
+                <div class="panel panel-default">
+                  <div class="panel-heading" (click)="mostrarColapsable(1)">
+                    <h4 class="panel-title">
+                      <a>
+                        País de origen
+                      </a>
+                    </h4>
+                    <button type="button" class="collpase-button" [class.collapsed]="!paisDeOriginColapsable"></button>
+                  </div>
+                  @if(paisDeOriginColapsable){
+                  <div class="panel-collapse collapse in" id="panel-01">
+                    <div class="panel-body">
+                        <crosslist [fechas]="seleccionarOrigenDelPais"
+                        [label]="paisDeOriginLabel" [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
+                        (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"></crosslist>                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <div class="panel-group ficha-collapse" id="accordion">
+                <div class="panel panel-default">
+                  <div class="panel-heading" (click)="mostrarColapsable(2)">
+                    <h4 class="panel-title">
+                      <a>
+                        País de procedencia
+                      </a>
+                    </h4>
+                    <button type="button" class="collpase-button" [class.collapsed]="!paisDeProcedenciaColapsable"></button>
+                  </div>
+                  @if(paisDeProcedenciaColapsable){
+                  <div class="panel-collapse collapse in" id="panel-01">
+                    <div class="panel-body">
+                        <crosslist [fechas]="paisDeProcedenciaDatos"
+                [label]="paisDeProcedenciaLabel" [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
+                (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"></crosslist>                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if(elementosAnadidos.includes('claveDeLos')){
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label class="form-label" for="claveDeLos">Clave de los lotes*:</label>
+                        <input class="form-control" id="claveDeLos" type="text" formControlName="claveDeLos"
+                            [ngClass]="isValid(mercanciaForm, 'claveDeLos') ? 'required' : ''">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <ng-container *ngTemplateOutlet="fecha; context: { controlName: 'fechaDeFabricacio', lableName:'Fecha de fabricacio' }"></ng-container>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <ng-container *ngTemplateOutlet="fecha; context: { controlName: 'fechaDeCaducidad', lableName:'Fecha de caducidad' }"></ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5 justify-content-md-center">
+                <div class="col-md-8">
+                    <app-tabla-dinamica [tipoSeleccionTabla]="claveConfig.tipoSeleccionTabla"
+                        [configuracionTabla]="claveConfig.configuracionTabla" [datos]="claveConfig.datos"
+                        (listaDeFilaSeleccionada)="claveListaFn($event)"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="pull-right ml-2">
+                        <button type="button" name="eliminarClave" class="btn btn-danger ms-2"
+                        (click)="eliminarClave()">
+                            Eliminar  
+                        </button>
+                        <button type="button" name="modificarClave" class="btn btn-danger ms-2"
+                        (click)="modificarClave()">
+                        Modificar
+                        </button>
+                        <button type="button" name="agregarClave" class="btn btn-primary ms-2" data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarScain" (click)="agregarClave()">
+                            Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+          }
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <div class="panel-group ficha-collapse" id="accordion">
+                <div class="panel panel-default">
+                  <div class="panel-heading" (click)="mostrarColapsable(3)">
+                    <h4 class="panel-title">
+                      <a>
+                        Uso específico
+                      </a>
+                    </h4>
+                    <button type="button" class="collpase-button" [class.collapsed]="!usoEspesificoColapsable"></button>
+                  </div>
+                  @if(usoEspesificoColapsable){
+                  <div class="panel-collapse collapse in" id="panel-01">
+                    <div class="panel-body">
+                        <crosslist [fechas]="usoEspesificoDatos"
+                [label]="usoEspesificoLabel" [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
+                (fechasSeleccionadasChange)="usoEspesificoSeleccionadasChange($event)"></crosslist>                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #fecha let-controlName="controlName" let-lableName="lableName">
+            <label class="form-label" [for]="controlName">{{lableName ? lableName : 'Fecha'}}</label>
+            <input class="form-control" [id]="controlName" type="date" [formControlName]="controlName"
+                [ngClass]="isValid(mercanciaForm, controlName) ? 'required' : ''">
+        </ng-template>
+    </form>
+    
+    @if(detalleMercancia) {
+        <div class="row mt-3">
+            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (agregarMercanciaSellecion)="agregarMercanciaSellecion($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
+        </div>
+    }
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="pull-right ml-2">
+                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+                (click)="limpiarMercancia()">
+                    Limpiar  
+                </button>
+                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+                (click)="cancelar()">
+                Cancelar
+                </button>
+                <button type="button" name="agregarScian" class="btn btn-primary ms-2" data-bs-toggle="modal"
+                    data-bs-target="#modalAgregarScain" (click)="agregarMercancia()">
+                    Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

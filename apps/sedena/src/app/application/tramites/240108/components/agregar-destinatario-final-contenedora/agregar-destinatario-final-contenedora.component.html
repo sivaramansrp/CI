@@ -1,0 +1,6 @@
+<app-agregar-destinatario-final
+  (updateDestinatarioFinalTablaDatos)="
+    updateDestinatarioFinalTablaDatos($event)
+  "
+  [formaDatos]="terechosDatos$ | async"
+></app-agregar-destinatario-final>

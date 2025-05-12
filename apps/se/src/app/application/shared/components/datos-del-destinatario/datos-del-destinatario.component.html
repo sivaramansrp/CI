@@ -1,0 +1,35 @@
+<div class="container">
+    <form [formGroup]="formDatosDelDestinatario">
+        <div class="row mt-5">
+            <ng-titulo titulo="Datos del destinatario" />
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="nombres">Nombre(s):</label>
+              <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
+            </div>
+      
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="primerApellido">Primer apellido:</label>
+              <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" (change)="setValoresStore('formDatosDelDestinatario','primerApellido','setFormDatosDelDestinatario')" />
+            </div>
+      
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido:</label
+              >
+              <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido" (change)="setValoresStore('formDatosDelDestinatario','segundoApellido','setFormDatosDelDestinatario')" />
+            </div>
+      
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="numeroDeRegistroFiscal"
+                >Número de registro fiscal:</label
+              >
+              <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
+            </div>
+      
+            <div class="col-md-8 form-group">
+              <label class="form-label" for="razonSocial">Razón social:</label>
+              <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial" (change)="setValoresStore('formDatosDelDestinatario','razonSocial','setFormDatosDelDestinatario')" />
+            </div>
+          </div>
+    </form>
+</div>

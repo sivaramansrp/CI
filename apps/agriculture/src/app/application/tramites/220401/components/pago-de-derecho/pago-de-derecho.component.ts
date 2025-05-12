@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -7,6 +10,11 @@ import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente que gestiona el formulario de pago de derechos de importación o exportación.
@@ -24,15 +32,19 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule, CatalogoSelectComponent],
   standalone: true,
 })
-export class PagoDeDerechoComponent implements OnInit {
-  FormSolicitud!: FormGroup; // Objeto de formulario reactivo para manejar los datos del formulario
-  
+export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+  FormSolicitud!: FormGroup; 
+  private destroyNotifier$: Subject<void> = new Subject();
+    public solicitudState!: solicitud220401State;
   answer: string = ''; // Respuesta seleccionada por el usuario
   
   public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
   public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
-
-  constructor(private fb: FormBuilder) { }
+   // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder,
+    private agregar220401Store: Agregar220401Store,
+    private agregarQuery: AgregarQuery,
+  ) { }
 
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -45,30 +57,39 @@ export class PagoDeDerechoComponent implements OnInit {
    * @memberof PagoDeDerechoComponent
    */
   ngOnInit(): void {
-    this.getJustificacion();  // Obtiene las opciones para justificar el pago
-    this.getBanco();           // Obtiene las opciones para seleccionar el banco
+this.agregarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.getJustificacion(); // Obtiene las opciones para justificar el pago
+    this.getBanco(); // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
-      datosImportadorExportador: this.fb.group({
-        exentoDePago: ['No', Validators.required],
-        Justificacion: ['', Validators.required],
+     exentoDePago: [this.solicitudState?.exentoDePago || 'No', Validators.required],
+       Justificacion: [this.solicitudState?.Justificacion || '', [Validators.required]],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
-        Banco: ['', Validators.required],
-        llaveDePago: ['', Validators.required],
-        fechaPago: [' ', Validators.required],
-        importePago: ['', Validators.required],
-      }),
-    });
+        Banco:[this.solicitudState?.Banco],
+        llaveDePago:[this.solicitudState?.llaveDePago],
+       fechaPago:[this.solicitudState?.fechaPago,[ Validators.required]],
+       importePago: ['', Validators.required],
+      });
+    
 
     // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
     this.updateFormFieldsBasedOnExentoDePago('No');
 
-    // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
-    this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.valueChanges.subscribe((value) => {
+     // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
+    this.FormSolicitud.get('exentoDePago')?.valueChanges.subscribe((value) => {
       this.updateFormFieldsBasedOnExentoDePago(value);
     });
-  }
+
+}
 
   /**
    * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
@@ -81,28 +102,39 @@ export class PagoDeDerechoComponent implements OnInit {
    */
   updateFormFieldsBasedOnExentoDePago(value: string): void {
     if (value === 'No') {
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.enable();
-      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.enable();
+      this.FormSolicitud.get('rfcImportExport')?.setValue('454000554');
+      this.FormSolicitud.get('cadenaDependencia')?.setValue('0001012A0000EX');
+      this.FormSolicitud.get('importePago')?.setValue('594.0');
+      this.FormSolicitud.get('fechaPago')?.enable();
+      this.FormSolicitud.get('llaveDePago')?.enable();
       
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.disable();
+      this.FormSolicitud.get('cadenaDependencia')?.disable();
+      this.FormSolicitud.get('importePago')?.disable();
     } else {
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
+      this.FormSolicitud.get('rfcImportExport')?.reset();
+      this.FormSolicitud.get('cadenaDependencia')?.reset();
+      this.FormSolicitud.get('importePago')?.reset();
       
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.disable();
+      this.FormSolicitud.get('cadenaDependencia')?.disable();
+      this.FormSolicitud.get('importePago')?.disable();
+      this.FormSolicitud.get('fechaPago')?.disable();
+      this.FormSolicitud.get('llaveDePago')?.disable();
     }
   }
-
+  /**
+ * Asigna al store el valor de un campo de formulario usando el método especificado.
+ *
+ * @param form Grupo de formulario que contiene el campo.
+ * @param campo Nombre del control dentro del formulario.
+ * @param metodoNombre Nombre del método del store (`Agregar220401Store`) que recibirá el valor.
+ */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+    const VALOR = form.get(campo)?.value;
+    
+   (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
   /**
    * Obtiene las opciones de justificación para el pago de derechos.
    * 
@@ -136,6 +168,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   JustificacionSeleccion(): void { }
 
   /**
@@ -143,7 +176,10 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
-  BancoSeleccion(): void { }
+  // eslint-disable-next-line no-empty-function
+  BancoSeleccion(): void {
+    
+   }
 
   /**
    * Método para validar el formulario y registrar los valores si el formulario es válido.
@@ -152,5 +188,11 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   validarFormulario() { }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

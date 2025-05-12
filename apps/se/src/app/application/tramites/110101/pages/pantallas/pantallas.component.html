@@ -12,9 +12,10 @@
                     <app-datos></app-datos>
                 }
                 @case (2) {
-                    
+                     <app-firmar-solicitud></app-firmar-solicitud>
                 }
             }
         </div>
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
 </div>

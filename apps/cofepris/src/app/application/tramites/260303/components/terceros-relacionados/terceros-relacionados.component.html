@@ -1,0 +1,69 @@
+<div class="container">
+    <ng-titulo titulo="Terceros relacionados"></ng-titulo>
+    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
+    <div class="row mb-3">
+        <h5>Fabricante*:</h5>
+        <div class="col-md-12">
+            <app-tabla-dinamica
+                [configuracionTabla]="configuracionTabla"
+                [datos]="fabricanteTablaDatos"
+                [tipoSeleccionTabla]="checkbox">
+            </app-tabla-dinamica>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar fabricante')">Agregar</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <h5>Facturador*:</h5>
+        <div class="col-md-12">
+            <app-tabla-dinamica
+                [configuracionTabla]="configuracionFacturadorTabla"
+                [datos]="facturadorTablaDatos"
+                [tipoSeleccionTabla]="checkbox">
+            </app-tabla-dinamica>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar facturador')">Agregar</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <h5>Proveedor/distribuidor:</h5>
+        <div class="col-md-12">
+            <app-tabla-dinamica
+                [configuracionTabla]="configuracionProveedorTabla"
+                [datos]="proveedorTablaDatos"
+                [tipoSeleccionTabla]="checkbox">
+            </app-tabla-dinamica>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar proveedor/distribuidor')">Agregar</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <h5>Certificado analítico:</h5>
+        <div class="col-md-12">
+            <app-tabla-dinamica
+                [configuracionTabla]="configuracionCertificadoAnaliticoTabla"
+                [datos]="certificadoAnaliticoTablaDatos"
+                [tipoSeleccionTabla]="checkbox">
+            </app-tabla-dinamica>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar certificado analítico')">Agregar</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <h5>Otros:</h5>
+        <div class="col-md-12">
+            <app-tabla-dinamica
+                [configuracionTabla]="configuracionOtrosTabla"
+                [datos]="otrosTablaDatos"
+                [tipoSeleccionTabla]="checkbox">
+            </app-tabla-dinamica>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar otros')">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>

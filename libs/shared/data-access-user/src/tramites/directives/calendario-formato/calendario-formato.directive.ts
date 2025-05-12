@@ -6,6 +6,8 @@ import { Directive } from '@angular/core';
 })
 export class CalendarioFormatoDirective {
 
-  constructor() { }
+  constructor() { 
+    // Lógica de inicialización si es necesario
+  }
 
 }

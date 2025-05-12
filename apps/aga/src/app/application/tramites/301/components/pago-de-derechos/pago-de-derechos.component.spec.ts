@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
@@ -11,7 +10,7 @@ describe('PagoDeDerechosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PagoDeDerechosComponent, TituloComponent, SelectCatalogosComponent],
+      imports: [ReactiveFormsModule, PagoDeDerechosComponent, TituloComponent],
       providers: [FormBuilder],
     }).compileComponents();
   });
@@ -42,7 +41,7 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges(); // Make sure changes are reflected
 
     expect(montoControl?.value).toBe('4845');
-    expect(montoControl?.disabled).toBeTrue();
+    expect(montoControl?.disabled).toBe(true);
   });
 
   it('should have "Linea" field as required', () => {
@@ -50,7 +49,7 @@ describe('PagoDeDerechosComponent', () => {
     const lineaControl = form.get('pagodederechos.Linea');
     
     // Check if the "Linea" field is required
-    expect(lineaControl?.hasError('required')).toBeTrue();
+    expect(lineaControl?.hasError('required')).toBe(true);
   });
 
   it('should call updateformfied on ngOnInit and update the monto field', () => {

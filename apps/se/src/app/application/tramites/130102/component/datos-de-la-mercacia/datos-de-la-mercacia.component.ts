@@ -1,16 +1,19 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  *compo doc
  * @fileoverview Componente DetosDelLaComponent: maneja la lógica del formulario
  * para la gestión de productos, fracciones arancelarias y unidades de medida.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule, 
+  ValidationErrors,  
   Validators,
 } from '@angular/forms';
 
@@ -23,6 +26,12 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 
 /**
@@ -44,7 +53,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './datos-de-la-mercacia.component.html',
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
-export class DetosDelLaMarcaciaComponent implements OnInit {
+export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -73,7 +82,6 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * compo doc
    * @property {string} defaultSelect - Valor predeterminado para el selector de productos.
    */
-  defaultSelect: string = 'Nuevo';
 
   /**
    * compo doc
@@ -87,13 +95,20 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    */
   fraccionF: Catalogo[] = fractionValues;
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * compo doc
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient,
+     private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
+  ) {
     //constructor
   }
 
@@ -102,36 +117,62 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * @method ngOnInit
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
-  ngOnInit() {
+  ngOnInit(): void {
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.formDelLa = this.fb.group({
+      productos: [this.solicitudState?.productos],
       descripcion: [
-        '',
+        this.solicitudState?.descripcion,
         [
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(500),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator
         ],
       ],
-      fraccion: ['', [Validators.required]],
-      unidadMedida: ['', [Validators.required]],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
+      unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
       cantidad: [
-        '',
+        this.solicitudState?.cantidad,
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(REG_X.SOLO_NUMEROS), 
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
       valorFacturaUSD: [
-        '',
+        this.solicitudState?.valorFacturaUSD,
         [
           Validators.required,
           Validators.min(0.01),
           Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
     });
-    this.fetchProductoOptions();
+   this.fetchProductoOptions();
+   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+  }
+
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
   /**
@@ -142,7 +183,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    *
    * Este método es para la etiqueta de radio de producto.
    */
-  onValueChange(value: string | number) {
+  onValueChange(value: string | number): void {
     this.selectedValue = value.toString();
   }
 
@@ -151,9 +192,8 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * @method fetchProductoOptions
    * @description Carga las opciones de productos desde el JSON.
    */
-  fetchProductoOptions() {
+  fetchProductoOptions(): void {
     this.producto = productoOptions.options;
-    this.defaultSelect = productoOptions.defaultSelect;
   }
 
   /**
@@ -173,4 +213,25 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
   fetchUnidad(): void {
     this.selectedValue = 'Nuevo';
   }
+
+  /**
+ * Validador personalizado que verifica si un campo comienza con espacios en blanco.
+ * Retorna un error si se detectan espacios al inicio.
+ */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Emite y completa el observable para evitar fugas de memoria.
+   */
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

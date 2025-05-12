@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="row">
+    <form class="row mt-5" [formGroup]="datosDelTramiteDos" >
+      <ng-titulo titulo="Mercancías" />
+
+      <div class="col-md-12">
+        <label class="form-label" for="procedimientoCargaDescarga">
+          Describa el procedimiento y los mecanismos que utilizará para la descarga y carga de la mercancía*
+        </label>
+        <input type="text" class="form-control ht" id="procedimientoCargaDescarga" formControlName="procedimientoCargaDescarga"  (change)="setValoresStore(datosDelTramiteDos, 'procedimientoCargaDescarga', 'setProcedimientoCargaDescarga')"/>
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label" for="sistemasMedicionUbicacion">
+          Describa los tipos de sistemas de medición de la mercancía y su ubicación*
+        </label>
+        <input type="text" class="form-control ht" id="sistemasMedicionUbicacion" formControlName="sistemasMedicionUbicacion" (change)="setValoresStore(datosDelTramiteDos, 'sistemasMedicionUbicacion', 'setSistemasMedicionUbicacion')" />
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label" for="motivoNoDespachoAduana">
+          Indique los motivos por los cuales no es posible despachar la mercancia por la aduana:*
+        </label>
+        <input type="text" class="form-control ht" id="motivoNoDespachoAduana" formControlName="motivoNoDespachoAduana" (change)="setValoresStore(datosDelTramiteDos, 'motivoNoDespachoAduana', 'setMotivoNoDespachoAduana')" />
+      </div>
+
+      <ng-titulo titulo="Agentes y apoderados aduanales" />
+      <div class="row">
+        <div class="col-md-8 mt-4">
+          <app-catalogo-select
+            [catalogo]="operacione.catalogos"
+            [label]="'Selecciona el tipo de figura para promover las operaciones'"
+            [required]="true"
+            formControlName="operaciones"  (change)="
+            setValoresStore(datosDelTramiteDos, 'operaciones', 'setOperaciones')
+          ">
+          </app-catalogo-select>
+        </div>
+      </div>
+
+      <ng-titulo titulo="Agentes y apoderados aduanales registrados" />
+
+      <div class="row">
+        <div class="col-md-12 mb-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()">
+            Agregar
+          </button>
+          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default">Modificar</button>
+        </div>
+
+        <div class="table-container">
+          <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"> </ng-table>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="container mt-4">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Agregar</h4>
+          </div>
+          <div class="modal-body">
+            <ng-titulo titulo="Fracciones arancelarias" />
+            <form [formGroup]="agenteForm" >
+              <p class="fw-bold">Registro de Agentes Aduanales</p>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="nombres">Nombre(s)*</label>
+                  <input type="text" class="form-control" id="nombres" formControlName="nombres" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="primerApellido">Primer Apellido*</label>
+                  <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="segundoApellido">Segundo Apellido*</label>
+                  <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="numeroPatente">Número de patente de agente aduanal*</label>
+                  <input type="text" class="form-control" id="numeroPatente" formControlName="numeroPatente" />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer custom-footer justify-content-center">
+            <button type="button" class="btn btn-primary" (click)="agregarMercancias()">Agregar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

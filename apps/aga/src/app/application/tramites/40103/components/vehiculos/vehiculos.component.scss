@@ -1,0 +1,22 @@
+.btn-Agregar {
+  float: inline-end;
+}
+.modal-fullscreen .modal-body {
+  overflow-x: hidden;
+}
+.table-responsive {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.anio-vehiculo-veh {
+  margin-top: -39px;
+}
+::ng-deep app-tabla-dinamica table th,
+::ng-deep app-tabla-dinamica table td {
+  white-space: nowrap;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+}

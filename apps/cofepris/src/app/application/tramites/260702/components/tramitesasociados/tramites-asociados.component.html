@@ -1,0 +1,23 @@
+<ng-titulo titulo="Trámites Asociados:*"></ng-titulo>
+<app-tabla-dinamica
+  [configuracionTabla]="destinatarioConfiguracionTabla"
+  [datos]="tablaFilaDatos"
+></app-tabla-dinamica>
+
+<div class="d-flex justify-content-end mt-3">
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="mostrarModal()" 
+  >
+    Continuar
+  </button>
+</div>
+
+@if (nuevaNotificacion) {
+  <section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+  </section>
+  }
+  

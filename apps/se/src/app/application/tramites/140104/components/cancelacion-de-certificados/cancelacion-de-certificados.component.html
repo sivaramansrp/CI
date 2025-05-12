@@ -1,0 +1,320 @@
+<div class="container">
+  <div class="row">
+    <ng-titulo [titulo]="'Buscar cupos'"></ng-titulo>
+  </div>
+  <div class="row">
+    <form   [formGroup]="formularioGrupo">
+    <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="regimenAduaneroList"
+    formControlName="regimenAduanero"
+    [label]="'Régimen aduanero'"
+    [required]="false"
+    name="regimenAduanero"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="mecanismoAsignacionList"
+    formControlName="mecanismoAsignacion"
+    [label]="'Mecanismo de asignación'"
+    [required]="false"
+    name="mecanismoAsignacion"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="tratadoBloqueComercialList"
+    formControlName="tratadoBloqueComercial"
+    [label]="'Tratado o bloque comercial'"
+    [required]="false"
+    name="tratadoBloqueComercial"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="nombreProductoList"
+    formControlName="nombreProducto"
+    [label]="'Nombre de producto'"
+    [required]="false"
+    name="nombreProducto"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="nombreSubproductoList"
+    formControlName="nombreSubproducto"
+    [label]="'Nombre del subproducto'"
+    [required]="false"
+    name="nombreSubproducto"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="representacionFederalList"
+    formControlName="representacionFederal"
+    [label]="'Representación federal'"
+    [required]="false"
+    name="representacionFederal"
+  ></app-catalogo-select>
+  </div>
+
+  </form>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-10">
+      <button type="button" class="btn btn-primary" (click)="buscar($event)">Buscar</button>
+  </div>
+  </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Cupos disponibles</h5>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCuposDisponibles"
+          [datos]="cuposDisponiblesTabla"></app-tabla-dinamica>
+  
+      </div>
+    </div>
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
+      <ng-titulo [titulo]="'Detalle del cupo'"></ng-titulo>
+    </div>
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
+      <form [formGroup]="detalleDelCupoForm">
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="regimenAduanero">Régimen aduanero:</label>
+        <input
+          class="form-control"
+          id="regimenAduanero"
+          formControlName="regimenAduanero"
+          placeholder=""
+          name="regimenAduanero"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="descripcionProducto">Descripción del producto:</label>
+        <input
+          class="form-control"
+          id="descripcionProducto"
+          formControlName="descripcionProducto"
+          placeholder=""
+          name="descripcionProducto"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="clasificacionSubproducto">Clasificación del subproducto:</label>
+        <input
+          class="form-control"
+          id="clasificacionSubproducto"
+          formControlName="clasificacionSubproducto"
+          placeholder=""
+          name="clasificacionSubproducto"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="unidadMedida">Unidad de medida:</label>
+        <input
+          class="form-control"
+          id="unidadMedida"
+          formControlName="unidadMedida"
+          placeholder=""
+          name="unidadMedida"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="mecanismoAsignacion">Mecanismo de asignación:</label>
+        <input
+          class="form-control"
+          id="mecanismoAsignacion"
+          formControlName="mecanismoAsignacion"
+          placeholder=""
+          name="mecanismoAsignacion"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="tratadoAcuerdo">Tratado / Acuerdo:</label>
+        <input
+          class="form-control"
+          id="tratadoAcuerdo"
+          formControlName="tratadoAcuerdo"
+          placeholder=""
+          name="tratadoAcuerdo"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-12">
+        <label for="acondicionamiento" class="form-label text-start"
+          >Fracciones arancelarias:</label
+        >
+        <textarea
+          id="fraccionesArancelarias"
+          class="form-control altura-del-área-de-texto"
+          rows="3"
+          formControlName="fraccionesArancelarias"
+          readonly="true"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="paises" class="form-label text-start"
+          >Países:</label
+        >
+        <textarea
+          id="paises"
+          class="form-control altura-del-área-de-texto"
+          rows="3"
+          formControlName="paises"
+          readonly="true"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="observaciones" class="form-label text-start"
+          >Observaciones:</label
+        >
+        <textarea
+          id="observaciones"
+          class="form-control altura-del-área-de-texto"
+          rows="3"
+          formControlName="observaciones"
+          readonly="true"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="fundamentos" class="form-label text-start"
+          >Fundamentos:</label
+        >
+        <textarea
+          id="fundamentos"
+          class="form-control altura-del-área-de-texto"
+          rows="3"
+          formControlName="fundamentos"
+          readonly="true"
+        ></textarea>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="fechaInicioVigencia">Fecha de inicio de vigencia:</label>
+        <input
+          class="form-control"
+          id="fechaInicioVigencia"
+          formControlName="fechaInicioVigencia"
+          placeholder=""
+          name="fechaInicioVigencia"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="fechaFinVigencia">Fecha de fin de vigencia:</label>
+        <input
+          class="form-control"
+          id="fechaFinVigencia"
+          formControlName="fechaFinVigencia"
+          placeholder=""
+          name="fechaFinVigencia"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      </form>
+    </div>
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
+      <ng-titulo [titulo]="'Ofico'"></ng-titulo>
+    </div>
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
+      <form [formGroup]="montoForm">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoAsignado">Monto asignado:</label>
+          <input
+            class="form-control"
+            id="montoAsignado"
+            formControlName="montoAsignado"
+            placeholder=""
+            name="montoAsignado"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoAsignado">Monto disponible:</label>
+          <input
+            class="form-control"
+            id="montoDisponible"
+            formControlName="montoDisponible"
+            placeholder=""
+            name="montoDisponible"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoExpedido">Monto expedido:</label>
+          <input
+            class="form-control"
+            id="montoExpedido"
+            formControlName="montoExpedido"
+            placeholder=""
+            name="montoExpedido"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        </form>
+    </div>
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
+      <div class="col-md-12">
+        <h5>Certificados disponibles</h5>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosDisponibles"
+          [datos]="CertificadosDisponiblesTabla"></app-tabla-dinamica>
+          <div class="row mt-2">
+            <div class="col-md-12 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight" (click)="seleccionar($event)">Seleccionar</button>
+            </div>
+          </div> 
+      </div>
+    
+      <div class="row" *ngIf="mostrarDetalleDelCupo">
+        <div class="col-md-12">
+          <h5>Certificados a cancelar</h5>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosACancelar"
+            [datos]="CertificadosACancelarTabla"></app-tabla-dinamica>
+            <div class="row mt-2">
+              <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight">Eliminar seleccionado</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight" (click)="devlover($event)">Devlover facturas</button>
+              </div>
+            </div> 
+        </div>
+
+        <div class="row" *ngIf="mostrarDetalleDelCupo">
+          <form [formGroup]="cancelacionForm">
+            <div class="col-md-12 form-group">
+              <label class="form-label" for="razon">Motivo de la cancelación *:</label>
+             
+              <textarea
+              id="razon"
+              name="razon"
+              class="form-control altura-del-área-de-texto"
+              rows="3"
+              formControlName="razon"
+              readonly="true"
+            ></textarea>
+              
+            </div>
+            </form>
+        </div>
+</div>
+
+

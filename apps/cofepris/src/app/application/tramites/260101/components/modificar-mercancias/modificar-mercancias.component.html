@@ -1,0 +1,308 @@
+<form [formGroup]="datosMercanciaForm">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos mercancía" />
+    </div>
+    <div class="col-md-8 mt-3">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="productosCatalogo.catalogos"
+        [label]="productosCatalogo.labelNombre"
+        [placeholder]="productosCatalogo.primerOpcion"
+        [required]="productosCatalogo.required"
+        (selectionChange)="seleccionaProductos($event)"
+        formControlName="clasificaionProductos"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-3">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="especificarCatalogo.catalogos"
+        [label]="especificarCatalogo.labelNombre"
+        [placeholder]="especificarCatalogo.primerOpcion"
+        [required]="especificarCatalogo.required"
+        formControlName="especificarProducto"
+        (selectionChange)="seleccionaEspecificar($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-3">
+      <label class="form-label" for="denominacionProducto"
+        >Denominación especifica del producto*:</label
+      >
+      <input
+        class="form-control"
+        id="denominacionProducto"
+        placeholder=""
+        type="text"
+        formControlName="nombreProductoEspecifico"
+        (change)="setNombreProductoEspecifico($event)"
+      />
+    </div>
+    <div class="col-md-8 mt-3">
+      <label class="form-label" for="marca">Marca*:</label>
+      <input
+        class="form-control"
+        id="marca"
+        placeholder=""
+        type="text"
+        formControlName="marca"
+        (change)="setMarca($event)"
+      />
+    </div>
+    <div class="col-md-8 mt-3">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="tipoProductoCatalogo.catalogos"
+        [label]="tipoProductoCatalogo.labelNombre"
+        [placeholder]="tipoProductoCatalogo.primerOpcion"
+        [required]="tipoProductoCatalogo.required"
+        formControlName="tipoProducto"
+        (selectionChange)="seleccionaTipoProducto($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-3">
+      <label class="form-label" for="fraccionArancelaria"
+        >Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+        </label
+      >
+      <input
+        class="form-control"
+        id="fraccionArancelaria"
+        placeholder=""
+        type="text"
+        formControlName="fraccionArancelaria"
+        (change)="setFraccionArancelaria($event)"
+      />
+    </div>
+    <div class="col-md-8 mt-3">
+      <label class="form-label" for="descripcionFraccionArancelaria"
+        >Descripción de la fracción arancelaria*:</label
+      >
+      <input
+        class="form-control"
+        id="descripcionFraccionArancelaria"
+        placeholder=""
+        type="text"
+        formControlName="descripcionFraccionArancelaria"
+      />
+    </div>
+    <div class="col-md-4 mt-3"></div>
+    <div class="col-md-4 mt-3">
+      <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
+      <input
+        class="form-control"
+        id="cantidadUMT"
+        placeholder=""
+        type="number"
+        formControlName="cantidadUMT"
+        (change)="setCantidadUMT($event)"
+      />
+    </div>
+    <div class="col-md-4 mt-3">
+      <label class="form-label" for="umt">UMT*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      </label>
+      <input
+        class="form-control"
+        id="umt"
+        placeholder=""
+        type="text"
+        formControlName="umt"
+      />
+    </div>
+    <div class="col-md-4 mt-3"></div>
+    <div class="col-md-4 mt-3">
+      <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
+      <input
+        class="form-control"
+        id="cantidadUMC"
+        placeholder=""
+        type="number"
+        formControlName="cantidadUMC"
+        (change)="setCantidadUMC($event)"
+      />
+    </div>
+    <div class="col-md-4 mt-3">
+      <app-catalogo-select
+        [id]="'umc'"
+        [catalogo]="umcCatalogo.catalogos"
+        [label]="umcCatalogo.labelNombre"
+        [placeholder]="umcCatalogo.primerOpcion"
+        [required]="umcCatalogo.required"
+        formControlName="umc"
+        (selectionChange)="setUMC($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-3"></div>
+
+    <div class="col-md-12 mt-4">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div
+            class="panel-heading"
+            (click)="paisOrigenColapsable()"
+            tabindex="0"
+          >
+            <h4 class="panel-title">País de origen</h4>
+            <button type="button" class="collpase-button collapsed"></button>
+          </div>
+          @if(paisOrigen){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <crosslist
+                [label]="paisOrigenCrossList.label"
+                [fechas]="paisOrigenCrossList.fechas"
+              ></crosslist>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-4">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div
+            class="panel-heading"
+            (click)="paisProcedencis_colapsable()"
+            tabindex="0"
+          >
+            <h4 class="panel-title">País de procedencia</h4>
+            <button type="button" class="collpase-button collapsed"></button>
+          </div>
+          @if(paisProcedencisColapsable){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <crosslist
+                [label]="paisProcedencisCrossList.label"
+                [fechas]="paisProcedencisCrossList.fechas"
+              ></crosslist>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 mt-3">
+      <label class="form-label" for="claveDeLosLotes"
+        >Clave de los lotes*:</label
+      >
+      <input
+        class="form-control"
+        id="claveDeLosLotes"
+        placeholder=""
+        type="text"
+        formControlName="claveDeLosLotes"
+        (change)="setClaveDeDeLosLotes($event)"
+      />
+    </div>
+
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4 mt-3">
+      <input-fecha
+        class="width"
+        [datos]="fechaFabricacionDatos"
+        [setFecha]="datosMercanciaForm.get('fechaFabricacion')?.value"
+        (valorCambiado)="seleccionarFechaFabricacion($event)"
+      ></input-fecha>
+    </div>
+
+    <div class="col-md-4 mt-3">
+      <input-fecha
+        class="width"
+        [datos]="fechaCaducidad"
+        [setFecha]="datosMercanciaForm.get('fechaCaducidad')?.value"
+        (valorCambiado)="seleccionarFechaCaducidad($event)"
+      ></input-fecha>
+    </div>
+    <div class="col-md-12 mt-3">
+      <label class="form-label" for="">Lista Claves de los lotes*:</label>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-8 mt-3">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [configuracionTabla]="configuracionTabla"
+        (listaDeFilaSeleccionada)="getListaClavesDeLotes($event)"
+        [datos]="tipos"
+      >
+      </app-tabla-dinamica>
+    </div>
+    <div class="col-md-2"></div>
+
+    <div class="col-md-12 d-flex justify-content-end align-items-end">
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-default btn-space"
+          (click)="modificarClavesDeLotes()"
+        >
+          Modificar
+        </button>
+        <button
+          class="btn btn-default ms-3"
+          type="button"
+          (click)="eliminarClavesDeLotes()"
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          (click)="agregarClavesDeLotes()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-4">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div
+            class="panel-heading"
+            (click)="usoEspecificoColapsable()"
+            tabindex="0"
+          >
+            <h4 class="panel-title">Uso especifico</h4>
+            <button type="button" class="collpase-button collapsed"></button>
+          </div>
+          @if(usoEspecifico){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <crosslist
+                [fechas]="usoEspecificoCrossList.fechas"
+                [label]="usoEspecificoCrossList.label"
+              >
+              </crosslist>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 d-flex justify-content-end align-items-end">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-space">
+          Modificar
+        </button>
+        <button class="btn btn-default ms-3" type="button">Eliminar</button>
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          data-bs-dismiss="modal"
+          (click)="agregarMercanias()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

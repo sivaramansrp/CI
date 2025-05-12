@@ -1,0 +1,52 @@
+.modal-dialog {
+    max-width: 600px !important;
+}
+
+.modal-header {
+    justify-content: left;
+}
+
+.scian {
+    margin: 3em 0 1em 0;
+}
+
+#modalAgregarMercancia .modal-dialog {
+    max-width: 1100px !important;
+}
+
+#modalAgregarMercancia .modal-body {
+    padding: 30px 30px 0px 30px;
+}
+
+#modalAgregarMercancia .modal-footer {
+    padding: 3rem;
+}
+
+#modalAlerta .modal-footer {
+    justify-content: center;
+}
+
+#modalAlerta .modal-header {
+    height: 50px;
+}
+
+#modalAlerta .modal-dialog {
+    max-width: 315px !important;
+}
+
+.manifiesto-descripcion {
+    text-align: justify;
+    margin: -25px 0px 0px 25px !important;
+}
+
+.alert {
+    text-align: left !important;
+}
+
+.alert label {
+    font-weight: normal;
+}
+
+.seleccion-solo-lectura {
+    pointer-events: none;
+}

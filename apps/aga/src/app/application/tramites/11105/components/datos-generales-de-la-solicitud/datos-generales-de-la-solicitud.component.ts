@@ -1,0 +1,395 @@
+import {
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
+import { CommonModule } from '@angular/common';
+import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
+import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
+import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
+
+/**
+ * Texto de adjuntar para terceros.
+ */
+const TERCEROS_TEXTO_DE_ADJUNTAR =
+  'Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación';
+
+/**
+ * Componente que representa los datos generales de la solicitud.
+ */
+@Component({
+  selector: 'app-datos-generales-de-la-solicitud',
+  templateUrl: './datos-generales-de-la-solicitud.component.html',
+  styleUrls: ['./datos-generales-de-la-solicitud.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    InputRadioComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+  ],
+})
+export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
+  
+  /**
+   * Evento de salida que emite un valor de tipo cadena.
+   * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
+
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Configuración de la tabla de selección.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Texto de adjuntar para terceros.
+   */
+  TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
+
+  /**
+   * Indica si la tabla debe mostrarse.
+   */
+  mostrarTabla = true;
+
+  /**
+   * Indica si el popup está abierto.
+   */
+  isPopupOpen = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  isPopupClose = true;
+
+  /**
+   * Lista de fines elegidos.
+   */
+  finesElegidos: string[] = [];
+
+  /**
+   * Lista de fines seleccionados.
+   */
+  elegidosSeleccionados: string[] = [];
+
+  /**
+   * Catálogo de aduanas.
+   */
+  public aduana: CatalogosSelect = {
+    labelNombre: 'Aduana por la que ingresará la mercancía',
+    required: false,
+    primerOpcion: 'Seleccione un Valor',
+    catalogos: [],
+  };
+
+  /**
+   * Catálogo del propósito de la mercancía.
+   */
+  public propositoDeLaMercancia: CatalogosSelect = {
+    labelNombre:
+      DATOS_GENERERALES_DE_LA_SOLICICTUD.PROPOSITO_DE_LA_MERCANCIA_LABEL_NOMBRE,
+    required: false,
+    primerOpcion: DATOS_GENERERALES_DE_LA_SOLICICTUD.PRIMAR_OPCION,
+    catalogos: [],
+  };
+
+  /**
+   * Configuración de la tabla.
+   */
+  configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = [
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.ADUANA_LABEL_NOMBRE,
+      clave: (item: DetallesDelMercancia) => item.tipoDeMercancia,
+      orden: 1,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.CANTIDAD,
+      clave: (item: DetallesDelMercancia) => item.cantidad,
+      orden: 2,
+    },
+    {
+      encabezado:
+        DATOS_GENERERALES_DE_LA_SOLICICTUD.UNIDAD_DE_MEDIDA_DE_COMERCIALIZACION,
+      clave: (item: DetallesDelMercancia) => item.unidadDeMedida,
+      orden: 3,
+    },
+    {
+      encabezado:
+        DATOS_GENERERALES_DE_LA_SOLICICTUD.ANO_DE_IMPORTACION_TEMPORAL,
+      clave: (item: DetallesDelMercancia) => item.anoDeImportacionTemporal,
+      orden: 4,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.MODEL,
+      clave: (item: DetallesDelMercancia) => item.modelo,
+      orden: 5,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.MARCA,
+      clave: (item: DetallesDelMercancia) => item.marca,
+      orden: 6,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.NUMBERO_DE_SERIE,
+      clave: (item: DetallesDelMercancia) => item.numeroDeSerie,
+      orden: 7,
+    },
+  ];
+
+  /**
+   * Formulario de trámite.
+   */
+  tramiteForm!: FormGroup;
+
+  /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string;
+
+  /**
+   * Datos configurados para la tabla.
+   */
+  configuracionTablaDatos: DetallesDelMercancia[] = [];
+
+  /**
+   * Opciones para el radio button.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: 'sí' },
+    { label: 'No', value: 'no' },
+  ];
+
+  /**
+   * Constructor de la clase.
+   * @param retiradaDeLaAutorizacionDeDonacionesService Servicio para manejar datos relacionados con la autorización de donaciones.
+   * @param formBuilder FormBuilder para construir formularios reactivos.
+   * @param validacionesService Servicio para manejar validaciones de formularios.
+   */
+  constructor(
+    private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
+    public formBuilder: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Método de inicialización del componente.
+   */
+  ngOnInit(): void {
+    this.donanteDomicilio();
+    this.buscarAduanaDatos();
+    this.buscarpropositoDeLaMercanciaDatos();
+    this.buscarDetallesDelMercanciaDatos();
+  }
+
+  /**
+   * Busca los datos de la aduana.
+   */
+  buscarAduanaDatos(): void {
+    this.retiradaDeLaAutorizacionDeDonacionesService
+      .getAduanaIngresara()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.aduana.catalogos = response as Catalogo[];
+      });
+  }
+
+  /**
+   * Busca los datos del propósito de la mercancía.
+   */
+  buscarpropositoDeLaMercanciaDatos(): void {
+    this.retiradaDeLaAutorizacionDeDonacionesService
+      .getAduanaIngresara()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.propositoDeLaMercancia.catalogos = response as Catalogo[];
+      });
+  }
+
+  /**
+   * Busca los detalles de la mercancía.
+   */
+  buscarDetallesDelMercanciaDatos(): void {
+    this.retiradaDeLaAutorizacionDeDonacionesService
+      .getDetallesDelMercanciaDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((datos: DetallesDelMercancia) => {
+        this.configuracionTablaDatos = [datos];
+      });
+  }
+
+  /**
+   * Cambia el valor seleccionado del radio button.
+   * @param value Valor seleccionado.
+   */
+  cambiarRadio(value: string | number): void {
+    this.valorSeleccionado = value as string;
+  }
+
+  /**
+   * Abre el popup.
+   */
+  openPopup(): void {
+    this.isPopupOpen = true;
+  }
+
+  /**
+   * Cierra el popup.
+   */
+  closePopup(): void {
+    this.isPopupOpen = false;
+    this.isPopupClose = false;
+  }
+
+  /**
+   * Muestra la siguiente tabla.
+   */
+  nextTabla(): void {
+    this.mostrarTabla = false;
+  }
+
+  /**
+   * Valida si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Obtiene el grupo de formulario de importador/exportador.
+   */
+  get retiradaDeDonaciones(): FormGroup {
+    return this.tramiteForm.get('retiradaDeDonaciones') as FormGroup;
+  }
+
+  /**
+   * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
+   */
+  donanteDomicilio(): void {
+    this.tramiteForm = this.formBuilder.group({
+      retiradaDeDonaciones: this.formBuilder.group({
+        aduana: [{ value: '', disabled: true }, [Validators.required]],
+        nombre: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        tipoMercancia: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        usoEspecifico: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(512)],
+        ],
+        condicion: [{ value: '', disabled: true }, Validators.required],
+        marca: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        ano: [{ value: '', disabled: true }, [Validators.required]],
+        modelo: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        serie: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        manifesto: [{ value: '', disabled: true }, Validators.required],
+        calle: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        numeroExterior: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(10)],
+        ],
+        numeroInterior: [
+          { value: '', disabled: true },
+          [Validators.maxLength(10)],
+        ],
+        telefono: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.pattern(/^\d{10}$/)],
+        ],
+        correoElectronico: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.email],
+        ],
+        pais: [{ value: '', disabled: true }, Validators.required],
+        codigoPostal: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.pattern(/^\d{5}$/)],
+        ],
+        estado: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        colonia: [
+          { value: '', disabled: true },
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        opcion: [{ value: 'false' }, Validators.maxLength(50)],
+      }),
+    });
+  }
+
+  /**
+   * Valida el formulario del destinatario.
+   * Si el formulario es inválido, marca todos los campos como tocados.
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.tramiteForm.invalid) {
+      this.tramiteForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
+  /**
+   * Método que emite un evento para continuar con el flujo de la solicitud.
+   * Este evento no envía ningún dato adicional, solo notifica que se debe proceder.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
+  }
+}

@@ -1,0 +1,11 @@
+[
+  { "clave": "MX", "descripcion": "México" },
+  { "clave": "US", "descripcion": "Estados Unidos" },
+  { "clave": "CA", "descripcion": "Canadá" },
+  { "clave": "ES", "descripcion": "España" },
+  { "clave": "AR", "descripcion": "Argentina" },
+  { "clave": "BR", "descripcion": "Brasil" },
+  { "clave": "CO", "descripcion": "Colombia" },
+  { "clave": "FR", "descripcion": "Francia" },
+  { "clave": "DE", "descripcion": "Alemania" }
+]

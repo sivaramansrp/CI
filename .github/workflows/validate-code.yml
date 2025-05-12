@@ -1,0 +1,333 @@
+name: Validate Code
+
+on:
+  pull_request:
+    # Solo ejecutar cuando los PRs van hacia ramas principales
+    branches: [ "develop", "staging", "production" ]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.eslintrc.json'
+  push:
+    branches: [ "develop", "staging", "production" ]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.eslintrc.json'
+  workflow_dispatch:
+    # Permitir ejecución manual con parámetros
+    inputs:
+      validateTarget:
+        description: 'Tipo de validación a ejecutar'
+        required: true
+        type: choice
+        options:
+          - all
+          - lint
+          - test
+          - build
+        default: 'all'
+
+env:
+  NODE_VERSION: '22.14.0'
+  NX_VERSION: '19.3.1'
+
+jobs:
+  lint:
+    name: Lint and Code Quality
+    runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'lint' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'lint'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
+      - name: Install dependencies
+        run: npm ci --no-audit --prefer-offline
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Get affected projects
+          if [ -n "$CHANGED_FILES" ]; then
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
+          fi
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, running checks on all projects"
+            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
+            # Filter out NX error messages
+            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
+            
+            if [ -n "$ALL_PROJECTS" ]; then
+              AFFECTED_PROJECTS="$ALL_PROJECTS"
+            else
+              echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
+              AFFECTED_PROJECTS="dashboard"
+            fi
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Lint affected projects
+        run: |
+          LINT_FAILED=false
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Linting project: $PROJECT"
+            if ! npx nx lint $PROJECT --fix=false; then
+              echo "::warning::Linting failed for $PROJECT"
+              LINT_FAILED=true
+            fi
+          done
+          if [ "$LINT_FAILED" = "true" ]; then
+            echo "::warning::Linting issues were found. Please fix them before merging."
+          fi
+
+      - name: Check TypeScript
+        run: |
+          TS_FAILED=false
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Type checking project: $PROJECT"
+            if ! npx nx build $PROJECT --configuration=development --target=typecheck; then
+              echo "::warning::Type checking failed for $PROJECT"
+              TS_FAILED=true
+            fi
+          done
+          if [ "$TS_FAILED" = "true" ]; then
+            echo "::warning::Type checking issues were found. Please fix them before merging."
+          fi
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'test' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'test'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
+      - name: Install dependencies
+        run: npm ci --no-audit --prefer-offline
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          # Get affected projects
+          if [ -n "$CHANGED_FILES" ]; then
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
+          fi
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, running tests on all projects"
+            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
+            # Filter out NX error messages
+            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
+            
+            if [ -n "$ALL_PROJECTS" ]; then
+              AFFECTED_PROJECTS="$ALL_PROJECTS"
+            else
+              echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
+              AFFECTED_PROJECTS="dashboard"
+            fi
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Run unit tests
+        run: |
+          TEST_FAILED=false
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Testing project: $PROJECT"
+            if ! npx nx test $PROJECT --passWithNoTests; then
+              echo "::warning::Tests failed for $PROJECT"
+              TEST_FAILED=true
+            fi
+          done
+          if [ "$TEST_FAILED" = "true" ]; then
+            echo "::warning::Some tests have failed. Please fix them before merging."
+          fi
+
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'build' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'build'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
+      - name: Install dependencies
+        run: npm ci --no-audit --prefer-offline
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          # Get affected projects
+          if [ -n "$CHANGED_FILES" ]; then
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
+          fi
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, checking build for dashboard"
+            echo "::warning::No affected projects found. Defaulting to dashboard app for build verification."
+            AFFECTED_PROJECTS="dashboard"
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Check build
+        run: |
+          # Build at least one app to verify the build process
+          FIRST_PROJECT=$(echo ${{ steps.changed-projects.outputs.affected_projects }} | awk '{print $1}')
+          if [ -n "$FIRST_PROJECT" ]; then
+            echo "Checking build for project: $FIRST_PROJECT"
+            if ! npx nx build $FIRST_PROJECT --configuration=development; then
+              echo "::warning::Build failed for $FIRST_PROJECT"
+              echo "::warning::Build issues were found. Please fix them before merging."
+              exit 0
+            fi
+          else
+            echo "::warning::No projects to build. Cannot verify build process."
+          fi

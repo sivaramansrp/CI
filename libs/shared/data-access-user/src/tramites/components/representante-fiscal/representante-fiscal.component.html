@@ -3,8 +3,8 @@
     <div class="form-group">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
-          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid(rfcBusqueda) ? 'required' : ''" appUppercase>
-        <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
+          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid(rfcBusqueda) ? 'required' : ''" libUppercase>
+        <button class="btn btn-group-primary" title="Buscar" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
           <i class="bi bi-search"></i>
         </button>
       </div>
@@ -30,7 +30,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="rfc" class="form-label">RFC</label>
-        <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="rfc" appUppercase>
+        <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="rfc" libUppercase>
       </div>
     </div>
 
@@ -40,21 +40,21 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="nombre" class="form-label">Nombre</label>
-        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre" appUppercase>
+        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre" libUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="primerApellido" class="form-label">Apellido Paterno</label>
         <input class="form-control" id="primerApellido" placeholder="Apellido Paterno" type="text" formControlName="primerApellido"
-          appUppercase>
+          libUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="segundoApellido" class="form-label">Apellido Materno</label>
         <input class="form-control" id="segundoApellido" placeholder="Apellido Materno" type="text" formControlName="segundoApellido"
-          [ngClass]="isValid( representanteLegalForm ,'segundoApellido') ? 'required' : ''" appUppercase>
+          [ngClass]="isValid( representanteLegalForm ,'segundoApellido') ? 'required' : ''" libUppercase>
       </div>
     </div>
   </div>

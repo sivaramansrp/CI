@@ -115,7 +115,25 @@ It will show tasks that you can run with Nx.
 - npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
 
 # Remove cache
-- npx nx reset
-- npx nx clear-cache
-- Remove .nx if required
-- npx nx run serve dashboard --port=4500
+- Step 1
+    - close the vscode, open the command prompt
+    - Remove .nx if required
+    - npx nx reset
+    - npx nx clear-cache
+    - npx nx run serve dashboard
+   -  refer - https://nx.dev/nx-api/nx/documents/reset
+- Step 2
+    - Resolved the node build verbose issue
+    - Resolved the screen not render issue
+    - Resolve webcache 
+    - npm i webpack@5.91.0
+    - Follow step1
+
+# Change Host & PORT
+- Port
+    - departmant -> project.json
+    - dashboard\src\app\app.routes.ts -> ports add here
+- Host
+    - Environment
+    - libs\shared\data-access-user\src\enviroments\enviroment.ts
+    - WEB_HOST - format ('http://localhost'),

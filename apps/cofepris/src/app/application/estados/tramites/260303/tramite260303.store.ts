@@ -1,0 +1,1357 @@
+import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+
+
+/**
+ * Interfaz que representa el estado de Solicitud260303.
+ */
+export interface Solicitud260303State {
+    /**
+     * El valor de rfcResponsableSanitario.
+     */
+    denominacionRazon: string;
+    /**
+     * El valor de codigoPostal.
+     */
+    codigoPostal:string;
+    /**
+     * El valor de estado.
+     */
+    estado:string;
+    /**
+     * El valor de muncipio.
+     */
+    municipio:string;
+    /**
+     * El valor de localidad.
+    */
+    localidad:string;
+    /**
+     * El valor de colonia.
+    */
+    colonia:string;
+    /**
+     * El valor de calleYNumero.
+    */
+    calleYNumero:string;
+    /**
+     * El valor de correoElecronico.
+    */
+    correoElecronico:string;
+    /**
+     * El valor de lada.
+    */
+    lada:string;
+    /**
+     * El valor de telefono.
+    */
+    telefono:string;
+    /**
+     * El valor de claveScianModal.
+    */
+    claveScianModal: string;
+    /**
+     * El valor de avisoDeFuncionamiento.
+     */
+    avisoDeFuncionamiento: string;
+    /**
+     * El valor de claveDescripcionModal.
+    */
+    clave: string;
+    /**
+     * El valor de descripcion.
+    */
+    descripcion: string;
+    /**
+     * El valor de avisoCheckbox.
+    */
+    avisoCheckbox: boolean;
+    /**
+     * El valor de licenciaSanitaria.
+    */
+    licenciaSanitaria: string;
+    /**
+     * El valor de regimen.
+    */
+    regimen: string;
+     /**
+     * El valor de regimenDestinara.
+    */
+    regimenDestinara: string;
+    /**
+     * El valor de aduanasEntradas.
+    */
+    aduana:string;
+    /**
+     * El valor de numeroPermiso.
+    */
+    numeroPermiso:string;
+     /**
+     * El valor de losDatosNo.
+    */
+    losDatosNo: string;
+     /**
+     * El valor de losDatosYes.
+    */
+    losDatosYes: string;
+     /**
+     * El valor de nombreORazon.
+    */
+    nombreORazon: string;
+    /**
+     * El valor de clasificacion.
+    */
+    clasificacion:string;
+    /**
+     * El valor de especificarClasificacionProducto.
+    */
+    especificarClasificacionProducto:string;
+    /**
+     * El valor de denominacionEspecifica.
+    */
+    denominacionEspecifica:string;
+    /**
+     * El valor de denominacionDistintiva.
+    */
+    denominacionDistintiva:string;
+    /**
+     * El valor de denominacionComun.
+    */
+    denominacionComun:string;
+    /**
+     * El valor de tipoDeProducto.
+    */
+    tipoDeProducto:string;
+    /**
+     * El valor de estadoFisico.
+    */
+    estadoFisico:string;
+    /**
+     * El valor de fraccionArancelaria.
+    */
+    fraccionArancelaria:string;
+    /**
+     * El valor de descripcionFraccion.
+    */
+    descripcionFraccion:string;
+    /**
+     * El valor de cantidadUMT.
+    */
+    cantidadUMT:string;
+    /**
+     * El valor de UMT.
+    */
+    UMT:string;
+    /**
+     * El valor de cantidadUMC.
+    */
+    cantidadUMC:string;
+    /**
+     * El valor de UMC.
+    */
+    UMC:string;
+    /**
+     * El valor de presentacion.
+    */
+    presentacion:string;
+    /**
+     * El valor de numeroRegistro.
+    */
+    numeroRegistro:string;
+    /**
+     * El valor de fechaCaducidad.
+    */
+    fechaCaducidad:string;
+    /**
+     * El valor de cumplimiento.
+    */
+    cumplimiento:string;
+    /**
+     * El valor de rfc.
+    */
+    rfc:string;
+    /**
+     * El valor de nombre.
+    */
+    nombre:string;
+    /**
+     * El valor de apellidoPaterno.
+    */
+    apellidoPaterno:string;
+    /**
+     * El valor de apellidoMaterno.
+    */
+    apellidoMaterno:string;
+    /**
+     * El valor de dci.
+    */
+    dci: string;
+        /**
+     * El valor de marcaComercialODenominacionDistintiva.
+    */
+    marcaComercialODenominacionDistintiva: string;
+            /**
+     * El valor de descripcionDeLaFraccion.
+    */
+    descripcionDeLaFraccion: string;
+    /**
+     * El valor de numeroCas.
+    */
+    numeroCas: string;
+    /**
+     * El valor de cantidadDeLotes.
+    */
+    cantidadDeLotes: string;
+    /**
+     * El valor de kgOrPorLote.
+    */
+    kgOrPorLote: string;
+    /**
+     * El valor de pais.
+    */
+    pais: string;
+    /**
+     * El valor de paisDeProcedencia.
+    */
+    paisDeProcedencia: string;
+    /**
+     * El valor de detallarUso.
+    */
+    detallarUso: string;
+    /**
+     * El valor de numeroDePiezas.
+    */
+    numeroDePiezas: string;
+    /**
+     * El valor de descripcionDelNumeroDePiezas.
+    */
+    descripcionDelNumeroDePiezas: string;
+    /**
+     * El valor de numeroDeRegistro.
+    */
+    numeroDeRegistro: string;
+    /**
+     * El valor de claveDeReferencia.
+    */
+    claveDeReferencia: string;
+    /**
+     * El valor de cadenaDaLaDependencia.
+    */
+    cadenaDaLaDependencia: string;
+    /**
+     * El valor de banco.
+    */
+    banco: string;
+    /**
+     * El valor de laveDePago.
+    */
+    laveDePago: string;
+    /**
+     * El valor de fechaDePago.
+     */
+    fechaDePago: string;
+    /**
+     * El valor de importeDePago.
+     */
+    importeDePago: string;
+    /**
+     * El valor de tipoDocumento.
+     */
+    tipoDocumento: string;
+    /**
+     * El valor de tercerosRelacionadosDenominacionSocial.
+     */
+    tercerosRelacionadosDenominacionSocial: string;
+    /**
+     * El valor de tercerosRelacionadosTerceroNombre.
+     */
+    tercerosRelacionadosTerceroNombre: string;
+    /**
+     * El valor de tercerosRelacionadosNacional.
+     */
+    tercerosRelacionadosNacional: string;
+    /**
+     * El valor de tercerosRelacionadosExtranjero.
+     */
+    tercerosRelacionadosExtranjero: string;
+    /**
+     * El valor de tercerosRelacionadosFisica.
+     */
+    tercerosRelacionadosFisica: string;
+    /**
+     * El valor de tercerosRelacionadosMoral.
+     */
+    tercerosRelacionadosMoral: string;
+    /**
+     * El valor de tercerosRelacionadosNoContribuyente.
+     */
+    tercerosRelacionadosNoContribuyente: string;
+    /**
+     * El valor de tercerosRelacionadosRfc.
+     */
+    tercerosRelacionadosRfc: string;
+    /**
+     * El valor de tercerosRelacionadosCurp.
+     */
+    tercerosRelacionadosCurp: string;
+    /**
+     * El valor de tercerosRelacionadosRazonSocial.
+     */
+    tercerosRelacionadosRazonSocial: string;
+    /**
+     * El valor de tercerosRelacionadosPais.
+     */
+    tercerosRelacionadosPais: string;
+    /**
+     * El valor de tercerosRelacionadosEstado.
+     */
+    tercerosRelacionadosEstado: string;
+    /**
+     * El valor de tercerosRelacionadosCodigoPostal.
+     */
+    tercerosRelacionadosCodigoPostal: string;
+    /**
+     * El valor de tercerosRelacionadosCalle.
+     */
+    tercerosRelacionadosCalle: string;
+    /**
+     * El valor de tercerosRelacionadosNumeroExterior.
+     */
+    tercerosRelacionadosNumeroExterior: string;
+    /**
+     * El valor de tercerosRelacionadosNumeroInterior.
+     */
+    tercerosRelacionadosNumeroInterior: string;
+    /**
+     * El valor de tercerosRelacionadosLada.
+     */
+    tercerosRelacionadosLada: string;
+    /**
+     * El valor de tercerosRelacionadosTelefono.
+     */
+    tercerosRelacionadosTelefono: string;
+    /**
+     * El valor de tercerosRelacionadosCorreoElectronico.
+     */
+    tercerosRelacionadosCorreoElectronico: string;
+    /**
+     * El valor de tercerosRelacionadosTelefono.
+     */
+}
+/**
+ * Función para crear el estado inicial de Solicitud260303State.
+ * @returns {Solicitud260303State} El estado inicial de Solicitud260211State.
+ */
+export function createInitialState(): Solicitud260303State {
+    return {
+        denominacionRazon: '',
+        codigoPostal: '',
+        estado: '',
+        municipio: '',
+        localidad: '',
+        colonia: '',
+        calleYNumero: '',
+        correoElecronico: '',
+        lada: '',
+        telefono: '',
+        claveScianModal: '',
+        avisoDeFuncionamiento: '',
+        clave: '',
+        descripcion: '',
+        avisoCheckbox: false,
+        licenciaSanitaria: '',
+        regimen: '',
+        regimenDestinara: '',
+        aduana: '',
+        numeroPermiso: '',
+        losDatosNo: '',
+        losDatosYes: '',
+        nombreORazon: '',
+        clasificacion: '',
+        especificarClasificacionProducto: '',
+        denominacionEspecifica: '',
+        denominacionDistintiva: '',
+        denominacionComun: '',
+        tipoDeProducto: '',
+        estadoFisico: '',
+        fraccionArancelaria: '',
+        descripcionFraccion: '',
+        cantidadUMT: '',
+        UMT: '',
+        cantidadUMC: '',
+        UMC: '',
+        presentacion: '',
+        numeroRegistro: '',
+        fechaCaducidad: '',
+        cumplimiento: '',
+        rfc: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        dci: '',
+        marcaComercialODenominacionDistintiva: '',
+        descripcionDeLaFraccion: '',
+        numeroCas: '',
+        cantidadDeLotes: '',
+        kgOrPorLote: '',
+        pais: '',
+        paisDeProcedencia: '',
+        detallarUso: '',
+        numeroDePiezas: '',
+        descripcionDelNumeroDePiezas: '',
+        numeroDeRegistro: '',
+        claveDeReferencia: '',
+        cadenaDaLaDependencia: '',
+        banco: '',
+        laveDePago: '',
+        fechaDePago: '',
+        importeDePago: '',
+        tipoDocumento: '',
+        tercerosRelacionadosDenominacionSocial: '',
+        tercerosRelacionadosTerceroNombre: '',
+        tercerosRelacionadosNacional: '',
+        tercerosRelacionadosExtranjero: '',
+        tercerosRelacionadosFisica: '',
+        tercerosRelacionadosMoral: '',
+        tercerosRelacionadosNoContribuyente: '',
+        tercerosRelacionadosRfc: '',
+        tercerosRelacionadosCurp: '',
+        tercerosRelacionadosRazonSocial: '',
+        tercerosRelacionadosPais: '',
+        tercerosRelacionadosEstado: '',
+        tercerosRelacionadosCodigoPostal: '',
+        tercerosRelacionadosCalle: '',
+        tercerosRelacionadosNumeroExterior: '',
+        tercerosRelacionadosNumeroInterior: '',
+        tercerosRelacionadosLada: '',
+        tercerosRelacionadosTelefono: '',
+        tercerosRelacionadosCorreoElectronico: '',
+    };
+}
+
+ /**
+ * Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
+ */
+@Injectable({
+    providedIn: 'root',
+})
+/**
+ * Decorador StoreConfig para configurar la tienda con un nombre y una opción de restablecimiento.
+ * @param {Object} config - El objeto de configuración.
+ * @param {string} config.name - El nombre de la tienda.
+ * @param {boolean} config.resettable - Indica si la tienda es restablecible.
+ */
+@StoreConfig({ name: 'tramite260303', resettable: true })
+
+export class Tramite260303Store extends Store<Solicitud260303State>{
+    /**
+     * Crea una instancia de Tramite260303Store.
+     * Inicializa la tienda con el estado inicial.
+     */
+    constructor() {
+        super(createInitialState());
+    }
+
+    /**
+     * Establece el estado de denominacionRazon.
+     * @param denominacionRazon - El valor de denominacionRazon.
+     */
+    public setDenominacionRazon(denominacionRazon: string) {
+        this.update((state) => ({
+            ...state,
+            denominacionRazon,
+        }));
+    }
+    /**
+     * Establece el estado de denominacion.
+     * @param denominacion - El valor de denominacion.
+     */
+    public setDenominacion(denominacion: string) {
+        this.update((state) => ({
+            ...state,
+            denominacion,
+        }));
+    }
+    /**
+     * Establece el estado de correo.
+     * @param correo - El valor de correo.
+     */
+    public setCorreo(correo: string) {
+        this.update((state) => ({
+            ...state,
+            correo,
+        }));
+    }
+    /**
+     * Establece el estado de codigoPostal.
+     * @param codigoPostal - El valor de codigoPostal.
+     */
+    public setCodigoPostal(codigoPostal: string) {
+        this.update((state) => ({
+            ...state,
+            codigoPostal,
+        }));
+    }
+    /**
+     * Establece el estado de estado.
+     * @param estado - El valor de estado.
+     */
+    public setEstado(estado: string) {
+        this.update((state) => ({
+            ...state,
+            estado,
+        }));
+    }
+    /**
+     * Establece el muncipio de muncipio.
+     * @param muncipio - El valor de muncipio.
+     */
+    public setMuncipio(muncipio: string) {
+        this.update((state) => ({
+            ...state,
+            muncipio,
+        }));
+    }
+    /**
+     * Establece el localidad de localidad.
+     * @param localidad - El valor de localidad.
+     */
+    public setLocalidad(localidad: string) {
+        this.update((state) => ({
+            ...state,
+            localidad,
+        }));
+    }
+    /**
+     * Establece el estado de colonia.
+     * @param colonia - El valor de colonia.
+     */
+    public setColonia(colonia: string) {
+        this.update((state) => ({
+            ...state,
+            colonia,
+        }));
+    }
+    /**
+     * Establece el estado de calle.
+     * @param calle - El valor de calle.
+     */
+    public setCalle(calle: string) {
+        this.update((state) => ({
+            ...state,
+            calle,
+        }));
+    }
+    /**
+     * Establece el estado de lada.
+     * @param lada - El valor de lada.
+     */
+    public setLada(lada: string) {  
+        this.update((state) => ({
+            ...state,
+            lada,
+        }));
+    }
+    /**
+     * Establece el estado de telefono.
+     * @param telefono - El valor de telefono.
+     */
+    public setTelefono(telefono: string) {
+        this.update((state) => ({
+            ...state,
+            telefono,
+        }));
+    }
+    /**
+     * Establece el estado de claveScianModal.
+     * @param claveScianModal - El valor de claveScianModal.
+     */
+    public setClaveScianModal(claveScianModal: string) {
+        this.update((state) => ({
+            ...state,
+            claveScianModal,
+        }));
+    }
+    /**
+     * Establece el estado de claveDescripcionModal.
+     * @param claveDescripcionModal - El valor de claveDescripcionModal.
+     */
+    public setClaveDescripcionModal(claveDescripcionModal: string) {
+        this.update((state) => ({
+            ...state,
+            claveDescripcionModal,
+        }));
+    }
+    /**
+     * Establece el estado de avisoCheckbox.
+     * @param avisoCheckbox - El valor de avisoCheckbox.
+     */
+    public setAvisoCheckbox(avisoCheckbox: boolean) {
+        this.update((state) => ({
+            ...state,
+            avisoCheckbox,
+        }));
+    }
+    /**
+     * Establece el estado de licenciaSanitaria.
+     * @param licenciaSanitaria - El valor de licenciaSanitaria.
+     */
+    public setLicenciaSanitaria(licenciaSanitaria: string) {
+        this.update((state) => ({
+            ...state,
+            licenciaSanitaria,
+        }));
+    }
+    /**
+     * Establece el estado de regimen.
+     * @param regimen - El valor de regimen.
+     */
+    public setRegimen(regimen: string) {
+        this.update((state) => ({
+            ...state,
+            regimen,
+        }));
+    }
+    /**
+     * Establece el estado de aduanasEntradas.
+     * @param aduanasEntradas - El valor de aduanasEntradas.
+     */
+    public setAduanasEntradas(aduanasEntradas: string) {
+        this.update((state) => ({
+            ...state,
+            aduanasEntradas,
+        }));
+    }
+    /**
+     * Establece el estado de numeroPermiso.
+     * @param numeroPermiso - El valor de numeroPermiso.
+     */
+    public setNumeroPermiso(numeroPermiso: string) {
+        this.update((state) => ({
+            ...state,
+            numeroPermiso,
+        }));
+    }
+    /**
+     * Establece el estado de clasificacion.
+     * @param clasificacion - El valor de clasificacion.
+     */
+    public setClasificacion(clasificacion: string) {
+        this.update((state) => ({
+            ...state,
+            clasificacion,
+        }));
+    }
+    /**
+     * Establece el estado de especificar.
+     * @param especificar - El valor de especificar.
+     */
+    public setEspecificarClasificacionProducto(especificarClasificacionProducto: string) {
+        this.update((state) => ({
+            ...state,
+            especificarClasificacionProducto,
+        }));
+    }
+    /**
+     * Establece el estado de denominacionEspecifica.
+     * @param denominacionEspecifica - El valor de denominacionEspecifica.
+     */
+    public setDenominacionEspecifica(denominacionEspecifica: string) {
+        this.update((state) => ({
+            ...state,
+            denominacionEspecifica,
+        }));
+    }
+    /**
+     * Establece el estado de denominacionDistintiva.
+     * @param denominacionDistintiva - El valor de denominacionDistintiva.
+     */
+    public setDenominacionDistintiva(denominacionDistintiva: string) {
+        this.update((state) => ({
+            ...state,
+            denominacionDistintiva,
+        }));
+    }
+    /**
+     * Establece el estado de denominacionComun.
+     * @param denominacionComun - El valor de denominacionComun.
+     */
+    public setDenominacionComun(denominacionComun: string) {
+        this.update((state) => ({
+            ...state,
+            denominacionComun,
+        }));
+    }
+    /**
+     * Establece el estado de tipoDeProducto.
+     * @param tipoDeProducto - El valor de tipoDeProducto.
+     */
+    public setTipoDeProducto(tipoDeProducto: string) {
+        this.update((state) => ({
+            ...state,
+            tipoDeProducto,
+        }));
+    }
+    /**
+     * Establece el estado de estadoFisico.
+     * @param estadoFisico - El valor de estadoFisico.
+     */
+    public setEstadoFisico(estadoFisico: string) {
+        this.update((state) => ({
+            ...state,
+            estadoFisico,
+        }));
+    }
+    /**
+     * Establece el estado de fraccionArancelaria.
+     * @param fraccionArancelaria - El valor de fraccionArancelaria.
+     */
+    public setFraccionArancelaria(fraccionArancelaria: string) {
+        this.update((state) => ({
+            ...state,
+            fraccionArancelaria,
+        }));
+    }
+    /**
+     * Establece el estado de fraccionArancelaria.
+     * @param fraccionArancelaria - El valor de fraccionArancelaria.
+     */
+    public setDescripcionFraccion(descripcionFraccion: string) {
+        this.update((state) => ({
+            ...state,
+            descripcionFraccion,
+        }));
+    }
+    /**
+     * Establece el estado de cantidadUMT.
+     * @param cantidadUMT - El valor de cantidadUMT.
+     */
+    public setCantidadUMT(cantidadUMT: string) {
+        this.update((state) => ({
+            ...state,
+            cantidadUMT,
+        }));
+    }
+    /**
+     * Establece el estado de UMT.
+     * @param UMT - El valor de UMT.
+     */
+    public setUMT(UMT: string) {
+        this.update((state) => ({
+            ...state,
+            UMT,
+        }));
+    }
+    /**
+     * Establece el estado de cantidadUMC.
+     * @param cantidadUMC - El valor de cantidadUMC.
+     */
+    public setCantidadUMC(cantidadUMC: string) {
+        this.update((state) => ({
+            ...state,
+            cantidadUMC,
+        }));
+    }
+    /**
+     * Establece el estado de UMC.
+     * @param UMC - El valor de UMC.
+     */
+    public setUMC(UMC: string) {
+        this.update((state) => ({
+            ...state,
+            UMC,
+        }));
+    }
+    /**
+     * Establece el estado de presentacion.
+     * @param presentacion - El valor de presentacion.
+     */
+    public setPresentacion(presentacion: string) {
+        this.update((state) => ({
+            ...state,
+            presentacion,
+        }));
+    }
+    /**
+     * Establece el estado de numeroRegistro.
+     * @param numeroRegistro - El valor de numeroRegistro.
+     */
+    public setNumeroRegistro(numeroRegistro: string) {
+        this.update((state) => ({
+            ...state,
+            numeroRegistro,
+        }));
+    }
+    /**
+     * Establece el estado de fechaCaducidad.
+     * @param fechaCaducidad - El valor de fechaCaducidad.
+     */
+    public setFechaCaducidad(fechaCaducidad: string) {
+        this.update((state) => ({
+            ...state,
+            fechaCaducidad,
+        }));
+    }
+    /**
+     * Establece el estado de cumplimiento.
+     * @param cumplimiento - El valor de cumplimiento.
+     */
+    public setCumplimiento(cumplimiento: string) {
+        this.update((state) => ({
+            ...state,
+            cumplimiento,
+        }));
+    }
+    /**
+     * Establece el estado de rfc.
+     * @param rfc - El valor de rfc.
+     */
+    public setRfc(rfc: string) {
+        this.update((state) => ({
+            ...state,
+            rfc,
+        }));
+    }
+    /**
+     * Establece el estado de nombre.
+     * @param nombre - El valor de nombre.
+     */
+    public setNombre(nombre: string) {
+        this.update((state) => ({
+            ...state,
+            nombre,
+        }));
+    }
+    /**
+     * Establece el estado de apellidoPaterno.
+     * @param apellidoPaterno - El valor de apellidoPaterno.
+     */
+    public setApellidoPaterno(apellidoPaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoPaterno,
+        }));
+    }
+    /**
+     * Establece el estado de apellidoMaterno.
+     * @param apellidoMaterno - El valor de apellidoMaterno.
+     */
+    public setApellidoMaterno(apellidoMaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoMaterno,
+        }));
+    }
+
+    /**
+     * Establece el estado de dci.
+     * @param dci - El valor de dci.
+     */
+    public setDci(dci: string) {
+        this.update((state) => ({
+            ...state,
+            dci,
+        }));
+    }
+
+    /**
+     * Establece el estado de marcaComercialODenominacionDistintiva.
+     * @param marcaComercialODenominacionDistintiva - El valor de marcaComercialODenominacionDistintiva.
+     */
+    public setMarcaComercialODenominacionDistintiva(marcaComercialODenominacionDistintiva: string) {
+        this.update((state) => ({
+            ...state,
+            marcaComercialODenominacionDistintiva,
+        }));
+    }
+
+    /**
+     * Establece el estado de descripcionDeLaFraccion.
+     * @param descripcionDeLaFraccion - El valor de descripcionDeLaFraccion.
+     */
+    public setDescripcionDeLaFraccion(descripcionDeLaFraccion: string) {
+        this.update((state) => ({
+            ...state,
+            descripcionDeLaFraccion,
+        }));
+    }
+    /**
+     * Establece el estado de numeroCas.
+     * @param numeroCas - El valor de numeroCas.
+     */
+    public setNumeroCas(numeroCas: string) {
+        this.update((state) => ({
+            ...state,
+            numeroCas,
+        }));
+    }
+    /**
+     * Establece el estado de cantidadDeLotes.
+     * @param cantidadDeLotes - El valor de cantidadDeLotes.
+     */
+    public setCantidadDeLotes(cantidadDeLotes: string) {
+        this.update((state) => ({
+            ...state,
+            cantidadDeLotes,
+        }));
+    }
+    /**
+     * Establece el estado de kgOrPorLote.
+     * @param kgOrPorLote - El valor de kgOrPorLote.
+     */
+    public setKgOrPorLote(kgOrPorLote: string) {
+        this.update((state) => ({
+            ...state,
+            kgOrPorLote,
+        }));
+    }
+    /**
+     * Establece el estado de pais.
+     * @param pais - El valor de pais.
+     */
+    public setPais(pais: string) {
+        this.update((state) => ({
+            ...state,
+            pais,
+        }));
+    }
+    /**
+     * Establece el estado de paisDeProcedencia.
+     * @param paisDeProcedencia - El valor de paisDeProcedencia.
+     */
+    public setPaisDeProcedencia(paisDeProcedencia: string) {
+        this.update((state) => ({
+            ...state,
+            paisDeProcedencia,
+        }));
+    }
+    /**
+     * Establece el estado de detallarUso.
+     * @param detallarUso - El valor de detallarUso.
+     */
+    public setDetallarUso(detallarUso: string) {
+        this.update((state) => ({
+            ...state,
+            detallarUso,
+        }));
+    }
+    /**
+     * Establece el estado de numeroDePiezas.
+     * @param numeroDePiezas - El valor de numeroDePiezas.
+     */
+    public setNumeroDePiezas(numeroDePiezas: string) {
+        this.update((state) => ({
+            ...state,
+            numeroDePiezas,
+        }));
+    }
+    /**
+     * Establece el estado de descripcionDelNumeroDePiezas.
+     * @param descripcionDelNumeroDePiezas - El valor de descripcionDelNumeroDePiezas.
+     */
+    public setDescripcionDelNumeroDePiezas(descripcionDelNumeroDePiezas: string) {
+        this.update((state) => ({
+            ...state,
+            descripcionDelNumeroDePiezas,
+        }));
+    }
+    /**
+     * Establece el estado de numeroDeRegistro.
+     * @param numeroDeRegistro - El valor de numeroDeRegistro.
+     */
+    public setNumeroDeRegistro(numeroDeRegistro: string) {
+        this.update((state) => ({
+            ...state,
+            numeroDeRegistro,
+        }));
+    }
+    /**
+     * Establece el estado de claveDeReferencia.
+     * @param claveDeReferencia - El valor de claveDeReferencia.
+     */
+    public setNombreORazon(nombreORazon: string) {
+        this.update((state) => ({
+            ...state,
+            nombreORazon,
+        }));
+    }
+    /**
+     * Establece el estado de claveDeReferencia.
+     * @param claveDeReferencia - El valor de claveDeReferencia.
+     */
+    public setLosDatosNo(losDatosNo: string) {
+        this.update((state) => ({
+            ...state,
+            losDatosNo,
+        }));
+    }
+    /**
+     * Establece el estado de claveDeReferencia.
+     * @param claveDeReferencia - El valor de claveDeReferencia.
+     */
+    public setLosDatosYes(losDatosYes: string) {
+        this.update((state) => ({
+            ...state,
+            losDatosYes,
+        }));
+    }
+    /**
+     * Establece el estado de claveDeReferencia.
+     * @param claveDeReferencia - El valor de claveDeReferencia.
+     */
+    public setAvisoDeFuncionamiento(avisoDeFuncionamiento: string) {
+        this.update((state) => ({
+            ...state,
+            avisoDeFuncionamiento,
+        }));
+    }
+    /**
+     * Establece el estado de regimenDestinara.
+     * @param regimenDestinara - El valor de regimenDestinara.
+     */
+    public setRegimenDestinara(regimenDestinara: string) {
+        this.update((state) => ({
+            ...state,
+            regimenDestinara,
+        }));
+    }
+    /**
+     * Establece el estado de regimenDestinara.
+     * @param regimenDestinara - El valor de regimenDestinara.
+     */
+    public setClave(clave: string) {
+        this.update((state) => ({
+            ...state,
+            clave,
+        }));
+    }
+    /**
+     * Establece el estado de descripcion.
+     * @param descripcion - El valor de descripcion.
+     */
+    public setDescripcion(descripcion: string) {
+        this.update((state) => ({
+            ...state,
+            descripcion,
+        }));
+    }
+    /**
+     * Establece el estado de descripcion.
+     * @param descripcion - El valor de descripcion.
+     */
+    public SetCalleYNumero(calleYNumero: string) { 
+        this.update((state) => ({
+            ...state,
+            calleYNumero,
+        }));
+    }
+
+    /**
+     * Establece el estado de correoElecronico.
+     * @param correoElecronico - El valor de correoElecronico.
+     */
+    public SetCorreoElecronico(correoElecronico: string) {
+        this.update((state) => ({
+            ...state,
+            correoElecronico,
+        }));
+    }
+
+    /**
+     * Establece el estado de municipio.
+     * @param municipio - El valor de municipio.
+     */
+    public SetMunicipio(municipio: string) {
+        this.update((state) => ({
+            ...state,
+            municipio,
+        }));
+    }
+
+    /**
+     * Establece el estado de claveDeReferencia.
+     * @param claveDeReferencia - El valor de claveDeReferencia.
+     */
+    public SetClaveDeReferencia(claveDeReferencia: string) {
+        this.update((state) => ({
+            ...state,
+            claveDeReferencia,
+        }));
+    }
+
+    /**
+     * Establece el estado de cadenaDaLaDependencia.
+     * @param cadenaDaLaDependencia - El valor de cadenaDaLaDependencia.
+     */
+    public SetCadenaDaLaDependencia(cadenaDaLaDependencia: string) {
+        this.update((state) => ({
+            ...state,
+            cadenaDaLaDependencia,
+        }));
+    }
+
+    /**
+     * Establece el estado de banco.
+     * @param banco - El valor de banco.
+     */
+    public SetBanco(banco: string) {
+        this.update((state) => ({
+            ...state,
+            banco,
+        }));
+    }
+
+    /**
+     * Establece el estado de laveDePago.
+     * @param laveDePago - El valor de laveDePago.
+     */
+    public SetLaveDePago(laveDePago: string) {
+        this.update((state) => ({
+            ...state,
+            laveDePago,
+        }));
+    }
+
+    /**
+     * Establece el estado de fechaDePago.
+     * @param fechaDePago - El valor de fechaDePago.
+     */
+    public SetFechaDePago(fechaDePago: string) {
+        this.update((state) => ({
+            ...state,
+            fechaDePago,
+        }));
+    }
+
+    /**
+     * Establece el estado de importeDePago.
+     * @param importeDePago - El valor de importeDePago.
+     */
+    public SetImporteDePago(importeDePago: string) {
+        this.update((state) => ({
+            ...state,
+            importeDePago,
+        }));
+    }
+
+    /**
+     * Establece el estado de tipoDocumento.
+     * @param tipoDocumento - El valor de tipoDocumento.
+     */
+    public SetTipoDocumento(tipoDocumento: string) {
+        this.update((state) => ({
+            ...state,
+            tipoDocumento,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosDenominacionSocial.
+     * @param tercerosRelacionadosDenominacionSocial - El valor de tercerosRelacionadosDenominacionSocial.
+     */
+    public SetTercerosRelacionadosDenominacionSocial(tercerosRelacionadosDenominacionSocial: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosDenominacionSocial,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosTerceroNombre.
+     * @param tercerosRelacionadosTerceroNombre - El valor de tercerosRelacionadosTerceroNombre.
+     */
+    public SetTercerosRelacionadosTerceroNombre(tercerosRelacionadosTerceroNombre: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosTerceroNombre,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosNacional.
+     * @param tercerosRelacionadosNacional - El valor de tercerosRelacionadosNacional.
+     */
+    public SetTercerosRelacionadosNacional(tercerosRelacionadosNacional: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNacional,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosExtranjero.
+     * @param tercerosRelacionadosExtranjero - El valor de tercerosRelacionadosExtranjero.
+     */
+    public SetTercerosRelacionadosExtranjero(tercerosRelacionadosExtranjero: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosExtranjero,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosFisica.
+     * @param tercerosRelacionadosFisica - El valor de tercerosRelacionadosFisica.
+     */
+    public SetTercerosRelacionadosFisica(tercerosRelacionadosFisica: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosFisica,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosMoral.
+     * @param tercerosRelacionadosMoral - El valor de tercerosRelacionadosMoral.
+     */
+    public SetTercerosRelacionadosMoral(tercerosRelacionadosMoral: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosMoral,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosNoContribuyente.
+     * @param tercerosRelacionadosNoContribuyente - El valor de tercerosRelacionadosNoContribuyente.
+     */
+    public SetTercerosRelacionadosNoContribuyente(tercerosRelacionadosNoContribuyente: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNoContribuyente,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosRfc.
+     * @param tercerosRelacionadosRfc - El valor de tercerosRelacionadosRfc.
+     */
+    public SetTercerosRelacionadosRfc(tercerosRelacionadosRfc: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosRfc,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosCurp.
+     * @param tercerosRelacionadosCurp - El valor de tercerosRelacionadosCurp.
+     */
+    public SetTercerosRelacionadosCurp(tercerosRelacionadosCurp: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCurp,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosRazonSocial.
+     * @param tercerosRelacionadosRazonSocial - El valor de tercerosRelacionadosRazonSocial.
+     */
+    public SetTercerosRelacionadosRazonSocial(tercerosRelacionadosRazonSocial: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosRazonSocial,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosPais.
+     * @param tercerosRelacionadosPais - El valor de tercerosRelacionadosPais.
+     */
+    public SetTercerosRelacionadosPais(tercerosRelacionadosPais: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosPais,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosEstado.
+     * @param tercerosRelacionadosEstado - El valor de tercerosRelacionadosEstado.
+     */
+    public SetTercerosRelacionadosEstado(tercerosRelacionadosEstado: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosEstado,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosCodigoPostal.
+     * @param tercerosRelacionadosCodigoPostal - El valor de tercerosRelacionadosCodigoPostal.
+     */
+    public SetTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCodigoPostal,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosCalle.
+     * @param tercerosRelacionadosCalle - El valor de tercerosRelacionadosCalle.
+     */
+    public SetTercerosRelacionadosCalle(tercerosRelacionadosCalle: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCalle,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosNumeroExterior.
+     * @param tercerosRelacionadosNumeroExterior - El valor de tercerosRelacionadosNumeroExterior.
+     */
+    public SetTercerosRelacionadosNumeroExterior(tercerosRelacionadosNumeroExterior: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNumeroExterior,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosNumeroInterior.
+     * @param tercerosRelacionadosNumeroInterior - El valor de tercerosRelacionadosNumeroInterior.
+     */
+    public SetTercerosRelacionadosNumeroInterior(tercerosRelacionadosNumeroInterior: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNumeroInterior,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosLada.
+     * @param tercerosRelacionadosLada - El valor de tercerosRelacionadosLada.
+     */
+    public SetTercerosRelacionadosLada(tercerosRelacionadosLada: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosLada,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosTelefono.
+     * @param tercerosRelacionadosTelefono - El valor de tercerosRelacionadosTelefono.
+     */
+    public SetTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string) {  
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosTelefono,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosCorreoElectronico.
+     * @param tercerosRelacionadosCorreoElectronico - El valor de tercerosRelacionadosCorreoElectronico.
+     */
+    public SetTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCorreoElectronico,
+        }));
+    }
+} 
+  

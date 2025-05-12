@@ -6,7 +6,7 @@ export interface PantallasFormData {
     datasGenerals: []
   }
 
-  export interface TransporteFormData  {
+  export interface TransporteFormData {
     mediodeTransporte: string,
     identificaciónDelTransporte: string,
     numerodeContenedor: string,

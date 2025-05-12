@@ -1,0 +1,46 @@
+<form [formGroup]="forma">
+    <div class="row">
+        <formas-dinamicas formularioTitulo="País(es) procedencia" [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaFormData"
+        [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+    <div class="row mt-5">
+        <crosslist
+            [fechas]="seleccionarOrigenDelPais"
+            [label]="paisDeProcedenciaLabel"
+            [botones]="paisDeProcedenciaBotones"
+        ></crosslist>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene: </label>
+                <textarea 
+                class="form-control min-height" 
+                id="justificacion" 
+                name="justificacion"
+                formControlName="justificacion"
+                rows="5"
+                (change)="eventoDeCambioDeValor($event, 'justificacion')"
+            ></textarea>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="form-label" for="observaciones">Observaciones: </label>
+                <textarea 
+                    class="form-control min-height" 
+                    id="observaciones" 
+                    name="observaciones"
+                    formControlName="observaciones"
+                    rows="5"
+                    (change)="eventoDeCambioDeValor($event, 'observaciones')"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+</form>
+    

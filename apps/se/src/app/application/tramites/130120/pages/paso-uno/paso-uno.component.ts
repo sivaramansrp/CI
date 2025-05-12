@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from "../../components/datos-de-la-solicitud/datos-de-la-solicitud.component";
-import { SolicitanteComponent } from "libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
+import { SolicitanteComponent } from "@ng-mf/data-access-user";
 
 @Component({
   selector: 'app-paso-uno',

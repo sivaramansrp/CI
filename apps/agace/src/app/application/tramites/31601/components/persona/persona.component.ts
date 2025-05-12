@@ -55,6 +55,11 @@ export class PersonaComponent implements OnInit, OnDestroy {
    * @type {Personas[]}
    */
   personaParas: Personas[] = [];
+
+  /**
+   * Configuración de las columnas para la tabla dinámica.
+   * @type {ConfiguracionColumna<any>[]}
+   */
   configuracionTabla: ConfiguracionColumna<any>[] = [
     { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
     { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
@@ -94,6 +99,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param {HttpClient} http - Instancia del cliente HTTP para realizar peticiones.
+   * @param {ServiciosPantallaService} pantallaSvc - Servicio para obtener los datos de las personas.
    */
   constructor(
     public http: HttpClient,

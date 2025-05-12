@@ -1,14 +1,14 @@
 import {
   Component,
   EventEmitter,
-  inject,
   Input,
+  OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
+  inject,
 } from '@angular/core';
-import { ListaPasosWizard } from '../../../core/models/5701/servicios-extraordinarios.model';
 import { CommonModule } from '@angular/common';
+import { ListaPasosWizard } from '../../../core/models/shared/datos-generales.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 
 @Component({
@@ -17,11 +17,11 @@ import { WizardService } from '../../../core/services/shared/wizard/wizard.servi
   imports: [CommonModule],
   templateUrl: './wizard.component.html',
   styleUrl: './wizard.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
-export class WizardComponent {
+export class WizardComponent implements OnChanges {
   @Input() listaPasos: Array<ListaPasosWizard> = [];
-  @Output() indice = new EventEmitter<any>();
+  @Output() indice = new EventEmitter<number>();
 
   indiceActual: number = 0;
   estadoInicial: boolean = false;
@@ -30,9 +30,14 @@ export class WizardComponent {
 
   wizardService = inject(WizardService);
 
-
-
-  ngOnChanges(changes: SimpleChanges) {
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones
+   * o el estado del control del formulario según corresponda.
+   *
+   * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns void
+   */
+  ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['listaPasos'].currentValue !== undefined &&
       changes['listaPasos'].currentValue !== null
@@ -40,7 +45,7 @@ export class WizardComponent {
       this.listaPasos = changes['listaPasos'].currentValue;
 
       this.listaPasos.forEach((element, index) => {
-        this.estadoInicial = index == 0 ? true : false;
+        this.estadoInicial = index === 0 ? true : false;
         this.lista.push({
           indice: index,
           titulo: element.titulo,
@@ -53,19 +58,30 @@ export class WizardComponent {
     }
   }
 
-  siguiente(activo: boolean = true) {
-
+  /**
+   * Avanza al siguiente índice en la lista y actualiza su estado.
+   * 
+   * @param activo - Indica si el elemento actual debe estar activo (por defecto `true`).
+   * @returns void
+   */
+  siguiente(activo: boolean = true): void {
     this.indiceActual = this.indiceActual === this.maximo ? this.indiceActual : this.indiceActual + 1;
     this.lista[this.indiceActual].activo = activo;
 
-    if( this.indiceActual === (this.maximo)) {
+    if (this.indiceActual === (this.maximo)) {
       this.lista[this.indiceActual].completado = activo;
     }
   }
 
-  atras() {
+  /**
+   * Retrocede al paso anterior en la lista de trámites.
+   * Marca el paso actual como inactivo y no completado.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  atras(): void {
     this.lista[this.indiceActual].activo = false;
     this.lista[this.indiceActual].completado = false;
-    this.indiceActual = this.indiceActual == 0 ? 0 : this.indiceActual - 1;
+    this.indiceActual = this.indiceActual === 0 ? 0 : this.indiceActual - 1;
   }
 }

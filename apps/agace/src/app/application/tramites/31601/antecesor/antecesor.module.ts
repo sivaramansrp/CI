@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AntecesorRoutingModule } from './antecesor-routing.module';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { ReprestantanteComponent } from '../components/represtantante/represtantante.component';
 import { EnlaceComponent } from '../components/enlace/enlace.component';
@@ -24,6 +24,8 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { RequisitosComponent } from '../components/requisitos/requisitos.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { provideHttpClient } from '@angular/common/http';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -35,6 +37,7 @@ import { provideHttpClient } from '@angular/common/http';
     ReprestantanteComponent,
     EnlaceComponent,
     PersonaComponent,
+    SolicitanteComponent,
 
     NavComponent,
     AduaneroComponent,
@@ -48,10 +51,14 @@ import { provideHttpClient } from '@angular/common/http';
     FirmaElectronicaComponent,
     BtnContinuarComponent,
     RequisitosComponent,
+    ToastrModule.forRoot(),
   ],
   providers: [
     ServiciosPantallaService,
     provideHttpClient(),
+    ToastrService,
+    BsModalService
+    
   ]
 })
 

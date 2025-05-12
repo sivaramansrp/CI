@@ -1,0 +1,9 @@
+<app-federatarios-y-plantas
+  [federatariosConfig]="federatariosTablaConfiguracion"
+  [federatariosDatos]="(federatariosTablaLista$ | async) || []"
+  [plantasDisponiblesConfig]="plantasDisponiblesTablaConfiguracion"
+  [plantasImmexConfig]="plantasImmexTablaConfiguracion"
+  [plantasDisponiblesDatos]="plantasDisponiblesTablaLista"
+  [plantasImmexDatos]="plantasImmexTablaLista"
+  (datosFormaFedratario)="setFormaDatos($event)"
+></app-federatarios-y-plantas>

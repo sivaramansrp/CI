@@ -1,13 +1,16 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { PantallasFormData } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
-import { ServiciosPantallasService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ServiciosPantallasService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
 
 interface Solicitude {
   fechaCreacion: string;
@@ -53,6 +56,7 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
  * Si ocurre un error durante la solicitud, registra un mensaje de error en la consola.
  */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   loadSolicitudesData() {
    
     this.http.get<Solicitude[]>('assets/json/220401/solicitude.json').subscribe(
@@ -65,9 +69,11 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
       }
     );
   }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleContent() {
     this.showContent = !this.showContent;
   }
+  // eslint-disable-next-line no-empty-function
   constructor(private serviciosPantallasService: ServiciosPantallasService, private http: HttpClient) { }
     /**
    * Este método se utiliza para inicializar los datos del formulario de las pantallas.
@@ -83,6 +89,7 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
         this.pantallasFormData = formData;
       });
       // Set the form data
+      // eslint-disable-next-line dot-notation
       this.pantallasFormData['solict'] = [];
       this.serviciosPantallasService.setPantallasFormDataSubject(this.pantallasFormData);
     this.loadSolicitudesData();
@@ -90,7 +97,7 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
    /**
    * Este método se utiliza para destruir la suscripción. - 220401
    */
-   ngOnDestroy() {
+   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
    }

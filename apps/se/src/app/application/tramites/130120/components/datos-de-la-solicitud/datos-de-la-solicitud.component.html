@@ -8,12 +8,12 @@
           @for (item of fieldGroup.menu; let menuIndex = $index; track menuIndex) {
           <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
             <div class="form-group">
-              @switch (item.inputType) { @case('select') {
+              @switch (item.inputType) { @case(inputTypes.SELECT) {
               <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre"
               [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
-              } @case('text') {
-                @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && item.props.availableRadioOptions.includes(valoresSeleccionadosRadio['radio' + groupIndex]))) {
-                  <label class="form-label" [for]="item.props.campo">{{
+              } @case(inputTypes.TEXT) {
+                @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
+                  <label class="mt-5" [for]="item.props.campo">{{
                     item.props.labelNombre
                   }}</label>
                   <input
@@ -22,25 +22,44 @@
                     [id]="item.props.campo"
                     [placeholder]="item.props.placeholder"
                     [formControlName]="item.props.campo"
-                    appUppercase
+                    libUppercase
                   />
+                  <div *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.touched && formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.invalid">
+                    <small *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+                  </div>
                 }
-              } @case('break-content') {
+              } @case(inputTypes.TEXTAREA){
+                @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
+                  <label class="form-label" [for]="item.props.campo">{{
+                    item.props.labelNombre
+                  }}</label>
+                  <textarea
+                    class="form-control"
+                    [id]="item.props.campo"
+                    [formControlName]="item.props.campo"
+                    row="3"
+                    style="height: 20%;"
+                  ></textarea>
+                  <div *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.touched && formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.invalid">
+                    <small *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+                  </div>
+                }
+              } @case(inputTypes.BREAK_CONTENT) {
               <div class="w-100"></div>
-              } @case ('date') {
+              } @case (inputTypes.DATE) {
               <input-fecha
                 [datos]="item.props"
                 (valorCambiado)="fechaCambiado($event)"
               ></input-fecha>
-              } @case ('radio') {
+              } @case (inputTypes.RADIO) {
               <label class="form-label" [for]="item.props.campo">{{
                 item.props.labelNombre
-              }}</label>@if(item.props.required){<span>*</span>}:
+              }}</label>@if(item.props.required){<b><span>*</span></b>}:
               <app-input-radio
-                [radioOptions]="item.props.options"
-                [selectedValue]="item.props.selectedValue"
+                [radioOptions]="item.props.radioOptions"
+                [selectedValue]="item.props.radioSelectedValue"
                 [isRequired]="item.props.required"
-                (valueChange)="cambioValorRadio('radio' + groupIndex, $event)"
+                (valueChange)="cambioValorRadio('radio', groupIndex, menuIndex,  $event)"
                 [layout]="'horizontal'"
               ></app-input-radio>
               }}

@@ -1,0 +1,24 @@
+<div>
+    <ng-titulo titulo="Consulta de domicilios"></ng-titulo>
+    <form [formGroup]="formConsulta">
+      <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select
+            [catalogo]="estadoJson"
+            [tooltipQuestionCircle]="true"
+            [label]="'Estado*'"
+            [placeholder]="'Seleccione una aduana'"
+            formControlName="estadoControl"
+            (change)="getMunicipios()"
+          ></app-catalogo-select>
+        </div>
+      </div>
+        <div
+        class="d-flex justify-content-end align-items-center mt-5"
+      >
+        <button type="button" class="btn-primary btn" name="Buscardomicilios">Buscar domicilios</button>
+      </div>
+     
+    </form>
+  
+</div>

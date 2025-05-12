@@ -1,0 +1,14 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "Ferroviario"
+    },
+    {
+      "id": 2,
+      "descripcion": "Marítimo"
+    }
+  ],
+  "message": "Seleccione un valor"
+}

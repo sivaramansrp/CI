@@ -1,0 +1,240 @@
+<div class="container">
+  <ng-titulo titulo="Mercancía o producto a importar" />
+
+  <form [formGroup]="FormSolicitud">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pantallasActionService.tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
+          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Autorización COFERPRIS</h2>
+      </div>
+      <div class="col-md-6 mt-4">
+        <div class="form-check mt-4">
+          <input class="form-check-input" (click)="seleccioneAutorizacion()" type="checkbox" value="" id="autorizacion"
+            formControlName="autorizacion">
+          <label class="form-check-label" for="autorizacion">No aplica permiso de COFEPRIS
+          </label>
+        </div>
+      </div>
+    </div>
+    @if(!FormSolicitud.get('autorizacion')?.value) {
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pantallasActionService.noDePermisocoferprise" formControlName="noDePermisocoferprise"
+          [label]="'No. de permiso COFERPRIS'" [required]="true" name="noDePermisocoferprise"
+          (change)="noDePermisocoferpriseSeleccion()"></app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="nombreComercial">Nombre comercial del permiso COFERPRIS</label>
+          <input class="form-control" id="nombreComercial" formControlName="nombreComercial"
+            placeholder="Nombre Comercial" type="text">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <label class="form-label" for="cantidadAutorizada">Cantidad autorizada</label>
+        <input class="form-control" id="cantidadAutorizada" formControlName="cantidadAutorizada"
+          placeholder="Cantidad autorizada" type="text" libUppercase>
+      </div>
+    </div>
+    }
+    <ng-titulo titulo="Datos de las mercancías a importar"/>
+    <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
+          [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria"
+          (change)="seleccioneAutorizacion()"></app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="descripcionDeLaFraccion">Descripción de la fracción arancelaria:<span 
+            class="bi bi-question-circle-fill fs-4 m-1" title="Title" 
+            ata-bs-toggle="tooltip"></span></label>
+          <input class="form-control" id="descripcionDeLaFraccion" formControlName="descripcionDeLaFraccion"
+            placeholder="Que contengan bifenilos polibromados (PBB), bifenilos policlorados (PCB) o terfenilo."
+            type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pantallasActionService.numeroCas" formControlName="numeroCas" [label]="'Número C.A.S.'"
+          [required]="true" name="numeroCas" (change)="numeroCasSeleccione()"></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="form-label" for="descripcionNoArancelaria">Descripción no arancelaria:</label>
+          <input class="form-control min-hgt" id="descripcionNoArancelaria" formControlName="descripcionNoArancelaria"
+            placeholder="Únicamente; Bifenilos policlorados PCB CAS 1336-36-3" type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="form-label" for="nombreQuimico">Nombre químico:</label>
+            <input class="form-control min-hgt" id="nombreQuimico" formControlName="nombreQuimico"
+            placeholder="Bifenilos policlorados PCB CAS 1336-36-3" type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="nombreDeLaMercancia">Nombre de la mercancía o producto a importar:</label>
+          <input class="form-control" id="nombreDeLaMercancia"
+            placeholder="Nombre de la mercancía o producto a importar" type="text" formControlName="nombreDeLaMercancia"
+            [ngClass]="isValid(FormSolicitud, 'nombreDeLaMercancia') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'nombreDeLaMercancia', 'setNombreDeLaMercancia')">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="unNumero">Número UN:</label>
+          <input class="form-control" id="unNumero" placeholder="" type="number" formControlName="unNumero"
+            [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'unNumero', 'setUnNumero')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="datosNombreComercial">Nombre comercial*:</label>
+          <input class="form-control" id="datosNombreComercial" placeholder="Nombre comercial" type="text"
+            formControlName="datosNombreComercial"
+            [ngClass]="isValid(FormSolicitud, 'datosNombreComercial') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'datosNombreComercial', 'setDatosNombreComercial')">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="datosNumeroComun">Número común*:</label>
+          <input class="form-control" id="datosNumeroComun" placeholder="Número común" type="text"
+            formControlName="datosNumeroComun" [ngClass]="isValid(FormSolicitud, 'datosNumeroComun') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'datosNumeroComun', 'setDatosNumeroComun')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="datosPorcentaje">Porcentaje de concentración*:</label>
+          <input class="form-control" id="datosPorcentaje" placeholder="Porcentaje de concentración" type="number"
+            formControlName="datosPorcentaje" [ngClass]="isValid(FormSolicitud, 'datosPorcentaje') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'datosPorcentaje', 'setDatosPorcentaje')">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="datosComponentes">Componentes:</label>
+          <input class="form-control" id="datosComponentes" placeholder="Componentes" type="text"
+            formControlName="datosComponentes" [ngClass]="isValid(FormSolicitud, 'datosComponentes') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'datosComponentes', 'setDatosComponentes')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-catalogo-select [catalogo]="pantallasActionService.clasificacion" formControlName="clasificacion"
+          [label]="'Clasificación toxicológica'" [required]="true" name="clasificacion"
+          (change)="clasificacionSeleccione()"></app-catalogo-select>
+      </div>
+      <div class="col-md-6">
+        <app-catalogo-select [catalogo]="pantallasActionService.estadoFisico" formControlName="estadoFisico" [label]="'Estado Físico'"
+          [required]="true" name="estadoFisico" (change)="estadoFisicoSeleccione()"></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <app-catalogo-select [catalogo]="pantallasActionService.datosObjecto" formControlName="datosObjecto"
+          [label]="'Objeto de la importación'" [required]="true" name="datosObjecto"
+          (change)="datosObjectoSeleccione()"></app-catalogo-select>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="especifique:">Especifique:</label>
+          <input class="form-control" id="especifique" formControlName="especifique" placeholder="Especifique"
+            type="text">
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="especifiqueDos">Especifique:</label>
+          <input class="form-control" id="especifiqueDos" formControlName="especifiqueDos" placeholder="Especifique"
+            type="text">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row mt-5">
+      <div class="col-md-12 mt-5">
+        <crosslist [fechas]="seleccionarOrigenDelPais" [botones]="paisDeProcedenciaBotons"
+          [label]="paisDeProcedenciaLabel"></crosslist>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12 mt-5">
+        <crosslist [fechas]="listaPaisDelProducto" [botones]="paisDelProductoBotons" [label]="paisDelProductoLabel">
+        </crosslist>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12 mt-5">
+        <crosslist [fechas]="listaDeEntradaPersonalizada" [botones]="aduanasDeEntradaBotons"
+          [label]="aduanasDeEntradaLabel"></crosslist>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Cantidad a importar" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="cantidad">Cantidad:</label>
+          <input class="form-control" id="cantidad" placeholder="Introduzca el número" type="number"
+            formControlName="cantidad" [ngClass]="isValid(FormSolicitud, 'cantidad') ? 'required' : ''"
+            (change)="setValoresStore(FormSolicitud,'cantidad', 'setCantidad')">
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="cantidadLetra">Cantidad (letra):</label>
+          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra"
+            placeholder="El número en palabras" type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-catalogo-select [catalogo]="pantallasActionService.unidadDeMedida" formControlName="unidadDeMedida" [label]="'Unidad de medida'"
+          [required]="true" name="unidadDeMedida" (change)="unidadDeMedidaSeleccione()"></app-catalogo-select>
+      </div>
+    </div>
+    <div class="mt-5">
+      <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+  </form>
+</div>

@@ -3,7 +3,8 @@
 
 // module.exports = withModuleFederation(config);
 
-
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/naming-convention */
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');
@@ -33,9 +34,9 @@ module.exports = {
    name: 'semarnat',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/semarnat/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/semarnat/src/app/application/app.module.ts',
    },
-   shared: share({
+   shared: share({ 
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
@@ -50,5 +51,8 @@ module.exports = {
    })
   }),
   sharedMappings.getPlugin()
- ]
+ ],
+ watchOptions: {
+    ignored: 'node_modules'
+  }
 };

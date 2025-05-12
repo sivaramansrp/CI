@@ -1,0 +1,74 @@
+<div class="container">
+    <div>
+      <ng-titulo
+        titulo="Detalles del transporte"
+      ></ng-titulo>
+      <form [formGroup]="detallestransporte" novalidate>
+        <div class="row">
+         
+          <div class="col-md-4">
+            <label class="form-label" for="puertodeEmbarque">Puerto de embarque:</label>
+            <input 
+              type="text" class="form-control" id="puertodeEmbarque" 
+              placeholder="Veracruz" formControlName="puertodeEmbarque"
+              [class.is-invalid]="detallestransporte.get('puertodeEmbarque')?.touched && detallestransporte.get('puertodeEmbarque')?.invalid"
+              (change)="enCambioDeDetallesDeTransporte('puertodeEmbarque')">
+            <div class="invalid-feedback">
+              Corrija el nombre.
+            </div>
+          </div>
+      
+          <div class="col-md-4">
+            <label class="form-label" for="puertodeDesembarque">Puerto de desembarque:</label>
+            <input 
+              type="text" class="form-control" id="puertodeDesembarque" 
+              placeholder="Mexico" formControlName="puertodeDesembarque"
+              [class.is-invalid]="detallestransporte.get('puertodeDesembarque')?.touched && detallestransporte.get('puertodeDesembarque')?.invalid"
+              (change)="enCambioDeDetallesDeTransporte('puertodeDesembarque')">
+            <div class="invalid-feedback">
+              Corrija el nombre.
+            </div>
+          </div>
+      
+          <div class="col-md-4">
+            <label class="form-label" for="puertodeTransito">Puerto de tránsito:</label>
+            <input 
+              type="text" class="form-control" id="puertodeTransito" 
+              placeholder="Veracruz norte" formControlName="puertodeTransito"
+              [class.is-invalid]="detallestransporte.get('puertodeTransito')?.touched && detallestransporte.get('puertodeTransito')?.invalid"
+              (change)="enCambioDeDetallesDeTransporte('puertodeTransito')">
+            <div class="invalid-feedback">
+              Corrija el nombre.
+            </div>
+          </div>
+      
+         
+          <div class="col-md-4">
+            <label class="form-label" for="nombredelaEmbarcacion">Nombre de la embarcación:</label>
+            <input 
+              type="text" class="form-control" id="nombredelaEmbarcacion" 
+              placeholder="Puerto Boca" formControlName="nombredelaEmbarcacion"
+              [class.is-invalid]="detallestransporte.get('nombredelaEmbarcacion')?.touched && detallestransporte.get('nombredelaEmbarcacion')?.invalid"
+              (change)="enCambioDeDetallesDeTransporte('nombredelaEmbarcacion')">
+            <div class="invalid-feedback">
+              Corrija el nombre.
+            </div>
+          </div>
+      
+         <div class="col-md-4">
+            <label class="form-label" for="numerodeVuelo">Número de vuelo:</label>
+            <input 
+              type="text" class="form-control" id="numerodeVuelo" 
+              placeholder="0115 I" formControlName="numerodeVuelo"
+              [class.is-invalid]="detallestransporte.get('numerodeVuelo')?.touched && detallestransporte.get('numerodeVuelo')?.invalid"
+              (change)="enCambioDeDetallesDeTransporte('numerodeVuelo')">
+            <div class="invalid-feedback">
+              Ingrese solo dígitos.
+            </div>
+          </div>
+      
+        </div>
+      </form>
+     
+    </div>
+</div>

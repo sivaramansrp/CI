@@ -1,9 +1,19 @@
 {
-  "login": "http://localhost:4201",
-  "aga": "http://localhost:4202",
-  "agriculture": "http://localhost:4204",
-  "se": "http://localhost:4205",
-  "semarnat": "http://localhost:4206",
-  "funcionario": "http://localhost:4210",
-  "agace": "http://localhost:4209"
+  "login": "https://front.v30.ultrasist.net/login",
+  "agace": "https://front.v30.ultrasist.net/agace",
+  "aga": "https://front.v30.ultrasist.net/aga",
+  "agriculture": "https://front.v30.ultrasist.net/agriculture",
+  "se": "https://front.v30.ultrasist.net/se",
+  "semarnat": "https://front.v30.ultrasist.net/semarnat",
+  "funcionario": "https://front.v30.ultrasist.net/funcionario",
+  "cofepris": "https://front.v30.ultrasist.net/cofepris", 
+  "sener": "https://front.v30.ultrasist.net/sener",
+  "amecafe": "https://front.v30.ultrasist.net/amecafe",
+  "inbal": "https://front.v30.ultrasist.net/inbal",
+  "sedena": "https://front.v30.ultrasist.net/sedena",
+  "profepa": "https://front.v30.ultrasist.net/profepa",
+  "inah": "https://front.v30.ultrasist.net/inah",
+  "crt": "https://front.v30.ultrasist.net/crt",
+  "stps": "https://front.v30.ultrasist.net/stps",
+  "bandejas": "https://front.v30.ultrasist.net/bandejas"
 }

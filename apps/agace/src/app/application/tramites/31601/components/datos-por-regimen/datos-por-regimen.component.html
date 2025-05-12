@@ -17,6 +17,7 @@
               name="importaciones"
               id="importaciones1-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'importaciones', 'setImportaciones')"
             />
             <label class="form-check-label" for="importaciones1-si">Sí</label>
           </div>
@@ -30,6 +31,7 @@
               name="importaciones"
               id="importaciones1-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'importaciones', 'setImportaciones')"
             />
             <label class="form-check-label" for="importaciones1-no">No</label>
           </div>
@@ -56,12 +58,13 @@
             <input
               class="form-check-input"
               type="radio"
-              formControlName="infraestructura"
-              name="infraestructura"
-              id="infraestructura-si"
+              formControlName="infraestructuraIndique"
+              name="infraestructuraIndique"
+              id="infraestructuraIndique-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'infraestructuraIndique', 'setInfraestructuraIndique')"
             />
-            <label class="form-check-label" for="infraestructura-si">Sí</label>
+            <label class="form-check-label" for="infraestructuraIndique-si">Sí</label>
           </div>
         </div>
         <div class="col-md-6">
@@ -69,12 +72,13 @@
             <input
               class="form-check-input"
               type="radio"
-              formControlName="infraestructura"
-              name="infraestructura"
-              id="infraestructura-no"
+              formControlName="infraestructuraIndique"
+              name="infraestructuraIndique"
+              id="infraestructuraIndique-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'infraestructuraIndique', 'setInfraestructuraIndique')"
             />
-            <label class="form-check-label" for="infraestructura-no">No</label>
+            <label class="form-check-label" for="infraestructuraIndique-no">No</label>
           </div>
         </div>
         @if (regimenForm.get('infraestructura')?.invalid &&
@@ -102,6 +106,7 @@
               name="ultimosMeses"
               id="ultimosMeses-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'ultimosMeses', 'setUltimosMeses')"
             />
             <label class="form-check-label" for="ultimosMeses-si">Sí</label>
           </div>
@@ -115,6 +120,7 @@
               name="ultimosMeses"
               id="ultimosMeses-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'ultimosMeses', 'setUltimosMeses')"
             />
             <label class="form-check-label" for="ultimosMeses-no">No</label>
           </div>
@@ -141,6 +147,7 @@
               name="operacionesmeses"
               id="operaciones12meses-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'operacionesmeses', 'setOperacionesmeses')"
             />
             <label class="form-check-label" for="operaciones12meses-si"
               >Sí</label
@@ -156,6 +163,7 @@
               name="operacionesmeses"
               id="operaciones12meses-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'operacionesmeses', 'setOperacionesmeses')"
             />
             <label class="form-check-label" for="operaciones12meses-no"
               >No</label
@@ -179,6 +187,7 @@
             class="form-control"
             formControlName="valor"
             placeholder="100"
+            (change)="setValoresStore(regimenForm,'valor', 'setValor')"
           />
           @if (regimenForm.get('valor')?.invalid &&
           regimenForm.get('valor')?.touched) {
@@ -205,6 +214,7 @@
                     formControlName="transferencias"
                     class="form-control"
                     placeholder="80"
+                    (change)="setValoresStore(regimenForm,'transferencias', 'setTransferencias')"
                   />
                   @if(regimenForm.get('transferencias')?.invalid &&
                   regimenForm.get('transferencias')?.touched) {
@@ -219,6 +229,7 @@
                     formControlName="transferenciasVir"
                     class="form-control"
                     placeholder="80"
+                    (change)="setValoresStore(regimenForm,'transferenciasVir', 'setTransferenciasVir')"
                   />
                   @if(regimenForm.get('transferenciasVir')?.invalid &&
                   regimenForm.get('transferenciasVir')?.touched) {
@@ -236,6 +247,7 @@
                     formControlName="retornos"
                     class="form-control"
                     placeholder="10"
+                    (change)="setValoresStore(regimenForm,'retornos', 'setRetornos')"
                   />
                   @if(regimenForm.get('retornos')?.invalid &&
                   regimenForm.get('retornos')?.touched) {
@@ -249,6 +261,7 @@
                     formControlName="retornosSe"
                     class="form-control"
                     placeholder="10"
+                    (change)="setValoresStore(regimenForm,'retornosSe', 'setRetornosSe')"
                   />
                   @if(regimenForm.get('retornosSe')?.invalid &&
                   regimenForm.get('retornosSe')?.touched) {
@@ -265,6 +278,7 @@
                     formControlName="constancias"
                     class="form-control"
                     placeholder="10"
+                    (change)="setValoresStore(regimenForm,'constancias', 'setConstancias')"
                   />
                   @if(regimenForm.get('constancias')?.invalid &&
                   regimenForm.get('constancias')?.touched) {
@@ -278,6 +292,7 @@
                     formControlName="constanciasDe"
                     class="form-control"
                     placeholder="10"
+                    (change)="setValoresStore(regimenForm,'constanciasDe', 'setConstanciasDe')"
                   />
                   @if(regimenForm.get('constanciasDe')?.invalid &&
                   regimenForm.get('constanciasDe')?.touched) {
@@ -323,6 +338,7 @@
               name="empleadosPropios"
               id="empleadosPropios-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'empleadosPropios', 'setEmpleadosPropios')"
             />
             <label class="form-check-label" for="empleadosPropios-si">Sí</label>
           </div>
@@ -336,6 +352,7 @@
               name="empleadosPropios"
               id="empleadosPropios-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'empleadosPropios', 'setEmpleadosPropios')"
             />
             <label class="form-check-label" for="empleadosPropios-no">No</label>
           </div>
@@ -354,7 +371,7 @@
         </p>
         <div class="col-md-6">
           <label class="form-label" for="numeroEmpleados"
-            ><span class="text-danger">*</span> Número de empleados</label
+            > Número de empleados <span>*</span>:</label
           >
           <input
             type="number"
@@ -362,6 +379,7 @@
             formControlName="numeroEmpleados"
             id="numeroEmpleados"
             placeholder="1"
+            (change)="setValoresStore(regimenForm,'numeroEmpleados', 'setNumeroEmpleados')"
           />
           @if (regimenForm.get('numeroEmpleados')?.invalid &&
           regimenForm.get('numeroEmpleados')?.touched) {
@@ -370,22 +388,26 @@
           </div>
           }
           <label class="form-label" for="numeroEmpleados"
-            ><span class="text-danger">*</span> Número de empleados</label
+            >Número de empleados <span>*</span>:</label
           >
           <input
             type="number"
             class="form-control"
             id="numeroEmpleados"
             placeholder="1"
+            formControlName="numeroEmpleadosDos"
+            (change)="setValoresStore(regimenForm,'numeroEmpleadosDos', 'setNumeroEmpleadosDos')"
           />
           <label class="form-label" for="numeroEmpleados"
-            ><span class="text-danger">*</span> Número de empleados</label
+            >Número de empleados <span>*</span>:</label
           >
           <input
             type="number"
             class="form-control"
             id="numeroEmpleados"
             placeholder="1"
+            formControlName="numeroEmpleadosTres"
+            (change)="setValoresStore(regimenForm,'numeroEmpleadosTres', 'setNumeroEmpleadosTres')"
           />
         </div>
         <div class="col-md-6">
@@ -394,7 +416,7 @@
             formControlName="comboBimestresUno"
             [label]="'Bimestre'"
             [required]="true"
-            (change)="bimestreUnoSeleccion()"
+            (change)="setValoresStore(regimenForm,'comboBimestresUno', 'setComboBimestresUno')"
           >
           </app-catalogo-select>
           <app-catalogo-select
@@ -402,7 +424,7 @@
             formControlName="comboBimestresDos"
             [label]="'Bimestre'"
             [required]="true"
-            (change)="bimestreDosSeleccion()"
+            (change)="setValoresStore(regimenForm,'comboBimestresDos', 'setComboBimestresDos')"
           >
           </app-catalogo-select>
           <app-catalogo-select
@@ -410,7 +432,7 @@
             formControlName="comboBimestresTres"
             [label]="'Bimestre'"
             [required]="true"
-            (change)="bimestreTresSeleccion()"
+            (change)="setValoresStore(regimenForm,'comboBimestresTres', 'setComboBimestresTres')"
           >
           </app-catalogo-select>
         </div>
@@ -476,6 +498,7 @@
               name="proveedorCumplimiento"
               id="proveedorCumplimiento-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'proveedorCumplimiento', 'setProveedorCumplimiento')"
             />
             <label class="form-check-label" for="proveedorCumplimiento-si"
               >Sí</label
@@ -491,6 +514,7 @@
               name="proveedorCumplimiento"
               id="proveedorCumplimiento-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'proveedorCumplimiento', 'setProveedorCumplimiento')"
             />
             <label class="form-check-label" for="proveedorCumplimiento-no"
               >No</label
@@ -521,6 +545,7 @@
               name="declaracionISR"
               id="declaracionISR-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'declaracionISR', 'setDeclaracionISR')"
             />
             <label class="form-check-label" for="declaracionISR-si">Sí</label>
           </div>
@@ -534,6 +559,7 @@
               name="declaracionISR"
               id="declaracionISR-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'declaracionISR', 'setDeclaracionISR')"
             />
             <label class="form-check-label" for="declaracionISR-no">No</label>
           </div>
@@ -570,6 +596,7 @@
               name="cancelacion"
               id="cancelacion-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'cancelacion', 'setCancelacion')"
             />
             <label class="form-check-label" for="cancelacion-si">Sí</label>
           </div>
@@ -583,6 +610,7 @@
               name="cancelacion"
               id="cancelacion-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'cancelacion', 'setCancelacion')"
             />
             <label class="form-check-label" for="cancelacion-no">No</label>
           </div>
@@ -608,6 +636,7 @@
               name="cumplimientoReglas"
               id="cumplimientoReglas-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'cumplimientoReglas', 'setCumplimientoReglas')"
             />
             <label class="form-check-label" for="cumplimientoReglas-si"
               >Sí</label
@@ -623,6 +652,7 @@
               name="cumplimientoReglas"
               id="cumplimientoReglas-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'cumplimientoReglas', 'setCumplimientoReglas')"
             />
             <label class="form-check-label" for="cumplimientoReglas-no"
               >No</label
@@ -660,6 +690,7 @@
               name="recintoFiscalizado"
               id="recintoFiscalizado-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'recintoFiscalizado', 'setRecintoFiscalizado')"
             />
             <label class="form-check-label" for="recintoFiscalizado-si"
               >Sí</label
@@ -675,6 +706,7 @@
               name="recintoFiscalizado"
               id="recintoFiscalizado-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'recintoFiscalizado', 'setRecintoFiscalizado')"
             />
             <label class="form-check-label" for="recintoFiscalizado-no"
               >No</label
@@ -711,6 +743,7 @@
               name="recintoEstrategico"
               id="recintoEstrategico-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'recintoEstrategico', 'setRecintoEstrategico')"
             />
             <label class="form-check-label" for="recintoEstrategico-si"
               >Sí</label
@@ -726,6 +759,7 @@
               name="recintoEstrategico"
               id="recintoEstrategico-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'recintoEstrategico', 'setRecintoEstrategico')"
             />
             <label class="form-check-label" for="recintoEstrategico-no"
               >No</label
@@ -755,6 +789,7 @@
               name="cumplimientoLineamientos"
               id="cumplimientoLineamientosEstrategico-si"
               value="Yes"
+              (change)="setValoresStore(regimenForm,'cumplimientoLineamientos', 'setCumplimientoLineamientos')"
             />
             <label
               class="form-check-label"
@@ -772,6 +807,7 @@
               name="cumplimientoLineamientos"
               id="cumplimientoLineamientosEstrategico-no"
               value="No"
+              (change)="setValoresStore(regimenForm,'cumplimientoLineamientos', 'setCumplimientoLineamientos')"
             />
             <label
               class="form-check-label"

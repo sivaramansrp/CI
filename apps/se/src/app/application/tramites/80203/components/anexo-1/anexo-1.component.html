@@ -1,0 +1,196 @@
+<div class="container">  
+  <!-- Pasos para la sección de exportación -->
+  <form [formGroup]="immexRegistroform">
+    <div formGroupName="exportacionForm">
+      <ng-titulo titulo="Permiso Immex"></ng-titulo>
+      <div class="row">
+        <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+          <label for="permiso-immex">Permiso IMMEX:</label>
+          <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos" placeholder="" />
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableExportacion()">Agregar</button>
+        </div>
+      </div>
+      <div class="row  mt-5" *ngIf="showTableExport">
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
+
+        <div class="container text-end mt-5">
+          <button class="btn btn-primary me-2" (click)="showFraccionExportacion()">Mostrar detalle mercancía</button>
+        </div>
+      </div>
+    
+      <div class="row" id="fraccion-exportacion" *ngIf="showFraccionExport">
+        <ng-titulo titulo="Fracción Arancelaria de exportación"></ng-titulo>
+        <div class="col-12">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
+            <input type="text" class="form-control" formControlName="fraccionArancelariaExportacion" id="fraccion-arancelaria-exportacion" placeholder="" />
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+            <label for="description-del-producto">Descripción del producto:</label>
+            <textarea  class="form-control" id="description-del-producto" formControlName="FraccionDescExportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableFractionExport()">Agregar</button>
+        </div>
+        <div class="row  mt-5" *ngIf="showTableFractionExp">
+          <app-tabla-dinamica 
+          *ngIf="fraccionTablaDatos.length > 0"
+          [tipoSeleccionTabla]="tablaSeleccionRadio"
+          [configuracionTabla]="fraccionExportacionTabla"
+          [datos]="fraccionTablaDatos">
+        </app-tabla-dinamica>
+          <div class="container text-end mt-5">
+            <button class="btn btn-primary me-2" (click)="showProductoImportacion()">Mostrar detalle mercancía</button>
+          </div>
+        </div>    
+      </div>
+
+      <div class="row" id="product-exportacion" *ngIf="showProductoImport">
+        <ng-titulo titulo="Detalle del producto de exportación"></ng-titulo>
+        <div class="col-12">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
+            <input type="text" class="form-control" id="fraccion-arancelaria-exportacion" formControlName="productoArancelariaExportacion" placeholder="" />
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description">Descripción:</label>
+            <textarea  class="form-control" id="description" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <app-catalogo-select
+            [label]="'Nico'"
+            [catalogo]="nico"
+            formControlName="Nico"
+            [required]="true"
+            name="Nico"
+          ></app-catalogo-select>
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description-nico">Descripción Nico:</label>
+            <textarea  class="form-control" id="description-nico" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-primary" (click)="showTableNicoExport()">Agregar Nico</button>
+        </div>  
+        <div class="row  mt-5" *ngIf="showTableNicoExp">
+          <h6>Nico</h6>
+          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+            <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+          </div>
+          <div class="container text-start mt-5">
+            <button class="btn btn-default me-2">Eliminar Nico</button>
+          </div>
+          <div class="container text-end mt-5">
+            <button class="btn btn-primary me-2">Guardar</button>
+            <button class="btn btn-default me-2">Cancelar</button>
+          </div>
+        </div>  
+      </div>
+    </div>
+ 
+
+  <!-- Pasos para la sección de importación -->
+ 
+    <div formGroupName="importacionForm">
+      <ng-titulo titulo="Permiso Immex"></ng-titulo>
+      <div class="row">
+        <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+          <label for="permiso-immex">Permiso IMMEX:</label>
+          <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos" placeholder="" />
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableImportacion()">Agregar</button>
+        </div>
+      </div>
+      <div class="row  mt-5" *ngIf="showTableImport">
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
+        <div class="container text-end mt-5">
+          <button class="btn btn-primary me-2" (click)="showCommodityImportacion()">Mostrar detalle mercancía</button>
+        </div>
+      </div>
+
+      <div class="row" id="commodity-importacion" *ngIf="showCommodityImport">
+        <ng-titulo titulo="Detalle de la mercancía de importación"></ng-titulo>
+        <div class="col-12">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="candiad-anual">Cantidad anual*:</label>
+            <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual" placeholder="" [required]="true"/>
+          </div>
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="capacidad-periodo">Capacidad instalada por periodo*:</label>
+            <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo" placeholder="" [required]="true"/>
+          </div>
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="candidad-por-periodo">Cantidad por periodo*:</label>
+            <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo" placeholder="" [required]="true"/>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="fraccion-arancelaria-import">Fracción arancelaria:</label>
+            <input type="text" class="form-control" id="fraccion-arancelaria-import" formControlName="commodityImportacion" placeholder="" />
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description">Descripción:</label>
+            <textarea  class="form-control" id="description" formControlName="commodityDescImportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <app-catalogo-select
+            [label]="'Nico'"
+            [catalogo]="nico"
+            formControlName="Nico"
+            [required]="true"
+            name="Nico"
+          ></app-catalogo-select>
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description-nico">Descripción Nico:</label>
+            <textarea  class="form-control" id="description-nico" formControlName="commodityNicoDescImportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-primary" (click)="showTableNicoImport()">Agregar Nico</button>
+        </div>  
+        <div class="row  mt-5" *ngIf="showTableNicoImp">
+          <h6>Nico</h6>
+          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+            <app-tabla-dinamica  *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+          </div>
+          <div class="container text-start mt-5">
+            <button class="btn btn-default me-2">Eliminar Nico</button>
+          </div>
+          <div class="container text-end mt-5">
+            <button class="btn btn-default me-2">Regresar</button>
+            <button class="btn btn-primary me-2">Guardar</button>
+          </div>
+        </div>  
+        <div class="row  mt-5">
+          <app-tabla-dinamica 
+          *ngIf="fraccionTablaDatos.length > 0"
+          [tipoSeleccionTabla]="tablaSeleccionRadio"
+          [configuracionTabla]="fraccionExportacionTabla"
+          [datos]="fraccionTablaDatos">
+        </app-tabla-dinamica>
+        
+        </div> 
+      </div>
+    </div>
+  </form>
+</div>
+
+

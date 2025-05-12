@@ -1,0 +1,46 @@
+<div class="container">
+  <ng-titulo titulo="Datos del establecimiento" />
+  <form [formGroup]="datosDelForm">
+    <div class="container text-end mt-5">
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
+        (click)="abrirModal()">Seleccionar establecimiento</button>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="denominacion">Denominación o razón social*:</label>
+          <input class="form-control" id="denominacion" placeholder="" type="text" formControlName="denominacion" (change)="setValoresStore(datosDelForm,'denominacion', 'setDenominacion')">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="correoElectronico">Correo electrónico:<i
+              class="bi bi-question-circle-fill"></i></label>
+          <input class="form-control" id="correoElectronico" formControlName="correoElectronico" placeholder=""
+            type="text" (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container mt-4">
+  <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+        </div>
+        <div class="modal-body">
+          Por el momento no hay comunicación con el
+          Sistema de COFEPRIS, favor
+          de capturar su establecimiento.
+        </div>
+
+        <div class="modal-footer custom-footer justify-content-center">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

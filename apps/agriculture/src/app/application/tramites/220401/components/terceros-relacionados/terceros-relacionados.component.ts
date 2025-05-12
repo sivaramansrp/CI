@@ -1,10 +1,21 @@
-import { Component } from '@angular/core';
+/* eslint-disable no-empty-function */
+import { Component, OnInit } from '@angular/core';
+
 import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
+
 import { TableComponent } from '@ng-mf/data-access-user';
-import establecimientoTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
-import destinatarioTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
-import importardorTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import establecimientoTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import destinatarioTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import importardorTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
+
 import { AlertComponent } from '@ng-mf/data-access-user';
+
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
 
 
@@ -15,7 +26,7 @@ import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-de
    standalone: true,
   imports: [TituloComponent,TableComponent,AlertComponent,AgregarDestinatoriaComponent],
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit {
 
 
   public establecimientoHeaderData: string[] = [];
@@ -32,8 +43,8 @@ export class TercerosRelacionadosComponent {
   public infoAlert = 'alert-info';
 
 
-  constructor() {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
 
   ngOnInit(): void {
     this.getEstablecimiento();
@@ -45,6 +56,7 @@ export class TercerosRelacionadosComponent {
    * @description getEstablecimiento se utiliza para establecer el establecimientoHeaderData de getEstablecimientoTableData
    */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public getEstablecimiento() {
     this.establecimientoHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.establecimientoBodyData = this.getEstablecimientoTableData.tableBody;
@@ -54,6 +66,7 @@ export class TercerosRelacionadosComponent {
    * @description getDestinatario se utiliza para establecer el destinatarioHeaderData de getDestinatarioTableData
    */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public getDestinatario() {
     this.destinatarioHeaderData = this.getDestinatarioTableData.tableHeader;
     this.destinatarioBodyData = this.getDestinatarioTableData.tableBody;
@@ -63,6 +76,7 @@ export class TercerosRelacionadosComponent {
    * @description getImportador se utiliza para establecer el importadorHeaderData de getImportadorTableData
    */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public getImportador() {
     this.importadorHeaderData = this.getImportadorTableData.tableHeader;
     this.importadorBodyData = this.getImportadorTableData.tableBody;
@@ -73,6 +87,7 @@ export class TercerosRelacionadosComponent {
    * @param  agregar, que acepta datos de tipo cadena
    * @description agregar se utiliza para agregar un nuevo estable
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public agregar(agregar:string) {
     if(agregar === 'Agregar'){
       this.hasAgregar = true;

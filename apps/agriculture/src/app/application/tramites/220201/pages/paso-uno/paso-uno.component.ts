@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para el asistente de solicitud.
@@ -34,6 +35,10 @@ export class PasoUnoComponent {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
+  constructor(private readonly seccionStore: SeccionLibStore) {
+    this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerSeccion([true])
+  }
 
   /**
    * Evento emitido al cambiar de pestaña.

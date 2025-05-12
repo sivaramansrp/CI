@@ -1,0 +1,487 @@
+<div class="container">
+    <form [formGroup]="dataDeLaSolicitudForm">
+        <ng-container formGroupName="datosDelTramiteRealizar"> 
+        <h5>seleccione el tipo operacion que desea realizer</h5>
+       <app-input-radio
+            [radioOptions]="opcionDeBotonDeRadio"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+          ></app-input-radio> 
+     <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="justification">justification</label>
+            <textarea class="form-control" id="justification" rows="2" height="50"
+            placeholder="" style="height: 100px" formControlName="justification" 
+            (change)="setValoresStore(datosDelTramiteRealizar,'justification', 'setJustification')"></textarea>
+          </div>
+        </div>
+        </div>
+    
+    <ng-titulo titulo="Datos del establecimiento" />
+    
+        <div class="text-end">
+          <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()" >Seleccionar establecimiento</button>
+        </div>
+        @if (nuevaNotificacion) {
+          <section>
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+          </lib-notificaciones>
+          </section>
+          }
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
+                />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="correoelectronico">Correo electronico*:</label>
+                <input class="form-control" id="correoelectronico" type="text" formControlName="correoElectronico"
+                (change)="setValoresStore(datosDelTramiteRealizar,'correoElectronico', 'setCorreoElectronico')"
+                />
+            </div>
+        </div>
+        <ng-titulo titulo="Domicilio del establecimiento" />
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigoPostal')"
+                />
+              </div>
+              <div class="col-md-4 ">
+                <div class="form-group">
+                    <div class="form-group">
+                        <app-catalogo-select
+                        id="estadoData"
+                        formControlName="estado"
+                        [catalogo]="estadoData.catalogos"
+                        [label]="'Estado'"
+                        [required]="true"
+                        (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
+                      ></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="municipoyalcaldia">Municipio y alcaldia:</label>
+                <input class="form-control" id="municipoyalcaldia" type="text" formControlName="municipoyalcaldia"
+                (change)="setValoresStore(datosDelTramiteRealizar,'municipoyalcaldia', 'setMunicipoyalcaldia')"/>
+              </div>
+        </div>
+        <div class="row mt-5">
+            <div class="alert alert-warning">
+              <strong>¡Precaución!</strong> Debes capturar localidad y colonia
+            </div>
+          </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="localidad">Localidad:</label>
+                <input class="form-control" id="localidad" type="text" formControlName="localidad"
+                (change)="setValoresStore(datosDelTramiteRealizar,'localidad', 'setLocalidad')"/>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="colonia">Colonia:</label>
+                <input class="form-control" id="colonia" type="text" formControlName="colonia"
+                (change)="setValoresStore(datosDelTramiteRealizar,'colonia', 'setColonia')"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label" for="calle">Calle*:</label>
+                <input class="form-control" id="calle" type="text" formControlName="calle"
+                (change)="setValoresStore(datosDelTramiteRealizar,'calle', 'setCalle')"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <label class="form-label" for="lada">Lada:</label>
+                <input class="form-control" id="lada" type="text" formControlName="lada"
+                (change)="setValoresStore(datosDelTramiteRealizar,'lada', 'setLada')"/>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="telefono">Telefono*:</label>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono', 'setTelefono')"/>
+            </div>
+        </div>
+      </ng-container>
+        <ng-titulo titulo="S.C.I.A.N.*" />
+        <app-tabla-dinamica
+      [configuracionTabla]="configuracionColumnasoli"
+       [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [datos]="tableData"
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
+    </app-tabla-dinamica>
+    <div class="col-md-12 d-flex justify-content-end">
+        <div class="btn-group">
+          <button class="btn btn-danger"
+            type="button" (click)="onDelete()">Eliminar</button>
+            <button class="btn btn-primary me-2"
+            type="submit" (click)="onAgregar()">Agregar</button>
+        </div>
+    </div>
+    <div *ngIf="showClavaScianForm">
+      <ng-titulo titulo="Clave S.C.I.A.N" />
+  <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+      <ng-container formGroupName="claveScianG"> 
+          <div class="row">
+              <div class="col-md-4 mb-3">
+                  <div class="form-group">
+                      <app-catalogo-select
+                      id="claveScianData"
+                      formControlName="claveScian"
+                      [catalogo]="claveScianData.catalogos"
+                      [label]="'Clave S.C.I.A.N'"
+                      [required]="true"
+                      
+                    ></app-catalogo-select>
+                  </div>
+               </div>
+          </div>
+          <div class="row">
+              <div class="col-md-4 mb-3">
+                  <div class="form-group">
+                      <app-catalogo-select
+                      id="descripcionDelScianData"
+                      formControlName="descripcionDelScian"
+                      [catalogo]="descripcionDelScianData.catalogos"
+                      [label]="'Descripcion del S.C.I.A.N'"
+                      [required]="true"
+                    ></app-catalogo-select>
+                  </div>
+               </div>
+          </div>
+      </ng-container>
+      <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+            <button class="btn btn-danger"
+              type="button" (click)="onCancelar()">Cancelar</button>
+              <button class="btn btn-primary me-2"
+              type="button" (click)="onLimpiar()">Limpiar</button>
+              <button class="btn btn-primary me-2"
+              type="submit">Agregar</button>
+          </div>
+        
+      </div>
+      </form>
+  </div>
+    <ng-container formGroupName="datosDelTramiteRealizar"> 
+      <div class="row mt-5">
+        <div class="col-md-4 mt-4">
+          <lib-input-check
+          [id]="'avisoDeFuncionamiento'"
+          [label]="'Aviso de funcionamiento'"
+          [required]="true"
+          formControlName="avisoDeFuncionamiento"
+          (change)="setValoresStore(datosDelTramiteRealizar,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')"
+          ></lib-input-check>
+        </div>
+        <div class="col-md-4 mt-4">
+          <label class="form-label" for="licenciaSanitaria" >No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+          </label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"  
+          (change)="setValoresStore(datosDelTramiteRealizar,'licenciaSanitaria', 'setLicenciaSanitaria')"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+            <app-catalogo-select 
+            id="regimenalqueData"
+            formControlName="regimenalque"
+            [catalogo]="regimenalqueData.catalogos" 
+            [label]="'Régimen al que se destinarán la mercancías'" 
+            [required]="true"
+            (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select 
+            id="aduanaData"
+            formControlName="aduana"
+            [catalogo]="aduanaData.catalogos" 
+            [label]="'Aduana'" 
+            [required]="false"
+            (change)="setValoresStore(datosDelTramiteRealizar,'aduana', 'setAduana')">
+        </app-catalogo-select>
+        </div>
+      </div>
+    </ng-container>
+      <div class="col-md-12 mt-4">
+        <label class="form-label mb-5" for="">mercancías*:</label>
+        <app-tabla-dinamica 
+         [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+          [configuracionTabla]="mercanciasDatos"
+          [datos]="mercanciasConfiguracionTabla"
+          >
+          </app-tabla-dinamica>
+      </div>
+     
+      <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Datos mercancía</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="delProductoData"
+                  formControlName="clasificaionProductos"
+                  [catalogo]="delProducto.catalogos" 
+                  [label]="'Clasificación del producto'" 
+                  [required]="true"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'clasificaionProductos', 'setClasificaionProductos')"
+                  ></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="especificarData"
+                  formControlName="especificarProducto"
+                  [catalogo]="especificarData.catalogos" 
+                  [label]="'Especificar clasificación del producto'"
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
+                  <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Marca*:</label>
+                  <input class="form-control" formControlName="marca" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'marca', 'setMarca')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="tipoProductoData"
+                  formControlName="tipoProducto"
+                  [catalogo]="tipoProductoData.catalogos"
+                   [label]="'Tipo de producto'" 
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Descripción de la fracción arancelaria*:</label>
+                  <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria', 'setDescripcionFraccionArancelaria')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-3">
+                  <label class="form-label">Cantidad UMT*:</label>
+                  <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT', 'setCantidadUMT')"/>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="umt" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umt', 'setUMT')" />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-3">
+                  <label class="form-label">Cantidad UMC*:</label>
+                  <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC', 'setCantidadUMC')"/>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="umc" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"/>
+                </div>
+              </div>
+              <!-- collapsed crosslist -->
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                      <h4 class="panel-title">País de origen</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
+                      <div class="panel-body">
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                      </div>
+                    </div> }
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                      <h4 class="panel-title">País de origen</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if(paisOrigen){
+                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
+                      <div class="panel-body">
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+              <!-- Clave de los lotes -->
+              
+               <div class="row">
+                <div class="col-md-8">
+                  <label class="form-label" for="claveDeLosLotes">Clave de los lotes*:</label>
+                  <input class="form-control"  type="text" formControlName="claveDeLosLotes"                 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'claveDeLosLotes', 'setClaveDeLosLotes')"
+                  (change)="onClaveDeLosLotesChange($event)"
+                  >
+                </div>
+               </div>
+              <div class="row">
+                <div class="col-md-4">
+                   <input-fecha 
+                   class="form-control" 
+                    [datos]="fechaFabricacionDatos"  
+                    class="disabled-input-fecha" 
+                    [setFecha]="dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value"
+                    (valorCambiado)="onFechaDeFabricacionChange($event)">
+                    </input-fecha> 
+
+                  </div>
+                <div class="col-md-4">
+                  <input-fecha class="form-control" 
+                  [datos]="fechaCaducidad" 
+                  class="disabled-input-fecha"
+                  [setFecha]="dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value"
+                  (valorCambiado)="onFechaDeCaducidadChange($event)">
+
+                  </input-fecha>                
+                </div>
+              </div>
+              <div class="col-md-12 mt-3">
+                <label class="form-label" for="">Lista Claves de los lotes*:</label>
+              </div>
+              <div class="col-md-8 mt-3 justify-content-centre align-items-centre">
+                <app-tabla-dinamica 
+                [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" 
+                [configuracionTabla]="listaClave"
+                 [datos]="listaClaveTabla"
+                 (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+                 ></app-tabla-dinamica>
+              </div>
+              <div class="col-md-12 d-flex justify-content-end align-items-end">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-space" (click)="onModificar()" >Modificar</button>          
+                  <button class="btn btn-default ms-3" type="button"  (click)="onEliminar()"> Eliminar </button>
+                  <button type="button" class="btn btn-primary ms-3"  (click)="onAgregarListaClave()"> Agregar </button>
+                </div>
+              </div>
+              @if (nuevaNotificacion) {
+                <section>
+                <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmarEliminar()">
+                </lib-notificaciones>
+                </section>
+                }
+          
+              <!-- udospecifico crosslist -->
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
+                      <h4 class="panel-title">Uso especifico</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
+                      <div class="panel-body">
+                        <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
+                      </div>
+                    </div> }
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 d-flex justify-content-end align-items-end">
+                <div class="btn-group">
+                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" (click)="clearNotificacion()">Cancelar</button>
+                  <button type="button" class="btn btn-primary ms-3" >Modificar </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+   </div>
+      
+
+
+<div class="col-md-12 d-flex justify-content-end">
+  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
+</div>
+  <ng-titulo titulo="Manifiestos y declaraciones" />
+  <div class="alert alert-info">
+    <label style="font-weight: normal">
+      <div class="col-md-1 mt-5">
+        <input type="checkbox" class="mt-5" />
+        <b> *</b>
+      </div>
+      <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+    </label>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+    <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'"></app-input-radio>
+  </div>
+  <ng-container formGroupName="datosDelTramiteRealizar"> 
+
+<ng-titulo titulo="Representante legal" />
+<div class="row mt-5">
+  <div class="col-md-4 mt-2">
+    <label class="form-label" for="rfc">RFC*:</label>
+    <input class="form-control" type="text" formControlName="rfc"
+    (change)="setValoresStore(datosDelTramiteRealizar,'rfc', 'setRfc')"
+    />
+  </div>
+  <div class="col-md-2 mt-4">
+    <button type="button" class="btn btn-primary">Buscar</button>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
+    <input class="form-control" type="text" formControlName="legalRazonSocial"
+    (change)="setValoresStore(datosDelTramiteRealizar,'legalRazonSocial', 'setLegalRazonSocial')"
+    />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+    <input class="form-control" type="text" formControlName="apellidoPaterno"
+    (change)="setValoresStore(datosDelTramiteRealizar,'apellidoPaterno', 'setApellidoPaterno')"
+
+    />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+    <input class="form-control" type="text" formControlName="apellidoMaterno"
+    (change)="setValoresStore(datosDelTramiteRealizar,'apellidoMaterno', 'setApellidoMaterno')"/>
+  </div>
+</div>
+  </ng-container>
+
+      

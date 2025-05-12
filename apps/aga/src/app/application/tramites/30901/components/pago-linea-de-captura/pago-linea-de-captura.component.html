@@ -1,0 +1,85 @@
+<div class="container">
+  <form [formGroup]="formPagoLC">
+  <ng-titulo titulo="Ingresar pago de derechos:" />
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
+        <input
+          type="text"
+          id="lineaCaptura"
+          class="form-control"
+          formControlName="lineaCaptura"
+          (keyup)="validarLineaCaptura()"
+          (change)="setLineaCaptura()"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="lineaCaptura">Monto*:</label>
+        <input
+          type="text"
+          id="monto"
+          class="form-control"
+          formControlName="valorPago"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="form-group d-flex justify-content-end">
+        <button class="btn btn-default me-5" (click)="limpiarCampos()">
+          Limpiar
+        </button>
+        <button class="btn btn-primary me-5" (click)="anadirTarifasDePago()">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <app-tabla-dinamica
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [configuracionTabla]="configuracionColumnas"
+      [datos]="pagoDerechosLista"
+      >
+      </app-tabla-dinamica>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="form-group pull-right">
+        <button class="btn btn-danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="form-group pull-right">
+      <p class="mt-5 fw-bold">
+        A través del siguiente vínculo puedes ingresar a la página para generar
+        la línea de captura de la constancia que se solicita:
+      </p>
+      <br />
+      <a
+        href="https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf"
+        target="_blank"
+      >
+        Generar línea de captura
+      </a>
+      <br /><br />
+    </div>
+  </div>
+
+</form>
+</div>

@@ -1,6 +1,5 @@
 
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
-import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -29,7 +28,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TestPageComponent } from './pages/test-page/test-page.component';
@@ -66,13 +64,11 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     AlertComponent,
     FirmaElectronicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     InputCheckComponent,
     InputHoraComponent,
     InputFechaComponent,
     CrosslistComponent,
-    AgregaPersonasComponent,
     SelectPaisesComponent,
     RepresentanteFiscalComponent,
     forwardRef(() => AnexarDocumentosComponent),

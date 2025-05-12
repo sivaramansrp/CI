@@ -14,9 +14,11 @@
         <app-paso-dos></app-paso-dos>
         } @case (3) {
         <app-paso-tres></app-paso-tres>
-        } @case (4) {
-        <app-paso-cuatro></app-paso-cuatro>
-        } }
+        }
+        @default {
+          <app-paso-uno></app-paso-uno>
+        }
+        }
   
         <btn-continuar
           [datos]="datosPasos"

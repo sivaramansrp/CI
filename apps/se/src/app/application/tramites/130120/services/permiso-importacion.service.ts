@@ -6,5 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class PermisoImportacionService {
 
-    constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {
+      // constructor code
+    }
 }

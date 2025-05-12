@@ -1,0 +1,80 @@
+<fieldset [formGroupName]="claveDeControl">
+  <ng-titulo titulo="Medio de transporte" />
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select 
+        id="Mediodetransporte" 
+        [catalogo]="mediodetransporte.catalogos" 
+        [label]="mediodetransporte.labelNombre" 
+        [placeholder]="mediodetransporte.primerOpcion" 
+        [required]="mediodetransporte.required" 
+        formControlName="transporteIdMedio"
+        (selectionChange)="setTransporteIdMedio($event)"
+        [isDisabled]="false"></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="puntos" class="form-label"
+          >Identificación del transporte:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          size="30"
+          formControlName="identificacionTransporte"
+          id="puntos"
+          (change)="setIdentificacionTransporte($event)"
+        />
+        <div
+          *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
+          grupoFormularioPadre.get(claveDeControl)?.get('identificacionTransporte')?.touched
+  "
+        >
+          Se superó la longitud máxima de 30 caracteres.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-5">
+      <label class="form-label" for="solicituddeInspección"
+        >¿La solicitud de Inspección Física es para trámites que arriban por
+        Ferrocarril o por Partes II?*:</label
+      >
+      <app-input-radio
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
+          [selectedValue]="esSolicitudFerrosValor"
+          [layout]="'vertical'"
+          formControlName="esSolicitudFerros"
+          (valueChange)="enCambioDeValor($event)"
+        ></app-input-radio>
+    </div>
+    <div class="col-md-12">
+      <div class="form-field">
+        <label for="Datosdelamercancía" class="form-label"
+          >Datos de la mercancía:</label
+        >
+      </div>
+    </div>
+    <div class="col-md-12">
+      <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
+
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="totalDeGuiasAmparadas" class="form-label"
+          >Total de guías amparadas:<span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label
+        >
+        <input
+          class="form-control"
+          type="number"
+          formControlName="totalDeGuiasAmparadas"
+          id="totalDeGuiasAmparadas"
+          (change)="setTotalDeGuiasAmparadas($event)"
+          formControlName="totalDeGuiasAmparadas"
+        />
+      </div>
+    </div>
+  </div>
+</fieldset>

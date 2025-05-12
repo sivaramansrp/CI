@@ -1,0 +1,73 @@
+<div class="page">
+  <div class="container">
+    <form [formGroup]="formBusqueda">
+      <div class="row">
+        <div class="col-md p-2">
+          <h1>Acuses y Resoluciones</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 form-group">
+          <label class="form-label" for="solicitante">Solicitante:</label>
+          <p>{{ formBusqueda.get('solicitante')?.value }}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label>RFC:</label>
+          <p>{{ formBusqueda.get('rfc')?.value }}</p>
+        </div>
+        <div class="acuses-y-resolutiones-busqueda">
+          <div class="acuses-y-resoluciones-folio-tramite">
+            <div class="acuses-y-resoluciones-cuerpo p-0">
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label class="form-label" for="folio"
+                    >Folio del trámite:</label
+                  >
+                  <input
+                    class="form-control"
+                    id="folio"
+                    placeholder="Ingrese un folio"
+                    type="text"
+                    formControlName="folio"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <input-fecha
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="cambioFechaInicio($event)"
+                  ></input-fecha>
+                </div>
+                <div class="col-md-4">
+                  <input-fecha
+                    [datos]="fechaFinalInput"
+                    (valorCambiado)="cambioFechaFinal($event)"
+                  ></input-fecha>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md" (click)="folioTramite()">
+                  <button type="button" class="btn boton-buscar">Buscar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="espectaculoAcuseYResolucionesFolioTramiteDatos">
+        <div class="col-md">
+          <h1>Acuses y resoluciones</h1>
+          <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="configuracionTablaDatos"
+            (filaClic)="onFilaClic()"
+          >
+          </app-tabla-dinamica>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

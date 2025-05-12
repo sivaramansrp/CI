@@ -7,44 +7,36 @@
           [catalogo]="entidadFederativaLista"
           [label]="'Entidad federativa'"
           [required]="true"
-          (selectionChange)="fetchEntidadFederativa($event)"
+          (selectionChange)="fetchEntidadFederativa($event);setValoresStore(frmRepresentacion,'entidad', 'setEntidad')"
           [placeholder]="'Seleccione un valor'"
           formControlName="entidad"
         ></app-catalogo-select>
-        <div
-          *ngIf="
-            frmRepresentacion.controls['entidad'].invalid &&
-            frmRepresentacion.controls['entidad'].touched
-          "
-          class="text-danger"
-        >
-          <small
-            *ngIf="frmRepresentacion.controls['entidad'].errors?.['required']"
-            >Debe seleccionar un valor.</small
-          >
-        </div>
+        @if (frmRepresentacion.controls['entidad'].invalid && frmRepresentacion.controls['entidad'].touched) {
+          <div class="text-danger">
+            @if (frmRepresentacion.controls['entidad'].errors?.['required']) {
+              <small>Debe seleccionar un valor.</small>
+            }
+          </div>
+        }
+        
       </div>
       <div class="col-md-4 form-group">
         <app-catalogo-select
           [catalogo]="representacionFederalLista"
           [label]="'Representación federal'"
           [required]="true"
-          (selectionChange)="fetchRepresentacionFederal($event)"
+          (selectionChange)="fetchRepresentacionFederal($event);setValoresStore(frmRepresentacion,'representacion', 'setRepresentacion')"
           [placeholder]="'Seleccione un valor'"
           formControlName="representacion"
         ></app-catalogo-select>
-        <div
-          *ngIf="
-            frmRepresentacion.controls['representacion'].invalid &&
-            frmRepresentacion.controls['representacion'].touched
-          "
-          class="text-danger"
-        >
-          <small
-            *ngIf="frmRepresentacion.controls['representacion'].errors?.['required']"
-            >Debe seleccionar un valor.</small
-          >
-        </div>
+        @if (frmRepresentacion.controls['representacion'].invalid && frmRepresentacion.controls['representacion'].touched) {
+          <div class="text-danger">
+            @if (frmRepresentacion.controls['representacion'].errors?.['required']) {
+              <small>Debe seleccionar un valor.</small>
+            }
+          </div>
+        }
+        
       </div>
     </div>
     <table>

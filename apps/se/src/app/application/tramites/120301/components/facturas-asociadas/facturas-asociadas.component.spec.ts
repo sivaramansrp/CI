@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { formularioAsociacionFactura } from './facturas-asociadas.component';
-import { FacturasAsociadasService } from 'libs/shared/data-access-user/src/core/services/120301/facturas-asociadas/facturas-asociadas.service';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { FormularioAsociacionFacturaComponent } from './facturas-asociadas.component';
+import { of, throwError } from 'rxjs';
 
 describe('formularioAsociacionFactura', () => {
-  let component: formularioAsociacionFactura;
-  let fixture: ComponentFixture<formularioAsociacionFactura>;
-  let facturasAsociadasService: FacturasAsociadasService;
+  let component: FormularioAsociacionFacturaComponent;
+  let fixture: ComponentFixture<FormularioAsociacionFacturaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,15 +16,13 @@ describe('formularioAsociacionFactura', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         TableComponent,
-        TituloComponent
+        TituloComponent,
+        FormularioAsociacionFacturaComponent
       ],
-      declarations: [formularioAsociacionFactura],
-      providers: [FacturasAsociadasService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(formularioAsociacionFactura);
+    fixture = TestBed.createComponent(FormularioAsociacionFacturaComponent);
     component = fixture.componentInstance;
-    facturasAsociadasService = TestBed.inject(FacturasAsociadasService);
     fixture.detectChanges();
   });
 
@@ -34,25 +30,20 @@ describe('formularioAsociacionFactura', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch data on init', () => {
-    const mockData = {
-      facturas: [
-        { tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', '2024-11-07 00:00:00.0', '100', '9', 'Kilogramo', '100.0'] },
-        { tbodyData: ['3434324', 'FACTURA', 'CALLE', '2024-10-14 00:00:00.0', '999999', '999990', 'Kilogramo', '3213.0'] }
-      ]
-    };
-    spyOn(facturasAsociadasService, 'getDatos').and.returnValue(of(mockData));
-
+  it('should initialize form with default values', () => {
     component.ngOnInit();
-
-    expect(component.facturas).toEqual(mockData.facturas);
+    expect(component.formularioAsociacionFactura.value).toEqual({ cantidadFacturas: '' });
   });
 
-  it('should handle error while fetching data', () => {
-    spyOn(facturasAsociadasService, 'getDatos').and.returnValue(of({}));
-
+  it('should have a valid form when cantidadFacturas is provided', () => {
     component.ngOnInit();
+    component.formularioAsociacionFactura.controls['cantidadFacturas'].setValue('10');
+    expect(component.formularioAsociacionFactura.valid).toBeTruthy();
+  });
 
-    expect(component.facturas).toEqual([]);
+  it('should have an invalid form when cantidadFacturas is empty', () => {
+    component.ngOnInit();
+    component.formularioAsociacionFactura.controls['cantidadFacturas'].setValue('');
+    expect(component.formularioAsociacionFactura.invalid).toBeTruthy();
   });
 });

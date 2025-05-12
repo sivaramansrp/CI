@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { BtnContinuarComponent } from "@ng-mf/data-access-user";
-
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 import { RepresentacionfederalService } from '@ng-mf/data-access-user';
 
@@ -29,7 +27,7 @@ describe('RepresentacionFederalComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [RepresentacionFederalComponent,CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, BtnContinuarComponent],
+      imports: [RepresentacionFederalComponent,CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       providers: [
         { provide: RepresentacionfederalService, useValue: SERVICE_MOCK }
       ]

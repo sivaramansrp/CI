@@ -1,0 +1,68 @@
+<ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+
+<form [formGroup]="detosEstablecimiento">
+  <div class="col-md-12 mb-5">
+    <div class="pull-right">
+      <button name="establecimiento" class="btn btn-primary" (click)="openEstablecimientoModal()">
+        Seleccionar establecimiento
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="denominacionRazonSocial" class="col-md-8 mb-3">
+      <label for="establecimientoDenominacionRazonSocial"
+        >Denominación o razón social <span class="require">*</span>:</label
+      >
+
+      <div>
+        <input
+          type="text"
+          id="establecimientoDenominacionRazonSocialId"
+          formControlName="establecimientoDenominacionRazonSocial"
+          class="form-control"
+          (change)="onControlChange('establecimientoDenominacionRazonSocial')"
+        />
+      </div>
+    </div>
+    <div id="establecimientoCorreoElectronico" class="col-md-4 mb-3">
+      <label for="establecimientoCorreoElectronico"
+        >Correo electrónico <span class="require">*</span>:</label
+      >
+
+      <div>
+        <input
+          type="text"
+          id="establecimientoCorreoElectronicoId"
+          formControlName="establecimientoCorreoElectronico"
+          class="form-control"
+          (change)="onControlChange('establecimientoCorreoElectronico')"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<div
+  class="modal fade"
+  #establecimientoModalButton
+
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form >
+        <div class="modal-body">
+          Por el momento no hay comunicación con el
+          Sistema de COFEPRIS, favor de capturar su establecimiento.
+          Acerar
+        </div>
+        <div class="modal-footer mt-5 d-flex justify-content-center">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

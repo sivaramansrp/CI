@@ -1,0 +1,13 @@
+.ht{
+    height: 100px;
+}
+.ht2{
+    height: 50px;
+}
+.table-container{
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: scroll;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
-import { enviroment } from './../../../../../../../../apps/aga/src/app/enviroments/enviroment';
+import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,9 @@ import { enviroment } from './../../../../../../../../apps/aga/src/app/enviromen
 export class SubirDocumentoService {
   private urlServer = enviroment.URL_SERVER_UPLOAD;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   subirDocumento(token: string, file: File): Observable<{ message: string }> {
     const headers = new HttpHeaders({

@@ -1,0 +1,133 @@
+<form [formGroup]="formulario" (ngSubmit)="buscarSolicitudPorCAAT()">
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
+        <input type="hidden" formControlName="idPersonaSolicitud" />
+        <input type="hidden" formControlName="ideGenerica1" />
+        <input
+          type="hidden"
+          formControlName="fechaInicioVigencia"
+          id="fechaInicioVigencia"
+        />
+        <input
+          type="hidden"
+          formControlName="fechaFinVigencia"
+          id="fechaFinVigencia"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="mt-4">
+          <label for="claveFolioCAAT"
+            >Codigo Alfanumerico del Transportista(CAAT):</label
+          >
+          <span class="require">*</span>
+        </div>
+        <div>
+          <input
+            type="text"
+            formControlName="claveFolioCAAT"
+            id="claveFolioCAAT"
+            maxlength="4"
+            (blur)="caatConMayusculas($event)"
+            class="form-control"
+          />
+          <div
+            *ngIf="
+              formulario.get('claveFolioCAAT')?.invalid &&
+              formulario.get('claveFolioCAAT')?.touched
+            "
+          >
+            <small class="text-danger">Clave Folio CAAT is required</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="buscarSolicitudPorCAAT()"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-md-4 mt-4">
+        <div>
+          <label for="caatAereoRenovacionCaat">CAAT:</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            readonly
+            formControlName="cveFolioCaat"
+            maxlength="4"
+            class="form-control"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="col col-md-4 mt-4">
+        <div>
+          <label for="descripcionTipoCaat">Perfil:</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            readonly
+            formControlName="descripcionTipoCaat"
+            id="descripcionTipoCaat"
+            maxlength=""
+            class="form-control"
+            readonly
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          class="tipoDeCaatAerea"
+          [catalogo]="tipoDeCaatAerea"
+          formControlName="tipoDeCaatAerea"
+          [required]="true"
+          label="Tipo de CAAT Aérea"
+          name="tipoDeCaatAerea"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          class="ideCodTransportacionAerea"
+          [catalogo]="ideCodTransportacionAerea"
+          formControlName="ideCodTransportacionAerea"
+          [required]="true"
+          label="Codigo Transportación Aérea"
+          name="ideCodTransportacionAerea"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="solicitudIataIcao" class="form-label">Codigo:</label>
+        <input
+          type="text"
+          readonly
+          formControlName="codIataIcao"
+          maxlength="3"
+          class="form-control"
+        />
+      </div>
+    </div>
+  </div>
+</form>

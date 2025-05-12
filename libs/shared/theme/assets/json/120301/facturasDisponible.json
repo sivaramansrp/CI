@@ -1,0 +1,12 @@
+[
+  {
+    "numeroDeLaFactura": "prueba leav26agosto2024",
+    "razonSocial": "ESPERANCITAS.CO",
+    "domicilio": "CALLE PRUEBA",
+    "fechaExpedicionFactura": "2024-11-07 00:00:00.0 GMT 06:00",
+    "cantidadTotal": "90",
+    "cantidadDisponible": "10",
+    "unidadMedida": "Kilogramos",
+    "valorDolares": "100.0"
+  }
+]

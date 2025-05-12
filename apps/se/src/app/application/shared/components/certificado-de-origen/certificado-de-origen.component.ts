@@ -1,0 +1,313 @@
+import { CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS } from '../../constantes/modificacion.enum';
+import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Mercancia } from '../../models/modificacion.enum';
+import { Subject } from 'rxjs';
+
+/**
+ * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
+ * 
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha de inicio.
+ * @property {boolean} required - Indica si el campo de fecha de inicio es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha de inicio está habilitado.
+ */
+export const FECHA_INICIO = {
+  labelNombre: 'Fecha inicio',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
+ * 
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
+ * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
+ */
+export const FECHA_FINAL = {
+  labelNombre: 'Fecha final',
+  required: true,
+  habilitado: true,
+};
+
+@Component({
+  selector: 'app-certificado-de-origen',
+  standalone: true,
+  imports: [
+    TituloComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    TablaDinamicaComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    InputCheckComponent
+  ],
+  templateUrl: './certificado-de-origen.component.html',
+  styleUrl: './certificado-de-origen.component.scss'
+})
+
+export class CertificadoDeOrigenComponent implements OnDestroy {
+  /**
+   * Propiedad de entrada que recibe un arreglo de menús desplegables.
+   * @type {MenusDesplegables[]}
+   */
+  @Input() data!: MenusDesplegables[];
+
+  /**
+   * Propiedad de entrada que indica si el operador está habilitado o no.
+   * @type {boolean}
+   */
+  @Input() operador!: boolean;
+
+  /**
+   * Propiedad de entrada que indica si la tabla de selección está activada o no.
+   * @type {boolean}
+   */
+  @Input() tablaSeleccionEvent!: boolean;
+
+  /**
+   * Propiedad de entrada que recibe los datos de los tratados/acuerdos.
+   * @type {Catalogo[]}
+   */
+  @Input() tratadoAcuerdo!: Catalogo[];
+
+  /**
+   * Propiedad de entrada que recibe los datos de los países bloqueados.
+   * @type {Catalogo[]}
+   */
+  @Input() paisBloqu!: Catalogo[];
+
+  /**
+   * Propiedad de entrada que recibe los datos de la tabla de mercancia.
+   * @type {Mercancia[]}
+   */
+  @Input() tableData!: Mercancia[];
+
+  /**
+   * Propiedad de entrada que recibe los datos de la mercancia guardada.
+   * @type {Mercancia[]}
+   */
+  @Input() guardarClicado!: Mercancia[];
+
+  /**
+   * Propiedad de salida que emite el valor del formulario cuando se actualiza.
+   * @type {EventEmitter<undefined>}
+   */
+  @Output() formCertificadoEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
+
+  /**
+   * Propiedad de salida que emite el estado seleccionado.
+   * @type {EventEmitter<Catalogo>}
+   */
+  @Output() tipoEstadoSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+
+  /**
+   * Propiedad de salida que emite el país bloqueado seleccionado.
+   * @type {EventEmitter<Catalogo>}
+   */
+  @Output() paisBloquEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+
+  /**
+   * Propiedad de salida que emite un valor booleano para buscar la mercancia.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
+   * Propiedad de salida que emite la fila seleccionada de mercancia.
+   * @type {EventEmitter<Mercancia>}
+   */
+  @Output() filaClics = new EventEmitter<Mercancia>();
+
+  /**
+   * Formulario reactivo utilizado para la gestión de los datos del certificado.
+   * @type {FormGroup}
+   */
+  formCertificado!: FormGroup;
+
+  /**
+   * Configuración de las fechas de inicio y fin.
+   * @type {InputFecha}
+   */
+  public fechaInicioInput: InputFecha = FECHA_INICIO;
+  public fechaFinalInput: InputFecha = FECHA_FINAL;
+
+  /**
+   * Subject para gestionar el ciclo de vida del componente y cancelar las suscripciones.
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Configuración de las columnas de la tabla de mercancia.
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
+
+  /**
+   * Configuración de las columnas de la tabla de mercancia seleccionada.
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+
+  /**
+   * Datos de la bitácora obtenidos desde el servicio.
+   * @type {Mercancia[]}
+   */
+  datos: Mercancia[] = [];
+
+  /**
+   * Estado de la selección de la tabla.
+   * @type {TablaSeleccion}
+   */
+  seleccionTabla = TablaSeleccion.UNDEFINED;
+
+  /**
+   * Tipo de selección de la tabla (radio o checkbox).
+   * @type {TablaSeleccion}
+   */
+  tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
+
+  /**
+   * Datos del formulario, recibidos a través de la propiedad `@Input()`.
+   * @type {Object}
+   */
+  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+
+  /**
+   * Datos de la mercancia seleccionada de la bitácora.
+   * @type {Mercancia}
+   */
+  datosSeleccionados!: Mercancia;
+
+  /**
+   * Propiedad booleana que indica si el formulario está siendo actualizado.
+   * @type {boolean}
+   */
+
+ /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+ @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+  false
+);  
+  /**
+   * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
+   * @param fb FormBuilder para la creación del formulario reactivo.
+   */
+  constructor(private fb: FormBuilder) {
+    // Inicializa el formulario reactivo con los campos y validaciones necesarias.
+    this.formCertificado = this.fb.group({
+      si: [false],
+      entidadFederativa: ['', [Validators.required, Validators.min(0)]],
+      bloque: ['', [Validators.required, Validators.min(0)]],
+      fraccionArancelariaForm: [''],
+      registroProductoForm: [''],
+      nombreComercialForm: [''],
+      fechaInicioInput: ['', [Validators.required]],
+      fechaFinalInput: ['', [Validators.required]],
+    });
+
+    // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
+    
+    setTimeout(() => {
+      if (this.datosForm) {
+        this.formCertificado.patchValue(this.datosForm);
+      }
+    }, 100);
+  }
+  
+
+  /**
+   * Establece el estado seleccionado en el store.
+   * @param {Catalogo} estado El estado seleccionado.
+   */
+  tipoEstadoSeleccion(estado: Catalogo): void {
+    this.tipoEstadoSeleccionEvent.emit(estado);
+  }
+
+  /**
+   * Establece el bloque seleccionado en el store.
+   * @param {Catalogo} estado El bloque seleccionado.
+   */
+  tipoSeleccion(estado: Catalogo): void {
+    this.paisBloquEvent.emit(estado);
+  }
+
+  /**
+   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formCertificado.get(campo)?.value;    
+    this.formaValida.emit(this.formCertificado.valid);
+    this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
+  }
+
+  /**
+   * Getter para obtener el control del formulario de la entidad federativa.
+   * @returns {FormControl} El control para la entidad federativa.
+   */
+  get formularioControl(): FormControl {
+    return this.formCertificado.get('') as FormControl;
+  }
+
+  /**
+   * Método que emite un evento para buscar la mercancia.
+   */
+  buscarMercancia(): void {
+    this.setbuscarMercanciaEvent.emit(true);
+  }
+
+  /**
+   * Cambia el valor de la fecha de inicio en el formulario.
+   * @param nuevo_valor El nuevo valor de la fecha de inicio.
+   */
+  public cambioFechaInicio(nuevo_valor: string): void {    
+    this.formCertificado.get('fechaInicioInput')?.setValue(nuevo_valor);
+    this.setValoresStore('formCertificado','fechaInicioInput',nuevo_valor)
+    this.formCertificado.get('fechaInicioInput')?.markAsUntouched();
+  }
+
+  /**
+   * Cambia el valor de la fecha final en el formulario.
+   * @param nuevo_valor El nuevo valor de la fecha final.
+   */
+  public cambioFechaFinal(nuevo_valor: string): void {
+    this.formCertificado.get('fechaFinalInput')?.setValue(nuevo_valor);
+    this.setValoresStore('formCertificado','fechaFinalInput',nuevo_valor)
+    this.formCertificado.get('fechaFinalInput')?.markAsUntouched();
+  }
+
+  /**
+   * Método que emite el evento para abrir el modal de modificación con los datos de la mercancia seleccionada.
+   * @param datos1 Los datos de la mercancia seleccionada.
+   */
+  abrirModificarModal(datos1: Mercancia): void {
+    this.filaClics.emit(datos1);
+  }
+
+  /**
+   * Opens a modal and emits an event indicating that a row has been clicked.
+   * 
+   * @remarks
+   * This method triggers the `filaClics` event emitter.
+   * 
+   * @returns {void}
+   */
+  abrirModal(tableData: Mercancia): void {
+    this.filaClics.emit(tableData);
+  }
+}
