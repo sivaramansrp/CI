@@ -198,6 +198,16 @@ export interface DatosDomicilioLegalState {
    * El valor de apellidoMaterno.
    */
   apellidoMaterno: string;
+  /**
+ * Lista de aduanas de entrada asociadas.
+ * @type {string[]}
+ */
+  aduanasDeEntrada: string[]
+
+  /**
+   * El valor de garantiasOfrecidas.
+   */
+  garantiasOfrecidas: string;
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -394,6 +404,16 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de apellidoMaterno.
      */
     apellidoMaterno: '',
+    /**
+     * Lista de aduanas de entrada asociadas.
+     * @type {string[]}
+     */
+    aduanasDeEntrada: [],
+
+    /**
+     * El valor de garantiasOfrecidas.
+     */
+    garantiasOfrecidas: '',
   };
 }
 
@@ -902,6 +922,28 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
     this.update((state) => ({
       ...state,
       apellidoMaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el arreglo proporcionado de datos de país de origen.
+   *
+   * @param aduanasDeEntrada - Un arreglo de cadenas que representa los datos de país de origen.
+   */
+  public setPaisDeOriginDatos(aduanasDeEntrada: string[]): void {
+    this.update((state) => ({
+      ...state,
+      aduanasDeEntrada,
+    }));
+  }
+  /**
+  * Establece el estado de garantiasOfrecidas.
+  * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
+  */
+  public setGarantiasOfrecidas(garantiasOfrecidas: string): void {
+    this.update((state) => ({
+      ...state,
+      garantiasOfrecidas,
     }));
   }
 }

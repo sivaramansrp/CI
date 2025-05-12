@@ -22,6 +22,19 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
   styleUrl: './empresas-subfabricante.component.scss',
   host: { hostID: crypto.randomUUID().toString() },
 })
+/**
+ * @component
+ * @name EmpresasSubfabricanteComponent
+ * @description Componente encargado de gestionar los datos de los subfabricantes en el trámite 80102.
+ * Este componente permite agregar, eliminar y complementar plantas de subfabricantes, así como manejar
+ * la información del subcontratista.
+ *
+ * @usageNotes
+ * Este componente utiliza servicios de consulta (`Tramite80102Query`) y estado (`Tramite80102Store`)
+ * para manejar y observar los datos relacionados con los subfabricantes. Además, implementa el ciclo de vida
+ * de Angular para limpiar las suscripciones al destruirse.
+ */
+
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
 
 
