@@ -1,20 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaExpandibleComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
-import { ModalComponent } from '../modal/modal.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, takeUntil, Subject } from 'rxjs';
 import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
+import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../modal/modal.component';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
-import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
 import { 
   CONFIGURATION_TABLA, 
   CONFIGURATION_TABLA_MERCANCIAS, 
   Detalle, 
   Producto 
 } from '../../models/flora-fauna.models';
+import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
+
 
 /**
  * Componente para gestionar las mercancías en el trámite 250102.
@@ -155,13 +156,13 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       return [];
     }
     
-    const detalles = this.mapaDetalles.get(producto.id);
+    const DETALLES = this.mapaDetalles.get(producto.id);
     
-    if (!detalles || detalles.length === 0) {
+    if (!DETALLES || DETALLES.length === 0) {
       return [];
     }
     
-    return detalles;
+    return DETALLES;
   };
 
   /**
@@ -200,15 +201,15 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * @param campo Campo del formulario que se va a guardar
    */
   establecerValoresStore(formulario: FormGroup, campo: string): void {
-    const valor = formulario.get(campo)?.value;
-    if (valor !== undefined) {
+    const VALOR = formulario.get(campo)?.value;
+    if (VALOR !== undefined) {
       // Crear un objeto con la propiedad dinámica
-      const datos: Partial<Tramite250102State> = {
-        [campo]: valor
+      const DATOS: Partial<Tramite250102State> = {
+        [campo]: VALOR
       };
       
       // Actualizar el store con el método establecerDatos
-      this.tramite250102Store.establecerDatos(datos);
+      this.tramite250102Store.establecerDatos(DATOS);
     }
   }
 
@@ -239,10 +240,10 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       return;
     }
     
-    const nuevoIdProducto = this.generarId();
+    const NUEVOIDPRODUCTO = this.generarId();
     
     const PRODUCTO_FORMDATA: Producto = {
-      id: nuevoIdProducto,
+      id: NUEVOIDPRODUCTO,
       descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion || '',
     };
     
@@ -250,20 +251,20 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     this.producto.push(PRODUCTO_FORMDATA);
     
     // Crear una copia profunda del array fraccionData
-    const copiaDetalles = [...this.fraccionData.map(detalle => ({...detalle}))];
+    const COPIADETALLES = [...this.fraccionData.map(detalle => ({...detalle}))];
     
     // Almacenar los detalles para este producto específico
-    this.mapaDetalles.set(nuevoIdProducto, copiaDetalles);
+    this.mapaDetalles.set(NUEVOIDPRODUCTO, COPIADETALLES);
    
     // Crear una copia tipada correctamente de las entradas para pasar al store
-    const entradasDetalles: [number, Detalle[]][] = Array.from(this.mapaDetalles.entries()).map(
+    const ENTRADASDETALLES: [number, Detalle[]][] = Array.from(this.mapaDetalles.entries()).map(
       ([clave, valor]) => [clave, [...valor]] as [number, Detalle[]]
     );
     
     // Actualizar el store con el método establecerDatos
     this.tramite250102Store.establecerDatos({
       productos: [...this.producto],
-      detalles: entradasDetalles
+      detalles: ENTRADASDETALLES
     });
         
     // Reiniciar el formulario

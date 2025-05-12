@@ -305,10 +305,33 @@ export const CONFIGURATION_TABLA_REQUISITOS = [
 export const CERTIFICADO_MODAL_TABLA = [
   {
     encabezado: 'Certificado',
-    clave: (item: CertificadoModal) => item.certificado,
+    clave: (item: CertificadoModal): string => item.certificado,
     orden: 1
   }
 ];
+
+/**
+ * Configuración de las columnas para la tabla de permisos.
+ * Cada objeto en el array representa una columna con su encabezado, clave y orden.
+ */
+export const CONFIGURACION_COLUMNA = [
+  {
+    encabezado: 'Certificado',
+    clave: (item: ClavesDePermisos): string => item.certificado,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha expedición',
+    clave: (item: ClavesDePermisos): string => item.fechaExpedicion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Tipo de movimiento',
+    clave: (item: ClavesDePermisos): string => item.tipoMovimiento,
+    orden: 3,
+  },
+];
+
 
 /**
  * Representa los datos de las columnas de una tabla de certificados.
@@ -334,4 +357,18 @@ export interface DestinatarioTablaDatos {
 export interface CertificadoModal {
   id: number;
   certificado: string;
+}
+
+/**
+ * Interfaz que representa las claves de un lote, incluyendo datos de fabricación y caducidad.
+ */
+export interface ClavesDePermisos {
+  /** certificado - Certificado del lote. */
+  certificado: string;
+
+  /** fechaExpedicion - Fecha de expedición del certificado. */
+  fechaExpedicion: string;
+
+  /** tipoMovimiento - Tipo de movimiento asociado al certificado. */
+  tipoMovimiento: string;
 }
