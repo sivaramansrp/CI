@@ -1,10 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
 
-const routes: Routes = [];
+const ROUTES: Routes = [
+  {
+    path: 'solicitud',
+    component: SolicitudPasoComponent,
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'solicitud',
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class RegistroPoblacionalRoutingModule { }
