@@ -72,7 +72,7 @@ export interface MercanciasTabla {
     CrosslistComponent,
   ],
   templateUrl: './domicilio-establecimiento.component.html',
-  styleUrls: ['./domicilio-establecimiento.component.css'],
+  styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
 /**
@@ -179,15 +179,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
+
   /**
-   * Maneja el cambio de selección de países de origen.
-   * @param events Lista de países seleccionados.
+   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
+   *
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(this.domicilio, 'paisDeOriginDatos', 'setPaisDeOriginDatos');
   }
 
   /**
@@ -342,6 +346,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
+      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
@@ -365,6 +370,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+    this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
   }
 
   /**

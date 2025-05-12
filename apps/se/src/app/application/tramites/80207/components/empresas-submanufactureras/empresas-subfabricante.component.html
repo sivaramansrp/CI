@@ -75,6 +75,11 @@
           maxlength="13"
           (change)="obtenerRFC()"
         />
+        <div *ngIf="esInvalido('rfc')" class="text-danger">
+          <small *ngIf="formularioDatosSubcontratista.controls['rfc'].errors?.['required']">
+            Este campo es obligatorio.
+          </small>
+          </div>
       </div>
     </div>
 
@@ -89,9 +94,14 @@
           formControlName="estado"
           (selectionChange)="enEstadoSeleccionado($event)"
         ></app-catalogo-select>
+        <div *ngIf="esInvalido('estado')" class="text-danger">
+          <small *ngIf="formularioDatosSubcontratista.controls['estado'].errors?.['required']">
+            Este campo es obligatorio.
+          </small>
+          </div>
+      </div>
       </div>
     </div>
-  </div>
 </form>
 <!-- datosSubcontratista fin -->
 
