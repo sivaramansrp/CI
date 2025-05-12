@@ -7,7 +7,7 @@ describe('SanidadAcuicolaImportacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SanidadAcuicolaImportacionComponent],
+      declarations: [SanidadAcuicolaImportacionComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SanidadAcuicolaImportacionComponent);

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
 import { Subject, takeUntil } from 'rxjs';
 
 import { AlertComponent, ModeloDeFormaDinamica, TablaSeleccion } from '@ng-mf/data-access-user';
@@ -23,6 +24,8 @@ import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 import { Modal } from 'bootstrap';
+import { guid } from '@datorama/akita';
+
 /**
  * Componente que gestiona los datos del trámite 220103.
  */
@@ -34,6 +37,12 @@ import { Modal } from 'bootstrap';
   styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si se está modificando una mercancía.
+   */
+  esModificarMercancia: boolean = false;
+
   /**
    * Referencia al modal de mercancías.
    */
@@ -83,6 +92,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Estado seleccionado del trámite.
    */
   estadoSeleccionado!: Tramite220103State;
+
+  /**
+   * Estado seleccionado de la mercancía.
+   */
   estadoSeleccionadoMercancia!: Tramite220103State;
 
   /**
@@ -104,8 +117,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * 
    * @param formBuilder - FormBuilder para inicializar los formularios.
-   * @param consultaTramite - Consulta para obtener el estado del trámite.
-   * @param almacenTramite - Almacén para gestionar el estado del trámite.
+   * @param tramite220103Store - Almacén para gestionar el estado del trámite.
+   * @param tramite220103Query - Consulta para obtener el estado del trámite.
    * @param servicio - Servicio para interactuar con la API de mercancías.
    */
   constructor(
@@ -123,57 +136,64 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Suscribe al estado del trámite y actualiza los datos de la tabla.
    */
   ngOnInit(): void {
-    this.obtenerEstadoValor();
+    this.obtenerEstado();
     this.obtenerAduanaDeIngreso();
     this.obtenerMedioDeTransporte();
-    this.getOrigen();
-    this.getUmc();
-    this.getUso();
-    this.getPais();
+    this.obtenerOrigen();
+    this.obtenerUmc();
+    this.obtenerUso();
+    this.obtenerPais();
   }
 
-
-  obtenerEstadoValor(): void {
+  /**
+   * Obtiene el estado actual del trámite y actualiza los datos de la tabla.
+   */
+  obtenerEstado(): void {
     this.tramite220103Query.selectTramite220103State$
-    .pipe(takeUntil(this.notificadorDestruccion$))
-    .subscribe((estado) => {
-      this.estadoSeleccionado = estado;
-      this.estadoSeleccionadoMercancia = estado['mercancia'] ?? {} as Tramite220103State;
-      this.datosTabla = estado.tablaMercancia || [];
-    });
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estado) => {
+        this.estadoSeleccionado = estado;
+        this.estadoSeleccionadoMercancia = estado['mercancia'] ?? {} as Tramite220103State;
+        this.datosTabla = estado.tablaMercancia || [];
+      });
   }
-
 
   /**
    * Obtiene la descripción de la fracción arancelaria y actualiza el formulario y el estado.
    */
-  obtenerDescripcionFraccion(): void {
-    this.formularioDatosMercancia.patchValue({
-      descripcionFraccion: 'Los demás',
-      umt: 'kilogramo',
-    });
-    this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demás','mercancia');
-    this.tramite220103Store.setTramite220103State('umt', 'kilogramo','mercancia');
+ obtenerDescripcionFraccion(): void {
+    if (this.formularioDatosMercancia.get('fraccionArancelaria')?.value === '30019099') {
+      this.formularioDatosMercancia.patchValue({
+        descripcionFraccion: 'Los demás',
+        umt: 'kilogramo',
+      });
+      this.tramite220103Store.setTramite220103State('descripcionFraccion', 'Los demás');
+      this.tramite220103Store.setTramite220103State('umt', 'kilogramo');
+    }
   }
 
   /**
    * Establece un cambio de valor en el estado del trámite.
    * 
    * @param evento - Evento que contiene el campo y el valor a actualizar.
+   * @param prop - Propiedad específica del estado a actualizar (opcional).
    */
-  establecerCambioDeValor(evento: { campo: string; valor: unknown },prop?:string): void {
-    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor,prop);
+  establecerCambioDeValor(evento: { campo: string; valor: unknown }, prop?: string): void {
+    this.tramite220103Store.setTramite220103State(evento.campo, evento.valor, prop);
     if (evento.campo === 'fraccionArancelaria') {
       this.obtenerDescripcionFraccion();
     }
     if (evento.campo === 'uso') {
       const OTRO_USO_ITEM = this.configuracionFormularioMercancia.find((item) => item.campo === 'otroUso');
       if (OTRO_USO_ITEM) {
-        OTRO_USO_ITEM.mostrar = this.formularioDatosMercancia.get('uso')?.value!=='';
+        OTRO_USO_ITEM.mostrar = this.formularioDatosMercancia.get('uso')?.value !== '';
       }
     }
   }
 
+  /**
+   * Obtiene las opciones de aduanas de ingreso desde el servicio.
+   */
   obtenerAduanaDeIngreso(): void {
     this.servicio.getAdunaDeIngreso()
       .pipe(takeUntil(this.notificadorDestruccion$))
@@ -181,81 +201,96 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         if (opciones) {
           const ADUANA = this.configuracionFormularioDatos.find((aduana) => aduana.campo === 'aduanaDeIngreso');
           if (ADUANA) {
-           ADUANA.opciones=opciones
+            ADUANA.opciones = opciones;
           }
         }
       });
-    }
+  }
 
-      obtenerMedioDeTransporte(): void {
-        this.servicio.getMedioDeTransporte()
-          .pipe(takeUntil(this.notificadorDestruccion$))
-          .subscribe((opciones) => {
-            if (opciones) {
-              const MEDIO_TRANSPORTE = this.configuracionFormularioDatos.find((medioTransporte) => medioTransporte.campo === 'medioDeTransporte');
-              if (MEDIO_TRANSPORTE) {
-                MEDIO_TRANSPORTE.opciones = opciones;
-              }
-            }
-          });
+  /**
+   * Obtiene las opciones de medios de transporte desde el servicio.
+   */
+  obtenerMedioDeTransporte(): void {
+    this.servicio.getMedioDeTransporte()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const MEDIO_TRANSPORTE = this.configuracionFormularioDatos.find((medioTransporte) => medioTransporte.campo === 'medioDeTransporte');
+          if (MEDIO_TRANSPORTE) {
+            MEDIO_TRANSPORTE.opciones = opciones;
+          }
         }
+      });
+  }
 
-
-        getOrigen(): void {
-          this.servicio.getOrigen()
-            .pipe(takeUntil(this.notificadorDestruccion$))
-            .subscribe((opciones) => {
-              if (opciones) {
-                const ORIGEN = this.configuracionFormularioMercancia.find((origen) => origen.campo === 'origen');
-                if (ORIGEN) {
-                  ORIGEN.opciones = opciones;
-                }
-              }
-            });
+  /**
+   * Obtiene las opciones de origen desde el servicio.
+   */
+  obtenerOrigen(): void {
+    this.servicio.getOrigen()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const ORIGEN = this.configuracionFormularioMercancia.find((origen) => origen.campo === 'origen');
+          if (ORIGEN) {
+            ORIGEN.opciones = opciones;
+          }
         }
+      });
+  }
 
-        getUmc(): void {
-          this.servicio.getUmc()
-            .pipe(takeUntil(this.notificadorDestruccion$))
-            .subscribe((opciones) => {
-              if (opciones) {
-                const UMC = this.configuracionFormularioMercancia.find((umc) => umc.campo === 'umc');
-                if (UMC) {
-                  UMC.opciones = opciones;
-                }
-              }
-            });
-        } 
-
-        getUso(): void {
-          this.servicio.getUso()
-            .pipe(takeUntil(this.notificadorDestruccion$))
-            .subscribe((opciones) => {
-              if (opciones) {
-                const USO = this.configuracionFormularioMercancia.find((uso) => uso.campo === 'uso');
-                if (USO) {
-                  USO.opciones = opciones;
-                }
-              }
-            });
-        } 
-
-        getPais(): void {
-          this.servicio.getPais()
-            .pipe(takeUntil(this.notificadorDestruccion$))
-            .subscribe((opciones) => {
-              if (opciones) {
-                const PAIS_ORIGEN = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisOrigen');
-                const PAIS_PROCEDENCIA = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisProcedencia');
-                if (PAIS_ORIGEN) {
-                  PAIS_ORIGEN.opciones = opciones;
-                }
-                if (PAIS_PROCEDENCIA) {
-                  PAIS_PROCEDENCIA.opciones = opciones;
-                }
-              }
-            });
+  /**
+   * Obtiene las opciones de UMC desde el servicio.
+   */
+  obtenerUmc(): void {
+    this.servicio.getUmc()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const UMC = this.configuracionFormularioMercancia.find((umc) => umc.campo === 'umc');
+          if (UMC) {
+            UMC.opciones = opciones;
+          }
         }
+      });
+  }
+
+  /**
+   * Obtiene las opciones de uso desde el servicio.
+   */
+  obtenerUso(): void {
+    this.servicio.getUso()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const USO = this.configuracionFormularioMercancia.find((uso) => uso.campo === 'uso');
+          if (USO) {
+            USO.opciones = opciones;
+          }
+        }
+      });
+  }
+
+  /**
+   * Obtiene las opciones de países desde el servicio.
+   */
+  obtenerPais(): void {
+    this.servicio.getPais()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((opciones) => {
+        if (opciones) {
+          const PAIS_ORIGEN = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisOrigen');
+          const PAIS_PROCEDENCIA = this.configuracionFormularioMercancia.find((pais) => pais.campo === 'paisProcedencia');
+          if (PAIS_ORIGEN) {
+            PAIS_ORIGEN.opciones = opciones;
+          }
+          if (PAIS_PROCEDENCIA) {
+            PAIS_PROCEDENCIA.opciones = opciones;
+          }
+        }
+      });
+  }
+
   /**
    * Obtiene las mercancías seleccionadas en la tabla.
    * 
@@ -270,29 +305,43 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.formularioDatosMercancia.valid) {
-      this.obtenerMercancia();
-      const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
-      if (INSTANCIA) {
-        this.instanciaModal = INSTANCIA;
+      const MERCANCIA: Mercancia = this.formularioDatosMercancia.value;
+      if (this.esModificarMercancia) {
+        MERCANCIA.id = this.mercanciasSeleccionadas[0].id;
+        this.esModificarMercancia = false;
+      } else {
+        MERCANCIA.id = guid();
+        this.postMercancia(MERCANCIA.id);
       }
-    this.instanciaModal.hide();
-    this.formularioDatosMercancia.reset();
-    this.tramite220103Store.reset();
-    
-    } 
-    else if(this.formularioDatosMercancia.invalid) {
+      this.cerrarModal();
+      this.formularioDatosMercancia.reset();
+    } else if (this.formularioDatosMercancia.invalid) {
       this.formularioDatosMercancia.markAllAsTouched();
     }
   }
 
   /**
-   * Obtiene las mercancías desde el servicio y actualiza el estado.
+   * Cierra el modal de mercancías.
    */
-  obtenerMercancia(): void {
+  cerrarModal(): void {
+    const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
+    if (INSTANCIA) {
+      this.instanciaModal = INSTANCIA;
+    }
+    this.instanciaModal.hide();
+  }
+
+  /**
+   * Obtiene las mercancías desde el servicio y actualiza el estado.
+   * 
+   * @param id - Identificador de la mercancía.
+   */
+  postMercancia(id: string): void {
     this.servicio.getMercancias()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((respuesta: Mercancia[]) => {
         if (respuesta) {
+          respuesta[0].id = id;
           this.tramite220103Store.setTramite220103State('tablaMercancia', respuesta);
         }
       });
@@ -312,7 +361,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Modifica una mercancía seleccionada en el formulario.
    */
   modificarMercancia(): void {
-    this.formularioDatosMercancia.patchValue(this.mercanciasSeleccionadas[0]);
+    if (this.mercanciasSeleccionadas.length > 0) {
+      this.esModificarMercancia = true;
+      this.formularioDatosMercancia.patchValue(this.mercanciasSeleccionadas[0]);
+    }
   }
 
   /**

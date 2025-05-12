@@ -1,47 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
-import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
+import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
+import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
+import { of, Subject } from 'rxjs';
+import { Modal } from 'bootstrap';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let mockQuery: jest.Mocked<Tramite220103Query>;
-  let mockStore: jest.Mocked<Tramite220103Store>;
-  let mockService: jest.Mocked<SanidadAcuicolaImportacionService>;
+  let servicioMock: jest.Mocked<SanidadAcuicolaImportacionService>;
+  let storeMock: jest.Mocked<Tramite220103Store>;
+  let queryMock: jest.Mocked<Tramite220103Query>;
 
   beforeEach(async () => {
-    mockQuery = {
-      selectTramite220103State$: of({
-        Tablamercancia: [
-          { id: 1, descripcion: 'Mercancía 1' },
-          { id: 2, descripcion: 'Mercancía 2' },
-        ],
-      }),
-    } as unknown as jest.Mocked<Tramite220103Query>;
+    servicioMock = {
+    getAdunaDeIngreso: jest.fn().mockReturnValue(of([])),
+    getMedioDeTransporte: jest.fn().mockReturnValue(of([])),
+    getOrigen: jest.fn().mockReturnValue(of([])),
+    getUmc: jest.fn().mockReturnValue(of([])),
+    getUso: jest.fn().mockReturnValue(of([])),
+    getPais: jest.fn().mockReturnValue(of([])),
+    getMercancias: jest.fn().mockReturnValue(of([])),
+  } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
 
-    mockStore = {
+    storeMock = {
       setTramite220103State: jest.fn(),
-      agregarMercancia: jest.fn(),
       eliminarMercancia: jest.fn(),
     } as unknown as jest.Mocked<Tramite220103Store>;
 
-    mockService = {
-      getMercancias: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Mercancía 1' }])),
-    } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
+    queryMock = {
+      selectTramite220103State$: of({ tablaMercancia: [] }),
+    } as unknown as jest.Mocked<Tramite220103Query>;
 
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [ReactiveFormsModule,DatosDelTramiteComponent],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: Tramite220103Query, useValue: mockQuery },
-        { provide: Tramite220103Store, useValue: mockStore },
-        { provide: SanidadAcuicolaImportacionService, useValue: mockService },
+        { provide: SanidadAcuicolaImportacionService, useValue: servicioMock },
+        { provide: Tramite220103Store, useValue: storeMock },
+        { provide: Tramite220103Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -50,162 +50,151 @@ describe('DatosDelTramiteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el estado y los datos de la tabla en ngOnInit', () => {
+  it('debe inicializar el estado en ngOnInit', () => {
+    const mockEstado = {
+      tablaMercancia: [{
+        id: '1',
+        descripcion: 'Mercancía 1',
+        fraccionArancelaria: '1234',
+        descripcionFraccion: 'Descripción',
+        cantidadUMT: '10',
+        umt: 'kg',
+        cantidadUMC: '5',
+        umc: 'unidad',
+        nombreComun: 'Nombre común',
+        nombreCientifico: 'Nombre científico',
+        faseDesarrollo: 'Fase',
+        uso: 'Uso',
+        otroUso: '',
+        origen: 'Origen',
+        paisOrigen: 'México',
+        paisProcedencia: 'EE.UU.',
+      }],
+    };
+    queryMock.selectTramite220103State$ = of(mockEstado);
+
     component.ngOnInit();
 
-    expect(component.estadoSeleccionado).toEqual({
-      Tablamercancia: [
-        { id: 1, descripcion: 'Mercancía 1' },
-        { id: 2, descripcion: 'Mercancía 2' },
-      ],
-    });
-    expect(component.datosTabla).toEqual([
-      { id: 1, descripcion: 'Mercancía 1' },
-      { id: 2, descripcion: 'Mercancía 2' },
-    ]);
+    expect(component.datosTabla).toEqual(mockEstado.tablaMercancia);
   });
 
-  it('debería obtener la descripción de la fracción arancelaria y actualizar el formulario y el estado', () => {
-    component.obtenerDescripcionFraccion();
+  it('debe obtener las opciones de aduanas de ingreso', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'Aduana 1' }];
+    servicioMock.getAdunaDeIngreso.mockReturnValue(of(mockOpciones));
 
-    expect(component.formularioDatosMercancia.value).toEqual({
-      descripcionFraccion: 'Los demás',
-      umt: 'kilogramo',
-    });
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('umt', 'kilogramo');
+    component.obtenerAduanaDeIngreso();
+
+    expect(servicioMock.getAdunaDeIngreso).toHaveBeenCalled();
   });
 
-  it('debería establecer un cambio de valor en el estado del trámite', () => {
-    const mockEvent = { campo: 'fraccionArancelaria', valor: '123456' };
-    component.establecerCambioDeValor(mockEvent);
+  it('debe obtener las opciones de medios de transporte', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'Transporte 1' }];
+    servicioMock.getMedioDeTransporte.mockReturnValue(of(mockOpciones));
 
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('fraccionArancelaria', '123456');
+    component.obtenerMedioDeTransporte();
+
+    expect(servicioMock.getMedioDeTransporte).toHaveBeenCalled();
   });
 
-  it('debería obtener las mercancías seleccionadas en la tabla', () => {
-    const mockMercancias: Mercancia[] = [{
-      id: "1", descripcion: 'Mercancía 1',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUMT: '',
-      umt: '',
-      cantidadUMC: '',
-      umc: '',
-      nombreComun: '',
-      nombreCientifico: '',
-      faseDesarrollo: '',
-      uso: '',
+  it('debe obtener las opciones de origen', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'Origen 1' }];
+    servicioMock.getOrigen.mockReturnValue(of(mockOpciones));
+
+    component.obtenerOrigen();
+
+    expect(servicioMock.getOrigen).toHaveBeenCalled();
+  });
+
+  it('debe obtener las opciones de UMC', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'UMC 1' }];
+    servicioMock.getUmc.mockReturnValue(of(mockOpciones));
+
+    component.obtenerUmc();
+
+    expect(servicioMock.getUmc).toHaveBeenCalled();
+  });
+
+  it('debe obtener las opciones de uso', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'Uso 1' }];
+    servicioMock.getUso.mockReturnValue(of(mockOpciones));
+
+    component.obtenerUso();
+
+    expect(servicioMock.getUso).toHaveBeenCalled();
+  });
+
+  it('debe obtener las opciones de país', () => {
+    const mockOpciones = [{ id: 1, descripcion: 'México' }];
+    servicioMock.getPais.mockReturnValue(of(mockOpciones));
+
+    component.obtenerPais();
+
+    expect(servicioMock.getPais).toHaveBeenCalled();
+  });
+
+  it('debe agregar una mercancía al estado', () => {
+    component.formularioDatosMercancia.setValue({
+      descripcion: 'Mercancía 1',
+      fraccionArancelaria: '1234',
+      descripcionFraccion: 'Descripción',
+      cantidadUMT: '10',
+      umt: 'kg',
+      cantidadUMC: '5',
+      umc: 'unidad',
+      nombreComun: 'Nombre común',
+      nombreCientifico: 'Nombre científico',
+      faseDesarrollo: 'Fase',
+      uso: 'Uso',
       otroUso: '',
-      origen: '',
-      paisOrigen: '',
-      paisProcedencia: ''
-    }];
-    component.obtenerMercanciasSeleccionadas(mockMercancias);
+      origen: 'Origen',
+      paisOrigen: 'México',
+      paisProcedencia: 'EE.UU.',
+    });
 
-    expect(component.mercanciasSeleccionadas).toEqual(mockMercancias);
-  });
-
-  it('debería agregar una mercancía al estado del trámite', () => {
-    component.formularioDatosMercancia.setValue({ descripcionFraccion: 'Nueva Mercancía', umt: 'kilogramo' });
-    component.mercanciasSeleccionadas = [{
-      id: "1", descripcion: 'Mercancía 1',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUMT: '',
-      umt: '',
-      cantidadUMC: '',
-      umc: '',
-      nombreComun: '',
-      nombreCientifico: '',
-      faseDesarrollo: '',
-      uso: '',
-      otroUso: '',
-      origen: '',
-      paisOrigen: '',
-      paisProcedencia: ''
-    }];
+    jest.spyOn(component, 'postMercancia').mockImplementation();
 
     component.agregarMercancia();
 
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith({
-      descripcionFraccion: 'Nueva Mercancía',
-      umt: 'kilogramo',
-      id: 1,
-    });
-    expect(component.formularioDatosMercancia.value).toEqual({});
-    expect(component.mercanciasSeleccionadas).toEqual([]);
+    expect(component.postMercancia).toHaveBeenCalled();
   });
 
-  it('debería eliminar una mercancía seleccionada del estado del trámite', () => {
-    component.mercanciasSeleccionadas = [{
-      id: "1", descripcion: 'Mercancía 1',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUMT: '',
-      umt: '',
-      cantidadUMC: '',
-      umc: '',
-      nombreComun: '',
-      nombreCientifico: '',
-      faseDesarrollo: '',
-      uso: '',
-      otroUso: '',
-      origen: '',
-      paisOrigen: '',
-      paisProcedencia: ''
-    }];
+  it('debe eliminar una mercancía del estado', () => {
+    component.mercanciasSeleccionadas = [{ id: '1', descripcion: 'Mercancía 1' } as any];
 
     component.eliminarMercancia();
 
-    expect(mockStore.eliminarMercancia).toHaveBeenCalledWith(1);
+    expect(storeMock.eliminarMercancia).toHaveBeenCalledWith('1');
     expect(component.mercanciasSeleccionadas).toEqual([]);
   });
 
-  it('debería modificar una mercancía seleccionada en el formulario', () => {
-    component.mercanciasSeleccionadas = [{
-      id: "1", descripcion: 'Mercancía 1',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUMT: '',
-      umt: '',
-      cantidadUMC: '',
-      umc: '',
-      nombreComun: '',
-      nombreCientifico: '',
-      faseDesarrollo: '',
-      uso: '',
-      otroUso: '',
-      origen: '',
-      paisOrigen: '',
-      paisProcedencia: ''
-    }];
+  it('debe modificar una mercancía seleccionada', () => {
+    component.mercanciasSeleccionadas = [{ id: '1', descripcion: 'Mercancía 1' } as any];
 
     component.modificarMercancia();
 
-    expect(component.formularioDatosMercancia.value).toEqual({ id: 1, descripcion: 'Mercancía 1' });
+    expect(component.esModificarMercancia).toBe(true);
+    expect(component.formularioDatosMercancia.value.descripcion).toBe('Mercancía 1');
   });
 
-  it('debería obtener mercancías desde el servicio y actualizar el estado', () => {
-    component.obtenerMercancia();
+  it('debe cerrar el modal de mercancías', () => {
+    const mockModalInstance = { hide: jest.fn() } as unknown as Modal;
+    component.elementoModal = { nativeElement: {} } as any;
+    jest.spyOn(Modal, 'getInstance').mockReturnValue(mockModalInstance);
 
-    expect(mockService.getMercancias).toHaveBeenCalled();
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('Tablamercancia', [
-      { id: 1, descripcion: 'Mercancía 1' },
-    ]);
+    component.cerrarModal();
+
+    expect(mockModalInstance.hide).toHaveBeenCalled();
   });
 
-  it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
-
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    const spy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const spyComplete = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

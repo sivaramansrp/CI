@@ -1,3 +1,6 @@
+/**
+ * tramites220103.query.ts
+ */
 import { Tramite220103State, Tramite220103Store } from '../tramites/tramites220103.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';

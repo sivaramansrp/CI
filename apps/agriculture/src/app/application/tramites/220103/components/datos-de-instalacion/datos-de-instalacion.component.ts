@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModeloDeFormaDinamica, TituloComponent } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -87,9 +87,6 @@ export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
   establecerCambioDeValor(evento: { campo: string; valor: unknown }): void {
     this.tramite220103Store.setTramite220103State(evento.campo, evento.valor);
   }
-
-
-
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

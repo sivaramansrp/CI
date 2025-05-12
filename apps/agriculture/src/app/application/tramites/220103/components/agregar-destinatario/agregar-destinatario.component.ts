@@ -23,6 +23,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  Catalogo,
   InputRadioComponent,
   ModeloDeFormaDinamica,
   TituloComponent,
@@ -158,7 +159,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     this.servicio
       .getColonia()
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe((opciones) => {
+      .subscribe((opciones:Catalogo[]) => {
         const CAMPO_COLONIA = this.formularioConfiguracion.find(
           (campo) => campo.campo === 'colonia'
         );
@@ -228,7 +229,6 @@ cambiarValoresTipoPersona(): void {
     
     if (this.isInstalacionMode) {
       if (this.formularioAgregarInstalacion.valid) {
-        console.log('Instalacion', this.formularioAgregarInstalacion.value);
         this.getInstalacion();
         this.closeModal.emit();
         this.formularioAgregarInstalacion.reset();
@@ -261,7 +261,6 @@ cambiarValoresTipoPersona(): void {
       .getInstalacion()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((valor) => {
-        console.log('valor', valor);
         this.tramite220103Store.setTramite220103State(
           'tablaInstalacion',
           valor
