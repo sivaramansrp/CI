@@ -43,49 +43,49 @@ describe('TercerosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should have the correct TEXTOS value', () => {
-  //   expect(component.TEXTOS).toBe(MENSAJE_TABLA_OBLIGATORIA);
-  // });
+  it('should have the correct TEXTOS value', () => {
+    expect(component.TEXTOS).toBe(MENSAJE_TABLA_OBLIGATORIA);
+  });
 
-  // it('should initialize exportador list correctly', () => {
-  //   expect(sanidadService.inicializaDatosExportador).toHaveBeenCalled();
-  //   expect(component.sanidadService.exportador).toEqual(mockExportador);
-  //   expect(component.sanidadService.exportador.length).toBeGreaterThan(0);
-  // });
+  it('should initialize exportador list correctly', () => {
+    expect(sanidadService.inicializaDatosExportador).toHaveBeenCalled();
+    expect(component.sanidadService.exportador).toEqual(mockExportador);
+    expect(component.sanidadService.exportador.length).toBeGreaterThan(0);
+  });
 
-  // it('should initialize destinatario list correctly', () => {
-  //   expect(sanidadService.inicializaDatosDestinatario).toHaveBeenCalled();
-  //   expect(component.sanidadService.destinatario).toEqual(mockDestinatario);
-  //   expect(component.sanidadService.destinatario.length).toBeGreaterThan(0);
-  // });
+  it('should initialize destinatario list correctly', () => {
+    expect(sanidadService.inicializaDatosDestinatario).toHaveBeenCalled();
+    expect(component.sanidadService.destinatario).toEqual(mockDestinatario);
+    expect(component.sanidadService.destinatario.length).toBeGreaterThan(0);
+  });
 
-  // it('should have the correct configuracionTabla for exportador', () => {
-  //   expect(component.configuracionTabla).toEqual(CONFIGURATION_TABLA_EXPORTADOR);
-  //   expect(component.configuracionTabla.length).toBe(5); // Adjust based on the actual length
-  //   expect(component.configuracionTabla[0].encabezado).toBe('Nombre/denominación o razón social');
-  //   expect(component.configuracionTabla[1].encabezado).toBe('Teléfono');
-  //   expect(component.configuracionTabla[2].encabezado).toBe('Correo electrónico');
-  //   expect(component.configuracionTabla[3].encabezado).toBe('Domicilio');
-  //   expect(component.configuracionTabla[4].encabezado).toBe('País');
-  // });
+  it('should have the correct configuracionTabla for exportador', () => {
+    expect(component.configuracionTabla).toEqual(CONFIGURATION_TABLA_EXPORTADOR);
+    expect(component.configuracionTabla.length).toBe(5); // Adjust based on the actual length
+    expect(component.configuracionTabla[0].encabezado).toBe('Nombre/denominación o razón social');
+    expect(component.configuracionTabla[1].encabezado).toBe('Teléfono');
+    expect(component.configuracionTabla[2].encabezado).toBe('Correo electrónico');
+    expect(component.configuracionTabla[3].encabezado).toBe('Domicilio');
+    expect(component.configuracionTabla[4].encabezado).toBe('País');
+  });
 
-  // it('should have the correct configuracionTablaDatos for destinatario', () => {
-  //   expect(component.configuracionTablaDatos).toEqual(CONFIGURATION_TABLA_DESTINATARIO);
-  //   expect(component.configuracionTablaDatos.length).toBe(11); // Adjust based on the actual length
-  //   expect(component.configuracionTablaDatos[0].encabezado).toBe('Nombre/denominación o razón social');
-  //   expect(component.configuracionTablaDatos[1].encabezado).toBe('Teléfono');
-  //   expect(component.configuracionTablaDatos[2].encabezado).toBe('Correo electrónico');
-  //   expect(component.configuracionTablaDatos[3].encabezado).toBe('Calle');
-  //   expect(component.configuracionTablaDatos[4].encabezado).toBe('Número exterior');
-  // });
+  it('should have the correct configuracionTablaDatos for destinatario', () => {
+    expect(component.configuracionTablaDatos).toEqual(CONFIGURATION_TABLA_DESTINATARIO);
+    expect(component.configuracionTablaDatos.length).toBe(11); // Adjust based on the actual length
+    expect(component.configuracionTablaDatos[0].encabezado).toBe('Nombre/denominación o razón social');
+    expect(component.configuracionTablaDatos[1].encabezado).toBe('Teléfono');
+    expect(component.configuracionTablaDatos[2].encabezado).toBe('Correo electrónico');
+    expect(component.configuracionTablaDatos[3].encabezado).toBe('Calle');
+    expect(component.configuracionTablaDatos[4].encabezado).toBe('Número exterior');
+  });
 
-  // it('should display the exportador table correctly', () => {
-  //   const tableRows = fixture.nativeElement.querySelectorAll('.exportador-table-row');
-  //   expect(tableRows.length).toBe(mockExportador.length);
-  // });
+  it('should display the exportador table correctly', () => {
+    const tableRows = fixture.nativeElement.querySelectorAll('.exportador-table-row');
+    expect(tableRows.length).toBe(mockExportador.length);
+  });
 
-  // it('should display the destinatario table correctly', () => {
-  //   const tableRows = fixture.nativeElement.querySelectorAll('.destinatario-table-row');
-  //   expect(tableRows.length).toBe(mockDestinatario.length);
-  // });
+  it('should display the destinatario table correctly', () => {
+    const tableRows = fixture.nativeElement.querySelectorAll('.destinatario-table-row');
+    expect(tableRows.length).toBe(mockDestinatario.length);
+  });
 });
