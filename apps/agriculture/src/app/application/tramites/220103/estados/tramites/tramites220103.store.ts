@@ -13,6 +13,7 @@ import { DatosDelTerceroDestinatario, Instalacion, Mercancia } from '../../model
 export interface Tramite220103State {
     tablaMercancia?: Mercancia[];
     tablaInstalacion?: Instalacion[];
+    datosDelTerceroInstalacion?: Instalacion;
     tablaDestinatario?: DatosDelTerceroDestinatario[];
     datosDelTerceroDestinatario?: DatosDelTerceroDestinatario;
     mercancia?: Mercancia;
@@ -59,6 +60,24 @@ export function createInitialState(): Tramite220103State {
         lada: '',
         colonia: '',
         codigoPostal: ''
+    },
+    datosDelTerceroInstalacion:{
+        nombre: '',
+        primerApellido: '',
+        segundoApellido: '',
+        telefono: '',
+        correoElectronico: '',
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        pais: '',
+        estado: '',
+        municipio: '',
+        colonia: '',
+        lada: '',
+        codigoPostal: '',
+        domicillio: '',
+        razonSocial: ''
     }
 }
 }

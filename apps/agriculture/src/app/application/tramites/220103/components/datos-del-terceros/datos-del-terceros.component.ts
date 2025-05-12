@@ -49,6 +49,9 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
   @ViewChild('modalDestinatario') elementoModal!: ElementRef;
   private instanciaModal!: Modal;
 
+  @ViewChild('modalInstalaci') elementoModalInstalaci!: ElementRef;
+private instanciaModalInstalaci!: Modal;
+
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -122,6 +125,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estado) => {
         this.datosTabla = estado?.['tablaDestinatario'] || [];
+        this.datosTablaInstalacion = estado?.['tablaInstalacion'] || [];
       });
   }
 
@@ -148,6 +152,15 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
     }
   this.instanciaModal.hide();
   }
+
+  // Add the closeModalInstalaci method
+closeModalInstalaci(): void {
+  const INSTANCIA = Modal.getInstance(this.elementoModalInstalaci.nativeElement);
+  if (INSTANCIA) {
+    this.instanciaModalInstalaci = INSTANCIA;
+  }
+  this.instanciaModalInstalaci.hide();
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

@@ -40,10 +40,21 @@ export interface Mercancia {
   
   export interface Instalacion {
     id?: string;
-    nombreInstalacion: string;
-    direccion: string;
+    nombre: string;
+    primerApellido: string;
+    segundoApellido: string;
     telefono: string;
     correoElectronico: string;
+    calle: string;
+    numeroExterior: string;
+    numeroInterior: string;
     pais: string;
-    [key: string]: string|undefined;
+    estado: string;
+    municipio: string;
+    colonia: string;
+    lada: string;
+    codigoPostal: string;
+    domicillio?: string;
+    razonSocial?: string;
+    [key: string]: string|undefined | unknown;
   }
