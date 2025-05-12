@@ -125,6 +125,13 @@ const ROUTES: Routes = [
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
   },
   {
+    path: 'permiso-ordinario-importacion-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240405/permiso-ordinario-importacion-sustancias-quimicas.module'
+      ).then((m) => m.PermisoOrdinarioImportacionSustanciasQuimicasModule),
+    },
+    {   
     path: 'permiso-ordinario-prorroga-importacion-material-explosivo',
     loadChildren: () =>
       import(
