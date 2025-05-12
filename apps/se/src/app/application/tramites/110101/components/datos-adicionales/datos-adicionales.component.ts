@@ -1,18 +1,14 @@
-/* eslint-disable sort-imports */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { DatosAdicionalesStore } from '../../estados/tramites/datos-adicionales110101.store';
-import { DatosAdicionalesQuery } from '../../estados/queries/datos-adicionales110101.query'
-import { PROTESTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
+import { Subject,distinctUntilChanged, take, takeUntil } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
+import { CommonModule } from '@angular/common';
+import { DatosAdicionalesQuery } from '../../estados/queries/datos-adicionales110101.query';
+import { DatosAdicionalesStore } from '../../estados/tramites/datos-adicionales110101.store';
+import { PROTESTA } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 /**
 * Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
 */
@@ -23,8 +19,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [TituloComponent,
     CommonModule,
-    AlertComponent,
-    SelectCatalogosComponent,
+    AlertComponent,    
     CatalogoSelectComponent,
     ReactiveFormsModule]
 })
@@ -86,7 +81,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private datosAdicionalesStore: DatosAdicionalesStore,
     private datosAdicionalesQuery: DatosAdicionalesQuery
-    // eslint-disable-next-line no-empty-function
+    
   ) {
   }
 
@@ -154,27 +149,6 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     ]
   }
 
-  /**
-  * Método para validar la representación federal.
-  * @param _e - Objeto de tipo 'Catalogo'.
-  * @returns {void}
-  */
-  // eslint-disable-next-line class-methods-use-this
-  public docSeleccionado(_e: Event): void {
-    // this is a dynamic function once we get the api will implement it
-  }
-
-  /**
-   * Método para validar la representación federal.
-   * @param _e - Objeto de tipo 'Catalogo'.
-   * @returns {void}
-   */
-
-  // eslint-disable-next-line class-methods-use-this
-  public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
-    // this is a dynamic function once we get the api will implement it
-
-  }
 
   /**
    * **Obtiene los valores del formulario desde el estado de la tienda**
