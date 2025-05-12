@@ -432,6 +432,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'catalogos',
+    loadChildren: () =>
+      import('./tramites/90303/catalogos.module').then(
+        (m) => m.CatalogosModule
+      ),
+  },
+{  
     path: 'expedicion-certificados-asignacion-directa',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
