@@ -164,3 +164,7 @@ It will show tasks that you can run with Nx.
     - apps\aga\src\app\environments\environment.prod.ts
         - npx nx build aga --configuration=production
 
+# Context path add in Build Commands - Department   
+    - npx nx build aga --configuration=development --base-href=/aga/
+    - npx nx build aga --configuration=qa --base-href=/aga/
+    - npx nx build aga --configuration=production --base-href=/aga/
