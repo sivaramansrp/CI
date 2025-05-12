@@ -3,7 +3,7 @@
  */
 export interface TablaDatos {
   /** Datos correspondientes a las celdas del cuerpo de la tabla. */
-  tbodyData: string[];
+  Datosdeltabledata: string[];
 }
 
 /**
@@ -314,8 +314,84 @@ export interface CertificadosTablaDatos {
  * Representa los datos de las columnas de una tabla de destinatarios.
  * Contiene un arreglo con los nombres de las columnas que se mostrarán en la tabla.
  */
+export interface Destinatarios {
+    nombre: string;
+    pais: string;
+    ciudad: string;
+    entidadfederativa: string;
+    domicilio: string;
+    codigopostal: string;
+  }
 export interface DestinatarioTablaDatos {
   /** Lista de nombres de las columnas para la tabla de destinatarios. */
   columns: string[];
 }
 
+export const AGREGAR_MIEMBRO_TABLA = [
+    {
+        encabezado: 'Nombre/denominación razón social',
+        clave: (ele: Destinatarios):string => ele.nombre,
+        orden: 1,
+    },
+    {
+        encabezado: 'País',
+        clave: (ele: Destinatarios) :string => ele.pais,
+        orden: 2,
+    },
+    {
+        
+        encabezado: 'Ciudad',
+        clave: (ele: Destinatarios):string => ele.ciudad,
+        orden: 3,
+    },
+    {
+        
+        encabezado: 'Entidad federativa',
+        clave: (ele: Destinatarios):string | undefined => ele.entidadfederativa,
+        orden: 4,
+    },
+    {
+        
+        encabezado: 'Domicilio',
+        clave: (ele: Destinatarios):string => ele.domicilio,
+        orden: 5,
+    },
+    {
+        
+        encabezado: 'Código postal o equivalente',
+        clave: (ele: Destinatarios) :string=> ele.codigopostal,
+        orden: 6,
+    },
+]
+
+export interface Adunal{
+    nombre: string;
+    primerapellido: string;
+    segundoapellido: string;
+    patente:string
+  }
+
+export const TABLA_AGENT_ADUNALDATA = [
+    {
+        encabezado: 'Nombre',
+        clave: (ele: Adunal): string => ele.nombre,
+        orden: 1,
+    },
+    {
+        encabezado: 'Primer apellido',
+        clave: (ele: Adunal):string => ele.primerapellido,
+        orden: 2,
+    },
+    {
+        
+        encabezado: 'Segundo apellido',
+        clave: (ele: Adunal):string => ele.segundoapellido,
+        orden: 3,
+    },
+    {
+        
+        encabezado: 'Patente',
+        clave: (ele: Adunal):string => ele.patente,
+        orden: 4,
+    },
+]   

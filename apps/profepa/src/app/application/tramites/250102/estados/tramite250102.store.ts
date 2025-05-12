@@ -2,8 +2,9 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { TablaDatos} from '../models/flora-fauna.models';
+
 /**
- * Estado del trámite con clave 250101. Contiene toda la información capturada
+ * Estado del trámite con clave 250102. Contiene toda la información capturada
  * durante el proceso del trámite, incluyendo datos del destinatario, agente aduanal,
  * mercancía, y aspectos administrativos.
  */
@@ -87,10 +88,10 @@ export interface Tramite250102State {
   /** Lugar de procedencia del producto. */
   procedencia: string;
 }
- 
- 
+
+
 /**
- * Crea y retorna el estado inicial para el trámite 250101.
+ * Crea y retorna el estado inicial para el trámite 250102.
  *
  * Esta función se utiliza para inicializar todos los campos del estado
  * con valores por defecto (nulos, cadenas vacías o arreglos vacíos),
@@ -117,7 +118,7 @@ export function createInitialState(): Tramite250102State {
     destinatarioCodigoPostal: '',
     /** Domicilio del destinatario (vacío). */
     destinatarioDomicilio: '',
- 
+
     destinariociudad: '',
     /** Nombre del agente aduanal (vacío). */
     agenteAduanalNombre: '',
@@ -181,7 +182,7 @@ export function createInitialState(): Tramite250102State {
     procedencia: '',
   };
 }
- 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -190,18 +191,37 @@ export class Tramite250102Store extends Store<Tramite250102State> {
   constructor() {
     super(createInitialState());
   }
+
+  /**
+ * @method establecerDatos
+ * @description Actualiza el estado con los datos proporcionados.
+ * @param datos Datos parciales para actualizar el estado del trámite.
+ */
   public establecerDatos(datos: Partial<Tramite250102State>): void {
     this.update((state) => ({
       ...state,
       ...datos,
     }));
   }
+
+  /**
+ * @method establecerDestinatario
+ * @description Establece la información de destinatarios en el estado del trámite.
+ * @param destinatarioRowData Lista de datos de destinatarios que serán almacenados.
+ */
   public establecerDestinatario(destinatarioRowData: TablaDatos[]): void {
       this.update((state) => ({ ...state, destinatarioRowData }));
     }
- 
+
+    /**
+ * @method establecerAgenteAduanal
+ * @description Establece la información de agentes aduanales en el estado del trámite.
+ * @param agenteAduanalRowData Lista de datos de agentes aduanales que serán almacenados.
+ */
   public establecerAgenteAduanal(agenteAduanalRowData: TablaDatos[]): void {
         this.update((state) => ({ ...state, agenteAduanalRowData }));
     }
 }
- 
+
+
+
