@@ -115,10 +115,10 @@ export class Tramite32514Store extends Store<Solicitud32514State> {
   }
 
   /**
-   * Actualiza el estado asignando un nuevo valor a la propiedad especificada.
+   * Establece o actualiza una propiedad específica del estado con un nuevo valor.
    *
-   * @param {string} key - Clave del estado que se desea actualizar.
-   * @param {string} value - Nuevo valor a asignar a la clave especificada.
+   * @param {string} key - Clave de la propiedad del estado que se desea modificar.
+   * @param {string} value - Nuevo valor que se asignará a la propiedad especificada.
    * @returns {void}
    */
   public setEstado(key: string, value: string): void {
