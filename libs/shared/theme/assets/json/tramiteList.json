@@ -2172,8 +2172,8 @@
   {
     "id": 311,
     "tramite": 240123,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/aviso-de-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/aviso-de-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {
