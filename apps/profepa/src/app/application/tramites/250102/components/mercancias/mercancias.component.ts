@@ -96,6 +96,9 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   /** Estado de la solicitud del trámite */
   public solicitudState!: Tramite250102State;
 
+  /** Generar un ID único para los productos */
+  private generarId = MercanciasComponent.generarId;
+
   /**
    * Constructor del componente
    */
@@ -292,7 +295,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   /**
    * Genera un ID único para nuevos elementos
    */
-  private generarId(): number {
+  static generarId(): number {
     return Date.now() + Math.floor(Math.random() * 1000);
   }
   

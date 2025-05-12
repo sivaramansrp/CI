@@ -5,8 +5,8 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 
-import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FLORA_FAUNA, FLORA_FAUNA_ALERT } from '../../constantes/flora-fauna.enum';
+import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 
 /**
  * Interfaz que define la estructura de una acción de botón, con su tipo de acción
