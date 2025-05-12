@@ -176,7 +176,7 @@ export class FederatariosYPlantasComponent {
    * @type {boolean}
    * @default false
    */
-  @Input() esExpresasVisible: boolean = true;
+  @Input() esExpresasVisible: boolean = false;
 
 
   /**
