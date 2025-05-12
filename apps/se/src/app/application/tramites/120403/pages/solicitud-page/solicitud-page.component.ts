@@ -104,8 +104,10 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
   getValorIndices(e: AccionBoton) {
-    this.datoPaso.txtBtnAnt = '';
+    
+    delete (this.datoPaso as { txtBtnAnt?: string }).txtBtnAnt;
     this.alerta = true;
+    // this.receiveData(2)
   }
   receiveData(data: number): void{
     this.datos = data;

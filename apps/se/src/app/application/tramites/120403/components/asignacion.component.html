@@ -18,7 +18,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()"> Buscar </button>
+      <button [disabled]="!(asignacionForm.get('asignacionsolitud')?.value && asignacionForm.get('numTramite')?.value)" type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()"> Buscar </button>
     </div>
   </div>
   <div *ngIf="mostrarMonto || mostrarVigencia">
@@ -59,6 +59,7 @@
           <label for="ampliar" class="form-label">Monto a ampliar*:</label>
           <input type="text" class="form-control" formControlName="ampliar" (change)="setValoresStore(asignacionForm,'ampliar','setAmpliar')" />
           <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
+          <div *ngIf="asignacionForm.get('ampliar')?.invalid && asignacionForm.get('ampliar')?.touched" class="text-danger">Es un campo requerido</div>
         </div>
       </div>
     </div>
@@ -69,6 +70,7 @@
         <div class="col-md-4">
           <input-fecha [setFecha]="asignacionForm.get('fechaFin')?.value" [datos]="fechaFinInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
         </div>
+        <div *ngIf="asignacionForm.get('fechaFin')?.invalid && asignacionForm.get('fechaFin')?.touched" class="text-danger">Es un campo requerido</div>
       </div>
     </div>
   </div>
