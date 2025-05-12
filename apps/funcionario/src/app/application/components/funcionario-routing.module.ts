@@ -1,18 +1,19 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SeleccionModuloComponent } from '../seleccion-modulo/seleccion-modulo.component';
-import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
-import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
-import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
-import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
-import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
+import { BandejaPendientesComponent } from './seleccion-modulo/seleccion-modulo.component';
+import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
+import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { ConsultaComponent } from './consulta/consulta.component';
+import { NgModule } from '@angular/core';
+import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
+import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
 
-const routes: Routes = [
+
+const ROUTES: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'seleccion-modulo' },
   {
-    path: 'bandeja',
+    path: 'bandeja-pendientes',
     component: BandejaPendientesComponent,
   },
   {
@@ -28,26 +29,30 @@ const routes: Routes = [
     component: SolicitudPageComponent,
   },
   {
-    path: 'seleccion-modulo',
-    component: SeleccionModuloComponent,
-  },
-  {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
-    },
-    {
-        path: 'consulta',
-        component: ConsultaComponent,
-    },
-    {
-      path: 'observaciones-dictamen',
-      component: ObservacionesDictamenComponent,
-      },
+  },
+  {
+    path: 'consulta',
+    component: ConsultaComponent,
+  },
+  {
+    path: 'observaciones-dictamen',
+    component: ObservacionesDictamenComponent,
+  },
+  {
+    path: 'observaciones-dictamen',
+    component: ObservacionesDictamenComponent,
+  },
+  {
+    path: 'bandeja-solicitudes',
+    component: BandejaSolicitudesComponent,
+  }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class FuncionarioRoutingModule { }
