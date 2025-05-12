@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PagoDerechosState, dateLessThanOrEqualToday } from '../../models/tramies230401.models';
 import {
   delay,
   map,
   takeUntil,
   tap,
 } from 'rxjs';
-import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
@@ -91,12 +91,12 @@ export class PagoDeDerechosComponent implements OnInit {
     */
   createPagoDerechos(): void {
     this.pagoDerechos = this.fb.group({
-      clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
-      dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],
+      clave:  [this.pagoDerechosState.clave, [Validators.required, Validators.maxLength(50)]],
+      dependencia: [this.pagoDerechosState.dependencia, [Validators.required, Validators.maxLength(50)]],
       banco: [this.pagoDerechosState.banco, [Validators.required]],
-      llavePago: [{ value: this.pagoDerechosState.llavePago, disabled: true }],
-      fecha: [this.pagoDerechosState.fecha, [Validators.required]],
-      importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
+      llavePago: [ this.pagoDerechosState.llavePago, [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{10}$/)]],
+      fecha: [this.pagoDerechosState.fecha, [Validators.required, dateLessThanOrEqualToday]],
+      importePago: [ this.pagoDerechosState.importePago, [Validators.required, Validators.maxLength(16), Validators.pattern(/^\d{1,16}$/)]],
     });
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
     if (FETCHA_CONTROL) {

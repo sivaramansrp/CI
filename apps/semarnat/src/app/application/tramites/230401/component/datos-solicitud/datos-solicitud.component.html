@@ -120,17 +120,21 @@
         <div class="form-group">
           <label class="form-label" for="nombreDeLaMercancia">Nombre de la mercancía o producto a importar:</label>
           <input class="form-control" id="nombreDeLaMercancia"
-            type="text" formControlName="nombreDeLaMercancia"
+            type="text" formControlName="nombreDeLaMercancia" maxlength="1000"
             [ngClass]="isValid(FormSolicitud, 'nombreDeLaMercancia') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'nombreDeLaMercancia', 'setNombreDeLaMercancia')">
+            (change)="setValoresStore(FormSolicitud,'nombreDeLaMercancia')">
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="unNumero">Número UN:</label>
-          <input class="form-control" id="unNumero" type="number" formControlName="unNumero"
-            [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'unNumero', 'setUnNumero')">
+          <input class="form-control" id="unNumero" type="text" formControlName="unNumero"
+            [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''" 
+            (change)="setValoresStore(FormSolicitud,'unNumero')">
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['pattern'] || FormSolicitud.get('unNumero')?.errors?.['maxlength']">
+              Longitud máxima 50 dígitos</div>
+          <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['required'] && FormSolicitud.get('unNumero')?.touched">
+              Este campo es obligatorio</div>
         </div>
       </div>
     </div>
@@ -141,17 +145,17 @@
           <div class="form-group">
             <label class="form-label" for="datosNombreComercial">Nombre comercial *:</label>
             <input class="form-control" id="datosNombreComercial" type="text"
-              formControlName="datosNombreComercial"
+              formControlName="datosNombreComercial" maxlength="1000"
               [ngClass]="isValid(FormSolicitud, 'datosNombreComercial') ? 'required' : ''"
-              (change)="setValoresStore(FormSolicitud,'datosNombreComercial', 'setDatosNombreComercial')">
+              (change)="setValoresStore(FormSolicitud,'datosNombreComercial')">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label" for="datosNumeroComun">Nombre común *:</label>
-            <input class="form-control" id="datosNumeroComun" type="text"
+            <input class="form-control" id="datosNumeroComun" type="text" maxlength="250"
               formControlName="datosNumeroComun" [ngClass]="isValid(FormSolicitud, 'datosNumeroComun') ? 'required' : ''"
-              (change)="setValoresStore(FormSolicitud,'datosNumeroComun', 'setDatosNumeroComun')">
+              (change)="setValoresStore(FormSolicitud,'datosNumeroComun')">
           </div>
         </div>
       </div>
@@ -162,7 +166,11 @@
             <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
             <input class="form-control" id="datosPorcentaje" type="number"
               formControlName="datosPorcentaje" [ngClass]="isValid(FormSolicitud, 'datosPorcentaje') ? 'required' : ''"
-              (change)="setValoresStore(FormSolicitud,'datosPorcentaje', 'setDatosPorcentaje')">
+              (change)="setValoresStore(FormSolicitud,'datosPorcentaje')">
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['maxlength']">
+                Longitud máxima 100 caracteres</div>
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['required'] && FormSolicitud.get('datosPorcentaje')?.touched">
+                Este campo es obligatorio</div>
           </div>
         </div>
         <div class="col-md-6">
@@ -170,7 +178,11 @@
             <label class="form-label" for="datosComponentes">Componentes:</label>
             <input class="form-control" id="datosComponentes" type="text"
               formControlName="datosComponentes" [ngClass]="isValid(FormSolicitud, 'datosComponentes') ? 'required' : ''"
-              (change)="setValoresStore(FormSolicitud,'datosComponentes', 'setDatosComponentes')">
+              (change)="setValoresStore(FormSolicitud,'datosComponentes')">
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('datosComponentes')?.errors?.['maxlength']">
+                Longitud máxima 250 caracteres</div>
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('datosComponentes')?.errors?.['required'] && FormSolicitud.get('datosComponentes')?.touched">
+                Este campo es obligatorio</div>
           </div>
         </div>
       </div>
@@ -199,6 +211,10 @@
               <label class="form-label" for="especifique:">Especifique *:</label>
               <input class="form-control" id="especifique" formControlName="especifique"
                 type="text">
+                <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['maxlength']">
+                  Longitud máxima 200 caracteres</div>
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['required'] && FormSolicitud.get('especifique')?.touched">
+                  Este campo es obligatorio</div>
             </div>
           }
         </div>
@@ -210,6 +226,10 @@
               <label class="form-label" for="especifiqueDos">Especifique *:</label>
               <input class="form-control" id="especifiqueDos" formControlName="especifiqueDos"
                 type="text">
+                <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['maxlength']">
+                  Longitud máxima 250 caracteres</div>
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['required'] && FormSolicitud.get('especifiqueDos')?.touched">
+                  Este campo es obligatorio</div>
             </div>
           </div>
         </div>
@@ -240,15 +260,17 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="cantidad">Cantidad:</label>
+          <label class="form-label" for="cantidad">Cantidad *:</label>
           <input class="form-control" id="cantidad" type="number"
             formControlName="cantidad" [ngClass]="isValid(FormSolicitud, 'cantidad') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'cantidad', 'setCantidad')">
+            (change)="setValoresStore(FormSolicitud,'cantidad')">
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('cantidad')?.errors?.['maxDigits']">
+              Este campo permite 12 enteros y tres decimales</div>
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="cantidadLetra">Cantidad (letra):</label>
+          <label class="form-label" for="cantidadLetra">Cantidad (letra) *:</label>
           <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
         </div>
       </div>

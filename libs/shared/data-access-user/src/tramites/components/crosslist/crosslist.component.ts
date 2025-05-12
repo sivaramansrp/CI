@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 export interface CrossListLable {
   tituluDeLaIzquierda: string;
   derecha: string;
+  showUnoTitulo?: boolean;
+  showDosTitulo?: boolean;
 }
 @Component({
   selector: 'crosslist',

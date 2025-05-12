@@ -36,7 +36,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 import { SustanciaSensible } from '../../models/tramies230401.models';
-
+import { maxDigitsValidator } from '../../models/tramies230401.models';
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
@@ -57,15 +57,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud230401State;
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    derecha: 'País(es) seleccionados *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
   public paisDelProductoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
+    derecha: 'País(es) seleccionado(s) *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
   public aduanasDeEntradaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas',
+    derecha: 'Aduanas de entrada seleccionadas *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
 
   /**
@@ -471,14 +477,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a pantallas con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALRO = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.tramite230401Store as any)[metodoNombre](VALRO);
-        if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
+    if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
       const NUMERO_ACTIVO = Number(VALRO);
-      const VALOR_FORMATEDO = String.fromCharCode(NUMERO_ACTIVO);
-      this.tramite230401Store.setCantidadLetra(VALOR_FORMATEDO);
+      this.tramite230401Store.setCantidad(NUMERO_ACTIVO);
     }
   }
 
@@ -625,7 +628,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       unNumero: [
         this.solicitudState?.unNumero,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.maxLength(50), Validators.pattern(/^\d+$/)],
       ],
       datosNombreComercial: [
         this.solicitudState?.datosNombreComercial,
@@ -637,11 +640,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       datosPorcentaje: [
         this.solicitudState?.datosPorcentaje,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.maxLength(100)],
       ],
       datosComponentes: [
         this.solicitudState?.datosComponentes,
-        [Validators.maxLength(50)],
+        [Validators.required, Validators.maxLength(250)],
       ],
       clasificacion: [
         this.solicitudState?.clasificacion,
@@ -651,15 +654,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       datosObjecto: [this.solicitudState?.datosObjecto, [Validators.required]],
       especifique: [
         this.solicitudState?.especifique,
-        [Validators.maxLength(50)],
+        [Validators.maxLength(200)],
       ],
       especifiqueDos: [
         this.solicitudState?.especifiqueDos,
-        [Validators.maxLength(50)],
+        [Validators.maxLength(250)],
       ],
       cantidad: [
         this.solicitudState?.cantidad,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.min(1), Validators.max(999999999999.999), maxDigitsValidator()],
       ],
       cantidadLetra: [
         { value: this.solicitudState?.cantidadLetra, disabled: true },
