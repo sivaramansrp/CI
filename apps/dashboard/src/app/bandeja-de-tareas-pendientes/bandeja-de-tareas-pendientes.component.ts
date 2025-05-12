@@ -50,6 +50,11 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         clave: (artículo:BandejaDeTareasPendientes) => artículo.numeroDeProcedimiento,
         orden: 7,
       },
+      {
+        encabezado: 'Origin',
+        clave: (artículo:BandejaDeTareasPendientes) => artículo.origin,
+        orden: 8,
+      }
     ];
     public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;

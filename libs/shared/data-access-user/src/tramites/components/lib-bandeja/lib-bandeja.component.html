@@ -26,19 +26,19 @@
     @if(tieneBandeja) {
         <div class="panel-group ficha-collapse" id="accordion">
             <div class="panel panel-default">
-              <div class="panel-heading" (click)="mostrarColapsable(1)">
+              <div class="panel-heading d-flex justify-content-end" (click)="mostrarColapsable(1)">
                 <h4 class="panel-title text-end me-5">
                   <a>Búsqueda</a>
                 </h4>
-                <button
-                  type="button"
-                  class="collpase-button"
-                  [class.collapsed]="!paisDeOriginColapsable"
-                ></button>
+                @if(paisDeOriginColapsable) {
+                    <i class="bi bi-chevron-up"></i>
+                } @else {
+                    <i class="bi bi-chevron-down"></i>
+                }
               </div>
               @if(paisDeOriginColapsable){
               <div class="panel-collapse collapse in" id="panel-01">
-                <div class="panel-body">
+                <div class="panel-body pb-0">
                     <form [formGroup]="dinamicasBandejaForma">
                         <div class="row mb-3">  
                             <formas-dinamicas 
@@ -85,6 +85,16 @@
               >
               </app-tabla-dinamica>
             </div>
-          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <app-table-pagination
+              [totalItems]="totalItems"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="currentPage"
+              (pageChange)="onPageChange($event)"
+              (itemsPerPageChange)="onItemsPerPageChange($event)"
+            >
+            </app-table-pagination>
+        </div>
     }
 </div>

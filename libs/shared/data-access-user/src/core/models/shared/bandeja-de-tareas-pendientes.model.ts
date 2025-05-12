@@ -6,4 +6,5 @@ export interface BandejaDeTareasPendientes {
     estadoDeTramite: string;
     departamento: string;
     numeroDeProcedimiento: string;
+    origin: string;
 }

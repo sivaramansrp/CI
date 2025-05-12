@@ -8,6 +8,7 @@ import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.compone
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 import { ConsultaioStore } from '../../../core/estados/consulta.store';
+import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { ConsultaioStore } from '../../../core/estados/consulta.store';
     FormasDinamicasComponent,
     RouterModule,
     TablaDinamicaComponent,
+    TablePaginationComponent
   ],
   templateUrl: './lib-bandeja.component.html',
   styleUrl: './lib-bandeja.component.scss',
@@ -41,6 +43,10 @@ export class LibBandejaComponent<T> implements OnInit {
     public originalConfiguracionTabla: any[] = [];
     public tramiteData: TramiteDetails[] = [];
     public paisDeOriginColapsable = false;
+    public totalItems: number = 0;
+    public currentPage: number = 1;
+    public itemsPerPage: number = 5;
+    public miembroDeLaEmpresaBodyData: unknown[] = [];
 
 
     constructor(
@@ -63,7 +69,7 @@ export class LibBandejaComponent<T> implements OnInit {
 
     public filterConfiguracionTabla(): void {
       this.configuracionTabla = this.configuracionTabla.filter(item => 
-        item.encabezado !== 'Departamento' && item.encabezado !== 'Número de procedimiento'
+        item.encabezado !== 'Departamento' && item.encabezado !== 'Número de procedimiento' && item.encabezado !== 'Origin'
       );
     }
 
@@ -76,15 +82,18 @@ export class LibBandejaComponent<T> implements OnInit {
 
     public onFilaClic(event:any):void {
       const ROW_OBJETO = event;
-      let PROCEDURE:unknown;
+      let PROCEDURE: unknown;
+      let ORIGIN: string = ''; // Inicializar ORIGEN con un valor predeterminado
       this.configuracionTablaDatos.forEach((datos) => {
         if (datos.numeroDeProcedimiento === ROW_OBJETO.numeroDeProcedimiento) {
+          ORIGIN = datos.origin;
           PROCEDURE = Number(datos.numeroDeProcedimiento);
         }
       });
       this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
       this.procedureUrl = this.tramiteData[0].linkDashboard;
       //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
+      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,false,false,false);
 
       this.router.navigate([this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento]);
     }
@@ -94,6 +103,25 @@ export class LibBandejaComponent<T> implements OnInit {
         this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
       }
     }
+
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  public updatePagination(): void {
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
+    );
+  }
+
+  public onItemsPerPageChange(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
 
 
 }
