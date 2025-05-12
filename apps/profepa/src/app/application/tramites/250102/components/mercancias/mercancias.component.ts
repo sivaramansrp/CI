@@ -109,7 +109,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Obtener el estado actual del store
-    this.tramite250102Query.selectSolicitud$
+    this.tramite250102Query.selectTramiteState$
       .pipe(
         takeUntil(this.notificadorDestruccion$),
         map((seccionState) => {
@@ -195,11 +195,21 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store correspondiente
+   * Establece los valores en el store utilizando el método establecerDatos
+   * @param formulario Formulario con los valores a guardar
+   * @param campo Campo del formulario que se va a guardar
    */
-  establecerValoresStore(formulario: FormGroup, campo: string, nombreMetodo: keyof Tramite250102Store): void {
-    const VALOR = formulario.get(campo)?.value;
-    (this.tramite250102Store[nombreMetodo] as (value: unknown) => void)(VALOR);
+  establecerValoresStore(formulario: FormGroup, campo: string): void {
+    const valor = formulario.get(campo)?.value;
+    if (valor !== undefined) {
+      // Crear un objeto con la propiedad dinámica
+      const datos: Partial<Tramite250102State> = {
+        [campo]: valor
+      };
+      
+      // Actualizar el store con el método establecerDatos
+      this.tramite250102Store.establecerDatos(datos);
+    }
   }
 
   /**
@@ -250,9 +260,11 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       ([clave, valor]) => [clave, [...valor]] as [number, Detalle[]]
     );
     
-    // Actualizar el store con el nuevo producto y detalles
-    this.tramite250102Store.setProductos([...this.producto]);
-    this.tramite250102Store.setDetalles(entradasDetalles);
+    // Actualizar el store con el método establecerDatos
+    this.tramite250102Store.establecerDatos({
+      productos: [...this.producto],
+      detalles: entradasDetalles
+    });
         
     // Reiniciar el formulario
     this.formMercancias.reset();

@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="descripcion" formControlName="descripcion"
                             [label]="'Descripción del producto'" [required]="true" name="descripcion"
-                            (change)="establecerValoresStore(formMercancias, 'descripcion', 'setDescripcion')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'descripcion')"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -37,14 +37,14 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="fraccion" formControlName="fraccion"
                             [label]="'Fracción arancelaria'" [required]="true" name="fraccion"
-                            (change)="establecerValoresStore(formMercancias, 'fraccion', 'setFraccion')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'fraccion')"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="arancelaria">Descripción de la fracción arancelaria*: </label>
                         <input class="form-control" id="arancelaria" type="text" formControlName="arancelaria"
-                            (change)="establecerValoresStore(formMercancias, 'arancelaria', 'setArancelaria')" />
+                            (change)="establecerValoresStore(formMercancias, 'arancelaria')" />
 
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <label class="form-label" for="cantidad">Cantidad*:</label>
                         <input class="form-control" id="cantidad" type="text" formControlName="cantidad"
-                            (change)="establecerValoresStore(formMercancias, 'cantidad', 'setCantidad')" />
+                            (change)="establecerValoresStore(formMercancias, 'cantidad')" />
 
                     </div>
                     @if(formMercancias.controls['cantidad'].invalid && formMercancias.controls['cantidad'].touched) {
@@ -70,14 +70,14 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="medida" formControlName="medida" [label]="'Unidad de medida'"
                             [required]="true" name="medida"
-                            (change)="establecerValoresStore(formMercancias, 'medida', 'setMedida')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'medida')"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="genero" formControlName="genero" [label]="'Género'"
                             [required]="true" name="genero"
-                            (change)="establecerValoresStore(formMercancias, 'genero', 'setGenero')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'genero')"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -86,14 +86,14 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="especie" formControlName="especie" [label]="'Especie'"
                             [required]="true" name="especie"
-                            (change)="establecerValoresStore(formMercancias, 'especie', 'setEspecie')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'especie')"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="comun" formControlName="comun" [label]="'Nombre común'"
                             [required]="true" name="comun"
-                            (change)="establecerValoresStore(formMercancias, 'comun', 'setComun')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'comun')"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -102,14 +102,14 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="origen" formControlName="origen" [label]="'País de origen'"
                             [required]="true" name="origen"
-                            (change)="establecerValoresStore(formMercancias, 'origen', 'setOrigen')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'origen')"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="procedencia" formControlName="procedencia"
                             [label]="'País de procedencia'" [required]="true" name="procedencia"
-                            (change)="establecerValoresStore(formMercancias, 'procedencia', 'setProcedencia')"></app-catalogo-select>
+                            (change)="establecerValoresStore(formMercancias, 'procedencia')"></app-catalogo-select>
                     </div>
                 </div>
             </div>
