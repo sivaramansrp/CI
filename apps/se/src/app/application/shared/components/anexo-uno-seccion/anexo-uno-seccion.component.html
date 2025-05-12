@@ -1,0 +1,671 @@
+<!-- <app-anexo-uno [anexoConfiguartion]="anexoUnoConfig"
+[anexoDosConfiguartion]="anexoImportacionConfig"
+[anexoUnoTablaLista]="anexoUnoTablaLista"
+[anexoDosTablaLista]="anexoDosTablaLista"
+(obtenerAnexoUnoDevolverLaLlamada)="obtenerAnexoUnoDevolverLaLlamada($event)"
+(obtenerAnexoDosDevolverLaLlamada)="obtenerAnexoDosDevolverLaLlamada($event)"
+(rutaLaFraccionDeComplemento)="rutaLaFraccionDeComplemento($event)"
+>
+</app-anexo-uno> -->
+<div class="container">
+  <ng-titulo titulo="Anexo I" />
+  <ng-alert [CONTENIDO]="anexoUnoAlerta"></ng-alert>
+  <form [formGroup]="anexoUnoFormGroup">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fraccionArancelaria"
+            >Fracción arancelaria del producto:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="fraccionArancelaria"
+            formControlName="fraccionArancelaria"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="descripcion" class="form-label text-start"
+            >Descripción:</label
+          >
+          <textarea
+            id="descripcion"
+            class="form-control"
+            style="height: 60%; resize: none"
+            formControlName="descripcion"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">
+          Agregar
+        </button>
+        <button class="btn btn-primary">Carga por archivo</button>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <app-tabla-dinamica
+        [configuracionTabla]="tablaSociaAccionistas"
+        [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+        [datos]="anexoUnoTablaLista"
+      ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-12 container text-end mt-5">
+      <button
+        class="btn btn-default me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#complementarFuncionModal"
+      >
+        Complementar Función
+      </button>
+
+      <button
+        class="btn btn-primary me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#proveedorClienteModal"
+      >
+        Proveedor Cliente
+      </button>
+      <button
+        class="btn btn-primary me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#proyectoImmexModal"
+      >
+        Proyecto IMMEX
+      </button>
+
+      <button class="btn btn-primary">Proveedor Cliente por Archivo</button>
+    </div>
+  </div>
+  <form class="row mt-5" [formGroup]="anexoDosFormGroup">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fraccionArancelaria"
+            >Fracción arancelaria de la mercancía:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="fraccionArancelaria"
+            formControlName="fraccionArancelaria"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="descripcion" class="form-label text-start"
+            >Descripción:</label
+          >
+          <textarea
+            id="descripcion"
+            class="form-control"
+            style="height: 60%; resize: none"
+            formControlName="descripcion"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2">
+          Eliminar
+        </button>
+        <button class="btn btn-primary me-2" >
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <!-- <app-tabla-dinamica
+        [tipoSeleccionTabla]="anexoDosConfiguration.anexoDosTablaSeleccionRadio"
+        [configuracionTabla]="anexoDosConfiguration.anexoDosEncabezadoDeTabla"
+        [datos]="anexoDosTablaLista"
+        (filaSeleccionada)="setAnexoDosLista($event)"
+      ></app-tabla-dinamica> -->
+        <app-tabla-dinamica
+            [configuracionTabla]="tableProveedorCliente"
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+            [datos]="proveedorTablaLista"
+          ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-12 container text-end mt-5">
+      <button
+        class="btn btn-default me-2"
+     
+      >
+        Complementar Función
+      </button>
+      <button
+        class="btn btn-primary me-2"
+       
+      >
+        Proveedor Cliente
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="complementarFuncionModal"
+  tabindex="-1"
+  aria-labelledby="complementarFuncionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="complementarFuncionModalLabel">
+          Complementar Función
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Fracción arancelaria</h5>
+              <!-- <p class="form-label text-start">
+          {{ complimentarFraccionDatos.fraccionArancelaria }}
+        </p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Anexo II</h5>
+              <!-- <p class="form-label text-start">
+          {{ complimentarFraccionDatos.anexoDos }}
+        </p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Tipo</h5>
+              <!-- <p class="form-label text-start">
+          {{ complimentarFraccionDatos.tipo }}
+        </p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">UMT</h5>
+              <!-- <p class="form-label text-start">{{ complimentarFraccionDatos.umt }}</p> -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ng-titulo titulo="Fracción arancelaria del producto" />
+          </div>
+        </div>
+
+        <form [formGroup]="complimentarForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <!-- <app-catalogo-select
+            [catalogo]="catagoriaSeleccionDatos"
+            formControlName="catagoria"
+            [label]="'catagoria'"
+            [required]="true"
+            name="catagoria"
+          ></app-catalogo-select> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="descripcion" class="form-label text-start"
+                  >Descripción comercial*:</label
+                >
+                <textarea
+                  id="descripcion"
+                  class="form-control"
+                  style="height: 60%; resize: none"
+                  formControlName="descripcion"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-10">
+              <label for="monedaNacionalMensual" class="form-label text-start"
+                >Valor en moneda nacional de las importaciones a realizarse
+                mensualmente*:</label
+              >
+            </div>
+            <div class="col-md-2">
+              <input
+                class="form-control min-hgt"
+                id="monedaNacionalMensual"
+                formControlName="monedaNacionalMensual"
+                type="number"
+              />
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-10">
+              <label
+                for="monedaNacionalDeDosPeriodos"
+                class="form-label text-start"
+                >Valor en moneda nacional de las importaciones a realizarse
+                durante el periodo de 2 años*:</label
+              >
+            </div>
+            <div class="col-md-2">
+              <input
+                class="form-control min-hgt"
+                id="monedaNacionalDeDosPeriodos"
+                formControlName="monedaNacionalDeDosPeriodos"
+                type="number"
+              />
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-10">
+              <label for="volumenMensual" class="form-label text-start">
+                Volumen de las importaciones a realizarse mensualmente*:
+              </label>
+            </div>
+            <div class="col-md-2">
+              <input
+                class="form-control min-hgt"
+                id="volumenMensual"
+                formControlName="volumenMensual"
+                type="number"
+              />
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-10">
+              <label for="twoPeriodVolume" class="form-label text-start">
+                Volumen de las importaciones a realizarse durante el periodo de
+                2 años*:
+              </label>
+            </div>
+            <div class="col-md-2">
+              <input
+                class="form-control min-hgt"
+                id="twoPeriodVolume"
+                formControlName="twoPeriodVolume"
+                type="number"
+              />
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-12 container text-end mt-5">
+            <button class="btn btn-default me-2">Guardar</button>
+            <button class="btn btn-primary me-2">Regresar Anexo</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="proveedorClienteModal"
+  tabindex="-1"
+  aria-labelledby="proveedorClienteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="proveedorClienteModalLabel">
+          Proveedor Cliente
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Modal content goes here -->
+        <ng-titulo titulo="Proveedor Cliente" />
+        <form [formGroup]="formularioProveedorCliente">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="descripcion" class="form-label text-start"
+                  >Descripción Comercial:</label
+                >
+                <textarea
+                  id="descripcion"
+                  class="form-control"
+                  style="height: 60%; resize: none"
+                  formControlName="descripcionComercial"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select
+                  [catalogo]="paisDestinoCatalog"
+                  [label]="'Pais Destino'"
+                  [required]="true"
+                  [isDisabled]="false"
+                  name="paisDestino"
+                  formControlName="paisDestino"
+                ></app-catalogo-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="rfc">RFC/TAXID Cliente*:</label>
+                <input
+                  class="form-control min-hgt"
+                  id="rfc"
+                  formControlName="rfc"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="razonSocialCliente"
+                  >Razón social Cliente*:</label
+                >
+                <input
+                  class="form-control min-hgt"
+                  id="razonSocialCliente"
+                  formControlName="razonSocialCliente"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="row justify-content-end">
+          <button type="button" class="btn btn-danger col-auto mt-3 me-3">
+            Limpar
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary col-auto pull-right float-end mt-3"
+            (click)="agregarProveedorCliente()"
+          >
+            Agregar
+          </button>
+        </div>
+
+        <div class="row mt-5">
+          <app-tabla-dinamica
+            [configuracionTabla]="tableProveedorCliente"
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+            [datos]="proveedorTablaLista"
+          ></app-tabla-dinamica>
+        </div>
+
+        <div class="row justify-content-end">
+          <button type="button" class="btn btn-danger col-auto mt-3 me-3">
+            Eliminar
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary col-auto pull-right float-end mt-3 ml-3"
+          >
+            Editar
+          </button>
+        </div>
+
+        <div class="row justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary col-auto pull-right float-end mt-3"
+          >
+            Regresar
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="proyectoImmexModal"
+  tabindex="-1"
+  aria-labelledby="proyectoImmexModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="proyectoImmexModalLabel">Proyecto IMMEX</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Fracción arancelaria</h5>
+              <!-- <p class="form-label text-start">
+          {{ proyectoImmexDatos.fraccionArancelaria }}
+        </p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Anexo II</h5>
+              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.anexoDos }}</p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">Tipo</h5>
+              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.tipo }}</p> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <h5 class="form-label text-start">UMT</h5>
+              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.umt }}</p> -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ng-titulo titulo="Proyecto IMMEX" />
+          </div>
+        </div>
+        <form [formGroup]="proyectoForm">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="descripcion" class="form-label text-start"
+                  >Descripción comersial*:</label
+                >
+                <textarea
+                  id="descripcion"
+                  class="form-control"
+                  style="height: 60%; resize: none"
+                  formControlName="descripcion"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select
+            [catalogo]="tipoDeDocumenteCatalog"
+            [label]="'Tipo de documento*:'"
+            [required]="true"
+            [isDisabled]="false"
+          
+            formControlName="tipoDeDocumente"
+          ></app-catalogo-select>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="fechaDeFirma"
+                  >Fecha de firma*:</label
+                >
+                <input
+                  class="form-control min-hgt"
+                  id="fechaDeFirma"
+                  formControlName="fechaDeFirma"
+                  type="date"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="fechaDeVigencia"
+                  >Fecha de fin de vigencia*:</label
+                >
+                <input
+                  class="form-control min-hgt"
+                  id="fechaDeVigencia"
+                  formControlName="fechaDeVigencia"
+                  type="date"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="rfcTaxId"
+                  >RFC de la parte firmante Tax ID*:</label
+                >
+                <input
+                  class="form-control min-hgt"
+                  id="rfcTaxId"
+                  formControlName="rfcTaxId"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="razonSocial"
+                  >Razón social de la parte firmante</label
+                >
+                <input
+                  class="form-control min-hgt"
+                  id="razonSocial"
+                  formControlName="razonSocial"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          
+        </form>
+        <div class="row justify-content-end">
+          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3">
+            Limpar
+          </button>
+
+          <button
+            type="button"
+             (click)="agregarProyectoImmex()"
+            class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+          >
+            Agregar
+          </button>
+        </div>
+
+        <div class="row mt-5">
+          <app-tabla-dinamica
+            [configuracionTabla]="tablaProyectoImmex"
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+            [datos]="proyectoImmexTablaLista"
+          ></app-tabla-dinamica>
+        </div>
+        <div class="row justify-content-end">
+          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3">
+            Eliminar
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+          >
+            Editar
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-12 container text-end mt-5">
+            <button class="btn btn-primary me-2">Regresar Anexo</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

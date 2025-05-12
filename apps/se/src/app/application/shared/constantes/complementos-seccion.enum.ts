@@ -3,7 +3,9 @@
  * Constantes para la sección de complementos
  * @constant
  */
-import { SociaoAccionistas } from "../models/complimentos-seccion.model";
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
+import { AnexoUnoProducto, ProveedorCliente, ProyectoImmex, SociaoAccionistas } from "../models/complimentos-seccion.model";
 /**
  * Constantes para la sección de complementos
  *  @constant
@@ -584,3 +586,187 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
     orden: 7,
   },
 ];
+
+export const TABLA_ANEXO_PRODUCTO_FRACCION =[
+  {
+    encabezado: 'Fracción',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.fraccion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fraccion arancelaria',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.fraccionArancelaria,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción comercial',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.descripcion,
+    orden: 3,
+  },
+  {
+    encabezado: 'Anexo II',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.anexoII,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'Tipo',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.tipo,
+    orden: 5,
+  },
+  {
+    encabezado: 'UMT',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.umt,
+    orden: 6,
+  },
+  {
+    encabezado: 'Categoria',
+    clave: (ele: AnexoUnoProducto): string | undefined => ele.categoria,
+    orden: 6,
+  },
+  {
+    encabezado: 'Valor en moneda mensual',
+    clave: (ele: AnexoUnoProducto): string | undefined =>
+      ele.valorModedaMensual,
+    orden: 7,
+  },
+   {
+    encabezado: 'Valor en moneda anual',
+    clave: (ele: AnexoUnoProducto): string | undefined =>
+      ele.valorModedaAnual,
+    orden: 8,
+  },
+   {
+    encabezado: 'Volumen mensual',
+    clave: (ele: AnexoUnoProducto): string | undefined =>
+      ele.valorMensual,
+    orden: 9,
+  },
+   {
+    encabezado: 'Volumen anual',
+    clave: (ele: AnexoUnoProducto): string | undefined =>
+      ele.valorAnual,
+    orden: 10,
+  }
+]
+export const TABLE_PROVEEDOR_CLIENTE =[
+   {
+    encabezado: 'Fracción',
+    clave: (ele: ProveedorCliente): string | undefined => ele.fraccion,
+    orden: 1,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (ele: ProveedorCliente): string | undefined => ele.paisDeOrigen,
+    orden: 2,
+  },
+  {
+    encabezado: 'Rfc/Tax Id Proveedor',
+    clave: (ele: ProveedorCliente): string | undefined => ele.rfcTaxIdProveedor,
+    orden: 3,
+  },
+  {
+    encabezado: 'Razón Social Proveedor',
+    clave: (ele: ProveedorCliente): string | undefined => ele.razonSocialProveedor,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'País destino',
+    clave: (ele: ProveedorCliente): string | undefined => ele.paisDestino,
+    orden: 5,
+  },
+  {
+    encabezado: 'Rfc/Tax Id Cliente',
+    clave: (ele: ProveedorCliente): string | undefined => ele.rfcTaxClient,
+    orden: 6,
+  },
+  {
+    encabezado: 'Razón Social Cliente',
+    clave: (ele: ProveedorCliente): string | undefined => ele.razonsocialCliente,
+    orden: 6,
+  }
+]
+export const ANEXO_I_SERVICIO_CATALOGO:Catalogo[]=[
+   {
+      id: 1,
+      descripcion: 'Option1',
+    },
+    {
+      id: 2,
+      descripcion: 'Option2',
+    },
+]
+export const PAIS_DESTINO_CATALOG:Catalogo[] = [
+    {
+      id: 1,
+      descripcion: 'Mexico',
+    },
+    {
+      id: 2,
+      descripcion: 'USA',
+    },
+  ];
+
+  export const TABLA_PROYECTO_IMMEX=[
+     {
+    encabezado: 'Fracción',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoFraccion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo document',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoTipoDocument,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción otro',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoDescripcionOtro,
+    orden: 3,
+  },
+  {
+    encabezado: 'Fecha firma',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoFechaFirma,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'Fecha fin vigencia',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoFechaVigencia,
+    orden: 5,
+  },
+  {
+    encabezado: 'RFC de la parte firmante',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoRfc,
+    orden: 6,
+  },
+  {
+    encabezado: 'Nómbre/Razón social de la parte firmante',
+    clave: (ele: ProyectoImmex): string | undefined => ele.encabezadoRazonFirmante,
+    orden: 7,
+  }
+  ]
+  export const ANEXO_FRACION_ANARELARIA=[
+    {
+    encabezado: 'Fracción',
+    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fracción arancelaria del producto de exportación',
+    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccionExportacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción comercial',
+    clave: (ele: ProyectoImmex): string | undefined => ele.anexoDescripcionComercial,
+    orden: 3,
+  },
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccionImportacion,
+    orden: 4,
+  },
+
+ 
+  ]
