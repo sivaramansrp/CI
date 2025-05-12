@@ -7,7 +7,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors } from '@angular/forms';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
@@ -22,6 +22,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 @Component({
   selector: 'app-uso-especifico',
@@ -72,8 +73,16 @@ export class UsoEspicificoComponent implements OnInit {
    */
   catalogos: Catalogo[] = fraccionOptionJson;
 
+  /**
+   * Estado actual de la solicitud utilizado para poblar los formularios.
+   */
   public solicitudState!: Solicitud130102State;
+
+  /**
+   * Notificador para destruir las suscripciones activas al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * @constructor
@@ -82,7 +91,8 @@ export class UsoEspicificoComponent implements OnInit {
   // eslint-disable-next-line no-empty-function
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) { 
     // constructor
   }
@@ -105,8 +115,10 @@ export class UsoEspicificoComponent implements OnInit {
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: [{ value: '', disabled: true }]
+      descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
+
     });
+    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
   }
 
     /**
@@ -129,4 +141,18 @@ export class UsoEspicificoComponent implements OnInit {
   obtenerRequisitosFraccionArancelariaEsquema(): void {
     this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
   }
+
+  /**
+  * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+  * 
+  * @param control - Control del formulario a validar.
+  * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+  */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+
 }

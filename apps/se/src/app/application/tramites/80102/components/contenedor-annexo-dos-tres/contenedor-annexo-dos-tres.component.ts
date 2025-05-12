@@ -16,6 +16,17 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './contenedor-annexo-dos-tres.component.html',
   styleUrl: './contenedor-annexo-dos-tres.component.scss',
 })
+/**
+ * @component
+ * @name ContenedorAnnexoDosTresComponent
+ * @description Componente encargado de gestionar los anexos dos y tres en el trámite 80102.
+ * Este componente permite visualizar y manejar los datos de los anexos dos y tres, así como sus encabezados.
+ *
+ * @usageNotes
+ * Este componente utiliza servicios de consulta (`Tramite80102Query`) y estado (`Tramite80102Store`) 
+ * para manejar y observar los datos relacionados con los anexos. Además, implementa el ciclo de vida 
+ * de Angular para limpiar las suscripciones al destruirse.
+ */
 export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
   /**
    * Lista de encabezados del anexo dos.
