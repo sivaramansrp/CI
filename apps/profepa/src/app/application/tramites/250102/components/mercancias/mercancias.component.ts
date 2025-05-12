@@ -243,10 +243,10 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       return;
     }
     
-    const NUEVOIDPRODUCTO = this.generarId();
+    const NUEVO_ID_PRODUCTO = this.generarId();
     
     const PRODUCTO_FORMDATA: Producto = {
-      id: NUEVOIDPRODUCTO,
+      id: NUEVO_ID_PRODUCTO,
       descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion || '',
     };
     
@@ -254,20 +254,20 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     this.producto.push(PRODUCTO_FORMDATA);
     
     // Crear una copia profunda del array fraccionData
-    const COPIADETALLES = [...this.fraccionData.map(detalle => ({...detalle}))];
+    const COPIA_DETALLES = [...this.fraccionData.map(detalle => ({...detalle}))];
     
     // Almacenar los detalles para este producto específico
-    this.mapaDetalles.set(NUEVOIDPRODUCTO, COPIADETALLES);
+    this.mapaDetalles.set(NUEVO_ID_PRODUCTO, COPIA_DETALLES);
    
     // Crear una copia tipada correctamente de las entradas para pasar al store
-    const ENTRADASDETALLES: [number, Detalle[]][] = Array.from(this.mapaDetalles.entries()).map(
+    const ENTRADAS_DETALLES: [number, Detalle[]][] = Array.from(this.mapaDetalles.entries()).map(
       ([clave, valor]) => [clave, [...valor]] as [number, Detalle[]]
     );
     
     // Actualizar el store con el método establecerDatos
     this.tramite250102Store.establecerDatos({
       productos: [...this.producto],
-      detalles: ENTRADASDETALLES
+      detalles: ENTRADAS_DETALLES
     });
         
     // Reiniciar el formulario

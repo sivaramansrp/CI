@@ -48,20 +48,20 @@ describe('CertificadosComponent', () => {
 
   describe('Elementos de la interfaz de usuario', () => {
     it('debería renderizar el componente de título', () => {
-      const elementoTitulo = fixture.debugElement.query(By.directive(TituloComponent));
-      expect(elementoTitulo).toBeTruthy();
+      const ELEMENTO_TITULO = fixture.debugElement.query(By.directive(TituloComponent));
+      expect(ELEMENTO_TITULO).toBeTruthy();
     });
 
     it('debería renderizar el componente de tabla', () => {
-      const elementoTabla = fixture.debugElement.query(By.directive(TablaDinamicaComponent));
-      expect(elementoTabla).toBeTruthy();
+      const ELEMENTO_TABLA = fixture.debugElement.query(By.directive(TablaDinamicaComponent));
+      expect(ELEMENTO_TABLA).toBeTruthy();
     });
 
     it('debería renderizar los botones de agregar y eliminar', () => {
-      const botones = fixture.debugElement.queryAll(By.css('button'));
-      expect(botones.length).toBe(2);
-      expect(botones[0].nativeElement.textContent.trim()).toBe('Eliminar');
-      expect(botones[1].nativeElement.textContent.trim()).toBe('Agregar');
+      const BOTONES = fixture.debugElement.queryAll(By.css('button'));
+      expect(BOTONES.length).toBe(2);
+      expect(BOTONES[0].nativeElement.textContent.trim()).toBe('Eliminar');
+      expect(BOTONES[1].nativeElement.textContent.trim()).toBe('Agregar');
     });
   });
 
@@ -87,24 +87,24 @@ describe('CertificadosComponent', () => {
 
     it('debería limpiar las suscripciones al destruir el componente', () => {
       // Creamos espías para los métodos next y complete del Subject
-      const nextSpy = jest.spyOn(component['destroy$'], 'next');
-      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+      const NEXT_SPY = jest.spyOn(component['destroy$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(component['destroy$'], 'complete');
       
       // Activamos ngOnDestroy
       component.ngOnDestroy();
       
       // Verificamos que next y complete fueron llamados
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
+      expect(NEXT_SPY).toHaveBeenCalled();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
     });
   });
 
   describe('Interacciones del usuario', () => {
     it('debería abrir el modal cuando se hace clic en el botón agregar', () => {
-      const botonAgregar = fixture.debugElement.queryAll(By.css('button'))[1].nativeElement;
+      const BOTON_AGREGAR = fixture.debugElement.queryAll(By.css('button'))[1].nativeElement;
       
       expect(component.showAutorizacionesModal).toBe(false);
-      botonAgregar.click();
+      BOTON_AGREGAR.click();
       expect(component.showAutorizacionesModal).toBe(true);
     });
 
@@ -114,13 +114,13 @@ describe('CertificadosComponent', () => {
       fixture.detectChanges();
       
       // Espiamos el método
-      const espia = jest.spyOn(component, 'agregarCertificadosSeleccionados');
+      const ESPIA = jest.spyOn(component, 'agregarCertificadosSeleccionados');
       
       // Encontramos y hacemos clic en el botón agregar del modal
-      const botonAgregarModal = fixture.debugElement.query(By.css('#registroDestinatarioBtn'));
-      if (botonAgregarModal) {
-        botonAgregarModal.nativeElement.click();
-        expect(espia).toHaveBeenCalled();
+      const BOTON_AGREGAR_MODAL = fixture.debugElement.query(By.css('#registroDestinatarioBtn'));
+      if (BOTON_AGREGAR_MODAL) {
+        BOTON_AGREGAR_MODAL.nativeElement.click();
+        expect(ESPIA).toHaveBeenCalled();
       }
     });
 
@@ -130,13 +130,13 @@ describe('CertificadosComponent', () => {
       fixture.detectChanges();
       
       // Espiamos el método
-      const espia = jest.spyOn(component, 'cambiarCertificadosAutorizaciones');
+      const ESPIA = jest.spyOn(component, 'cambiarCertificadosAutorizaciones');
       
       // Encontramos y hacemos clic en el botón cerrar del modal
-      const botonCerrarModal = fixture.debugElement.query(By.css('#limpiarDestinatarioBtn'));
-      if (botonCerrarModal) {
-        botonCerrarModal.nativeElement.click();
-        expect(espia).toHaveBeenCalled();
+      const BOTON_CERRAR_MODAL = fixture.debugElement.query(By.css('#limpiarDestinatarioBtn'));
+      if (BOTON_CERRAR_MODAL) {
+        BOTON_CERRAR_MODAL.nativeElement.click();
+        expect(ESPIA).toHaveBeenCalled();
       }
     });
   });

@@ -110,13 +110,13 @@ describe('MercanciasComponent', () => {
   describe('Métodos del componente', () => {
     it('debería obtener datos anidados correctamente con obtenerDatosAnidados', () => {
       // Crear un producto de prueba
-      const producto: Producto = { id: 1, descripcion: 'Producto de prueba' };
+      const PRODUCTO: Producto = { id: 1, descripcion: 'Producto de prueba' };
 
       // Caso 1: Producto sin detalles
-      expect(component.obtenerDatosAnidados(producto)).toEqual([]);
+      expect(component.obtenerDatosAnidados(PRODUCTO)).toEqual([]);
 
       // Caso 2: Producto con detalles
-      const detalles: Detalle[] = [{
+      const DETALLES: Detalle[] = [{
         fraccionArancelaria: 'Fracción 1',
         cantidad: '10',
         unidadMedida: 'KG',
@@ -125,28 +125,28 @@ describe('MercanciasComponent', () => {
         paisOrigen: 'País origen',
         paisProcedencia: 'País procedencia'
       }];
-      component.mapaDetalles.set(1, detalles);
-      expect(component.obtenerDatosAnidados(producto)).toEqual(detalles);
+      component.mapaDetalles.set(1, DETALLES);
+      expect(component.obtenerDatosAnidados(PRODUCTO)).toEqual(DETALLES);
 
       // Caso 3: Producto sin ID
-      const productoSinId = { descripcion: 'Producto sin ID' } as Producto;
-      expect(component.obtenerDatosAnidados(productoSinId)).toEqual([]);
+      const PRODUCTO_SIN_ID = { descripcion: 'Producto sin ID' } as Producto;
+      expect(component.obtenerDatosAnidados(PRODUCTO_SIN_ID)).toEqual([]);
 
       // Caso 4: Producto con ID pero sin detalles en el mapa
-      const productoSinDetalles: Producto = { id: 2, descripcion: 'Producto sin detalles' };
-      expect(component.obtenerDatosAnidados(productoSinDetalles)).toEqual([]);
+      const PRODUCTO_SIN_DETALLES: Producto = { id: 2, descripcion: 'Producto sin detalles' };
+      expect(component.obtenerDatosAnidados(PRODUCTO_SIN_DETALLES)).toEqual([]);
     });
 
     it('debería manejar el caso de producto nulo o indefinido en obtenerDatosAnidados', () => {
       // Caso con producto nulo
-      const resultado = component.obtenerDatosAnidados(null as unknown as Producto);
-      expect(resultado).toEqual([]);
+      const RESULTADO = component.obtenerDatosAnidados(null as unknown as Producto);
+      expect(RESULTADO).toEqual([]);
     });
 
     it('debería seleccionar un producto correctamente con alSeleccionarProducto', () => {
-      const producto: Producto = { id: 1, descripcion: 'Producto de prueba' };
-      component.alSeleccionarProducto(producto);
-      expect(component.productoSeleccionado).toEqual(producto);
+      const PRODUCTO: Producto = { id: 1, descripcion: 'Producto de prueba' };
+      component.alSeleccionarProducto(PRODUCTO);
+      expect(component.productoSeleccionado).toEqual(PRODUCTO);
     });
 
     it('debería agregar un detalle correctamente con agregarDetalle', () => {
@@ -162,13 +162,13 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar el método push del array fraccionData
-      const pushSpy = jest.spyOn(component.fraccionData, 'push');
+      const PUSH_SPY = jest.spyOn(component.fraccionData, 'push');
 
       // Llamar al método
       component.agregarDetalle();
 
       // Verificar que se llamó al método push
-      expect(pushSpy).toHaveBeenCalled();
+      expect(PUSH_SPY).toHaveBeenCalled();
       expect(component.fraccionData.length).toBe(1);
     });
 
@@ -178,20 +178,20 @@ describe('MercanciasComponent', () => {
       component.formMercancias.setErrors({ 'invalid': true });
 
       // Espiar el método push del array fraccionData
-      const pushSpy = jest.spyOn(component.fraccionData, 'push');
+      const PUSH_SPY = jest.spyOn(component.fraccionData, 'push');
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.agregarDetalle();
 
       // Verificar que no se llamó al método push
-      expect(pushSpy).not.toHaveBeenCalled();
+      expect(PUSH_SPY).not.toHaveBeenCalled();
       expect(component.fraccionData.length).toBe(0);
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('debería establecer valores en el store correctamente con establecerValoresStore', () => {
@@ -211,12 +211,12 @@ describe('MercanciasComponent', () => {
 
     it('no debería llamar a establecerDatos si el valor es undefined', () => {
       // Crear un formulario con un control que no existe
-      const formGroup = formBuilder.group({
+      const FORM_GROUP = formBuilder.group({
         otroControl: ['']
       });
 
       // Llamar al método con un campo que no existe
-      component.establecerValoresStore(formGroup, 'campoInexistente');
+      component.establecerValoresStore(FORM_GROUP, 'campoInexistente');
 
       // Verificar que no se llamó al método establecerDatos del store
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
@@ -238,13 +238,13 @@ describe('MercanciasComponent', () => {
       component.mostrarModalMercancias = true;
 
       // Espiar el método reset del formulario
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
 
       // Llamar al método
       component.cancelarDetalle();
 
       // Verificar que se llamó al método reset y se limpiaron los datos
-      expect(resetSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
       expect(component.fraccionData).toEqual([]);
       expect(component.mostrarModalMercancias).toBe(false);
     });
@@ -265,15 +265,15 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar métodos
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
-      const generarIdSpy = jest.spyOn(component as any, 'generarId').mockReturnValue(123);
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
+      const GENERAR_ID_SPY = jest.spyOn(component as any, 'generarId').mockReturnValue(123);
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar resultados
-      expect(resetSpy).toHaveBeenCalled();
-      expect(generarIdSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
+      expect(GENERAR_ID_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(1);
       expect(component.mapaDetalles.has(123)).toBe(true);
       expect(component.fraccionData).toEqual([]);
@@ -286,17 +286,17 @@ describe('MercanciasComponent', () => {
       component.fraccionData = [];
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar que no se guardó nada
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(0);
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('no debería guardar el detalle si no hay descripción seleccionada', () => {
@@ -315,22 +315,22 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar que no se guardó nada
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(0);
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('debería abrir el modal de mercancías correctamente con abrirModalMercancias', () => {
       // Espiar el método reset del formulario
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
       // Verificar estado inicial
       expect(component.mostrarModalMercancias).toBe(false);
 
@@ -339,16 +339,16 @@ describe('MercanciasComponent', () => {
 
       // Verificar que se abrió el modal y se reseteó el formulario
       expect(component.mostrarModalMercancias).toBe(true);
-      expect(resetSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
       expect(component.fraccionData).toEqual([]);
 
       // Llamar al método de nuevo
-      resetSpy.mockClear();
+      RESET_SPY.mockClear();
       component.abrirModalMercancias();
 
       // Verificar que se cerró el modal y no se reseteó el formulario
       expect(component.mostrarModalMercancias).toBe(false);
-      expect(resetSpy).not.toHaveBeenCalled();
+      expect(RESET_SPY).not.toHaveBeenCalled();
     });
 
     it('debería generar un ID único con generarId', () => {
@@ -401,12 +401,12 @@ describe('MercanciasComponent', () => {
       expect(component.obtenerDatosAnidados(producto)).toEqual(detalles);
 
       // Caso 3: Producto sin ID
-      const productoSinId = { descripcion: 'Producto sin ID' } as Producto;
-      expect(component.obtenerDatosAnidados(productoSinId)).toEqual([]);
+      const PRODUCTO_SIN_ID = { descripcion: 'Producto sin ID' } as Producto;
+      expect(component.obtenerDatosAnidados(PRODUCTO_SIN_ID)).toEqual([]);
 
       // Caso 4: Producto con ID pero sin detalles en el mapa
-      const productoSinDetalles: Producto = { id: 2, descripcion: 'Producto sin detalles' };
-      expect(component.obtenerDatosAnidados(productoSinDetalles)).toEqual([]);
+      const PRODUCTO_SIN_DETALLES: Producto = { id: 2, descripcion: 'Producto sin detalles' };
+      expect(component.obtenerDatosAnidados(PRODUCTO_SIN_DETALLES)).toEqual([]);
     });
 
     it('debería manejar el caso de producto nulo o indefinido en obtenerDatosAnidados', () => {
@@ -434,13 +434,13 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar el método push del array fraccionData
-      const pushSpy = jest.spyOn(component.fraccionData, 'push');
+      const PUSH_SPY = jest.spyOn(component.fraccionData, 'push');
 
       // Llamar al método
       component.agregarDetalle();
 
       // Verificar que se llamó al método push
-      expect(pushSpy).toHaveBeenCalled();
+      expect(PUSH_SPY).toHaveBeenCalled();
       expect(component.fraccionData.length).toBe(1);
     });
 
@@ -450,20 +450,20 @@ describe('MercanciasComponent', () => {
       component.formMercancias.setErrors({ 'invalid': true });
 
       // Espiar el método push del array fraccionData
-      const pushSpy = jest.spyOn(component.fraccionData, 'push');
+      const PUSH_SPY = jest.spyOn(component.fraccionData, 'push');
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.agregarDetalle();
 
       // Verificar que no se llamó al método push
-      expect(pushSpy).not.toHaveBeenCalled();
+      expect(PUSH_SPY).not.toHaveBeenCalled();
       expect(component.fraccionData.length).toBe(0);
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('debería establecer valores en el store correctamente con establecerValoresStore', () => {
@@ -483,12 +483,12 @@ describe('MercanciasComponent', () => {
 
     it('no debería llamar a establecerDatos si el valor es undefined', () => {
       // Crear un formulario con un control que no existe
-      const formGroup = formBuilder.group({
+      const FORM_GROUP = formBuilder.group({
         otroControl: ['']
       });
 
       // Llamar al método con un campo que no existe
-      component.establecerValoresStore(formGroup, 'campoInexistente');
+      component.establecerValoresStore(FORM_GROUP, 'campoInexistente');
 
       // Verificar que no se llamó al método establecerDatos del store
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
@@ -510,13 +510,13 @@ describe('MercanciasComponent', () => {
       component.mostrarModalMercancias = true;
 
       // Espiar el método reset del formulario
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
 
       // Llamar al método
       component.cancelarDetalle();
 
       // Verificar que se llamó al método reset y se limpiaron los datos
-      expect(resetSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
       expect(component.fraccionData).toEqual([]);
       expect(component.mostrarModalMercancias).toBe(false);
     });
@@ -537,15 +537,15 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar métodos
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
-      const generarIdSpy = jest.spyOn(component as any, 'generarId').mockReturnValue(123);
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
+      const GENERAR_ID_SPY = jest.spyOn(component as any, 'generarId').mockReturnValue(123);
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar resultados
-      expect(resetSpy).toHaveBeenCalled();
-      expect(generarIdSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
+      expect(GENERAR_ID_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(1);
       expect(component.mapaDetalles.has(123)).toBe(true);
       expect(component.fraccionData).toEqual([]);
@@ -558,17 +558,17 @@ describe('MercanciasComponent', () => {
       component.fraccionData = [];
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar que no se guardó nada
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(0);
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('no debería guardar el detalle si no hay descripción seleccionada', () => {
@@ -587,22 +587,22 @@ describe('MercanciasComponent', () => {
       });
 
       // Espiar console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const CONSOLE_SPY = jest.spyOn(console, 'error').mockImplementation();
 
       // Llamar al método
       component.guardarDetalle();
 
       // Verificar que no se guardó nada
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(CONSOLE_SPY).toHaveBeenCalled();
       expect(component.producto.length).toBe(0);
       expect(tramite250102StoreMock.establecerDatos).not.toHaveBeenCalled();
 
-      consoleSpy.mockRestore();
+      CONSOLE_SPY.mockRestore();
     });
 
     it('debería abrir el modal de mercancías correctamente con abrirModalMercancias', () => {
       // Espiar el método reset del formulario
-      const resetSpy = jest.spyOn(component.formMercancias, 'reset');
+      const RESET_SPY = jest.spyOn(component.formMercancias, 'reset');
 
       // Verificar estado inicial
       expect(component.mostrarModalMercancias).toBe(false);
@@ -612,16 +612,16 @@ describe('MercanciasComponent', () => {
 
       // Verificar que se abrió el modal y se reseteó el formulario
       expect(component.mostrarModalMercancias).toBe(true);
-      expect(resetSpy).toHaveBeenCalled();
+      expect(RESET_SPY).toHaveBeenCalled();
       expect(component.fraccionData).toEqual([]);
 
       // Llamar al método de nuevo
-      resetSpy.mockClear();
+      RESET_SPY.mockClear();
       component.abrirModalMercancias();
 
       // Verificar que se cerró el modal y no se reseteó el formulario
       expect(component.mostrarModalMercancias).toBe(false);
-      expect(resetSpy).not.toHaveBeenCalled();
+      expect(RESET_SPY).not.toHaveBeenCalled();
     });
 
     it('debería generar un ID único con generarId', () => {
@@ -630,10 +630,10 @@ describe('MercanciasComponent', () => {
       const mathRandomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.5);
 
       // Llamar al método
-      const id = (component as any).generarId();
+      const ID = (component as any).generarId();
 
       // Verificar el resultado
-      expect(id).toBe(1500); // 1000 + Math.floor(0.5 * 1000)
+      expect(ID).toBe(1500); // 1000 + Math.floor(0.5 * 1000)
 
       // Restaurar los espías
       dateNowSpy.mockRestore();
@@ -648,8 +648,8 @@ describe('MercanciasComponent', () => {
       fixture.detectChanges();
 
       // Verificar que el modal está visible
-      const modal = fixture.debugElement.query(By.css('app-modal'));
-      expect(modal).toBeTruthy();
+      const MODAL = fixture.debugElement.query(By.css('app-modal'));
+      expect(MODAL).toBeTruthy();
     });
 
     it('debería ocultar el modal cuando mostrarModalMercancias es false', () => {
@@ -658,8 +658,8 @@ describe('MercanciasComponent', () => {
       fixture.detectChanges();
 
       // Verificar que el modal está oculto o tiene la propiedad active=false
-      const modal = fixture.debugElement.query(By.css('app-modal[active=false]'));
-      expect(modal).toBeTruthy();
+      const MODAL = fixture.debugElement.query(By.css('app-modal[active=false]'));
+      expect(MODAL).toBeTruthy();
     });
   });
 });
