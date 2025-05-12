@@ -112,7 +112,7 @@ describe('RequisitosComponent', () => {
 
   it('should call correct store method with setValoresStore()', () => {
     component.transporteForm.controls['medio'].setValue(5);
-    component.setValoresStore(component.transporteForm, 'medio', 'setMedio');
+    component.setValoresStore(component.transporteForm, 'medio',);
     expect(storeMock.setMedio).toHaveBeenCalledWith(5);
   });
 

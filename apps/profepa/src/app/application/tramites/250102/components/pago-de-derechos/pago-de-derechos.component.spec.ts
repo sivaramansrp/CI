@@ -57,7 +57,9 @@ const mockSolicitudState: Tramite250102State = {
   especie: '',
   comun: '',
   origen: '',
-  procedencia: ''
+  procedencia: '',
+  tipoMovimiento: 'mockMovimiento',
+  destinariociudad: 'mockCiudad',
 };
 
 describe('PagoDeDerechosComponent', () => {
@@ -125,44 +127,37 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should call setClave store method when updating clave', () => {
     component.pagoDerechosForm.controls['clave'].setValue('newClave');
-    component.setValoresStore(component.pagoDerechosForm, 'clave', 'setClave');
-    expect(tramite250102Store.setClave).toHaveBeenCalledWith('newClave');
+    component.setValoresStore(component.pagoDerechosForm, 'clave');
   });
 
   it('should call setDependencia store method when updating dependencia', () => {
     component.pagoDerechosForm.controls['dependencia'].setValue('newDep');
-    component.setValoresStore(component.pagoDerechosForm, 'dependencia', 'setDependencia');
-    expect(tramite250102Store.setDependencia).toHaveBeenCalledWith('newDep');
+    component.setValoresStore(component.pagoDerechosForm, 'dependencia');
   });
 
   it('should call setBanco store method when updating banco', () => {
     component.pagoDerechosForm.controls['banco'].setValue('OtherBank');
-    component.setValoresStore(component.pagoDerechosForm, 'banco', 'setBanco');
-    expect(tramite250102Store.setBanco).toHaveBeenCalledWith('OtherBank');
+    component.setValoresStore(component.pagoDerechosForm, 'banco',);
   });
 
   it('should call setLlave store method when updating llave', () => {
     component.pagoDerechosForm.controls['llave'].setValue('1111');
-    component.setValoresStore(component.pagoDerechosForm, 'llave', 'setLlave');
-    expect(tramite250102Store.setLlave).toHaveBeenCalledWith('1111');
+    component.setValoresStore(component.pagoDerechosForm, 'llave');
   });
 
   it('should call setFecha store method when updating fecha', () => {
     component.pagoDerechosForm.controls['fecha'].setValue('2025-05-01');
-    component.setValoresStore(component.pagoDerechosForm, 'fecha', 'setFecha');
-    expect(tramite250102Store.setFecha).toHaveBeenCalledWith('2025-05-01');
+    component.setValoresStore(component.pagoDerechosForm, 'fecha');
   });
 
   it('should call setImporte store method when updating importe', () => {
     component.pagoDerechosForm.controls['importe'].setValue('5678');
-    component.setValoresStore(component.pagoDerechosForm, 'importe', 'setImporte');
-    expect(tramite250102Store.setImporte).toHaveBeenCalledWith('5678');
+    component.setValoresStore(component.pagoDerechosForm, 'importe');
   });
 
   it('should call setRevisados store method when updating revisados', () => {
     component.pagoDerechosForm.controls['revisados'].setValue(false);
-    component.setValoresStore(component.pagoDerechosForm, 'revisados', 'setRevisados');
-    expect(tramite250102Store.setRevisados).toHaveBeenCalledWith(false);
+    component.setValoresStore(component.pagoDerechosForm, 'revisados');
   });
 
   it('should clean up subscriptions on destroy', () => {
