@@ -21,8 +21,9 @@ export class InputFechaComponent implements OnChanges {
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();
   @Input() setFecha!: string;
   @Input({required: true}) datos!: InputFecha;
-
-
+  @Input() tooltipQuestionCircle: boolean = false;
+  @Input() label!: string;
+  
   meses = MESES;
   semana = SEMANA;
 
