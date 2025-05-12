@@ -320,12 +320,6 @@ export const PAIS_PROCEDENCIA_TODOS = [
       tipoInput: 'textarea',
       desactivado: false,
       soloLectura: false,
-      validadores: [
-        {
-          tipo: 'required',
-          mensaje: ''
-        }
-      ],
       marcadorDePosicion: '',
       marginTop: 0
     },
@@ -335,3 +329,35 @@ export const CROSLISTA_DE_PAISES: string[] = [
   "ESTADOS UNIDOS DE AMERICA",
   "CANADA"
 ];
+
+export const REPRESENTACION_FEDERAL = [
+  {
+    id: 'entidad',
+    labelNombre: 'Entidad federativa',
+    campo: 'entidad',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0
+  },
+  {
+    id: 'reprsentation_federal',
+    labelNombre: 'Representación federal',
+    campo: 'reprsentation_federal',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: 'Selecciona una opcion',
+    marginTop: 0
+  },
+];
+  

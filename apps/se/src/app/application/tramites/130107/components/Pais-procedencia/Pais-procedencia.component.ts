@@ -10,7 +10,7 @@ import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-use
 @Component({
   selector: 'app-pais-procedencia',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, CrosslistComponent],
   templateUrl: './Pais-procedencia.component.html',
   styleUrl: './Pais-procedencia.component.scss',
 })
