@@ -18,6 +18,7 @@ export const INITIAL_STATE: TramiteState = {
     representacionFederal: '',
     tipoModalidad: '',
     descripcionModalidad: '',
+    actividadProductivaActual: '',
   },
   altaPlanta: [],
   estado: {

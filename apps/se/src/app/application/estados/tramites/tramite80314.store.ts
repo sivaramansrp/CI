@@ -123,6 +123,7 @@ export function createInitialState(): Solicitud80314State {
       federal: '',
       tipo: '',
       programa: '',
+      actividadProductivaActual: '',
     },
     datosDelContenedor: [],
     tipoBusqueda: '',

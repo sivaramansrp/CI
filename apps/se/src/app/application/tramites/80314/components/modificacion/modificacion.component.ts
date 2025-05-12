@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  ConfiguracionColumna,
+  CatalogoSelectComponent,
+  CatalogosSelect,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+
 import {
   Solicitud80314State,
   Tramite80314Store,
@@ -31,6 +33,7 @@ import { Tramite80314Query } from '../../../../estados/queries/tramite80314.quer
     FormsModule,
     TituloComponent,
     TablaDinamicaComponent,
+    CatalogoSelectComponent,
   ],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.scss',
@@ -42,6 +45,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private tramite80314Store: Tramite80314Store,
     private tramite80314Query: Tramite80314Query
   ) {}
+
+  actividadProductiva!: CatalogosSelect;
 
   /**
    * Grupo de formulario para el formulario de solicitud.
@@ -91,6 +96,16 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
+
+    this.actividadProductiva = {
+      labelNombre: 'Activided productiva',
+      required: false,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [
+        { id: 1, descripcion: 'AGRICULTURA' },
+        { id: 2, descripcion: 'BORDADO 0 IMPRESION DE PRENDAS' },
+      ],
+    };
   }
 
   /**
@@ -111,6 +126,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       federal: [this.derechoState?.datosModificacion?.federal, []],
       tipo: [this.derechoState?.datosModificacion?.tipo, []],
       programa: [this.derechoState?.datosModificacion?.programa, []],
+      actividadProductivaActual: [
+        this.derechoState?.datosModificacion?.actividadProductivaActual,[]],
+      actividadProductiva: []
     });
   }
 
@@ -168,6 +186,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.modificacionForm
       .get('programa')
       ?.setValue(this.derechoState?.datosModificacion?.programa);
+    this.modificacionForm
+      .get('actividadProductivaActual')
+      ?.setValue(this.derechoState?.datosModificacion?.actividadProductivaActual);
   }
 
   /**

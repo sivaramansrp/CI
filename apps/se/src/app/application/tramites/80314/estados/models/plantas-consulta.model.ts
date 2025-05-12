@@ -28,8 +28,8 @@
 
   export interface Federetarios {
     nombre?: string;
-    apellidoPrimer?: string;
-    apellidoSegundo?: string;
+    apellidoPaterno?: string;
+    apellidoMaterno?: string;
     numeroActa?: string;
     fetchActa?: string;
     numeroNotaria?: string;
@@ -91,5 +91,6 @@
       representacionFederal: string;
       tipoModalidad: string;
       descripcionModalidad: string;
+      actividadProductivaActual: string;
   
   }

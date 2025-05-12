@@ -23,7 +23,9 @@ export class DatosCertificacionComponent {
    */
   constructor(private fb: FormBuilder) {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
+      certificion: [{ value: 'Si', disabled: false }], // El campo de certificación con valor "Si" y deshabilitado.
+      fechaInicio: [{ value: '', disabled: false }],
+      fechaVigencia: [{ value: '', disabled: false }],
     });
   }
 }

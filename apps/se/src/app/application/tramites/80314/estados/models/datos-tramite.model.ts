@@ -55,6 +55,7 @@ export interface DatosModificacion {
   federal: string;
   tipo: string;
   programa: string;
+  actividadProductivaActual: string;
 }
 
 export interface DatosDelModificacion {

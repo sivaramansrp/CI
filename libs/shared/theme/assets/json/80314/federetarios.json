@@ -2,8 +2,8 @@
   "data": [
     {
       "nombre": "Juan",
-      "apellidoPrimer": "Pérez",
-      "apellidoSegundo": "González",
+      "apellidoPaterno": "Pérez",
+      "apellidoMaterno": "González",
       "numeroActa": "123456789",
       "fetchActa": "Acta_12345.pdf",
       "numeroNotaria": "45",
@@ -12,8 +12,8 @@
     },
     {
       "nombre": "Maria",
-      "apellidoPrimer": "López",
-      "apellidoSegundo": "Martínez",
+      "apellidoPaterno": "López",
+      "apellidoMaterno": "Martínez",
       "numeroActa": "987654321",
       "fetchActa": "Acta_98765.pdf",
       "numeroNotaria": "12",
@@ -22,8 +22,8 @@
     },
     {
       "nombre": "Carlos",
-      "apellidoPrimer": "García",
-      "apellidoSegundo": "Sánchez",
+      "apellidoPaterno": "García",
+      "apellidoMaterno": "Sánchez",
       "numeroActa": "112233445",
       "fetchActa": "Acta_11223.pdf",
       "numeroNotaria": "78",
