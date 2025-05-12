@@ -127,6 +127,5 @@ export interface Entidad {
 }
 
 export interface ParametrosGetDocumentos {
-  idSolicitud: string;
   especifico: boolean;
 }

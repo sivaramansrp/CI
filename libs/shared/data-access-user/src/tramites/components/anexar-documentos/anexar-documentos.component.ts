@@ -28,6 +28,7 @@ import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
+import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 
 
 
@@ -183,10 +184,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
-    private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
+    private catalogoDocumentosService: CatalogoDocumentosService,
   ) { }
 
   ngOnInit(): void {
@@ -213,6 +213,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
+
+    this.getListaDocumentoObligatorios();
   }
 
   /**
@@ -596,6 +598,22 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       txtBtnCancelar: '',
       tamanioModal: ''
     }
+  }
+
+  getListaDocumentoObligatorios(): void {
+    console.log('Peticion API documentos');
+    
+    const TRAMITE = '5701';
+    const PARAMETROS = {
+      especifico: false
+    }
+    this.catalogoDocumentosService.getDocumentosObligatorios(TRAMITE, PARAMETROS)
+      .pipe(
+        map((response) => {
+          console.log(response);
+
+        }))
+        .subscribe();
   }
 
 }

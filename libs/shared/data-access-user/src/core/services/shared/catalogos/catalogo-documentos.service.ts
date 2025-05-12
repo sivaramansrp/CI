@@ -22,7 +22,6 @@ export class CatalogoDocumentosService {
 
         return this.http.get<CatalogoDocumentosResponse>(ENDPOINT, {
             params: {
-                idSolicitud: params.idSolicitud,
                 especifico: params.especifico,
             }
         }).pipe(

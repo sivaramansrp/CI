@@ -30,7 +30,7 @@ export class SolicitudPageComponent implements OnInit {
    * Contiene el índice del paso actual, para las navs-tabs del paso uno.
    * Se inicializa en 1
    */
-  indice: number = 1;
+  indice: number = 2;
 
   /**
    * Contiene el estado de la sección actual.
