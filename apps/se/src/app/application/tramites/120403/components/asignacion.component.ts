@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, SharedModule, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ANO_CATALOGO, FECHA_FIN, RADIO_OPCIONS } from '../models/registro.model';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { CuposService } from '../services/cupos.service';
+import { Catalogo, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, SharedModule, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud120403State, Tramite120403Store } from '../state/Tramite120403.store';
+import { CommonModule } from '@angular/common';
+import { CuposService } from '../services/cupos.service';
 import { Tramite120403Query } from '../state/Tramite120403.query';
 
 @Component({
@@ -46,15 +46,17 @@ export class AsignacionComponent implements OnInit, OnDestroy {
     this.obtenerDatosEstado();
   }
   
-  buscar(): void {
-    if(this.mostrarVigencia = this.asignacionForm.get('asignacionRadio')?.value === 'vigencia'){
-      this.mostrarVigencia = true;
-      this.mostrarMonto = false;
-    }else if(this.mostrarMonto = this.asignacionForm.get('asignacionRadio')?.value === 'monto'){
-      this.mostrarVigencia = false;
-      this.mostrarMonto = true;
-    }
+buscar(): void {
+  const ASIGNACION_RADIO = this.asignacionForm.get('asignacionRadio')?.value;
+
+  if (ASIGNACION_RADIO === 'vigencia') {
+    this.mostrarVigencia = true;
+    this.mostrarMonto = false;
+  } else if (ASIGNACION_RADIO === 'monto') {
+    this.mostrarVigencia = false;
+    this.mostrarMonto = true;
   }
+}
 
   cambioFechaPago(nuevo_fechaPago: string): void {
     this.asignacionForm.patchValue({

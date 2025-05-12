@@ -1,115 +1,75 @@
 <form [formGroup]="asignacionForm" (ngSubmit)="validarDestinatarioFormulario()">
-    <!-- Mecanismo de asignación directa -->
-    <ng-titulo titulo="Mecanismo de asignación directa" />
-    <label>Estimado contribuyente, debido a que usted cuenta con una autorización previa para este trámite, debe
-        seleccionar
-        la modalidad del trámite a requerir:</label>
-
-    <div class="row mt-5">
-        <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"
-            formControlName="asignacionRadio" [isRequired]="true"
-            (change)="setValoresStore(asignacionForm,'asignacionRadio','setAsignacionRadio')"></app-input-radio>
+  <!-- Mecanismo de asignación directa -->
+  <ng-titulo titulo="Mecanismo de asignación directa" />
+  <label>Estimado contribuyente, debido a que usted cuenta con una autorización previa para este trámite, debe seleccionar la modalidad del trámite a requerir:</label>
+  <div class="row mt-5">
+    <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" formControlName="asignacionRadio" [isRequired]="true" (change)="setValoresStore(asignacionForm,'asignacionRadio','setAsignacionRadio')"></app-input-radio>
+  </div>
+  <!-- Número de oficio de asignación -->
+  <ng-titulo titulo="Número de oficio de asignación" />
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del oficio de asignación'" [required]="true" formControlName="asignacionsolitud" (change)="setValoresStore(asignacionForm,'asignacionsolitud','setAsignacionsolitud')">></app-catalogo-select>
     </div>
-    <!-- Número de oficio de asignación -->
-    <ng-titulo titulo="Número de oficio de asignación" />
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del oficio de asignación'"
-                [required]="true" formControlName="asignacionsolitud"
-                (change)="setValoresStore(asignacionForm,'asignacionsolitud','setAsignacionsolitud')">></app-catalogo-select>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Número de oficio de asignación*:</label>
-            <input type="text" class="form-control" size="68" formControlName="numTramite"
-                (change)="setValoresStore(asignacionForm,'numTramite','setNumTramite')" />
-        </div>
+    <div class="col-md-6">
+      <label class="form-label">Número de oficio de asignación*:</label>
+      <input type="text" class="form-control" size="68" formControlName="numTramite" (change)="setValoresStore(asignacionForm,'numTramite','setNumTramite')" />
     </div>
-    <div class="row mt-5">
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()"> Buscar </button>
-        </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()"> Buscar </button>
     </div>
-
+  </div>
+  <div *ngIf="mostrarMonto || mostrarVigencia">
+    <!-- Datos de la asignacion -->
+    <ng-titulo titulo="Datos de la asignacion" />
+    <div class="row mt-5 mb-5">
+      <div class="col-md-4">
+        <label for="especie">Fecha de inicio de vigencia de la asignación</label>
+        <input type="text" class="form-control gris-color">
+      </div>
+      <div class="col-md-4">
+        <label for="funcionZootecnica">Fecha de fin vigencia de la asignacion</label>
+        <input type="text" class="form-control gris-color">
+      </div>
+    </div>
+    <div class="row mt-5 mb-5">
+      <div class="col-md-4">
+        <label for="authorizado">Monto autorizado</label>
+        <input type="text" class="form-control gris-color" readonly>
+        <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
+      </div>
+      <div class="col-md-4">
+        <label for="Expendido">Monto Expendido</label>
+        <input type="text" class="form-control gris-color" readonly>
+        <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
+      </div>
+      <div class="col-md-4">
+        <label for="disponible">Monto disponible</label>
+        <input type="text" class="form-control gris-color" readonly>
+        <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
+      </div>
+    </div>
     <!-- Monto a ampliar -->
     <div *ngIf="mostrarMonto">
-        <!-- Datos de la asignacion -->
-        <ng-titulo titulo="Datos de la asignacion" />
-        <div class="row mt-5 mb-5">
-            <div class="col-md-4">
-                <label for="especie">Fecha de inicio de vigencia de la asignación</label>
-                <input type="text" class="form-control gris-color">
-            </div>
-            <div class="col-md-4">
-                <label for="funcionZootecnica">Fecha de fin vigencia de la asignacion</label>
-                <input type="text" class="form-control gris-color">
-            </div>
+      <ng-titulo titulo="Monto a ampliar" />
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label for="ampliar" class="form-label">Monto a ampliar*:</label>
+          <input type="text" class="form-control" formControlName="ampliar" (change)="setValoresStore(asignacionForm,'ampliar','setAmpliar')" />
+          <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
         </div>
-
-        <div class="row mt-5 mb-5">
-            <div class="col-md-4">
-                <label for="authorizado">Monto autorizado</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-            <div class="col-md-4">
-                <label for="Expendido">Monto Expendido</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-            <div class="col-md-4">
-                <label for="disponible">Monto disponible</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-        </div>
-        <ng-titulo titulo="Monto a ampliar" />
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <label for="ampliar" class="form-label">Monto a ampliar*:</label>
-                <input type="text" class="form-control" formControlName="ampliar"
-                    (change)="setValoresStore(asignacionForm,'ampliar','setAmpliar')" />
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-        </div>
+      </div>
     </div>
     <!-- Periodo a ampliar -->
     <div *ngIf="mostrarVigencia">
-        <!-- Datos de la asignacion -->
-        <ng-titulo titulo="Datos de la asignacion" />
-        <div class="row mt-5 mb-5">
-            <div class="col-md-4">
-                <label for="especie">Fecha de inicio de vigencia de la asignación</label>
-                <input type="text" class="form-control gris-color">
-            </div>
-            <div class="col-md-4">
-                <label for="funcionZootecnica">Fecha de fin vigencia de la asignacion</label>
-                <input type="text" class="form-control gris-color">
-            </div>
+      <ng-titulo titulo="Periodo a ampliar" />
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <input-fecha [setFecha]="asignacionForm.get('fechaFin')?.value" [datos]="fechaFinInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
         </div>
-
-        <div class="row mt-5 mb-5">
-            <div class="col-md-4">
-                <label for="authorizado">Monto autorizado</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-            <div class="col-md-4">
-                <label for="Expendido">Monto Expendido</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-            <div class="col-md-4">
-                <label for="disponible">Monto disponible</label>
-                <input type="text" class="form-control gris-color" readonly>
-                <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
-            </div>
-        </div>
-        <ng-titulo titulo="Periodo a ampliar" />
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <input-fecha [setFecha]="asignacionForm.get('fechaFin')?.value" [datos]="fechaFinInput"
-                    (valorCambiado)="cambioFechaPago($event)"></input-fecha>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </form>

@@ -1,10 +1,7 @@
-import {
-  FirmaElectronicaComponent,
-  TramiteFolioService,
-} from '@ng-mf/data-access-user';
-import { catchError, map, ReplaySubject, Subscription, takeUntil } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 /**
  * Componente que representa el paso tres del trámite.
@@ -14,7 +11,7 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
 
   /**
    * Componente de firma electrónica.

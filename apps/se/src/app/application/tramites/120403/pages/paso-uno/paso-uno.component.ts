@@ -1,13 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import {
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
 import { CuposService } from '../../services/cupos.service';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -17,27 +12,11 @@ import { CuposService } from '../../services/cupos.service';
   templateUrl: './paso-uno.component.html',
   styles: ``,
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
-
-  /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
-   */
-  constructor(private cupos: CuposService) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
-   */
-  ngOnInit(): void {
-    
-  }
+  entidadFederativa!: unknown;
 
   /**
    * Referencia al componente de solicitante.
@@ -63,7 +42,15 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    * Índice del paso actual.
    */
   indice: number = 1;
-
+  @Output() dataEmitter = new EventEmitter<number>();
+  /**
+   * Constructor del componente.
+   * @param registro Servicio para obtener datos de catálogos.
+   */
+  constructor(private cupos: CuposService) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+  
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
    * Configura los formularios dinámicos y obtiene el tipo de persona.
@@ -80,5 +67,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.dataEmitter.emit(this.indice);
+
   }
 }

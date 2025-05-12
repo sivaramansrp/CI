@@ -2,7 +2,7 @@ import {
   AVISO,
   DatosPasos,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
@@ -38,11 +38,16 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
+
+  ngOnInit(): void {
+    this.receiveData(1);
+  }
   /**
    * Texto del aviso de privacidad.
    */
-avisoPrivacidad  = AVISO.Aviso;
+  avisoPrivacidad = AVISO.Aviso;
+  datos !: number;
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.
@@ -53,7 +58,7 @@ avisoPrivacidad  = AVISO.Aviso;
    * Índice del paso actual.
    */
   indice: number = 1;
-
+  alerta: boolean = false;
   /**
    * Referencia al componente del asistente.
    */
@@ -66,6 +71,13 @@ avisoPrivacidad  = AVISO.Aviso;
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  datoPaso: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: '',
     txtBtnSig: 'Continuar',
   };
 
@@ -90,5 +102,12 @@ avisoPrivacidad  = AVISO.Aviso;
         this.wizardComponent.atras();
       }
     }
+  }
+  getValorIndices(e: AccionBoton) {
+    this.datoPaso.txtBtnAnt = '';
+    this.alerta = true;
+  }
+  receiveData(data: number): void{
+    this.datos = data;
   }
 }

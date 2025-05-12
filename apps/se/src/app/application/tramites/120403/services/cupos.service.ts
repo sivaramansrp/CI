@@ -1,7 +1,7 @@
+import { Catalogo } from '../state/Tramite120403.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Catalogo } from '../state/Tramite120403.store';
 
 @Injectable({
   providedIn: 'root'
