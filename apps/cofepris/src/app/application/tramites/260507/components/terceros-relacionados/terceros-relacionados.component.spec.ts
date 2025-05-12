@@ -1,18 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { TercerosRelacionados260507Component } from './terceros-relacionados.component';
 
-describe('TercerosRelacionadosComponent', () => {
-  let component: TercerosRelacionadosComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
+describe('TercerosRelacionados260507Component', () => {
+  let component: TercerosRelacionados260507Component;
+  let fixture: ComponentFixture<TercerosRelacionados260507Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosComponent]
+      imports: [
+        TercerosRelacionados260507Component,
+        TercerosRelacionadosComponent,
+        HttpClientTestingModule
+      ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
+    fixture = TestBed.createComponent(TercerosRelacionados260507Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

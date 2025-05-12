@@ -20,7 +20,12 @@ describe('PasoDosComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot()],
+      imports: [
+        TituloComponent,
+        AlertComponent, 
+        AnexarDocumentosComponent,
+        ToastrModule.forRoot()
+      ],
       providers: [provideHttpClient(), CatalogosService, ToastrService]
     }).compileComponents();
   });

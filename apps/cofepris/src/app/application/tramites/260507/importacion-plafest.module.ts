@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -9,7 +9,7 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionados260507Component } from './components/terceros-relacionados/terceros-relacionados.component';
 
 
 @NgModule({
@@ -30,7 +30,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
     TituloComponent,
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
-    TercerosRelacionadosComponent,
+    TercerosRelacionados260507Component,
     PagoDeDerechosComponent
   ]
 })

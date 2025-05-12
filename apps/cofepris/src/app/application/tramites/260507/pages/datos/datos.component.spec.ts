@@ -1,3 +1,12 @@
+jest.mock('@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json', () => ({
+  default: {
+    paisSelectData: [
+      { id: '1', descripcion: 'México' },
+      { id: '2', descripcion: 'Estados Unidos' },
+    ],
+  }
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
 import { CommonModule } from '@angular/common';
@@ -6,8 +15,9 @@ import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-acce
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionados260507Component } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -20,11 +30,15 @@ describe('DatosComponent', () => {
         CommonModule, 
         SolicitanteComponent,
         DatosDeLaSolicitudComponent,
-        TercerosRelacionadosComponent,
+        TercerosRelacionados260507Component,
         PagoDeDerechosComponent,
         HttpClientModule,
       ],
-      providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
+      providers: [
+        SolicitanteService,
+        HttpClientTestingModule, 
+        HttpClient
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 

@@ -114,6 +114,18 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.datosImportadorExportador.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.datosImportadorExportador, 'fechaPago', 'setFechaPago');
+  }
+
+  /**
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.
    */
