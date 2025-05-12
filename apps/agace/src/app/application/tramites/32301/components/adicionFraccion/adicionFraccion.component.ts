@@ -12,6 +12,8 @@ import {
   CatalogoSelectComponent,
   CrosslistComponent,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TableComponent,
   TablePaginationComponent,
   TituloComponent,
@@ -56,6 +58,7 @@ interface RatioOption {
     TablePaginationComponent,
     CatalogoSelectComponent,
     CrosslistComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './adicionFraccion.component.html',
 })
@@ -175,7 +178,6 @@ export class AdicionFraccionComponent
    * Instancias de modales utilizados en la carga masiva y fracciones.
    */
   cargaMasivaFrModalInstance!: Modal;
-  CargaMasivaFralertaModelInstance!: Modal;
   fraccionesModelInstance!: Modal;
 
   /**
@@ -183,9 +185,14 @@ export class AdicionFraccionComponent
    */
   @ViewChild('cargaMasivaFrModal', { static: false })
   cargaMasivaFrModal!: ElementRef;
-  @ViewChild('CargaMasivaFralertaModel', { static: false })
-  CargaMasivaFralertaModel!: ElementRef;
+
   @ViewChild('fraccionesModel', { static: false }) fraccionesModel!: ElementRef;
+
+  /**
+   * Declaración de la variable nuevaNotificacion de tipo Notificacion.
+   * Se utiliza para almacenar y gestionar notificaciones dentro del sistema.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -327,12 +334,6 @@ export class AdicionFraccionComponent
       );
     }
 
-    if (this.CargaMasivaFralertaModel?.nativeElement) {
-      this.CargaMasivaFralertaModelInstance = new Modal(
-        this.CargaMasivaFralertaModel.nativeElement
-      );
-    }
-
     if (this.fraccionesModel?.nativeElement) {
       this.fraccionesModelInstance = new Modal(
         this.fraccionesModel.nativeElement
@@ -370,7 +371,55 @@ export class AdicionFraccionComponent
    * Abre el modal de alerta después de cargar un archivo de procesos.
    */
   cargarArchivoProcesosAjax(): void {
-    this.openCargaMasivaFralertaModel();
+    /**
+     * Configuración de una nueva notificación para alertar al usuario.
+     */
+    this.nuevaNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
+
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'danger',
+
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que 1 - El archivo debe conteneral menos un registro.
+       */
+      mensaje: '1 - El archivo debe conteneral menos un registro.',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -388,24 +437,6 @@ export class AdicionFraccionComponent
   closeCargaMasivaFrModal(): void {
     if (this.cargaMasivaFrModalInstance) {
       this.cargaMasivaFrModalInstance.hide();
-    }
-  }
-
-  /**
-   * Abre el modal de alerta de carga masiva de fracciones.
-   */
-  openCargaMasivaFralertaModel(): void {
-    if (this.CargaMasivaFralertaModelInstance) {
-      this.CargaMasivaFralertaModelInstance.show();
-    }
-  }
-
-  /**
-   * Cierra el modal de alerta de carga masiva de fracciones.
-   */
-  closeCargaMasivaFralertaModel(): void {
-    if (this.CargaMasivaFralertaModelInstance) {
-      this.CargaMasivaFralertaModelInstance.hide();
     }
   }
 

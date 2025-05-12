@@ -275,29 +275,11 @@
   </div>
 </div>
 
-<div class="modal fade" tabindex="-1" #CargaMasivaFralertaModel>
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-12 text-center">
-            1 - El archivo debe conteneral menos un registro.
-          </div>
-        </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
 
-        <div class="button-group d-flex justify-content-center mt-5 me-md-3">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="closeCargaMasivaFralertaModel()"
-          >
-            Aceptar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+ 
