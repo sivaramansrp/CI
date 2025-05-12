@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  styles: './paso-uno.component.scss',
 })
 export class PasoUnoComponent {
   /**

@@ -116,6 +116,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
+          console.log(seccionState, 'seccionStatedaata..........');
           this.personaFisicaExtranjeraTabla = seccionState.personaFisicaExtranjeraTabla || [];
         })
       )
