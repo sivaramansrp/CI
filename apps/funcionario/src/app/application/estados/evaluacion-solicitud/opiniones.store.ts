@@ -1,0 +1,57 @@
+import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from "@angular/core";
+
+export interface SolicitudOpinionesState {
+    /**
+     * Parametro de la lista de opiniones seleccionados
+     */
+    listaOpciones: { dependencia: string; justificacion: string }[];
+    /**
+     * Parametro para el desplegable de opiniones
+     */
+    parametroDesplegable: boolean;
+}
+/**
+ * Creación del estado inicial para la interfaz de solicitud de opiniones
+ * @returns SolicitudopinionesState
+ */
+export function createInitialState(): SolicitudOpinionesState {
+    return {
+        listaOpciones: [],
+        parametroDesplegable: false,
+    };
+}
+/**
+ * Clase que maneja el estado de la solicitud de opiniones
+ * @class OpinionesStates
+ */
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'OpinionesStates', resettable: true })
+export class OpinionesStates extends Store<SolicitudOpinionesState> {
+    constructor() {
+        super(createInitialState());
+    }
+    /**
+     * Resetear valores
+     */
+    resetStore() {
+        this.reset();
+    }
+    /**
+     * Guarda la lista de opiniones requeridos
+     * @param opinionesSeleccionados 
+     */
+    setSolicitudOpiniones(listaOpciones: { dependencia: string; justificacion: string }[]) {
+        this.update(state => ({ ...state, listaOpciones }));
+    }
+    /**
+     * Método para guardar el valor del desplegable
+     * @param parametroDesplegable 
+     */
+    public setValorDesplegableOpinion(parametroDesplegable: boolean): void {
+        this.update((state) => ({
+            ...state,
+            parametroDesplegable,
+        }));
+    }
+}
