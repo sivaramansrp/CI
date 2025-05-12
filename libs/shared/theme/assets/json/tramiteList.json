@@ -3208,8 +3208,8 @@
   {
     "id": 459,
     "tramite": 260919,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importar-de-remedios-herbals/permiso-remedios-herbals",
+    "linkDepartment": "/pago/importar-de-remedios-herbals/permiso-remedios-herbals",
     "department": "cofepris"
   },
   {
