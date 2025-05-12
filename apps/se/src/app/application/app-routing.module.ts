@@ -446,6 +446,13 @@ const ROUTES: Routes = [
       ),  
    },
    {
+    path: 'registro-solicitud-immex',
+    loadChildren: () =>
+      import('./tramites/80210/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
+      ),
+   },
+   {
     path: 'validar-inicialmente-certificado',
     loadChildren: () =>
       import('./tramites/110214/validar-inicialmente-certificado.module').then(
