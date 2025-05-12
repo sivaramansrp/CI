@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-tabla-expandible',
@@ -10,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
-export class TablaExpandibleComponent<T, N> {
+export class TablaExpandibleComponent<T, TN> {
   /**
    * Evento de salida emitido cuando se hace clic en una fila.
    */
@@ -34,7 +36,7 @@ export class TablaExpandibleComponent<T, N> {
   /**
    * Configuración para las columnas de la tabla anidada
    */
-  @Input() configuracionTablaAnidada: ConfiguracionColumna<N>[] = [];
+  @Input() configuracionTablaAnidada: ConfiguracionColumna<TN>[] = [];
 
   /**
    * Datos para la tabla principal
@@ -44,7 +46,7 @@ export class TablaExpandibleComponent<T, N> {
   /**
    * Función para obtener datos anidados para una fila específica
    */
-  @Input() obtenerDatosAnidados!: (item: T) => N[];
+  @Input() obtenerDatosAnidados!: (item: T) => TN[];
 
   /**
    * Identificador único para la tabla
@@ -62,6 +64,10 @@ export class TablaExpandibleComponent<T, N> {
     this.idFilaSeleccionada = valor;
   }
 
+  get inputSelection(): number {
+    return this._seleccionEntrada;
+  }
+
   /**
    * Evento emitido cuando se selecciona una fila
    */
@@ -75,7 +81,7 @@ export class TablaExpandibleComponent<T, N> {
   /**
    * Evento emitido cuando se alterna un valor
    */
-  @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
+  @Output() alternarValor: EventEmitter<{ row: T; column: string }> = new EventEmitter();
 
   /**
    * ID de la fila seleccionada
@@ -102,7 +108,7 @@ export class TablaExpandibleComponent<T, N> {
   /**
    * Obtiene la configuración ordenada para las columnas anidadas
    */
-  obtenerConfiguracionAnidadaOrdenada(): ConfiguracionColumna<N>[] {
+  obtenerConfiguracionAnidadaOrdenada(): ConfiguracionColumna<TN>[] {
     return this.configuracionTablaAnidada.sort((a, b) => a.orden - b.orden);
   }
 
