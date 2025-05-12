@@ -23,4 +23,4 @@ const ROUTES_CONTENEDOR: Routes = [
   imports: [RouterModule.forChild(ROUTES_CONTENEDOR)],
   exports: [RouterModule],
 })
-export class ImmexModificationRoutingModule { }
+export class ImmexModificacionCambioDeSectorRoutingModule { }

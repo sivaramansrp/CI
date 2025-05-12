@@ -1,16 +1,22 @@
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
-
 /**
  * Este componente se muestra en PasoDos
  */
 @Component({
+  standalone: true,
+  imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent],
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
@@ -27,17 +33,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Cada elemento es de tipo `Catalogo`, que representa un catálogo de opciones.
    */
   tiposDocumentos: Catalogo[] = [];
-  
+
   /**
    * Clase CSS utilizada para mostrar una alerta informativa en la interfaz de usuario.
-   * 
+   *
    * @type {string}
    */
   infoAlert = 'alert-info';
 
   /**
    * Lista de documentos del catálogo.
-   * 
+   *
    * @type {Catalogo[]}
    * @remarks
    * Este arreglo contiene los documentos disponibles en el catálogo,
@@ -59,15 +65,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   private destroy$: Subject<void> = new Subject<void>();
 
-
   /**
    * Constructor de la clase PasoDosComponent.
-   * 
+   *
    * @param catalogosServices - Servicio para gestionar los catálogos necesarios en el componente.
    */
-  constructor(
-    private catalogosServices: CatalogosService,
-  ) { 
+  constructor(private catalogosServices: CatalogosService) {
     // Constructor
   }
 
@@ -90,11 +93,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
- */
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroy$))
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -103,7 +107,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         },
         error: (_error): void => {
           // Manejo de error
-         },
+        },
       });
   }
 }

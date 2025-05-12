@@ -12,6 +12,7 @@ import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramit
 import { ViewChild } from '@angular/core';
 
 @Component({
+
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',

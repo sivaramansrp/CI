@@ -1,15 +1,18 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, takeUntil } from 'rxjs';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
 @Component({
+  standalone: true,
+  imports: [FirmaElectronicaComponent],
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.css',
 })
-export class PasoTresComponent implements OnDestroy{
+export class PasoTresComponent implements OnDestroy {
   /**
    * Tipo de persona.
    */

@@ -488,10 +488,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'immex-modificacion',
+    path: 'immex-modificacion-cambio-de-sector',
     loadChildren: () =>
-      import('./tramites/80314/immexModification.module').then(
-        (m) => m.ImmexModificationModule
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
       ),
   }
 ];

@@ -1,7 +1,14 @@
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoDosComponent } from '../../../120404/component/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
@@ -28,6 +35,14 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
+  standalone: true,
+  imports: [
+    PasoDosComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    WizardComponent,
+    BtnContinuarComponent,
+  ],
 })
 /**
  * Componente que representa la página de solicitud.

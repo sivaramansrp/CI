@@ -68,13 +68,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * Configuración de las columnas de la tabla dinámica.
-   * Define las propiedades de cada columna, como encabezado, clave y orden.
-   */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] =
-    CONFIGURACION_MODIFICACION;
-
-  /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
   datosTabla: DatosDelModificacion[] = [];
