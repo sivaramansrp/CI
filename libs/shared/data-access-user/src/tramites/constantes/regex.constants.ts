@@ -393,6 +393,27 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
 export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
 
 /**
+ * Expresión regular para validar nombres.
+ *
+ * Esta expresión regular asegura que un nombre:
+ * - No comience ni termine con un espacio.
+ * - Contenga caracteres alfanuméricos, incluyendo caracteres especiales como Ñ, ñ, Ä, Ë, Ï, Ö, Ü, Ç, ç, y otros.
+ * - Permita caracteres como &, /, -, ., ', y paréntesis.
+ * - Admite caracteres griegos como α y β.
+ *
+ * Ejemplos válidos:
+ * - "Juan Pérez"
+ * - "María-José"
+ * - "O'Connor"
+ * - "Αλέξανδρος"
+ *
+ * Ejemplos no válidos:
+ * - " Juan" (comienza con un espacio)
+ * - "Pérez " (termina con un espacio)
+ * - "Juan@Pérez" (contiene un carácter no permitido)
+ */
+export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
+/**
  * Expresión regular para validar archivos con formato Excel.
  * 
  * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:

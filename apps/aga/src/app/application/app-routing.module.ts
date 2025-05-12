@@ -155,6 +155,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
+  {
     path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then(
@@ -225,19 +232,27 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      )
+  },
+  
   { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
         (m) => m.PrestadoresServicioModule
-      ),
+      )
   },
   {
     path: 'exencion-impuestos',
     loadChildren: () =>
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
-      ),
+      )
   },
   {
     path:'registro-solicitud',
