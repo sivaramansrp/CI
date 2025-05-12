@@ -3,6 +3,7 @@ import { Component, Input, OnInit,forwardRef } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  FOLIO_DEL_TRAMITE,
   PERSONA_FISICA_EXTRANJERO,
   PERSONA_FISICA_NACIONAL,
   PERSONA_MORAL_EXTRANJERO,
@@ -42,6 +43,8 @@ export class SolicitanteComponent implements OnInit {
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
+  datosTramite: FormularioDinamico[] = [];
+
 
   form!: FormGroup;
 
@@ -54,6 +57,7 @@ export class SolicitanteComponent implements OnInit {
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
+    this.inicializarFormGroup(this.datosTramite, 'datosTramite');
   }
 
   /**
@@ -90,6 +94,7 @@ export class SolicitanteComponent implements OnInit {
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
+    this.datosTramite=FOLIO_DEL_TRAMITE;
   }
 
   /**
@@ -105,6 +110,9 @@ export class SolicitanteComponent implements OnInit {
   get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
+  get datosTramiteForm(): FormGroup {
+    return this.form.get('datosTramite') as FormGroup;
+  }
 
   /**
    * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
@@ -113,6 +121,7 @@ export class SolicitanteComponent implements OnInit {
     this.form = this.fb.group({
       datosGenerales: this.fb.group({}),
       domicilioFiscal: this.fb.group({}),
+      datosTramite: this.fb.group({})
     });
   }
 

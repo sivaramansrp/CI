@@ -126,12 +126,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
   },
-{
-  path: 'transferencia-contenedores',
-  loadChildren: () =>
-    import('./tramites/11204/temporal-contenedores.module').then(
-      (m) => m.TemporalContenedoresModule
-    ),
+  {
+    path: 'transferencia-contenedores',
+    loadChildren: () =>
+      import('./tramites/11204/temporal-contenedores.module').then(
+        (m) => m.TemporalContenedoresModule
+      ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -217,7 +217,7 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  { 
+  {
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -237,16 +237,16 @@ const ROUTES: Routes = [
       import('./tramites/570102/registro-solicitud-desistimiento.module').then(
         (m) => m.RegistroSolicitudDesistimientoModule
       ),
-    },
-    {
+  },
+  {
     path: 'registro-del-codigo',
-      loadChildren: () =>
-        import('./tramites/40401/tramite40401.module').then(
-          (m) => m.Tramite40401Module),
+    loadChildren: () =>
+      import('./tramites/40401/tramite40401.module').then(
+        (m) => m.Tramite40401Module),
   },
   {
     path: 'codigo-transportista',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./tramites/40402/codigo-transportista.module').then(
         (m) => m.CodigoTransportistaModule)
   },
@@ -261,6 +261,13 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./evaluar/evaluar.component').then(
         (m) => m.EvaluarComponent
+      ),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
       ),
   },
 ];

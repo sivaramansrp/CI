@@ -16,8 +16,9 @@ import { Type } from "@angular/core";
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+
 @Component({
-  selector: 'app-evaluar',
+  selector: 'app-autorizar',
   standalone: true,
   imports: [CommonModule, ReviewersTabsComponent,
     EncabezadoRequerimientoComponent,
@@ -25,19 +26,18 @@ import { takeUntil } from 'rxjs';
     GenerarDictamenComponent,
     FirmaElectronicaComponent
   ],
-  templateUrl: './evaluar.component.html',
-  styleUrl: './evaluar.component.scss',
+  templateUrl: './autorizar.component.html',
+  styleUrl: './autorizar.component.scss',
 })
-export class EvaluarComponent implements OnInit, OnDestroy {
+export class AutorizarComponent implements OnInit, OnDestroy {
   listaTrimites = LISTA_TRIMITES;
   slectTramite!: AccuseComponentes | undefined
   viewChild!: Type<unknown>;
   tramite: number = 0;
-  indice: number = 0;
   firmar: boolean = false;
   detallesDelTramite!: DetallesDelTramite;
-  guardarDatos!: ConsultaioState;
   private destroyNotifier$: Subject<void> = new Subject();
+  guardarDatos!: ConsultaioState;
   constructor(private router: Router,
     private consultaioStore: ConsultaioStore,
     private consultaioQuery: ConsultaioQuery,
@@ -62,7 +62,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
-      this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_EVALUAR', 'AGA', true, false, false);
+      this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_AUTORIZACION', 'AGA', true, false, false);
     } else {
       this.router.navigate(['/se/seleccion-tramite']);
     }
@@ -88,10 +88,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
   }
 
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
   guardarFirmar(): void {
     this.firmar = true;
   }
@@ -102,7 +98,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         this.guardarFirmar();
         break;
       case 'cancelar':
-        this.indice = 0;
         break;
       default:
     }
