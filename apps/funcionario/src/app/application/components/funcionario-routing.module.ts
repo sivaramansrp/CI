@@ -5,10 +5,11 @@ import { BandejaPendientesComponent } from './seleccion-modulo/seleccion-modulo.
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { ConsultaComponent } from './consulta/consulta.component';
+import { ConsultaTramiteComponent } from './consulta-tramite/consulta-tramite.component';
+import { DatosGeneralesTramiteComponent } from './datos-generales-tramite/datos-generales-tramite.component';
 import { NgModule } from '@angular/core';
 import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
-
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-modulo' },
@@ -47,7 +48,15 @@ const ROUTES: Routes = [
   {
     path: 'bandeja-solicitudes',
     component: BandejaSolicitudesComponent,
-  }
+  },
+   {
+    path: 'consulta-tramite',
+    component: ConsultaTramiteComponent
+  },
+  {
+    path: 'datos-generales-tramite',
+    component: DatosGeneralesTramiteComponent
+  },
 
 ];
 
