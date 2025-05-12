@@ -19,7 +19,7 @@ jest.mock('@libs/shared/theme/assets/json/250102/pago-formdatos.json', () => ({
   },
 }));
 
-const mockSolicitudState: Tramite250102State = {
+const MOCK_SOLICITUD_STATE: Tramite250102State = {
   clave: 'mockClave',
   dependencia: 'mockDependencia',
   banco: 'MockBank1',
@@ -60,6 +60,8 @@ const mockSolicitudState: Tramite250102State = {
   procedencia: '',
   tipoMovimiento: 'mockMovimiento',
   destinariociudad: 'mockCiudad',
+  productos: [],
+  detalles: [],
 };
 
 describe('PagoDeDerechosComponent', () => {
@@ -67,7 +69,7 @@ describe('PagoDeDerechosComponent', () => {
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
   let tramite250102Store: Tramite250102Store;
 
-  const tramite250102StoreMock = {
+  const TRAMITE250102_STORE_MOCK = {
     setClave: jest.fn(),
     setDependencia: jest.fn(),
     setBanco: jest.fn(),
@@ -77,8 +79,8 @@ describe('PagoDeDerechosComponent', () => {
     setRevisados: jest.fn(),
   };
 
-  const tramite250102QueryMock = {
-    selectSolicitud$: of(mockSolicitudState),
+  const TRAMITE250102_QUERY_MOCK = {
+    selectSolicitud$: of(MOCK_SOLICITUD_STATE),
   };
 
   beforeEach(async () => {
@@ -92,8 +94,8 @@ describe('PagoDeDerechosComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: tramite250102StoreMock },
-        { provide: Tramite250102Query, useValue: tramite250102QueryMock },
+        { provide: Tramite250102Store, useValue: TRAMITE250102_STORE_MOCK },
+        { provide: Tramite250102Query, useValue: TRAMITE250102_QUERY_MOCK },
       ],
     }).compileComponents();
   });
@@ -161,11 +163,11 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const DESTROY_SPY = jest.spyOn(component['destroyNotifier$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
 
