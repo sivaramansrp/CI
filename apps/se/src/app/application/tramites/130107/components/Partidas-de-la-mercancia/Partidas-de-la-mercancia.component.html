@@ -1,0 +1,34 @@
+<form [formGroup]="forma">
+    <div class="row">
+        <formas-dinamicas formularioTitulo="Partidas de la mercancía" [forma]="ninoFormGroup"
+            [formularioDatos]="PartidasDeLaMercancia"></formas-dinamicas>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <button class="btn btn-primary me-2" type="button">
+                    Cargar archivo
+                </button>
+                <button class="btn btn-primary ms-2" (click)="agregarPartida()">
+                    Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+         <div class="row">
+            <h6>Partidas:</h6>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="partidasTabla"
+                [datos]="datospartidas"></app-tabla-dinamica>
+        </div>
+     <div class="row">
+        <formas-dinamicas [forma]="ninoFormGroup"
+            [formularioDatos]="PartidasDeLa"></formas-dinamicas>
+    </div>
+        <div class="row mt-5 text-end">
+            <div>
+                <button type="button" class="btn btn-danger me-2 btn-space" >Eliminar partida</button>
+                <button type="button" class="btn btn-primary btn-space" >Modificar partida</button>
+            </div>
+        </div>
+</form>

@@ -1,0 +1,18 @@
+<form [formGroup]="forma">
+    <div class="row">
+        <formas-dinamicas formularioTitulo="País(es) procedencia" [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaFormData"
+    ></formas-dinamicas>
+    </div>
+    <div class="row mt-5">
+        <crosslist
+            [fechas]="seleccionarOrigenDelPais"
+            [label]="paisDeProcedenciaLabel"
+            [botones]="paisDeProcedenciaBotones"
+        ></crosslist>
+    </div>
+       <div class="row">
+        <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaTodos"
+        ></formas-dinamicas>
+    </div>
+    
+</form>

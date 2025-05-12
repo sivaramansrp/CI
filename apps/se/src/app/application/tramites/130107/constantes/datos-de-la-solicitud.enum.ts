@@ -166,4 +166,172 @@ export const DATOS_DE_LA_MERCANCIA = [
       marginTop: 0
     },
   ];
-  
+
+  export const PARTIDAS_DE_LA_MERCANCIA = [
+  {
+    id: 'cantidad',
+    labelNombre: 'Cantidad',
+    campo: 'cantidad',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'valorPartidaUsd',
+    labelNombre: 'Valor partida USD',
+    campo: 'valorPartidaUsd',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+    {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'descripcion',
+    labelNombre: 'Descripción',
+    campo: 'descripcion',
+    clase: 'col-md-8',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+        tipo: 'required',
+        mensaje: ''
+      }
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+];
+
+export const PARTIDAS = [
+   {
+    id: 'cantidadTotal',
+    labelNombre: 'Cantidad total',
+    campo: 'cantidadTotal',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: true,
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'valorTotalUsd',
+    labelNombre: 'Valor total USD',
+    campo: 'valorTotalUsd',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: true,
+    soloLectura: false,
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+];
+
+export const PAIS_PROCEDENCIA = [
+  {
+    id: 'bloque',
+    labelNombre: 'Bloque',
+    campo: 'bloque',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      { tipo: '' }
+    ],
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0
+  },
+  {
+    id: 'todos_los_paises',
+    labelNombre: 'Todos los países',
+    campo: 'todos_los_paises',
+    clase: 'col-md-8',
+    tipoInput: 'button',
+    desactivado: false,
+    marginTop: 5
+  },
+];
+
+export const PAIS_PROCEDENCIA_TODOS = [
+   {
+      id: 'mercancía',
+      labelNombre: 'Uso(s) específico(s) de la mercancía',
+      campo: 'mercancía',
+      clase: 'col-md-8',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+          mensaje: ''
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0
+    },
+     {
+      id: 'obtiene',
+      labelNombre: 'Justificación y beneficio que se obtiene',
+      campo: 'obtiene',
+      clase: 'col-md-8',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+          mensaje: ''
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0
+    },
+     {
+      id: 'Observaciones',
+      labelNombre: 'Observaciones',
+      campo: 'Observaciones',
+      clase: 'col-md-8',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+          mensaje: ''
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0
+    },
+]
+
+export const CROSLISTA_DE_PAISES: string[] = [
+  "ESTADOS UNIDOS DE AMERICA",
+  "CANADA"
+];

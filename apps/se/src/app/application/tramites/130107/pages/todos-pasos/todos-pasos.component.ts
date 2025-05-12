@@ -1,12 +1,13 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/importaciones-agropecuarias.enum';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../constantes/importaciones-agropecuarias.enum';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-todos-pasos',
   templateUrl: './todos-pasos.component.html',
 })
+
 export class TodosPasosComponent implements OnDestroy {
 /**
 * Esta variable se utiliza para almacenar la lista de pasos.
@@ -26,9 +27,7 @@ export class TodosPasosComponent implements OnDestroy {
    * Notificador para destruir observables activos.
    */
   private destroyed$ = new Subject<void>();
-
-
-
+  
   /**
   * Esta variable se utiliza para almacenar el componente wizard.
   * @param wizardComponent - El componente wizard.
