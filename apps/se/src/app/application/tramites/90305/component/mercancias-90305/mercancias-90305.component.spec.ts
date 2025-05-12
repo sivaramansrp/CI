@@ -27,8 +27,7 @@ describe('Mercancias90305Component', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
-      declarations: [Mercancias90305Component],
+      imports: [Mercancias90305Component, CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
       providers: [{ provide: ProsecModificacionServiceTsService, useValue: mockService }],
     }).compileComponents();
 

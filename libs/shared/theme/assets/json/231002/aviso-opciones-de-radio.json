@@ -1,0 +1,13 @@
+{
+    "opcionesDeRadio": [
+        {
+            "label": "Retorno por primera vez",
+            "value": "TAV.IMP"
+        },
+        {
+            "label": "Retorno sub-secuente",
+            "value": "TAV.MON"
+        }
+    ],
+    "required": false
+}
