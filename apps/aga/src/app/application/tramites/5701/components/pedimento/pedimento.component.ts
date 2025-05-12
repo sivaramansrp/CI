@@ -1,15 +1,13 @@
-import { BooleanoSiNoPipe, Notificacion, SoloNumerosDirective, } from '@ng-mf/data-access-user';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
+import { BooleanoSiNoPipe, Notificacion, NotificacionesComponent, SoloNumerosDirective, } from '@ng-mf/data-access-user';
+import { Component, ElementRef, forwardRef, Input, OnChanges, OnDestroy, OnInit, output, SimpleChanges, ViewChild, } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { NotificacionesComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
 import { ToastrService } from 'ngx-toastr';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
   selector: 'c-pedimento',
