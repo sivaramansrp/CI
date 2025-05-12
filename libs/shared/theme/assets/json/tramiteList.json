@@ -4198,5 +4198,12 @@
     "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
     "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
     "department": "semarnat"
+  },
+  {
+    "id": 602,
+    "tramite": 103,
+    "linkDashboard": "/aga/autorizacion/mercancia-donada",
+    "linkDepartment": "/pago/autorizacion/mercancia-donada",
+    "department": "aga"
   }
 ]

@@ -285,6 +285,13 @@ const ROUTES: Routes = [
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
         (m) => m.ModificacionDonacionesImmexModule
       ),
+  },
+  {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
+      ),
   }
 ];
 
