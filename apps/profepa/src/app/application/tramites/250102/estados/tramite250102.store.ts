@@ -1,7 +1,7 @@
+import { Detalle, Producto, TablaDatos} from '../models/flora-fauna.models';
 import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { TablaDatos} from '../models/flora-fauna.models';
 
 /**
  * Estado del trámite con clave 250102. Contiene toda la información capturada
@@ -87,6 +87,10 @@ export interface Tramite250102State {
   origen: string;
   /** Lugar de procedencia del producto. */
   procedencia: string;
+    /** Lista de productos agregados */
+    productos: Producto[];
+    /** Detalles de cada producto, almacenados como entradas de mapa */
+    detalles: [number, Detalle[]][];
 }
 
 
@@ -180,6 +184,10 @@ export function createInitialState(): Tramite250102State {
     origen: '',
     /** Lugar de procedencia (vacío). */
     procedencia: '',
+     /** Lista vacía para los productos */
+     productos: [],
+     /** Lista vacía para los detalles de productos */
+     detalles: [],
   };
 }
 
@@ -219,8 +227,16 @@ export class Tramite250102Store extends Store<Tramite250102State> {
  * @param agenteAduanalRowData Lista de datos de agentes aduanales que serán almacenados.
  */
   public establecerAgenteAduanal(agenteAduanalRowData: TablaDatos[]): void {
-        this.update((state) => ({ ...state, agenteAduanalRowData }));
-    }
+    this.update((state) => ({ ...state, agenteAduanalRowData }));
+  }
+
+/**
+ * Restaura el estado inicial del store.
+ */
+public resetStore(): void {
+  this.reset();
+}
+
 }
 
 

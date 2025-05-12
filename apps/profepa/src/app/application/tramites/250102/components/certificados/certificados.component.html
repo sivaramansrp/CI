@@ -1,1 +1,37 @@
-<p>certificados works!</p>
+<div class="container">
+    <ng-titulo titulo="Permisos o certificados CITES o autorizaciones de vida silvestre" />
+    <div class="col-md-12 mt-3">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+            [datos]="permisosDatos">
+        </app-tabla-dinamica>
+    </div>
+
+    <div class="col-md-12 d-flex justify-content-end align-items-end">
+        <div class="btn-group">
+            <button class="btn btn-danger ms-3" type="button">
+                Eliminar
+            </button>
+            <button class="btn btn-primary ms-3" type="button" (click)="cambiarCertificadosAutorizaciones()">
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>
+
+<app-modal [active]="showAutorizacionesModal">
+    <div class="datos-table">
+        <ng-titulo titulo="Selección de permisos o certificados CITES o autorizaciones de vida silvestre" />
+
+        <div class="table-responsive mt-5">
+            <app-tabla-dinamica 
+                [tipoSeleccionTabla]="tipoSeleccionTabla" 
+                [configuracionTabla]="configuracionTablaCertificados"
+                [datos]="certificadosModalDatos">
+            </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 mt-5 pb-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-default ms-3" id="limpiarDestinatarioBtn" (click)="cambiarCertificadosAutorizaciones()">Cerrar</button>
+            <button type="button" class="btn btn-primary ms-3" id="registroDestinatarioBtn" (click)="agregarCertificadosSeleccionados()">Agregar</button>
+        </div>
+    </div>
+</app-modal>
