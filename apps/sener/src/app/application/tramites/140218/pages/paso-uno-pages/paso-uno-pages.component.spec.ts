@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoPagesComponent } from './paso-uno-pages.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 
 describe('PasoUnoPagesComponent', () => {
   let component: PasoUnoPagesComponent;
@@ -60,39 +58,14 @@ describe('PasoUnoPagesComponent', () => {
     component = fixture.componentInstance;
 
     // Injecting mocked children
-    const datosComponent = new MockDatosDelSolicitudModificacionComponent();
-    const tercerosComponent = new MockTercerosRelacionadosComponent();
-    const pagoComponent = new MockPagoDeDerechosComponent();
-    const tramitesComponent = new MockTramitesAsociadosComponent();
     const solicitanteComponent = new MockSolicitanteComponent();
 
     component.solicitante = solicitanteComponent as any;
-    // component.datosSolicitudComponents = {
-    //   toArray: () => [datosComponent]
-    // } as any;
-    // component.tercerosRelacionadosComponents = {
-    //   toArray: () => [tercerosComponent]
-    // } as any;
-    // component.pagoDeDerechosEntradaComponent = {
-    //   toArray: () => [pagoComponent]
-    // } as any;
-    // component.tramitesAsociadosSeccionComponent = {
-    //   toArray: () => [tramitesComponent]
-    // } as any;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should collect form values correctly', () => {
-    // const result = component.collectFormValues();
 
-    // expect(result.solicitante?.datosGenerales.actEconomica).toEqual('Juan Perez');
-    // expect(result.datosSolicitud?.length).toBe(1);
-    // expect(result.datosSolicitud?.[0].formMercancias?.UMC).toBe('Medicamento');
-    // expect(result.tercerosRelacionados?.[0].facturador?.calle).toBe('Facturador A');
-    // expect(result.pagoDeDerechos?.[0].banco).toBe(1000);
-    // expect(result.tramitesAsociados?.[0].estatus).toBe('Trámite X');
-  });
 });

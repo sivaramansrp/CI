@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, takeUntil} from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 
 import { DatosSolicitudState } from '../../estados/store/tramite140218.store';
@@ -97,7 +97,7 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * Este método inicializa el formulario con los valores actuales del estado de la solicitud
    * y deshabilita los campos que no deben ser editables por el usuario.
    */
-  crearAgregarFormulario():void {
+  crearAgregarFormulario(): void {
     this.tramite140218Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -108,51 +108,22 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.renunciaDerechosForm = this.formBuilder.group({
-      folioTramite: [this.solicitudState.folioTramite],
-      tipoSolicitud: [this.solicitudState.tipoSolicitud],
-      regimen: [this.solicitudState.regimen],
-      clasificacionRegimen: [this.solicitudState.clasificacionRegimen],
-      periodoVigencia: [this.solicitudState.periodoVigencia],
-      unidadMedida: [this.solicitudState.unidadMedida],
-      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
-      cantidadAutorizada: [this.solicitudState.cantidadAutorizada],
-      valorAutorizado: [this.solicitudState.valorAutorizado],
-      nico: [this.solicitudState.nico],
-      descripcionNico: [this.solicitudState.descripcionNico],
-      acotacion: [this.solicitudState.acotacion],
-      permisoDesde: [this.solicitudState.permisoDesde],
-      permisoHasty: [this.solicitudState.permisoHasty],
-      motivoRenuncia: []
+      folioTramite: [{ value: this.solicitudState.folioTramite, disabled: true }],
+      tipoSolicitud: [{ value: this.solicitudState.tipoSolicitud, disabled: true }],
+      regimen: [{ value: this.solicitudState.regimen, disabled: true }],
+      clasificacionRegimen: [{ value: this.solicitudState.clasificacionRegimen, disabled: true }],
+      periodoVigencia: [{ value: this.solicitudState.periodoVigencia, disabled: true }],
+      unidadMedida: [{ value: this.solicitudState.unidadMedida, disabled: true }],
+      fraccionArancelaria: [{ value: this.solicitudState.fraccionArancelaria, disabled: true }],
+      cantidadAutorizada: [{ value: this.solicitudState.cantidadAutorizada, disabled: true }],
+      valorAutorizado: [{ value: this.solicitudState.valorAutorizado, disabled: true }],
+      nico: [{ value: this.solicitudState.nico, disabled: true }],
+      descripcionNico: [{ value: this.solicitudState.descripcionNico, disabled: true }],
+      acotacion: [{ value: this.solicitudState.acotacion, disabled: true }],
+      permisoDesde: [{ value: this.solicitudState.permisoDesde, disabled: true }],
+      permisoHasty: [{ value: this.solicitudState.permisoHasty, disabled: true }],
+      motivoRenuncia: [''] // este sí es editable
     });
-
-    // Deshabilitar campos no editables
-    this.renunciaDerechosForm.get('permisoHasty')?.disable();
-    this.renunciaDerechosForm.get('folioTramite')?.disable();
-    this.renunciaDerechosForm.get('tipoSolicitud')?.disable();
-    this.renunciaDerechosForm.get('regimen')?.disable();
-    this.renunciaDerechosForm.get('clasificacionRegimen')?.disable();
-    this.renunciaDerechosForm.get('periodoVigencia')?.disable();
-    this.renunciaDerechosForm.get('unidadMedida')?.disable();
-    this.renunciaDerechosForm.get('fraccionArancelaria')?.disable();
-    this.renunciaDerechosForm.get('cantidadAutorizada')?.disable();
-    this.renunciaDerechosForm.get('valorAutorizado')?.disable();
-    this.renunciaDerechosForm.get('nico')?.disable();
-    this.renunciaDerechosForm.get('descripcionNico')?.disable();
-    this.renunciaDerechosForm.get('acotacion')?.disable();
-    this.renunciaDerechosForm.get('permisoDesde')?.disable();
-
-    /**
-     * @method setRenunciaDerechosForm
-     * @description Establece los valores iniciales en el formulario `renunciaDerechosForm` 
-     * utilizando los datos proporcionados en `renuncia.formData`.
-     * 
-     * @remarks
-     * Este método asigna valores a múltiples controles del formulario, asegurando que 
-     * cada campo sea inicializado correctamente con los datos correspondientes.
-     * 
-     * @void
-     * Este método no retorna ningún valor.
-     */
     this.setRenunciaDerechosForm();
 
     // Actualizar el estado del almacén con los datos del formulario
@@ -172,7 +143,7 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @void
    * Este método no retorna ningún valor.
    */
-  setRenunciaDerechosForm():void {
+  setRenunciaDerechosForm(): void {
     // Establecer valores iniciales en el formulario
     this.renunciaDerechosForm.get('permisoHasty')?.setValue(renuncia.formData.permisoHasty);
     this.renunciaDerechosForm.get('folioTramite')?.setValue(renuncia.formData.folioTramite);
@@ -216,10 +187,10 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite140218Store.update(UPDATE_PAGO_FORM);
   }
 
-   /**
-   * Gancho de ciclo de vida OnDestroy
-   */
-   ngOnDestroy(): void {
+  /**
+  * Gancho de ciclo de vida OnDestroy
+  */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

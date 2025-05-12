@@ -50,6 +50,17 @@ export const MODIFICACION_PERMISO_ENUM = [
  *  */
 export const MODIFICACION_PERMISO_DATA='Renuncia de derechos de permisos'
 
+/**
+ * Contiene el texto HTML del manifiesto de aceptación para la renuncia de permiso.
+ *
+ * @remarks
+ * Este manifiesto se basa en lo dispuesto por los artículos 11, fracción V, 57 fracción II I y 58 de la Ley Federal de Procedimiento Administrativo,
+ * aplicable de manera supletoria al Acuerdo que establece la clasificación y codificación de Hidrocarburos y Petrolíferos cuya importación y exportación
+ * requieren Permiso Previo de la Secretaría de Energía. El texto declara, bajo protesta de decir verdad, que los derechos otorgados mediante el permiso
+ * especificado no son de orden ni interés público y que su renuncia no afecta el interés público.
+ *
+ * @property Texto - Texto del manifiesto de aceptación en formato HTML.
+ */
 export const MANIFIESTO_ACEPTACION_HTML = {
   Texto: `De conformidad con lo dispuesto en los artículos 11, fracción V, 57 fracción II I y 58 de la Ley Federal de Procedimiento
 Administrativo de aplicación supletoria al Acuerdo por el que se establece la clasificación y codificación de
