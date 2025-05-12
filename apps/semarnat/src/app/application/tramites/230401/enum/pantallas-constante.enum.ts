@@ -76,6 +76,16 @@ export const SECCIONES_TRAMITE_230401 = {
   },
 };
 
+/**
+ * Configuración de las sustancias sensibles utilizada para definir las propiedades
+ * y el orden de las columnas en una tabla o vista relacionada con sustancias sensibles.
+ * 
+ * Cada objeto en la configuración representa una columna con las siguientes propiedades:
+ * - `encabezado`: El título o nombre de la columna que se mostrará en la interfaz de usuario.
+ * - `clave`: Una función que toma un objeto de tipo `SustanciaSensible` y devuelve el valor
+ *   correspondiente para esa columna.
+ * - `orden`: El número que indica la posición de la columna en la tabla o vista.
+ */
 export const CONFIGURACION_SUSTANCIAS_SENSIBLES = [
   {
     encabezado: 'Número CAS',

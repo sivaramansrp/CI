@@ -729,6 +729,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modifica los valores del formulario "FormSolicitud" con los datos
+   * seleccionados de la lista "sustanciasSensiblesSeleccionadas".
+   * 
+   * Si la lista "sustanciasSensiblesSeleccionadas" está vacía, no realiza
+   * ninguna acción y retorna inmediatamente.
+   * 
+   * Los campos actualizados en el formulario incluyen:
+   * - `numeroCas`: Número CAS de la sustancia seleccionada.
+   * - `cas`: Código CAS de la sustancia seleccionada.
+   * - `descripcionNoArancelaria`: Descripción no arancelaria de la sustancia seleccionada.
+   * - `nombreQuimico`: Nombre químico de la sustancia seleccionada.
+   */
   modificarListaDeNumeros(): void {
     if (this.sustanciasSensiblesSeleccionadas.length === 0) {
       return;
