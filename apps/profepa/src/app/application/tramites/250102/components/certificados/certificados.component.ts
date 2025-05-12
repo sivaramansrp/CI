@@ -1,9 +1,9 @@
+import { CERTIFICADO_MODAL_TABLA, CONFIGURACION_COLUMNA, CertificadoModal, ClavesDePermisos } from '../../models/flora-fauna.models';
 import { Component, OnDestroy } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CERTIFICADO_MODAL_TABLA, CertificadoModal, ClavesDePermisos, CONFIGURACION_COLUMNA } from '../../models/flora-fauna.models';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
 import { ModalComponent } from '../modal/modal.component';
+import { Subject } from 'rxjs';
 
 /**
  * @description
