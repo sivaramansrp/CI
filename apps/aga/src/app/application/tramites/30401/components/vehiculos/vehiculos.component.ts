@@ -41,8 +41,8 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
     ReactiveFormsModule,
     NotificacionesComponent,
   ],
-  templateUrl: './Vehiculos.component.html',
-  styleUrl: './Vehiculos.component.scss',
+  templateUrl: './vehiculos.component.html',
+  styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements OnInit {
   /**
