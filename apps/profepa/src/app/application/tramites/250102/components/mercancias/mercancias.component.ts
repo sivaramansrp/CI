@@ -2,7 +2,7 @@ import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaExpandi
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil, Subject } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
