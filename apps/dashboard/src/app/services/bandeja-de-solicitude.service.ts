@@ -21,4 +21,12 @@ export class BandejaDeSolicitudeService {
       })
     );
   }
+
+  public getTareasPendientesTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/bandeja-de-tareas-pendientes/de-tareas-pendientes-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

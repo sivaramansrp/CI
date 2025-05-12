@@ -5,6 +5,7 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 import { enviroment } from '@libs/shared/data-access-user/src';
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
+import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 
 export const appRoutes: Route[] = [
   {
@@ -164,6 +165,10 @@ export const appRoutes: Route[] = [
   {
     path: 'bandeja-de-solicitudes',
     component: BandejaDeSolicitudesComponent
+  },
+  {
+    path: 'bandeja-de-tareas-pendientes',
+    component: BandejaDeTareasPendientesComponent
   }
 
 ];
