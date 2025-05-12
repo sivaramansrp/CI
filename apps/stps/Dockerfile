@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/stps
 
 # Build the application
-RUN npx nx build stps --configuration=production --skip-nx-cache --verbose
+RUN npx nx build stps --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/stps" && test -f "/app/dist/apps/stps/index.html" || exit 1

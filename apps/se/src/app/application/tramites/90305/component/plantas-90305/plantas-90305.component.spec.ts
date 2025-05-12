@@ -49,8 +49,7 @@ describe('Plantas90305Component', () => {
     } as ProsecModificacionServiceTsService;
 
     await TestBed.configureTestingModule({
-      declarations: [Plantas90305Component],
-      imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+      imports: [Plantas90305Component, CommonModule, TituloComponent, TablaDinamicaComponent],
       providers: [{ provide: ProsecModificacionServiceTsService, useValue: mockService }],
     }).compileComponents();
 
