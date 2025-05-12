@@ -1,8 +1,9 @@
-import { Observable, map } from 'rxjs';
+import { Anexo, Bitacora, Complimentaria, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Anexo, Bitacora, Complimentaria, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from '../models/datos-tramite.model';
+import { map } from 'rxjs/operators';
 
 /**
  * Servicio `SolicitudService` utilizado para gestionar las solicitudes relacionadas con el trámite 80316.
@@ -43,7 +44,9 @@ export class SolicitudService {
    * @returns {Observable<Bitacora[]>} Un observable que emite un arreglo de objetos de tipo `Bitacora`.
    */
   obtenerBitacora(): Observable<Bitacora[]> {
-    return this.http.get<Bitacora[]>('assets/json/80308/bitacora.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Bitacora[] }>('assets/json/80308/bitacora.json').pipe(
+      map((res: { data: Bitacora[] }) => res.data)
+    );
   }
 
   /**
@@ -61,7 +64,9 @@ export class SolicitudService {
    * @returns {Observable<Complimentaria[]>} Un observable que emite un arreglo de objetos de tipo `Complimentaria`.
    */
   obtenerComplimentaria(): Observable<Complimentaria[]> {
-    return this.http.get<Complimentaria[]>('assets/json/80316/complimentaria.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Complimentaria[] }>('assets/json/80316/complimentaria.json').pipe(
+      map((res: { data: Complimentaria[] }) => res.data)
+    );
   }
 
   /**
@@ -70,7 +75,9 @@ export class SolicitudService {
    * @returns {Observable<Anexo[]>} Un observable que emite un arreglo de objetos de tipo `Anexo`.
    */
   obtenerAnexo(): Observable<Anexo[]> {
-    return this.http.get<Anexo[]>('assets/json/80316/anexo.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Anexo[] }>('assets/json/80316/anexo.json').pipe(
+      map((res: { data: Anexo[] }) => res.data)
+    );
   }
 
   /**
@@ -79,7 +86,9 @@ export class SolicitudService {
    * @returns {Observable<Federetarios[]>} Un observable que emite un arreglo de objetos de tipo `Federetarios`.
    */
   obtenerFederetarios(): Observable<Federetarios[]> {
-    return this.http.get<Federetarios[]>('assets/json/80316/federetarios.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Federetarios[] }>('assets/json/80316/federetarios.json').pipe(
+      map((res: { data: Federetarios[] }) => res.data)
+    );
   }
 
   /**
@@ -88,7 +97,9 @@ export class SolicitudService {
    * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de objetos de tipo `Operacions`.
    */
   obtenerOperacion(): Observable<Operacions[]> {
-    return this.http.get<Operacions[]>('assets/json/80316/operacion.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Operacions[] }>('assets/json/80316/operacion.json').pipe(
+      map((res: { data: Operacions[] }) => res.data)
+    );
   }
 
   /**
@@ -97,7 +108,9 @@ export class SolicitudService {
    * @returns {Observable<Empresas[]>} Un observable que emite un arreglo de objetos de tipo `Empresas`.
    */
   obtenerEmpresas(): Observable<Empresas[]> {
-    return this.http.get<Empresas[]>(`assets/json/80316/empresas.json`).pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Empresas[] }>(`assets/json/80316/empresas.json`).pipe(
+      map((res: { data: Empresas[] }) => res.data)
+    );
   }
 
   /**
@@ -106,7 +119,9 @@ export class SolicitudService {
    * @returns {Observable<Plantas[]>} Un observable que emite un arreglo de objetos de tipo `Plantas`.
    */
   obtenerPlantas(): Observable<Plantas[]> {
-    return this.http.get<Plantas[]>(`assets/json/80316/plantas.json`).pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Plantas[] }>(`assets/json/80316/plantas.json`).pipe(
+      map((res: { data: Plantas[] }) => res.data)
+    );
   }
 
   /**
@@ -115,7 +130,9 @@ export class SolicitudService {
    * @returns {Observable<Servicios[]>} Un observable que emite un arreglo de objetos de tipo `Servicios`.
    */
   obtenerServicios(): Observable<Servicios[]> {
-    return this.http.get<Servicios[]>(`assets/json/80316/servicios.json`).pipe(map((res: any) => res.data));
+    return this.http.get<{ data: Servicios[] }>(`assets/json/80316/servicios.json`).pipe(
+      map((res: { data: Servicios[] }) => res.data)
+    );
   }
 
   /**
@@ -124,7 +141,9 @@ export class SolicitudService {
    * @returns {Observable<FraccionSensible[]>} Un observable que emite un arreglo de objetos de tipo `FraccionSensible`.
    */
   obteneFraccionSensible(): Observable<FraccionSensible[]> {
-    return this.http.get<FraccionSensible[]>('assets/json/80316/fraccionSensible.json').pipe(map((res: any) => res.data));
+    return this.http.get<{ data: FraccionSensible[] }>('assets/json/80316/fraccionSensible.json').pipe(
+      map((res: { data: FraccionSensible[] }) => res.data)
+    );
   }
 
   /**
@@ -144,5 +163,4 @@ export class SolicitudService {
   getTipoDePersona(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/80316/tipoDePersona.json`);
   }
-
 }
