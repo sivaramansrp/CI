@@ -11,7 +11,7 @@ describe('RequisitosComponent', () => {
   let fixture: ComponentFixture<RequisitosComponent>;
   let storeMock: any;
 
-  const mockState = {
+  const MOCK_STATE = {
     medio: 2,
     identificacion: 'ABC123',
     economico: 'ECO456',
@@ -36,7 +36,7 @@ describe('RequisitosComponent', () => {
       imports: [ReactiveFormsModule, FormsModule, RequisitosComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Query, useValue: { selectSolicitud$: of(mockState) } },
+        { provide: Tramite250102Query, useValue: { selectSolicitud$: of(MOCK_STATE) } },
         { provide: Tramite250102Store, useValue: storeMock },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Avoid errors for unknown elements
@@ -117,11 +117,11 @@ describe('RequisitosComponent', () => {
   });
 
   it('should clean up resources on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destroyNotifier$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
 
