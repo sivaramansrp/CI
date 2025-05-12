@@ -10,9 +10,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './paso-dos.component.html',
 })
 export class PasoDosComponent implements OnInit {
-/**
- * Asigna el valor de la constante TEXTOS al mismo nombre para su uso en el componente.
- */
+  /**
+   * Asigna el valor de la constante TEXTOS al mismo nombre para su uso en el componente.
+   */
   TEXTOS = TEXTOS;
 
   /**
@@ -74,7 +74,9 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { return _error; },
+        error: (_error: unknown): unknown => {
+          return _error;
+        }
       });
   }
 }
