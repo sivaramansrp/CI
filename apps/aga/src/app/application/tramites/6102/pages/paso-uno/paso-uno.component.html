@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Junta Tecnica</a>
+        </li>
+      </ul>
+  
+      <ng-container>
+        @switch (indice) {
+        @case (1) {
+        <app-solicitud></app-solicitud>
+        }
+        @case (2) {
+        }
+        }
+      </ng-container>
+    </div>
+  </div>
+  
