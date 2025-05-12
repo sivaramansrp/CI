@@ -32,7 +32,7 @@ describe('DatosAnexosComponent', () => {
 
   it('debe ejecutar #obteneComplimentaria()', () => {
     component.obteneComplimentaria();
-    expect(component.modificionService.obtenerAnexo).toHaveBeenCalled();
+    expect(component.solicitudService.obtenerAnexo).toHaveBeenCalled();
   });
 
   it('debería ejecutar #ngOnDestroy()', () => {

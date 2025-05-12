@@ -1,4 +1,4 @@
-import { Anexo, Bitacora, Complimentaria, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from '../models/datos-tramite.model';
+import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -149,10 +149,10 @@ export class SolicitudService {
   /**
    * Obtiene los datos de la tabla desde un archivo JSON local.
    * 
-   * @returns {Observable<RespuestaCatalogos>} Un observable que emite un objeto con los datos de la tabla.
+   * @returns {Observable<DatosDeLaTabla[]>} Un observable que emite un objeto con los datos de la tabla.
    */
-  getTablaData(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`assets/json/80316/tablaLista.json`);
+  getTablaData(): Observable<{ data: DatosDeLaTabla[] }> {
+    return this.http.get<{ data: DatosDeLaTabla[] }>('assets/json/80316/tablaLista.json');
   }
 
   /**

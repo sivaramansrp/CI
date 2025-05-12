@@ -1,4 +1,15 @@
-import { Anexo, Bitacora, Complimentaria, DatosDelModificacion, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from "../models/datos-tramite.model";
+import {
+  Anexo,
+  Bitacora,
+  Complimentaria,
+  DatosDelModificacion,
+  Empresas,
+  Federetarios,
+  FraccionSensible,
+  Operacions,
+  Plantas,
+  Servicios,
+} from '../models/datos-tramite.model';
 
 /**
  * Pasos del proceso de modificación.
@@ -29,64 +40,81 @@ export const PASOS = [
  * Configuración de las columnas de la tabla para la modificación.
  * Define cómo se mostrarán los datos relacionados con la modificación en la tabla.
  */
-export const CONFIGURACION_MODIFICACION = [
-    { encabezado: 'Id', 
-      clave: (ele: DatosDelModificacion) => ele.id, 
-      orden: 0 },
-    { encabezado: 'Calle', 
-      clave: (ele: DatosDelModificacion) => ele.calle, 
-      orden: 2 },
-    {
-      encabezado: 'Número Exterior',
-      clave: (ele: DatosDelModificacion) => ele.numeroExterior,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número Interior',
-      clave: (ele: DatosDelModificacion) => ele.numeroInterior,
-      orden: 4,
-    },
-    {
-      encabezado: 'Código Postal',
-      clave: (ele: DatosDelModificacion) => ele.codigoPosta,
-      orden: 5,
-    },
-    { encabezado: 'Colonia', 
-      clave: (ele: DatosDelModificacion) => ele.colonia, 
-      orden: 6 },
-    {
-      encabezado: 'Municipio o alcaldía',
-      clave: (ele: DatosDelModificacion) => ele.municipioOAlcaldia,
-      orden: 7,
-    },
-    {
-      encabezado: 'Entidad Federativa',
-      clave: (ele: DatosDelModificacion) => ele.entidadFederativa,
-      orden: 8,
-    },
-    { encabezado: 'País', 
-      clave: (ele: DatosDelModificacion) => ele.pais, 
-      orden: 9 },
-    {
-      encabezado: 'Registro Federal de Contribuyentes',
-      clave: (ele: DatosDelModificacion) => ele.rfc,
-      orden: 10,
-    },
-    {
-      encabezado: 'Domicilio fiscal del solicitante',
-      clave: (ele: DatosDelModificacion) => ele.domicilioFiscal,
-      orden: 11,
-    },
-    {
-      encabezado: 'Razón Social',
-      clave: (ele: DatosDelModificacion) => ele.razonSocial,
-      orden: 12,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion) => ele.desEstatus,
-      orden: 1,
-    },
+export const CONFIGURACION_MODIFICACION: {
+  encabezado: string;
+  clave: (ele: DatosDelModificacion) => unknown;
+  orden: number;
+}[] = [
+  {
+    encabezado: 'Id',
+    clave: (ele: DatosDelModificacion): number | undefined => ele.id,
+    orden: 0,
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.calle,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: DatosDelModificacion): number | undefined =>
+      ele.numeroExterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: DatosDelModificacion): number | undefined =>
+      ele.numeroInterior,
+    orden: 4,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: DatosDelModificacion): number | undefined => ele.codigoPosta,
+    orden: 5,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.colonia,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o alcaldía',
+    clave: (ele: DatosDelModificacion): string | undefined =>
+      ele.municipioOAlcaldia,
+    orden: 7,
+  },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (ele: DatosDelModificacion): string | undefined =>
+      ele.entidadFederativa,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Registro Federal de Contribuyentes',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.rfc,
+    orden: 10,
+  },
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: DatosDelModificacion): string | undefined =>
+      ele.domicilioFiscal,
+    orden: 11,
+  },
+  {
+    encabezado: 'Razón Social',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.razonSocial,
+    orden: 12,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.desEstatus,
+    orden: 1,
+  },
 ];
 
 /**
@@ -138,7 +166,7 @@ export const CONFIGURACION_FEDERETARIOS = [
     encabezado: 'Número acta',
     clave: (ele: Federetarios): string | undefined => ele.numeroActa,
     orden: 4,
-  }
+  },
 ];
 
 /**
@@ -147,34 +175,34 @@ export const CONFIGURACION_FEDERETARIOS = [
 export const CONFIGURACION_OPERACIONES = [
   {
     encabezado: 'Calle',
-    clave: (ele: Operacions) : string | undefined => ele.calle,
+    clave: (ele: Operacions): string | undefined => ele.calle,
     orden: 1,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    clave: (ele: Operacions): string | undefined => ele.codigoPostal,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    clave: (ele: Operacions): string | undefined => ele.colonia,
     orden: 5,
   },
   {
     encabezado: 'Localidad',
-    clave: (ele: Operacions) : string | undefined => ele.localidad,
+    clave: (ele: Operacions): string | undefined => ele.localidad,
     orden: 6,
-  }
+  },
 ];
 
 /**
@@ -183,17 +211,17 @@ export const CONFIGURACION_OPERACIONES = [
 export const CONFIGURACION_BITACORA_TABLA = [
   {
     encabezado: 'Tipo modificación',
-    clave: (ele: Bitacora) : string | undefined => ele.tipoModificion,
+    clave: (ele: Bitacora): string | undefined => ele.tipoModificion,
     orden: 1,
   },
   {
     encabezado: 'Fecha modificación',
-    clave: (ele: Bitacora) : string | undefined => ele.fetchModificion,
+    clave: (ele: Bitacora): string | undefined => ele.fetchModificion,
     orden: 2,
   },
   {
     encabezado: 'Valores anteriores',
-    clave: (ele: Bitacora) : string | undefined => ele.valoresAnteriores,
+    clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
     orden: 3,
   },
   {
@@ -209,7 +237,8 @@ export const CONFIGURACION_BITACORA_TABLA = [
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo) : string | undefined => ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
@@ -219,7 +248,7 @@ export const CONFIGURACION_ANEXOS_TABLA = [
   },
   {
     encabezado: 'Tipo Fracción',
-    clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
     orden: 3,
   },
 ];
@@ -227,22 +256,24 @@ export const CONFIGURACION_ANEXOS_TABLA = [
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaImportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaImportacion,
     orden: 1,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: Anexo) : string | undefined => ele.descripcion,
+    clave: (ele: Anexo): string | undefined => ele.descripcion,
     orden: 2,
   },
   {
     encabezado: 'Tipo Fracción',
-    clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
     orden: 3,
   },
 ];
@@ -321,7 +352,8 @@ export const CONFIGURACION_EMPRESAS = [
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: Empresas): string | undefined => ele.estatus ? 'Activada' : 'Baja',
+    clave: (ele: Empresas): string | undefined =>
+      ele.estatus ? 'Activada' : 'Baja',
     orden: 12,
   },
 ];
@@ -397,7 +429,8 @@ export const CONFIGURACION_SERVICIOS = [
 export const CONFIGURACION_FRACCION_SENSIBLE = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: FraccionSensible): number | undefined => ele.fraccionArancelariaExportacion,
+    clave: (ele: FraccionSensible): number | undefined =>
+      ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
@@ -412,8 +445,8 @@ export const CONFIGURACION_FRACCION_SENSIBLE = [
   },
   {
     encabezado: 'Unidad de medida tarifaria',
-    clave: (ele: FraccionSensible): string | undefined => ele.unidadMedidaTarifaria,
+    clave: (ele: FraccionSensible): string | undefined =>
+      ele.unidadMedidaTarifaria,
     orden: 4,
-  }
+  },
 ];
-

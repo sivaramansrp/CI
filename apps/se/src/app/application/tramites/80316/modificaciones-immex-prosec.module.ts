@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModificacionesImmexProsecRoutingModule } from './modificaciones-immex-prosec-routing.module';
+import { NgModule } from '@angular/core';
 
 @NgModule({
   declarations: [],

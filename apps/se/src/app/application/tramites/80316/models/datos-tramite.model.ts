@@ -232,7 +232,7 @@ export interface Anexo {
 /**
  * Representa los datos de una tabla.
  */
-export interface datosDeLaTabla {
+export interface DatosDeLaTabla {
   id: number;
   folioDePrograma: string;
   tipoDePrograma: string;

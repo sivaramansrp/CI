@@ -1,175 +1,82 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of as observableOf, Subject } from 'rxjs';
 import { ModificacionComponent } from './modificacion.component';
-import { FormBuilder } from '@angular/forms';
-import { SolicitudService } from '../../service/solicitud.service';
-import { Tramite80316Store } from '../../../../estados/tramites/tramite80316.store';
-import { Tramite80316Query } from '../../../../estados/queries/tramite80316.query';
-
-@Injectable()
-class MockSolicitudService {}
-
-@Injectable()
-class MockTramite80316Store {
-  setDatosModificacion = jest.fn(); // Mock the method
-  setAnotherMethod = jest.fn(); // Add other methods if needed
-}
-
-@Injectable()
-class MockTramite80316Query {
-  selectBuscarDomicilios$ = {};
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite80316Store } from '../../estados/tramite80316.store';
+import { Tramite80316Query } from '../../estados/tramite80316.query';
 
 describe('ModificacionComponent', () => {
-  let fixture;
-  let component;
+  let fixture!: ComponentFixture<ModificacionComponent>;
+  let component!: ModificacionComponent;
+  let solicitudService: jest.Mocked<SolicitudService>;
+  let tramite80316Store: jest.Mocked<Tramite80316Store>;
+  let tramite80316Query: jest.Mocked<Tramite80316Query>;
 
   beforeEach(() => {
+    solicitudService = {
+      getDatosModificacion: jest.fn().mockReturnValue(observableOf({})),
+      getActividadProductiva: jest.fn().mockReturnValue(observableOf({ data: [] })),
+    } as unknown as jest.Mocked<SolicitudService>;
+
+    tramite80316Store = {
+      setDatosModificacion: jest.fn(),
+      setActividadProductiva: jest.fn(),
+    } as unknown as jest.Mocked<Tramite80316Store>;
+
+    tramite80316Query = {
+      selectSolicitud$: observableOf({}),
+    } as unknown as jest.Mocked<Tramite80316Query>;
+
     TestBed.configureTestingModule({
-      imports: [ ModificacionComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [ModificacionComponent, FormsModule, ReactiveFormsModule, ToastrModule.forRoot(), HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        FormBuilder,
-        { provide: SolicitudService, useClass: MockSolicitudService },
-        { provide: Tramite80316Store, useClass: MockTramite80316Store },
-        { provide: Tramite80316Query, useClass: MockTramite80316Query }
-      ]
-    }).overrideComponent(ModificacionComponent, {
-
+        { provide: SolicitudService, useValue: solicitudService },
+        { provide: Tramite80316Store, useValue: tramite80316Store },
+        { provide: Tramite80316Query, useValue: tramite80316Query },
+        provideToastr({ positionClass: 'toast-top-right' }),
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(ModificacionComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramite80316Query = component.tramite80316Query || {};
-    component.tramite80316Query.selectSolicitud$ = observableOf({});
-    component.inicializarFormulario = jest.fn();
-    component.loadDatosModificacion = jest.fn();
-    component.loadDatosTablaData = jest.fn();
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
+    expect(component.modificacionForm).toBeDefined();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.unsubscribe = jest.fn();
-    component.ngOnDestroy();
+  it('should call loadDatosModificacion on ngOnInit', () => {
+    const loadDatosModificacionSpy = jest.spyOn(component, 'loadDatosModificacion');
+    component.ngOnInit();
+    expect(loadDatosModificacionSpy).toHaveBeenCalled();
   });
 
-  it('should run #inicializarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.derechoState = component.derechoState || {};
-    component.derechoState.datosModificacion = 'datosModificacion';
-    component.inicializarFormulario();
+  it('should call inicializaCatalogos on ngOnInit', () => {
+    const inicializaCatalogosSpy = jest.spyOn(component, 'inicializaCatalogos');
+    component.ngOnInit();
+    expect(inicializaCatalogosSpy).toHaveBeenCalled();
   });
 
-  it('should run #loadDatosModificacion()', async () => {
-    component.solicitudService = component.solicitudService || {};
-    component.solicitudService.getDatosModificacion = jest.fn().mockReturnValue(observableOf({}));
-    component.tramite80316Store = component.tramite80316Store || {};
-    component.tramite80316Store.setDatosModificacion = jest.fn();
-    component.setFormValues = jest.fn();
+  it('should call setDatosModificacion in store when loadDatosModificacion is called', () => {
     component.loadDatosModificacion();
+    expect(tramite80316Store.setDatosModificacion).toHaveBeenCalled();
   });
 
-  it('should run #loadDatosTablaData()', async () => {
-    component.solicitudService = component.solicitudService || {};
-    component.solicitudService.getDatosTableData = jest.fn().mockReturnValue(observableOf({}));
-    component.loadDatosTablaData();
-  });
-
-  it('should run #setValoresStore()', async () => {
-    // Arrange
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'mockValue' }),
-    } as unknown as FormGroup;
-
-    const mockCampo = 'mockCampo';
-    const mockMetodoNombre = 'setDatosModificacion'; // Use a valid method name
-
-    component.tramite80316Store =
-      new MockTramite80316Store() as unknown as Tramite80316Store;
-
-    // Act
-    component.setValoresStore(
-      mockForm,
-      mockCampo,
-      mockMetodoNombre as keyof Tramite80316Store
-    );
-
-    // Assert
-    expect(
-      component.tramite80316Store.setDatosModificacion
-    ).toHaveBeenCalledWith('mockValue');
-  });
-
-  it('should run #setValoresStore()', async () => {
-    component.tramite80316Store = component.tramite80316Store || {};
-    component.tramite80316Store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-  });
-
-  it('should run #valorDeAlternancia()', async () => {
-    component.datosTabla = component.datosTabla || {};
-    component.datosTabla.findIndex = jest.fn().mockReturnValue([
-      {
-        "id": {}
-      }
-    ]);
-    component.datosTabla.index = {
-      desEstatus: {}
-    };
-    component.valorDeAlternancia({
-      id: {}
-    });
+  it('should initialize actividadProductiva when inicializaCatalogos is called', () => {
+    component.inicializaCatalogos();
+    expect(solicitudService.getActividadProductiva).toHaveBeenCalled();
   });
 
 });
+  

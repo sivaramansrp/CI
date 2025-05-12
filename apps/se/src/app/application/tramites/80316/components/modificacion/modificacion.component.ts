@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosDelModificacion } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
-import { DatosDelModificacion } from '../../models/datos-tramite.model';
 
 /**
  * Componente `ModificacionComponent` utilizado para gestionar y mostrar los datos relacionados con la modificación de un trámite.
@@ -38,7 +38,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private solicitudService: SolicitudService,
+    public solicitudService: SolicitudService,
     private tramite80316Store: Tramite80316Store,
     private tramite80316Query: Tramite80316Query
   ) {}
@@ -131,7 +131,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Inicializa los catálogos necesarios para el formulario.
    * Carga los datos de actividades productivas desde el servicio.
    */
-  private inicializaCatalogos(): void {
+  public inicializaCatalogos(): void {
     const ACTIVIDADPRODUCTIVA$ = this.solicitudService.getActividadProductiva().pipe(
       map((resp) => {
         this.actividadProductiva = resp.data;

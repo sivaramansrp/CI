@@ -6,17 +6,18 @@ import {
   CONFIGURACION_PLANTAS,
   CONFIGURACION_SERVICIOS,
 } from '../../constantes/modificacion.enum';
+import { Complimentaria, Empresas, Federetarios, Operacions, Plantas, Servicios } from '../../models/datos-tramite.model';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
 import {
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
-import { ToastrService } from 'ngx-toastr';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Complimentaria, Empresas, Federetarios, Operacions, Plantas, Servicios } from '../../models/datos-tramite.model';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Componente `DatosComplimentariaComponent` utilizado para gestionar y mostrar los datos relacionados con la información complementaria.
@@ -31,6 +32,7 @@ import { Complimentaria, Empresas, Federetarios, Operacions, Plantas, Servicios 
     TituloComponent,
     DatosCertificacionComponent,
     TablaDinamicaComponent,
+    CommonModule
   ],
   providers: [SolicitudService, ToastrService],
 })

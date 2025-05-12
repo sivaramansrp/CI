@@ -1,14 +1,14 @@
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
 import { Component } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Input } from '@angular/core';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
+import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ViewChild } from '@angular/core';
 
 /**

@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
 import {
   DatosModificacion,
   DatosSolicitante,
 } from '../models/datos-tramite.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
 /**
  * Representa el estado de la solicitud 80316.

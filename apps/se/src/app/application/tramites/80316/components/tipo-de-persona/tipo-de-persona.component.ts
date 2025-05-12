@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   BtnContinuarComponent,
   Catalogo,
   CatalogoSelectComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
-import { map, merge, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente `TipoDePersonaComponent` utilizado para gestionar y mostrar los datos relacionados con el tipo de persona.
@@ -30,7 +30,7 @@ import { map, merge, Subject, takeUntil } from 'rxjs';
   templateUrl: './tipo-de-persona.component.html',
   styleUrl: './tipo-de-persona.component.scss',
 })
-export class TipoDePersonaComponent {
+export class TipoDePersonaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos del tipo de persona.
    * Contiene los campos necesarios para capturar el tipo de persona y el RFC del importador/exportador.

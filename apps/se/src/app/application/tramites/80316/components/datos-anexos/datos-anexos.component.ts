@@ -1,11 +1,10 @@
+import { Anexo, FraccionSensible } from '../../models/datos-tramite.model';
 import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA, CONFIGURACION_FRACCION_SENSIBLE } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Anexo, FraccionSensible } from '../../models/datos-tramite.model';
 
 /**
  * Componente `DatosAnexosComponent` utilizado para gestionar y mostrar los datos de los anexos.

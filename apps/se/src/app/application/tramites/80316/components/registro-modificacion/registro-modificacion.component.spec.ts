@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroModificacionComponent } from './registro-modificacion.component';
 import { Router } from '@angular/router';
 import { SolicitudService } from '../../services/solicitud.service';
+import { provideHttpClient } from '@angular/common/http';
 
 @Injectable()
 class MockRouter {
@@ -15,18 +16,17 @@ class solicitudService {}
 
 describe('RegistroModificacionComponent', () => {
   let fixture: ComponentFixture<RegistroModificacionComponent>;
-  let component: { ngOnDestroy: () => void; llenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: { ngOnDestroy: () => void; lenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, RegistroModificacionComponent ],
-      declarations: [
-        
-      ],
+      declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
+        provideHttpClient(),
         { provide: Router, useClass: MockRouter },
-        { provide: solicitudService, useClass: SolicitudService }
+        { provide: solicitudService, useClass: SolicitudService },
       ]
     }).overrideComponent(RegistroModificacionComponent, {
 
@@ -45,9 +45,9 @@ describe('RegistroModificacionComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.llenarLaTabla = jest.fn();
+    component.lenarLaTabla = jest.fn();
     component.ngOnInit();
-    expect(component.llenarLaTabla).toHaveBeenCalled();
+    expect(component.lenarLaTabla).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
