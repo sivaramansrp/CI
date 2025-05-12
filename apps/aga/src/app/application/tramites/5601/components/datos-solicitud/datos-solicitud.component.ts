@@ -57,13 +57,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  */
   private destroyed$: Subject<void> = new Subject();
 
+  /**
+   * Formulario que contiene los detalles de la solicitud.
+   */
   public formularioDatosSolicitud = FORMULARIO_DETALLES;
 
+  /**
+   * Formulario que contiene los detalles de la mercancía.
+   */
   public formularioDatosMercancia = MERCANCIA_DETALLES;
 
+  /**
+   * Formulario que contiene los detalles de logística y operaciones.
+   */
   public formularioLogisticaOperaciones = FORMULARIO_LOGISTICA_OPERACIONES;
 
-  public formularioUbicacionMercancia = UBICACION_MERCANCIA
+  /**
+   * Formulario que contiene la ubicación de la mercancía.
+   */
+  public formularioUbicacionMercancia = UBICACION_MERCANCIA;
 
   
 
@@ -82,34 +94,60 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Formulario principal que contiene un grupo de formularios relacionados con "nino".
+   */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Formulario que contiene un grupo de formularios relacionados con la mercancía.
+   */
   public formularioMercancia: FormGroup = new FormGroup({
     mercanciaFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Formulario que contiene un grupo de formularios relacionados con logística y operaciones.
+   */
   public formularioLogistica: FormGroup = new FormGroup({
     logisticaFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Formulario que contiene un grupo de formularios relacionados con la ubicación de la mercancía.
+   */
   public formularioUbicacion: FormGroup = new FormGroup({
     ubicacionFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Obtiene el grupo de formularios relacionado con "nino" del formulario principal.
+   */
   get formularioFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formularios relacionado con la mercancía del formulario correspondiente.
+   */
   get datosMercanciaFormGroup(): FormGroup {
     return this.formularioMercancia.get('mercanciaFormGroup') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formularios relacionado con logística y operaciones
+   * del formulario correspondiente.
+   */
   get formularioLogisticaFormGroup(): FormGroup {
     return this.formularioLogistica.get('logisticaFormGroup') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formularios relacionado con la ubicación de la mercancía
+   * del formulario correspondiente.
+   */
   get formularioUbicacionFormGroup(): FormGroup {
     return this.formularioUbicacion.get('ubicacionFormGroup') as FormGroup;
   }
@@ -155,6 +193,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Método que se ejecuta al cambiar el tipo de operación.
+   * Actualiza la visibilidad del campo "fechaOperacion" en el formulario de datos de solicitud.
+   */
   alCambiarTipoOperacion(): void {
     const CAMPO_FECHA_OPERACION = this.formularioDatosSolicitud.find(f => f.campo === 'fechaOperacion');
     if (CAMPO_FECHA_OPERACION) {
@@ -174,10 +216,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     (this.tramite5601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Método para establecer un cambio de valor en el store.
+   * @param event Objeto que contiene el campo y el valor a actualizar.
+   * Si el campo es 'tipoOperacion', se ejecuta el método alCambiarTipoOperacion.
+   */
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
+      // Actualiza el valor dinámico en el store.
       this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
 
+      // Si el campo es 'tipoOperacion', actualiza la visibilidad del campo "fechaOperacion".
       if (event.campo === 'tipoOperacion') {
         this.alCambiarTipoOperacion();
       }

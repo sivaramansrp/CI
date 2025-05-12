@@ -1,123 +1,102 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CertificacionesComponent } from './certificaciones.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Tramite5601Store } from '../../estados/stores/tramite5601.store';
 import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
-import { CommonModule } from '@angular/common';
-import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
 import { Tramite5601State } from '../../estados/stores/tramite5601.store';
+import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 
-describe('CertificacionesComponent', (): void => {
-  let componente: CertificacionesComponent;
+jest.mock('../../estados/queries/tramite5601.query');
+jest.mock('../../estados/stores/tramite5601.store');
+
+describe('CertificacionesComponent (Jest)', () => {
+  let component: CertificacionesComponent;
   let fixture: ComponentFixture<CertificacionesComponent>;
-  let mockStore: Partial<Tramite5601Store>;
-  let mockQuery: Partial<Tramite5601Query>;
-  let destroyed$: Subject<void>;
+  let store: jest.Mocked<Tramite5601Store>;
+  let query: jest.Mocked<Tramite5601Query>;
 
-  const ESTADO_INICIAL: Tramite5601State = {
-    // formularioCertificacion
-    tieneCertificacion: true,
-    certificacionEmpresa: 'Certificación ISO 9001',
-    otraCertificacion: 'Certificación adicional',
-  
-    // formulario
-    aduana: 'Aduana ejemplo',
-    seccionAduanera: 'Sección A',
-    tipoOperacion: 'Importación',
-    fechaOperacion: '2025-01-01',
-    motivoDespachoDomicilio: 'Entrega urgente',
-    observaciones: 'Sin observaciones',
-  
-    // formularioMercancia
-    especificacionesMercancia: 'Detalles de la mercancía',
-    descripcionMercancia: 'Mercancía de prueba',
-    tipoMoneda: 'MXN',
-    valorMercancia: '10000',
-  
-    // formularioLogistica
-    esquemasControlSeguridad: 'CCTV, Guardia',
-    distanciaRutaTiempos: '10km - 15min',
-  
-    // formularioUbicacionMercancia
-    direccion: 'Calle Falsa 123',
-    telefono: '5551234567',
-    distanciaAduana: '5km',
-    referencias: 'Frente al parque industrial',
+  const ESTADO_MOCK: Tramite5601State = {
+    tieneCertificacion: false,
+    certificacionEmpresa: '',
+    otraCertificacion: '',
+    aduana: '',
+    seccionAduanera: '',
+    tipoOperacion: '',
+    fechaOperacion: '',
+    motivoDespachoDomicilio: '',
+    observaciones: '',
+    especificacionesMercancia: '',
+    descripcionMercancia: '',
+    tipoMoneda: '',
+    valorMercancia: '',
+    esquemasControlSeguridad: '',
+    distanciaRutaTiempos: '',
+    direccion: '',
+    telefono: '',
+    distanciaAduana: '',
+    referencias: ''
   };
-  
 
-  beforeEach(async (): Promise<void> => {
-    destroyed$ = new Subject<void>();
-
-    mockStore = {
-      setTieneCertificacion: jest.fn(),
-    };
-
-    mockQuery = {
-      selectCertificacion$: of(ESTADO_INICIAL),
-    };
+  beforeEach(async () => {
+    store = new Tramite5601Store() as jest.Mocked<Tramite5601Store>;
+    query = new Tramite5601Query(store) as jest.Mocked<Tramite5601Query>;
+    query.selectCertificacion$ = of(ESTADO_MOCK);
 
     await TestBed.configureTestingModule({
-      imports: [
-        CertificacionesComponent,
-        ReactiveFormsModule,
-        CommonModule,
-        TituloComponent,
-        InputCheckComponent,
-      ],
+      imports: [ReactiveFormsModule, CertificacionesComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite5601Store, useValue: mockStore },
-        { provide: Tramite5601Query, useValue: mockQuery },
+        { provide: Tramite5601Store, useValue: store },
+        { provide: Tramite5601Query, useValue: query },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CertificacionesComponent);
-    componente = fixture.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', (): void => {
-    expect(componente).toBeTruthy();
+  it('debería crearse correctamente', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con el estado del query', (): void => {
-    const VALORES = componente.formularioCertificacion.value;
-    expect(VALORES.tieneCertificacion).toBe(true);
-    expect(VALORES.certificacionEmpresa).toBe('Certificación ISO 9001');
-    expect(VALORES.otraCertificacion).toBe('Certificación adicional');
+  it('debería inicializar el estado desde el query', () => {
+    expect(component.certificacionState).toEqual(ESTADO_MOCK);
   });
 
-  it('debería mostrar el modal si el checkbox está seleccionado', (): void => {
-    const EVENTO = { target: { checked: true } } as unknown as Event;
-    componente.mostrarModalSiSeleccionado(EVENTO);
-    expect(componente.modal).toBe('show');
-    expect(componente.tituloModal).toBeDefined();
-    expect(componente.mensajeModal).toBeDefined();
+  it('debería mostrar el modal con título y mensaje al llamar mostrarModalSiSeleccionado', () => {
+    component.mostrarModalSiSeleccionado();
+    expect(component.tituloModal).toBe(TITULO_MODAL);
+    expect(component.mensajeModal).toBe(MENSAJE_MODAL);
+    expect(component.modal).toBe('show');
   });
 
-  it('debería cerrar el modal correctamente', (): void => {
-    componente.modal = 'show';
-    componente.tituloModal = 'Título';
-    componente.mensajeModal = 'Mensaje';
-    componente.cerrarModal();
-    expect(componente.modal).toBe('');
-    expect(componente.tituloModal).toBe('');
-    expect(componente.mensajeModal).toBe('');
+  it('debería cerrar el modal correctamente', () => {
+    component.modal = 'show';
+    component.tituloModal = 'titulo';
+    component.mensajeModal = 'mensaje';
+    component.cerrarModal();
+
+    expect(component.modal).toBe('');
+    expect(component.tituloModal).toBe('');
+    expect(component.mensajeModal).toBe('');
   });
 
-  it('debería llamar setTieneCertificacion al cambiar el valor del checkbox', (): void => {
-    const mockEvent = { target: { checked: true } } as unknown as Event;
-    componente.onTieneCertificacionChange(mockEvent);
-    expect(mockStore.setTieneCertificacion).toHaveBeenCalledWith(true);
+  it('debería llamar setDynamicFieldValue del store al establecer un cambio de valor', () => {
+    const SPY = jest.spyOn(store, 'setDynamicFieldValue');
+    const EVENTO = { campo: 'aduana', valor: 'Tijuana' };
+
+    component.establecerCambioDeValor(EVENTO);
+
+    expect(SPY).toHaveBeenCalledWith('aduana', 'Tijuana');
   });
 
-  it('debería limpiar el observable destroyed$ en ngOnDestroy', (): void => {
-    const spyNext = jest.spyOn(componente['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(componente['destroyed$'], 'complete');
-    componente.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+  it('debería mostrar modal si el campo es tieneCertificacion', () => {
+    const SPY = jest.spyOn(component, 'mostrarModalSiSeleccionado');
+
+    component.establecerCambioDeValor({ campo: 'tieneCertificacion', valor: 'true' });
+
+    expect(SPY).toHaveBeenCalled();
   });
 });

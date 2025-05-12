@@ -51,7 +51,7 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
  */
   private destroyed$: Subject<void> = new Subject();
 
-  public pagoDeDerechosFormData = FORMULARIO_CERTIFICACION_DETALLES;
+  public certificacionEmpresa = FORMULARIO_CERTIFICACION_DETALLES;
 
   /**
    * Constructor del componente.
@@ -80,10 +80,14 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Muestra un modal si se cumple una condición específica.
+   * Establece el título y el mensaje del modal antes de abrirlo.
+   */
   mostrarModalSiSeleccionado(): void {
-    this.tituloModal = TITULO_MODAL; // Asigna el título del modal.
-    this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal.
-    this.abrirModal(); // Abre el modal.
+    this.tituloModal = TITULO_MODAL; // Asigna el título del modal desde una constante.
+    this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal desde una constante.
+    this.abrirModal(); // Llama al método para abrir el modal.
   }
 
   /**
@@ -129,17 +133,33 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Formulario principal que contiene un grupo de formularios anidados.
+   * En este caso, incluye un grupo de formulario llamado 'ninoFormGroup'.
+   */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
 
+  /**
+   * Obtiene el grupo de formulario 'ninoFormGroup' del formulario principal.
+   * Este método devuelve el grupo de formulario anidado como un FormGroup.
+   */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
+  /**
+   * Establece un cambio de valor en el store basado en un evento recibido.
+   * @param event - Objeto que contiene el nombre del campo y el valor a actualizar.
+   * Si el campo es 'tieneCertificacion', se muestra un modal al usuario.
+   */
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
+      // Actualiza el valor dinámico en el store.
       this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+
+      // Si el campo es 'tieneCertificacion', muestra un modal.
       if (event.campo === 'tieneCertificacion') {
         this.mostrarModalSiSeleccionado();
       }
