@@ -66,17 +66,17 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
   describe('ngOnInit', () => {
     it('debería inicializar el componente y cargar datos', () => {
-      const spyLoadPais = jest.spyOn(component, 'obtenerPaisData');
-      const spyLoadEstado = jest.spyOn(component, 'obtenerEstadoData');
-      const spyFormDestinatarios = jest.spyOn(component, 'establecerFormDestinatariosModal');
-      const spyFormAgente = jest.spyOn(component, 'establecerFormAgenteAduanal');
+      const SPY_LOAD_PAIS = jest.spyOn(component, 'obtenerPaisData');
+      const SPY_LOAD_ESTADO = jest.spyOn(component, 'obtenerEstadoData');
+      const SPY_FORM_DESTINATARIOS = jest.spyOn(component, 'establecerFormDestinatariosModal');
+      const SPY_FORM_AGENTE = jest.spyOn(component, 'establecerFormAgenteAduanal');
 
       component.ngOnInit();
 
-      expect(spyLoadPais).toHaveBeenCalled();
-      expect(spyLoadEstado).toHaveBeenCalled();
-      expect(spyFormDestinatarios).toHaveBeenCalled();
-      expect(spyFormAgente).toHaveBeenCalled();
+      expect(SPY_LOAD_PAIS).toHaveBeenCalled();
+      expect(SPY_LOAD_ESTADO).toHaveBeenCalled();
+      expect(SPY_FORM_DESTINATARIOS).toHaveBeenCalled();
+      expect(SPY_FORM_AGENTE).toHaveBeenCalled();
       expect(component.formDestinatariosModal.get('destinatarioRadio')?.value).toBe('1');
     });
 
@@ -235,32 +235,32 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
   describe('confirmAgregar', () => {
     it('debería confirmar la adición de un destinatario', () => {
-      const spyEnviar = jest.spyOn(component, 'enviarDestinatarioFormulario');
-      const spyLimpar = jest.spyOn(component, 'limparDestinatario');
+      const SPYENVIAR = jest.spyOn(component, 'enviarDestinatarioFormulario');
+      const SPYLIMPAE= jest.spyOn(component, 'limparDestinatario');
 
       component.confirmAgregar();
 
-      expect(spyEnviar).toHaveBeenCalled();
+      expect(SPYENVIAR).toHaveBeenCalled();
       expect(component.showAceptarModal).toBe(false);
-      expect(spyLimpar).toHaveBeenCalled();
+      expect(SPYLIMPAE).toHaveBeenCalled();
     });
   });
 
   describe('onSeleccionDestinatario', () => {
     it('debería actualizar las filas seleccionadas de destinatarios', () => {
-      const filas: Destinatarios[] = [{ nombre: 'Test', pais: 'México', ciudad: 'Guadalajara', entidadfederativa: 'Jalisco', domicilio: 'Calle 123', codigopostal: '44100' }];
-      component.onSeleccionDestinatario(filas);
+      const FILAS: Destinatarios[] = [{ nombre: 'Test', pais: 'México', ciudad: 'Guadalajara', entidadfederativa: 'Jalisco', domicilio: 'Calle 123', codigopostal: '44100' }];
+      component.onSeleccionDestinatario(FILAS);
 
-      expect(component.selectedDestinatarioRows).toEqual(filas);
+      expect(component.selectedDestinatarioRows).toEqual(FILAS);
     });
   });
 
   describe('onSeleccionAgenteAduanal', () => {
     it('debería actualizar las filas seleccionadas de agentes aduanales', () => {
-      const filas: Adunal[] = [{ nombre: 'Juan', primerapellido: 'Pérez', segundoapellido: 'Gómez', patente: '1234' }];
-      component.onSeleccionAgenteAduanal(filas);
+      const FILAS: Adunal[] = [{ nombre: 'Juan', primerapellido: 'Pérez', segundoapellido: 'Gómez', patente: '1234' }];
+      component.onSeleccionAgenteAduanal(FILAS);
 
-      expect(component.selectedAgenteAduanalRows).toEqual(filas);
+      expect(component.selectedAgenteAduanalRows).toEqual(FILAS);
     });
   });
 
@@ -358,13 +358,13 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
   describe('ngOnDestroy', () => {
     it('debería limpiar suscripciones', () => {
-      const spyNext = jest.spyOn(destroySubject, 'next');
-      const spyComplete = jest.spyOn(destroySubject, 'complete');
+      const SPY_NEXT = jest.spyOn(destroySubject, 'next');
+      const SPY_COMPLETE = jest.spyOn(destroySubject, 'complete');
 
       component.ngOnDestroy();
 
-      expect(spyNext).toHaveBeenCalled();
-      expect(spyComplete).toHaveBeenCalled();
+      expect(SPY_NEXT).toHaveBeenCalled();
+      expect(SPY_COMPLETE).toHaveBeenCalled();
     });
   });
 });

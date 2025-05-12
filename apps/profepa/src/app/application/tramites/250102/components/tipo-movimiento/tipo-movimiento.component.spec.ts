@@ -63,10 +63,10 @@ describe('TipoMovimientoComponent', () => {
   });
 
   it('debe actualizar la tienda cuando se llama a setValoresStore', () => {
-    const form = component.tipoMovimientoForm;
-    form.get('tipoMovimiento')?.setValue('nuevoValor');
+    const FORM = component.tipoMovimientoForm;
+    FORM.get('tipoMovimiento')?.setValue('nuevoValor');
 
-    component.setValoresStore(form, 'tipoMovimiento');
+    component.setValoresStore(FORM, 'tipoMovimiento');
 
     expect(mockStore.establecerDatos).toHaveBeenCalledWith({ tipoMovimiento: 'nuevoValor' });
   });
@@ -87,8 +87,8 @@ describe('TipoMovimientoComponent', () => {
   });
 
   it('Deberían limpiar las suscripciones en Destroy', () => {
-    const destroySpy = jest.spyOn(component.destroy$, 'next');
+    const DESTROY_SPY = jest.spyOn(component.destroy$, 'next');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
   });
 });

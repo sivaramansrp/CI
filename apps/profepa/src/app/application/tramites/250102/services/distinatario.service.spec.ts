@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DistinatarioService } from './distinatario.service';
 
 describe('DistinatarioService', () => {
@@ -10,7 +9,7 @@ describe('DistinatarioService', () => {
     service = TestBed.inject(DistinatarioService);
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 });

@@ -10,7 +10,7 @@ describe('TipoMovimientoService', () => {
     service = TestBed.inject(TipoMovimientoService);
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 });
