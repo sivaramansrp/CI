@@ -1,3 +1,14 @@
+
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
+import { SociaoAccionistas } from "../models/complimentos-seccion.model";
+/**
+ * Constantes para la sección de complementos
+ *  @constant
+ *  @type {string}
+ */
 export const FORMA_COMPLIMENTOS_SOLICITUDE = [
     {
       id: 'modalidad',
@@ -15,6 +26,9 @@ export const FORMA_COMPLIMENTOS_SOLICITUDE = [
     },
     
   ];
+  /**
+   * Constantes para la sección de complementos
+   */
    export const FORMA_COMPLIMENTOS_PROGRAMA = [
     {
       id: 'preOperativo',
@@ -27,6 +41,10 @@ export const FORMA_COMPLIMENTOS_SOLICITUDE = [
       marginTop: 0,
     },
    ]
+   /**
+    * Constantes para la sección de complementos
+    * @constant
+    */
    export const FORMA_DATOS_GENERALES = [
     {
       id: 'paginaWWeb',
@@ -65,6 +83,11 @@ export const FORMA_COMPLIMENTOS_SOLICITUDE = [
         marginTop: 0,
       }
 ]
+
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
 export const OBLIGACIONES_FISCALES = [
   {
     id: 'OpinionPositiva',
@@ -105,10 +128,18 @@ export const OBLIGACIONES_FISCALES = [
     marginTop: 0,
   },
 ]
+/*
+  * Constantes para la sección de complementos
+  * @constant
+  */
 export const MANIFIESTOS_DECLARACION = {
   MANIFIESTOS:
     'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.',
 };
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
 export const FORMA_MODIFICACIONES_SOLICITUDE =[
   {
     id: 'nombreDelFederatario',
@@ -119,7 +150,7 @@ export const FORMA_MODIFICACIONES_SOLICITUDE =[
     desactivado: false,
     soloLectura: false,
     marcadorDePosicion: '',
-    marginTop: 0,
+    marginTop: 3,
   },
   {
     id: 'nombreDeNotaria',
@@ -233,6 +264,10 @@ export const FORMA_MODIFICACIONES_SOLICITUDE =[
   },
 
 ]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
 
 export const FORMA_NACIONALIDAA_MAXICANA =[
   {
@@ -282,7 +317,7 @@ export const FORMA_NACIONALIDAA_MAXICANA =[
     labelNombre: 'País',
     campo: 'pais',
     clase: 'col-md-6',
-    tipoInput: 'text',
+    tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,
     validadores: [
@@ -310,7 +345,7 @@ export const FORMA_NACIONALIDAA_MAXICANA =[
     labelNombre: 'Estado',
     campo: 'estado',
     clase: 'col-md-6',
-    tipoInput: 'text',
+    tipoInput: 'select-catalogos',
     desactivado: false,
     validadores: [
       { tipo: 'required' }
@@ -334,6 +369,11 @@ export const FORMA_NACIONALIDAA_MAXICANA =[
     marginTop: 0,
   },
 ]
+/*
+  * Constantes para la sección de complementos
+  * @constant
+  */
+
 export const FORMA_SI_NACIONALIDAA_MAXICANA=[
   {
     id: 'rfc_de_contri',
@@ -350,6 +390,10 @@ export const FORMA_SI_NACIONALIDAA_MAXICANA=[
     marginTop: 0,
   },
 ]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
 export const FORMA_PERSONA_FISICA_FORM_DATA =[
   {
     id: 'Nombre',
@@ -451,3 +495,92 @@ export const FORMA_PERSONA_FISICA_FORM_DATA =[
   },
 
 ]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ * @type {Array}
+ */
+
+export const TABLA_SOCIO_ACCIONISTAS = [
+  {
+    encabezado: 'RFC',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'razón social',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Nombre',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.nombre,
+    orden: 3,
+  },
+  {
+    encabezado: 'Apellido paterno',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.apellidoPaterno,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'Apellido materno',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.apellidoMaterno,
+    orden: 5,
+  },
+  {
+    encabezado: 'Correo',
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
+    orden: 6,
+  },
+];
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ * @type {Array}
+ */
+export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
+  {
+    encabezado: 'TAX ID',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.taxId,
+    orden: 1,
+  },
+  {
+    encabezado: 'razón social',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Nombre',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.nombre,
+    orden: 3,
+  },
+  {
+    encabezado: 'Apellido paterno',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.apellidoPaterno,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'País',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.pais,
+    orden: 5,
+  },
+  {
+    encabezado: 'CP',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.cp,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado',
+    clave: (ele: SociaoAccionistas): string | undefined => ele.estado,
+    orden: 6,
+  },
+  {
+    encabezado: 'Correo',
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
+    orden: 7,
+  },
+];
