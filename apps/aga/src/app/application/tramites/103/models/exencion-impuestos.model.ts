@@ -10,9 +10,9 @@ export interface RespuestaMercancia {
 
   /**
    * Datos del contenedor relacionados con la mercancía.
-   * @type {datosDelMercancia}
+   * @type {DatosDelMercancia}
    */
-  datos: datosDelMercancia;
+  datos: DatosDelMercancia;
 
   /**
    * Mensaje de la respuesta.
@@ -24,7 +24,7 @@ export interface RespuestaMercancia {
 /**
  * Interfaz que representa los datos de una mercancía.
  */
-export interface datosDelMercancia {
+export interface DatosDelMercancia {
   /**
    * Identificador único de la mercancía.
    * @type {number}
@@ -53,7 +53,7 @@ export interface datosDelMercancia {
    * Año relacionado con la mercancía.
    * @type {Array<any>}
    */
-  ano: any[];
+  ano: unknown[];
 
   /**
    * Uso específico de la mercancía.
@@ -89,5 +89,5 @@ export interface datosDelMercancia {
    * Datos adicionales relacionados con la mercancía.
    * @type {Array<any>}
    */
-  datosDelMercancia: any[];
+  datosDelMercancia: unknown[];
 }

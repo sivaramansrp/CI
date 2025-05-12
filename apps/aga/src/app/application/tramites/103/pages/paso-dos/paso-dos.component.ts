@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-
 import documentList from '@libs/shared/theme/assets/json/103/document-list.json';
 
 /**
@@ -14,7 +13,7 @@ import documentList from '@libs/shared/theme/assets/json/103/document-list.json'
   standalone: true,
   imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent]
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constante que contiene los textos utilizados en el componente.
    * @type {any}

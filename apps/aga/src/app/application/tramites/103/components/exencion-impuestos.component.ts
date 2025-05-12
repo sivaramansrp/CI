@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
+import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import mercanciaTable from 'libs/shared/theme/assets/json/103/mercancia-table.json';
-import { datosDelMercancia } from '../models/exencion-impuestos.model';
+import { map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
+import { Modal } from 'bootstrap';
+import { Subject } from 'rxjs';
 import { Tramite103Query } from '../estados/tramite103.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/103/mercancia-table.json';
 
 /**
  * Componente para la gestión de exención de impuestos
@@ -126,7 +127,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Datos de las mercancías
    */
-  public datosDelMercancia: datosDelMercancia[] = [];
+  public datosDelMercancia: DatosDelMercancia[] = [];
 
   /**
    * Valor seleccionado del radio
@@ -408,7 +409,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
           if (respuesta?.success) {
             respuesta.datos.id = this.datosDelMercancia.length + 1;
             this.datosDelMercancia.push(respuesta.datos);
-            (this.store.setDelMercancia as (valor: datosDelMercancia[]) => void)(this.datosDelMercancia);
+            (this.store.setDelMercancia as (valor: DatosDelMercancia[]) => void)(this.datosDelMercancia);
             const DATOS = {
               tbodyData: [
                 respuesta.datos.tipoDeMercancia.toString(),
@@ -430,13 +431,6 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
           this.cerrarModal();
         });
     }
-  }
-
-  /**
-   * Limpia los datos de mercancías
-   */
-  limpiarMercancias(): void {
-    // Implementar la lógica para limpiar las mercancías
   }
 
   /**

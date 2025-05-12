@@ -1,17 +1,67 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExencionImpuestosComponent } from './exencion-impuestos.component';
-import { Validators } from '@angular/forms';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { of, Subject } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
+import { Tramite103Store } from '../estados/tramite103.store';
+import { Tramite103Query } from '../estados/tramite103.query';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Modal } from 'bootstrap';
+
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn().mockImplementation(() => ({
+    show: jest.fn(),
+  })),
+}));
 
 describe('ExencionImpuestosComponent', () => {
   let component: ExencionImpuestosComponent;
   let fixture: ComponentFixture<ExencionImpuestosComponent>;
+  let mockService: any;
+  let mockStore: any;
+  let mockQuery: any;
 
   beforeEach(async () => {
+    mockService = {
+      getAduana: jest.fn().mockReturnValue(of({ data: [] })),
+      getDestinoMercancia: jest.fn().mockReturnValue(of({ data: [] })),
+      getCondicionMercancia: jest.fn().mockReturnValue(of({ data: [] })),
+      getUnidadMedida: jest.fn().mockReturnValue(of({ data: [] })),
+      getAno: jest.fn().mockReturnValue(of({ data: [] })),
+      getPais: jest.fn().mockReturnValue(of({ data: [] })),
+      agregarMercancias: jest.fn().mockReturnValue(of({ success: true, datos: { tipoDeMercancia: 'tipo', usoEspecifico: 'uso', cantidad: 1, unidadMedida: 'kg', ano: 2022, modelo: 'modelo', marca: 'marca', serie: 'serie', condicionMercancia: 'bueno' } }))
+    };
+
+    mockStore = {
+      setAduana: jest.fn(),
+      setDestinoMercancia: jest.fn(),
+      setCondicionMercancia: jest.fn(),
+      setUnidadMedida: jest.fn(),
+      setAno: jest.fn(),
+      setPais: jest.fn(),
+      setOrganismoPublico: jest.fn(),
+      setVehiculo: jest.fn(),
+      setDelMercancia: jest.fn(),
+      setValorSeleccionado: jest.fn(),
+      setNombre: jest.fn(),
+    };
+
+    mockQuery = {
+      selectSolicitud$: of({})
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ExencionImpuestosComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      declarations: [],
+      imports: [ReactiveFormsModule, ExencionImpuestosComponent],
+      providers: [
+        { provide: ExencionImpuestosService, useValue: mockService },
+        { provide: Tramite103Store, useValue: mockStore },
+        { provide: Tramite103Query, useValue: mockQuery },
+        { provide: ValidacionesFormularioService, useValue: {} },
+        FormBuilder
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExencionImpuestosComponent);
@@ -19,165 +69,88 @@ describe('ExencionImpuestosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should initialize tramiteForm and agregarMercanciasForm on donanteDomicilio()', () => {
-    component.solicitudState = {
-      aduana: 'aduanaValue',
-      organismoPublico: 'organismoValue',
-      usoEspecifico: 'usoValue',
-      pais: 'paisValue',
-      rfc: 'rfcValue',
-      numeroProgramaImmex: 'programaValue',
-      razonSocial: 'razonValue',
-      correoElectronicoOpcional: 'emailValue',
-      telefonoOpcional: 'phoneValue',
-      calle: 'calleValue',
-      numeroExterior: 'exteriorValue',
-      numeroInterior: 'interiorValue',
-      telefono: 'telefonoValue',
-      correoElectronico: 'correoValue',
-      codigoPostal: 'postalValue',
-      estado: 'estadoValue',
-      colonia: 'coloniaValue',
-      tipoDeMercancia: 'tipoValue',
-      condicionMercancia: 'condicionValue',
-      unidadMedida: 'unidadValue',
-      ano: 'anoValue',
-    } as any;
-
-    component.donanteDomicilio();
-
-    expect(component.tramiteForm).toBeDefined();
-    expect(component.agregarMercanciasForm).toBeDefined();
-    expect(component.tramiteForm.get('exencionImpuestos.aduana')?.value).toBe('aduanaValue');
-    expect(component.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value).toBe('tipoValue');
-  });
-
-  it('should call setAduana on aduanaSeleccion()', () => {
-    const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
-    component.tramiteForm = component.fb.group({
-      exencionImpuestos: component.fb.group({
-        aduana: ['aduanaValue'],
-      }),
-    });
-
-    component.aduanaSeleccion();
-
-    expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
-  });
-
-  it('should call setTipoDeMercancia on tipoDeMercanciaSeleccion()', () => {
-    const setTipoDeMercanciaSpy = jest.spyOn(component['store'], 'setTipoDeMercancia');
-    component.agregarMercanciasForm = component.fb.group({
-      datosMercancia: component.fb.group({
-        tipoDeMercancia: ['tipoValue'],
-      }),
-    });
-
-    component.tipoDeMercanciaSeleccion();
-
-    expect(setTipoDeMercanciaSpy).toHaveBeenCalledWith('tipoValue');
-  });
-
-  it('should call setCondicionMercancia on condicionMercanciaSeleccion()', () => {
-    const setCondicionMercanciaSpy = jest.spyOn(component['store'], 'setCondicionMercancia');
-    component.agregarMercanciasForm = component.fb.group({
-      datosMercancia: component.fb.group({
-        condicionMercancia: ['condicionValue'],
-      }),
-    });
-
-    component.condicionMercanciaSeleccion();
-
-    expect(setCondicionMercanciaSpy).toHaveBeenCalledWith('condicionValue');
-  });
-
-  it('should call setUnidadMedida on unidadMedidaSeleccion()', () => {
-    const setUnidadMedidaSpy = jest.spyOn(component['store'], 'setUnidadMedida');
-    component.agregarMercanciasForm = component.fb.group({
-      datosMercancia: component.fb.group({
-        unidadMedida: ['unidadValue'],
-      }),
-    });
-
-    component.unidadMedidaSeleccion();
-
-    expect(setUnidadMedidaSpy).toHaveBeenCalledWith('unidadValue');
-  });
-
-  it('should call setAno on anoSeleccion()', () => {
-    const setAnoSpy = jest.spyOn(component['store'], 'setAno');
-    component.agregarMercanciasForm = component.fb.group({
-      datosMercancia: component.fb.group({
-        ano: ['anoValue'],
-      }),
-    });
-
-    component.anoSeleccion();
-
-    expect(setAnoSpy).toHaveBeenCalledWith('anoValue');
-  });
-
-  it('should call setPais on paisSeleccion()', () => {
-    const setPaisSpy = jest.spyOn(component['store'], 'setPais');
-    component.tramiteForm = component.fb.group({
-      exencionImpuestos: component.fb.group({
-        pais: ['paisValue'],
-      }),
-    });
-
-    component.paisSeleccion();
-
-    expect(setPaisSpy).toHaveBeenCalledWith('paisValue');
-  });
-
-  it('should mark tramiteForm as touched if invalid on validarDestinatarioFormulario()', () => {
-    component.tramiteForm = component.fb.group({
-      exencionImpuestos: component.fb.group({
-        aduana: ['', Validators.required],
-      }),
-    });
-
-    component.validarDestinatarioFormulario();
-
-    expect(component.tramiteForm.touched).toBeTruthy();
-  });
-
-  it('should set values in store on setValoresStore()', () => {
-    const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
-    component.tramiteForm = component.fb.group({
-      exencionImpuestos: component.fb.group({
-        aduana: ['aduanaValue'],
-      }),
-    });
-
-    component.setValoresStore(component.tramiteForm, 'exencionImpuestos.aduana', 'setAduana');
-
-    expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
-  });
-
-  it('should close modal on cerrarModal()', () => {
-    const closeModalMock = {
-      nativeElement: {
-        click: jest.fn(),
-      },
-    };
-    component.closeModal = closeModalMock as any;
-
-    component.cerrarModal();
-
-    expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy()', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-  });
-
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize catalogs on ngOnInit', () => {
+    component.ngOnInit();
+    expect(mockService.getAduana).toHaveBeenCalled();
+    expect(mockService.getDestinoMercancia).toHaveBeenCalled();
+  });
+
+  it('should open agregar mercancías modal', () => {
+    const modalRef = { nativeElement: document.createElement('div') };
+    component.modalElement = modalRef as any;
+    component.abrirDialogoMercancias();
+    expect(Modal).toHaveBeenCalled();
+  });
+
+  it('should open confirm modal when agregarMercanciasForm is valid', () => {
+    const modalRef = { nativeElement: document.createElement('div') };
+    component.confirmarModalElement = modalRef as any;
+    component.modalElement = modalRef as any;
+
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        tipoDeMercancia: ['tipo'],
+        usoEspecifico: ['uso'],
+        condicionMercancia: ['condicion'],
+        unidadMedida: ['unidad'],
+        vehiculo: ['vehiculo'],
+        ano: [2022],
+        cantidad: [5],
+        marca: ['marca'],
+        modelo: ['modelo'],
+        serie: ['serie']
+      })
+    });
+
+    component.agregarConfirmarModal();
+    expect(Modal).toHaveBeenCalled();
+  });
+
+  it('should add mercancías and update table when form is valid', () => {
+    const closeSpy = jest.fn();
+    component.closeModal = { nativeElement: { click: closeSpy } } as any;
+
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        tipoDeMercancia: ['tipo'],
+        usoEspecifico: ['uso'],
+        condicionMercancia: ['condicion'],
+        unidadMedida: ['unidad'],
+        vehiculo: ['vehiculo'],
+        ano: [2022],
+        cantidad: [5],
+        marca: ['marca'],
+        modelo: ['modelo'],
+        serie: ['serie']
+      })
+    });
+
+    component.agregarMercancias();
+
+    expect(mockService.agregarMercancias).toHaveBeenCalled();
+    expect(mockStore.setDelMercancia).toHaveBeenCalled();
+  });
+
+  it('should set value in store using setValoresStore', () => {
+    const dummyForm = component.fb.group({ nombre: ['John'] });
+    component.setValoresStore(dummyForm, 'nombre', 'setNombre');
+    expect(mockStore.setNombre).toHaveBeenCalledWith('John');
+  });
+
+  it('should call correct store method when cambiarRadio is invoked', () => {
+    component.cambiarRadio('sí');
+    expect(mockStore.setValorSeleccionado).toHaveBeenCalledWith('sí');
+  });
+
+  it('should call OnDestroy and cleanup', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

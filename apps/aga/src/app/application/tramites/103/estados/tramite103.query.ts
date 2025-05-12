@@ -1,6 +1,6 @@
+import { Solicitud103State, Tramite103Store } from './tramite103.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud103State, Tramite103Store } from './tramite103.store';
 
 /**
  * Tramite103Query provides reactive access to the state of Solicitud103.

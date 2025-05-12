@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 /**
  * Componente para el paso tres del trámite 301.

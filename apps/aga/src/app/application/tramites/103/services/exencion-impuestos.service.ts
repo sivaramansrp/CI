@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { Tramite103Store } from '../estados/tramite103.store';

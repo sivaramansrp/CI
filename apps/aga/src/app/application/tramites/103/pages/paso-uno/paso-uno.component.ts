@@ -1,9 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ExencionImpuestosComponent } from '../../components/exencion-impuestos.component';
 
 /**
