@@ -255,7 +255,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then(
+        (m) => m.EvaluarComponent
+      ),
+  },
 ];
 
 @NgModule({
