@@ -280,11 +280,17 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule
-      ),
+        (m) => m.ModificacionDonacionesImmexModule),
   }
 ];
 
