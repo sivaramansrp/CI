@@ -1857,8 +1857,8 @@
   {
     "id": 266,
     "tramite": 240305,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
     "department": "sedena"
   },
   {
