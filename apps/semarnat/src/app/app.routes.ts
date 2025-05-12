@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Route } from '@angular/router';
 
-export const appRoutes: Route[] = [
+export const APP_ROUTES: Route[] = [
   {
     path: '',
     loadChildren: () =>
