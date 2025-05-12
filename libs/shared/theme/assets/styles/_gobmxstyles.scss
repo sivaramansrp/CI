@@ -9,6 +9,7 @@
 .alert .alert-link,
 .close {
   font-weight: 700;
+  font-size: small;
 }
 
 .alert {
@@ -99,8 +100,11 @@
 
 .alert {
   border-width: 2px;
+  padding: 24px
+}
+
+.alert-text-center {
   text-align: center;
-  padding: 20px 15px;
 }
 
 .alert-dismissable,

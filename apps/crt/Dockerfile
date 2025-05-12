@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/crt
 
 # Build the application
-RUN npx nx build crt --configuration=production --skip-nx-cache --verbose
+RUN npx nx build crt --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/crt" && test -f "/app/dist/apps/crt/index.html" || exit 1

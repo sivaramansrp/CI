@@ -9,6 +9,7 @@ import { Detalle, Producto, TablaDatos} from '../models/flora-fauna.models';
  * mercancía, y aspectos administrativos.
  */
 export interface Tramite250102State {
+  tipoMovimiento : string;
   /** Tipo de aduana seleccionada. */
   tipoAduana: CatalogoResponse | null;
   /** Tipo de inspectoría seleccionada. */
@@ -25,6 +26,7 @@ export interface Tramite250102State {
   destinatarioCodigoPostal: string;
   /** Domicilio completo del destinatario. */
   destinatarioDomicilio: string;
+  destinariociudad: string;
   /** Nombre del agente aduanal. */
   agenteAduanalNombre: string;
   /** Primer apellido del agente aduanal. */
@@ -90,8 +92,8 @@ export interface Tramite250102State {
     /** Detalles de cada producto, almacenados como entradas de mapa */
     detalles: [number, Detalle[]][];
 }
-
-
+ 
+ 
 /**
  * Crea y retorna el estado inicial para el trámite 250101.
  *
@@ -103,6 +105,7 @@ export interface Tramite250102State {
  */
 export function createInitialState(): Tramite250102State {
   return {
+    tipoMovimiento  :'',
     /** Valor inicial para tipo de aduana (sin seleccionar). */
     tipoAduana: null,
     /** Valor inicial para tipo de inspectoría (sin seleccionar). */
@@ -119,6 +122,8 @@ export function createInitialState(): Tramite250102State {
     destinatarioCodigoPostal: '',
     /** Domicilio del destinatario (vacío). */
     destinatarioDomicilio: '',
+ 
+    destinariociudad: '',
     /** Nombre del agente aduanal (vacío). */
     agenteAduanalNombre: '',
     /** Primer apellido del agente aduanal (vacío). */
@@ -185,124 +190,25 @@ export function createInitialState(): Tramite250102State {
      detalles: [],
   };
 }
-
+ 
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite250101', resettable: true })
+@StoreConfig({ name: 'tramite250102', resettable: true })
 export class Tramite250102Store extends Store<Tramite250102State> {
   constructor() {
     super(createInitialState());
   }
-
-  /**
-   * Actualiza el tipo de aduana en el estado.
-   * @param tipoAduana Catálogo de aduana
-   */
-  public establecerTipoAduana(tipoAduana: CatalogoResponse): void {
-    this.update((state) => ({ ...state, tipoAduana }));
+  public establecerDatos(datos: Partial<Tramite250102State>): void {
+    this.update((state) => ({
+      ...state,
+      ...datos,
+    }));
   }
-
-  /**
-   * Actualiza el tipo de inspectoria en el estado.
-   * @param tipoInspectoria Catálogo de inspectoria
-   */
-  public establecerTipoInspectoria(tipoInspectoria: CatalogoResponse): void {
-    this.update((state) => ({ ...state, tipoInspectoria }));
-  }
-
-  /**
-   * Actualiza el tipo de municipio en el estado.
-   * @param tipoMunicipio Catálogo de municipio
-   */
-  public establecerTipoMunicipio(tipoMunicipio: CatalogoResponse): void {
-    this.update((state) => ({ ...state, tipoMunicipio }));
-  }
-
-  /**
-   * Actualiza la denominación del destinatario.
-   * @param destinatarioDenominacion Nombre o razón social del destinatario
-   */
-  public establecerDestinatarioDenominacion(destinatarioDenominacion: string): void {
-    this.update((state) => ({ ...state, destinatarioDenominacion }));
-  }
-
-  /**
-   * Establece el país del destinatario.
-   * @param destinatarioPais Catálogo del país
-   */
-  public establecerDestinatarioPais(destinatarioPais: CatalogoResponse): void {
-    this.update((state) => ({ ...state, destinatarioPais }));
-  }
-
-  /**
-   * Establece el estado del destinatario.
-   * @param destinatarioEstado Catálogo del estado
-   */
-  public establecerDestinatarioEstado(destinatarioEstado: CatalogoResponse): void {
-    this.update((state) => ({ ...state, destinatarioEstado }));
-  }
-
-  /**
-   * Establece el código postal del destinatario.
-   * @param destinatarioCodigoPostal Código postal
-   */
-  public establecerDestinatarioCodigoPostal(destinatarioCodigoPostal: string): void {
-    this.update((state) => ({ ...state, destinatarioCodigoPostal }));
-  }
-
-  /**
-   * Establece el domicilio del destinatario.
-   * @param destinatarioDomicilio Dirección
-   */
-  public establecerDestinatarioDomicilio(destinatarioDomicilio: string): void {
-    this.update((state) => ({ ...state, destinatarioDomicilio }));
-  }
-
-  /**
-   * Establece el nombre del agente aduanal.
-   * @param agenteAduanalNombre Nombre del agente
-   */
-  public establecerAgenteAduanalNombre(agenteAduanalNombre: string): void {
-    this.update((state) => ({ ...state, agenteAduanalNombre }));
-  }
-
-  /**
-   * Establece el primer apellido del agente aduanal.
-   * @param agenteAduanalPrimerApellido Apellido paterno
-   */
-  public establecerAgenteAduanalPrimerApellido(agenteAduanalPrimerApellido: string): void {
-    this.update((state) => ({ ...state, agenteAduanalPrimerApellido }));
-  }
-
-  /**
-   * Establece el segundo apellido del agente aduanal.
-   * @param agenteAduanalSegundoApellido Apellido materno
-   */
-  public establecerAgenteAduanalSegundoApellido(agenteAduanalSegundoApellido: string): void {
-    this.update((state) => ({ ...state, agenteAduanalSegundoApellido }));
-  }
-
-  /**
-   * Establece la patente del agente aduanal.
-   * @param agenteAduanalPatente Número de patente
-   */
-  public establecerAgenteAduanalPatente(agenteAduanalPatente: string): void {
-    this.update((state) => ({ ...state, agenteAduanalPatente }));
-  }
-
-  /**
-   * Establece la lista de destinatarios.
-   * @param destinaraioRowData Datos tabulares
-   */
-  public establecerDestinatario(destinaraioRowData: TablaDatos[]): void {
-    this.update((state) => ({ ...state, destinaraioRowData }));
-  }
-
-  /**
-   * Establece la lista de agentes aduanales.
-   * @param agenteAduanalRowData Datos tabulares
-   */
+  public establecerDestinatario(destinatarioRowData: TablaDatos[]): void {
+      this.update((state) => ({ ...state, destinatarioRowData }));
+    }
+ 
   public establecerAgenteAduanal(agenteAduanalRowData: TablaDatos[]): void {
     this.update((state) => ({ ...state, agenteAduanalRowData }));
   }
@@ -594,5 +500,5 @@ public resetStore(): void {
   this.reset();
 }
 
-
 }
+ 
