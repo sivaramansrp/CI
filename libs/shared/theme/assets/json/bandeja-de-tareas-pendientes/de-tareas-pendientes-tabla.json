@@ -2,17 +2,18 @@
     {
         "folioTramite": "12345",
         "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Revisión de documentos",
+        "nombreDeLaTarea": "Evaluar solicitud",
         "fechaDeAsignacion": "2023-10-01",
         "estadoDeTramite": "En Proceso",
         "departamento": "Recursos Humanos",
         "numeroDeProcedimiento": "301",
-        "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+        "origin": "FLUJO_FUNCIONARIO_EVALUAR",
+        "acciones": "T"
     },
     {
         "folioTramite": "67890",
         "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "Análisis de datos",
+        "nombreDeLaTarea": "confirmar notificación",
         "fechaDeAsignacion": "2023-10-02",
         "estadoDeTramite": "Pendiente",
         "departamento": "Finanzas",
@@ -22,7 +23,7 @@
     {
         "folioTramite": "54321",
         "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Elaboración de informe anual",
+        "nombreDeLaTarea": "Funcionario de informes",
         "fechaDeAsignacion": "2023-10-03",
         "estadoDeTramite": "Completado",
         "departamento": "Administración",
@@ -42,7 +43,7 @@
     {
         "folioTramite": "13579",
         "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "Revisión de políticas internas",
+        "nombreDeLaTarea": "confirmar resolución",
         "fechaDeAsignacion": "2023-10-05",
         "estadoDeTramite": "Pendiente",
         "departamento": "Recursos Humanos",
@@ -52,7 +53,7 @@
     {
         "folioTramite": "24680",
         "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Análisis de mercado",
+        "nombreDeLaTarea": "Functionario verificar requerimiento",
         "fechaDeAsignacion": "2023-10-06",
         "estadoDeTramite": "Completado",
         "departamento": "Marketing",
@@ -62,7 +63,7 @@
     {
         "folioTramite": "86420",
         "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Revisión de contratos",
+        "nombreDeLaTarea": "Generar opinión",
         "fechaDeAsignacion": "2023-10-07",
         "estadoDeTramite": "En Proceso",
         "departamento": "Legal",
@@ -72,7 +73,7 @@
     {
         "folioTramite": "97531",
         "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "Evaluación de proveedores",
+        "nombreDeLaTarea": "Subsecuente",
         "fechaDeAsignacion": "2023-10-08",
         "estadoDeTramite": "Pendiente",
         "departamento": "Compras",
