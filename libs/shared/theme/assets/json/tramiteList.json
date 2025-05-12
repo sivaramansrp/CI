@@ -989,8 +989,8 @@
   {
     "id": 142,
     "tramite": 32507,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/entrega-acta-solicitante",
+    "linkDepartment": "/pago/entrega-acta-solicitante",
     "department": "agace"
   },
   {
@@ -1325,8 +1325,8 @@
   {
     "id": 190,
     "tramite": 30401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-empresas/transporte",
+    "linkDepartment": "/pago/registro-empresas/transporte",
     "department": "aga"
   },
   {
@@ -1374,8 +1374,8 @@
   {
     "id": 197,
     "tramite": 630307,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/aeronaves-en-retorno-temporal/solicitud",
+    "linkDepartment": "/pago/aeronaves-en-retorno-temporal/solicitud",
     "department": "aga"
   },
   {
@@ -1437,8 +1437,8 @@
   {
     "id": 206,
     "tramite": 32102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-de-ampliacion/solicitud",
+    "linkDepartment": "/pago/aviso-de-ampliacion/solicitud",
     "department": "agace"
   },
   {
@@ -1857,8 +1857,8 @@
   {
     "id": 266,
     "tramite": 240305,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
     "department": "sedena"
   },
   {
@@ -1878,15 +1878,15 @@
   {
     "id": 269,
     "tramite": 240405,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 270,
     "tramite": 240407,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/solicitud-prorroga-aviso-importacion/importacion-de-sustancias-quimicas",
+    "linkDepartment": "/pago/solicitud-prorroga-aviso-importacion/importacion-de-sustancias-quimicas",
     "department": "sedena"
   },
   {
@@ -2011,8 +2011,8 @@
   {
     "id": 288,
     "tramite": 80210,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex/confirmacion",
+    "linkDepartment": "/pago/registro-solicitud-immex/confirmacion",
     "department": "se"
   },
   {
@@ -2053,8 +2053,8 @@
   {
     "id": 294,
     "tramite": 90303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/catalogos/solicitud",
+    "linkDepartment": "/pago/catalogos/solicitud",
     "department": "se"
   },
   {
@@ -4191,5 +4191,12 @@
     "linkDashboard": "/se/immex-modificacion/registro-modificacion",
     "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
     "department": "se"
+  },
+  {
+    "id": 601,
+    "tramite": 231002,
+    "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
+    "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
+    "department": "semarnat"
   }
 ]
