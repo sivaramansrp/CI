@@ -19,7 +19,7 @@
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
-        @if(acciones){
+        @if(acciones && acciones.length){
         <th>Acciones</th>
         }
 
@@ -54,7 +54,7 @@
         }
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
+        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
           {{ col.clave(fila) || ' ' }}
         </td>
         <td class="align-icon">

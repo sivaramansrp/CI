@@ -431,8 +431,80 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  
+  {
+    path: 'catalogos',
+    loadChildren: () =>
+      import('./tramites/90303/catalogos.module').then(
+        (m) => m.CatalogosModule
+      ),
+  },
+{  
+    path: 'immex-modificacion',
+    loadChildren: () =>
+      import('./tramites/80306/immexModification.module').then(
+        (m) => m.ImmexModificationModule
+      ),  
+   },
+   {
+    path: 'registro-solicitud-immex',
+    loadChildren: () =>
+      import('./tramites/80210/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
+      ),
+   },
+  {
+    path:'registro-expansion',
+    loadChildren: () =>
+     import('./tramites/80211/registro-expansion.module').then(
+        (m) => m.RegistroExpansionModule
+       ),
+    },
+  },
+   {
+    path: 'validar-inicialmente-certificado',
+    loadChildren: () =>
+      import('./tramites/110214/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
+  {
+    path: 'registro-modificacion', 
+    loadChildren: () =>
+      import('./tramites/80301/registro-modificacion.module').then(
+        (m) => m.RegistroModificacionModule
+      ),
+  },
+  {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  },
+  {
+    path: 'certificado-alianza-posteriori',
+    loadChildren:() =>
+      import('./tramites/110223/certificado-alianza-posteriori.module').then(
+        (m) => m.CertificadoAlianzaPosterioriModule
+      )
+  },
+  {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      )
+  },
+  {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/90304/prosec.module').then(
+        (m) => m.ProsecModule
+      ),
+  },
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],

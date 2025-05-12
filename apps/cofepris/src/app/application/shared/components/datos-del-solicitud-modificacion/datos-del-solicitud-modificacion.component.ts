@@ -36,7 +36,7 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { HttpClient } from '@angular/common/http';
+import {MENSAJE_DE_VALIDACI0N} from '../../../shared/constantes/aviso-de-funcionamiento.enum';
 
 import { Modal } from 'bootstrap';
 
@@ -56,6 +56,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';/*
 ** component 
 */
+
 @Component({
   selector: 'app-datos-del-solicitud-modificacion',
   standalone: true,
@@ -82,6 +83,19 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+  /**
+   * Referencia al componente `ManifiestosRepresentanteSeccionComponent`.
+   */
+ @Input() hideRepresentanteLegal: boolean =true;
+  /**
+   * Referencia al componente `CatalogoSelectComponent`.
+ * @tipo {boolean}
+ * @descripción
+ * Este decorador de entrada (`@Input`) permite controlar la visibilidad de los campos relacionados con
+ * el código postal y el correo electrónico en el componente. 
+ * 
+  * */
+  @Input() showCodigoPostalCorreoElectronico: boolean = false;
   /**
  * Notificación actual que se muestra en el componente.
  * 
@@ -477,6 +491,10 @@ eliminarPedimento(borrar: boolean): void {
     this.estadoDelServicio();
   
   }
+
+  /*
+  * Método para manejar el evento de cierre del modal.
+  */
   estadoDelServicio():void{
     this.establecimientoService
     .getJustificationData()
@@ -497,6 +515,7 @@ eliminarPedimento(borrar: boolean): void {
       this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
     });
   }
+  
   /**
    * Método de limpieza del componente.
    * Se utiliza para liberar recursos y evitar fugas de memoria.
@@ -517,19 +536,19 @@ eliminarPedimento(borrar: boolean): void {
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       establecimientoDomicilioCodigoPostal :['', Validators.required],
-      scian :['', Validators.required]
+      scian: this.fb.array([]),
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
-      descripcionScian: ['', Validators.required],
+      descripcionScian: [''],
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
-      noLicenciaSanitaria: ['', Validators.required],
+      noLicenciaSanitaria: [''],
       avisoCheckbox: [false],
        licenciaSanitaria: [{ value: '', disabled: true }],
-       regimen: [''],
-       aduanasEntradas: [''],
+       regimen: ['', Validators.required],
+       aduanasEntradas: ['', Validators.required],
        aifaCheckbox: [false],
     });
     this.formMercancias = this.fb.group({
@@ -540,6 +559,7 @@ eliminarPedimento(borrar: boolean): void {
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
+      estadoFormaFarmaceutica: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
@@ -551,6 +571,7 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
+    
   }
 /**
  * Deshabilita el campo "observaciones" del formulario de domicilio
@@ -620,40 +641,42 @@ cerrarModal(): void {
     this.modalInstance.hide();
   }
 }
-  /**
-   * Actualiza el estado del formulario según los cambios en los controles.
-   * @param controlName Nombre del control que cambió.
-   */
-  onContriloChange(controlName: string): void {
-    const UPDATED_VALUE = {
-      [controlName]: this.scianForm.get(controlName)?.value,
-    };
-    
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+/**
+ * @method abrirModal
+ * @description
+ * Este método abre el modal activo utilizando la instancia del modal de Bootstrap.
+ * Verifica si la instancia del modal (`modalInstance`) está definida antes de intentar abrirlo.
+ * 
+ * @returns void
+ */
+enCambioDeControl(formName: string, controlName: string): void {
+  let formGroup: FormGroup;
+
+  // Determine which form group to use
+  switch (formName) {
+    case 'scianForm':
+      formGroup = this.scianForm;
+      break;
+    case 'domicilioEstablecimiento':
+      formGroup = this.domicilioEstablecimiento;
+      break;
+    case 'solicitudEstablecimientoForm':
+      formGroup = this.solicitudEstablecimientoForm;
+      break;
+    default:
+      return;
   }
-  /**
-   * Carga los datos del catálogo de justificación.
-   */
-  enCambioDeControl(controlName: string): void {
-    
-    const UPDATED_VALUE = {
-      [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
-    };
-    
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-  }
-  /**
-   * Actualiza el estado del formulario según los cambios en los controles.
-   * @param controlName Nombre del control que cambió.
-   */
-  enControlCambioFormulario(controlName: string): void {
+
+  // Obtener el valor actualizado del control
+  const UPDATED_VALUE = {
+    [controlName]: formGroup.get(controlName)?.value,
+  };
+
+  //Actualizar la tienda o el servicio con el valor actualizado
+  this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   
-    const UPDATED_VALUE = {
-      [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
-    };
-   
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-  }
+}
+
   /**
    * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
    * @param event Evento del checkbox.
@@ -720,6 +743,7 @@ cerrarModal(): void {
         denominacionComun: this.formMercancias.get('denominacionComun')?.value,
         formaFarmaceutica: this.formMercancias.get('tipoDeProducto')?.value,
         estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+        estadoFormaFarmaceutica: this.formMercancias.get('estadoFormaFarmaceutica')?.value,
         fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
         descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
         unidadUMT: this.formMercancias.get('UMT')?.value,
@@ -741,6 +765,25 @@ cerrarModal(): void {
       this.cerrarModalMercancía();
     }
   }
+/* *
+* Método para eliminar un elemento de la tabla de mercancías.
+* @param index Índice del elemento a eliminar.
+**/
+validationMessages = MENSAJE_DE_VALIDACI0N;
+/**
+ * * Método para obtener el mensaje de error de un control específico en el formulario.
+ * @param controlName Nombre del control en el formulario.
+  * @returns Mensaje de error o null si no hay error.
+  * 
+  * */
+  getErrorMessage(controlName: string): string | null {
+    const CONTROL = this.formMercancias.get(controlName);
+    if (CONTROL && CONTROL.hasError('required') && (CONTROL.touched || CONTROL.dirty)) {
+      return this.validationMessages[controlName]
+    }
+    return null;
+  }
+  
   /**
    * Abre el modal SCIAN.
    */
@@ -773,6 +816,7 @@ cerrarModal(): void {
    * Configuración de columnas para la tabla de datos SCIAN.
    */
   configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
+  
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -784,5 +828,8 @@ cerrarModal(): void {
   /**
    * Método para crear el formulario.
    */
+  hasError(form: FormGroup, controlName: string, error: string) {
+    return form.get(controlName)?.touched && form.get(controlName)?.hasError(error);
+  }
   
 }
