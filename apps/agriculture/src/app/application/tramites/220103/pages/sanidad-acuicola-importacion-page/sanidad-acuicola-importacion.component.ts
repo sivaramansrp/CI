@@ -1,9 +1,17 @@
+
 import { Component, ViewChild } from '@angular/core';
 
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS } from '../../constantes/sanidad-acuicola-importacion.enum';
 
-
+/**
+ * @componente
+ * @nombre SanidadAcuicolaImportacionComponent
+ * @descripcion
+ * Componente que gestiona el flujo del trámite de sanidad acuícola e importación.
+ * Implementa un asistente (wizard) para guiar al usuario a través de los diferentes
+ * pasos del proceso de solicitud.
+ */
 @Component({
   selector: 'app-sanidad-acuicola-importacion',
   standalone: false,
