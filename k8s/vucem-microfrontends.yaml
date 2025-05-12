@@ -24,19 +24,23 @@ metadata:
 data:
   module-federation.manifest.json: |
     {
-      "login": "https://front.v30.ultrasist.net:4201/login",
-      "aga": "https://front.v30.ultrasist.net:4202/aga", 
-      "agriculture": "https://front.v30.ultrasist.net:4204/agriculture",
-      "se": "https://front.v30.ultrasist.net:4205/se",
-      "semarnat": "https://front.v30.ultrasist.net:4206/semarnat",
-      "agace": "https://front.v30.ultrasist.net:4209/agace",
-      "funcionario": "https://front.v30.ultrasist.net:4210/funcionario",
-      "cofepris": "https://front.v30.ultrasist.net:4211/cofepris",
-      "amecafe": "https://front.v30.ultrasist.net:4212/amecafe",
-      "sener": "https://front.v30.ultrasist.net:4217/sener",
-      "inbal": "https://front.v30.ultrasist.net:4218/inbal",
-      "sedena": "https://front.v30.ultrasist.net:4219/sedena",
-      "profepa": "https://front.v30.ultrasist.net:4220/profepa"
+      "login": "https://front.v30.ultrasist.net/login/remoteAppEntry.js",
+      "aga": "https://front.v30.ultrasist.net/aga/remoteAppEntry.js", 
+      "agriculture": "https://front.v30.ultrasist.net/agriculture/remoteAppEntry.js",
+      "se": "https://front.v30.ultrasist.net/se/remoteAppEntry.js",
+      "semarnat": "https://front.v30.ultrasist.net/semarnat/remoteAppEntry.js",
+      "agace": "https://front.v30.ultrasist.net/agace/remoteAppEntry.js",
+      "funcionario": "https://front.v30.ultrasist.net/funcionario/remoteAppEntry.js",
+      "cofepris": "https://front.v30.ultrasist.net/cofepris/remoteAppEntry.js",
+      "amecafe": "https://front.v30.ultrasist.net/amecafe/remoteAppEntry.js",
+      "sener": "https://front.v30.ultrasist.net/sener/remoteAppEntry.js",
+      "inbal": "https://front.v30.ultrasist.net/inbal/remoteAppEntry.js",
+      "sedena": "https://front.v30.ultrasist.net/sedena/remoteAppEntry.js",
+      "profepa": "https://front.v30.ultrasist.net/profepa/remoteAppEntry.js",
+      "crt": "https://front.v30.ultrasist.net/crt/remoteAppEntry.js",
+      "inah": "https://front.v30.ultrasist.net/inah/remoteAppEntry.js",
+      "bandejas": "https://front.v30.ultrasist.net/bandejas/remoteAppEntry.js",
+      "stps": "https://front.v30.ultrasist.net/stps/remoteAppEntry.js"
     }
 ---
 # Deployment for dashboard
@@ -1336,12 +1340,21 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+    # Add Cache-Control headers for Module Federation - CRITICAL FOR MODULE FEDERATION
     nginx.ingress.kubernetes.io/configuration-snippet: |
       # Add CORS headers
       add_header 'Access-Control-Allow-Origin' '*' always;
       add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
       add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization' always;
       add_header 'Access-Control-Max-Age' 1728000;
+      
+      # Ensure remoteAppEntry.js files are never cached - THIS IS CRITICAL FOR MODULE FEDERATION
+      if ($request_uri ~* \/remoteAppEntry\.js$) {
+        add_header Cache-Control "no-store, no-cache, must-revalidate" always;
+        add_header Pragma "no-cache" always;
+        expires -1;
+      }
+      
       # Handle OPTIONS preflight requests
       if ($request_method = 'OPTIONS') {
         add_header 'Access-Control-Allow-Origin' '*';
@@ -1513,7 +1526,7 @@ spec:
             name: modulefederation-stps-microfront-service-${ENV}
             port:
               number: 80
-      # Module Federation specific paths
+      # Module Federation specific paths - IMPORTANT FOR FEDERATION TO WORK
       - path: /remoteAppEntry.js
         pathType: Exact
         backend:
