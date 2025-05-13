@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-agricultura-microfront-service-dev
+  name: modulefederation-agriculture-microfront-service-dev
 spec:
   selector:
-    app: modulefederation-agricultura-microfront-dev
+    app: modulefederation-agriculture-microfront-dev
   ports:
     - protocol: TCP
       port: 4204
