@@ -120,9 +120,9 @@ seleccionarFechaInicio(evento: string): void {
    * Limpia los datos del formulario.
    */
   clearForm(): void {
-    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; // Preserve the banco value
-    this.pagoDeDerechosForm.reset(); // Reset the form
-    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); // Restore the banco value
+    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; // Preservar el valor del banco
+    this.pagoDeDerechosForm.reset(); // Restablecer el formulario
+    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); // Restaurar el valor del banco
   }
 
   /**

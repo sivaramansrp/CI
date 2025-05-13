@@ -11,7 +11,7 @@ import { TramiteFolioService } from '@libs/shared/data-access-user/src/core/serv
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent implements OnDestroy {
-  private destroyed$ = new Subject<void>(); // Subject to signal unsubscription
+  private destroyed$ = new Subject<void>(); // Sujeta a desuscripción de señal
 
   constructor(
     private router: Router,
@@ -29,7 +29,7 @@ export class PasoTresComponent implements OnDestroy {
       this.serviciosExtraordinariosServices
         .obtenerTramite(19) // ID de trámite
         .pipe(
-          takeUntil(this.destroyed$), // Automatically unsubscribe on destroy
+          takeUntil(this.destroyed$), // Darse de baja automáticamente al destruir
           map(() => {
             // Navegación al acuse si el trámite es exitoso
             this.router.navigate(['servicios-extraordinarios/acuse']);

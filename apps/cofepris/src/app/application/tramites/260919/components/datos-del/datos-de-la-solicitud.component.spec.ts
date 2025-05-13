@@ -191,7 +191,7 @@ describe('DatosdelasolicitudComponent', () => {
       {},
       {}
     );
-    expect(component.solicitud260919Store.metodoNombre).toHaveBeenCalled(); // Ensure the mock function is called
+    expect(component.solicitud260919Store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
