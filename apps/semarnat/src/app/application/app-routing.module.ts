@@ -52,7 +52,12 @@ const ROUTES: Routes = [
     path: 'phytosanitary-rexportation',
     loadChildren: () =>
       import('./tramites/230202/phytosanitary-rexportation.module').then((m) => m.PhytosanitaryRexportationModule),
-  }
+   },
+   {
+    path: 'aviso-retorno',
+    loadChildren: () =>
+      import('./tramites/231002/aviso-retorno.module').then((m) => m.AvisoRetornoModule),
+   },
 ];
 
 @NgModule({

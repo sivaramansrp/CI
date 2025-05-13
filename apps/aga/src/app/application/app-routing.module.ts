@@ -155,6 +155,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
+  {
     path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then(
@@ -225,19 +232,27 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      )
+  },
+  
   { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
         (m) => m.PrestadoresServicioModule
-      ),
+      )
   },
   {
     path: 'exencion-impuestos',
     loadChildren: () =>
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
-      ),
+      )
   },
   {
     path:'registro-solicitud',
@@ -263,6 +278,26 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
   }
 ];
 
