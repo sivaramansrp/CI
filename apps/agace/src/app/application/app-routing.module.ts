@@ -91,6 +91,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-destruccion',
+    loadChildren: () =>
+      import('./tramites/32506/aviso-destruccion.module').then(
+        (m) => m.AvisoDestruccionModule
+      ),
+  },
+  {
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
