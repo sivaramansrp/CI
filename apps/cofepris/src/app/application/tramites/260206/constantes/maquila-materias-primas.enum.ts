@@ -34,7 +34,7 @@ export const PASOS = [
 export const SECCIONES_TRAMITE_260206 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
+      VALIDACION_SECCION_2: false,
       VALIDACION_SECCION_3: false,
       VALIDACION_SECCION_4: false,
     },
