@@ -4193,6 +4193,13 @@
     "department": "se"
   },
   {
+    "id": 601,
+    "tramite": 120603,
+    "linkDashboard": "/se/registro-como-expresa/registro-empresa",
+    "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
+     "department": "se"
+},
+  {
     "id": 602,
     "tramite": 231002,
     "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
