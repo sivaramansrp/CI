@@ -487,6 +487,13 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+    path: 'modalidad-terciarización',
+    loadChildren: () =>
+      import('./tramites/80105/modalidad-terciarización.module').then(
+        (m) => m.ModalidadTerciarizaciónModule
+      ),
+  }
 ];
 
 
