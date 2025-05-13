@@ -23,7 +23,9 @@ RUN npm install --force --no-audit --no-package-lock
 # RUN npx nx reset
 ENV NX_VERBOSE_LOGGING=true
 # ENV NX_DEAMON=true
-RUN npx nx build inbal --configuration=development --skip-nx-cache --verbose
+ARG NODE_ENV
+RUN echo "Building inbal image for environment: $NODE_ENV"
+RUN npx nx build inbal --configuration=$NODE_ENV --base-href=/inbal/ --skip-nx-cache --verbose
 # RUN pwd && ls -a /app/dist/apps/inbal
 
 # Stage 2: Serve with Nginx

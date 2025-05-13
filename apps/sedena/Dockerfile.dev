@@ -23,7 +23,9 @@ RUN npm install --force --no-audit --no-package-lock
 # RUN npx nx reset
 ENV NX_VERBOSE_LOGGING=true
 # ENV NX_DEAMON=true
-RUN npx nx build sedena --configuration=development --skip-nx-cache --verbose
+ARG NODE_ENV
+RUN echo "Building sedena image for environment: $NODE_ENV"
+RUN npx nx build sedena --configuration=$NODE_ENV --base-href=/sedena/ --skip-nx-cache --verbose
 # RUN pwd && ls -a /app/dist/apps/sedena
 
 # Stage 2: Serve with Nginx

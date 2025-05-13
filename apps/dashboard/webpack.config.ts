@@ -11,9 +11,10 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
 // Determinar dinámicamente la publicPath
 function getPublicPath() {
   if (process.env.NODE_ENV === 'production') {
-    return 'http://localhost:4200/';
+    return 'https://front.v30.ultrasist.net/';
   } else {
-    return 'http://localhost:4200/';
+    // return 'http://localhost:4200/';
+    return 'https://front.v30.ultrasist.net/';
   }
 }
 
