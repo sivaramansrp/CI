@@ -28,7 +28,9 @@ import { CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO, CAMPOS_FORMULA
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
-
+/**
+ * app-app-agregar-destinatario Componente
+ */
 @Component({
   selector: 'app-agregar-destinatario',
   standalone: true,

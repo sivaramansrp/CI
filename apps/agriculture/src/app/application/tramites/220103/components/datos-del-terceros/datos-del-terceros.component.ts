@@ -31,7 +31,9 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/co
 import { CommonModule } from "@angular/common";
 
 import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
-
+/**
+ * app-datos-del-terceros Componente
+ */
 @Component({
   selector: 'app-datos-del-terceros',
   standalone: true,
