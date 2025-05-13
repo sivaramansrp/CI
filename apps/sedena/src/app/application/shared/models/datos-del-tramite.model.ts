@@ -17,6 +17,7 @@ export interface DatosDelTramiteFormState {
   unoSemestre?: string;
   informacionConfidencial?: boolean;
   fechaPago?: string;
+  fechaSalida?: string;
 }
 
 /**
@@ -45,12 +46,12 @@ export interface MercanciaDetalle {
   fraccionArancelaria: string;
   descripcionFraccion: string;
   unidadMedidaTarifa: string;
-  umc: string;
+  umc?: string;
   cantidadUMT: number;
   valorComercial: number;
   tipoMoneda: string;
   descripcion: string;
-  paisOrigen: string;
+  paisOrigen?: string;
 }
 
 /**
@@ -125,7 +126,21 @@ export const MANIFIESTOS_DECLARACION = {
  * @property {boolean} habilitado - Indica si el campo está habilitado para edición.
  */
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha única de pago',
+  labelNombre: 'Fecha única de entrada',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Constante que define la configuración para el campo de Fecha única de salida de la mercancía.
+ *
+ * @constant
+ * @property {string} labelNombre - Etiqueta del campo mostrada al usuario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado para edición.
+ */
+export const FECHA_DE_SALIDA = {
+  labelNombre: 'Fecha única de salida de la mercancía',
   required: true,
   habilitado: true,
 };
