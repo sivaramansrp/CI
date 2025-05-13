@@ -2102,8 +2102,8 @@
   {
     "id": 301,
     "tramite": 6403,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/retorno-de-partes/solicitante",
+    "linkDepartment": "/pago/retorno-de-partes/solicitante",
     "department": "aga"
   },
   {

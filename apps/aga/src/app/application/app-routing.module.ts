@@ -291,6 +291,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
         (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
   }
 ];
 
