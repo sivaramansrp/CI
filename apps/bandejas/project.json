@@ -30,11 +30,11 @@
           }
         ],
         "styles": [
-          "node_modules/bootstrap/scss/bootstrap.scss",
-           "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-           "node_modules/ngx-toastr/toastr.css",
-          "libs/shared/theme/assets/styles/main.scss"
-         ],
+             "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+             "libs/shared/theme/assets/styles/main.scss"
+            ],
         "scripts": [
           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
         ],
@@ -51,6 +51,37 @@
           "budgets": [
             {
               "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/bandejas/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/bandejas/src/app/environments/environment.ts",
+              "with": "apps/bandejas/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
               "maximumWarning": "500kb",
               "maximumError": "1mb"
             },
@@ -61,26 +92,40 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/bandejas/webpack.prod.config.ts"
-          }
+            "path": "apps/bandejas/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/bandejas/src/app/environments/environment.ts",
+              "with": "apps/bandejas/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
-          "buildOptimizer": false,
-          "optimization": false,
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
           "vendorChunk": true,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          "buildOptimizer": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4224,
-        "publicHost": "http://localhost:4224"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -88,6 +133,9 @@
         },
         "development": {
           "buildTarget": "bandejas:build:development"
+        },
+        "qa": {
+          "buildTarget": "bandejas:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -110,7 +158,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "bandejas:build",
         "port": 4224,

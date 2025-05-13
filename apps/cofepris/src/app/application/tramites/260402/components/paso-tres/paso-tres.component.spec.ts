@@ -4,6 +4,7 @@ import { PasoTresComponent } from './paso-tres.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -16,9 +17,10 @@ describe('PasoTresComponent', () => {
       imports: [
         CommonModule,
         FirmaElectronicaComponent,
+        PasoTresComponent,
+        ToastrModule.forRoot(),
         RouterTestingModule.withRoutes([]),
       ],
-      declarations: [PasoTresComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -30,6 +32,24 @@ describe('PasoTresComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const mockFirma = 'VALID_SIGNATURE';
+
+    component.obtieneFirma(mockFirma);
+
+    expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  });
+
+  it('should not navigate when FIRMA is empty', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const mockFirma = '';
+
+    component.obtieneFirma(mockFirma);
+
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
 });
