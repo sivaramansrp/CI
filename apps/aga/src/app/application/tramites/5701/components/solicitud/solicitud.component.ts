@@ -1083,7 +1083,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+    
   /**
 * Abre el modal para eliminar un documento.
 * @param {number} i - El índice del documento.
