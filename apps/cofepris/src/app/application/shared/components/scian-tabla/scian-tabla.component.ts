@@ -91,7 +91,7 @@ export class ScianTablaComponent implements OnInit {
   claveSelecionada(event: Catalogo): void {
     this.scianNinoLista = this.scianLista.filter((ele) => ele.id === event.id);
     this.scianForm.patchValue({
-      scianNino: `${this.scianNinoLista[0].descripcion} Descripción for Test`
+      scianNino: this.scianNinoLista[0].id
     })
   }
 
