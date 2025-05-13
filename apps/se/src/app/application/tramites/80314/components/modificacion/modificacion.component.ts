@@ -16,6 +16,7 @@ import {
   Tramite80314Store,
 } from '../../../../estados/tramites/tramite80314.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ACTIVIDAD_PRODUCTIVA } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -102,10 +103,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       labelNombre: 'Activided productiva',
       required: false,
       primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        { id: 1, descripcion: 'AGRICULTURA' },
-        { id: 2, descripcion: 'BORDADO 0 IMPRESION DE PRENDAS' },
-      ],
+      catalogos: ACTIVIDAD_PRODUCTIVA
     };
   }
 

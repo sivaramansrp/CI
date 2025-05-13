@@ -649,14 +649,6 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
 ];
 
 /**
- * Constante que define el título del mensaje para el registro de una solicitud
- * de modificación del programa IMMEX. Específicamente, se refiere a la
- * modificación para dar de alta un domicilio de una planta, bodega o almacén.
- */
-export const TITULOMENSAJE =
-  'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
-
-/**
  * Texto constante que describe el mensaje mostrado al registrar una solicitud.
  *
  * Este mensaje informa al usuario que la solicitud ha sido registrada con un número temporal,
@@ -665,3 +657,19 @@ export const TITULOMENSAJE =
  */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
+
+/**
+ * Configuración de actividades productivas.
+ *
+ * Este arreglo contiene objetos que representan las actividades productivas
+ * disponibles en el sistema. Cada objeto incluye un identificador único (`id`)
+ * y una descripción (`descripcion`) de la actividad.
+ *
+ * Propiedades:
+ * - `id`: Identificador único de la actividad productiva.
+ * - `descripcion`: Descripción de la actividad productiva.
+ */
+export const ACTIVIDAD_PRODUCTIVA = [
+  { id: 1, descripcion: 'AGRICULTURA' },
+  { id: 2, descripcion: 'BORDADO O IMPRESIÓN DE PRENDAS' },
+];
