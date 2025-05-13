@@ -299,7 +299,6 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionMercanciaDonadaModule
       ),
   }
-  
 ];
 
 @NgModule({
