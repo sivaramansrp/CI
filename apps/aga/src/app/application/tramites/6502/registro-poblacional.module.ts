@@ -6,6 +6,7 @@ import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.co
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AvisoDeCambioComponent } from './components/aviso-de-cambio/aviso-de-cambio.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@l
     RegistroPoblacionalRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    AvisoDeCambioComponent
   ],
 })
 export class RegistroPoblacionalModule {}

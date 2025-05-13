@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-md-12">
+        <ng-titulo titulo="Datos de los agentes aduanales y mandatarios relacionados."></ng-titulo>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-md-12">
+        <app-tabla-dinamica [configuracionTabla]="instalacionesPrincipalesTabla"
+        [datos]="instalacionesPrincipalesTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox"></app-tabla-dinamica>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-primary me-2" (click)="openModal()">Modificar</button>
+    </div>
+</div>
+
+<div
+  class="modal fade"
+  #modal
+  tabindex="-1"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <p></p>
+        </div>
+      <div class="modal-body">
+        <form [formGroup]="modalForma">
+            <h6 class="para-title">Datos personales.</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                </div>
+                <div class="col-md-4">
+                    <label for="registroFederal">Registro federal de contribuyentes:</label>
+                    <input type="text" class="form-control" id="registroFederal" formControlName="registroFederal">
+                </div>
+                <div class="col-md-4">
+                    <label for="curp">Clave única de registro poblacional (CURP):</label>
+                    <input type="text" class="form-control" id="curp" formControlName="curp">
+                </div>
+            </div>
+            <h6 class="para-title">Actualización de la clave única de registro poblacional (CURP).</h6>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="curpActualizada"><span class="danger">*</span>Clave única de registro poblacional (CURP) actualizada:</label>
+                    <input type="text" class="form-control" id="curpActualizada" formControlName="curpActualizada">
+                    @if(modalForma.controls['curpActualizada'].invalid && modalForma.controls['curpActualizada'].touched){
+                        <div class="d-grid">
+                            @if(modalForma.controls['curpActualizada'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                    }
+    
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="confirmacioCurpActualizada"><span class="danger">*</span>Confirmación de clave única de registro poblacional (CUR P) actualizada:</label>
+                    <input type="text" class="form-control" id="confirmacioCurpActualizada" formControlName="confirmacioCurpActualizada">
+                    @if(modalForma.controls['confirmacioCurpActualizada'].invalid && modalForma.controls['confirmacioCurpActualizada'].touched){
+                        <div class="d-grid">
+                            @if(modalForma.controls['confirmacioCurpActualizada'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                    }
+    
+                </div>
+            </div>
+                        
+        </form>
+        
+      </div>
+      <div class="modal-footer justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="hideModal()">Modificar</button>
+        <button type="button" class="btn btn-primary" (click)="hideModal()">Limpiar</button>
+        <button type="button" class="btn btn-default" (click)="hideModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
