@@ -507,6 +507,13 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120403/cupos.module').then(
+        (m) => m.CuposModule
+      ),
+  },
 ];
 
 
