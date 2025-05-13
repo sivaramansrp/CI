@@ -2,7 +2,7 @@
   {
     "id": 1,
     "tramite": 104,
-    "linkDashboard": "/pago/deposito-fiscal/solicitud",
+    "linkDashboard": "/aga/deposito-fiscal/solicitud",
     "linkDepartment": "/pago/deposito-fiscal/solicitud",
     "department": "aga"
   },
@@ -107,7 +107,7 @@
   {
     "id": 16,
     "tramite": 31601,
-    "linkDashboard": "/agace/pago/antecesor/datosdelasolicitud",
+    "linkDashboard": "/agace/antecesor/datosdelasolicitud",
     "linkDepartment": "/agace/pago/antecesor/datosdelasolicitud",
     "department": "agace"
   },
@@ -394,7 +394,7 @@
   {
     "id": 57,
     "tramite": 120602,
-    "linkDashboard": "/se/empresa-frontera/datos-empresad",
+    "linkDashboard": "/se/empresa-frontera/datos-empresa",
     "linkDepartment": "/pago/empresa-frontera/datos-empresad",
     "department": "se"
   },
@@ -408,7 +408,7 @@
   {
     "id": 59,
     "tramite": 130106,
-    "linkDashboard": "/desmantelar/solicitante",
+    "linkDashboard": "/se/desmantelar/solicitante",
     "linkDepartment": "/desmantelar/solicitante",
     "department": "se"
   },
@@ -450,7 +450,7 @@
   {
     "id": 65,
     "tramite": 140103,
-    "linkDashboard": "/se/pago/cancelacion-de/solicitante",
+    "linkDashboard": "/se/cancelacion-de/solicitante",
     "linkDepartment": "/se/pago/cancelacion-de/solicitante",
     "department": "se"
   },
@@ -611,7 +611,7 @@
   {
     "id": 88,
     "tramite": 260211,
-    "linkDashboard": "/permiso-sanitario/pantallas",
+    "linkDashboard": "/cofepris/permiso-sanitario/pantallas",
     "linkDepartment": "/permiso-sanitario/pantallas",
     "department": "cofepris"
   },
@@ -667,7 +667,7 @@
   {
     "id": 96,
     "tramite": 260502,
-    "linkDashboard": "/pago/muestras-plaguicidas/plaguicidas",
+    "linkDashboard": "/cofepris/muestras-plaguicidas/plaguicidas",
     "linkDepartment": "/pago/muestras-plaguicidas/plaguicidas",
     "department": "cofepris"
   },
@@ -891,8 +891,8 @@
   {
     "id": 128,
     "tramite": 302,
-    "linkDashboard": "/aga/certi-registro/pantallas",
-    "linkDepartment": "/pago/certi-registro/pantallas",
+    "linkDashboard": "/aga/certi-registro/proceso-completo",
+    "linkDepartment": "/pago/certi-registro/proceso-completo",
     "department": "aga"
   },
   {
@@ -1052,15 +1052,15 @@
   {
     "id": 151,
     "tramite": 260303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-psicotropicos/registrarIPM",
+    "linkDepartment": "/pago/importacion-psicotropicos/registrarIPM",
     "department": "cofepris"
   },
   {
     "id": 152,
     "tramite": 260512,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/Permiso-de-importacion/pantallaspage",
+    "linkDepartment": "/pago/Permiso-de-importacion/pantallaspage",
     "department": "cofepris"
   },
   {
@@ -1094,8 +1094,8 @@
   {
     "id": 157,
     "tramite": 270201,
-    "linkDashboard": "/inbal/aviso-siglos/solictud",
-    "linkDepartment": "/pago/aviso-siglos/solictud",
+    "linkDashboard": "/inbal/aviso-siglos/solicitud",
+    "linkDepartment": "/pago/aviso-siglos/solicitud",
     "department": "inbal"
   },
   {
@@ -1185,8 +1185,8 @@
   {
     "id": 170,
     "tramite": 120204,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificado-cupos/solicitud-expedicion",
+    "linkDepartment": "/pago/expedicion-certificado-cupos/solicitud-expedicion",
     "department": "se"
   },
   {
@@ -1199,8 +1199,8 @@
   {
     "id": 172,
     "tramite": 105,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/invocar-modulo/solicitante",
+    "linkDepartment": "/pago/invocar-modulo/solicitante",
     "department": "aga"
   },
   {
@@ -1213,8 +1213,8 @@
   {
     "id": 174,
     "tramite": 317,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
+    "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
     "department": "agace"
   },
   {
@@ -1283,8 +1283,8 @@
   {
     "id": 184,
     "tramite": 140101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/solicitud-de-cancelacion/solicitante",
+    "linkDepartment": "/pago/solicitud-de-cancelacion/solicitante",
     "department": "se"
   },
   {
@@ -1395,8 +1395,8 @@
   {
     "id": 200,
     "tramite": 31602,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
+    "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
     "department": "agace"
   },
   {
@@ -1556,14 +1556,14 @@
   {
     "id": 223,
     "tramite": 260513,
-    "linkDashboard": "cofepris/muestras-de-toxicos/plaguicidas",
+    "linkDashboard": "/cofepris/muestras-de-toxicos/plaguicidas",
     "linkDepartment": "pago/muestras-de-toxicos/plaguicidas",
     "department": "cofepris"
   },
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDashboard": "/cofepris/sustancias-permitidas",
     "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
@@ -1619,8 +1619,8 @@
   {
     "id": 232,
     "tramite": 260913,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
+    "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
     "department": "cofepris"
   },
   {
