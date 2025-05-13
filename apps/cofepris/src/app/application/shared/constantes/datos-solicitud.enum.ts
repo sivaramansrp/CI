@@ -376,7 +376,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  *              para elementos colapsables en la aplicación.
  * @type {number[]}
 */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [ 260206,
   260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201, 
   260219,260302, 260304 , 260103
 ];
