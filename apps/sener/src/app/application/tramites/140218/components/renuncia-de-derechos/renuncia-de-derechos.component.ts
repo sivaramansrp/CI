@@ -187,6 +187,11 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite140218Store.update(UPDATE_PAGO_FORM);
   }
 
+   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140218Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite140218Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
   /**
   * Gancho de ciclo de vida OnDestroy
   */

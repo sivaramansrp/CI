@@ -105,8 +105,8 @@
       <div class="col-md-8">
         <div class="form-group">
           <label for="motivoSuspension" class="form-label">Motivo renuncia de derechos *:</label>
-          <textarea rows="3" cols="80" id="motivoRenuncia" required="true"
-            formControlName="motivoRenuncia"></textarea>
+          <textarea rows="3" cols="80" id="motivoRenuncia" required="true" formControlName="motivoRenuncia"
+            (change)="setValoresStore(renunciaDerechosForm, 'motivoRenuncia', 'setMotivoRenuncia')"></textarea>
         </div>
         @if(renunciaDerechosForm.controls['motivoRenuncia'].invalid &&
         renunciaDerechosForm.controls['motivoRenuncia'].touched) {
@@ -121,9 +121,9 @@
     <ng-titulo titulo="Manifiesto bajo protesta"></ng-titulo>
     <div class="row">
       <div class="alert alert-info">
-        <label style="font-weight: normal;display: -webkit-inline-box">
+        <label class="inline-box">
           <input type="checkbox" id="manifesto" />
-          <span style="display:block; text-align: initial;display: flex;margin-left: 10px;">
+          <span class="manifestoText">
             {{manifestoText.Texto}}</span>
         </label>
       </div>
