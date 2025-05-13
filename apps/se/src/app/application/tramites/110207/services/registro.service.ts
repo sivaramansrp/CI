@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@ng-mf/data-access-user';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { enviroment } from '../../../../enviroments/enviroment';
+import { inject } from '@angular/core';
+import { APPINJECT } from 'apps/se/src/app/app.inject';
 
 
 /**
@@ -15,14 +16,19 @@ import { enviroment } from '../../../../enviroments/enviroment';
 })
 export class RegistroService {
   /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  private readonly appConfig = inject(APPINJECT);
+
+  /**
    * URL base del servidor principal.
    */
-  urlServer = enviroment.URL_SERVER;
+  urlServer = this.appConfig.URL_SERVER;
 
   /**
    * URL base del servidor de catálogos auxiliares.
    */
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Constructor del servicio.
