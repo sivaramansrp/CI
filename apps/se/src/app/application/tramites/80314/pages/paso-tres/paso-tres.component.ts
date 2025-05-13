@@ -64,6 +64,14 @@ export class PasoTresComponent implements OnDestroy {
     }
   }
 
+  /**
+   * @override
+   * @method
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se utiliza para completar y limpiar el Subject `destroy$`, evitando fugas de memoria
+   * al desuscribirse de observables.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
