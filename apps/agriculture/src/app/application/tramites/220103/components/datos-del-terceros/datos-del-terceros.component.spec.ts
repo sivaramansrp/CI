@@ -1,141 +1,206 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTercerosComponent } from './datos-del-terceros.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
-import { DatosDelTerceroDestinatario, Instalacion } from '../../modelos/sanidad-acuicola-importacion.model';
+import { of } from 'rxjs';
+import { ElementRef } from '@angular/core';
 import { Modal } from 'bootstrap';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-// Mock de la clase Modal de Bootstrap
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({ selector: 'app-tabla-dinamica', template: '' })
+class MockTablaDinamicaComponent {
+  @Input() configuracionTabla: any;
+  @Input() datos: any;
+  @Input() tipoSeleccionTabla: any;
+  @Output() listaDeFilaSeleccionada = new EventEmitter<any>();
+}
+
+@Component({ selector: 'app-agregar-destinatario', template: '' })
+class MockAgregarDestinatarioComponent {
+  @Input() esModoInstalacion?: boolean;
+  @Output() cerrarModal = new EventEmitter<void>();
+}
+
+@Component({ selector: 'ng-titulo', template: '' })
+class MockNgTitulo {
+  @Input() titulo: string = '';
+}
+
+@Component({ selector: 'ng-alert', template: '' })
+class MockNgAlert {
+  @Input() CONTENIDO: any;
+}
+
 jest.mock('bootstrap', () => ({
   Modal: {
-    getInstance: jest.fn().mockImplementation(() => ({
-      hide: jest.fn()
-    }))
-  }
+    getInstance: jest.fn(),
+  },
 }));
 
 describe('DatosDelTercerosComponent', () => {
   let component: DatosDelTercerosComponent;
   let fixture: ComponentFixture<DatosDelTercerosComponent>;
-  let mockQuery: any;
+  let TRAMITE_QUERY_MOCK: Partial<Tramite220103Query>;
 
-  // Datos simulados
-  const mockState = {
-    tablaDestinatario: [{ id: '1', nombre: 'Destinatario Test' }] as DatosDelTerceroDestinatario[],
-    tablaInstalacion: [{ id: '1', nombre: 'Instalación Test' }] as Instalacion[]
-  };
+  const MOCK_MODAL_INSTANCE = { hide: jest.fn() };
 
   beforeEach(async () => {
-    mockQuery = {
-      selectTramite220103State$: of(mockState)
+    TRAMITE_QUERY_MOCK = {
+      selectTramite220103State$: of({
+        tablaDestinatario: [{
+          nombre: 'Juan Pérez',
+          primerApellido: 'Pérez',
+          segundoApellido: 'García',
+          razonSocial: 'Empresa X',
+          telefono: '1234567890',
+          correoElectronico: 'juan.perez@example.com',
+          direccion: 'Calle Falsa 123',
+          codigoPostal: '54321',
+          ciudad: 'Ciudad Y',
+          estado: 'Estado Y',
+          pais: 'Pais Y',
+          tipoPersona: 'Física',
+          rfc: 'RFC123456789',
+          curp: 'CURP123456789',
+          lada: '123',
+          calle: 'Calle Principal',
+          numeroExterior: '456',
+          numeroInterior: 'B',
+          municipioAlcaldia: 'Municipio Z',
+          colonia: 'Colonia Z',
+        }],
+        tablaInstalacion: [{
+          nombre: 'Planta Industrial X',
+          primerApellido: 'Apellido1',
+          segundoApellido: 'Apellido2',
+          telefono: '1234567890',
+          correoElectronico: 'example@example.com',
+          direccion: 'Direccion X',
+          codigoPostal: '12345',
+          ciudad: 'Ciudad X',
+          estado: 'Estado X',
+          pais: 'Pais X',
+          tipoInstalacion: 'Tipo X',
+          capacidad: '1000',
+          unidadMedida: 'kg',
+          calle: 'Calle X',
+          numeroExterior: '123',
+          numeroInterior: 'A',
+          municipio: 'Municipio X',
+          referencia: 'Referencia X',
+          colonia: 'Colonia X',
+          lada: '123',
+        }],
+      }),
     };
 
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        DatosDelTercerosComponent
+        DatosDelTercerosComponent,
+        HttpClientTestingModule,
+      ],
+      declarations: [
+        MockTablaDinamicaComponent,
+        MockAgregarDestinatarioComponent,
+        MockNgTitulo,
+        MockNgAlert,
       ],
       providers: [
-        FormBuilder,
-        { provide: Tramite220103Query, useValue: mockQuery }
+        { provide: Tramite220103Query, useValue: TRAMITE_QUERY_MOCK },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTercerosComponent);
     component = fixture.componentInstance;
+
+    component.elementoModal = { nativeElement: {} } as ElementRef;
+    component.elementoModalInstalaci = { nativeElement: {} } as ElementRef;
+
+    (Modal.getInstance as jest.Mock).mockReturnValue(MOCK_MODAL_INSTANCE);
+
+    fixture.detectChanges();
   });
 
-  describe('Inicialización del componente', () => {
-    it('debería crear el componente', () => {
-      expect(component).toBeTruthy();
-    });
-
-    it('debería inicializar las propiedades con valores predeterminados', () => {
-      expect(component.mensajeImportante).toBeDefined();
-      expect(component.configuracionFormularioDatos).toBeDefined();
-      expect(component.configuracionFormularioMercancia).toBeDefined();
-      expect(component.configuracionTabla).toBeDefined();
-      expect(component.configuracionTablaInstalacion).toBeDefined();
-      expect(component.datosTabla).toEqual([]);
-      expect(component.datosTablaInstalacion).toEqual([]);
-      expect(component.destinatariosSeleccionados).toEqual([]);
-      expect(component.instalacionesSeleccionadas).toEqual([]);
-    });
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('debería suscribirse al estado y actualizar las tablas', fakeAsync(() => {
-      component.ngOnInit();
-      tick();
-
-      expect(component.datosTabla).toEqual(mockState.tablaDestinatario);
-      expect(component.datosTablaInstalacion).toEqual(mockState.tablaInstalacion);
-    }));
-
-    it('debería manejar un estado nulo correctamente', fakeAsync(() => {
-      mockQuery.selectTramite220103State$ = of(null);
-      component.ngOnInit();
-      tick();
-
-      expect(component.datosTabla).toEqual([]);
-      expect(component.datosTablaInstalacion).toEqual([]);
-    }));
+  it('should load state data into the tables', () => {
+    expect(component.datosTabla.length).toBe(1);
+    expect(component.datosTablaInstalacion.length).toBe(1);
   });
 
-  describe('Métodos de selección', () => {
-    it('debería actualizar destinatariosSeleccionados con el evento', () => {
-      const datosPrueba = [{ id: 'test', nombre: 'Destinatario Test' }] as DatosDelTerceroDestinatario[];
-      component.obtenerDestinatarioSeleccionadas(datosPrueba);
-      expect(component.destinatariosSeleccionados).toBe(datosPrueba);
-    });
-
-    it('debería actualizar instalacionesSeleccionadas con el evento', () => {
-      const datosPrueba = [{ id: 'test', nombre: 'Instalación Test' }] as Instalacion[];
-      component.obtenerInstalaciSeleccionadas(datosPrueba);
-      expect(component.instalacionesSeleccionadas).toBe(datosPrueba);
-    });
+  it('should update selected recipients list', () => {
+    const SELECCIONADOS = [component.datosTabla[0]];
+    component.obtenerDestinatarioSeleccionadas(SELECCIONADOS);
+    expect(component.destinatariosSeleccionados).toEqual(SELECCIONADOS);
   });
 
-  describe('Métodos de cierre de modal', () => {
-    it('closeModal debería obtener la instancia del modal y llamar a hide', () => {
-      const mockElementRef = { nativeElement: document.createElement('div') };
-      component.elementoModal = mockElementRef as ElementRef;
-
-      const mockModalInstance = { hide: jest.fn() };
-      const getInstanceSpy = jest.spyOn(Modal, 'getInstance').mockReturnValue(mockModalInstance as any);
-
-      component.closeModal();
-
-      expect(getInstanceSpy).toHaveBeenCalledWith(mockElementRef.nativeElement);
-      expect(mockModalInstance.hide).toHaveBeenCalled();
-    });
-
-    it('closeModalInstalaci debería manejar una instancia nula del modal', () => {
-      const mockElementRef = { nativeElement: document.createElement('div') };
-      component.elementoModalInstalaci = mockElementRef as ElementRef;
-
-      jest.spyOn(Modal, 'getInstance').mockReturnValue(null);
-
-      expect(() => component.closeModalInstalaci()).not.toThrow();
-    });
+  it('should update selected installations list', () => {
+    const SELECCIONADOS = [component.datosTablaInstalacion[0]];
+    component.obtenerInstalaciSeleccionadas(SELECCIONADOS);
+    expect(component.instalacionesSeleccionadas).toEqual(SELECCIONADOS);
   });
 
-  describe('ngOnDestroy', () => {
-    it('debería llamar a next y complete en notificadorDestruccion$', () => {
-      const nextSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-      const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+  it('should close recipient modal if instance exists', () => {
+    component.cerrarModal();
+    expect(Modal.getInstance).toHaveBeenCalledWith(component.elementoModal.nativeElement);
+    expect(MOCK_MODAL_INSTANCE.hide).toHaveBeenCalled();
+  });
 
-      component.ngOnDestroy();
+  it('should close installation modal if instance exists', () => {
+    component.cerrarModalInstalacion();
+    expect(Modal.getInstance).toHaveBeenCalledWith(component.elementoModalInstalaci.nativeElement);
+    expect(MOCK_MODAL_INSTANCE.hide).toHaveBeenCalled();
+  });
 
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('should not throw if Modal.getInstance returns null (recipient)', () => {
+    (Modal.getInstance as jest.Mock).mockReturnValueOnce(null);
+    expect(() => component.cerrarModal()).not.toThrow();
+    expect(component['instanciaModal']).toBeUndefined();
+  });
+
+  it('should not throw if Modal.getInstance returns null (installation)', () => {
+    (Modal.getInstance as jest.Mock).mockReturnValueOnce(null);
+    expect(() => component.cerrarModalInstalacion()).not.toThrow();
+    expect(component['instanciaModalInstalaci']).toBeUndefined();
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const SPY_NEXT = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const SPY_COMPLETE = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+    component.ngOnDestroy();
+    expect(SPY_NEXT).toHaveBeenCalled();
+    expect(SPY_COMPLETE).toHaveBeenCalled();
+  });
+
+  it('should render recipient table component', () => {
+    const TABLAS = fixture.nativeElement.querySelectorAll('app-tabla-dinamica');
+    expect(TABLAS[0]).toBeTruthy();
+  });
+
+  it('should render installation table component', () => {
+    const TABLAS = fixture.nativeElement.querySelectorAll('app-tabla-dinamica');
+    expect(TABLAS[1]).toBeTruthy();
+  });
+
+  it('should render "Agregar" button for recipient modal', () => {
+    const BOTONES = fixture.nativeElement.querySelectorAll('button[name="agregar"]');
+    expect(BOTONES[0]).toBeTruthy();
+    expect(BOTONES[0].textContent).toContain('Agregar');
+  });
+
+  it('should render "Agregar" button for installation modal', () => {
+    const BOTONES = fixture.nativeElement.querySelectorAll('button[name="agregar"]');
+    expect(BOTONES[1]).toBeTruthy();
+    expect(BOTONES[1].textContent).toContain('Agregar');
+  });
+
+  it('should render both modals in the DOM', () => {
+    const MODAL_DEST = fixture.nativeElement.querySelector('#modalDestinatario');
+    const MODAL_INST = fixture.nativeElement.querySelector('#modalInstalaci');
+    expect(MODAL_DEST).toBeTruthy();
+    expect(MODAL_INST).toBeTruthy();
   });
 });

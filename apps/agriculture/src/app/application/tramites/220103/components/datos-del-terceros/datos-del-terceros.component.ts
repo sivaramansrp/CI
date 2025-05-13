@@ -1,37 +1,37 @@
-import { CommonModule } from '@angular/common';
-
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder} from '@angular/forms';
-
-import { Subject, takeUntil } from 'rxjs';
-
-import {
-  AlertComponent,
-  ModeloDeFormaDinamica,
-  TablaSeleccion,
-} from '@ng-mf/data-access-user';
-import {
-  CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE,
-  CAMPOS_FORMULARIO_MERCANCIAS,
-  CONFIGURACION_CONTACTO,
-  CONFIGURACION_TABLA_INSTALACION,
-  IMPORTANTE,
-} from '../../constantes/sanidad-acuicola-importacion.enum';
-import { DatosDelTerceroDestinatario, Instalacion } from '../../modelos/sanidad-acuicola-importacion.model';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-
-
-import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
-import { Modal } from 'bootstrap';
-
 /**
+ * @component
+ * @name DatosDelTercerosComponent
+ * @description
  * Componente que gestiona los datos de terceros relacionados con el trámite.
  * Permite la visualización, modificación y eliminación de destinatarios e instalaciones.
- * @author Desarrollador
- * @version 1.0.0
+ *
+ * @example
+ * <app-datos-del-terceros></app-datos-del-terceros>
+ *
+ * @see Tramite220103Store
+ * @see Tramite220103Query
+ * @see AgregarDestinatarioComponent
+ * @see TablaDinamicaComponent
+ * @see TituloComponent
+ * @see AlertComponent
  */
+
+import { Modal } from "bootstrap";
+
+import { DatosDelTerceroDestinatario, Instalacion } from "../../modelos/sanidad-acuicola-importacion.model";
+import { Tramite220103Query } from "../../estados/queries/tramites220103.query";
+
+import { FormBuilder } from "@angular/forms";
+
+import { Subject, takeUntil } from "rxjs";
+
+import { AlertComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from "@libs/shared/data-access-user/src";
+import { CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE, CAMPOS_FORMULARIO_MERCANCIAS, CONFIGURACION_CONTACTO, CONFIGURACION_TABLA_INSTALACION, IMPORTANTE } from "../../constantes/sanidad-acuicola-importacion.enum";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
+import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
+
 @Component({
   selector: 'app-datos-del-terceros',
   standalone: true,
@@ -41,7 +41,7 @@ import { Modal } from 'bootstrap';
     TituloComponent,
     TablaDinamicaComponent,
     AgregarDestinatarioComponent
-],
+  ],
   templateUrl: './datos-del-terceros.component.html',
   styleUrl: './datos-del-terceros.component.scss',
 })
@@ -51,7 +51,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Utilizado para controlar la apertura y cierre del modal.
    */
   @ViewChild('modalDestinatario') elementoModal!: ElementRef;
-  
+
   /**
    * Instancia del modal de destinatarios.
    * Se utiliza para controlar programáticamente el comportamiento del modal.
@@ -64,7 +64,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Utilizado para controlar la apertura y cierre del modal.
    */
   @ViewChild('modalInstalaci') elementoModalInstalaci!: ElementRef;
-  
+
   /**
    * Instancia del modal de instalaciones.
    * Se utiliza para controlar programáticamente el comportamiento del modal.
@@ -103,7 +103,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Configuración de la tabla de destinatarios.
    * Define las columnas, encabezados y comportamiento de la tabla.
    */
-  configuracionTabla = CONFIGURACION_CONTACTO;
+  configuracionTablaContacto = CONFIGURACION_CONTACTO;
 
   /**
    * Configuración de la tabla de instalaciones.
@@ -116,7 +116,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Contiene la información que se muestra en la tabla de destinatarios.
    */
   datosTabla: DatosDelTerceroDestinatario[] = [];
-  
+
   /**
    * Datos de la tabla de instalaciones.
    * Contiene la información que se muestra en la tabla de instalaciones.
@@ -172,17 +172,17 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * 
    * @param event - Evento con las filas seleccionadas por el usuario en la tabla.
    */
-  obtenerDestinatarioSeleccionadas(event: any): void {
+  obtenerDestinatarioSeleccionadas(event: DatosDelTerceroDestinatario[]): void {
     this.destinatariosSeleccionados = event;
   }
-  
+
   /**
    * Maneja la selección de instalaciones en la tabla.
    * Actualiza la propiedad instalacionesSeleccionadas con las filas seleccionadas.
    * 
    * @param event - Evento con las filas seleccionadas por el usuario en la tabla.
    */
-  obtenerInstalaciSeleccionadas(event: any): void {
+  obtenerInstalaciSeleccionadas(event: Instalacion[]): void {
     this.instalacionesSeleccionadas = event;
   }
 
@@ -191,7 +191,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Obtiene la instancia del modal utilizando el elemento de referencia y lo oculta.
    * Este método se ejecuta cuando el usuario cancela la operación o guarda un destinatario.
    */
-  closeModal(): void {
+  cerrarModal(): void {
     const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
     if (INSTANCIA) {
       this.instanciaModal = INSTANCIA;
@@ -204,7 +204,7 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Obtiene la instancia del modal utilizando el elemento de referencia y lo oculta.
    * Este método se ejecuta cuando el usuario cancela la operación o guarda una instalación.
    */
-  closeModalInstalaci(): void {
+  cerrarModalInstalacion(): void {
     const INSTANCIA = Modal.getInstance(this.elementoModalInstalaci.nativeElement);
     if (INSTANCIA) {
       this.instanciaModalInstalaci = INSTANCIA;

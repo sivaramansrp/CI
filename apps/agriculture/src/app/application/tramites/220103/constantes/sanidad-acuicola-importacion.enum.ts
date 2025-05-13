@@ -1472,7 +1472,7 @@ export const CONFIGURACION_TABLA_INSTALACION = [
       // Si existe razón social, usarla; si no, usar nombre de persona
       if (ele.razonSocial && ele.razonSocial.trim()) {
         return ele.razonSocial;
-      } else {
+      } 
         // Concatenar nombre y apellidos para personas físicas
         let nombreCompleto = ele.nombre || '';
         if (ele.primerApellido) {
@@ -1482,7 +1482,7 @@ export const CONFIGURACION_TABLA_INSTALACION = [
           nombreCompleto += ' ' + ele.segundoApellido;
         }
         return nombreCompleto.trim();
-      }
+      
     },
     orden: 1,
   },
@@ -1497,7 +1497,7 @@ export const CONFIGURACION_TABLA_INSTALACION = [
       // Si existe domicilio completo, usarlo; si no, construirlo con componentes
       if (ele.domicillio) {
         return ele.domicillio;
-      } else {
+      } 
         /** Construir dirección concatenando sus partes */
         let direccion = '';
         if (ele.calle) {
@@ -1522,7 +1522,7 @@ export const CONFIGURACION_TABLA_INSTALACION = [
           direccion += ', C.P. ' + ele.codigoPostal;
         }
         return direccion.trim();
-      }
+      
     },
     orden: 2,
   },

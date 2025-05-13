@@ -9,28 +9,28 @@ import { CAMPOS_FORMULARIO_DATOS_DE_INSTALACION } from '../../constantes/sanidad
 describe('DatosDeInstalacionComponent', () => {
   let component: DatosDeInstalacionComponent;
   let fixture: ComponentFixture<DatosDeInstalacionComponent>;
-  let mockQuery: jest.Mocked<Tramite220103Query>;
-  let mockStore: jest.Mocked<Tramite220103Store>;
+  let MOCK_QUERY: jest.Mocked<Tramite220103Query>;
+  let MOCK_STORE: jest.Mocked<Tramite220103Store>;
 
   beforeEach(async () => {
-    mockQuery = {
+    MOCK_QUERY = {
       selectTramite220103State$: of({
         campo1: 'valor1',
         campo2: 'valor2',
       }),
     } as unknown as jest.Mocked<Tramite220103Query>;
 
-    mockStore = {
+    MOCK_STORE = {
       setTramite220103State: jest.fn(),
     } as unknown as jest.Mocked<Tramite220103Store>;
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule,DatosDeInstalacionComponent],
+      imports: [ReactiveFormsModule, DatosDeInstalacionComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite220103Query, useValue: mockQuery },
-        { provide: Tramite220103Store, useValue: mockStore },
+        { provide: Tramite220103Query, useValue: MOCK_QUERY },
+        { provide: Tramite220103Store, useValue: MOCK_STORE },
       ],
     }).compileComponents();
 
@@ -53,20 +53,20 @@ describe('DatosDeInstalacionComponent', () => {
   });
 
   it('debería establecer un cambio de valor en el estado del trámite', () => {
-    const mockEvent = { campo: 'campo1', valor: 'nuevoValor' };
-    component.establecerCambioDeValor(mockEvent);
+    const MOCK_EVENT = { campo: 'campo1', valor: 'nuevoValor' };
+    component.establecerCambioDeValor(MOCK_EVENT);
 
-    expect(mockStore.setTramite220103State).toHaveBeenCalledWith('campo1', 'nuevoValor');
+    expect(MOCK_STORE.setTramite220103State).toHaveBeenCalledWith('campo1', 'nuevoValor');
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+    const DESTROY_NOTIFIER_SPY = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const DESTROY_NOTIFIER_COMPLETE_SPY = jest.spyOn(component['notificadorDestruccion$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(DESTROY_NOTIFIER_SPY).toHaveBeenCalled();
+    expect(DESTROY_NOTIFIER_COMPLETE_SPY).toHaveBeenCalled();
   });
 
   it('debería inicializar el formulario con los campos de configuración', () => {

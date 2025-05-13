@@ -8,7 +8,7 @@
       >Destinatario (destino final)*:</label
     >
     <app-tabla-dinamica
-      [configuracionTabla]="configuracionTabla"
+      [configuracionTabla]="configuracionTablaContacto"
       [datos]="datosTabla"
       [tipoSeleccionTabla]="seleccionTabla"
       (listaDeFilaSeleccionada)="obtenerDestinatarioSeleccionadas($event)"
@@ -21,15 +21,6 @@
   </div>
   <div class="col-md-12 mt-4">
     <div class="col-12 d-flex justify-content-end">
-      <!-- @if(datosTabla.length > 0) {
-            <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
-                data-bs-target="#modalDestinatario" (click)="modificarDestinatario()">
-                Modificar
-            </button>
-            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarDestinatario()">
-                Eliminar
-            </button>
-            } -->
       <button
         name="agregar"
         class="btn btn-primary"
@@ -52,7 +43,7 @@
       <div class="modal-content">
         <div class="modal-body">
           <app-agregar-destinatario
-            (closeModal)="closeModal()"
+            (cerrarModal)="cerrarModal()"
           ></app-agregar-destinatario>
         </div>
       </div>
@@ -78,15 +69,6 @@
 
   <div class="col-md-12 mt-4">
     <div class="col-12 d-flex justify-content-end">
-      <!-- @if(datosTabla.length > 0) {
-            <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
-                data-bs-target="#modalInstalaci" (click)="modificarInstalaci()">
-                Modificar
-            </button>
-            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarInstalaci()">
-                Eliminar
-            </button>
-            } -->
       <button
         name="agregar"
         class="btn btn-primary"
@@ -108,8 +90,8 @@
       <div class="modal-content">
         <div class="modal-body">
           <app-agregar-destinatario
-            [isInstalacionMode]="true"
-            (closeModal)="closeModalInstalaci()"
+            [esModoInstalacion]="true"
+            (cerrarModal)="cerrarModalInstalacion()"
           ></app-agregar-destinatario>
         </div>
       </div>

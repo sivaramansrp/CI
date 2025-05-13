@@ -1,7 +1,7 @@
 <div class="container">
     <ng-titulo titulo="Agregar destinatario (destino final)"> </ng-titulo>
     <div class="col-md-12">
-        <div [formGroup]="isInstalacionMode ? formularioAgregarInstalacion : formularioAgregarDestinatario">
+        <div [formGroup]="esModoInstalacion ? formularioAgregarInstalacion : formularioAgregarDestinatario">
         <label for="tipoPersona" class="form-label">Tipo persona*:</label>
         <app-input-radio [radioOptions]="tipoPersona" [isRequired]="true" [layout]="'vertical'"
             [isBold]="true" (valueChange)="establecerCambioDeValor({campo:'tipoPersona', valor:$event})" formControlName="tipoPersona"></app-input-radio>
@@ -9,17 +9,17 @@
     </div>
     <ng-titulo titulo="Datos personales"> </ng-titulo>
     <div class="row mt-5">
-        @if (!isInstalacionMode) {
+        @if (!esModoInstalacion) {
             <formas-dinamicas 
                 [forma]="formularioAgregarDestinatario" 
-                [formularioDatos]="formularioConfiguracion" 
+                [formularioDatos]="configuracionFormularioDestinatario" 
                 [estado]="estadoSeleccionado.datosDelTerceroDestinatario || {}"
                 (emitirCambioDeValor)="establecerCambioDeValor($event,'datosDelTerceroDestinatario')">
             </formas-dinamicas>
         } @else {
             <formas-dinamicas 
                 [forma]="formularioAgregarInstalacion" 
-                [formularioDatos]="formularioConfiguracionInstalacion" 
+                [formularioDatos]="configuracionFormularioInstalacion" 
                 [estado]="estadoSeleccionado.datosDelTerceroInstalacion || {}"
                 (emitirCambioDeValor)="establecerCambioDeValor($event,'datosDelTerceroInstalacion')">
             </formas-dinamicas>
@@ -35,7 +35,7 @@
                     Limpiar
                 </button>
                 <button name="cancelar" class="btn btn btn-danger me-2" 
-              (click)="closeModal.emit()">
+              (click)="cerrarModal.emit()">
                     Cancelar
                 </button>
             <button name="guardar" class="btn btn-primary" (click)="guardarDestinatario()">
