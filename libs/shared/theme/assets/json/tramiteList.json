@@ -2585,8 +2585,8 @@
   {
     "id": 370,
     "tramite": 10703,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/importador-exportador/modification-exencion-impuestos",
+    "linkDepartment": "/pago/importador-exportador/modification-exencion-impuestos",
     "department": "aga"
   },
   {
