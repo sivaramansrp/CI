@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/sener
 
 # Build the application
-RUN npx nx build sener --configuration=production --skip-nx-cache --verbose
+RUN npx nx build sener --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/sener" && test -f "/app/dist/apps/sener/index.html" || exit 1
