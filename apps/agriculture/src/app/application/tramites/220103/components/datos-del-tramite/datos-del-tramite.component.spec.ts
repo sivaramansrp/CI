@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
 import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { Modal } from 'bootstrap';
 
 describe('DatosDelTramiteComponent', () => {
@@ -16,14 +16,14 @@ describe('DatosDelTramiteComponent', () => {
 
   beforeEach(async () => {
     servicioMock = {
-    getAdunaDeIngreso: jest.fn().mockReturnValue(of([])),
-    getMedioDeTransporte: jest.fn().mockReturnValue(of([])),
-    getOrigen: jest.fn().mockReturnValue(of([])),
-    getUmc: jest.fn().mockReturnValue(of([])),
-    getUso: jest.fn().mockReturnValue(of([])),
-    getPais: jest.fn().mockReturnValue(of([])),
-    getMercancias: jest.fn().mockReturnValue(of([])),
-  } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
+      getAdunaDeIngreso: jest.fn().mockReturnValue(of([])),
+      getMedioDeTransporte: jest.fn().mockReturnValue(of([])),
+      getOrigen: jest.fn().mockReturnValue(of([])),
+      getUmc: jest.fn().mockReturnValue(of([])),
+      getUso: jest.fn().mockReturnValue(of([])),
+      getPais: jest.fn().mockReturnValue(of([])),
+      getMercancias: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Mercancía 1' }])),
+    } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
 
     storeMock = {
       setTramite220103State: jest.fn(),
@@ -35,8 +35,7 @@ describe('DatosDelTramiteComponent', () => {
     } as unknown as jest.Mocked<Tramite220103Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDelTramiteComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, DatosDelTramiteComponent],
       providers: [
         FormBuilder,
         { provide: SanidadAcuicolaImportacionService, useValue: servicioMock },
@@ -83,56 +82,32 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('debe obtener las opciones de aduanas de ingreso', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'Aduana 1' }];
-    servicioMock.getAdunaDeIngreso.mockReturnValue(of(mockOpciones));
-
     component.obtenerAduanaDeIngreso();
-
     expect(servicioMock.getAdunaDeIngreso).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de medios de transporte', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'Transporte 1' }];
-    servicioMock.getMedioDeTransporte.mockReturnValue(of(mockOpciones));
-
     component.obtenerMedioDeTransporte();
-
     expect(servicioMock.getMedioDeTransporte).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de origen', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'Origen 1' }];
-    servicioMock.getOrigen.mockReturnValue(of(mockOpciones));
-
     component.obtenerOrigen();
-
     expect(servicioMock.getOrigen).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de UMC', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'UMC 1' }];
-    servicioMock.getUmc.mockReturnValue(of(mockOpciones));
-
     component.obtenerUmc();
-
     expect(servicioMock.getUmc).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de uso', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'Uso 1' }];
-    servicioMock.getUso.mockReturnValue(of(mockOpciones));
-
     component.obtenerUso();
-
     expect(servicioMock.getUso).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de país', () => {
-    const mockOpciones = [{ id: 1, descripcion: 'México' }];
-    servicioMock.getPais.mockReturnValue(of(mockOpciones));
-
     component.obtenerPais();
-
     expect(servicioMock.getPais).toHaveBeenCalled();
   });
 
