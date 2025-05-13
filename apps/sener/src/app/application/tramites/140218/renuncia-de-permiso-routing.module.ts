@@ -8,8 +8,6 @@ const ROUTES: Routes = [
       path: 'solicitud',
       component: RenunciaDePermisoComponent,
     }
-   
-  
 ];
 
 @NgModule({
