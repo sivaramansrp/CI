@@ -148,6 +148,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
   },
   {
+    path: 'aviso-de-exportacion',
+    loadChildren: () =>
+      import(
+        './tramites/240123/aviso-de-exportacion.module'
+      ).then((m) => m.AvisoDeExportacionModule),
+  },
+  {
     path: 'solicitud-prorroga-aviso-importacion',
     loadChildren: () =>
       import(
