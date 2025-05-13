@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
+import { Tramite140205State } from '../../../../estados/tramites/tramite140205.store';
+import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
@@ -45,7 +45,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * 
    * Esta propiedad almacena el estado del trámite obtenido desde el store.
    */
-  public tramiteState!: Tramite110216State;
+  public tramiteState!: Tramite140205State;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
@@ -58,12 +58,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * 
-   * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110216Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite140205Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite140205Query} tramiteQuery - Query para obtener el estado del trámite.
    */
   constructor(
-    public store: Tramite110216Store,
-    public tramiteQuery: Tramite110216Query
+    public store: Tramite140205Store,
+    public tramiteQuery: Tramite140205Query
   ) { }
 
   /**

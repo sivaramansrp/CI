@@ -9,15 +9,10 @@
     <div class="row">
       @switch (indice) { @case (1) {
       <app-paso-uno></app-paso-uno>
-      } @case (2) {
-      <!-- <app-paso-dos></app-paso-dos> -->
       }
       }
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
-      
-      @if(indice ===1){
-     <!-- <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>  -->
-      }
+           
     </div>
   </div>
 </div>

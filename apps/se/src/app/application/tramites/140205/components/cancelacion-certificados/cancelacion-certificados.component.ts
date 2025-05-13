@@ -31,7 +31,7 @@ import {
   TABLA_DE_DATOS_CUPOS,
   TABLA_DE_DATOS_DISPONIBLES,
 } from '../../constants/cancelaciones.enum';
-import { DisponiblesTabla } from '../../../110216/models/certificado-origen.model';
+
 
 /**
  * @component

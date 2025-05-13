@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
+import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 import { of } from 'rxjs';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { provideHttpClient } from '@angular/common/http';
@@ -34,8 +34,8 @@ describe('SolicitantePageComponent', () => {
           positionClass: 'toast-top-right',
         }),
         provideHttpClient(),
-        { provide: Tramite110216Store, useValue: storeMock },
-        { provide: Tramite110216Query, useValue: queryMock },
+        { provide: Tramite140205Store, useValue: storeMock },
+        { provide: Tramite140205Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -55,7 +55,7 @@ describe('SolicitantePageComponent', () => {
     const wizardComponentSpySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
     const wizardComponentSpyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1); 
     expect(wizardComponentSpySiguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpyAtras).not.toHaveBeenCalled();
     expect(storeMock.setPasoActivo).not.toHaveBeenCalled();

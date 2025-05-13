@@ -1,4 +1,3 @@
-// filepath: apps/se/src/app/application/tramites/140205/services/test_cancelacionCertificados.service.test.ts
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CatalogoLista, CuposTablaDatos } from '../model/cancelaciones-certificado.model';

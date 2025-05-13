@@ -11,10 +11,41 @@ import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tra
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite140205State {
+  /** 
+   * Número del paso activo en el flujo del trámite.
+   * 
+   * Este número indica en qué paso se encuentra el usuario dentro del proceso de trámite.
+   */
   pasoActivo?: number;
+  /**
+   * Número de la pestaña activa en el flujo del trámite.
+   * 
+   * Este número indica cuál pestaña está activa actualmente en la interfaz de usuario.
+   */
+  pestanaActiva: number;
+  /**
+   * Datos de la empresa.
+   * 
+   * Esta propiedad almacena la información relacionada con la empresa que realiza el trámite.
+   */
   grupoEmpresa:GrupoEmpresa;
+  /**
+   * Datos del cupo.
+   * 
+   * Esta propiedad almacena la información relacionada con el cupo del trámite.
+   */
   grupoCupo: GrupoCupo;
+  /**
+   * Datos del detalle del cupo.
+   * 
+   * Esta propiedad almacena la información relacionada con el detalle del cupo del trámite.
+   */
   grupoDatalleCupo:GrupoDatalleCupo;
+  /**
+   * Datos del folio.
+   * 
+   * Esta propiedad almacena la información relacionada con el folio del trámite.
+   */
   grupoFolio:GrupoFolio;
  }
 
@@ -26,6 +57,7 @@ export interface Tramite140205State {
 export function createInitialState(): Tramite140205State {
   return {
     pasoActivo: 1,
+    pestanaActiva: 1,
     grupoEmpresa: {
       rfc: '',
       nombre: '',
@@ -126,6 +158,9 @@ export class Tramite140205Store extends Store<Tramite140205State> {
     }));
   }
 
+  /**
+   * Actualiza el nombre en el estado del trámite.
+   */ 
     public setGrupoEmpresaNombre(nombre: string): void {
       this.update((state) => ({
         ...state,
@@ -135,6 +170,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
         },
       }));
 }
+  /**
+   * Actualiza el nombre en el estado del trámite.
+   *
+   * Este método permite establecer el nombre en el estado del trámite.
+   *
+   * @param {string} nombre - El nombre a establecer.
+   */
   public setGrupoEmpresaPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
       ...state,
@@ -144,6 +186,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el segundo apellido en el estado del trámite.
+   *
+   * Este método permite establecer el segundo apellido en el estado del trámite.
+   *
+   * @param {string} segundoApellido - El segundo apellido a establecer.
+   */
   public setGrupoEmpresaSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
@@ -153,6 +202,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la actividad económica en el estado del trámite.
+   *
+   * Este método permite establecer la actividad económica en el estado del trámite.
+   *
+   * @param {string} actividadEconomica - La actividad económica a establecer.
+   */
   public setGrupoEmpresaActividadEconomica(actividadEconomica: string): void {
     this.update((state) => ({
       ...state,
@@ -162,6 +218,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza los datos RFC en el estado del trámite.
+   *
+   * Este método permite establecer los datos RFC en el estado del trámite.
+   *
+   * @param {string} datosRfc - Los datos RFC a establecer.
+   */
   public setGrupoEmpresaDatosRfc(datosRfc: string): void {
     this.update((state) => ({
       ...state,
@@ -171,6 +234,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la clave en el estado del trámite.
+   *
+   * Este método permite establecer la clave en el estado del trámite.
+   *
+   * @param {string} clave - La clave a establecer.
+   */
   public setGrupoEmpresaClave(clave: string): void {
     this.update((state) => ({
       ...state,
@@ -181,6 +251,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
     }));
   }
 
+  /**
+   * Actualiza el correo en el estado del trámite.
+   *
+   * Este método permite establecer el correo en el estado del trámite.
+   *
+   * @param {string} correo - El correo a establecer.
+   */
   public setGrupoEmpresaCorreo(correo: string): void {
     this.update((state) => ({
       ...state,
@@ -190,6 +267,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la calle en el estado del trámite.
+   *
+   * Este método permite establecer la calle en el estado del trámite.
+   *
+   * @param {string} calle - La calle a establecer.
+   */
   public setGrupoEmpresaCalle(calle: string): void {
     this.update((state) => ({
       ...state,
@@ -199,6 +283,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el número exterior en el estado del trámite.
+   *
+   * Este método permite establecer el número exterior en el estado del trámite.
+   *
+   * @param {string} numeroExterior - El número exterior a establecer.
+   */
   public setGrupoEmpresaNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
@@ -208,6 +299,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el número interior en el estado del trámite.
+   *
+   * Este método permite establecer el número interior en el estado del trámite.
+   *
+   * @param {string} numeroInterior - El número interior a establecer.
+   */
   public setGrupoEmpresaNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
@@ -217,6 +315,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el código postal en el estado del trámite.
+   *
+   * Este método permite establecer el código postal en el estado del trámite.
+   *
+   * @param {string} codigoPostal - El código postal a establecer.
+   */
   public setGrupoEmpresaCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
@@ -226,6 +331,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la colonia en el estado del trámite.
+   *
+   * Este método permite establecer la colonia en el estado del trámite.
+   *
+   * @param {string} colonia - La colonia a establecer.
+   */
   public setGrupoEmpresaColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
@@ -235,6 +347,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el país en el estado del trámite.
+   *
+   * Este método permite establecer el país en el estado del trámite.
+   *
+   * @param {string} pais - El país a establecer.
+   */
   public setGrupoEmpresaPais(pais: string): void {
     this.update((state) => ({
       ...state,
@@ -244,6 +363,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el estado en el estado del trámite.
+   *
+   * Este método permite establecer el estado en el estado del trámite.
+   *
+   * @param {string} estado - El estado a establecer.
+   */
   public setGrupoEmpresaEstado(estado: string): void {
     this.update((state) => ({
       ...state,
@@ -253,6 +379,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la localidad en el estado del trámite.
+   *
+   * Este método permite establecer la localidad en el estado del trámite.
+   *
+   * @param {string} localidad - La localidad a establecer.
+   */
   public setGrupoEmpresaLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
@@ -262,6 +395,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el teléfono en el estado del trámite.
+   *
+   * Este método permite establecer el teléfono en el estado del trámite.
+   *
+   * @param {string} telefono - El teléfono a establecer.
+   */
   public setGrupoEmpresaTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
@@ -271,7 +411,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
-
+  /**
+   * Actualiza el municipio en el estado del trámite.
+   *
+   * Este método permite establecer el municipio en el estado del trámite.
+   *
+   * @param {string} municipio - El municipio a establecer.
+   */
   public setGrupoEmpresaMunicipio(municipio: string): void {
     this.update((state) => ({
       ...state,
@@ -282,7 +428,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
     }));
   }
 
-
+  /**
+   * Actualiza el aduanero en el estado del trámite.
+   *
+   * Este método permite establecer el aduanero en el estado del trámite.
+   *
+   * @param {string} aduanero - El aduanero a establecer.
+   */
   public setGrupoCupoAduanero(aduanero: string): void {
     this.update((state) => ({
       ...state,
@@ -292,6 +444,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la clasificación del subproducto en el estado del trámite.
+   *
+   * Este método permite establecer la clasificación del subproducto en el estado del trámite.
+   *
+   * @param {string} clasificacionSubproducto - La clasificación del subproducto a establecer.
+   */
   public setGrupoCupoMecanismo(mecanismo: string): void {
     this.update((state) => ({
       ...state,
@@ -301,6 +460,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el tratado en el estado del trámite.
+   *
+   * Este método permite establecer el tratado en el estado del trámite.
+   *
+   * @param {string} tratado - El tratado a establecer.
+   */
   public setGrupoCupoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
@@ -310,6 +476,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el nombre del producto en el estado del trámite.
+   *
+   * Este método permite establecer el nombre del producto en el estado del trámite.
+   *
+   * @param {string} nombreProducto - El nombre del producto a establecer.
+   */
   public setGrupoCupoNombreProducto(nombreProducto: string): void {
     this.update((state) => ({
       ...state,
@@ -319,7 +492,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
-
+  /**
+   * Actualiza el nombre del subproducto en el estado del trámite.
+   *
+   * Este método permite establecer el nombre del subproducto en el estado del trámite.
+   *
+   * @param {string} nombreSubproducto - El nombre del subproducto a establecer.
+   */
   public setGrupoCupoNombreSubproducto(nombreSubproducto: string): void {
     this.update((state) => ({
       ...state,
@@ -329,6 +508,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el federal en el estado del trámite.
+   *
+   * Este método permite establecer el federal en el estado del trámite.
+   *
+   * @param {string} federal - El federal a establecer.
+   */
   public setGrupoCupoFederal(federal: string): void {
     this.update((state) => ({
       ...state,
@@ -339,6 +525,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
     }));
   }
 
+  /**
+   * Actualiza el aduanero en el estado del trámite.
+   *
+   * Este método permite establecer el aduanero en el estado del trámite.
+   *
+   * @param {string} aduanero - El aduanero a establecer.
+   */
   public setGrupoDatalleCupoAduanero(aduanero: string): void {
     this.update((state) => ({
       ...state,
@@ -348,6 +541,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la clasificación del subproducto en el estado del trámite.
+   *
+   * Este método permite establecer la clasificación del subproducto en el estado del trámite.
+   *
+   * @param {string} clasificacionSubproducto - La clasificación del subproducto a establecer.
+   */
   public setGrupoDatalleCupoClasificacionSubproducto(clasificacionSubproducto: string): void {
     this.update((state) => ({
       ...state,
@@ -357,6 +557,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la descripción del producto en el estado del trámite.
+   *
+   * Este método permite establecer la descripción del producto en el estado del trámite.
+   *
+   * @param {string} descripcionProducto - La descripción del producto a establecer.
+   */
   public setGrupoDatalleCupoDescripcionProducto(descripcionProducto: string): void {
     this.update((state) => ({
       ...state,
@@ -366,6 +573,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la unidad en el estado del trámite.
+   *
+   * Este método permite establecer la unidad en el estado del trámite.
+   *
+   * @param {string} unidad - La unidad a establecer.
+   */
   public setGrupoDatalleCupoUnidad(unidad: string): void {
     this.update((state) => ({
       ...state,
@@ -375,6 +589,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el mecanismo en el estado del trámite.
+   *
+   * Este método permite establecer el mecanismo en el estado del trámite.
+   *
+   * @param {string} mecanismo - El mecanismo a establecer.
+   */
   public setGrupoDatalleCupoMecanismo(mecanismo: string): void {
     this.update((state) => ({
       ...state,
@@ -384,6 +605,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el tratado en el estado del trámite.
+   *
+   * Este método permite establecer el tratado en el estado del trámite.
+   *
+   * @param {string} tratado - El tratado a establecer.
+   */
   public setGrupoDatalleCupoTratado(tratado: string): void {
     this.update((state) => ({
       ...state,
@@ -393,7 +621,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
-
+  /**
+   * Actualiza las arancelarias en el estado del trámite.
+   *
+   * Este método permite establecer las arancelarias en el estado del trámite.
+   *
+   * @param {string} arancelarias - Las arancelarias a establecer.
+   */
   public setGrupoDatalleCupoArancelarias(arancelarias: string): void {
     this.update((state) => ({
       ...state,
@@ -403,6 +637,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza los países en el estado del trámite.
+   *
+   * Este método permite establecer los países en el estado del trámite.
+   *
+   * @param {string} paises - Los países a establecer.
+   */
   public setGrupoDatalleCupoPaises(paises: string): void {
     this.update((state) => ({
       ...state,
@@ -412,6 +653,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza las observaciones en el estado del trámite.
+   *
+   * Este método permite establecer las observaciones en el estado del trámite.
+   *
+   * @param {string} observaciones - Las observaciones a establecer.
+   */
   public setGrupoDatalleCupoObservaciones(observaciones: string): void {
     this.update((state) => ({
       ...state,
@@ -421,7 +669,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
-
+  /**
+   * Actualiza los fundamentos en el estado del trámite.
+   *
+   * Este método permite establecer los fundamentos en el estado del trámite.
+   *
+   * @param {string} fundamentos - Los fundamentos a establecer.
+   */
   public setGrupoDatalleCupoFundamentos(fundamentos: string): void {
     this.update((state) => ({
       ...state,
@@ -431,6 +685,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la fecha de fin en el estado del trámite.
+   *
+   * Este método permite establecer la fecha de fin en el estado del trámite.
+   *
+   * @param {string} fin - La fecha de fin a establecer.
+   */
   public setGrupoDatalleCupoFin(fin: string): void {
     this.update((state) => ({
       ...state,
@@ -440,6 +701,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza la fecha de inicio en el estado del trámite.
+   *
+   * Este método permite establecer la fecha de inicio en el estado del trámite.
+   *
+   * @param {string} inicio - La fecha de inicio a establecer.
+   */
   public setGrupoDatalleCupoInicio(inicio: string): void {
     this.update((state) => ({
       ...state,
@@ -449,6 +717,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el monto asignado en el estado del trámite.
+   *
+   * Este método permite establecer el monto asignado en el estado del trámite.
+   *
+   * @param {string} montoAsignado - El monto asignado a establecer.
+   */
   public setGrupoFolioMontoAsignado(montoAsignado: string): void {
     this.update((state) => ({
       ...state,
@@ -458,7 +733,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
-
+  /**
+   * Actualiza el monto disponible en el estado del trámite.
+   *
+   * Este método permite establecer el monto disponible en el estado del trámite.
+   *
+   * @param {string} montoDisponible - El monto disponible a establecer.
+   */
   public setGrupoFolioMontoDisponible(montoDisponible: string): void {
     this.update((state) => ({
       ...state,
@@ -468,6 +749,13 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       },
     }));
   }
+  /**
+   * Actualiza el monto expedido en el estado del trámite.
+   *
+   * Este método permite establecer el monto expedido en el estado del trámite.
+   *
+   * @param {string} montoExpedido - El monto expedido a establecer.
+   */
   public setGrupoFolioMontoExpedido(montoExpedido: string): void {
     this.update((state) => ({
       ...state,
@@ -475,6 +763,19 @@ export class Tramite140205Store extends Store<Tramite140205State> {
         ...state.grupoFolio,
         montoExpedido,
       },
+    }));
+  }
+  /**
+   * Actualiza la pestaña activa en el estado del trámite.
+   *
+   * Este método permite establecer la pestaña activa en el estado del trámite.
+   *
+   * @param {number} pestanaActiva - El número de la pestaña activa a establecer.
+   */
+  public setPestanaActiva(pestanaActiva: number): void {
+    this.update((state) => ({
+      ...state,
+      pestanaActiva,
     }));
   }
 }
