@@ -35,16 +35,27 @@ const loadManifest = (retryCount = 0, maxRetries = 3): Promise<Record<string, st
     .then((manifest: Record<string, string>) => {
       console.log('Manifest loaded successfully');
       
-      // Solo procesar las URLs si el WEB_HOST está definido
-      if (enviroment.WEB_HOST) {
-        console.log('Processing URLs with WEB_HOST:', enviroment.WEB_HOST);
+      // Procesar las URLs según el entorno
+      if (manifest) {
+        console.log('Processing URLs with WEB_HOST:', window.location.origin);
+        
         Object.keys(manifest).forEach((key) => {
-          if (manifest[key].startsWith('http://localhost')) {
-            manifest[key] = manifest[key].replace('http://localhost', enviroment.WEB_HOST);
+          // Remover cualquier puerto específico (como 4201) de las URLs
+          if (manifest[key].match(/:\d{4}\//)) {
+            manifest[key] = manifest[key].replace(/:\d{4}\//, '/');
+          }
+          // Si la URL es relativa (comienza con /), convertirla a absoluta
+          else if (manifest[key].startsWith('/')) {
+            manifest[key] = window.location.origin + manifest[key];
+          }
+          // Si contiene localhost, reemplazarlo con el host actual
+          else if (manifest[key].includes('localhost')) {
+            manifest[key] = manifest[key].replace(/https?:\/\/localhost(:\d+)?/, window.location.origin);
           }
         });
+        console.log('Processed manifest:', manifest);
       } else {
-        console.log('Using manifest URLs as-is (no WEB_HOST replacement)');
+        console.log('No manifest URLs to process');
       }
       
       console.log('Processed manifest:', manifest);
