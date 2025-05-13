@@ -5,7 +5,7 @@
  */
 import { Catalogo } from "@libs/shared/data-access-user/src";
 
-import { AnexoUnoProducto, ProveedorCliente, ProyectoImmex, SociaoAccionistas } from "../models/complimentos-seccion.model";
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex, SociaoAccionistas } from "../models/complimentos-seccion.model";
 /**
  * Constantes para la sección de complementos
  *  @constant
@@ -586,6 +586,11 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
     orden: 7,
   },
 ];
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ * @type {Array}
+ */
 
 export const TABLA_ANEXO_PRODUCTO_FRACCION =[
   {
@@ -649,6 +654,11 @@ export const TABLA_ANEXO_PRODUCTO_FRACCION =[
     orden: 10,
   }
 ]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ * @type {Array}
+ */
 export const TABLE_PROVEEDOR_CLIENTE =[
    {
     encabezado: 'Fracción',
@@ -687,6 +697,12 @@ export const TABLE_PROVEEDOR_CLIENTE =[
     orden: 6,
   }
 ]
+/*
+  * Constantes para la sección de complementos
+  * @constant
+  * @type {Array}
+  */
+
 export const ANEXO_I_SERVICIO_CATALOGO:Catalogo[]=[
    {
       id: 1,
@@ -697,6 +713,11 @@ export const ANEXO_I_SERVICIO_CATALOGO:Catalogo[]=[
       descripcion: 'Option2',
     },
 ]
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ * @type {Array}
+ */
 export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     {
       id: 1,
@@ -707,6 +728,10 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
       descripcion: 'USA',
     },
   ];
+/**
+ * Constantes para la sección de complementos
+ * @constant
+ */
 
   export const TABLA_PROYECTO_IMMEX=[
      {
@@ -746,27 +771,45 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     orden: 7,
   }
   ]
+  /*
+  * Constantes para la sección de complementos
+  */
   export const ANEXO_FRACION_ANARELARIA=[
     {
     encabezado: 'Fracción',
-    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccion,
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccion,
     orden: 1,
   },
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccionExportacion,
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccionExportacion,
     orden: 2,
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: ProyectoImmex): string | undefined => ele.anexoDescripcionComercial,
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDescripcionComercial,
     orden: 3,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: ProyectoImmex): string | undefined => ele.anexoFraccionImportacion,
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccionImportacion,
     orden: 4,
   },
 
  
   ]
+/*
+  * Constantes para la sección de complementos
+  * @constant
+  * @type {Array}
+  */
+
+
+  export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [ {
+      id: 1,
+      descripcion: 'option1',
+    },
+    {
+      id: 2,
+      descripcion: 'option2',
+    },];

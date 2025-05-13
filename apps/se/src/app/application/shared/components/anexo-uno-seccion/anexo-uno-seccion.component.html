@@ -21,7 +21,7 @@
             class="form-control min-hgt"
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
-            type="text"
+            type="text" (change)="actualizarControl('anexoUnoFormGroup', 'fraccionArancelaria')"
           />
         </div>
       </div>
@@ -38,6 +38,7 @@
             class="form-control"
             style="height: 60%; resize: none"
             formControlName="descripcion"
+             (change)="actualizarControl('anexoUnoFormGroup', 'descripcion')"
           ></textarea>
         </div>
       </div>
@@ -100,6 +101,7 @@
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
             type="text"
+            (change)="actualizarControl('anexoDosFormGroup', 'fraccionArancelaria')"
           />
         </div>
       </div>
@@ -116,6 +118,7 @@
             class="form-control"
             style="height: 60%; resize: none"
             formControlName="descripcion"
+            (change)="actualizarControl('anexoDosFormGroup', 'descripcion')"
           ></textarea>
         </div>
       </div>
@@ -125,37 +128,34 @@
         <button class="btn btn-default me-2">
           Eliminar
         </button>
-        <button class="btn btn-primary me-2" >
+        <button class="btn btn-primary me-2" (click)="agregarFraccionAnarelaria()"  >
           Agregar
         </button>
       </div>
     </div>
 
     <div class="row mt-5">
-      <!-- <app-tabla-dinamica
-        [tipoSeleccionTabla]="anexoDosConfiguration.anexoDosTablaSeleccionRadio"
-        [configuracionTabla]="anexoDosConfiguration.anexoDosEncabezadoDeTabla"
-        [datos]="anexoDosTablaLista"
-        (filaSeleccionada)="setAnexoDosLista($event)"
-      ></app-tabla-dinamica> -->
+
         <app-tabla-dinamica
-            [configuracionTabla]="tableProveedorCliente"
+            [configuracionTabla]="tableFracionAnarelaria"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-            [datos]="proveedorTablaLista"
+            [datos]="anexoFraccionAnarelaria"
           ></app-tabla-dinamica>
     </div>
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
-      <button
-        class="btn btn-default me-2"
-     
-      >
-        Complementar Función
-      </button>
-      <button
+   <button
+  class="btn btn-default me-2"
+  data-bs-toggle="modal"
+  data-bs-target="#complementarFuncionModal"
+>
+  Complementar Función
+</button>
+    <button
         class="btn btn-primary me-2"
-       
+        data-bs-toggle="modal"
+        data-bs-target="#proveedorClienteModal"
       >
         Proveedor Cliente
       </button>
@@ -226,13 +226,13 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <!-- <app-catalogo-select
+                <app-catalogo-select
             [catalogo]="catagoriaSeleccionDatos"
             formControlName="catagoria"
             [label]="'catagoria'"
             [required]="true"
             name="catagoria"
-          ></app-catalogo-select> -->
+          ></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -669,3 +669,4 @@
     </div>
   </div>
 </div>
+

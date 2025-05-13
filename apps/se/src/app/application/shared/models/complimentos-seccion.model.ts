@@ -7,6 +7,7 @@ import {
 } from './nuevo-programa-industrial.model';
 
 /**
+ * * compodoc
  * Interfaz para representar la nacionalidad mexicana.
  * @interface NacionalidadMaxicana
  */
@@ -16,6 +17,7 @@ export interface NacionalidadMaxicana {
 }
 
 /**
+ * * compodoc
  * Interfaz para representar los datos de socios y accionistas.
  * @interface SociaoAccionistas
  */
@@ -35,6 +37,7 @@ export interface SociaoAccionistas {
 }
 
 /**
+ * * compodoc
  * Interfaz para representar la respuesta de los catálogos.
  * @interface RespuestaCatalogos
  */
@@ -43,97 +46,169 @@ export interface RespuestaCatalogos {
   data: Catalogo[]; // Lista de elementos del catálogo
   message: string; // Mensaje asociado a la respuesta
 }
-
+/**
+ * * compodoc
+ * @interface ServicioInmex
+ * Representa los datos de un servicio IMMEX.
+ */
 export interface ServicioInmex {
-  servicio?: string;
-  registroContribuyentes?: string;
-  denominacionSocial?: string;
-  numeroIMMEX?: string;
-  anoIMMEX?: string;
+  servicio?: string; // Nombre del servicio
+  registroContribuyentes?: string; // Registro de contribuyentes
+  denominacionSocial?: string; // Denominación social
+  numeroIMMEX?: string; // Número IMMEX
+  anoIMMEX?: string; // Año IMMEX
 }
+
+/**
+ * * compodoc
+ * @interface Servicio
+ * Representa los datos de un servicio general.
+ */
 export interface Servicio {
-  descripionDelServicio?: string;
-  descripcion?: string;
-  tipode?: string;
+  descripionDelServicio?: string; // Descripción del servicio
+  descripcion?: string; // Descripción adicional
+  tipode?: string; // Tipo de servicio
 }
 
+/**
+ * * compodoc
+ * @interface InfoServicios
+ * Representa la información básica de los servicios.
+ */
 export interface InfoServicios {
-  seleccionaLaModalidad: string;
-  folio: string;
-  ano: string;
+  seleccionaLaModalidad: string; // Modalidad seleccionada
+  folio: string; // Folio del servicio
+  ano: string; // Año del servicio
 }
 
+/**
+ * * compodoc
+ * @interface Servicios
+ * Representa los servicios disponibles.
+ */
 export interface Servicios {
-  seleccionaLaModalidad: string;
-  folio: string;
-  ano: string;
+  seleccionaLaModalidad: string; // Modalidad seleccionada
+  folio: string; // Folio del servicio
+  ano: string; // Año del servicio
 }
 
+/**
+ * @interface AccionBoton
+ * Representa una acción asociada a un botón.
+ */
 export interface AccionBoton {
-  accion: string;
-  valor: number;
+  accion: string; // Nombre de la acción
+  valor: number; // Valor asociado a la acción
 }
 
+/**
+ * * compodoc
+ * @interface DatosEmpresaExtranjera
+ * Representa los datos de una empresa extranjera.
+ */
 export interface DatosEmpresaExtranjera {
-  id: string;
-  taxIdEmpresaExt: string;
-  nombreEmpresaExt: string;
-  entidadFederativaEmpresaExt: string;
-  direccionEmpresaExtranjera: string;
+  id: string; // Identificador único
+  taxIdEmpresaExt: string; // Tax ID de la empresa extranjera
+  nombreEmpresaExt: string; // Nombre de la empresa extranjera
+  entidadFederativaEmpresaExt: string; // Entidad federativa
+  direccionEmpresaExtranjera: string; // Dirección de la empresa extranjera
 }
 
+/**
+ * * compodoc
+ * @interface DatosCatalago
+ * Representa los datos de un catálogo.
+ */
 export interface DatosCatalago {
-  labelNombre: string;
-  campo: string;
-  class: string;
-  tipo_input: string;
-  required: boolean;
-  opciones?: CatalogoPaises[];
-  opcionesCatalogo?: Catalogo[];
-  orden: number;
+  labelNombre: string; // Nombre visible del campo
+  campo: string; // Nombre del campo
+  class: string; // Clase CSS asociada
+  tipo_input: string; // Tipo de entrada (input)
+  required: boolean; // Indica si es obligatorio
+  opciones?: CatalogoPaises[]; // Opciones de países
+  opcionesCatalogo?: Catalogo[]; // Opciones del catálogo
+  orden: number; // Orden de aparición
 }
 
+/**
+ * * compodoc
+ * @interface AnnexoDosTres
+ * Representa los datos de los anexos dos y tres.
+ */
 export interface AnnexoDosTres {
-  anexoDosTablaLista: AnexoEncabezado[];
-  anexoTresTablaLista: AnexoEncabezado[];
+  anexoDosTablaLista: AnexoEncabezado[]; // Lista de datos del anexo dos
+  anexoTresTablaLista: AnexoEncabezado[]; // Lista de datos del anexo tres
 }
 
+/**
+ * * compodoc
+ * @interface AnnexoUno
+ * Representa los datos del anexo uno.
+ */
 export interface AnnexoUno {
-  exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla: AnexoUnoEncabezado[];
-  datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
-  seccionActiva: string;
+  exportarDatosTabla: AnexoDosEncabezado[]; // Datos para exportar
+  importarDatosTabla: AnexoUnoEncabezado[]; // Datos para importar
+  datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado; // Datos para navegación
+  seccionActiva: string; // Sección activa
 }
+
+/**
+ * * compodoc
+ * @interface AnexoUnoProducto
+ * Representa los datos de un producto en el anexo uno.
+ */
 export interface AnexoUnoProducto {
-  fraccion: string;
-  fraccionArancelaria: string;
-  descripcion: string;
-  anexoII: string;
-  tipo: string;
-  umt: string;
-  categoria: string;
-  valorModedaMensual: string;
-  valorModedaAnual: string;
-  valorMensual: string;
-  valorAnual: string;
+  fraccion: string; // Fracción
+  fraccionArancelaria: string; // Fracción arancelaria
+  descripcion: string; // Descripción del producto
+  anexoII: string; // Anexo II
+  tipo: string; // Tipo de producto
+  umt: string; // Unidad de medida
+  categoria: string; // Categoría del producto
+  valorModedaMensual: string; // Valor mensual en moneda
+  valorModedaAnual: string; // Valor anual en moneda
+  valorMensual: string; // Valor mensual
+  valorAnual: string; // Valor anual
 }
+
+/**
+ * * compodoc
+ * @interface ProveedorCliente
+ * Representa los datos de un proveedor o cliente.
+ */
 export interface ProveedorCliente {
-  fraccion: string;
-  paisDeOrigen: string;
-  rfcTaxIdProveedor: string;
-  razonSocialProveedor: string;
-  paisDestino: string;
-  rfcTaxClient: string;
-  razonsocialCliente: string;
+  fraccion: string; // Fracción
+  paisDeOrigen: string; // País de origen
+  rfcTaxIdProveedor: string; // RFC o Tax ID del proveedor
+  razonSocialProveedor: string; // Razón social del proveedor
+  paisDestino: string; // País de destino
+  rfcTaxClient: string; // RFC o Tax ID del cliente
+  razonsocialCliente: string; // Razón social del cliente
 }
 
+/**
+ * 
+ * @interface ProyectoImmex
+ * Representa los datos de un proyecto IMMEX.
+ */
 export interface ProyectoImmex {
-  encabezadoFraccion:string;
-  encabezadoTipoDocument: string;
-  encabezadoDescripcionOtro: string;
-  encabezadoFechaFirma: string;
-  encabezadoFechaVigencia: string;
-  encabezadoRfc: string;
-  encabezadoRazonFirmante: string;
+  encabezadoFraccion: string; // Fracción
+  encabezadoTipoDocument: string; // Tipo de documento
+  encabezadoDescripcionOtro: string; // Descripción adicional
+  encabezadoFechaFirma: string; // Fecha de firma
+  encabezadoFechaVigencia: string; // Fecha de vigencia
+  encabezadoRfc: string; // RFC
+  encabezadoRazonFirmante: string; // Razón social del firmante
+}
 
+/**
+ * compodoc
+ * @interface AnexoFraccionAnarelaria
+ * Representa los datos de una fracción arancelaria en el anexo.
+ */
+export interface AnexoFraccionAnarelaria {
+  anexoFraccion: string; // Fracción
+  anexoFraccionExportacion: string; // Fracción de exportación
+  anexoDescripcionComercial: string; // Descripción comercial
+  anexoFraccionImportacion: string; // Fracción de importación
 }
