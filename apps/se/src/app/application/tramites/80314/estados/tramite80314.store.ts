@@ -3,15 +3,88 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 
+/**
+ * Interfaz que define el estado de la entidad Tramite.
+ *
+ * @export
+ * @interface TramiteState
+ */
 export interface TramiteState {
+  /**
+   * Datos de modificación relacionados con el trámite.
+   *
+   * @type {DatosModificacion}
+   * @memberof TramiteState
+   */
   datosModificacion: DatosModificacion;
+
+  /**
+   * Lista de plantas a dar de alta.
+   *
+   * @type {Catalogo[]}
+   * @memberof TramiteState
+   */
   altaPlanta: Catalogo[];
+
+  /**
+   * Estado actual del trámite.
+   *
+   * @type {Catalogo}
+   * @memberof TramiteState
+   */
   estado: Catalogo;
+
+  /**
+   * Validación de los campos del formulario.
+   *
+   * @type {{ [key: string]: boolean }}
+   * @memberof TramiteState
+   */
   formaValida: { [key: string]: boolean };
+
+  /**
+   * Lista de domicilios asociados al trámite.
+   *
+   * @type {DomicilioInfo[]}
+   * @memberof TramiteState
+   */
   domicilios: DomicilioInfo[];
+
+  /**
+   * Lista de domicilios que se van a buscar.
+   *
+   * @type {DomicilioInfo[]}
+   * @memberof TramiteState
+   */
   buscarDomicilios: DomicilioInfo[];
 }
 
+/**
+ * Estado inicial para el manejo del estado de un trámite específico.
+ * 
+ * @constant
+ * @type {TramiteState}
+ * 
+ * @property {object} datosModificacion - Contiene los datos relacionados con la modificación del trámite.
+ * @property {string} datosModificacion.rfc - RFC asociado al trámite.
+ * @property {string} datosModificacion.representacionFederal - Representación federal del trámite.
+ * @property {string} datosModificacion.tipoModalidad - Tipo de modalidad del trámite.
+ * @property {string} datosModificacion.descripcionModalidad - Descripción de la modalidad del trámite.
+ * @property {string} datosModificacion.actividadProductivaActual - Actividad productiva actual relacionada con el trámite.
+ * 
+ * @property {Array} altaPlanta - Lista de plantas asociadas al trámite.
+ * 
+ * @property {object} estado - Representa el estado actual del trámite.
+ * @property {number} estado.id - Identificador del estado.
+ * @property {string} estado.descripcion - Descripción del estado.
+ * 
+ * @property {object} formaValida - Indica la validez de ciertos campos del formulario.
+ * @property {boolean} formaValida.entidadFederativa - Validez de la entidad federativa.
+ * 
+ * @property {Array} domicilios - Lista de domicilios asociados al trámite.
+ * 
+ * @property {Array} buscarDomicilios - Lista de domicilios buscados relacionados con el trámite.
+ */
 export const INITIAL_STATE: TramiteState = {
   datosModificacion: {
     rfc: '',
