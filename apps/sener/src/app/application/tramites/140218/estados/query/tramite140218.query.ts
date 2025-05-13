@@ -13,7 +13,6 @@ export class Tramite140218Query extends Query<DatosSolicitudState> {
     return state;
   });
  
-
   /**
    * Constructor del Query para el trámite 140218.
    * @param store Instancia del store de Tramite140218.

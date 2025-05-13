@@ -187,9 +187,42 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite140218Store.update(UPDATE_PAGO_FORM);
   }
 
-   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140218Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite140218Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  /**
+   * @method eventoDeCambioDeValor
+   * @description Maneja el evento de cambio de valor en un campo del formulario y actualiza el store.
+   *
+   * @param event - Evento de cambio proveniente del input.
+   * @param campo - Nombre del campo que ha cambiado.
+   *
+   * @void
+   * Este método no retorna ningún valor.
+   */
+  public eventoDeCambioDeValor(event: Event, campo: string): void {
+    if (event.target) {
+      const VALOR = (event.target as HTMLInputElement).value;
+      const DATO = { campo: campo, valor: VALOR };
+      this.establecerCambioDeValor(DATO);
+    }
+  }
+
+  /**
+   * @method establecerCambioDeValor
+   * @description Actualiza el valor dinámico de un campo en el store según el evento recibido.
+   * 
+   * @param event - Objeto que contiene el nombre del campo y el valor a establecer.
+   * Si el valor es un objeto con propiedad 'id', se utiliza dicho 'id' como valor.
+   * En caso contrario, se utiliza el valor directamente.
+   * 
+   * @void
+   * Este método no retorna ningún valor.
+   */
+  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+      const VALOR = event.valor.id;
+      this.tramite140218Store.setDynamicFieldValue(event.campo, VALOR);
+    } else if (event) {
+      this.tramite140218Store.setDynamicFieldValue(event.campo, event.valor);
+    }
   }
 
   /**

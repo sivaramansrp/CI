@@ -25,7 +25,7 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="clasificacionRegimen">Clasificación del régimen:</label>
-          <textarea class="background-color" rows="2" cols="44" formControlName="clasificacionRegimen"></textarea>
+          <textarea class="background-color" rows="2" cols="44" formControlName="clasificacionRegimen" ></textarea>
         </div>
       </div>
       <div class="col-md-3">
@@ -61,7 +61,7 @@
         <div class="form-group">
           <label class="form-label" for="valorAutorizado">Valor autorizado:</label>
           <input class="form-control" id="valorAutorizado" placeholder="" type="text"
-            formControlName="valorAutorizado" />
+            formControlName="valorAutorizado"  />
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="Acotacion">Acotación:</label>
-          <textarea class="background-color" rows="2" cols="44" formControlName="acotacion"></textarea>
+          <textarea class="background-color" rows="2" cols="44" formControlName="acotacion" ></textarea>
         </div>
       </div>
     </div>
@@ -106,7 +106,7 @@
         <div class="form-group">
           <label for="motivoSuspension" class="form-label">Motivo renuncia de derechos *:</label>
           <textarea rows="3" cols="80" id="motivoRenuncia" required="true" formControlName="motivoRenuncia"
-            (change)="setValoresStore(renunciaDerechosForm, 'motivoRenuncia', 'setMotivoRenuncia')"></textarea>
+            (change)="eventoDeCambioDeValor($event, 'motivoRenuncia')"></textarea>
         </div>
         @if(renunciaDerechosForm.controls['motivoRenuncia'].invalid &&
         renunciaDerechosForm.controls['motivoRenuncia'].touched) {
