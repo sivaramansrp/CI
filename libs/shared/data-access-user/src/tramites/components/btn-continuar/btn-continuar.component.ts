@@ -77,16 +77,16 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   continuar(): void {
-    // const CONDICION =
-    //   this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    // if (CONDICION) {
-    //   this.wizardService.cambio_indice(this.datos.indice);
-    //   const DATOS_CONTINUAR: AccionBoton = {
-    //     accion: 'cont',
-    //     valor: (this.datos.indice += 1),
-    //   };
-    //   this.continuarEvento.emit(DATOS_CONTINUAR);
-    // }
+    const CONDICION =
+      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    if (CONDICION) {
+      this.wizardService.cambio_indice(this.datos.indice);
+      const DATOS_CONTINUAR: AccionBoton = {
+        accion: 'cont',
+        valor: (this.datos.indice += 1),
+      };
+      this.continuarEvento.emit(DATOS_CONTINUAR);
+    }
   }
 
   /**

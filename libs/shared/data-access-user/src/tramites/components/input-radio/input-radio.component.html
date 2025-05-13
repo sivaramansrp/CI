@@ -10,7 +10,7 @@
           (change)="onSelectionChange(option.value)"
           formControlName="seleccion"
         />
-        <span class="radio-label" [ngClass]="{ 'fw-bold': gridLayout }" [title]="option.label">{{ option.label }}</span>
+        <span class="etiqueta-de-radio" [ngClass]="{ 'fw-bold': gridLayout }" [title]="option.label">{{ option.label }}</span>
         <span
           *ngIf="showTooltip && option.hint"
           class="bi bi-question-circle-fill fs-4 m-1"

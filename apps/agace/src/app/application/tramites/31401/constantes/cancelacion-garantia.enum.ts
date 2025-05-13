@@ -60,7 +60,7 @@ export const TIPO_SECTOR = [
     gridLayout: true,
   },
   {
-    id: 'concepto',
+    id: 'conceptoLabel',
     labelNombre: 'Concepto',
     campo: 'concepto',
     clase: 'col-md-4',
@@ -803,7 +803,7 @@ export const DATOS_POR_GARANTIA = [
     ],
   },
   {
-    id: 'numeroFolio',
+    id: 'numGenericoCarta',
     labelNombre: 'Número de folio',
     campo: 'numeroFolio',
     clase: 'col-md-8',
@@ -816,7 +816,7 @@ export const DATOS_POR_GARANTIA = [
     marginTop: 0,
   },
   {
-    id: 'rfc',
+    id: 'cveGenerica1Carta',
     labelNombre: 'RFC de la institución de fianza',
     campo: 'rfc',
     clase: 'col-md-4',
@@ -829,7 +829,7 @@ export const DATOS_POR_GARANTIA = [
     marginTop: 0,
   },
   {
-    id: 'fechaExpedicion',
+    id: 'fechaGenerica1Carta',
     labelNombre: 'Fecha de expedición',
     campo: 'fechaExpedicion',
     clase: 'col-md-4',
@@ -842,7 +842,7 @@ export const DATOS_POR_GARANTIA = [
     marginTop: 0,
   },
   {
-    id: 'fechaInicio',
+    id: 'fecInicioVigenciaCarta',
     labelNombre: 'Fecha de inicio de vigencia',
     campo: 'fechaInicio',
     clase: 'col-md-4',
@@ -855,7 +855,7 @@ export const DATOS_POR_GARANTIA = [
     marginTop: 0,
   },
   {
-    id: 'fechaFin',
+    id: 'fecFinVigenciaCarta',
     labelNombre: 'Fecha de fin de vigencia',
     campo: 'fechaFin',
     clase: 'col-md-4',
@@ -868,7 +868,7 @@ export const DATOS_POR_GARANTIA = [
     marginTop: 0,
   },
   {
-    id: 'importeTotal',
+    id: 'importeGenerico1Carta',
     labelNombre: 'Importe total en moneda nacional que ampara la póliza de fianza.',
     campo: 'importeTotal',
     clase: 'col-md-4',
