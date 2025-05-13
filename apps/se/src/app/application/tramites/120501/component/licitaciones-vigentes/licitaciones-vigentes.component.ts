@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Complementaria } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -190,7 +190,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * 
    */
   montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
-
+  showRepresentacionFederal: boolean = false;
+  showSeleccionarParticipante: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -440,5 +441,17 @@ montoRecibirValue(): void {
   const MONTO_RECIBIR = this.adquiriente.get('montoRecibir')?.value;
   this.tramite120501Store.setmontoRecibir(MONTO_RECIBIR);
 }
+/**
+ * Abre el modal para modificar la información.
+ *
+ * LicitacionesVigentesComponent
+ * 
+ */
+abrirModificarModal(event: Complementaria): void {
+  this.showRepresentacionFederal = true;
+}
 
+seleccionarParticipante():void{
+  this.showSeleccionarParticipante = true;
+}
 }

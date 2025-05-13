@@ -1,4 +1,4 @@
-interface Complementaria {
+export interface Complementaria {
   numerodelicitacion: string;
   fechadelicitacion: string;
   descripcion: string;
