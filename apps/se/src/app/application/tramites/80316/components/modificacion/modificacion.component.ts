@@ -132,14 +132,14 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Carga los datos de actividades productivas desde el servicio.
    */
   public inicializaCatalogos(): void {
-    const ACTIVIDADPRODUCTIVA$ = this.solicitudService.getActividadProductiva().pipe(
+    const ACTIVIDAD_PRODUCTIVA$ = this.solicitudService.getActividadProductiva().pipe(
       map((resp) => {
         this.actividadProductiva = resp.data;
       })
     );
 
     merge(
-      ACTIVIDADPRODUCTIVA$
+      ACTIVIDAD_PRODUCTIVA$
     )
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe();
@@ -150,8 +150,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite con la actividad seleccionada.
    */
   actividadProductivaSeleccion(): void {
-    const ACTIVIDADPRODUCTIVA = this.modificacionForm.get('actividadProductiva')?.value;
-    this.tramite80316Store.setActividadProductiva(ACTIVIDADPRODUCTIVA);
+    const ACTIVIDAD_PRODUCTIVA = this.modificacionForm.get('actividadProductiva')?.value;
+    this.tramite80316Store.setActividadProductiva(ACTIVIDAD_PRODUCTIVA);
   }
 
   /**

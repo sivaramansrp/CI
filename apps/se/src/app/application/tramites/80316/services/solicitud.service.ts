@@ -44,7 +44,7 @@ export class SolicitudService {
    * @returns {Observable<Bitacora[]>} Un observable que emite un arreglo de objetos de tipo `Bitacora`.
    */
   obtenerBitacora(): Observable<Bitacora[]> {
-    return this.http.get<{ data: Bitacora[] }>('assets/json/80308/bitacora.json').pipe(
+    return this.http.get<{ data: Bitacora[] }>('assets/json/80316/bitacora.json').pipe(
       map((res: { data: Bitacora[] }) => res.data)
     );
   }

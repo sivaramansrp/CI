@@ -281,7 +281,7 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
 /**
  * Título del mensaje mostrado al registrar una solicitud de modificación.
  */
-export const TITULOMENSAJE =
+export const TITULO_MENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
 
 /**

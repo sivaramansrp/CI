@@ -1,11 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
-import { Bitacora } from '../../../80308/models/plantas-consulta.model';
+import { Bitacora } from '../../models/datos-tramite.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 

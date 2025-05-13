@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
-import { provideToastr, ToastrService } from 'ngx-toastr'; // Import ToastrService and provideToastr
+import { provideToastr, ToastrService } from 'ngx-toastr';
 import { AltaPlantaComponent } from './alta-planta.component';
 
 describe('AltaPlantaComponent', () => {
@@ -10,13 +10,13 @@ describe('AltaPlantaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AltaPlantaComponent, TituloComponent, AlertComponent, AnexarDocumentosComponent], // Import standalone components
+      imports: [AltaPlantaComponent, TituloComponent, AlertComponent, AnexarDocumentosComponent], 
       providers: [
         CatalogosService,
-        provideHttpClient(), // Provide HttpClient
-        ToastrService, // Provide ToastrService
+        provideHttpClient(), 
+        ToastrService, 
         provideToastr({
-          positionClass: 'toast-top-right', // Example configuration for Toastr
+          positionClass: 'toast-top-right', 
         }),
       ],
     }).compileComponents();

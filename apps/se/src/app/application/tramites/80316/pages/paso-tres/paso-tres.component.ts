@@ -4,8 +4,8 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
- * Componente para el paso tres del trámite 301.
- * Este componente se utiliza para mostrar los pasos del asistente - 301
+ * Componente para el paso tres del trámite 80316.
+ * Este componente se utiliza para mostrar los pasos del asistente - 80316
  * Lista de pasos
  * Índice del paso
  */

@@ -131,14 +131,14 @@ export class TipoDePersonaComponent implements OnInit, OnDestroy {
    * Carga los datos del catálogo de tipos de persona desde el servicio.
    */
   private inicializaCatalogos(): void {
-    const TIPODEPERSONA$ = this.solicitudService.getTipoDePersona().pipe(
+    const TIPO_DE_PERSONA$ = this.solicitudService.getTipoDePersona().pipe(
       map((resp) => {
         this.tipoDePersona = resp.data;
       })
     );
 
     merge(
-      TIPODEPERSONA$
+      TIPO_DE_PERSONA$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -149,8 +149,8 @@ export class TipoDePersonaComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite con el tipo de persona seleccionado.
    */
   tipoDePersonaSeleccion(): void {
-    const TIPODEPERSONA = this.tipoDePersonaForm.get('tipoDePersona')?.value;
-    this.tramite80316Store.setActividadProductiva(TIPODEPERSONA);
+    const TIPO_DE_PERSONA = this.tipoDePersonaForm.get('tipoDePersona')?.value;
+    this.tramite80316Store.setActividadProductiva(TIPO_DE_PERSONA);
   }
 
   /**

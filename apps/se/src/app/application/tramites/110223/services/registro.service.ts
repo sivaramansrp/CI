@@ -3,7 +3,7 @@ import { JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../../enviroments/enviroment';
+import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110223.

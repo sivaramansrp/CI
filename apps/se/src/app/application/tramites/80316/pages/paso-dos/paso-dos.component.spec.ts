@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { provideHttpClient } from '@angular/common/http';
 import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
-import { provideToastr, ToastrService } from 'ngx-toastr'; // Import ToastrService and provideToastr
+import { provideToastr, ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -10,13 +10,13 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent,TituloComponent, AlertComponent, AnexarDocumentosComponent], // Import standalone components
+      imports: [PasoDosComponent,TituloComponent, AlertComponent, AnexarDocumentosComponent], 
       providers: [
         CatalogosService,
-        provideHttpClient(), // Provide HttpClient
-        ToastrService, // Provide ToastrService
+        provideHttpClient(), 
+        ToastrService, 
         provideToastr({
-          positionClass: 'toast-top-right', // Example configuration for Toastr
+          positionClass: 'toast-top-right', 
         }),
       ],
     }).compileComponents();
