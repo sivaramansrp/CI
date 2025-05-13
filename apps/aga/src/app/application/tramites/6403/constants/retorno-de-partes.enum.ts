@@ -1,4 +1,4 @@
-import { SolicitudTabla } from "../models/autorizacion-importacion.model";
+import { SolicitudTabla } from "../models/retorno-de-partes.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.

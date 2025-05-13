@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
 import { Tramite6403Store } from '../../estados/tramite6403.store';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
-import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
+import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { provideHttpClient } from '@angular/common/http'; 
 
@@ -14,7 +14,7 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, SolicitudComponent],
-      providers: [FormBuilder, Tramite6403Store, Tramite6403Query, AutorizacionImportacionService, ValidacionesFormularioService, provideHttpClient()],
+      providers: [FormBuilder, Tramite6403Store, Tramite6403Query, RetornoDePartesService, ValidacionesFormularioService, provideHttpClient()],
       declarations: []
     }).compileComponents();
 
@@ -38,7 +38,7 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, SolicitudComponent],
-      providers: [FormBuilder, Tramite6403Store, Tramite6403Query, AutorizacionImportacionService, ValidacionesFormularioService],
+      providers: [FormBuilder, Tramite6403Store, Tramite6403Query, RetornoDePartesService, ValidacionesFormularioService],
       declarations: []
     }).compileComponents();
 

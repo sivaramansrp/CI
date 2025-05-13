@@ -1,10 +1,10 @@
 import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AccionBoton } from '../../models/autorizacion-importacion.model';
+import { AccionBoton } from '../../models/retorno-de-partes.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/autorizacion-importacion.enum';
+import { PASOS } from '../../constants/retorno-de-partes.enum';
 import { Subject } from 'rxjs';
-import { TEXTOS } from '../../constants/autorizacion-importacion.enum';
+import { TEXTOS } from '../../constants/retorno-de-partes.enum';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
 import { Tramite6403State } from '../../estados/tramite6403.store';
 import { Tramite6403Store } from '../../estados/tramite6403.store';

@@ -223,7 +223,7 @@
       </div>
 
     </ng-container>
-    <ng-titulo titulo="Partes, refacciones o bienes destinados al mantenimiento o reparación." />
+    <ng-titulo titulo="Partes o refacciones reemplazadas." />
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
         [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
@@ -242,7 +242,7 @@
         </button>
       </div>
     </div>
-    <ng-titulo titulo="Medio de transporte de arribo al país. " />
+    <ng-titulo titulo="Medio de transporte de retorno." />
     <ng-container formGroupName="datosMedioTransporte">
       <div class="row">
         <div class="col-md-3">
@@ -458,142 +458,6 @@
         </div>
       </div>
     </ng-container>
-    <ng-titulo titulo="Destino de la mercancía reemplazada." />
-    <ng-container formGroupName="datosDestinoMercancia">
-
-      <div class="row">
-        <div class="col-md-8">
-          <app-catalogo-select [catalogo]="siNo"
-            [label]="'¿Ya se le dio destino a las partes o refacciones reemplazadas?'" [required]="true" id="conDestino"
-            formControlName="conDestino" [ngClass]="isValid(datosDestinoMercancia,'conDestino') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'conDestino', 'setConDestino')"></app-catalogo-select>
-        </div>
-        <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoDeDestino" [label]="'Tipo de destino'" [required]="true"
-            id="cveTipoDestino" formControlName="cveTipoDestino"
-            [ngClass]="isValid(datosDestinoMercancia,'cveTipoDestino') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDestino', 'setCveTipoDestino')"></app-catalogo-select>
-        </div>
-      </div>
-      @if(datosDestinoMercancia.get('conDestino')?.value !== 'No'){
-      <div class="row">
-        @if(datosDestinoMercancia.get('conDestino')?.value === 'Si' && datosDestinoMercancia.get('cveTipoDestino')?.value
-        === 'Retorno'){
-        <div class="col-md-3">
-          <app-catalogo-select [catalogo]="tipoDeDocumento" [label]="'Tipo de documento'" [required]="true"
-            id="cveTipoDocumentoReemplazada" formControlName="cveTipoDocumentoReemplazada"
-            [ngClass]="isValid(datosDestinoMercancia,'cveTipoDocumentoReemplazada') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDocumentoReemplazada', 'setCveTipoDocumentoReemplazada')"></app-catalogo-select>
-        </div>
-        <div class="col-md-4">
-          <div>
-            <label class="form-label" for="folioFormatoOficialDestino">Folio de formato oficial</label>
-            <span class="require form-label" id="folioFormatoOficialDestino">*</span>
-            <label class="form-label" for="folioFormatoOficialDestino">:</label>
-          </div>
-          <div>
-            <input id="folioFormatoOficialDestino" name="folioFormatoOficialDestino" type="text" class="form-control"
-              formControlName="folioFormatoOficialDestino"
-              [ngClass]="isValid(datosDestinoMercancia,'folioFormatoOficialDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'folioFormatoOficialDestino', 'setFolioFormatoOficialDestino')" />
-          </div>
-        </div>
-      } @else if(datosDestinoMercancia.get('conDestino')?.value === 'Si' && datosDestinoMercancia.get('cveTipoDestino')?.value
-      === 'Destrucción'){
-        <div class="col-md-5">
-          <div>
-            <label class="form-label" for="numeroActaDescruccion">Número de acta de destrucción</label>
-            <span class="require form-label" id="numeroActaDescruccion">*</span>
-            <label class="form-label" for="numeroActaDescruccion">:</label>
-          </div>
-          <div>
-            <input id="numeroActaDescruccion" name="numeroActaDescruccion" type="text" class="form-control"
-              formControlName="numeroActaDescruccion"
-              [ngClass]="isValid(datosDestinoMercancia,'numeroActaDescruccion') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'numeroActaDescruccion', 'setNumeroActaDescruccion')" />
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group datepicker-group">
-            <input-fecha [datos]="fechaDestino" [setFecha]="datosDestinoMercancia.get('fechaDescruccionDestino')?.value"
-              (valorCambiado)="cambioFechaDestino($event)"></input-fecha>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div>
-            <label class="form-label" for="autoridadPresentoAvisoDestruccion">Autoridad ante la que se presentó el aviso de destrucción</label>
-            <span class="require form-label" id="autoridadPresentoAvisoDestruccion">*</span>
-            <label class="form-label" for="autoridadPresentoAvisoDestruccion">:</label>
-          </div>
-          <div>
-            <input id="autoridadPresentoAvisoDestruccion" name="autoridadPresentoAvisoDestruccion" type="text" class="form-control"
-              formControlName="autoridadPresentoAvisoDestruccion"
-              [ngClass]="isValid(datosDestinoMercancia,'autoridadPresentoAvisoDestruccion') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'autoridadPresentoAvisoDestruccion', 'setAutoridadPresentoAvisoDestruccion')" />
-          </div>
-        </div>
-
-      } @else if(datosDestinoMercancia.get('conDestino')?.value === 'Si' && datosDestinoMercancia.get('cveTipoDestino')?.value
-        === 'Importación definitiva'){
-          <div class="col-md-2">
-            <div>
-              <label class="form-label" for="cveAduanaDestino">Aduana</label>
-              <span class="require form-label" id="cveAduanaDestino">*</span>
-              <label class="form-label" for="cveAduanaDestino">:</label>
-            </div>
-            <div>
-              <input id="cveAduanaDestino" name="cveAduanaDestino" type="text" class="form-control"
-                formControlName="cveAduanaDestino"
-                [ngClass]="isValid(datosDestinoMercancia,'cveAduanaDestino') ? 'required' : ''"
-                (change)="setValoresStore(datosDestinoMercancia, 'cveAduanaDestino', 'setCveAduanaDestino')" />
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div>
-              <label class="form-label" for="cvePatenteDestino">Patente</label>
-              <span class="require form-label" id="cvePatenteDestino">*</span>
-              <label class="form-label" for="cvePatenteDestino">:</label>
-            </div>
-            <div>
-              <input id="cvePatenteDestino" name="cvePatenteDestino" type="text" class="form-control"
-                formControlName="cvePatenteDestino"
-                [ngClass]="isValid(datosDestinoMercancia,'cvePatenteDestino') ? 'required' : ''"
-                (change)="setValoresStore(datosDestinoMercancia, 'cvePatenteDestino', 'setCvePatenteDestino')" />
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div>
-              <label class="form-label" for="cvePedimentoDestino">Pedimento</label>
-              <span class="require form-label" id="cvePedimentoDestino">*</span>
-              <label class="form-label" for="cvePedimentoDestino">:</label>
-            </div>
-            <div>
-              <input id="cvePedimentoDestino" name="cvePedimentoDestino" type="text" class="form-control"
-                formControlName="cvePedimentoDestino"
-                [ngClass]="isValid(datosDestinoMercancia,'cvePedimentoDestino') ? 'required' : ''"
-                (change)="setValoresStore(datosDestinoMercancia, 'cvePedimentoDestino', 'setCvePedimentoDestino')" />
-            </div>
-          </div>
-
-        
-        <div class="col-md-4">
-          <div>
-            <label class="form-label" for="estadoTipoDocumentoDestino">Estado del tipo de documento</label>
-            <span class="require form-label" id="estadoTipoDocumentoDestino">*</span>
-            <label class="form-label" for="estadoTipoDocumentoDestino">:</label>
-          </div>
-          <div>
-            <input id="estadoTipoDocumentoDestino" name="estadoTipoDocumentoDestino" type="text" class="form-control"
-              formControlName="estadoTipoDocumentoDestino"
-              [ngClass]="isValid(datosDestinoMercancia,'estadoTipoDocumentoDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'estadoTipoDocumentoDestino', 'setEstadoTipoDocumentoDestino')" />
-          </div>
-        </div>
-      }
-      </div>
-      }
-    </ng-container>
-
   </form>
 </div>
 <div class="modal fade" id="modalMercancia" tabindex="-1" #modalMercancia aria-labelledby="modalMercancia"
@@ -605,7 +469,7 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="mercanciaFormulario">
-          <ng-titulo titulo="Partes, refacciones o bienes destinados al mantenimiento o reparación." />
+          <ng-titulo titulo="Partes o refacciones reemplazadas." />
           <ng-container>
             <div class="row">
               <div class="col-md-6">

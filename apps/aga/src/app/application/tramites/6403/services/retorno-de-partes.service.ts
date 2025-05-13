@@ -1,4 +1,4 @@
-import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
+import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos } from '../models/retorno-de-partes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AutorizacionImportacionService {
+export class RetornoDePartesService {
   /**
    * Constructor del servicio.
    * 
@@ -93,22 +93,4 @@ export class AutorizacionImportacionService {
   obtenerPaisDeProcedencia(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/6403/pais-de-procedencia.json`);
   }
-
-  /**
-   * Obtiene una lista de opciones "Sí" o "No" desde un archivo JSON local.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de opciones "Sí" o "No".
-   */
-  obtenerSiNo(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6403/si-no.json`);
-  }
-
-  /**
-   * @description Obtiene el catálogo de tipos de destino desde un archivo JSON local.
-   * @returns {Observable<CatalogoLista>} Un observable que emite el catálogo de tipos de destino.
-   */
-  obtenerTipoDeDestino(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/6403/tipo-de-destino.json`);
-  }
- 
 }

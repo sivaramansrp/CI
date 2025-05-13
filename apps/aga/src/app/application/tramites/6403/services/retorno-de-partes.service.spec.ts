@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AutorizacionImportacionService } from './autorizacion-importacion.service';
-import { Catalogo, CatalogoLista, DatosSolicitante, SolicitudTabla, SolicitudTablaDatos } from "./../models/autorizacion-importacion.model";
+import { Catalogo, CatalogoLista, DatosSolicitante, SolicitudTabla, SolicitudTablaDatos } from "../models/retorno-de-partes.model";
 
 
 describe('AvisoTrasladoService', () => {

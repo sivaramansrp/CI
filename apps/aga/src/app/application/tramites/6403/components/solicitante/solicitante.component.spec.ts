@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
 import { Tramite6403Store } from '../../estados/tramite6403.store';
-import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
+import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 
 describe('SolicitanteComponent', () => {
   let component: SolicitanteComponent;
@@ -70,7 +70,7 @@ describe('SolicitanteComponent', () => {
       providers: [
         { provide: Tramite6403Query, useValue: tramiteQueryMock },
         { provide: Tramite6403Store, useValue: tramiteStoreMock },
-        { provide: AutorizacionImportacionService, useValue: avisoTrasladoServiceMock },
+        { provide: RetornoDePartesService, useValue: avisoTrasladoServiceMock },
       ],
     }).compileComponents();
 

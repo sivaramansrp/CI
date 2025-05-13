@@ -10,9 +10,8 @@ import {
   TituloComponent,
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
-import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/autorizacion-importacion.model";
-import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/autorizacion-importacion.enum";
-import { AutorizacionImportacionService } from "../../services/autorizacion-importacion.service";
+import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/retorno-de-partes.model";
+import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/retorno-de-partes.enum";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { ElementRef } from "@angular/core";
@@ -24,6 +23,7 @@ import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
+import { RetornoDePartesService } from "../../services/retorno-de-partes.service";
 import { Subject } from "rxjs";
 import { Tramite6403Query } from "../../estados/tramite6403.query";
 import { Tramite6403State } from "../../estados/tramite6403.store";
@@ -206,14 +206,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {Tramite6403Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite6403Query} tramiteQuery - Query para obtener el estado del trámite.
-   * @param {autorizacionImportacionService} autorizacionImportacionService - Servicio para obtener datos relacionados con el aviso.
+   * @param {retornoDePartesService} retornoDePartesService - Servicio para obtener datos relacionados con el aviso.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
   */
   constructor(
     public fb: FormBuilder,
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
-    public autorizacionImportacionService: AutorizacionImportacionService,
+    public retornoDePartesService: RetornoDePartesService,
     private validacionesService: ValidacionesFormularioService,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -240,8 +240,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.cargarTipoDeDocumento();
     this.cargarMedioDeTransporte();
     this.cargarPaisDeProcedencia();
-    this.cargarSiNo();
-    this.cargarTipoDeDestino();
     this.inicializarMercanciaFormulario();
   }
 
@@ -328,13 +326,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarAduaneras
-   * @description Método para cargar la lista de aduaneras desde el servicio `autorizacionImportacionService`.
+   * @description Método para cargar la lista de aduaneras desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `aduaneras`.
    *
    * @returns {void}
    */
   public cargarAduaneras(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerAduaneras()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -353,7 +351,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   public cargarAduanas(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerAduanas()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -365,13 +363,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarRecintoFiscalizado
-   * @description Método para cargar la lista de recintos fiscalizados desde el servicio `autorizacionImportacionService`.
+   * @description Método para cargar la lista de recintos fiscalizados desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `recintoFiscalizado`.
    *
    * @returns {void}
    */
   public cargarRecintoFiscalizado(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerRecintoFiscalizado()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -383,13 +381,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarTipoDeDocumento
-   * @description Método para cargar la lista de tipos de documentos desde el servicio `autorizacionImportacionService`.
+   * @description Método para cargar la lista de tipos de documentos desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `tipoDeDocumento`.
    *
    * @returns {void}
    */
   public cargarTipoDeDocumento(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerTipoDeDocumento()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -408,7 +406,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   public cargarMedioDeTransporte(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerMedioDeTransporte()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -421,17 +419,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Carga el país de procedencia desde el servicio de autorización de importación.
    * 
-   * Este método realiza una solicitud al servicio `autorizacionImportacionService` 
+   * Este método realiza una solicitud al servicio `retornoDePartesService` 
    * para obtener el catálogo de países de procedencia. Los datos obtenidos se asignan 
    * a la propiedad `paisDeProcedencia` del componente.
    * 
    * @remarks
    * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
    * 
-   * @see {@link autorizacionImportacionService.obtenerPaisDeProcedencia}
+   * @see {@link retornoDePartesService.obtenerPaisDeProcedencia}
    */
   public cargarPaisDeProcedencia(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerPaisDeProcedencia()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -443,56 +441,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
   /**
-   * @method cargarSiNo
-   * @description Método para cargar la lista de opciones "Sí" o "No" desde el servicio `autorizacionImportacionService`.
-   * Los datos obtenidos se asignan a la propiedad `siNo`.
-   *
-   * @returns {void}
-   */
-  public cargarSiNo(): void {
-    this.autorizacionImportacionService
-      .obtenerSiNo()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.siNo = datos.datos;
-        }
-      );
-  }
-
-  /**
-   * @method cargarTipoDeDestino
-   * @description Este método se encarga de cargar los tipos de destino desde el servicio de autorización de importación.
-   * Utiliza un observable para suscribirse a los datos obtenidos y asignarlos a la propiedad `tipoDeDestino`.
-   * 
-   * @returns {void} No retorna ningún valor.
-   * 
-   * @example
-   * // Ejemplo de uso:
-   * this.cargarTipoDeDestino();
-   * 
-   * @memberof SolicitudComponent
-   */
-  public cargarTipoDeDestino(): void {
-    this.autorizacionImportacionService
-      .obtenerTipoDeDestino()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.tipoDeDestino = datos.datos;
-        }
-      );
-  }
-
-  /**
    * @method cargarFederativa
-   * @description Método para cargar la lista de entidades federativas desde el servicio `autorizacionImportacionService`.
+   * @description Método para cargar la lista de entidades federativas desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `entidadFederativa`.
    *
    * @returns {void}
    */
   public cargarFederativa(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerFederativa()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -691,13 +647,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarMercanciaTabla
-   * @description Método para cargar los datos de la tabla de mercancias desde el servicio `autorizacionImportacionService`.
+   * @description Método para cargar los datos de la tabla de mercancias desde el servicio `retornoDePartesService`.
    * Los datos obtenidos se asignan a la propiedad `tablaDeDatos.datos`.
    *
    * @returns {void}
    */
   public cargarMercanciaTabla(): void {
-    this.autorizacionImportacionService
+    this.retornoDePartesService
       .obtenerSolicitudTabla()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(

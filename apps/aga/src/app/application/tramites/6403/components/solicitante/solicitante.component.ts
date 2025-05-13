@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
+import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
 import { Tramite6403State } from '../../estados/tramite6403.store';
@@ -55,7 +55,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
-    public autorizacionImportacionService: AutorizacionImportacionService
+    public autorizacionImportacionService: RetornoDePartesService
   ) { 
     // El constructor se utiliza para la inyección de dependencias.
   }

@@ -1,4 +1,4 @@
-import { DatosSolicitante, MercanciaFormulario, SolicitudFormulario } from '../models/autorizacion-importacion.model';
+import { DatosSolicitante, MercanciaFormulario, SolicitudFormulario } from '../models/retorno-de-partes.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -60,7 +60,7 @@ export interface Tramite6403State {
 export function createInitialState(): Tramite6403State {
   return {
     pasoActivo: 1,
-    pestanaActiva: 2,
+    pestanaActiva: 1,
     solicitudFormulario: {
       cveAduana: '',
       cveSeccionAduanal: '',
