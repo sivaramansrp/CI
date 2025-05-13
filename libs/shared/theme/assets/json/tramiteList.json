@@ -891,8 +891,8 @@
   {
     "id": 128,
     "tramite": 302,
-    "linkDashboard": "/aga/certi-registro/pantallas",
-    "linkDepartment": "/pago/certi-registro/pantallas",
+    "linkDashboard": "aga/certi-registro/proceso-completo",
+    "linkDepartment": "/pago/certi-registro/proceso-completo",
     "department": "aga"
   },
   {

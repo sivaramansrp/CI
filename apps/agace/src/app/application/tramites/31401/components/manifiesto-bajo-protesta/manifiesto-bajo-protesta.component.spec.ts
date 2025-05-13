@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ManifiestoBajoProtestaComponent } from './manifiesto-bajo-protesta.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ManifiestoBajoProtestaComponent', () => {
   let component: ManifiestoBajoProtestaComponent;
@@ -7,7 +8,7 @@ describe('ManifiestoBajoProtestaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManifiestoBajoProtestaComponent],
+      imports: [ManifiestoBajoProtestaComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ManifiestoBajoProtestaComponent);

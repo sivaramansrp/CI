@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ManifestacionesDeCancelacionComponent } from './manifestaciones-de-cancelacion.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ManifestacionesDeCancelacionComponent', () => {
   let component: ManifestacionesDeCancelacionComponent;
@@ -7,7 +8,7 @@ describe('ManifestacionesDeCancelacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManifestacionesDeCancelacionComponent],
+      imports: [ManifestacionesDeCancelacionComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ManifestacionesDeCancelacionComponent);

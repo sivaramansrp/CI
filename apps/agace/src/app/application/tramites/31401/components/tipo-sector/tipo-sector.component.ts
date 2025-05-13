@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
 import { CommonModule } from '@angular/common';
@@ -102,11 +102,9 @@ export class TipoSectorComponent implements OnInit, OnDestroy {
    * - Inyecta el servicio `FormBuilder` para la creación y gestión de formularios reactivos.
    * - Inyecta el servicio `CancelacionGarantiaService` para obtener las opciones disponibles para el tipo de garantía.
    *
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {CancelacionGarantiaService} cancelacionGarantiaService - Servicio para gestionar los datos relacionados con la cancelación de garantías.
    */
   constructor(
-    private fb: FormBuilder,
     private cancelacionGarantiaService: CancelacionGarantiaService
   ) {
     //

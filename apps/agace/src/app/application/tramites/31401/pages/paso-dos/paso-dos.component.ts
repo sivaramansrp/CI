@@ -63,7 +63,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Esta propiedad almacena los documentos que han sido marcados
    * como seleccionados en el flujo actual de la aplicación.
    */
-  documentosSeleccionados = documentList.documentosSeleccionados;
+  documentosSeleccionados = documentList?.documentosSeleccionados ?? [];
 
   /**
    * @private

@@ -139,14 +139,45 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   * @param {CancelacionGarantiaService} cancelacionGarantiaService - Servicio para manejar la lógica de cancelación de garantías.
   */
 
+  /**
+  * @constructor
+  * @description
+  * Constructor del componente `RequisitosComponent`.
+  * 
+  * Detalles:
+  * - Inyecta el servicio `CancelacionGarantiaService` para gestionar la obtención de datos relacionados con los requisitos.
+  * - Este servicio se utiliza para interactuar con la API y obtener la información necesaria para el formulario y la tabla dinámica.
+  * 
+  * @param {CancelacionGarantiaService} cancelacionGarantiaService - Servicio para manejar la lógica de cancelación de garantías.
+  */
   constructor(
     public cancelacionGarantiaService: CancelacionGarantiaService
   ) {
     //
   }
 
+  /**
+  * @method ngOnInit
+  * @description
+  * Método de inicialización del componente `RequisitosComponent`.
+  * 
+  * Detalles:
+  * - Llama al servicio `obtenerDatosTablaRequisitos` para cargar los datos de la tabla de requisitos.
+  * - Filtra los datos para excluir registros vacíos o nulos.
+  * - Asigna los datos filtrados a la propiedad `tablaRequisitos` para renderizar la tabla dinámica.
+  * - Llama al método `obtenerRequisitosDatos` para cargar las opciones disponibles para el tipo de garantía.
+  * 
+  * Funcionalidad:
+  * - Este método configura los datos iniciales necesarios para el formulario y la tabla dinámica.
+  * 
+  * @example
+  * this.ngOnInit();
+  * // Inicializa el componente y carga los datos necesarios.
+  */
   ngOnInit(): void {
-    this.cancelacionGarantiaService.obtenerDatosTablaRequisitos().subscribe((resp) => {
+    this.cancelacionGarantiaService.obtenerDatosTablaRequisitos()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp) => {
       if (resp && resp.length > 0) {
         const REQUISITOS_TABLA = resp.filter(item => 
           Object.values(item).some(value => value !== null && value !== '' && value !== undefined)

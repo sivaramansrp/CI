@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import {
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -7,7 +8,6 @@ import {
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
 import { CommonModule } from '@angular/common';
 import { ENCABEZADO_DE_TERECEROS_TABLA } from '../../constantes/cancelacion-garantia.enum';
-import { Subject } from 'rxjs';
 import { TerecerosTabla } from '../../models/cancelacion-garantia.model';
 
 /**
@@ -39,7 +39,7 @@ import { TerecerosTabla } from '../../models/cancelacion-garantia.model';
   styleUrl: './tereceros-relacionados.component.scss',
 })
 
-export class TerecerosRelacionadosComponent implements OnInit {
+export class TerecerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Tipo de selección para la tabla de insumos.
    * Por defecto, se utiliza la selección por checkbox.
@@ -96,7 +96,9 @@ export class TerecerosRelacionadosComponent implements OnInit {
   * this.ngOnInit();
   */
   ngOnInit(): void {
-    this.cancelacionGarantiaService.obtenerDatosTablaTereceros().subscribe((resp) => {
+    this.cancelacionGarantiaService.obtenerDatosTablaTereceros()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp) => {
       if (resp && resp.length > 0) {
         const REQUISITOS_TABLA = resp.filter(item => 
           Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
@@ -108,5 +110,27 @@ export class TerecerosRelacionadosComponent implements OnInit {
         }
       }
     });
+  }
+
+  /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroy$.next();
+  *   this.destroy$.complete();
+  * }
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

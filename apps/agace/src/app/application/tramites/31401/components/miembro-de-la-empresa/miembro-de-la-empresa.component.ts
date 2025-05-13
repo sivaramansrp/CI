@@ -87,11 +87,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * Representa el formulario reactivo utilizado en el componente `MiembroDeLaEmpresaComponent`.
    * @type {FormGroup}
    */
-  public forma: FormGroup = new FormGroup({
-    ninoFormGroup: new FormGroup({}),
-    senalePreviamente: new FormControl({ value: 1, disabled: true }),
-    enCasoAffirmativo: new FormControl({ value: 1, disabled: true }),
-  });
+  public forma!: FormGroup;
 
   /**
    * compo doc
@@ -174,9 +170,34 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * // Inicializa el componente y carga los datos necesarios.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
     this.obtenerDatostablaMiembro();
     this.obtenerTipoInversionDatos();
     this.obtenerRadioDatos();
+  }
+  
+  /**
+  * @method inicializarFormulario
+  * @description
+  * Método que inicializa el formulario reactivo utilizado en el componente `MiembroDeLaEmpresaComponent`.
+  * 
+  * Detalles:
+  * - Crea un formulario principal `forma` que contiene un grupo de formularios anidado llamado `ninoFormGroup`.
+  * - Incluye controles como `senalePreviamente` y `enCasoAffirmativo`, los cuales están deshabilitados por defecto y tienen valores iniciales establecidos.
+  * 
+  * Funcionalidad:
+  * - Este método configura la estructura inicial del formulario reactivo, permitiendo la interacción y validación de los datos en el componente.
+  * 
+  * @example
+  * this.inicializarFormulario();
+  * // Inicializa el formulario reactivo con los controles definidos.
+  */
+  public inicializarFormulario(): void {
+    this.forma = new FormGroup({
+    ninoFormGroup: new FormGroup({}),
+    senalePreviamente: new FormControl({ value: 1, disabled: true }),
+    enCasoAffirmativo: new FormControl({ value: 1, disabled: true }),
+    });
   }
 
   /**
@@ -228,6 +249,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   public obtenerDatostablaMiembro(): void {
     this.cancelacionGarantiaService
       .obtenerDatosTablaMiembro()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         if (resp && resp.length > 0) {
           const MIEMBRO_TABLA = resp.filter((item) =>
@@ -261,6 +283,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   public obtenerTipoInversionDatos(): void {
     this.cancelacionGarantiaService
       .obtenerTipoInversionData()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         if (resp && resp.length > 0) {
           const TIPO_DE_INVERSION_TABLA = resp.filter((item) =>
