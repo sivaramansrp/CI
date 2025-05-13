@@ -1094,7 +1094,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
       {
         tipo: 'pattern',
         valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
-        mensaje: ' ',
+        mensaje: 'Por favor, corrija el domicilio.',
       },
     ],
     marcadorDePosicion: 'Calle, No Ext, No Int, Ciudad, C.P.',
