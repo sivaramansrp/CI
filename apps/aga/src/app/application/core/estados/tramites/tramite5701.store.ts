@@ -1,8 +1,9 @@
-import { Store, StoreConfig } from '@datorama/akita';
-import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 import {
+  Pedimento,
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
+import { Store, StoreConfig } from '@datorama/akita';
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 
 import { Injectable } from '@angular/core';
 import { Patente } from '../../models/5701/Patente.model';
@@ -84,14 +85,7 @@ export interface Solicitud5701State {
   descripcionGenerica: string;
   justificacion: string;
 
-  idPedimento: number;
-  patentePedimento: number;
-  pedimento: string;
-  aduana: number;
-  tipoPedimento: string;
-  numero: number;
-  comprobanteValor: string;
-  pedimentoValidado: boolean;
+  pedimentos: Pedimento[]
 
   personasResponsablesDespacho: ResponsablesDespacho[];
 
@@ -171,14 +165,7 @@ export function createInitialState(): Solicitud5701State {
     paisProcedencia: 0,
     descripcionGenerica: '',
     justificacion: '',
-    idPedimento: 0,
-    patentePedimento: 0,
-    pedimento: '',
-    aduana: 0,
-    tipoPedimento: '',
-    numero: 0,
-    comprobanteValor: '',
-    pedimentoValidado: false,
+    pedimentos: [],
     personasResponsablesDespacho: [],
     tipoTransporte: '',
     transporte: [],
@@ -574,59 +561,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setidPedimento(idPedimento: number): void {
+  public setPedimentos(pedimentos: Pedimento[]): void {
     this.update((state) => ({
       ...state,
-      idPedimento,
-    }));
-  }
-
-  public setPatentePedimento(patentePedimento: number): void {
-    this.update((state) => ({
-      ...state,
-      patentePedimento,
-    }));
-  }
-
-  public setPedimento(pedimento: string): void {
-    this.update((state) => ({
-      ...state,
-      pedimento,
-    }));
-  }
-
-  public setAduana(aduana: number): void {
-    this.update((state) => ({
-      ...state,
-      aduana,
-    }));
-  }
-
-  public setTipoPedimento(tipoPedimento: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoPedimento,
-    }));
-  }
-
-  public setNumero(numero: number): void {
-    this.update((state) => ({
-      ...state,
-      numero,
-    }));
-  }
-
-  public setComprobanteValor(comprobanteValor: string): void {
-    this.update((state) => ({
-      ...state,
-      comprobanteValor,
-    }));
-  }
-
-  public setPedimentoValidado(pedimentoValidado: boolean): void {
-    this.update((state) => ({
-      ...state,
-      pedimentoValidado,
+      pedimentos,
     }));
   }
 

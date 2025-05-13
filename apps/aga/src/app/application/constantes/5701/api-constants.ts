@@ -107,7 +107,13 @@ export const LINEA_PAGO_QUERY = '{lineaPago}';
  * @param LINEA_PAGO_QUERY La línea de pago
  */
 export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
+
 /**
  * API para obtener el monto del trámite
  */
 export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
+
+/**
+ * API para validar el pedimento
+ */
+export const API_VALIDAR_PEDIMENTO = 'sat-t5701/pedimento/estado';

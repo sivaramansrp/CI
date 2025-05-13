@@ -36,11 +36,13 @@ import {
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
+  MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA, PATENTES_ID,
   TRANSPORTE,
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -52,7 +54,6 @@ import { CertificacionOeaService } from '../../../../core/services/5701/certific
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
 import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
-import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
@@ -206,7 +207,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Pedimento -crea una señal para validar
    */
-  validacionPedimento: boolean = false;
+  validacionPedimento?: boolean;
 
   /**
    * Almacena los datos que necesita el componente Patente para hacer las validaciones
@@ -661,7 +662,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.patenteService.getListaPatente('SAAA980822LP1').pipe(
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
-          this.tramite5701Store.setPatente(patente);
           patente = pantenteResponse.datos;
           const DATOS_PATENTE: DatosAgregarFormulario = {
             form: this.despacho,
@@ -669,6 +669,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             valor: patente?.patente,
           };
           FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+          this.tramite5701Store.setPatente(patente);
           return EMPTY;
         }
         return this.patenteApoderadoService.getListaPatentesApoderado('SAAA980822LP1');
@@ -796,21 +797,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ],
       }),
 
-      pedimento: this.fb.group({
-        idPedimento: [this.solicitudState?.idPedimento],
-
-        patentePedimento: [this.solicitudState?.patente],
-        pedimento: [this.solicitudState?.pedimento],
-        aduana: [this.solicitudState?.aduana],
-        tipoPedimento: [this.solicitudState?.tipoPedimento],
-        numeros: [this.solicitudState?.numero],
-        comprobanteValor: [this.solicitudState?.comprobanteValor],
-        pedimentoValidado: [this.solicitudState?.pedimentoValidado],
-
-      }),
+      pedimento: this.fb.array([]),
 
       personasResponsablesDespacho: this.fb.array([]),
-
 
       vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
@@ -1052,10 +1041,21 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.isValid(this.despacho, 'aduanaDespacho');
-    if (ADUANA_VALIDACION === null) {
-      this.validacionPedimento = true;
+    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho
+    if (!ADUANA_VALIDACION) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_ADUANA_PEDIMENTO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+      return;
     }
+    this.validacionPedimento = true;
   }
 
   /**
@@ -1672,6 +1672,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Procesa la lógica para activar o desactivar los campos de LDA y DD en el formulario.
+   * @param {tipo} string
+   * @returns {void} No retorna ningún valor.
+   */
   activaDesactivaCheckLDA_DDEX(tipo: string): void {
     this.despachoSeleccionado = !this.despachoSeleccionado;
 
@@ -1712,6 +1717,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.despacho, 'dd', 'setDD');
   }
 
+  /**
+   * Limpia los campos del formulario de despacho y actualiza el store correspondiente.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   limpiaCamposDdaLda(): void {
     this.despacho.get('idAduanaDespacho')?.setValue('');
     this.despacho.get('aduanaDespacho')?.setValue('');
@@ -1735,6 +1745,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.despacho, 'domicilioDespacho', 'setDomicilioDespacho');
   }
 
+  /**
+   * Valida si el campo recinto y el campo especifique tienen algun valor.
+   * @returns {boolean} Retorna true si el campo recinto es válido, de lo contrario false.
+   */
   validaCampoRecintoEspecifique(): boolean {
     const RECINTO = this.despacho.get('nombreRecinto')?.value ? parseInt(this.despacho.get('nombreRecinto')?.value, 10) : -1;
     const ESPECIFIQUE = this.despacho.get('recintoEspecifique')?.value;
@@ -1742,5 +1756,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return true;
     }
     return false;
+  }
+
+
+  /**
+   * Guarda los datos del pedimento en el store.
+   * @param {datosPedimento[]} Lista con los datos del pedimento.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeAgregarPedimento(datosPedimento: Pedimento[]): void {
+    this.tramite5701Store.setPedimentos(datosPedimento);
   }
 }
