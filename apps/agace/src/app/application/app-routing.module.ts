@@ -157,6 +157,13 @@ const ROUTES: Routes = [
         (m) => m.EntregaActaModule
       ),
   },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
 ];
 
 @NgModule({

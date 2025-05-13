@@ -947,8 +947,8 @@
   {
     "id": 136,
     "tramite": 32605,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/importador-y-o-exportador/solicitud",
+    "linkDepartment": "/pago/importador-y-o-exportador/solicitud",
     "department": "agace"
   },
   {
