@@ -263,6 +263,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
   }
 ];
 

@@ -31,7 +31,4 @@ import { ToastrService } from "ngx-toastr";
   exports: [],
   providers: [ToastrService, AutorizacionImportacionService]
 })
-export class AutorizacionImportacionModule {
-
-
-}
+export class RetornoDePartesModule {}

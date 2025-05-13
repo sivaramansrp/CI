@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Tramite6403State } from '../estados/tramite6403.store';
-import { Tramite6403Store } from '../estados/tramite6403.store';
+import { Tramite6403State } from './tramite6403.store';
+import { Tramite6403Store } from './tramite6403.store';
 /**
 * Servicio para realizar consultas relacionadas con el trámite 6403.
 * 
