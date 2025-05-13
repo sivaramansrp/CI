@@ -507,6 +507,14 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+
+    path: 'informe-anual-programa',
+    loadChildren: () =>
+      import('./tramites/150103/informe-anual-programa.module').then(
+        (m) => m.InformeAnualProgramaModule
+      ),
+  }
 ];
 
 
