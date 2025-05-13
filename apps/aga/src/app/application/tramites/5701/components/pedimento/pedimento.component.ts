@@ -36,6 +36,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
 
+  /**
+   * @description Datos de la tabla de pedimentos.
+   */
+  @Input() tablaPedimento!: Pedimento[];
+
   @Output() datosTablaPedimento: EventEmitter<Pedimento[]> = new EventEmitter();
 
   /**
@@ -117,6 +122,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Método del ciclo de vida de Angular que se llama cuando uno o más valores de las propiedades de entrada de un componente cambian.
    */
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tablaPedimento'] && changes['tablaPedimento'].currentValue) {
+      this.pedimentos = [...changes['tablaPedimento'].currentValue];
+      this.datosTablaPedimento.emit(this.pedimentos);
+    }
+
     if (changes['validacion']) {
       this.validacion = changes['validacion'].currentValue;
       this.acciones();
@@ -235,7 +245,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     }
-
   }
 
   /**

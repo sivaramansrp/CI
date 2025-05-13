@@ -349,7 +349,7 @@
     @if (individual()) {
     <ng-titulo titulo="Datos del pedimento" />
 
-    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
+    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente" [tablaPedimento]="solicitudState.pedimentos"
       (validaCampos)="validaCampoPedimento()" (datosTablaPedimento)="changeAgregarPedimento($event)"></c-pedimento>
     }
 
