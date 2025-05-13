@@ -52,7 +52,7 @@
     "id": 8,
     "tramite": 6001,
     "linkDashboard": "/aga/registro-cuentas-bancarias/todospasos",
-    "linkDepartment": "/aga/registro-cuentas-bancarias/todospasos",
+    "linkDepartment": "/pago/registro-cuentas-bancarias/todospasos",
     "department": "aga"
   },
   {
@@ -108,7 +108,7 @@
     "id": 16,
     "tramite": 31601,
     "linkDashboard": "/agace/antecesor/datosdelasolicitud",
-    "linkDepartment": "/agace/pago/antecesor/datosdelasolicitud",
+    "linkDepartment": "/pago/antecesor/datosdelasolicitud",
     "department": "agace"
   },
   {
@@ -164,7 +164,7 @@
     "id": 24,
     "tramite": 40302,
     "linkDashboard": "/aga/registro-transportista/solicitante",
-    "linkDepartment": "/aga/registro-transportista/solicitante",
+    "linkDepartment": "/pago/registro-transportista/solicitante",
     "department": "aga"
   },
   {
@@ -514,7 +514,7 @@
     "id": 74,
     "tramite": 220401,
     "linkDashboard": "/agriculture/pantallas-extraordinarios",
-    "linkDepartment": "/agriculture/pantallas-extraordinarios",
+    "linkDepartment": "/pago/pantallas-extraordinarios",
     "department": "agriculture"
   },
   {
@@ -612,14 +612,14 @@
     "id": 88,
     "tramite": 260211,
     "linkDashboard": "/cofepris/permiso-sanitario/pantallas",
-    "linkDepartment": "/permiso-sanitario/pantallas",
+    "linkDepartment": "/pago/permiso-sanitario/pantallas",
     "department": "cofepris"
   },
   {
     "id": 89,
     "tramite": 260212,
     "linkDashboard": "/cofepris/permiso-maquila/solictud",
-    "linkDepartment": "/cofepris/permiso-maquila/solictud",
+    "linkDepartment": "/pago/permiso-maquila/solictud",
     "department": "cofepris"
   },
   {
@@ -633,7 +633,7 @@
     "id": 91,
     "tramite": 260215,
     "linkDashboard": "/cofepris/permiso-sanitario-importacion/sanitario",
-    "linkDepartment": "/cofepris/permiso-sanitario-importacion/sanitario",
+    "linkDepartment": "/pago/permiso-sanitario-importacion/sanitario",
     "department": "cofepris"
   },
   {
@@ -647,21 +647,21 @@
     "id": 93,
     "tramite": 260401,
     "linkDashboard": "/cofepris/territorio-nacional/solicitante",
-    "linkDepartment": "/cofepris/territorio-nacional/solicitante",
+    "linkDepartment": "/pago/territorio-nacional/solicitante",
     "department": "cofepris"
   },
   {
     "id": 94,
     "tramite": 260402,
     "linkDashboard": "/cofepris/permiso-importacion-biologica/solictud",
-    "linkDepartment": "/cofepris/permiso-importacion-biologica/solictud",
+    "linkDepartment": "/pago/permiso-importacion-biologica/solictud",
     "department": "cofepris"
   },
   {
     "id": 95,
     "tramite": 260501,
     "linkDashboard": "/cofepris/permiso-plaguicidas/plaguicidas",
-    "linkDepartment": "/cofepris/permiso-plaguicidas/plaguicidas",
+    "linkDepartment": "/pago/permiso-plaguicidas/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -675,7 +675,7 @@
     "id": 97,
     "tramite": 260503,
     "linkDashboard": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
-    "linkDepartment": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+    "linkDepartment": "/pago/permiso-experimentales-plaguicidas/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -689,14 +689,14 @@
     "id": 99,
     "tramite": 260603,
     "linkDashboard": "/cofepris/aviso-de-importacion/SolicitudePage",
-    "linkDepartment": "/cofepris/aviso-de-importacion/SolicitudePage",
+    "linkDepartment": "/pago/aviso-de-importacion/SolicitudePage",
     "department": "cofepris"
   },
   {
     "id": 100,
     "tramite": 260604,
     "linkDashboard": "/cofepris/aviso-exportacion/pantallas",
-    "linkDepartment": "/cofepris/aviso-exportacion/pantallas",
+    "linkDepartment": "/pago/aviso-exportacion/pantallas",
     "department": "cofepris"
   },
   {
@@ -710,7 +710,7 @@
     "id": 102,
     "tramite": 260701,
     "linkDashboard": "/cofepris/permiso-certificados/registrarSolicitudIP",
-    "linkDepartment": "/cofepris/permiso-certificados/registrarSolicitudIP",
+    "linkDepartment": "/pago/permiso-certificados/registrarSolicitudIP",
     "department": "cofepris"
   },
   {
@@ -1067,7 +1067,7 @@
     "id": 153,
     "tramite": 260514,
     "linkDashboard": "/cofepris/permiso-importacion-calidad/pantallas",
-    "linkDepartment": "/cofepris/permiso-importacion-calidad/pantallas",
+    "linkDepartment": "/pago/permiso-importacion-calidad/pantallas",
     "department": "cofepris"
   },
   {
@@ -1221,8 +1221,8 @@
     "id": 175,
     "tramite": 221602,
     "linkDashboard": "/agriculture/fitosanitario/solicitante",
-    "linkDepartment": "/agriculture/fitosanitario/solicitante",
-    "department": "agricultura"
+    "linkDepartment": "/pago/fitosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 176,
@@ -1557,7 +1557,7 @@
     "id": 223,
     "tramite": 260513,
     "linkDashboard": "/cofepris/muestras-de-toxicos/plaguicidas",
-    "linkDepartment": "pago/muestras-de-toxicos/plaguicidas",
+    "linkDepartment": "/pago/muestras-de-toxicos/plaguicidas",
     "department": "cofepris"
   },
   {
