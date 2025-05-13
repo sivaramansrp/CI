@@ -34,7 +34,7 @@ import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documen
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, NotificacionesComponent,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, FormsModule, NotificacionesComponent],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
