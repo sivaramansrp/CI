@@ -248,7 +248,7 @@
     "id": 36,
     "tramite": 90305,
     "linkDashboard": "/se/prosec-modificacion/solicitante",
-    "linkDepartment": "/se/prosec-modificacion/solicitante",
+    "linkDepartment": "/pago/prosec-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -807,8 +807,8 @@
   {
     "id": 116,
     "tramite": 110212,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validacion-posteriori/solicitante",
+    "linkDepartment": "/pago/validacion-posteriori/solicitante",
     "department": "se"
   },
   {
@@ -821,8 +821,8 @@
   {
     "id": 118,
     "tramite": 110223,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/certificado-alianza-posteriori",
+    "linkDepartment": "/pago/certificado-alianza-posteriori",
     "department": "se"
   },
   {
@@ -870,9 +870,9 @@
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDepartment": "/pago/zoosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 126,
@@ -1605,15 +1605,15 @@
   {
     "id": 230,
     "tramite": 260908,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-meds-uso/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-meds-uso/solicitante",
     "department": "cofepris"
   },
   {
     "id": 231,
     "tramite": 260909,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-donacion/solicitante",
+    "linkDepartment": "/pago/medicamentos-donacion/solicitante",
     "department": "cofepris"
   },
   {
@@ -1626,8 +1626,8 @@
   {
     "id": 233,
     "tramite": 260914,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-de-insumos/pantallas",
+    "linkDepartment": "/pago/importacion-de-insumos/pantallas",
     "department": "cofepris"
   },
   {
@@ -1696,8 +1696,8 @@
   {
     "id": 243,
     "tramite": 270301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-importacion-plastica/Pantallas",
+    "linkDepartment": "/pago/aviso-importacion-plastica/Pantallas",
     "department": "inbal"
   },
   {
@@ -1976,8 +1976,8 @@
   {
     "id": 283,
     "tramite": 31801,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/renovacion-comercializadora/renovacion",
+    "linkDepartment": "/pago/renovacion-comercializadora/renovacion",
     "department": "agace"
   },
   {
@@ -2088,8 +2088,8 @@
   {
     "id": 299,
     "tramite": 6102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/junta-tecnica-registro/registro-tecnica",
+    "linkDepartment": "/pago/junta-tecnica-registro/registro-tecnica",
     "department": "aga"
   },
   {
@@ -2242,13 +2242,6 @@
   {
     "id": 321,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
-    "id": 322,
-    "tramite": 221601,
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "agricultura"

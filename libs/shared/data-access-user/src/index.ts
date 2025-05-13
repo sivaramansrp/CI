@@ -18,6 +18,7 @@ export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
 export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store'
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export {TramiteStore} from './core/estados/tramite.store';
+export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
 export * from './core/ambientes';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/constantes-alertas.enum';

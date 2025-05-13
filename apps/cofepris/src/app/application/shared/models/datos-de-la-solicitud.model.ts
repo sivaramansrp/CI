@@ -88,6 +88,7 @@ export interface MercanciasInfo {
   denominacionComun: string;
   formaFarmaceutica: string;
   estadoFisico: string;
+  estadoFormaFarmaceutica:string;
   fraccionArancelaria: string;
   descripcionFraccion: string;
   unidad: string;

@@ -202,6 +202,7 @@ export class NotificacionesComponent implements OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   declinarAccion(): void {
+    this.confirmacionModal.emit(false);
     this.modal?.hide();
   }
 

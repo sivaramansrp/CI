@@ -358,3 +358,25 @@ export const TEXTOS = {
    */
   SECCION_LEYENDA_CONFIRMAR_TEXTOS: 'Debes declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.'
 }
+/**
+ * Mensajes de validación para los campos del formulario.
+ * Cada clave representa un campo específico y su valor es el mensaje de error correspondiente.
+ * */
+export const MENSAJE_DE_VALIDACI0N : { [key: string]: string } = {
+  clasificacion: 'La clasificación del producto es obligatoria.',
+  especificarClasificacionProducto: 'Especificar la clasificación del producto es obligatoria.',
+  denominacionEspecifica: 'La denominación específica del producto es obligatoria.',
+  denominacionDistintiva: 'La denominación distintiva es obligatoria.',
+  denominacionComun: 'La denominación o nombre científico es obligatorio.',
+  tipoDeProducto: 'El tipo de producto es obligatorio.',
+  estadoFisico: 'El estado físico es obligatorio.',
+  estadoFormaFarmaceutica: 'La forma farmacéutica es obligatoria.',
+  fraccionArancelaria: 'La fracción arancelaria es obligatoria.',
+  descripcionFraccion: 'La descripción de la fracción es obligatoria.',
+  cantidadUMT: 'La cantidad UMT es obligatoria.',
+  UMT: 'La unidad de medida UMT es obligatoria.',
+  cantidadUMC: 'La cantidad UMC es obligatoria.',
+  UMC: 'La unidad de medida UMC es obligatoria.',
+  presentacion: 'La presentación farmacéutica o tipo de envase es obligatoria.',
+  numeroRegistro: 'El número de registro sanitario es obligatorio.',
+};
