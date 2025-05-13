@@ -17,7 +17,7 @@ describe('CuposService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Verifies that no unmatched HTTP requests are outstanding
+    httpMock.verify(); 
   });
 
   it('should be created', () => {

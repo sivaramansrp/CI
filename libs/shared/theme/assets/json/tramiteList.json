@@ -4187,9 +4187,9 @@
   },
   {
     "id": 600,
-    "tramite": 120403,
-    "linkDashboard": "se/cupos/solicitud",
-    "linkDepartment": "/pago/cupos/solicitud",
+    "tramite": 80306,
+    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
     "department": "se"
   },
   {
@@ -4200,10 +4200,10 @@
     "department": "semarnat"
   },
   {
-    "id": 602,
-    "tramite": 80306,
-    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
-    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
+     "id": 602,
+    "tramite": 120403,
+    "linkDashboard": "se/cupos/solicitud",
+    "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   }
 ]

@@ -79,10 +79,10 @@ describe('SolicitudPageComponent', () => {
     };
     component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
-    const accionBoton = { accion: 'cont', valor: 6 }; // Out of range
+    const accionBoton = { accion: 'cont', valor: 6 }; 
     component.getValorIndice(accionBoton);
 
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1); 
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
