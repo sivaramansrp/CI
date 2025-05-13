@@ -26,7 +26,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Propiedades de entrada del componente.
    * @param validacion: Indica si la validación es correcta.
    */
-  @Input({ required: true }) validacion!: boolean;
+  @Input({ required: true }) validacion!: boolean | undefined;
 
   /**
    * @description Propiedades de entrada del componente.
@@ -134,6 +134,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['validacion']) {
       this.validacion = changes['validacion'].currentValue;
+      this.acciones();
     }
 
     if (changes['datosNroPedimento']) {
@@ -149,26 +150,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
-    console.log('prueba de la api');
-    
-    const BODY : BodyEstadoPedimento = {
-      aduana: 1234,
-      patente: 4567,
-      pedimento: 7890
+    this.validaCampos.emit();
+    if (this.validacion) {
+      this.acciones();
     }
-    this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
-      takeUntil(this.destroyNotifier$),
-      map((response) => {
-        console.log(response);
-      })
-    ).subscribe();
-
-
-    // this.validaCampos.emit();
-    // if (this.validacion) {
-    //   this.acciones();
-    // }
-
   }
 
   /**
@@ -192,32 +177,56 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         ? parseInt(this.pedimentoForm.value, 10)
         : 0;
       if (NUMERO_PEDIMENTO !== 0) {
-        const PEDIMENTO = {
-          patente: this.datosNroPedimento.patente,
-          pedimento: NUMERO_PEDIMENTO,
-          aduana: this.datosNroPedimento.idAduanaDespacho,
-          idTipoPedimento: 0,
-          descTipoPedimento: 'Por evaluar',
-          numero: '',
-          comprobanteValor: '',
-          pedimentoValidado: false,
-        };
-
-        // Aqui se debe validar el pedimento a un endpoint, si no se encuentra se manda un aviso con modal y se agrega el pedimento a la tabla.
-        this.tituloModal = 'Aviso';
-        this.mensajeModal = ERR_VALIDACION_PEDIMENTO;
-        this.abrirModal();
-        this.pedimentos.push(PEDIMENTO);
+        const BODY: BodyEstadoPedimento = {
+          aduana: 1234,
+          patente: 4567,
+          pedimento: 7890
+        }
+        this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
+          takeUntil(this.destroyNotifier$),
+          map((response) => {
+            if (response.codigo === '00') {
+              const PEDIMENTO = {
+                patente: response.datos.patente,
+                pedimento: response.datos.pedimento,
+                aduana: response.datos.aduana,
+                estadoPedimento: response.datos.estado_pedimento,
+                subEstadoPedimento: response.datos.sub_estado_pedimento,
+                idTipoPedimento: 0,
+                descTipoPedimento: 'Por evaluar',
+                numero: '',
+                comprobanteValor: '',
+                pedimentoValidado: response.datos.pedimento_validado,
+              };
+              this.pedimentos.push(PEDIMENTO);
+              console.log(response);
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Avisos',
+                mensaje: ERR_VALIDACION_PEDIMENTO,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              }
+            }
+          })
+        ).subscribe();
       } else {
-        this.tituloModal = 'Aviso';
-        this.mensajeModal = MSG_NRO_PEDIMENTO;
-        this.abrirModal();
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'Avisos',
+          mensaje: MSG_NRO_PEDIMENTO,
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
       }
 
-    } else {
-      this.tituloModal = 'Aviso';
-      this.mensajeModal = MSG_ADUANA_PEDIMENTO;
-      this.abrirModal();
     }
   }
 

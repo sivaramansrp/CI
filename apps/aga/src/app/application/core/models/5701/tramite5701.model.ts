@@ -116,9 +116,11 @@ export interface Pedimento {
     patente: number;
     pedimento: number;
     aduana: number;
+    estadoPedimento: string;
+    subEstadoPedimento: string;
     idTipoPedimento: number;
     descTipoPedimento: string;
     numero: string;
     comprobanteValor: string;
-    pedimentoValidado: boolean;
+    pedimentoValidado: string;
   }

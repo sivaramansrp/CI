@@ -10,7 +10,7 @@ export interface EstadoPedimentoResponse {
     datos: EstadoPedimento;
 }
 
-interface EstadoPedimento {
+export interface EstadoPedimento {
     patente: number;
     pedimento: number;
     aduana: number;

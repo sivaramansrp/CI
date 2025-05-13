@@ -36,6 +36,7 @@ import {
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
+  MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA, PATENTES_ID,
   TRANSPORTE,
   VEHICULO
@@ -206,7 +207,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Pedimento -crea una señal para validar
    */
-  validacionPedimento: boolean = false;
+  validacionPedimento?: boolean;
 
   /**
    * Almacena los datos que necesita el componente Patente para hacer las validaciones
@@ -360,7 +361,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    this.tipoSolicitudSeleccion();    
+    this.tipoSolicitudSeleccion();
 
     this.verificarDatosExistentesStore();
   }
@@ -1052,10 +1053,21 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.isValid(this.despacho, 'aduanaDespacho');
-    if (ADUANA_VALIDACION === null) {
-      this.validacionPedimento = true;
+    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho
+    if (!ADUANA_VALIDACION) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_ADUANA_PEDIMENTO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+      return;
     }
+    this.validacionPedimento = true;
   }
 
   /**
