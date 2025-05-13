@@ -306,6 +306,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   @Input() public elementosRequeridos!: string[];
 
+  public etiquetaMunicipio: string = 'Municipio o alcaldía';
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -407,6 +409,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
         ? false
         : true;
+
+    this.etiquetaMunicipio =
+      this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
+        ? 'Municipio y alcaldía'
+        : 'Municipio o alcaldía';
   }
 
   /**
@@ -540,11 +547,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   actualizarDatosFormularioSolicitud(): void {
 
     this.elementosRequeridos?.forEach((campo) => {
-        const CONTROL = this.datosSolicitudForm.get(campo);
-        if (CONTROL) {
-          CONTROL.setValidators(Validators.required);
-          CONTROL.updateValueAndValidity();
-        }
+      const CONTROL = this.datosSolicitudForm.get(campo);
+      if (CONTROL) {
+        CONTROL.setValidators(Validators.required);
+        CONTROL.updateValueAndValidity();
+      }
     });
 
   }
@@ -773,6 +780,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.datosSolicitudForm.get('licenciaSanitaria')?.disable();
     } else {
       this.datosSolicitudForm.get('licenciaSanitaria')?.enable();
+    }
+  }
+
+  cambireCorreoElectronico(): void {
+    if (
+      this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103 &&
+      this.datosSolicitudForm.get('correoElectronico')?.value !== '' &&
+      this.datosSolicitudForm.get('denominacionRazon')?.value !== ''
+    ) {
+      this.datosSolicitudForm.get('codigoPostal')?.setValue(95270);
+      this.datosSolicitudForm.get('estado')?.setValue('101');
+      this.datosSolicitudForm.get('municipioAlcaldia')?.setValue('ALVARADO');
+      this.datosSolicitudForm.get('localidad')?.setValue('ALVARADO');
+      this.datosSolicitudForm.get('colonia')?.setValue('CENTRO');
     }
   }
   /**

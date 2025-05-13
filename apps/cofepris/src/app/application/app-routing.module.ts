@@ -397,6 +397,13 @@ const ROUTES: Routes = [
   loadChildren: () =>
     import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},  
+{
+  path: 'importacion-de-insumos',
+  loadChildren: () =>
+    import('./tramites/260914/importacion-de-insumos.module').then(
+      (m) => m.ImportacionDeInsumosModule
+    ),
 },
 {
   path: 'solicitud-modificacion-permiso-internacion',
@@ -439,6 +446,21 @@ const ROUTES: Routes = [
         (m) => m.ModificacionPermisoImportacionModule
       ),
 },
+{
+  path: 'modificacion-permiso-meds-uso',
+  loadChildren: () =>
+    import('./tramites/260908/modificacion-permiso-meds-uso.module').then(
+      (m) => m.ModificacionPermisoMedsUsoModule
+    ),
+},
+ {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
+  },
+
 
 {
   path: 'exportacion-medicamentos-contengan',
@@ -461,6 +483,13 @@ const ROUTES: Routes = [
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
+},
 {   
   path: 'exportacion-materias-primas-estupefacientes',
   loadChildren: () =>
@@ -481,7 +510,28 @@ const ROUTES: Routes = [
     import('./tramites/260515/permit-de-substances.module').then(
       (m) => m.PermitDeSubstancesModule
     )
-}
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+},
+{
+      path: 'medicamentos-donacion',
+      loadChildren: () =>
+        import('./tramites/260909/medicamentos-donacion.module').then(
+          (m) => m.MedicamentosDonacionModule
+        )
+    }
 ];
 
 @NgModule({

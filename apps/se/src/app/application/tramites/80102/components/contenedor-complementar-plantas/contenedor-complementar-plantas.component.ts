@@ -13,8 +13,17 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   templateUrl: './contenedor-complementar-plantas.component.html',
   styleUrl: './contenedor-complementar-plantas.component.scss',
 })
+
 /**
- * Componente para el contenedor de complementar plantas.
+ * @component
+ * @name ContenedorComplementarPlantasComponent
+ * @description Componente encargado de gestionar la vista de las plantas complementarias en el trámite 80102.
+ * Este componente permite visualizar y manejar los datos de las plantas seleccionadas para completar el trámite.
+ *
+ * @usageNotes
+ * Este componente utiliza servicios de consulta (`Tramite80102Query`) para manejar y observar los datos 
+ * relacionados con las plantas. Además, implementa el ciclo de vida de Angular para limpiar las suscripciones 
+ * al destruirse.
  */
 export class ContenedorComplementarPlantasComponent
   implements OnInit, OnDestroy
