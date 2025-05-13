@@ -5,8 +5,12 @@ import { RegistroPoblacionalRoutingModule } from './registro-poblacional-routing
 import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AvisoDeCambioComponent } from './components/aviso-de-cambio/aviso-de-cambio.component';
+import { ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { RegistroPoblacionalService } from './service/registro-poblacional.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,16 @@ import { AvisoDeCambioComponent } from './components/aviso-de-cambio/aviso-de-ca
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
-    AvisoDeCambioComponent
+    AvisoDeCambioComponent,
+    FirmaElectronicaComponent
+  ],
+  providers: [
+    ToastrService,
+    provideHttpClient(),
+    CatalogosService,
+    InicioSesionService,
+    ServiciosPantallaService,
+    RegistroPoblacionalService,
   ],
 })
 export class RegistroPoblacionalModule {}
