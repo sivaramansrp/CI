@@ -44,8 +44,8 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
   selector: 'app-datos-del-establecimiento-seccion',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule],
-  templateUrl: './Datos-del-establecimiento-seccion.component.html',
-  styleUrl: './Datos-del-establecimiento-seccion.component.scss',
+  templateUrl: './datos-del-establecimiento-seccion.component.html',
+  styleUrl: './datos-del-establecimiento-seccion.component.scss',
 })
 /*
   * @description

@@ -51,3 +51,7 @@ Thumbs.db
 /.vs/slnx.sqlite
 /.vs/frontend/v17/.wsuo
 /.vs/frontend/v17/workspaceFileList.bin
+
+**/.claude/settings.local.json
+.vs
+/.vs/VSWorkspaceState.json

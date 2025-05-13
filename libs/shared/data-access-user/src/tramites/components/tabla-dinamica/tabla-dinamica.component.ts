@@ -166,16 +166,18 @@ export class TablaDinamicaComponent<T> {
    */
   cambiarEstadoCheckbox(event: Event, indice: number): void {
     // Obtener el checkbox desde el evento
-    const checkbox = event.target as HTMLInputElement;
+    const CHECKBOX = event.target as HTMLInputElement;
+    const ROW = this.datos[indice];
     // Verificamos si el checkbox está seleccionado
-    if (checkbox?.checked) {
+    if (CHECKBOX?.checked) {
       if (!this.filasSeleccionadas.includes(indice)) {
         this.filasSeleccionadas.push(indice);
       }
+      this.filaSeleccionada.emit(ROW);
     } else {
-      const idx = this.filasSeleccionadas.indexOf(indice);
-      if (idx > -1) {
-        this.filasSeleccionadas.splice(idx, 1);
+      const IDX = this.filasSeleccionadas.indexOf(indice);
+      if (IDX > -1) {
+        this.filasSeleccionadas.splice(IDX, 1);
       }
     }
     this.listaDeFilaSeleccionada.emit(
@@ -191,9 +193,9 @@ export class TablaDinamicaComponent<T> {
    * @returns {void} - No retorna nada,
    */
   seleccionarDeseleccionarTodos(event: Event): void {
-    const checkbox = event.target as HTMLInputElement; // Obtener el checkbox desde el evento
+    const CHECKBOX = event.target as HTMLInputElement; // Obtener el checkbox desde el evento
 
-    if (checkbox.checked) {
+    if (CHECKBOX.checked) {
       // Si el checkbox de "seleccionar todo" está marcado, agregamos todos los índices al array
       this.filasSeleccionadas = this.datos.map((_, indice) => indice);
       this.listaDeFilaSeleccionada.emit(

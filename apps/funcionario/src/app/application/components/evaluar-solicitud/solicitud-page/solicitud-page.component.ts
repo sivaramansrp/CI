@@ -6,11 +6,12 @@ import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.c
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
 import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
+import { SolicitarOpinionComponent } from '../solicitar-opinion/solicitar-opinion.component';
 
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
-  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent, TituloComponent], // <-- Importa los componentes aquí
+  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent, TituloComponent, SolicitarOpinionComponent], // <-- Importa los componentes aquí
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
@@ -33,7 +34,7 @@ export class SolicitudPageComponent {
    * @param i indica el número de la pestaña seleccionada
    */
   seleccionaTab(i: number): void {
-    if (i === 2) {
+    if (i === 2 || i === 3) {
       this.firmarFuncionario = false;
     }
     this.indice = i;

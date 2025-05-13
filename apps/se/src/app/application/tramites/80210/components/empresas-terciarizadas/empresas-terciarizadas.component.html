@@ -1,0 +1,132 @@
+<div class="container">
+  <form [formGroup]="empresasForm">
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="modalidad"
+            >Selecciona la modalidad:</label
+          >
+          <input
+            id="modalidad"
+            class="form-control"
+            type="text"
+            name="modalidad"
+            formControlName="modalidad"
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="folio">Folio:</label>
+          <input
+            id="folio"
+            name="folio"
+            type="text"
+            class="form-control"
+            formControlName="folio"
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="ano">Ano:</label>
+          <input
+            id="ano"
+            name="ano"
+            type="text"
+            class="form-control"
+            formControlName="ano"
+          />
+        </div>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Empresas controladas" />
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label" for="rfc">RFC*:</label>
+          <input
+            id="rfc"
+            name="rfc"
+            type="text"
+            class="form-control"
+            formControlName="rfc"
+            [class.is-invalid]="
+              empresasForm.get('rfc')?.touched &&
+              empresasForm.get('rfc')?.invalid
+            "
+            (change)="setValoresStore('rfc', 'setRFC')"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              empresasForm.get('rfc')?.touched &&
+              empresasForm.get('rfc')?.invalid
+            "
+          >
+            <span *ngIf="empresasForm.get('rfc')?.hasError('required')"
+              >Este campo es obligatorio.</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <app-catalogo-select
+          name="estado"
+          id="estado"
+          formControlName="estado"
+          [catalogo]="registroSolicitudService.estados"
+          [label]="'Estado'"
+          [required]="true"
+          (change)="setValoresStore('estado', 'setEstado')"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" [disabled]="!this.empresasForm.valid" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
+          Buscar controladoras
+        </button>
+      </div>
+
+    </div>
+
+
+
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h6>Plantas Controladas disponibles:</h6>
+        <app-tabla-dinamica
+          [configuracionTabla]="tablaConfiguration"
+          [datos]="plantasDisponibles"
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          (listaDeFilaSeleccionada)="manejarFilaDisponibles($event)"
+        ></app-tabla-dinamica>
+      </div>
+      
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="agregarPlantas()">
+          Agregar plantas
+        </button>
+      </div>
+    </div>
+  
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h6>Plantas Controladas sleccionadas:</h6>
+        <app-tabla-dinamica 
+        [configuracionTabla]="tablaConfiguration"
+          [datos]="plantasSeleccionadas"
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+        ></app-tabla-dinamica>
+      </div>
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="eliminarPlantas()">
+          Eliminar plantas
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

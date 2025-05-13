@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { programaACancelar} from './../../../shared/models/ProgramaACancelar.model';
-
+import {ProgramaACancelar} from '../../../shared/models/programa-cancelar.model';
 // Decorador Injectable que permite que este servicio sea inyectable en cualquier módulo.
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa a cancelar.
@@ -29,7 +28,7 @@ export class ProgramaACancelarService {
    * 
    * @returns Observable que emite los datos del programa a cancelar.
    */
-  obtenerDatos(): Observable<programaACancelar> {
-    return this.http.get<programaACancelar>(`assets/json/140101/Programa.json`);
+  obtenerDatos(): Observable<ProgramaACancelar> {
+    return this.http.get<ProgramaACancelar>(`assets/json/140101/Programa.json`);
   }
 }

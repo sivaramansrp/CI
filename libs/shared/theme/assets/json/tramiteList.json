@@ -66,7 +66,7 @@
     "id": 10,
     "tramite": 10303,
     "linkDashboard": "/aga/donaciones-extranjeras/solicitud",
-    "linkDepartment": "/aga/donaciones-extranjeras/solicitud",
+    "linkDepartment": "/pago/donaciones-extranjeras/solicitud",
     "department": "aga"
   },
   {
@@ -80,7 +80,7 @@
     "id": 12,
     "tramite": 11201,
     "linkDashboard": "/aga/temporal-contenedores/solicitante",
-    "linkDepartment": "/aga/temporal-contenedores/solicitante",
+    "linkDepartment": "/pago/temporal-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -101,7 +101,7 @@
     "id": 15,
     "tramite": 30901,
     "linkDashboard": "/aga/muestras-mercancias/renovaciones",
-    "linkDepartment": "/aga/muestras-mercancias/renovaciones",
+    "linkDepartment": "/pago/muestras-mercancias/renovaciones",
     "department": "aga"
   },
   {
@@ -122,14 +122,14 @@
     "id": 18,
     "tramite": 32501,
     "linkDashboard": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
-    "linkDepartment": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+    "linkDepartment": "/pago/mercancias-desmontadas-o-sin-montar/solicitud",
     "department": "agace"
   },
   {
     "id": 19,
     "tramite": 32502,
-    "linkDashboard": "/agace/aviso",
-    "linkDepartment": "/agace/aviso",
+    "linkDashboard": "/agace/aviso/solicitud",
+    "linkDepartment": "/pago/aviso/solicitud",
     "department": "agace"
   },
   {
@@ -192,7 +192,7 @@
     "id": 28,
     "tramite": 80203,
     "linkDashboard": "/se/immex-registro-solicitud-modality/immex-registro",
-    "linkDepartment": "/se/immex-registro-solicitud-modality/immex-registro",
+    "linkDepartment": "/pago/immex-registro-solicitud-modality/immex-registro",
     "department": "se"
   },
   {
@@ -219,8 +219,8 @@
   {
     "id": 32,
     "tramite": 80302,
-    "linkDashboard": "/se/solicitud-modificacion",
-    "linkDepartment": "/se/solicitud-modificacion",
+    "linkDashboard": "/se/solicitud-modificacion/solicitante",
+    "linkDepartment": "/pago/solicitud-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -423,7 +423,7 @@
     "id": 61,
     "tramite": 130118,
     "linkDashboard": "/se/pexim/solicitud",
-    "linkDepartment": "/se/pexim/solicitud",
+    "linkDepartment": "/pago/pexim/solicitud",
     "department": "se"
   },
   {
@@ -457,8 +457,8 @@
   {
     "id": 66,
     "tramite": 140105,
-    "linkDashboard": "/se/pago/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/se/pago/desistimiento-de-permiso/solicitante",
+    "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {
@@ -479,7 +479,7 @@
     "id": 69,
     "tramite": 150102,
     "linkDashboard": "/se/reporte-anual/solicitud",
-    "linkDepartment": "/se/reporte-anual/solicitud",
+    "linkDepartment": "/pago/reporte-anual/solicitud",
     "department": "se"
   },
   {
@@ -535,21 +535,21 @@
     "id": 77,
     "tramite": 220501,
     "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
-    "linkDepartment": "/agriculture/sagarpa/datosdelasolicitud",
+    "linkDepartment": "/pago/sagarpa/datosdelasolicitud",
     "department": "agriculture"
   },
   {
     "id": 78,
     "tramite": 220502,
     "linkDashboard": "/agriculture/inspeccion-fisica/pantallas",
-    "linkDepartment": "/agriculture/inspeccion-fisica/pantallas",
+    "linkDepartment": "/pago/inspeccion-fisica/pantallas",
     "department": "agriculture"
   },
   {
     "id": 79,
     "tramite": 220701,
     "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
-    "linkDepartment": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+    "linkDepartment": "/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario",
     "department": "agriculture"
   },
   {
@@ -591,7 +591,7 @@
     "id": 85,
     "tramite": 260101,
     "linkDashboard": "/cofepris/importacion-productos/productos",
-    "linkDepartment": "/cofepris/importacion-productos/productos",
+    "linkDepartment": "/pago/importacion-productos/productos",
     "department": "cofepris"
   },
   {
@@ -681,8 +681,8 @@
   {
     "id": 98,
     "tramite": 260601,
-    "linkDashboard": "/cofepris/aviso-sanitario/datosde-la-solicitud",
-    "linkDepartment": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+    "linkDashboard": "/cofepris/aviso-sanitario/datos-de-la-solicitud",
+    "linkDepartment": "/pago/aviso-sanitario/datos-de-la-solicitud",
     "department": "cofepris"
   },
   {
@@ -716,8 +716,8 @@
   {
     "id": 103,
     "tramite": 290101,
-    "linkDashboard": "/cafe-exportadores/cafe-exportadores",
-    "linkDepartment": "/cafe-exportadores/cafe-exportadores",
+    "linkDashboard": "/amecafe/cafe-exportadores/cafe-exportadores",
+    "linkDepartment": "/pago/cafe-exportadores/cafe-exportadores",
     "department": "amecafe"
   },
   {
@@ -807,22 +807,22 @@
   {
     "id": 116,
     "tramite": 110212,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validacion-posteriori/solicitante",
+    "linkDepartment": "/pago/validacion-posteriori/solicitante",
     "department": "se"
   },
   {
     "id": 117,
     "tramite": 110214,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-inicialmente-certificado/solicitante",
+    "linkDepartment": "/pago/validar-inicialmente-certificado/solicitante",
     "department": "se"
   },
   {
     "id": 118,
     "tramite": 110223,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/certificado-alianza-posteriori",
+    "linkDepartment": "/pago/certificado-alianza-posteriori",
     "department": "se"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
     "department": "se"
   },
   {
@@ -870,9 +870,9 @@
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDepartment": "/pago/zoosanitario/solicitante",
+    "department": "agriculture"
   },
   {
     "id": 126,
@@ -906,7 +906,7 @@
     "id": 130,
     "tramite": 40201,
     "linkDashboard": "/aga/transportacion-maritima/asignar-caat-maritimo",
-    "linkDepartment": "/aga/transportacion-maritima/asignar-caat-maritimo",
+    "linkDepartment": "/pago/transportacion-maritima/asignar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -941,7 +941,7 @@
     "id": 135,
     "tramite": 31501,
     "linkDashboard": "/agace/autoridad/solicitud",
-    "linkDepartment": "/agace/autoridad/solicitud",
+    "linkDepartment": "/pago/autoridad/solicitud",
     "department": "agace"
   },
   {
@@ -962,7 +962,7 @@
     "id": 138,
     "tramite": 32401,
     "linkDashboard": "/agace/manifiesto-aereo/solicitar-requiremento",
-    "linkDepartment": "/agace/manifiesto-aereo/solicitar-requiremento",
+    "linkDepartment": "/pago/manifiesto-aereo/solicitar-requiremento",
     "department": "agace"
   },
   {
@@ -989,8 +989,8 @@
   {
     "id": 142,
     "tramite": 32507,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/entrega-acta-solicitante",
+    "linkDepartment": "/pago/entrega-acta-solicitante",
     "department": "agace"
   },
   {
@@ -1262,8 +1262,8 @@
   {
     "id": 181,
     "tramite": 260918,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-lab/modificacion-permiso-lab",
+    "linkDepartment": "/pago/modificacion-permiso-lab/modificacion-permiso-lab",
     "department": "cofepris"
   },
   {
@@ -1298,21 +1298,21 @@
     "id": 186,
     "tramite": 202,
     "linkDashboard": "/aga/prestadores-servicio/maniobras-mercancias",
-    "linkDepartment": "/aga/prestadores-servicio/maniobras-mercancias",
+    "linkDepartment": "/pago/prestadores-servicio/maniobras-mercancias",
     "department": "aga"
   },
   {
     "id": 187,
     "tramite": 6101,
     "linkDashboard": "/aga/junta-tecnica/solicitud",
-    "linkDepartment": "/aga/junta-tecnica/solicitud",
+    "linkDepartment": "/pago/junta-tecnica/solicitud",
     "department": "aga"
   },
   {
     "id": 188,
     "tramite": 11102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/modificacion-donaciones-immex/solicitante",
+    "linkDepartment": "/pago/modificacion-donaciones-immex/solicitante",
     "department": "aga"
   },
   {
@@ -1325,8 +1325,8 @@
   {
     "id": 190,
     "tramite": 30401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-empresas/transporte",
+    "linkDepartment": "/pago/registro-empresas/transporte",
     "department": "aga"
   },
   {
@@ -1354,7 +1354,7 @@
     "id": 194,
     "tramite": 40202,
     "linkDashboard": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
-    "linkDepartment": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
+    "linkDepartment": "/pago/modificacion-transportacion-maritima/modificar-caat-maritimo",
     "department": "aga"
   },
   {
@@ -1374,22 +1374,22 @@
   {
     "id": 197,
     "tramite": 630307,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/aeronaves-en-retorno-temporal/solicitud",
+    "linkDepartment": "/pago/aeronaves-en-retorno-temporal/solicitud",
     "department": "aga"
   },
   {
     "id": 198,
     "tramite": 31101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/garantia/solicitud",
+    "linkDepartment": "/pago/garantia/solicitud",
     "department": "agace"
   },
   {
     "id": 199,
     "tramite": 31301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/endoso-garantia/solicitud",
+    "linkDepartment": "/pago/endoso-garantia/solicitud",
     "department": "agace"
   },
   {
@@ -1430,15 +1430,15 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
     "id": 206,
     "tramite": 32102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-de-ampliacion/solicitud",
+    "linkDepartment": "/pago/aviso-de-ampliacion/solicitud",
     "department": "agace"
   },
   {
@@ -1458,8 +1458,8 @@
   {
     "id": 209,
     "tramite": 260103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-retorno-sanitario/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-retorno-sanitario/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1500,15 +1500,15 @@
   {
     "id": 215,
     "tramite": 260302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 216,
     "tramite": 260304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/exportacion-medicamentos-contengan/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-medicamentos-contengan/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1528,8 +1528,8 @@
   {
     "id": 219,
     "tramite": 260508,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1563,15 +1563,15 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
     "id": 225,
     "tramite": 260516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/operación-de-maquila-submaquila/plaguicidas",
+    "linkDepartment": "/pago/operación-de-maquila-submaquila/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1605,15 +1605,15 @@
   {
     "id": 230,
     "tramite": 260908,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-meds-uso/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-meds-uso/solicitante",
     "department": "cofepris"
   },
   {
     "id": 231,
     "tramite": 260909,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-donacion/solicitante",
+    "linkDepartment": "/pago/medicamentos-donacion/solicitante",
     "department": "cofepris"
   },
   {
@@ -1626,8 +1626,8 @@
   {
     "id": 233,
     "tramite": 260914,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-de-insumos/pantallas",
+    "linkDepartment": "/pago/importacion-de-insumos/pantallas",
     "department": "cofepris"
   },
   {
@@ -1647,8 +1647,8 @@
   {
     "id": 236,
     "tramite": 261101,
-    "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
-    "linkDepartment": "/pago/solicitude-modification/solitud-modification",
+    "linkDashboard": "/cofepris/solicitud-modificacion",
+    "linkDepartment": "/pago/solicitud-modificacion",
     "department": "cofepris"
   },
   {
@@ -1696,8 +1696,8 @@
   {
     "id": 243,
     "tramite": 270301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-importacion-plastica/Pantallas",
+    "linkDepartment": "/pago/aviso-importacion-plastica/Pantallas",
     "department": "inbal"
   },
   {
@@ -1717,8 +1717,8 @@
   {
     "id": 246,
     "tramite": 80301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-modificacion/registro-modificacion",
+    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {
@@ -1752,8 +1752,8 @@
   {
     "id": 251,
     "tramite": 130401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
@@ -1836,29 +1836,29 @@
   {
     "id": 263,
     "tramite": 240120,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 264,
     "tramite": 240121,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
+    "linkDepartment": "/pago/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
     "department": "sedena"
   },
   {
     "id": 265,
     "tramite": 240122,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 266,
     "tramite": 240305,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-substancias-quimicas/permiso-ordinario-importacion",
     "department": "sedena"
   },
   {
@@ -1871,29 +1871,29 @@
   {
     "id": 268,
     "tramite": 240311,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios", 
+    "linkDepartment": "/pago/permiso-ordinario/importacion-artificios",
     "department": "sedena"
   },
   {
     "id": 269,
     "tramite": 240405,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 270,
     "tramite": 240407,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/solicitud-prorroga-aviso-importacion/importacion-de-sustancias-quimicas",
+    "linkDepartment": "/pago/solicitud-prorroga-aviso-importacion/importacion-de-sustancias-quimicas",
     "department": "sedena"
   },
   {
     "id": 271,
     "tramite": 240411,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1927,8 +1927,8 @@
   {
     "id": 276,
     "tramite": 130201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+    "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
     "department": "sener"
   },
   {
@@ -1976,8 +1976,8 @@
   {
     "id": 283,
     "tramite": 31801,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/renovacion-comercializadora/renovacion",
+    "linkDepartment": "/pago/renovacion-comercializadora/renovacion",
     "department": "agace"
   },
   {
@@ -2011,15 +2011,15 @@
   {
     "id": 288,
     "tramite": 80210,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex/confirmacion",
+    "linkDepartment": "/pago/registro-solicitud-immex/confirmacion",
     "department": "se"
   },
   {
     "id": 289,
     "tramite": 80211,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
+    "linkDepartment": "/pago/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
     "department": "se"
   },
   {
@@ -2053,15 +2053,15 @@
   {
     "id": 294,
     "tramite": 90303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/catalogos/solicitud",
+    "linkDepartment": "/pago/catalogos/solicitud",
     "department": "se"
   },
   {
     "id": 295,
     "tramite": 90304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/solicitud-modificaciones",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/solicitud-modificaciones",
     "department": "se"
   },
   {
@@ -2088,8 +2088,8 @@
   {
     "id": 299,
     "tramite": 6102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/junta-tecnica-registro/registro-tecnica",
+    "linkDepartment": "/pago/junta-tecnica-registro/registro-tecnica",
     "department": "aga"
   },
   {
@@ -2172,8 +2172,8 @@
   {
     "id": 311,
     "tramite": 240123,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/aviso-de-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/aviso-de-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -2242,13 +2242,6 @@
   {
     "id": 321,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
-    "id": 322,
-    "tramite": 221601,
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "agricultura"
@@ -2921,8 +2914,8 @@
   {
     "id": 418,
     "tramite": 630103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/autorizacion-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/autorizacion-importacion-temporal/solicitud",
     "department": "aga"
   },
   {
@@ -3124,8 +3117,8 @@
   {
     "id": 447,
     "tramite": 32515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-opcion-seguro-global/solicitante",
+    "linkDepartment": "/pago/aviso-opcion-seguro-global/solicitante",
     "department": "agace"
   },
   {
@@ -4184,5 +4177,26 @@
     "linkDashboard": "",
     "linkDepartment": "",
     "department": "stps"
+  },
+  {
+    "id": 599,
+    "tramite": 260202,
+    "linkDashboard": "/cofepris/importacion-materias-primas",
+    "linkDepartment": "/pago/importacion-materias-primas",
+    "department": "cofepris"
+  },
+  {
+    "id": 600,
+    "tramite": 80306,
+    "linkDashboard": "/se/immex-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion/registro-modificacion",
+    "department": "se"
+  },
+  {
+    "id": 601,
+    "tramite": 231002,
+    "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
+    "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
+    "department": "semarnat"
   }
 ]

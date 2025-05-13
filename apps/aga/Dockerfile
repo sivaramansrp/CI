@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/aga
 
 # Build the application
-RUN npx nx build aga --configuration=production --skip-nx-cache --verbose
+RUN npx nx build aga --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/aga" && test -f "/app/dist/apps/aga/index.html" || exit 1

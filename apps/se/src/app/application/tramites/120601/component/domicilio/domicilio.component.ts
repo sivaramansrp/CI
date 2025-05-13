@@ -28,8 +28,8 @@ import {
   selector: 'app-domicilio',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
-  templateUrl: './Domicilio.component.html',
-  styleUrl: './Domicilio.component.scss',
+  templateUrl: './domicilio.component.html',
+  styleUrl: './domicilio.component.scss',
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
   /**

@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RemoteEntryComponent } from './entry.component';
-import { appRoutes } from '../app.routes';
+import { APP_ROUTES } from '../app.routes';
 import { provideRouter } from '@angular/router';
 
 @NgModule({
@@ -16,7 +15,7 @@ import { provideRouter } from '@angular/router';
     RemoteEntryComponent
   ],
   providers: [
-    provideRouter(appRoutes),
+    provideRouter(APP_ROUTES),
   ],
   bootstrap: []
 })
