@@ -132,8 +132,39 @@ It will show tasks that you can run with Nx.
 # Change Host & PORT
 - Port
     - departmant -> project.json
-    - dashboard\src\app\app.routes.ts -> ports add here
-- Host
-    - Environment
-    - libs\shared\data-access-user\src\enviroments\enviroment.ts
-    - WEB_HOST - format ('http://localhost'),
+
+# Environment Build Commands - Host 
+- UI Build-Microfrontend host Environments
+    - All department to be map in the module-federation.manifest.json
+    - Each department has the dev/prod/qa environement
+        - environment.ts
+        - evnironment-qa.ts
+        - environment-prod.ts
+    - All department url has to map in the host environemnts
+    - Local Dev Environment
+        - apps\dashboard\src\app\environments\environment.ts
+    - QA Environment 
+        - apps\dashboard\src\app\environments\environment.qa.ts    
+    - Production Environment 
+        - apps\dashboard\src\app\environments\environment.prod.ts 
+
+# Environment Build Commands - Host     
+    - apps\dashboard\src\app\environments\environment.ts
+        - npx nx build dashboard --configuration=development
+    - apps\dashboard\src\app\environments\environment.qa.ts
+        - npx nx build dashboard --configuration=qa
+    - apps\dashboard\src\app\environments\environment.prod.ts
+        - npx nx build dashboard --configuration=production
+        
+# Environment Build Commands - Department     
+    - apps\aga\src\app\environments\environment.ts
+        - npx nx build aga --configuration=development
+    - apps\aga\src\app\environments\environment.qa.ts
+        - npx nx build aga --configuration=qa
+    - apps\aga\src\app\environments\environment.prod.ts
+        - npx nx build aga --configuration=production
+
+# Context path add in Build Commands - Department   
+    - npx nx build aga --configuration=development --base-href=/aga/
+    - npx nx build aga --configuration=qa --base-href=/aga/
+    - npx nx build aga --configuration=production --base-href=/aga/
