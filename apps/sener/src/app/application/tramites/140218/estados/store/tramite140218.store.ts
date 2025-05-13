@@ -8,21 +8,7 @@ import { Injectable } from '@angular/core';
  * @param regimen - El nuevo valor de régimen que se asignará al estado.
  */
 export interface DatosSolicitudState {
-  folioTramite: string; // Número de folio del trámite
-  tipoSolicitud: string; // Tipo de solicitud
-  regimen: string; // Régimen asociado
-  clasificacionRegimen: string; // Clasificación del régimen
-  periodoVigencia: string; // Periodo de vigencia
-  unidadMedida: string; // Unidad de medida
-  fraccionArancelaria: string; // Fracción arancelaria
-  cantidadAutorizada: string; // Cantidad autorizada
-  valorAutorizado: string; // Valor autorizado
-  nico: string; // Número de Identificación Comercial (NICO)
-  descripcionNico: string; // Descripción del NICO
-  acotacion: string; // Acotación
-  permisoDesde: string; // Fecha de inicio del permiso
-  permisoHasty: string; // Fecha de fin del permiso
-  motivoRenuncia: string; // Motivo de renuncia
+  [key: string]: any;
 }
 
 /**
@@ -59,18 +45,23 @@ export function createInitialState(): DatosSolicitudState {
 
 export class Tramite140218Store extends Store<DatosSolicitudState> {
 
-    /**
-   * @comdoc
-   * Sets the value of "régimen" in the store state.
-   *
-   * @param regimen - El nuevo valor de régimen que se asignará al estado.
-   */
+  /**
+ * @comdoc
+ * Sets the value of "régimen" in the store state.
+ *
+ * @param regimen - El nuevo valor de régimen que se asignará al estado.
+ */
   constructor() {
     super(createInitialState());
   }
-
-
-    public setDynamicFieldValue(fieldName: string, value: any): void {
+  /**
+   * @comdoc
+   * Establece dinámicamente el valor de un campo en el estado de la tienda.
+   *
+   * @param fieldName - El nombre del campo que se actualizará en el estado.
+   * @param value - El nuevo valor que se asignará al campo especificado.
+   */
+  public setDynamicFieldValue(fieldName: string, value: any): void {
     this.update((state) => ({
       ...state,
       [fieldName]: value,

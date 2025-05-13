@@ -108,20 +108,20 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.renunciaDerechosForm = this.formBuilder.group({
-      folioTramite: [{ value: this.solicitudState.folioTramite, disabled: true }],
-      tipoSolicitud: [{ value: this.solicitudState.tipoSolicitud, disabled: true }],
-      regimen: [{ value: this.solicitudState.regimen, disabled: true }],
-      clasificacionRegimen: [{ value: this.solicitudState.clasificacionRegimen, disabled: true }],
-      periodoVigencia: [{ value: this.solicitudState.periodoVigencia, disabled: true }],
-      unidadMedida: [{ value: this.solicitudState.unidadMedida, disabled: true }],
-      fraccionArancelaria: [{ value: this.solicitudState.fraccionArancelaria, disabled: true }],
-      cantidadAutorizada: [{ value: this.solicitudState.cantidadAutorizada, disabled: true }],
-      valorAutorizado: [{ value: this.solicitudState.valorAutorizado, disabled: true }],
-      nico: [{ value: this.solicitudState.nico, disabled: true }],
-      descripcionNico: [{ value: this.solicitudState.descripcionNico, disabled: true }],
-      acotacion: [{ value: this.solicitudState.acotacion, disabled: true }],
-      permisoDesde: [{ value: this.solicitudState.permisoDesde, disabled: true }],
-      permisoHasty: [{ value: this.solicitudState.permisoHasty, disabled: true }],
+      folioTramite: [{ value: '', disabled: true }],
+      tipoSolicitud: [{ value: '', disabled: true }],
+      regimen: [{ value: '', disabled: true }],
+      clasificacionRegimen: [{ value: '', disabled: true }],
+      periodoVigencia: [{ value: '', disabled: true }],
+      unidadMedida: [{ value: '', disabled: true }],
+      fraccionArancelaria: [{ value: '', disabled: true }],
+      cantidadAutorizada: [{ value: '', disabled: true }],
+      valorAutorizado: [{ value: '', disabled: true }],
+      nico: [{ value: '', disabled: true }],
+      descripcionNico: [{ value: '', disabled: true }],
+      acotacion: [{ value:'', disabled: true }],
+      permisoDesde: [{ value: '', disabled: true }],
+      permisoHasty: [{ value: '', disabled: true }],
       motivoRenuncia: [''] // este sí es editable
     });
     this.setRenunciaDerechosForm();
@@ -187,43 +187,43 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite140218Store.update(UPDATE_PAGO_FORM);
   }
 
-  /**
-   * @method eventoDeCambioDeValor
-   * @description Maneja el evento de cambio de valor en un campo del formulario y actualiza el store.
-   *
-   * @param event - Evento de cambio proveniente del input.
-   * @param campo - Nombre del campo que ha cambiado.
-   *
-   * @void
-   * Este método no retorna ningún valor.
-   */
-  public eventoDeCambioDeValor(event: Event, campo: string): void {
-    if (event.target) {
-      const VALOR = (event.target as HTMLInputElement).value;
-      const DATO = { campo: campo, valor: VALOR };
-      this.establecerCambioDeValor(DATO);
+    /**
+     * @method eventoDeCambioDeValor
+     * @description Maneja el evento de cambio de valor en un campo del formulario y actualiza el store.
+     *
+     * @param event - Evento de cambio proveniente del input.
+     * @param campo - Nombre del campo que ha cambiado.
+     *
+     * @void
+     * Este método no retorna ningún valor.
+     */
+    public eventoDeCambioDeValor(event: Event, campo: string): void {
+      if (event.target) {
+        const VALOR = (event.target as HTMLInputElement).value;
+        const DATO = { campo: campo, valor: VALOR };
+        this.establecerCambioDeValor(DATO);
+      }
     }
-  }
 
-  /**
-   * @method establecerCambioDeValor
-   * @description Actualiza el valor dinámico de un campo en el store según el evento recibido.
-   * 
-   * @param event - Objeto que contiene el nombre del campo y el valor a establecer.
-   * Si el valor es un objeto con propiedad 'id', se utiliza dicho 'id' como valor.
-   * En caso contrario, se utiliza el valor directamente.
-   * 
-   * @void
-   * Este método no retorna ningún valor.
-   */
-  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-      const VALOR = event.valor.id;
-      this.tramite140218Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
-      this.tramite140218Store.setDynamicFieldValue(event.campo, event.valor);
+    /**
+     * @method establecerCambioDeValor
+     * @description Actualiza el valor dinámico de un campo en el store según el evento recibido.
+     * 
+     * @param event - Objeto que contiene el nombre del campo y el valor a establecer.
+     * Si el valor es un objeto con propiedad 'id', se utiliza dicho 'id' como valor.
+     * En caso contrario, se utiliza el valor directamente.
+     * 
+     * @void
+     * Este método no retorna ningún valor.
+     */
+    public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+      if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+        const VALOR = event.valor.id;
+        this.tramite140218Store.setDynamicFieldValue(event.campo, VALOR);
+      } else if (event) {
+        this.tramite140218Store.setDynamicFieldValue(event.campo, event.valor);
+      }
     }
-  }
 
   /**
   * Gancho de ciclo de vida OnDestroy
