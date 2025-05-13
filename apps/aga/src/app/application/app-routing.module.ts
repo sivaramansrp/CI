@@ -303,8 +303,6 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/6403/retorno-de-partes.module').then(
         (m) => m.RetornoDePartesModule),
-        (m) => m.ModificacionDonacionesImmexModule
-      ),
   }
 ];
 
