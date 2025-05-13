@@ -431,6 +431,12 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {path: 'reportes',
+    loadChildren:() =>
+      import('./tramites/110207/reportes.module').then(
+        (m) => m.ReportesModule
+      )
+  },
   {
     path: 'catalogos',
     loadChildren: () =>
