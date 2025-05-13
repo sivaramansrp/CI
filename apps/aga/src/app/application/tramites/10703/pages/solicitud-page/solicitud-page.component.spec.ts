@@ -15,15 +15,19 @@ describe('SolicitudPageComponent', () => {
   let wizardComponentMock: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
-    wizardComponentMock = { siguiente: jest.fn(), atras: jest.fn()} as any;
+    wizardComponentMock = { siguiente: jest.fn(), atras: jest.fn() } as any;
 
     await TestBed.configureTestingModule({
       imports: [],
-      declarations: [SolicitudPageComponent, CommonModule, WizardComponent,
-          BtnContinuarComponent,
-          PasoTresComponent,
-          PasoDosComponent,
-          PasoUnoComponent,],
+      declarations: [
+        SolicitudPageComponent,
+        CommonModule,
+        WizardComponent,
+        BtnContinuarComponent,
+        PasoTresComponent,
+        PasoDosComponent,
+        PasoUnoComponent,
+      ],
     })
       .overrideComponent(SolicitudPageComponent, {
         set: {
@@ -74,7 +78,7 @@ describe('SolicitudPageComponent', () => {
     const accionBoton: AccionBoton = { valor: 5, accion: 'cont' };
     component.getValorIndice(accionBoton);
 
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1);
     expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentMock.atras).not.toHaveBeenCalled();
   });

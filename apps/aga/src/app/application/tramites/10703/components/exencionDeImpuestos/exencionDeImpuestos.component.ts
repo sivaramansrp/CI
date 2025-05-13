@@ -368,7 +368,7 @@ export class ExencionDeImpuestosComponent implements OnInit {
     /**
      * Obtiene los datos del uso específico desde el servicio.
      */
-    const USOESPECIFICO$ = this.exencionDeImpuestosService
+    const USO_ESPECIFICO$ = this.exencionDeImpuestosService
       .getusoEspecifico()
       .pipe(
         map((resp) => {
@@ -423,7 +423,7 @@ export class ExencionDeImpuestosComponent implements OnInit {
     merge(
       ADUANA$,
       PAIS$,
-      USOESPECIFICO$,
+      USO_ESPECIFICO$,
       ANO$,
       UNIDAD_MEDIDA$,
       CONDICION_MERCANCIA$
