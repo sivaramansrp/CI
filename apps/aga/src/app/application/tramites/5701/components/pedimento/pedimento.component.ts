@@ -5,7 +5,9 @@ import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, M
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
+import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
@@ -96,7 +98,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private tramite5701Query: Tramite5701Query,
-    private tramite5701Store: Tramite5701Store
+    private tramite5701Store: Tramite5701Store,
+    private estadoPedimentoService: EstadoPedimentoService,
   ) { }
 
   ngOnInit(): void {
@@ -146,10 +149,25 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
-    this.validaCampos.emit();
-    if (this.validacion) {
-      this.acciones();
+    console.log('prueba de la api');
+    
+    const BODY : BodyEstadoPedimento = {
+      aduana: 1234,
+      patente: 4567,
+      pedimento: 7890
     }
+    this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        console.log(response);
+      })
+    ).subscribe();
+
+
+    // this.validaCampos.emit();
+    // if (this.validacion) {
+    //   this.acciones();
+    // }
 
   }
 
