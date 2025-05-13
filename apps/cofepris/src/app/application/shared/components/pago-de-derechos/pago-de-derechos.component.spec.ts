@@ -34,10 +34,10 @@ describe('PagoDeDerechosComponent', () => {
     component.ngOnInit();
   });
 
-  it('should run #onReset()', async () => {
+  it('should run #alReiniciar()', async () => {
     component.pagoDerechosForm = component.pagoDerechosForm || {};
     component.pagoDerechosForm.reset = jest.fn();
-    component.onReset();
+    component.alReiniciar();
      expect(component.pagoDerechosForm.reset).toHaveBeenCalled();
   });
 });
