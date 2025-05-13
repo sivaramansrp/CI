@@ -18,23 +18,7 @@ export interface DatosSolicitudState {
  * @returns El estado inicial de DatosSolicitudState con valores vacíos.
  */
 export function createInitialState(): DatosSolicitudState {
-  return {
-    folioTramite: '', // Número de folio del trámite
-    tipoSolicitud: '', // Tipo de solicitud
-    regimen: '', // Régimen asociado
-    clasificacionRegimen: '', // Clasificación del régimen
-    periodoVigencia: '', // Periodo de vigencia
-    unidadMedida: '', // Unidad de medida
-    fraccionArancelaria: '', // Fracción arancelaria
-    cantidadAutorizada: '', // Cantidad autorizada
-    valorAutorizado: '', // Valor autorizado
-    nico: '', // Número de Identificación Comercial (NICO)
-    descripcionNico: '', // Descripción del NICO
-    acotacion: '', // Acotación
-    permisoDesde: '', // Fecha de inicio del permiso
-    permisoHasty: '', // Fecha de fin del permiso
-    motivoRenuncia: '' // Motivo de renuncia
-  };
+  return {};
 }
 
 @Injectable({
