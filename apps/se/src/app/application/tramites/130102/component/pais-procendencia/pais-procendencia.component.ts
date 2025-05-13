@@ -10,10 +10,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 
@@ -29,6 +31,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -81,8 +84,16 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   paisProc: Catalogo[] = paisProcJson;
 
+  /**
+   * Estado actual de la solicitud 130102, obtenido desde el store.
+   */
   public solicitudState!: Solicitud130102State;
+
+  /**
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -118,7 +129,8 @@ export class PaisProcendenciaComponent implements OnInit {
   // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient, private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -138,10 +150,11 @@ export class PaisProcendenciaComponent implements OnInit {
 
     this.paisForm = this.fb.group({
       bloque: [this.solicitudState?.bloque],
-      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required]],
-      observaciones: [this.solicitudState?.observaciones],
+      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
+      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
     this.fetchPaisProc();
+    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
   }
   /**
    * Asigna un valor del formulario al store.
@@ -194,5 +207,18 @@ export class PaisProcendenciaComponent implements OnInit {
       .subscribe((data) => {
         this.paisProc = data;
       });
+  }
+
+   /**
+   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+   * 
+   * @param control - Control del formulario a validar.
+   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+   */
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
   }
 }

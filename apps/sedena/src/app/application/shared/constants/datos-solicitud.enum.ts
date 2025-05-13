@@ -99,7 +99,10 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
  * - `TRAMITE_240117`: Código para el trámite 240117.
  * - `TRAMITE_240121`: Código para el trámite 240121.
  * - `TRAMITE_240405`: Código para el trámite 240405.
+ * - `TRAMITE_240305`: Código para el trámite 240305.
  *  -`TRAMITE_240311`: Código para el trámite 240311.
+ * - `TRAMITE_240411`: Código para el trámite 240411.
+ * - `TRAMITE_240407`: Código para el trámite 240407.
  */
 export const NUMERO_TRAMITE = {
   TRAMITE_240108: 240108,
@@ -108,7 +111,12 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240117: 240117,
   TRAMITE_240121: 240121,
   TRAMITE_240405: 240405,
+  TRAMITE_240305: 240305,
   TRAMITE_240311: 240311,
+  TRAMITE_240411: 240411,
+  TRAMITE_240122: 240122,
+  TRAMITE_240407: 240407,
+  TRAMITE_240123: 240123,
 }
 
 /**
@@ -195,5 +203,14 @@ export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
  * @const
  * @type {number[]}
  */
-export const COLONIA_FIELD_FLAG = [240117, 240114];
+export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
+
+/**
+ * @constant
+ * @name TERCEROS_NACIONALIDAD
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con la nacionalidad de terceros.
+ * Este valor se utiliza para identificar trámites o procesos asociados a terceros con una nacionalidad específica.
+ */
+export const TERCEROS_NACIONALIDAD = [240123];
 

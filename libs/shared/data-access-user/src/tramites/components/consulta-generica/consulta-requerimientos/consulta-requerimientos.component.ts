@@ -1,0 +1,110 @@
+import {
+  BodyTablaRequerimiento,
+  HeaderTablaRequerimientos,
+} from '../../../../core/models/shared/consulta-generica.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { CONSULTA_REQUERIMIENTOS } from '../../../../core/enums/consulta-generica.enum';
+import { CommonModule } from '@angular/common';
+import { FolioQuery } from '../../../../core/queries/folio.query';
+import { RequerimientosService } from '../../../../core/services/consultagenerica/requerimiento-service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'lib-consultarequerimientos',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './consulta-requerimientos.component.html',
+  styleUrl: './consulta-requerimientos.component.scss',
+})
+export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
+  /**
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
+   */
+  public folio!: string;
+
+  /**
+   * Subject utilizado para manejar la cancelación de suscripciones.
+   * @type {Subject<void>}
+   */
+  public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Encabezado de la tabla de requerimientos.
+   * Contiene las columnas que se mostrarán en la tabla.
+   * @type {HeaderTablaRequerimientos[]}
+   */
+  readonly encabezadoTablaRequerimiento: HeaderTablaRequerimientos[] = CONSULTA_REQUERIMIENTOS.encabezadoTablaRequerimiento;
+
+  /**
+   * Datos de la tabla de requerimientos.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaRequerimiento[]}
+   */
+  public datosTablaRequerimientos: BodyTablaRequerimiento[] = [];
+
+  /**
+   * Constructor de la clase ConsultarequerimientosComponent.
+   * @param router Router para navegar a la vista de detalle de requerimiento.
+   * @param folioQuery Consulta del folio desde el store.
+   * @param requerimientoService Servicio para obtener los requerimientos.
+   */
+  constructor(
+    private router: Router,
+    private folioQuery: FolioQuery,
+    private requerimientoService: RequerimientosService
+  ) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el folio desde el store y obtiene los requerimientos desde el servicio.
+   */
+  ngOnInit(): void {
+    /** 
+     * Recuperar el folio desde el store.
+     */
+    this.folioQuery.getFolio().subscribe((folio) => {
+      this.folio = folio || '';
+    });
+
+    /** 
+     * Llamar al método para obtener los requerimientos al inicializar el componente.
+     */
+    this.getRequerimientos();
+  }
+
+  /**
+   * Abre una nueva pestaña con los detalles del requerimiento.
+   * @param {number} id - El id del requerimiento para visualizar el detalle.
+   * @returns {void}
+   */
+  verDetalleRequerimiento(id: number): void {
+    /**
+     * Aquí puedes implementar la lógica para abrir el detalle en una nueva pestaña.
+     */
+  }
+
+  /**
+   * Método para obtener los requerimientos desde el servicio.
+   * Se suscribe al observable del servicio para obtener los datos.
+   * @returns {void}
+   */
+  getRequerimientos(): void {
+    this.requerimientoService
+      .getRequerimientos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaRequerimientos = data;
+      });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+}

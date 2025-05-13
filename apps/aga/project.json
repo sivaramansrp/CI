@@ -51,6 +51,37 @@
           "budgets": [
             {
               "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/aga/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/aga/src/app/environments/environment.ts",
+              "with": "apps/aga/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
               "maximumWarning": "500kb",
               "maximumError": "1mb"
             },
@@ -61,26 +92,40 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/aga/webpack.prod.config.ts"
-          }
+            "path": "apps/aga/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/aga/src/app/environments/environment.ts",
+              "with": "apps/aga/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
-          "buildOptimizer": false,
-          "optimization": false,
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
           "vendorChunk": true,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          "buildOptimizer": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4202,
-        "publicHost": "http://localhost:4202"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -88,6 +133,9 @@
         },
         "development": {
           "buildTarget": "aga:build:development"
+        },
+        "qa": {
+          "buildTarget": "aga:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -110,7 +158,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "aga:build",
         "port": 4202,

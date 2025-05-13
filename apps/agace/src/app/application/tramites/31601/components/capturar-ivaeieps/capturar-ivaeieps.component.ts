@@ -1,42 +1,21 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
+import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
-
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-
-import { CommonModule } from '@angular/common';
-
-import { TableComponent } from '@ng-mf/data-access-user';
-
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
-import table from 'libs/shared/theme/assets/json/31601/table.json';
-import tableDetos from 'libs/shared/theme/assets/json/31601/table-datos.json';
-
-import mockData from 'libs/shared/theme/assets/json/31601/mockdata-capturar.json';
-
-import dropDown from 'libs/shared/theme/assets/json/31601/catalog-select-tipo.json';
-
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { PagoData } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
-
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import dropDown from '@libs/shared/theme/assets/json/31601/catalog-select-tipo.json';
+import mockData from '@libs/shared/theme/assets/json/31601/mockdata-capturar.json';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
+import table from '@libs/shared/theme/assets/json/31601/table.json';
+import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
 /**
  * @Component - CapturarIvaeiepsComponent
  *
@@ -49,7 +28,6 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
   standalone: true,
   imports: [
     TituloComponent,
-    SelectCatalogosComponent,
     TableComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
@@ -99,7 +77,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * Contiene los datos del encabezado de la tabla de destinatarios.
    * Estos datos se utilizan para completar la tabla de destinatarios en la interfaz de usuario.
    */
-  destinatarioHeaderData: any = table;
+  destinatarioHeaderData: TableData = table;
 
   /**
    * Representa los datos de LE (presumiblemente una entidad o proceso específico).
@@ -131,7 +109,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * @param {Tramite31601Store} tramite31601Store - Store para gestionar el estado del trámite.
    * @param {Tramite31601Query} tramite31601Query - Query para obtener el estado del trámite.
    */
-  // eslint-disable-next-line no-empty-function
+ 
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -145,7 +123,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    *
    * @returns {void}
    */
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+
   ngOnInit(): void {
     this.inicializarForms();
     this.poblarPagoForm(mockData);
@@ -249,9 +227,9 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   poblarPagoForm(data: PagoData): void {
     this.formularioDePago.patchValue({
       claveReferencia: data.claveReferencia,
-      numeroOperacion: this.solicitudState?.numeroOperacion && this.solicitudState?.numeroOperacion != '' ? this.solicitudState?.numeroOperacion : data.numeroOperacion,
+      numeroOperacion: this.solicitudState?.numeroOperacion && this.solicitudState?.numeroOperacion !== '' ? this.solicitudState?.numeroOperacion : data.numeroOperacion,
       cadenaDependencia: data.cadenaDependencia,
-      llavePago: this.solicitudState?.llavePago && this.solicitudState?.llavePago != ''?this.solicitudState?.llavePago : data.llavePago,
+      llavePago: this.solicitudState?.llavePago && this.solicitudState?.llavePago !== ''?this.solicitudState?.llavePago : data.llavePago,
       fechaPago: data.fechaPago,
       importePago: data.importePago,
     });
@@ -262,8 +240,8 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    *
    * Valor @param: el nuevo valor que se establecerá.
    */
-  cambioDeValor(value: any,): void {
-    this.valorSeleccionado = value;
+  cambioDeValor(value: string | number): void {
+    this.valorSeleccionado = value.toString();
   }
 
   /**
@@ -273,8 +251,8 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * @retornos nulos
    */
 
-  cambioDeValorIndique(value: any): void {
-    this.predeterminadoSeleccionar = value;
+  cambioDeValorIndique(value: string | number): void {
+    this.predeterminadoSeleccionar = value.toString();
   }
 
   /**
@@ -288,11 +266,11 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    */
   agregarDatos(): void {
     if (this.ivaForm.valid) {
-      const { rfc, denominacion, domicilio } = this.ivaForm.value;
+      const {RFC, DENOMINACION, DOMICILIO } = this.ivaForm.value;
       this.destinatarioHeaderData.tableBody[0].tbodyData.push([
-        rfc,
-        denominacion,
-        domicilio,
+        RFC,
+        DENOMINACION,
+        DOMICILIO,
       ]);
       this.ivaForm.reset();
     }
@@ -312,8 +290,8 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * @returns {nulo}
    */
   tipoDeInver(event?: Event): void {
-    const selectedValue = event ? (event.target as HTMLSelectElement).value : '';
-    this.ivaForm.get('tipoDe')?.setValue(selectedValue);
+    const SELECTED_VALUE = event ? (event.target as HTMLSelectElement).value : '';
+    this.ivaForm.get('tipoDe')?.setValue(SELECTED_VALUE);
   }
 
   /**
@@ -344,8 +322,8 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * @param {keyof Tramite31601Store} metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

@@ -1,0 +1,219 @@
+<div class="container">
+  @if(tipoDatos) {
+  <ng-titulo titulo="Agregar {{ tipoDatos }}"></ng-titulo>
+  <form class="row col-12" [formGroup]="agregarDatosForm">
+    <!-- Datos Generales -->
+    <h4>Datos generales</h4>
+    <div class="row">
+      <div class="col-md-6"></div>
+      <div class="col-md-6 offset-md-6">
+        <label class="form-label">Tipo persona*:</label>
+        <div class="form-check">
+          <app-input-radio
+            [radioOptions]="tipoPersonaRadioOpcions"
+            id="contenidoOpcionTipoPersona"
+            formControlName="tipoPersona"
+          >
+          </app-input-radio>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label class="form-label">R.F.C*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="R.F.C"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input type="text" class="form-control" formControlName="rfc" />
+      </div>
+    </div>
+
+    <!-- Datos Personales -->
+    @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.FISICA) {
+    <label class="form-label text-start fs-2">Datos personales</label>
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <label class="form-label">Nombre(s)*:</label>
+        <input type="text" class="form-control" formControlName="nombres" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Primer apellido*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="primerApellido"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Segundo apellido:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="segundoApellido"
+        />
+      </div>
+    </div>
+    } @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
+    <div class="row">
+      <div class="form-group col-md-8 mb-5">
+        <label class="form-label mover-izquierda fs-2" for="denominacionRazon"
+          >Denominación/razón social*:</label
+        >
+        <input
+          class="form-control col-md-4"
+          id="terceros_rSocial"
+          size="75"
+          maxlength="254"
+          type="text"
+          formControlName="denominacionRazon"
+        />
+      </div>
+    </div>
+    }
+
+    <div class="row mt-5">
+      <label class="form-label text-start fs-2">Domicilio</label>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+          [isDisabled]="true"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="estadosDatos"
+          formControlName="estado"
+          [label]="'Estado/localidad'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="municipiosDatos"
+          formControlName="municipioAlcaldia"
+          [label]="'Municipio/alcaldía'"
+          [required]="true"
+          [isDisabled]="false"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="localidadesDatos"
+          formControlName="localidad"
+          [label]="'Localidad'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="codigosPostalesDatos"
+          formControlName="codigoPostal"
+          [label]="'Código postal o equivalente'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="coloniasDatos"
+          formControlName="colonia"
+          [label]="'Colonia'"
+          [required]="false"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-8">
+        <label class="form-label">Calle*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input type="text" class="form-control" formControlName="calle" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Número exterior*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroExterior"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="form-label">Número interior:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroInterior"
+        />
+      </div>
+      <div class="col-md-1">
+        <label class="form-label">Lada:</label>
+        <input type="text" class="form-control" formControlName="lada" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Teléfono:</label>
+        <input type="text" class="form-control" formControlName="telefono" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Correo electrónico:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="email"
+          class="form-control"
+          formControlName="correoElectronico"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            name="eliminarMercancias"
+            class="btn btn-danger ms-2"
+            (click)="limpiarFormulario()"
+          >
+            Limpiar
+          </button>
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            (click)="guardarDatos()"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+</div>
