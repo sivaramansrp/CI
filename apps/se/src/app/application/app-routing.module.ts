@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'cancelaciones-certificado',
+    loadChildren: () =>
+      import('./tramites/140205/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
+  },
   
 ];
 
