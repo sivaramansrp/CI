@@ -53,7 +53,7 @@ import { CertificacionOeaService } from '../../../../core/services/5701/certific
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
 import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
-import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
@@ -662,7 +662,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.patenteService.getListaPatente('SAAA980822LP1').pipe(
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
-          this.tramite5701Store.setPatente(patente);
           patente = pantenteResponse.datos;
           const DATOS_PATENTE: DatosAgregarFormulario = {
             form: this.despacho,
@@ -670,6 +669,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             valor: patente?.patente,
           };
           FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+          this.tramite5701Store.setPatente(patente);
           return EMPTY;
         }
         return this.patenteApoderadoService.getListaPatentesApoderado('SAAA980822LP1');
@@ -699,6 +699,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
       takeUntil(this.destroyNotifier$),
     ).subscribe();
+    console.log(this.solicitudState);
+
   }
 
   /**
@@ -797,21 +799,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ],
       }),
 
-      pedimento: this.fb.group({
-        idPedimento: [this.solicitudState?.idPedimento],
-
-        patentePedimento: [this.solicitudState?.patente],
-        pedimento: [this.solicitudState?.pedimento],
-        aduana: [this.solicitudState?.aduana],
-        tipoPedimento: [this.solicitudState?.tipoPedimento],
-        numeros: [this.solicitudState?.numero],
-        comprobanteValor: [this.solicitudState?.comprobanteValor],
-        pedimentoValidado: [this.solicitudState?.pedimentoValidado],
-
-      }),
+      pedimento: this.fb.array([]),
 
       personasResponsablesDespacho: this.fb.array([]),
-
 
       vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
@@ -1756,5 +1746,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return true;
     }
     return false;
+  }
+
+
+  /**
+   * Guarda los datos del pedimento en el store.
+   * @param {datosPedimento[]} Lista con los datos del pedimento.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeAgregarPedimento(datosPedimento: Pedimento[]): void {
+    this.tramite5701Store.setPedimentos(datosPedimento);
   }
 }

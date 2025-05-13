@@ -16,5 +16,5 @@ export interface EstadoPedimento {
     aduana: number;
     estado_pedimento: string;
     sub_estado_pedimento: string;
-    pedimento_validado: string;
+    pedimento_valido: string;
 }

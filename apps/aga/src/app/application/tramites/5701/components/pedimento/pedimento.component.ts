@@ -1,9 +1,9 @@
-import { BooleanoSiNoPipe, Notificacion, NotificacionesComponent, SoloNumerosDirective, } from '@ng-mf/data-access-user';
-import { Component, ElementRef, forwardRef, Input, OnChanges, OnDestroy, OnInit, output, SimpleChanges, ViewChild, } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, OnInit, Output, output, SimpleChanges } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
-import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
+import { ERR_VALIDACION_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Notificacion, NotificacionesComponent, SoloNumerosDirective, } from '@ng-mf/data-access-user';
 import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective), NotificacionesComponent],
+  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => SoloNumerosDirective), NotificacionesComponent],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
   providers: [
@@ -36,9 +36,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
 
-
-  @ViewChild('aviso') AvisoModal!: ElementRef;
-  @ViewChild('closeModal') closeModal!: ElementRef;
+  @Output() datosTablaPedimento: EventEmitter<Pedimento[]> = new EventEmitter();
 
   /**
    * @description Estado de la solicitud 5701.
@@ -83,14 +81,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   pedimentos: Array<Pedimento> = [];
 
-  tituloModal!: string;
-  mensajeModal!: string;
-
-  /**
-   * @description Elemento a eliminar de la tabla de pedimentos.
-   */
-  elementoParaEliminar!: number;
-
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
@@ -125,11 +115,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando uno o más valores de las propiedades de entrada de un componente cambian.
-   * 
-   * @param changes - Un objeto de tipo `SimpleChanges` que contiene los cambios en las propiedades de entrada. Cada clave es el nombre de una propiedad de entrada y su valor es un objeto `SimpleChange` que contiene las propiedades `currentValue` y `previousValue`.
-   * 
-   * - `validacion`: Si esta propiedad cambia, se actualiza el valor de `this.validacion` con el valor actual.
-   * - `datosNroPedimento`: Si esta propiedad cambia, se actualiza el valor de `this.datosNroPedimento` con el valor actual.
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['validacion']) {
@@ -166,9 +151,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    *     - Muestra un modal con un mensaje de aviso y agrega el pedimento a la tabla.
    *   - Si el número de pedimento es 0:
    *     - Muestra un modal con un mensaje de aviso indicando que el número de pedimento no es válido.
-   * - Si `this.validacion` es falso:
-   *   - Muestra un modal con un mensaje de aviso indicando que la aduana del pedimento no es válida.
-   * 
    * @returns {void}
    */
   acciones(): void {
@@ -178,10 +160,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         : 0;
       if (NUMERO_PEDIMENTO !== 0) {
         const BODY: BodyEstadoPedimento = {
-          aduana: 1234,
-          patente: 4567,
-          pedimento: 7890
+          aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
+          patente: 23424,
+          pedimento: parseInt(this.pedimentoForm.value, 10),
         }
+
         this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
           takeUntil(this.destroyNotifier$),
           map((response) => {
@@ -196,10 +179,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                 descTipoPedimento: 'Por evaluar',
                 numero: '',
                 comprobanteValor: '',
-                pedimentoValidado: response.datos.pedimento_validado,
+                pedimentoValidado: response.datos.pedimento_valido,
               };
               this.pedimentos.push(PEDIMENTO);
-              console.log(response);
+              this.pedimentoForm.reset();
+              this.datosTablaPedimento.emit(this.pedimentos);
             } else {
               this.nuevaNotificacion = {
                 tipoNotificacion: 'alert',
@@ -226,7 +210,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
           txtBtnCancelar: '',
         }
       }
-
     }
   }
 
@@ -239,31 +222,20 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
    */
-  abrirModal(i: number = 0): void {
+  abrirModalEliminar(i: number = 0): void {
+    this.pedimentos.splice(i, 1);
+    this.datosTablaPedimento.emit(this.pedimentos);
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: 'Avisos',
-      mensaje: '¿Desea eliminar este item?',
+      mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
+      txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     }
 
-    this.elementoParaEliminar = i;
-  }
-
-  /**
-   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
-   * @param borrar Indica si se debe proceder con la eliminación.
-   * @returns {void}
-   */
-  eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
   }
 
   /**

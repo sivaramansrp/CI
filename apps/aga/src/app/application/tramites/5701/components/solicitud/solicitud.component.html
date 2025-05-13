@@ -309,7 +309,6 @@
           <app-catalogo-select [catalogo]="selectCatalogoDespacho" formControlName="nombreRecinto"
             [label]="'Tipo despacho'" [required]="false" [isDisabled]="activarCatalogoDespacho"></app-catalogo-select>
         </div>
-
         }
 
       </div>
@@ -351,7 +350,7 @@
     <ng-titulo titulo="Datos del pedimento" />
 
     <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
-      (validaCampos)="validaCampoPedimento()"></c-pedimento>
+      (validaCampos)="validaCampoPedimento()" (datosTablaPedimento)="changeAgregarPedimento($event)"></c-pedimento>
     }
 
     <ng-titulo titulo="Mercancía" />

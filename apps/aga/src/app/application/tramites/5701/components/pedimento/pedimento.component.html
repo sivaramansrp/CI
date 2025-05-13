@@ -22,16 +22,20 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-
+        <tr *ngFor="let pedimento of pedimentos; let i = index">
+          <td> {{pedimento.patente}}</td>
+          <td> {{pedimento.pedimento}}</td>
+          <td> {{pedimento.aduana}}</td>
+          <td> {{pedimento.idTipoPedimento}} </td>
+          <td> {{pedimento.numero}} </td>
+          <td> {{pedimento.comprobanteValor}} </td>
+          <td> {{pedimento.pedimentoValidado}} </td>
           <td>
-            <button type="button" class="btn btn-link" title="Eliminar" (click)="abrirModal(1)">
+            <button type="button" class="btn btn-link" title="Eliminar" (click)="abrirModalEliminar(i)">
               <i class="bi bi-trash3 bi-c"></i>
             </button>
           </td>
-
         </tr>
-
       </tbody>
     </table>
   </div>
@@ -39,7 +43,7 @@
 
 @if (nuevaNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
   </lib-notificaciones>
 </section>
 }
