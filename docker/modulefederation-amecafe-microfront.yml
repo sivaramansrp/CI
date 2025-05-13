@@ -4,7 +4,7 @@ services:
     image: modulefederation-amecafe-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/amecafe/Dockerfile
+      dockerfile: apps/amecafe/Dockerfile.dev
     container_name: modulefederation-amecafe-microfront
     restart: on-failure
     expose:
