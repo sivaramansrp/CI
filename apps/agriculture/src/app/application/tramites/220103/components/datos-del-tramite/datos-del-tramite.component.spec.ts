@@ -172,4 +172,143 @@ describe('DatosDelTramiteComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+
+  describe('establecerCambioDeValor', () => {
+    it('debe manejar cambios en fraccionArancelaria', () => {
+      const evento = { 
+        campo: 'fraccionArancelaria', 
+        valor: '30019099' 
+      };
+      
+      component.establecerCambioDeValor(evento, 'mercancia');
+      
+      expect(component.formularioDatosMercancia.get('descripcionFraccion')?.value)
+        .toBe('Los demás');
+      expect(component.formularioDatosMercancia.get('umt')?.value)
+        .toBe('kilogramo');
+      expect(storeMock.setTramite220103State)
+        .toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
+    });
+
+    it('debe manejar cambios en uso y mostrar/ocultar otroUso', () => {
+      const evento = { campo: 'uso', valor: 'OTRO' };
+      component.establecerCambioDeValor(evento, 'mercancia');
+      
+      const otroUsoField = component.configuracionFormularioMercancia
+        .find(item => item.campo === 'otroUso');
+      
+      expect(otroUsoField?.mostrar).toBeTruthy();
+    });
+  });
+
+  describe('agregarMercancia', () => {
+    it('debe agregar mercancía con nuevo ID cuando no es modificación', () => {
+      component.esModificarMercancia = false;
+      component.formularioDatosMercancia.patchValue({
+        descripcion: 'Nueva Mercancía'
+      });
+      
+      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
+        .mockReturnValue(true);
+      
+      const postMercanciaSpy = jest.spyOn(component, 'postMercancia');
+      component.agregarMercancia();
+      
+      expect(postMercanciaSpy).toHaveBeenCalled();
+      expect(component.esModificarMercancia).toBeFalsy();
+    });
+
+    it('debe actualizar mercancía existente cuando es modificación', () => {
+      component.esModificarMercancia = true;
+      component.mercanciasSeleccionadas = [{
+        id: '123',
+        descripcion: 'Mercancía Original',
+        fraccionArancelaria: '',
+        descripcionFraccion: '',
+        cantidadUMT: '',
+        umt: '',
+        cantidadUMC: '',
+        umc: '',
+        nombreComun: '',
+        nombreCientifico: '',
+        faseDesarrollo: '',
+        uso: '',
+        otroUso: '',
+        origen: '',
+        paisOrigen: '',
+        paisProcedencia: ''
+      }];
+      
+      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
+        .mockReturnValue(true);
+      
+      component.formularioDatosMercancia.patchValue({
+        descripcion: 'Mercancía Modificada'
+      });
+      
+      component.agregarMercancia();
+      
+      expect(component.esModificarMercancia).toBeFalsy();
+    });
+
+    it('debe marcar campos como touched cuando el formulario es inválido', () => {
+      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
+        .mockReturnValue(false);
+      const markAllAsTouchedSpy = jest.spyOn(component.formularioDatosMercancia, 'markAllAsTouched');
+      
+      component.agregarMercancia();
+      
+      expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('obtenerDescripcionFraccion', () => {
+    it('debe actualizar descripción y UMT para fracción específica', () => {
+      component.formularioDatosMercancia.patchValue({
+        fraccionArancelaria: '30019099'
+      });
+      
+      component.obtenerDescripcionFraccion();
+      
+      expect(storeMock.setTramite220103State)
+        .toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
+      expect(storeMock.setTramite220103State)
+        .toHaveBeenCalledWith('umt', 'kilogramo');
+    });
+
+    it('no debe actualizar para otras fracciones arancelarias', () => {
+      component.formularioDatosMercancia.patchValue({
+        fraccionArancelaria: '12345678'
+      });
+      
+      component.obtenerDescripcionFraccion();
+      
+      expect(storeMock.setTramite220103State)
+        .not.toHaveBeenCalled();
+    });
+  });
+
+  describe('manejo de errores en servicios', () => {
+    it('debe manejar error en getAduanaDeIngreso', () => {
+      servicioMock.getAdunaDeIngreso.mockReturnValue(throwError(() => new Error('Error')));
+      
+      component.obtenerAduanaDeIngreso();
+      
+      const aduanaField = component.configuracionFormularioDatos
+        .find(item => item.campo === 'aduanaDeIngreso');
+      expect(aduanaField?.opciones).toBeUndefined();
+    });
+
+    // Similar tests for other service methods
+  });
+
+  describe('estado inicial del componente', () => {
+    it('debe inicializar todas las propiedades correctamente', () => {
+      expect(component.esModificarMercancia).toBeFalsy();
+      expect(component.mercanciasSeleccionadas).toEqual([]);
+      expect(component.datosTabla).toEqual([]);
+      expect(component.formularioDatosTramite).toBeTruthy();
+      expect(component.formularioDatosMercancia).toBeTruthy();
+    });
+  });
 });

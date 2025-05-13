@@ -1,111 +1,141 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DatosDelTercerosComponent } from './datos-del-terceros.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-import { DatosDelTercero } from '../../modelos/sanidad-acuicola-importacion.model';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AlertComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
+import { DatosDelTerceroDestinatario, Instalacion } from '../../modelos/sanidad-acuicola-importacion.model';
+import { Modal } from 'bootstrap';
+
+// Mock de la clase Modal de Bootstrap
+jest.mock('bootstrap', () => ({
+  Modal: {
+    getInstance: jest.fn().mockImplementation(() => ({
+      hide: jest.fn()
+    }))
+  }
+}));
 
 describe('DatosDelTercerosComponent', () => {
   let component: DatosDelTercerosComponent;
   let fixture: ComponentFixture<DatosDelTercerosComponent>;
-  let tramite220103QueryMock: jest.Mocked<Tramite220103Query>;
+  let mockQuery: any;
 
-  const mockDatosDelTercero: DatosDelTercero = {
-    nombre: 'Test Name',
-    telefono: '1234567890',
-    correoElectronico: 'test@test.com',
-    calle: 'Test Street',
-    numeroExterior: '123',
-    numeroInterior: 'A',
-    pais: 'Test Country',
-    estado: 'Test State',
-    municipio: 'Test Municipality',
-    localidad: 'Test Locality',
-    codigoPostal: '12345'
+  // Datos simulados
+  const mockState = {
+    tablaDestinatario: [{ id: '1', nombre: 'Destinatario Test' }] as DatosDelTerceroDestinatario[],
+    tablaInstalacion: [{ id: '1', nombre: 'Instalación Test' }] as Instalacion[]
   };
 
   beforeEach(async () => {
-    tramite220103QueryMock = {
-      selectTramite220103State$: of({}),
-    } as any;
+    mockQuery = {
+      selectTramite220103State$: of(mockState)
+    };
 
     await TestBed.configureTestingModule({
-      imports: [DatosDelTercerosComponent],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        DatosDelTercerosComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: Tramite220103Query, useValue: tramite220103QueryMock }
-      ]
+        { provide: Tramite220103Query, useValue: mockQuery }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTercerosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  describe('Inicialización del componente', () => {
+    it('debería crear el componente', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should initialize with empty arrays', () => {
-    expect(component.datosTabla).toEqual([]);
-    expect(component.destinatariosSeleccionados).toEqual([]);
-    expect(component.instalacionesSeleccionadas).toEqual([]);
-  });
-
-  it('should have checkbox selection type', () => {
-    expect(component.seleccionTabla).toBe(TablaSeleccion.CHECKBOX);
-  });
-
-  describe('obtenerDestinatarioSeleccionadas', () => {
-    it('should update destinatariosSeleccionados when called', () => {
-      const mockEvent = [mockDatosDelTercero];
-      component.obtenerDestinatarioSeleccionadas(mockEvent);
-      expect(component.destinatariosSeleccionados).toEqual(mockEvent);
+    it('debería inicializar las propiedades con valores predeterminados', () => {
+      expect(component.mensajeImportante).toBeDefined();
+      expect(component.configuracionFormularioDatos).toBeDefined();
+      expect(component.configuracionFormularioMercancia).toBeDefined();
+      expect(component.configuracionTabla).toBeDefined();
+      expect(component.configuracionTablaInstalacion).toBeDefined();
+      expect(component.datosTabla).toEqual([]);
+      expect(component.datosTablaInstalacion).toEqual([]);
+      expect(component.destinatariosSeleccionados).toEqual([]);
+      expect(component.instalacionesSeleccionadas).toEqual([]);
     });
   });
 
-  describe('obtenerInstalaciSeleccionadas', () => {
-    it('should update instalacionesSeleccionadas when called', () => {
-      const mockEvent = [mockDatosDelTercero];
-      component.obtenerInstalaciSeleccionadas(mockEvent);
-      expect(component.instalacionesSeleccionadas).toEqual(mockEvent);
+  describe('ngOnInit', () => {
+    it('debería suscribirse al estado y actualizar las tablas', fakeAsync(() => {
+      component.ngOnInit();
+      tick();
+
+      expect(component.datosTabla).toEqual(mockState.tablaDestinatario);
+      expect(component.datosTablaInstalacion).toEqual(mockState.tablaInstalacion);
+    }));
+
+    it('debería manejar un estado nulo correctamente', fakeAsync(() => {
+      mockQuery.selectTramite220103State$ = of(null);
+      component.ngOnInit();
+      tick();
+
+      expect(component.datosTabla).toEqual([]);
+      expect(component.datosTablaInstalacion).toEqual([]);
+    }));
+  });
+
+  describe('Métodos de selección', () => {
+    it('debería actualizar destinatariosSeleccionados con el evento', () => {
+      const datosPrueba = [{ id: 'test', nombre: 'Destinatario Test' }] as DatosDelTerceroDestinatario[];
+      component.obtenerDestinatarioSeleccionadas(datosPrueba);
+      expect(component.destinatariosSeleccionados).toBe(datosPrueba);
+    });
+
+    it('debería actualizar instalacionesSeleccionadas con el evento', () => {
+      const datosPrueba = [{ id: 'test', nombre: 'Instalación Test' }] as Instalacion[];
+      component.obtenerInstalaciSeleccionadas(datosPrueba);
+      expect(component.instalacionesSeleccionadas).toBe(datosPrueba);
     });
   });
 
-  describe('modificarDestinatario', () => {
-    it('should be defined', () => {
-      expect(component.modificarDestinatario).toBeDefined();
-    });
-    // TODO: Add more specific tests once the modification logic is implemented
-  });
+  describe('Métodos de cierre de modal', () => {
+    it('closeModal debería obtener la instancia del modal y llamar a hide', () => {
+      const mockElementRef = { nativeElement: document.createElement('div') };
+      component.elementoModal = mockElementRef as ElementRef;
 
-  describe('eliminarDestinatario', () => {
-    it('should be defined', () => {
-      expect(component.eliminarDestinatario).toBeDefined();
-    });
-    // TODO: Add more specific tests once the deletion logic is implemented
-  });
+      const mockModalInstance = { hide: jest.fn() };
+      const getInstanceSpy = jest.spyOn(Modal, 'getInstance').mockReturnValue(mockModalInstance as any);
 
-  describe('modificarInstalaci', () => {
-    it('should be defined', () => {
-      expect(component.modificarInstalaci).toBeDefined();
-    });
-    // TODO: Add more specific tests once the modification logic is implemented
-  });
+      component.closeModal();
 
-  describe('eliminarInstalaci', () => {
-    it('should be defined', () => {
-      expect(component.eliminarInstalaci).toBeDefined();
+      expect(getInstanceSpy).toHaveBeenCalledWith(mockElementRef.nativeElement);
+      expect(mockModalInstance.hide).toHaveBeenCalled();
     });
-    // TODO: Add more specific tests once the deletion logic is implemented
+
+    it('closeModalInstalaci debería manejar una instancia nula del modal', () => {
+      const mockElementRef = { nativeElement: document.createElement('div') };
+      component.elementoModalInstalaci = mockElementRef as ElementRef;
+
+      jest.spyOn(Modal, 'getInstance').mockReturnValue(null);
+
+      expect(() => component.closeModalInstalaci()).not.toThrow();
+    });
   });
 
   describe('ngOnDestroy', () => {
-    it('should complete notificadorDestruccion$ on destroy', () => {
-      const spy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+    it('debería llamar a next y complete en notificadorDestruccion$', () => {
+      const nextSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+      const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+
       component.ngOnDestroy();
-      expect(spy).toHaveBeenCalled();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
     });
   });
 });
