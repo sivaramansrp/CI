@@ -4,7 +4,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoCapturarSolicitudComponent } from './paso-capturar-solicitud.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { NuevoProgramaIndustrialModule } from '../../nuevo-programa-industrial.module';
+import { ModalidadTerciarizaciónModule } from '../../modalidad-terciarización.module';
 
 describe('PasoCapturarSolicitudComponent', () => {
   let component: PasoCapturarSolicitudComponent;
@@ -14,7 +14,7 @@ describe('PasoCapturarSolicitudComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoCapturarSolicitudComponent],
       imports:[HttpClientTestingModule, WizardComponent, FirmaElectronicaComponent, BtnContinuarComponent,
-        AlertComponent, NuevoProgramaIndustrialModule]
+        AlertComponent, ModalidadTerciarizaciónModule]
     })
     .compileComponents();
     

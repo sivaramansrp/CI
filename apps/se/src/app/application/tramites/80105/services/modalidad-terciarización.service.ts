@@ -21,6 +21,7 @@ export class NuevoProgramaIndustrialService {
   getDatos(): Observable<InfoServicios> {
     return this.http
     .get<Servicio[]>("assets/json/80205/ampliacion-servicios.json")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res.data.InfoServicios));
 }
    
@@ -32,6 +33,7 @@ export class NuevoProgramaIndustrialService {
     return this.http
     .get<Catalogo[]>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res.data));
   }
 
@@ -57,6 +59,7 @@ export class NuevoProgramaIndustrialService {
         .get<PlantasSubfabricante[]>(
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .pipe(map((response: any) => response.data))
     );
   }
@@ -69,6 +72,7 @@ export class NuevoProgramaIndustrialService {
   obtenerComplimentos(): Observable<DatosComplimentos> {
     return this.http
     .get<DatosComplimentos>("assets/json/80102/datos-complimentos.json")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res));
   }
 /**
