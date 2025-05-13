@@ -432,6 +432,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'catalogos',
+    loadChildren: () =>
+      import('./tramites/90303/catalogos.module').then(
+        (m) => m.CatalogosModule
+      ),
+  },
+{  
+    path: 'expedicion-certificados-asignacion-directa',
+    loadChildren: () =>
+      import('./tramites/120202/expedicion-certificado-asignacion.module').then(
+        (m) => m.ExpedicionCertificadoAsignacionModule
+      ),
+  },  {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
@@ -439,6 +452,20 @@ const ROUTES: Routes = [
       ),  
    },
    {
+    path: 'registro-solicitud-immex',
+    loadChildren: () =>
+      import('./tramites/80210/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
+      ),
+   },
+  {
+    path:'registro-expansion',
+    loadChildren: () =>
+      import('./tramites/80211/registro-expansion.module').then(
+        (m) => m.RegistroExpansionModule
+      ),    
+  },
+  {
     path: 'validar-inicialmente-certificado',
     loadChildren: () =>
       import('./tramites/110214/validar-inicialmente-certificado.module').then(
