@@ -16,23 +16,70 @@ import { Tramite120403Query } from '../state/Tramite120403.query';
   styleUrl: './asignacion.component.scss',
 })
 export class AsignacionComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para la asignación.
+   */
   asignacionForm!: FormGroup;
+
+  /**
+   * Opciones de radio para el formulario.
+   */
   radioOpcions = RADIO_OPCIONS;
+
+  /**
+   * Valor seleccionado en las opciones de radio.
+   */
   valorSeleccionado: string = '';
+
+  /**
+   * Catálogo de años para el formulario.
+   */
   public anoCatalogo = ANO_CATALOGO;
+
+  /**
+   * Configuración de la fecha de fin.
+   */
   fechaFinInput = FECHA_FIN;
+
+  /**
+   * Estado actual de la solicitud.
+   */
   public solicitudState!: Solicitud120403State;
+
+  /**
+   * Sujeto para manejar la destrucción de observables.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Indica si se debe mostrar la sección de vigencia.
+   */
   mostrarVigencia: boolean = false;
+
+  /**
+   * Indica si se debe mostrar la sección de monto.
+   */
   mostrarMonto: boolean = false;
 
-  constructor(private cupos: CuposService,
+  /**
+   * Constructor del componente.
+   * @param cupos Servicio para obtener datos relacionados con los cupos.
+   * @param fb Constructor de formularios reactivos.
+   * @param store Almacén para manejar el estado global.
+   * @param query Consulta para obtener el estado de la solicitud.
+   * @param validacionesService Servicio para validar formularios.
+   */
+  constructor(
+    private cupos: CuposService,
     public fb: FormBuilder,
     private store: Tramite120403Store,
     private query: Tramite120403Query,
     private validacionesService: ValidacionesFormularioService
   ) { }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -45,26 +92,33 @@ export class AsignacionComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
     this.obtenerDatosEstado();
   }
-  
-buscar(): void {
-  const ASIGNACION_RADIO = this.asignacionForm.get('asignacionRadio')?.value;
+  /**
+    * Método para manejar la lógica de búsqueda.
+    */
+  buscar(): void {
+    const ASIGNACION_RADIO = this.asignacionForm.get('asignacionRadio')?.value;
 
-  if (ASIGNACION_RADIO === 'vigencia') {
-    this.mostrarVigencia = true;
-    this.mostrarMonto = false;
-  } else if (ASIGNACION_RADIO === 'monto') {
-    this.mostrarVigencia = false;
-    this.mostrarMonto = true;
+    if (ASIGNACION_RADIO === 'vigencia') {
+      this.mostrarVigencia = true;
+      this.mostrarMonto = false;
+    } else if (ASIGNACION_RADIO === 'monto') {
+      this.mostrarVigencia = false;
+      this.mostrarMonto = true;
+    }
   }
-}
-
+  /**
+     * Actualiza el valor de la fecha de fin en el formulario y en el estado global.
+     * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+     */
   cambioFechaPago(nuevo_fechaPago: string): void {
     this.asignacionForm.patchValue({
       fechaFin: nuevo_fechaPago,
     });
     this.setValoresStore(this.asignacionForm, 'fechaFin', 'setFechaFin');
   }
-
+  /**
+     * Obtiene los datos del estado relacionados con el catálogo de años.
+     */
   public obtenerDatosEstado(): void {
     this.cupos
       .obtenerDatosAno()
@@ -119,6 +173,9 @@ buscar(): void {
       ampliar: [this.solicitudState?.ampliar, [Validators.required]],
     });
   }
+  /**
+ * Método que se ejecuta al destruir el componente.
+ */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

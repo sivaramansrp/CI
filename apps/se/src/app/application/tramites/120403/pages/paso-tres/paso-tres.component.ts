@@ -21,7 +21,10 @@ export class PasoTresComponent implements OnDestroy {
  * Tipo de persona.
  */
   tipoPersona!: number;
-
+  /**
+    * Constructor del componente.
+    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
+    */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,

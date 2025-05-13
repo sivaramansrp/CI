@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { CuposService } from '../../services/cupos.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
@@ -42,15 +42,11 @@ export class PasoUnoComponent implements AfterViewInit {
    * Índice del paso actual.
    */
   indice: number = 1;
-  @Output() dataEmitter = new EventEmitter<number>();
   /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
-   */
-  constructor(private cupos: CuposService) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
-  
+  * Emisor de eventos para comunicar el índice del paso actual.
+  * Permite emitir el índice del paso seleccionado al componente padre.
+  */
+  @Output() dataEmitter = new EventEmitter<number>();
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
    * Configura los formularios dinámicos y obtiene el tipo de persona.
