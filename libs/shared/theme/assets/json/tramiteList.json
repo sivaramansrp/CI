@@ -2,8 +2,8 @@
   {
     "id": 1,
     "tramite": 104,
-    "linkDashboard": "/pago/deposito-fiscal/Donación-Franja-Fronteriza",
-    "linkDepartment": "/pago/deposito-fiscal/Donación-Franja-Fronteriza",
+    "linkDashboard": "/pago/deposito-fiscal/solicitud",
+    "linkDepartment": "/pago/deposito-fiscal/solicitud",
     "department": "aga"
   },
   {
