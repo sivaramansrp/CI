@@ -1,5 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+
 
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
@@ -22,6 +24,18 @@ export class PantallasComponent {
    * @default 1
    */
   public indice: number = 1;
+
+  /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
 
   /**
    * Referencia al componente Wizard para controlar la navegación entre pasos.
