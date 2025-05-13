@@ -10,19 +10,19 @@ import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { of as observableOf } from 'rxjs';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { Tramite80306Store } from '../../../../estados/tramites/tramite80306.store';
-import { Tramite80306Query } from '../../../../estados/queries/tramite80306.query';
+import { Tramite80314Store } from '../../../../estados/tramites/tramite80314.store';
+import { Tramite80314Query } from '../../../../estados/queries/tramite80314.query';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
 
 @Injectable()
-class MockTramite80306Store {
+class MockTramite80314Store {
   setFormValida = function () {};
 }
 
 @Injectable()
-class MockTramite80306Query {
+class MockTramite80314Query {
   selectEstado$ = observableOf({
     id: {},
   });
@@ -74,8 +74,8 @@ describe('AltaPlantaComponent', () => {
           useClass: MockModificacionSolicitudeService,
         },
         ToastrService,
-        { provide: Tramite80306Store, useClass: MockTramite80306Store },
-        { provide: Tramite80306Query, useClass: MockTramite80306Query },
+        { provide: Tramite80314Store, useClass: MockTramite80314Store },
+        { provide: Tramite80314Query, useClass: MockTramite80314Query },
       ],
     })
       .overrideComponent(AltaPlantaComponent, {

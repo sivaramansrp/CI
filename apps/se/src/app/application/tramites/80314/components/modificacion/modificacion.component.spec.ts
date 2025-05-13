@@ -4,22 +4,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModificacionComponent } from './modificacion.component';
 import { FormBuilder } from '@angular/forms';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { Tramite80306Store } from '../../../../estados/tramites/tramite80306.store';
-import { Tramite80306Query } from '../../../../estados/queries/tramite80306.query';
+import { Tramite80314Store } from '../../../../estados/tramites/tramite80314.store';
+import { Tramite80314Query } from '../../../../estados/queries/tramite80314.query';
 import { of as observableOf } from 'rxjs';
 
 @Injectable()
 class MockImmerModificacionService {}
 
 @Injectable()
-class MockTramite80306Store {}
+class MockTramite80314Store {}
 
 @Injectable()
-class MockTramite80306Query {}
+class MockTramite80314Query {}
 
 describe('ModificacionComponent', () => {
   let fixture: ComponentFixture<ModificacionComponent>;
-  let component: { ngOnDestroy: () => void; tramite80306Query: { selectSolicitud$?: any; }; inicializarFormulario: jest.Mock<any, any, any> | (() => void); loadDatosModificacion: jest.Mock<any, any, any> | (() => void); loadDatosTablaData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroyNotifier$: { next?: any; unsubscribe?: any; }; fb: { group?: any; }; derechoState: { datosModificacion?: any; }; solicitudService: { getDatosModificacion?: any; getDatosTableData?: any; }; tramite80306Store: { setDatosModificacion?: any; }; setFormValues: jest.Mock<any, any, any> | (() => void); modificacionForm: { get?: any; }; datosTabla: { findIndex?: any; INDEX?: any; }; valorDeAlternancia: (arg0: { id: {}; }) => void; };
+  let component: { ngOnDestroy: () => void; tramite80314Query: { selectSolicitud$?: any; }; inicializarFormulario: jest.Mock<any, any, any> | (() => void); loadDatosModificacion: jest.Mock<any, any, any> | (() => void); loadDatosTablaData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroyNotifier$: { next?: any; unsubscribe?: any; }; fb: { group?: any; }; derechoState: { datosModificacion?: any; }; solicitudService: { getDatosModificacion?: any; getDatosTableData?: any; }; tramite80314Store: { setDatosModificacion?: any; }; setFormValues: jest.Mock<any, any, any> | (() => void); modificacionForm: { get?: any; }; datosTabla: { findIndex?: any; INDEX?: any; }; valorDeAlternancia: (arg0: { id: {}; }) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -31,8 +31,8 @@ describe('ModificacionComponent', () => {
       providers: [
         FormBuilder,
         { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-        { provide: Tramite80306Store, useClass: MockTramite80306Store },
-        { provide: Tramite80306Query, useClass: MockTramite80306Query }
+        { provide: Tramite80314Store, useClass: MockTramite80314Store },
+        { provide: Tramite80314Query, useClass: MockTramite80314Query }
       ]
     }).overrideComponent(ModificacionComponent, {
 
@@ -51,8 +51,8 @@ describe('ModificacionComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.tramite80306Query = component.tramite80306Query || {};
-    component.tramite80306Query.selectSolicitud$ = observableOf({});
+    component.tramite80314Query = component.tramite80314Query || {};
+    component.tramite80314Query.selectSolicitud$ = observableOf({});
     component.inicializarFormulario = jest.fn();
     component.loadDatosModificacion = jest.fn();
     component.loadDatosTablaData = jest.fn();
@@ -83,12 +83,12 @@ describe('ModificacionComponent', () => {
   it('should run #loadDatosModificacion()', async () => {
     component.solicitudService = component.solicitudService || {};
     component.solicitudService.getDatosModificacion = jest.fn().mockReturnValue(observableOf({}));
-    component.tramite80306Store = component.tramite80306Store || {};
-    component.tramite80306Store.setDatosModificacion = jest.fn();
+    component.tramite80314Store = component.tramite80314Store || {};
+    component.tramite80314Store.setDatosModificacion = jest.fn();
     component.setFormValues = jest.fn();
     component.loadDatosModificacion();
     expect(component.solicitudService.getDatosModificacion).toHaveBeenCalled();
-    expect(component.tramite80306Store.setDatosModificacion).toHaveBeenCalled();
+    expect(component.tramite80314Store.setDatosModificacion).toHaveBeenCalled();
     expect(component.setFormValues).toHaveBeenCalled();
   });
 

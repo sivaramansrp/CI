@@ -1,9 +1,7 @@
 import {
   CatalogoSelectComponent,
   CatalogosSelect,
-  TablaDinamicaComponent,
   TablaSeleccion,
-  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -18,7 +16,6 @@ import {
   Tramite80314Store,
 } from '../../../../estados/tramites/tramite80314.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -31,8 +28,6 @@ import { Tramite80314Query } from '../../../../estados/queries/tramite80314.quer
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
-    TituloComponent,
-    TablaDinamicaComponent,
     CatalogoSelectComponent,
   ],
   templateUrl: './modificacion.component.html',
@@ -46,6 +41,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private tramite80314Query: Tramite80314Query
   ) {}
 
+  /**
+   * @description Representa la actividad productiva seleccionada en el componente.
+   * @type {CatalogosSelect}
+   * @memberof ModificacionComponent
+   * @compodoc
+   */
   actividadProductiva!: CatalogosSelect;
 
   /**
@@ -127,8 +128,10 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       tipo: [this.derechoState?.datosModificacion?.tipo, []],
       programa: [this.derechoState?.datosModificacion?.programa, []],
       actividadProductivaActual: [
-        this.derechoState?.datosModificacion?.actividadProductivaActual,[]],
-      actividadProductiva: []
+        this.derechoState?.datosModificacion?.actividadProductivaActual,
+        [],
+      ],
+      actividadProductiva: [],
     });
   }
 
@@ -188,7 +191,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       ?.setValue(this.derechoState?.datosModificacion?.programa);
     this.modificacionForm
       .get('actividadProductivaActual')
-      ?.setValue(this.derechoState?.datosModificacion?.actividadProductivaActual);
+      ?.setValue(
+        this.derechoState?.datosModificacion?.actividadProductivaActual
+      );
   }
 
   /**

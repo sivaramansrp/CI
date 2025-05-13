@@ -1,30 +1,65 @@
-import { Anexo, Bitacora, Complimentaria, DatosModificacion, DomicilioInfo, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import {
+  Anexo,
+  Bitacora,
+  Complimentaria,
+  DatosModificacion,
+  DomicilioInfo,
+  Federetarios,
+  Operacions,
+} from '../estados/models/plantas-consulta.model';
+import {
+  Catalogo,
+  RespuestaCatalogos,
+} from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+interface ComplimentariaResponse {
+  data: Complimentaria[];
+}
+interface AnexoResponse {
+  data: Anexo[];
+}
+interface FederetariosResponse {
+  data: Federetarios[];
+}
+interface OperacionsResponse {
+  data: Operacions[];
+}
+
+interface DomicilioInfoResponse {
+  data: DomicilioInfo[];
+}
+interface BitacoraResponse {
+  data: Bitacora[];
+}
+interface DatosModificacionResponse {
+  data: DatosModificacion;
+}
+interface CatalogoResponse {
+  data: Catalogo[];
+}
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImmerModificacionService {
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient,
-  ) { }
+  /**
+   * Obtener una lista de Transporte
+   *
+   * @param {string} catalogo - El nombre del catálogo a obtener.
+   * @returns {Observable<RespuestaCatalogos>} Un observable con la respuesta del catálogo de transporte.
+   */
+  getTablaData(catalogo: string): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(
+      `assets/json/80314/${catalogo}.json`
+    );
+  }
 
-      /**
-     * Obtener una lista de Transporte
-     * 
-     * @param {string} catalogo - El nombre del catálogo a obtener.
-     * @returns {Observable<RespuestaCatalogos>} Un observable con la respuesta del catálogo de transporte.
-     */
-    getTablaData(catalogo: string): Observable<RespuestaCatalogos> {
-      return this.http.get<RespuestaCatalogos>(`assets/json/80314/${catalogo}.json`);
-    }
-
-      /**
+  /**
    * Obtener datos del solicitante
    *
    * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos del solicitante.
@@ -35,7 +70,7 @@ export class ImmerModificacionService {
     );
   }
 
-    /**
+  /**
    * Obtener datos del solicitante
    *
    * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos del solicitante.
@@ -48,7 +83,7 @@ export class ImmerModificacionService {
 
   /**
    * Obtiene los datos de modificación desde un archivo JSON local.
-   * 
+   *
    * @returns {Observable<RespuestaCatalogos[]>} Un observable que emite un arreglo de objetos de tipo `RespuestaCatalogos`.
    */
   getModificacion(): Observable<RespuestaCatalogos[]> {
@@ -68,14 +103,15 @@ export class ImmerModificacionService {
     );
   }
 
-    /**
-     * Obtiene una lista de objetos de tipo `Complimentaria` desde un archivo JSON local.
-     * 
-     * @returns Un observable que emite un arreglo de objetos `Complimentaria`.
-     */
-    obtenerComplimentaria(): Observable<Complimentaria[]> {
+  /**
+   * Obtiene una lista de objetos de tipo `Complimentaria` desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de objetos `Complimentaria`.
+   */
+  obtenerComplimentaria(): Observable<Complimentaria[]> {
     return this.http
-      .get<Complimentaria[]>('assets/json/80314/complimentaria.json').pipe(map((res: any) => res.data));
+      .get<ComplimentariaResponse>('assets/json/80314/complimentaria.json')
+      .pipe(map((res: ComplimentariaResponse) => res.data));
   }
 
   /**
@@ -85,19 +121,21 @@ export class ImmerModificacionService {
    */
   obtenerAnexo(): Observable<Anexo[]> {
     return this.http
-      .get<Anexo[]>('assets/json/80314/anexo.json').pipe(map((res: any) => res.data));
+      .get<AnexoResponse>('assets/json/80314/anexo.json')
+      .pipe(map((res: AnexoResponse) => res.data));
   }
 
   /**
    * Obtiene la lista de federatarios desde un archivo JSON local.
-   * 
+   *
    * @returns Un observable que emite un arreglo de objetos de tipo `Federetarios`.
    */
   obtenerFederetarios(): Observable<Federetarios[]> {
     return this.http
-      .get<Federetarios[]>('assets/json/80314/federetarios.json').pipe(map((res: any) => res.data));
+      .get<FederetariosResponse>('assets/json/80314/federetarios.json')
+      .pipe(map((res: FederetariosResponse) => res.data));
   }
-  
+
   /**
    * Obtiene una lista de operaciones desde un archivo JSON local.
    *
@@ -106,17 +144,19 @@ export class ImmerModificacionService {
    */
   obtenerOperacion(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80314/operacion.json').pipe(map((res: any) => res.data));
+      .get<OperacionsResponse>('assets/json/80314/operacion.json')
+      .pipe(map((res: OperacionsResponse) => res.data));
   }
 
   /**
    * Obtiene la lista de plantas desde un archivo JSON localizado en los activos.
-   * 
+   *
    * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de objetos `Operacions`.
    */
   obtenerPlanta(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80314/planta.json').pipe(map((res: any) => res.data));
+      .get<OperacionsResponse>('assets/json/80314/planta.json')
+      .pipe(map((res: OperacionsResponse) => res.data));
   }
 
   /**
@@ -126,31 +166,36 @@ export class ImmerModificacionService {
    */
   obtenerServicios(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80314/servicios.json').pipe(map((res: any) => res.data));
+      .get<OperacionsResponse>('assets/json/80314/servicios.json')
+      .pipe(map((res: OperacionsResponse) => res.data));
   }
 
   /**
-     * Obtiene la lista de estados.
-     * @method obtenerListaEstado
-     * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
-     */
-    obtenerListaEstado(): Observable<Catalogo[]> {
-      return this.http
-        .get<Catalogo[]>('./assets/json/80314/estado.json').pipe(map((res: any) => res.data));
-    }
-  
-    obtenerDomicilios(): Observable<DomicilioInfo[]> {
-      return this.http
-        .get<DomicilioInfo[]>('assets/json/80314/domicilio.json').pipe(map((res: any) => res.data));
-    }
-  
-    obtenerBitacora(): Observable<Bitacora[]> {
-      return this.http
-        .get<Bitacora[]>('assets/json/80314/bitacora.json').pipe(map((res: any) => res.data));
-    }
-  
-    obtenerDatosGenerales(): Observable<DatosModificacion> {
-      return this.http
-        .get<DatosModificacion>('assets/json/80314/datos-modificacion.json').pipe(map((res: any) => res.data));
-    }
+   * Obtiene la lista de estados.
+   * @method obtenerListaEstado
+   * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
+   */
+  obtenerListaEstado(): Observable<Catalogo[]> {
+    return this.http
+      .get<CatalogoResponse>('./assets/json/80314/estado.json')
+      .pipe(map((res: CatalogoResponse) => res.data));
+  }
+
+  obtenerDomicilios(): Observable<DomicilioInfo[]> {
+    return this.http
+      .get<DomicilioInfoResponse>('assets/json/80314/domicilio.json')
+      .pipe(map((res: DomicilioInfoResponse) => res.data));
+  }
+
+  obtenerBitacora(): Observable<Bitacora[]> {
+    return this.http
+      .get<BitacoraResponse>('assets/json/80314/bitacora.json')
+      .pipe(map((res: BitacoraResponse) => res.data));
+  }
+
+  obtenerDatosGenerales(): Observable<DatosModificacion> {
+    return this.http
+      .get<DatosModificacionResponse>('assets/json/80314/datos-modificacion.json')
+      .pipe(map((res: DatosModificacionResponse) => res.data));
+  }
 }

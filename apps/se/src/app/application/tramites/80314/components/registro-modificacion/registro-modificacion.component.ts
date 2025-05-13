@@ -6,10 +6,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaTabla } from '../../models/datos-tramite.model';
 import { FormsModule } from '@angular/forms';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { Router } from '@angular/router';
-import { datosDeLaTabla } from '../../models/datos-tramite.model';
+
 
 @Component({
   selector: 'app-registro-modificacion',
@@ -46,7 +47,7 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
    * @property {boolean} [hiperenlace] - Indica si el contenido de la columna debe mostrarse
    * como un hiperenlace. Este campo es opcional.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<datosDeLaTabla>[] = [
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     {
       encabezado: 'Folio de programa',
       clave: (artículo) => artículo.folioDePrograma,
@@ -65,7 +66,7 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
    *
    * @type {datosDeLaTabla[]}
    */
-  public datosDelContenedor: datosDeLaTabla[] = [];
+  public datosDelContenedor: DatosDeLaTabla[] = [];
 
   /**
    * Observable para notificar la destrucción del componente.
