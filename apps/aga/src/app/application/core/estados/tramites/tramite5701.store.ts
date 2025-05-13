@@ -1,9 +1,9 @@
-import { Store, StoreConfig } from '@datorama/akita';
-import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 import {
   Pedimento,
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
+import { Store, StoreConfig } from '@datorama/akita';
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 
 import { Injectable } from '@angular/core';
 import { Patente } from '../../models/5701/Patente.model';

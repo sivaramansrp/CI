@@ -41,6 +41,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() tablaPedimento!: Pedimento[];
 
+  /**
+   * @description Emisor de eventos para la tabla de pedimentos.
+   * Se utiliza para emitir los datos de la tabla de pedimentos al componente padre.
+   */
   @Output() datosTablaPedimento: EventEmitter<Pedimento[]> = new EventEmitter();
 
   /**

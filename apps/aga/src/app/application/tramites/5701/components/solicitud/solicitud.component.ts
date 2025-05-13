@@ -42,6 +42,7 @@ import {
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { delay, EMPTY, first, map, merge, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -53,7 +54,6 @@ import { CertificacionOeaService } from '../../../../core/services/5701/certific
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
 import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
-import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
@@ -699,8 +699,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
       takeUntil(this.destroyNotifier$),
     ).subscribe();
-    console.log(this.solicitudState);
-
   }
 
   /**
@@ -1203,10 +1201,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
  * Cierra el modal.
  */
   cerrarModal(tipo: string, acepta: boolean): void {
-
-
-
-
     if (tipo === 'fecha') {
       this.datosServicio.reset();
     }
@@ -1676,6 +1670,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Procesa la lógica para activar o desactivar los campos de LDA y DD en el formulario.
+   * @param {tipo} string
+   * @returns {void} No retorna ningún valor.
+   */
   activaDesactivaCheckLDA_DDEX(tipo: string): void {
     this.despachoSeleccionado = !this.despachoSeleccionado;
 
@@ -1716,6 +1715,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.despacho, 'dd', 'setDD');
   }
 
+  /**
+   * Limpia los campos del formulario de despacho y actualiza el store correspondiente.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   limpiaCamposDdaLda(): void {
     this.despacho.get('idAduanaDespacho')?.setValue('');
     this.despacho.get('aduanaDespacho')?.setValue('');
@@ -1739,6 +1743,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.despacho, 'domicilioDespacho', 'setDomicilioDespacho');
   }
 
+  /**
+   * Valida si el campo recinto y el campo especifique tienen algun valor.
+   * @returns {boolean} Retorna true si el campo recinto es válido, de lo contrario false.
+   */
   validaCampoRecintoEspecifique(): boolean {
     const RECINTO = this.despacho.get('nombreRecinto')?.value ? parseInt(this.despacho.get('nombreRecinto')?.value, 10) : -1;
     const ESPECIFIQUE = this.despacho.get('recintoEspecifique')?.value;
