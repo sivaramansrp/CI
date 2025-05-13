@@ -70,20 +70,16 @@ describe('BitacoraComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    // Mock the service to throw an error
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerBitacora = jest
       .fn()
       .mockReturnValue(throwError(() => new Error('Error occurred')));
 
-    // Mock toastr
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
 
-    // Call ngOnInit
     component.ngOnInit();
 
-    // Assertions
     expect(component.modificionService.obtenerBitacora).toHaveBeenCalled();
     expect(component.toastr.error).toHaveBeenCalledWith(
       'Error occurred',

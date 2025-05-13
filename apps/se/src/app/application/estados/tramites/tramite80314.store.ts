@@ -297,6 +297,14 @@ export class Tramite80314Store extends Store<Solicitud80314State> {
     }));
   }
 
+  /**
+   * @method setFechaIngreso
+   * @description Actualiza el estado con la fecha de ingreso proporcionada.
+   * @param {string} fechaIngreso - La nueva fecha de ingreso que se establecerá en el estado.
+   * @example
+   * this.setFechaIngreso('2023-10-01');
+   * @memberof Tramite80314Store
+   */
   public setFechaIngreso(fechaIngreso: string): void {
     this.update((state) => ({
       ...state,
