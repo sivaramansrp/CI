@@ -25,7 +25,7 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import { provideHttpClient } from '@angular/common/http';
 
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
@@ -53,7 +53,8 @@ import { PasoTresComponent } from './component/paso-tres/paso-tres.component'
     WizardComponent,
     FirmaElectronicaComponent, 
     SolicitanteComponent,
-    PasoTresComponent
+    PasoTresComponent,
+    AlertComponent
   ],
   providers: [
     provideHttpClient(),
