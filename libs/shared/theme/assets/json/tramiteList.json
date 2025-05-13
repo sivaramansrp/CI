@@ -800,8 +800,8 @@
   {
     "id": 115,
     "tramite": 110207,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/reportes/solicitud",
+    "linkDepartment": "/pago/reportes/solicitud",
     "department": "se"
   },
   {
@@ -849,8 +849,8 @@
   {
     "id": 122,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
@@ -982,8 +982,8 @@
   {
     "id": 141,
     "tramite": 32506,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-destruccion/solicitante",
+    "linkDepartment": "/pago/aviso-destruccion/solicitante",
     "department": "agace"
   },
   {
@@ -2228,8 +2228,8 @@
   {
     "id": 319,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+   "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
