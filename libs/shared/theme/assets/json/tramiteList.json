@@ -786,8 +786,8 @@
   {
     "id": 113,
     "tramite": 32301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso/aviso-modificacion",
+    "linkDepartment": "/pago/aviso/aviso-modificacion",
     "department": "agace"
   },
   {
