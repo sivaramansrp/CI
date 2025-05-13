@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
     "department": "se"
   },
   {
@@ -2018,8 +2018,8 @@
   {
     "id": 289,
     "tramite": 80211,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
+    "linkDepartment": "/pago/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
     "department": "se"
   },
   {
@@ -2172,8 +2172,8 @@
   {
     "id": 311,
     "tramite": 240123,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/aviso-de-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/aviso-de-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -2914,8 +2914,8 @@
   {
     "id": 418,
     "tramite": 630103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/autorizacion-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/autorizacion-importacion-temporal/solicitud",
     "department": "aga"
   },
   {
