@@ -45,6 +45,17 @@
           formControlName="descripcionJustificacion"
           (change)="setValoresStore(paisForm,'descripcionJustificacion', 'setDescripcionJustificacion')"
         ></textarea>
+        @if (paisForm.controls['descripcionJustificacion'].invalid && paisForm.controls['descripcionJustificacion'].touched) {
+          <div class="text-danger">
+            @if (paisForm.controls['descripcionJustificacion'].errors?.['required']) {
+              <small>La justificación es obligatoria.</small>
+            }
+            @if (paisForm.controls['descripcionJustificacion'].errors?.['leadingSpaces']) {
+              <small>No se permiten espacios al inicio del campo.</small>
+            }
+          </div>
+        }
+        
       </div>
     </div>
   </div>
@@ -60,6 +71,14 @@
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones', 'setObservaciones')"
         ></textarea>
+        @if (paisForm.controls['observaciones'].invalid && paisForm.controls['observaciones'].touched) {
+          <div class="text-danger">
+            @if (paisForm.controls['observaciones'].errors?.['leadingSpaces']) {
+              <small>No se permiten espacios al inicio del campo.</small>
+            }
+          </div>
+        }
+        
       </div>
     </div>
   </div>

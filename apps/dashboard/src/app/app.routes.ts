@@ -3,14 +3,14 @@ import { Route } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from './environments/environment';
 
 export const appRoutes: Route[] = [
   {
     path: 'login',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/login/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.login}/remoteAppEntry.js`,
         remoteName: 'login',
         exposedModule: './Module'
       }).then((m) => m.RemoteEntryModule)
@@ -28,7 +28,7 @@ export const appRoutes: Route[] = [
     path: 'aga',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/aga/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.aga}/remoteAppEntry.js`,
         remoteName: 'aga',
         exposedModule: './Module'
       }).then((m) => m.AppAgaModule)
@@ -36,9 +36,8 @@ export const appRoutes: Route[] = [
   {
     path: 'agace',
     loadChildren: () =>
-      // loadRemoteModule('agace', './Routes').then((m) => m.REMOTE_ROUTES),
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/agace/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.agace}/remoteAppEntry.js`,
         remoteName: 'agace',
         exposedModule: './Module'
       }).then((m) => m.AppAgaceModule),
@@ -47,7 +46,7 @@ export const appRoutes: Route[] = [
     path: 'agriculture',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/agriculture/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.agriculture}/remoteAppEntry.js`,
         remoteName: 'agriculture',
         exposedModule: './Module'
       }).then((m) => m.AppAgriculturaModule)
@@ -56,7 +55,7 @@ export const appRoutes: Route[] = [
     path: 'se',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/se/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.se}/remoteAppEntry.js`,
         remoteName: 'se',
         exposedModule: './Module'
       }).then((m) => m.AppSEModule)
@@ -65,16 +64,26 @@ export const appRoutes: Route[] = [
     path: 'semarnat',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}/semarnat/remoteAppEntry.js`,
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.semarnat}/remoteAppEntry.js`,
         remoteName: 'semarnat',
         exposedModule: './Module'
       }).then((m) => m.AppSemarnatModule)
   },
   {
+    path: 'sener',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.sener}/remoteAppEntry.js`,
+        remoteName: 'sener',
+        exposedModule: './Module'
+      }).then((m) => m.AppSenerModule)
+  },
+  
+  {
     path: 'funcionario',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}/funcionario/remoteAppEntry.js`,
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.funcionario}/remoteAppEntry.js`,
             remoteName: 'funcionario',
             exposedModule: './Module'
         }).then((m) => m.AppFuncionarioModule)
@@ -83,7 +92,7 @@ export const appRoutes: Route[] = [
   path: 'amecafe',
   loadChildren: () =>
       loadRemoteModule({
-          remoteEntry: `${enviroment.WEB_HOST}/amecafe/remoteAppEntry.js`,
+          remoteEntry: `${ENVIRONMENT.REMOTE_APPS.amecafe}/remoteAppEntry.js`,
           remoteName: 'amecafe',
           exposedModule: './Module'
       }).then((m) => m.AppAmecafeModule)
@@ -92,7 +101,7 @@ export const appRoutes: Route[] = [
     path: 'sedena',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}/sedena/remoteAppEntry.js`,
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.sedena}/remoteAppEntry.js`,
             remoteName: 'sedena',
             exposedModule: './Module'
         }).then((m) => m.AppSedenaModule)
@@ -101,16 +110,25 @@ export const appRoutes: Route[] = [
     path: 'inbal',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}/inbal/remoteAppEntry.js`,
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.inbal}/remoteAppEntry.js`,
             remoteName: 'inbal',
             exposedModule: './Module'
         }).then((m) => m.AppInbalModule)
   },
   {
+    path: 'cofepris',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.cofepris}/remoteAppEntry.js`,
+            remoteName: 'cofepris',
+            exposedModule: './Module'
+        }).then((m) => m.AppCofeprisModule)
+  },
+  {
     path: 'profepa',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}/profepa/remoteAppEntry.js`,
+            remoteEntry: `${ENVIRONMENT.REMOTE_APPS.profepa}/remoteAppEntry.js`,
             remoteName: 'profepa',
             exposedModule: './Module'
         }).then((m) => m.AppProfepaModule)

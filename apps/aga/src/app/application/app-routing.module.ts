@@ -155,6 +155,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
+  {
     path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then(
@@ -164,8 +171,9 @@ const ROUTES: Routes = [
   {
     path: 'attention-Of-Renewal',
     loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
+      import('./tramites/40403/atencionDeRenovacion.module').then(
+        (m) => m.AtencionDeRenovacionModule
+
       ),
   },
   {
@@ -197,6 +205,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
+      )
+  },
+  {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
       import('./tramites/40202/modificacion-transportacion-maritima.module').then(
@@ -217,19 +232,27 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      )
+  },
+  
   { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
         (m) => m.PrestadoresServicioModule
-      ),
+      )
   },
   {
     path: 'exencion-impuestos',
     loadChildren: () =>
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
-      ),
+      )
   },
   {
     path:'registro-solicitud',
@@ -255,6 +278,19 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
+  },
+  {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule),
   }
 ];
 

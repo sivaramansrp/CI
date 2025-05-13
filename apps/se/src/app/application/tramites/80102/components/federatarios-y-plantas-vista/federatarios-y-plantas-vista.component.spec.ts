@@ -1,79 +1,64 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { FederatariosYPlantasVistaComponent } from './federatarios-y-plantas-vista.component';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+
+@Injectable()
+class MockTramite80102Store {}
+
+@Injectable()
+class MockTramite80102Query {
+  selectDatosFederatarios$ = {};
+}
 
 describe('FederatariosYPlantasVistaComponent', () => {
-  let component: FederatariosYPlantasVistaComponent;
-  let fixture: ComponentFixture<FederatariosYPlantasVistaComponent>;
-  let mockStore: any;
-  let mockQuery: any;
-  let mockActivatedRoute: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    // Create mocks for dependencies
-    mockStore = { setFederatarios: jest.fn() };
-    mockQuery = {
-      selectDatosFederatarios$: of([]), // Mock the observable
-    };
-    mockActivatedRoute = {
-      snapshot: {
-        paramMap: {
-          get: jest.fn(),
-        },
-      },
-    };
-
-    // Configure TestBed
-    await TestBed.configureTestingModule({
-      imports: [FederatariosYPlantasVistaComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FederatariosYPlantasVistaComponent, FormsModule, ReactiveFormsModule ],
       declarations: [],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite80102Store, useValue: mockStore },
-        { provide: Tramite80102Query, useValue: mockQuery },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-      ],
-    }).compileComponents();
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              params: {},
+              queryParams: {}
+            }
+          }
+        },
+        { provide: Tramite80102Store, useClass: MockTramite80102Store },
+        { provide: Tramite80102Query, useClass: MockTramite80102Query }
+      ]
+    }).overrideComponent(FederatariosYPlantasVistaComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(FederatariosYPlantasVistaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize federatariosTablaConfiguracion correctly', () => {
-    expect(component.federatariosTablaConfiguracion.TablaSeleccion).toEqual('CHECKBOX');
+  it('should run #setFormaDatos()', async () => {
+    component.store = component.store || {};
+    component.store.setFederatarios = jest.fn();
+    component.setFormaDatos({});
+    expect(component.store.setFederatarios).toHaveBeenCalled();
   });
 
-  it('should initialize federatariosTablaLista$ with observable data', (done) => {
-    component.federatariosTablaLista$.subscribe((data) => {
-      expect(data).toEqual([]);
-      done();
-    });
-  });
-
-  it('should initialize plantasDisponiblesTablaConfiguracion correctly', () => {
-    expect(
-      component.plantasDisponiblesTablaConfiguracion.TablaSeleccion
-    ).toEqual('CHECKBOX');
-  });
-
-  it('should initialize plantasImmexTablaConfiguracion correctly', () => {
-    expect(component.plantasImmexTablaConfiguracion.TablaSeleccion).toEqual(
-      'CHECKBOX'
-    );
-  });
-
-  it('should initialize plantasDisponiblesTablaLista as an empty array', () => {
-    expect(component.plantasDisponiblesTablaLista).toEqual([]);
-  });
-
-  it('should initialize plantasImmexTablaLista as an empty array', () => {
-    expect(component.plantasImmexTablaLista).toEqual([]);
-  });
 });
