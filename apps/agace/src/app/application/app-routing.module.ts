@@ -164,6 +164,12 @@ const ROUTES: Routes = [
         (m) => m.ImportadorYOExportadorModule
       ),
   },
+  { 
+    path: 'retorno-seguro-vehiculos-extranjeros',
+    loadChildren: () =>
+      import('./tramites/32514/aviso-retorno.module').then(
+        (m) => m.AvisoRetornoModule)
+  }
 ];
 
 @NgModule({
