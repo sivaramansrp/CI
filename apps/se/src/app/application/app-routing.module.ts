@@ -395,16 +395,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion',
     loadChildren: () =>
-      import(
-        './tramites/130110/importacion-neumaticos-comercializar.module'
-      ).then((m) => m.ImportacionNeumaticosComercializarModule),
+      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+        (m) => m.ImportacionNeumaticosComercializarModule
+      ),
   },
   {
     path: 'importacion',
     loadChildren: () =>
-      import(
-        './tramites/130113/importacion-equipo-anticontaminante.module'
-      ).then((m) => m.ImportacionEquipoAnticontaminanteModule),
+      import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+        (m) => m.ImportacionEquipoAnticontaminanteModule
+      ),
   },
   {
     path: 'importacion-de',
@@ -430,9 +430,9 @@ const ROUTES: Routes = [
   {
     path: 'importacion-otros-vehiculos-usados',
     loadChildren: () =>
-      import(
-        './tramites/130104/importacion-otros-vehiculos-usados.module'
-      ).then((m) => m.ImportacionOtrosVehiculosUsadosModule),
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
   },
   {
     path: 'modalidad-ampliacion',
@@ -460,7 +460,8 @@ const ROUTES: Routes = [
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
       ),
-  },  {
+  },  
+  {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
@@ -504,7 +505,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado-alianza-posteriori',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110223/certificado-alianza-posteriori.module').then(
         (m) => m.CertificadoAlianzaPosterioriModule
       )
@@ -551,6 +552,14 @@ const ROUTES: Routes = [
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
+  },
+
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110205/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
   },
 
 ];
