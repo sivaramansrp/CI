@@ -12,7 +12,6 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 // import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
-
 @Component({
   selector: 'lib-bandeja',
   standalone: true,
@@ -22,88 +21,96 @@ import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
     FormasDinamicasComponent,
     RouterModule,
     TablaDinamicaComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
   ],
   templateUrl: './lib-bandeja.component.html',
   styleUrl: './lib-bandeja.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class LibBandejaComponent<T> implements OnInit {
+  @Input() public titulo!: string;
+  @Input() public tieneBandeja: boolean = false;
+  @Input() public tablaTitulo!: string;
+  @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
+  @Input() configuracionTablaDatos: any[] = [];
+  @Input() public bandejaSolicitudeDatos: any[] = [];
+  public procedureUrl!: string;
+  public hasValidForm: boolean = false;
 
-    @Input() public titulo!: string;
-    @Input() public tieneBandeja: boolean = false;
-    @Input() public tablaTitulo!: string;
-    @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
-    @Input() configuracionTablaDatos: any[] = [];
-    @Input() public bandejaSolicitudeDatos: any[] = [];
-    public procedureUrl!: string;
-    public hasValidForm: boolean = false;
+  public dinamicasBandejaForma: FormGroup = new FormGroup({
+    bandejaSolicitudeFormGroup: new FormGroup({}),
+  });
 
-    public dinamicasBandejaForma: FormGroup = new FormGroup({
-      bandejaSolicitudeFormGroup: new FormGroup({})
-    });
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
+  public originalConfiguracionTabla: any[] = [];
+  public tramiteData: TramiteDetails[] = [];
+  public paisDeOriginColapsable = false;
+  public totalItems: number = 0;
+  public currentPage: number = 1;
+  public itemsPerPage: number = 5;
+  public miembroDeLaEmpresaBodyData: unknown[] = [];
 
-    public originalConfiguracionTabla: any[] = [];
-    public tramiteData: TramiteDetails[] = [];
-    public paisDeOriginColapsable = false;
-    public totalItems: number = 0;
-    public currentPage: number = 1;
-    public itemsPerPage: number = 5;
-    public miembroDeLaEmpresaBodyData: unknown[] = [];
-    public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
+  constructor(
+    public router: Router,
+    private consultaioStore: ConsultaioStore
+  ) {}
 
-
-    constructor(
-      public router: Router,
-      private consultaioStore: ConsultaioStore
-    ) {
-      
-    }
-
-    ngOnInit(): void {
-      if(this.tieneBandeja) {
-        this.hasValidForm = true;
-      }
-      this.filterConfiguracionTabla();
-    }
-
-    get bandejaSolicitudeFormGroup(): FormGroup {
-      return this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup;
-    }
-
-    public filterConfiguracionTabla(): void {
-      this.configuracionTabla = this.configuracionTabla.filter(item => 
-        item.encabezado !== 'Departamento' && item.encabezado !== 'Número de procedimiento' && item.encabezado !== 'Origin'
-      );
-    }
-
-    public enviarDatos(): void {
+  ngOnInit(): void {
+    if (this.tieneBandeja) {
       this.hasValidForm = true;
-      if (this.dinamicasBandejaForma.valid) {
-        this.hasValidForm = true;
-      }
     }
+    this.filterConfiguracionTabla();
+  }
 
-    public onFilaClic(event:any):void {
-      const ROW_OBJETO = event;
-      const PROCEDURE: unknown | number = Number(ROW_OBJETO.numeroDeProcedimiento);
-      const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
-      this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
-      this.procedureUrl = this.tramiteData[0].linkDashboard;
-      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,ROW_OBJETO.folioTramite, ROW_OBJETO.tipoDeTramite, true,true,true);
-      if(!this.tieneBandeja) {
-        this.router.navigate([this.procedureUrl]);
-      }
-      if((ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO')) {
-        this.router.navigate([`/${this.tramiteData[0].department}/proceso-requerimiento`]);  
-      }
-      
+  get bandejaSolicitudeFormGroup(): FormGroup {
+    return this.dinamicasBandejaForma.get(
+      'bandejaSolicitudeFormGroup'
+    ) as FormGroup;
+  }
+
+  public filterConfiguracionTabla(): void {
+    this.configuracionTabla = this.configuracionTabla.filter(
+      (item) =>
+        item.encabezado !== 'Departamento' &&
+        item.encabezado !== 'Número de procedimiento' &&
+        item.encabezado !== 'Origin'
+    );
+  }
+
+  public enviarDatos(): void {
+    this.hasValidForm = true;
+    if (this.dinamicasBandejaForma.valid) {
+      this.hasValidForm = true;
     }
-    public mostrarColapsable(orden:number): void {
-      if (orden === 1) {
-        this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
-      }
+  }
+
+  public onFilaClic(event: any): void {
+    const ROW_OBJETO = event;
+    const PROCEDURE: unknown | number = Number(
+      ROW_OBJETO.numeroDeProcedimiento
+    );
+    const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
+    this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
+    this.procedureUrl = this.tramiteData[0].linkDashboard;
+    this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,ROW_OBJETO.folioTramite,ROW_OBJETO.tipoDeTramite,true,false,false);
+    if(!this.tieneBandeja) {
+      this.router.navigate([this.procedureUrl]);
     }
+    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
+      this.router.navigate([
+        `/${this.tramiteData[0].department}/proceso-requerimiento`,
+      ]);
+    } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
+      this.router.navigate(['/confirmar-notificacion']);
+    } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION') {
+      this.router.navigate(['/confirmar-resolucion']);
+    }
+  }
+  public mostrarColapsable(orden: number): void {
+    if (orden === 1) {
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+    }
+  }
 
   public onPageChange(page: number): void {
     this.currentPage = page;
