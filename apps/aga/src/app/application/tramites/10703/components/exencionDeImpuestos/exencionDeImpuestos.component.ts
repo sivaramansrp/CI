@@ -6,7 +6,7 @@ import {
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -38,7 +38,7 @@ import { Tramite10703Query } from '../../estados/tramite10703.query';
   ],
   templateUrl: './exencionDeImpuestos.component.html',
 })
-export class ExencionDeImpuestosComponent implements OnInit {
+export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de aduanas.
    */
@@ -491,5 +491,14 @@ export class ExencionDeImpuestosComponent implements OnInit {
      * Convierte el valor a número y actualiza el estado.
      */
     this.store.setAduana(Number(ADUANA));
+  }
+
+   /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destroy$` para cancelar las suscripciones.
+   */
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
