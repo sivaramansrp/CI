@@ -168,3 +168,4 @@ export { SolicitanteasigncionserviceService } from './core/services/120404/solic
 export { enviroment } from './enviroments/enviroment';
 export * from './core/estados/consulta.store';
 export * from './core/queries/consulta.query';
+export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
