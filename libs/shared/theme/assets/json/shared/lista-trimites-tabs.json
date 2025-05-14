@@ -1,0 +1,44 @@
+[
+    {
+        "titulo": "Solicitud",
+        "id": "solicitud",
+        "disabled": false,
+        "tramite": 301
+    },
+    {
+        "titulo": "Documentos",
+        "id": "documentos",
+        "disabled": false,
+        "tramite": 301
+    },
+    {
+        "titulo": "Dictamen",
+        "id": "dictamen",
+        "disabled": true,
+        "tramite": 301
+    },
+    {
+        "titulo": "Requerimientos",
+        "id": "requerimientos",
+        "disabled": false,
+        "tramite": 301
+    },
+    {
+        "titulo": "Solicitud",
+        "id": "solicitud",
+        "disabled": false,
+        "tramite": 301
+    },
+    {
+        "titulo": "Documentos",
+        "id": "documentos",
+        "disabled": false,
+        "tramite": 301
+    },
+    {
+        "titulo": "Dictamen",
+        "id": "dictamen",
+        "disabled": false,
+        "tramite": 301
+    }
+]
