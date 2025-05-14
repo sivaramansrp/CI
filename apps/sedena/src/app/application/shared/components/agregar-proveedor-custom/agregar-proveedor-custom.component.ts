@@ -98,8 +98,23 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   
   
   @Input() proveedorTablaDatos: Proveedor[] = [];
-
+  /**
+   * @property isProveedorModificar
+   * @description Indica si el proveedor está en modo de modificación.
+   * Se utiliza para determinar si se debe mostrar el título de modificación o creación.
+   * @type {boolean}
+   */
   isProveedorModificar: boolean = false;
+
+  /**
+   * @property titluoMensaje
+   * @description Título del mensaje que se muestra en el formulario.
+   * Se utiliza para indicar si se está creando o modificando un proveedor.
+   * @type {string}
+   */
+
+
+  titluoMensaje: string = 'Agregar Proveedor'
 
   
 
@@ -265,6 +280,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
     this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
     this.isProveedorModificar= PROVEEDOR_TITULO_CUSTOM.includes(this.idProcedimiento);
+    if(this.isProveedorModificar) {
+      this.titluoMensaje = 'Modificar Proveedor';
+    }
     this.campoObligatorioChange();
     if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);

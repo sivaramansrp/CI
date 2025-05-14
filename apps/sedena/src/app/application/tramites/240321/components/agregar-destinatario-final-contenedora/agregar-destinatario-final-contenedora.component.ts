@@ -32,6 +32,10 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
      * @private
      */
     private unsubscribe$ = new Subject<void>();
+    /**
+     * Almacena el índice del destinatario actual.
+     * @property {string} destinatarioIndice
+     */
 
     destinatarioIndice: string= '';
 

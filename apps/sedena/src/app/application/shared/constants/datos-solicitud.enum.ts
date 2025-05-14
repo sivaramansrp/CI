@@ -215,7 +215,35 @@ export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
  */
 export const TERCEROS_NACIONALIDAD = [240123];
 
+
+
+/**
+ * Constante que representa los títulos personalizados para el destinatario.
+ * 
+ * @const DESTINATARIO_TITULO_CUSTOM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los títulos personalizados que se aplican al destinatario en el sistema.
+ */
+
 export const DESTINATARIO_TITULO_CUSTOM=[240321];
+/**
+ * Constante que representa los títulos personalizados para el proveedor.
+ * 
+ * @const PROVEEDOR_TITULO_CUSTOM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los títulos personalizados que se aplican al proveedor en el sistema.
+ */
 export const PROVEEDOR_TITULO_CUSTOM=[240321];
+/**
+ * Constante que representa los identificadores para ocultar el botón "Modificar Terceros".
+ * 
+ * @const OCULTAR_BOTON_MODIFICAR_TERCEROS
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * las condiciones en las que se debe ocultar el botón "Modificar Terceros" en el sistema.
+ */
+
 export const OCULTAR_BOTON_MODIFICAR_TERCEROS=[240321];
 

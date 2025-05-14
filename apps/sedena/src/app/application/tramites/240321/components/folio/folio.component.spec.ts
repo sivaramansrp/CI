@@ -103,10 +103,12 @@ describe('FolioComponent', () => {
   });
 
   it('should run #ngOnDestroy()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.unsubscribe = jest.fn();
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.subscription.unsubscribe).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

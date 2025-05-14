@@ -41,12 +41,6 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
 export class FolioComponent implements OnInit, OnDestroy {
 
   /**
-   * @property {Subscription} subscription
-   * Suscripción activa para manejar la limpieza de recursos.
-   */
-  
-  private subscription: Subscription = new Subscription();
-  /**
    * @property {FormGroup} formularioInfoRegistro
    * Formulario reactivo que contiene la información del registro.
    */
@@ -63,6 +57,14 @@ export class FolioComponent implements OnInit, OnDestroy {
    */
   
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constructor del componente.
+   * @constructor
+   * @param {FormBuilder} fb - Constructor de formularios reactivos.
+   * @param {Tramite240321Store} tramiteStore - Store que gestiona el estado del trámite.
+   * @param {Tramite240321Query} tramiteQuery - Query para acceder a los datos del trámite.
+   */
   
   constructor(
     private fb: FormBuilder,
@@ -121,7 +123,9 @@ export class FolioComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  
   }
 
   
