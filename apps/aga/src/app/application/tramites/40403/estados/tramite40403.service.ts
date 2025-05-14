@@ -1,37 +1,36 @@
-import { Observable, catchError, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Tramite40403Store } from './tramite40403.store';
+import { Observable } from 'rxjs';
 
+import { CAATRespuesta } from '../models/atencion-de-renovacion.model';
+
+/**
+ * Servicio para gestionar la atención a la renovación del trámite 40403.
+ */
 @Injectable({
   providedIn: 'root',
 })
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * Clase que representa el servicio de atención a la renovación del trámite 40403.
+ */
 export class Tramite40403Service {
   /**
-   * Ruta base para acceder a los archivos JSON locales relacionados con el trámite.
-   */
-  baseUrl = '../../../../../assets/json/40403/';
-
-  /**
    * Constructor del servicio.
-   * @param tramite40403Store - Almacén de estado para gestionar datos relacionados con el trámite.
    * @param http - Cliente HTTP para realizar solicitudes a la API o cargar recursos.
    */
   constructor(
-    private tramite40403Store: Tramite40403Store,
     private http: HttpClient
-  ) {}
+  ) {
+    // Constructor vacío, se utiliza para inyección de dependencias.
+  }
 
   /**
    * Obtiene el catálogo de tipos de CAAT aéreo desde un archivo JSON local.
    * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
    */
   getTipoDeCaatAerea(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40403/tipo-CAAT-aéreo.json');
+    return this.http.get<Catalogo[]>('/assets/json/40403/tipo-caat-aereo.json');
   }
 
   /**
@@ -44,15 +43,9 @@ export class Tramite40403Service {
 
   /**
    * Busca una solicitud utilizando el valor de `claveFolioCAAT` proporcionado.
-   * @param claveFolioCAAT - Clave única del folio CAAT para realizar la búsqueda.
-   * @returns Un observable que emite los datos de la solicitud encontrada o un error en caso de fallo.
+   * @returns Un observable que emite un objeto de tipo `CAATRespuesta`.
    */
-  buscarSolicitudPorCAATe(claveFolioCAAT: string): Observable<any> {
-    const BASE_URL = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
-    return this.http.get<any>(BASE_URL).pipe(
-      catchError((error) => {
-        return throwError(() => error);
-      })
-    );
+  buscarSolicitudPorCAATe(): Observable<CAATRespuesta> {
+    return this.http.get<CAATRespuesta>('/assets/json/40403/caat.json');
   }
 }

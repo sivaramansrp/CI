@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, CatalogosService } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent,CatalogosService} from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -29,7 +29,6 @@ import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { forwardRef } from '@angular/core';
 
-
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -49,7 +48,7 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
-    forwardRef(() => FirmaElectronicaComponent),
+    forwardRef(() => FirmaElectronicaComponent),   
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),

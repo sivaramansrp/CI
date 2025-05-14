@@ -93,7 +93,9 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado:</label>
+        <label class="form-label">Estado</label>
+        <span class="form-label" *ngIf="elementosRequeridos.includes('estado')">*</span>
+        <span class="form-label">:</span>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
       <div class="col-md-4">

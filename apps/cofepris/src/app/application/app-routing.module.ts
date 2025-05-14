@@ -331,6 +331,12 @@ const ROUTES: Routes = [
       
   },
   {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
+  },
+  {
     path: 'permiso-sujetos',
     loadChildren: () =>
       import(
@@ -364,6 +370,14 @@ const ROUTES: Routes = [
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
+
+{
+  path: 'importacion-remedios-herbolarios',
+  loadChildren: () =>
+  import('./tramites/260219/importacion-destinados-donacio.module').then(
+    (m) => m.ImportacionRemediosHerbolariosModule),
+},
+
 {
   path: 'permiso-transformacion-maquila',
   loadChildren: () =>
@@ -383,6 +397,19 @@ const ROUTES: Routes = [
   loadChildren: () =>
     import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},  
+{
+  path: 'importacion-de-insumos',
+  loadChildren: () =>
+    import('./tramites/260914/importacion-de-insumos.module').then(
+      (m) => m.ImportacionDeInsumosModule
+    ),
+},
+{
+  path: 'solicitud-modificacion-permiso-internacion',
+  loadChildren: () =>
+    import('./tramites/261402/solicitud-modificacion-permiso-internacion.module').then(
+      (m) => m.SolicitudModificacionPermisoInternacionModule)
 },
 {
     path: 'enmienda-permiso-sanitario',
@@ -398,7 +425,128 @@ const ROUTES: Routes = [
           (m) => m.DatosSolicitudeModule
         ),
   },
+  {
+        path: 'importar-suministros-medicos',
+        loadChildren: () =>
+          import('./tramites/260916/importar-suministros-medicos.module').then(
+            (m) => m.ImportarSuministrosMedicosModule
+          )
+  },
+  {
+    path: 'correccion-interna-de-la-cofepris',
+    loadChildren: () =>
+      import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+        (m) => m.CorreccionInternaDeLaCofeprisModule)
+  },
 
+  {
+    path: 'modificacion-permiso-importacion-medicamentos',
+    loadChildren: () =>
+      import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
+        (m) => m.ModificacionPermisoImportacionModule
+      ),
+},
+{
+  path: 'modificacion-permiso-meds-uso',
+  loadChildren: () =>
+    import('./tramites/260908/modificacion-permiso-meds-uso.module').then(
+      (m) => m.ModificacionPermisoMedsUsoModule
+    ),
+},
+ {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
+  },
+
+
+{
+  path: 'exportacion-medicamentos-contengan',
+  loadChildren: () =>
+    import('./tramites/260304/exportacion-medicamentos-contengan.module').then(
+      (m) => m.ExportacionMedicamentosContenganModule
+    ),
+},
+
+{
+  path: 'permiso-importacion-module',
+  loadChildren: () =>
+  import('./tramites/260917/permiso-importacion.module').then(
+    (m) => m.PermisoImportacionModule),
+},
+{
+  path: 'modificacion-permiso-importacion-tratamientos',
+  loadChildren: () =>
+    import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
+      (m) => m.ModificacionPermisoImportacionTratamientosModule
+    ),
+},
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
+},
+{   
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+},
+{
+  path: 'importacion-plafest',
+  loadChildren: () =>
+    import('./tramites/260507/importacion-plafest.module').then(
+      (m) => m.ImportacionPlafestModule
+    ),
+},
+{
+      path: 'medicamentos-donacion',
+      loadChildren: () =>
+        import('./tramites/260909/medicamentos-donacion.module').then(
+          (m) => m.MedicamentosDonacionModule
+        )
+    },
+    
+{
+  path: 'importar-de-remedios-herbals',
+  loadChildren: () =>
+    import('./tramites/260919/importar-de-remedios-herbals.module').then(
+      (m) => m.ImportarDeRemediosHerbalsModule
+    ),
+},
 ];
 
 @NgModule({

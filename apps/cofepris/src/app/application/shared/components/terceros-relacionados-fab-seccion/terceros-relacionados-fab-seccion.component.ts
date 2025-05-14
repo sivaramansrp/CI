@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatosSeleccionados } from '../../models/terceros-fabricante-relocionados.model';
+import { DatosSeleccionados, FabricanteRowData } from '../../models/terceros-fabricante-relocionados.model';
 
 import { NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
 import { ModalComponent } from '../modal/modal.component';
@@ -16,6 +16,8 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
 
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacionados.stores';
+
+
 
 @Component({
   selector: 'app-terceros-relacionados-fab-seccion',
@@ -1226,6 +1228,7 @@ public extranjero = false;
       this.showTableDiv = !this.showTableDiv;
       this.showDestinatario = !this.showDestinatario;
     }
+ 
   
     /**
      * Envía el formulario de Proveedor y actualiza los datos en el store.

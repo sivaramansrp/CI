@@ -118,7 +118,7 @@ export class ExportacionMineralesDeHierroService {
  */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-          'assets/json/130111/partidas-de-la.json'
+          'assets/json/130108/partidas-de-la.json'
         );
   }
 }

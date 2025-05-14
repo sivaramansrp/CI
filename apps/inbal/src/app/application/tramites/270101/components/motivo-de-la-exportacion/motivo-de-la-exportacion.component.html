@@ -1,0 +1,11 @@
+<form [formGroup]="forma">
+  <div class="row">
+    <formas-dinamicas
+      formularioTitulo="Motivo de la exportación"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="motivoFormData"
+      [estado]="exportarIlustracionesState"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"
+    ></formas-dinamicas>
+  </div>
+</form>

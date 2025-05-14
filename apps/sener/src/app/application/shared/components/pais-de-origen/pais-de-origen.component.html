@@ -2,7 +2,7 @@
   <form [formGroup]="paisForm">
    
   <div class="row">
-    <ng-titulo titulo="País(es) de origen"> </ng-titulo>
+    <ng-titulo titulo={{titulo}}> </ng-titulo>
  
     <div class="row mb-5">
       <div class="col-md-4">
@@ -37,7 +37,7 @@
         >
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="usoEspecifico"
           placeholder=""
           formControlName="usoEspecifico"
@@ -65,7 +65,7 @@
         >
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="justificacionImportacionExportacion"
           placeholder=""
           formControlName="justificacionImportacionExportacion"
@@ -87,12 +87,12 @@
   </div>
  
   <div class="row mt-4">
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="form-group">
         <label for="Observaciones" class="form-label">Observaciones:</label>
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="Observaciones"
           placeholder=""
           formControlName="observaciones"

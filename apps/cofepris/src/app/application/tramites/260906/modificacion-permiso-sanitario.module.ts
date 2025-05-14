@@ -17,7 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SanitarioService } from './services/sanitario.service';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
-import { TercerosRelacionadoesComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadoesComponent } from './components/terceros-Relacionados/terceros-Relacionados.component';
 import { forwardRef } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 

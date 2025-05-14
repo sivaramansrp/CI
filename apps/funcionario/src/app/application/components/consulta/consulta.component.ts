@@ -1,11 +1,23 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+import { BandejaComponent } from "@libs/shared/data-access-user/src/tramites/components/consulta-generica/bandeja/bandeja.component";
 import { CommonModule } from '@angular/common';
+import { FolioStore } from '@libs/shared/data-access-user/src/core/estados/folio.store';
 
 @Component({
   selector: 'app-consulta',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BandejaComponent],
   templateUrl: './consulta.component.html',
   styleUrl: './consulta.component.scss',
 })
-export class ConsultaComponent {}
+export class ConsultaComponent implements OnInit {
+  constructor(private folioStore: FolioStore) {
+    // constructor vacio
+  }
+  
+  ngOnInit(): void {
+    // Guardar el folio en el store
+    this.folioStore.update({ folio: '01010101010101010101010101010101' });
+  }
+}

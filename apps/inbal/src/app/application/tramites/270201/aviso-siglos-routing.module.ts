@@ -5,9 +5,14 @@ import { AvisoSiglosComponent } from './pages/aviso-siglos/aviso-siglos.componen
 
 const ROUTES: Routes = [
   {
-    path:'solictud',
+    path:'solicitud',
     component:AvisoSiglosComponent
-  }
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'solicitud',
+  },
 ];
 
 @NgModule({

@@ -196,11 +196,20 @@
 
     <div class="row mt-3">
       <div class="col-md-9">
-        <label class="form-label">Calle:</label>
+        <label class="form-label">Calle</label>
+        <span class="form-label" *ngIf="elementosRequeridos.includes('calle')">*</span>
+        <span class="form-label">:</span>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Física"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="calle" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Número exterior:</label>
+        <label class="form-label">Número exterior</label>
+        <span class="form-label" *ngIf="elementosRequeridos.includes('numeroExterior')">*</span>
+        <span class="form-label">:</span>
         <input
           type="text"
           class="form-control"

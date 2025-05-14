@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProgramaACancelarService } from './programACancelar.service';
-import { programaACancelar } from '@libs/shared/data-access-user/src/core/models/140101/programaACancelar.model';
-
+import { ProgramaACancelar } from '../../../shared/models/programa-cancelar.model';
 describe('ProgramaACancelarService', () => {
   let service: ProgramaACancelarService;
   let httpMock: HttpTestingController;
@@ -26,7 +25,7 @@ describe('ProgramaACancelarService', () => {
   });
 
   it('should fetch programaACancelar data', () => {
-    const mockData: programaACancelar = {
+    const mockData: ProgramaACancelar = {
       folioPrograma: '12345',
       idProgramaSeleccionado: '67890',
       modalidad: 'Presencial',

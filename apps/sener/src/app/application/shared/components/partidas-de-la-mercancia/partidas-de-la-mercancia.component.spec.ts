@@ -3,6 +3,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
+interface PartidasDeLaMercanciaModelo {
+  id: number;
+  cantidad: string;
+  unidadDeMedida: string;
+  fraccionFrancelaria: string;
+  descripcion: string;
+  valorUSD: number;
+  precioUnitarioUSD: string;
+  totalUSD: string;
+}
+
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
   let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
@@ -10,84 +21,101 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], // Import standalone component
+      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent],
     }).compileComponents();
-  
+
     formBuilder = TestBed.inject(FormBuilder);
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
+
     component.partidasDelaMercanciaForm = formBuilder.group({
       cantidadPartidasDeLaMercancia: ['', Validators.required],
       nombrePartida: ['', Validators.required],
-      descripcionPartidasDeLaMercancia: ['', Validators.required], 
-      valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required], 
+      descripcionPartidasDeLaMercancia: ['', Validators.required],
+      valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
+      cantidadModificar: ['', Validators.required],
+      descripcionModificar: ['', Validators.required],
     });
-  
-    fixture.detectChanges(); 
+    fixture.detectChanges();
   });
-  
-  
-  
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return true if form control is invalid in esInvalido', () => {
+  it('debería devolver true si el control del formulario es inválido en esInvalido', () => {
     component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('');
     component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
 
-    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
-    expect(isInvalid).toBe(true);
+    const ES_INVALIDO = component.esInvalido('cantidadPartidasDeLaMercancia');
+    expect(ES_INVALIDO).toBe(true);
   });
 
-  it('should return false if form control is valid in esInvalido', () => {
-    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('Valid Value');
+  it('debería devolver false si el control del formulario es válido en esInvalido', () => {
+    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('Valor Válido');
     component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
 
-    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
-    expect(isInvalid).toBe(false);
+    const ES_INVALIDO = component.esInvalido('cantidadPartidasDeLaMercancia');
+    expect(ES_INVALIDO).toBe(false);
   });
 
-  it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
-    const emitSpy = spyOn(component.filaSeleccionadaChange, 'emit');
-    const filasSeleccionadas = [{ id: 1 }, { id: 2 }];
+  it('debería emitir filaSeleccionadaChange cuando se llama a handleListaDeFilaSeleccionada', () => {
+    const EMIT_SPY = spyOn(component.filaSeleccionadaChange, 'emit');
+    const FILASSELECCIONADAS: PartidasDeLaMercanciaModelo[] = [
+      {
+        id: 1,
+        cantidad: '10',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '1234.56.78',
+        descripcion: 'Descripción de prueba 1',
+        valorUSD: 100,
+        precioUnitarioUSD: '10',
+        totalUSD: '1000',
+      },
+      {
+        id: 2,
+        cantidad: '20',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '8765.43.21',
+        descripcion: 'Descripción de prueba 2',
+        valorUSD: 200,
+        precioUnitarioUSD: '20',
+        totalUSD: '4000',
+      },
+    ];
+    component.handleListaDeFilaSeleccionada(FILASSELECCIONADAS);
 
-    component.handleListaDeFilaSeleccionada(filasSeleccionadas);
-
-    expect(emitSpy).toHaveBeenCalledWith(filasSeleccionadas);
+    expect(EMIT_SPY).toHaveBeenCalledWith(FILASSELECCIONADAS);
   });
 
-  it('should emit validarYEnviarFormularioEvent when validarYEnviarFormulario is called', () => {
-    const emitSpy = spyOn(component.validarYEnviarFormularioEvent, 'emit');
+  it('debería emitir validarYEnviarFormularioEvent cuando se llama a validarYEnviarFormulario', () => {
+    const EMIT_SPY = spyOn(component.validarYEnviarFormularioEvent, 'emit');
 
     component.validarYEnviarFormulario();
 
-    expect(emitSpy).toHaveBeenCalled();
+    expect(EMIT_SPY).toHaveBeenCalled();
   });
 
-  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
-    const emitSpy = spyOn(component.navegarParaModificarPartidaEvent, 'emit');
+  it('debería emitir navegarParaModificarPartidaEvent cuando se llama a navegarParaModificarPartida', () => {
+    const EMIT_SPY = spyOn(component.navegarParaModificarPartidaEvent, 'emit');
 
     component.navegarParaModificarPartida();
 
-    expect(emitSpy).toHaveBeenCalled();
+    expect(EMIT_SPY).toHaveBeenCalled();
   });
 
-  it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
-    const emitSpy = spyOn(component.setValoresStoreEvent, 'emit');
-    const testForm = formBuilder.group({
+  it('debería emitir setValoresStoreEvent con los argumentos correctos cuando se llama a setValoresStore', () => {
+    const EMIT_SPY = spyOn(component.setValoresStoreEvent, 'emit');
+    const TEST_FORM = formBuilder.group({
       testControl: ['', Validators.required],
     });
-    const testCampo = 'testCampo';
-    const testMetodoNombre = 'testMetodoNombre';
+    const MOCK_TEST_CAMPO = 'testCampo';
 
-    component.setValoresStore(testForm, testCampo, testMetodoNombre);
+    component.setValoresStore(TEST_FORM, MOCK_TEST_CAMPO);
 
-    expect(emitSpy).toHaveBeenCalledWith({
-      form: testForm,
-      campo: testCampo,
-      metodoNombre: testMetodoNombre,
+    expect(EMIT_SPY).toHaveBeenCalledWith({
+      form: TEST_FORM,
+      campo: MOCK_TEST_CAMPO,
     });
   });
 });

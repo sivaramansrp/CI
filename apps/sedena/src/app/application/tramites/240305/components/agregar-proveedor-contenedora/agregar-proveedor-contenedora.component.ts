@@ -1,0 +1,34 @@
+import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite240305Store } from '../../estados/tramite240305Store.store';
+
+@Component({
+  selector: 'app-agregar-proveedor-contenedora',
+  standalone: true,
+  imports: [CommonModule, AgregarProveedorComponent],
+  templateUrl: './agregar-proveedor-contenedora.component.html',
+  styleUrl: './agregar-proveedor-contenedora.component.scss',
+})
+export class AgregarProveedorContenedoraComponent {
+  /**
+   * @constructor
+   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   *
+   * @param tramite240305Store - Store que administra el estado del trámite 240305.
+   */
+  
+  constructor(public tramite240305Store: Tramite240305Store) {}
+
+  /**
+   * @method updateProveedorTablaDatos
+   * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
+   *
+   * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  updateProveedorTablaDatos(event: Proveedor[]): void {
+    this.tramite240305Store.updateProveedorTablaDatos(event);
+  }
+}

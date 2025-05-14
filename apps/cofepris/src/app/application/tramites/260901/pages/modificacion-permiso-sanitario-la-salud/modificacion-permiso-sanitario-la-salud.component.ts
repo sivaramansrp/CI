@@ -8,6 +8,7 @@ import { AccionBoton, AVISO, DatosPasos, ListaPasosWizard, WizardComponent } fro
 
 import {MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
+
 import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 /**
  * Component 

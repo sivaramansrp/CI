@@ -15,7 +15,7 @@
 
   <app-pais-de-origen [paisForm]="paisForm" [elementosDeBloque]="elementosDeBloque" [paisesPorBloque]="paisesPorBloque"
   [selectRangoDias]="selectRangoDias" (bloqueCambiar)="enCambioDeBloque($event)" (eventoAlHacerClicEnTodasLasCiudades)="obtenerListaDeCiudades()"
-  (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)"></app-pais-de-origen>
+  (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)" [titulo]="tituloParte"></app-pais-de-origen>
 
 <app-representacion [frmRepresentacionForm]="frmRepresentacionForm" [estado]="estado"
   [representacionFederal]="representacionFederal" [TEXTOS]="TEXTOS" (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)">

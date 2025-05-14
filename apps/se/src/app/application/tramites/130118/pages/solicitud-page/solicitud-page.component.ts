@@ -1,5 +1,7 @@
+import { AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -9,7 +11,7 @@ interface AccionBoton {
    * La acción que se realizará.
    */
   accion: string;
-  
+
   /**
    * El valor asociado a la acción.
    */
@@ -40,6 +42,39 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente de solicitud.
+
+   */
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
+
+  /**
+   * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
+   */
+  ALERTA = ALERTA;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
+  /**
    * Datos de los pasos del asistente.
    */
   datosPasos: DatosPasos = {
@@ -63,6 +98,16 @@ export class SolicitudPageComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+      if (this.indice === 1) {
+        const SOLICITUD_COMPONENT = this.pasoUnoComponent?.solicitudComponent;
+        this.esValido = SOLICITUD_COMPONENT?.validarFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+    
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();

@@ -49,7 +49,7 @@ import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Factu
  * - Implementa el hook `AfterViewInit` para inicializar referencias a los componentes hijos después de que
  *   la vista haya sido renderizada.
  */
-export class PasoUnoPagesComponent implements AfterViewInit {
+export class PasoUnoPagesComponent {
   /**
    * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
    */
@@ -97,16 +97,6 @@ export class PasoUnoPagesComponent implements AfterViewInit {
     tramitesAsociados?: Tramite[];
   } = {};
 
-  /**
-   * Hook del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * 
-   * Uso:
-   * - Se utiliza para inicializar referencias a los componentes hijos.
-   */
-  ngAfterViewInit(): void {
-    //afterViewInit
-  
-  }
 
   /**
    * Método para recopilar los valores de los formularios de todos los componentes hijos.
@@ -148,7 +138,6 @@ export class PasoUnoPagesComponent implements AfterViewInit {
         const CHILD_DATA: CompleteForm = {
           domicilioEstablecimiento: component.domicilioEstablecimiento?.value as DomicilioEstablecimiento,
           scianForm: component.scianForm?.value as ScianForm,
-          solicitudForm: component.solicitudForm?.value as SolicitudForm,
           solicitudEstablecimientoForm: component.solicitudEstablecimientoForm?.value as SolicitudEstablecimientoForm,
           formMercancias: component.formMercancias?.value as FormMercancias,
         };

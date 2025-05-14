@@ -19,6 +19,7 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MANIFIESTO_ACEPTACION_TEXTO } from '../../../../shared/constantes/manifesto-texto.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
  
 /**
@@ -80,7 +81,20 @@ import { TituloComponent } from '@ng-mf/data-access-user';
  * Este componente se utiliza dentro de un flujo de trámites donde el usuario debe aceptar ciertos términos o condiciones.
  * A través de este componente, se gestionan las interacciones del usuario con el manifiesto y las alertas relacionadas.
  */
-export class ManifiestoDeAceptacionComponent {}
+export class ManifiestoDeAceptacionComponent {
+  /**
+ * @property
+ * @name manifestoText
+ * @description
+ * Esta propiedad contiene el texto HTML del manifiesto de aceptación.
+ * El contenido de esta propiedad se utiliza para mostrar el manifiesto en la interfaz de usuario.
+ * El valor se obtiene de la constante `MANIFIESTO_ACEPTACION_TEXTO`, que está definida en el módulo compartido.
+ * 
+ * @type {string}
+ * @default MANIFIESTO_ACEPTACION_TEXTO
+ */
+manifestoText = MANIFIESTO_ACEPTACION_TEXTO;
+}
  
  
  

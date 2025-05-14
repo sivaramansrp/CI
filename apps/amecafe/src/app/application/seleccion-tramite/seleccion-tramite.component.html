@@ -5,28 +5,25 @@
       <table class="table table-responsive table-striped table-hover">
         <thead>
           <tr>
+            <th> #</th>
+            <th> departmento</th>
             <th>Tipo tr&aacute;mite</th>
             <th>URL</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>290201</td>
-            <td>
-              <a routerLink="/pago/registrar-solicitud/solicitud"
-                >{{ ruta }}/pago/registrar-solicitud/solicitud</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>290101</td>
-            <td>
-              <a routerLink="/pago/cafe-exportadores/cafe-exportadores"
-                >{{ ruta }}/pago/cafe-exportadores/cafe-exportadores</a
-              >
-            </td>
-          </tr>
-        </tbody>
+          @for(item of tramiteData; track $index) {
+            @if(item?.linkDepartment) {
+              <tr>
+                <td> {{$index + 1}}</td>
+                <td> {{item?.department}}</td>
+                <td> {{item?.tramite}}</td>
+                <td> <a [routerLink]=item.linkDepartment>{{ ruta }}{{item.linkDepartment}}</a>
+                </td>
+              </tr>
+            }
+          }
+          </tbody>
       </table>
     </div>
   </div>
