@@ -6,7 +6,7 @@
 export interface DiscripccionDeLaMercanciaForm {
     /**
      * Denominación de la persona fisca
-     * @type {number}
+     * @type {string}
      */
     Consecutivo: string;
 

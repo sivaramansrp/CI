@@ -18,7 +18,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `Consecutivo` de la fila.
      * - Orden: 1.
      */
-    { encabezado: 'Nombre', clave: (fila) => fila.Consecutivo, orden: 1 },
+    { encabezado: 'Consecutivo', clave: (fila) => fila.Consecutivo, orden: 1 },
 
     /**
      * Columna que muestra el domicilio relacionado con la mercancía.
@@ -26,7 +26,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `estado` de la fila.
      * - Orden: 2.
      */
-    { encabezado: 'Domicilio', clave: (fila) => fila.estado, orden: 2 },
+    { encabezado: 'Estado', clave: (fila) => fila.estado, orden: 2 },
 
     /**
      * Columna que muestra la descripción de la mercancía.
@@ -34,7 +34,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `Cantidad` de la fila.
      * - Orden: 3.
      */
-    { encabezado: 'Descripción', clave: (fila) => fila.Cantidad, orden: 3 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.Cantidad, orden: 3 },
 
     /**
      * Columna que muestra el país relacionado con la mercancía.
@@ -42,5 +42,5 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `FormaParteDePatrimonio` de la fila.
      * - Orden: 4.
      */
-    { encabezado: 'País', clave: (fila) => fila.FormaParteDePatrimonio, orden: 4 },
+    { encabezado: 'FormaParteDePatrimonio', clave: (fila) => fila.FormaParteDePatrimonio, orden: 4 },
 ];
