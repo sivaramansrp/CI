@@ -1,9 +1,8 @@
 import { Route } from '@angular/router';
-import { RemoteEntryComponent } from './entry.component';
 
 export const remoteRoutes: Route[] = [
-  { path: '', redirectTo: 'pago', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'pago', loadChildren: () => import('./../auth/auth.module').then(module => module.AuthModule)
+    path: 'login', loadChildren: () => import('./../auth/auth.module').then(module => module.AppLoginModule)
   }
 ]; 
