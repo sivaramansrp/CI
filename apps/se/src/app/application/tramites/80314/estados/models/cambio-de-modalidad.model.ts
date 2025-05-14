@@ -58,6 +58,15 @@ export interface CambioModalidadResponse {
     };
 }
 
+/**
+ * Configuración de las columnas para la tabla de servicios.
+ * 
+ * @constant
+ * @type {Array<{ encabezado: string, clave: (ele: ServicioInfo) => string | undefined, orden: number }>}
+ * @property {string} encabezado - Encabezado de la columna.
+ * @property {(ele: ServicioInfo) => string | undefined} clave - Función que obtiene el valor de la clave del elemento.
+ * @property {number} orden - Orden de la columna en la tabla.
+ */
 export const CONFIGURACION_SERVICIO = [
     {
         encabezado: 'Descripción del servicio',
@@ -69,7 +78,7 @@ export const CONFIGURACION_SERVICIO = [
         clave: (ele: ServicioInfo): string | undefined => ele.tipoDeServicio,
         orden: 2
     },
-]
+];
 
 /**
  * Representa la información de un servicio.
