@@ -18,4 +18,4 @@ export const ROUTES_ATTENTION: Routes = [
   imports: [RouterModule.forChild(ROUTES_ATTENTION)],
   exports: [RouterModule],
 })
-export class AttentionOfRenewalRoutingModule {}
+export class AtencionDeRenovacionRoutingModule {}
