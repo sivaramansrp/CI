@@ -47,7 +47,7 @@ export interface AgregarDatosProductorFormulario {
 export interface FormularioHistorico {
   datosConfidencialesProductor?: boolean;
   productorMismoExportador?: boolean;
-} 
+}
 /**
  * Interfaz que representa una acción de botón con un nombre de acción y un valor asociado.
  * 
@@ -65,13 +65,13 @@ export interface MercanciaTabla {
   fraccionArancelaria?: string;
   tipoFactura?: string;
   cantidad?: string;
-  unidadMedida?:string;
-  nombreTecnico?:string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
   nombreComercial?: string;
   valorMercancia: string;
   rfcProductor?: string;
-  numeroFactura?:string;
-  complemento?:string;
+  numeroFactura?: string;
+  complemento?: string;
 }
 
 /**

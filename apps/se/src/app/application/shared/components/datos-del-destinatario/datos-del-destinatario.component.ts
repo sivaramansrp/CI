@@ -16,9 +16,9 @@ export class DatosDelDestinatarioComponent implements OnDestroy,OnInit {
 
   /**
    * Datos del formulario para inicializar los valores
-   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @type { [key: string]: unknown }
    */
-  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+  @Input() datosForm!:{ [key: string]: unknown };
 
   /**
    * @Input

@@ -16,6 +16,7 @@ export interface Mercancia {
   fechaFinalInput?: string;
   numeroFactura?: string;
   unidadMedidaMasaBruta?: string;
+  complementoClasificacion?: string;
   complementoDescripcion?: string;
 }
 

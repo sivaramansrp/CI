@@ -8,6 +8,7 @@ import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
+
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
  * 
@@ -87,12 +88,15 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   @Input() mercanciasDisponibles!: boolean;
 
   /**
+<<<<<<< HEAD
    * Propiedad de entrada que representa el estado del formulario histórico.
    * @type {FormularioSi}
    */
   @Input() tramiteState: FormularioSi = {};
 
   /**
+=======
+>>>>>>> c534d5c26497bd256912bb4d2f2a533ae18c2615
    * Propiedad de entrada que recibe los datos de los tratados/acuerdos.
    * @type {Catalogo[]}
    */
@@ -172,9 +176,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
-   * Texto que contiene los requisitos y mensajes informativos.
-   * @type {string}
-   */
+  * Texto que contiene los requisitos y mensajes informativos.
+  * @type {string}
+  */
   TEXTOS = TEXTOS_REQUISITOS;
 
   /**
@@ -193,13 +197,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+    configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
 
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
+
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
@@ -223,13 +228,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Datos del formulario, recibidos a través de la propiedad `@Input()`.
    * @type {Object}
    */
-  @Input() datosForm: FormularioSi = {};
+  @Input() datosForm!: { [key: string]: unknown };
 
   /**
    * @property {string[]} elementosRequeridos
    * Lista de elementos que son obligatorios en el formulario.
    */
   @Input() public elementosRequeridos!: string[];
+
 
   /**
    * Datos de la mercancia seleccionada de la bitácora.
@@ -249,6 +255,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
   false
 );  
+
+
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.

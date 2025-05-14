@@ -15,7 +15,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
-   * Identificador del procedimiento asociado al componente.
    * 
    * @type {number}
    * @remarks
@@ -25,11 +24,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   
     /**
      * Datos del formulario para inicializar los valores
-     * @type {{ [key: string]: string | number | boolean | object | undefined }}
+     * @type {{ [key: string]: unknown }}
      */
-    @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+    @Input() datosForm!: { [key: string]: unknown };
+
   
-    
     /**
      * Emisor de eventos para manejar cambios en el formulario exportador.
      * 

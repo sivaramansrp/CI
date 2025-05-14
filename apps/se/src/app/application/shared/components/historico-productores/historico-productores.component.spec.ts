@@ -42,10 +42,6 @@ describe('HistoricoProductoresComponent', () => {
     component.agregarDatosProductorFormulario = component.agregarDatosProductorFormulario || {};
     component.agregarDatosProductorFormulario.patchValue = jest.fn();
     component.ngOnInit();
-    // expect(component.initFormulario).toHaveBeenCalled();
-    // expect(component.initAgregarDatosProductorFormulario).toHaveBeenCalled();
-    // expect(component.formulario.patchValue).toHaveBeenCalled();
-    // expect(component.agregarDatosProductorFormulario.patchValue).toHaveBeenCalled();
   });
 
   it('should run #initFormulario()', async () => {

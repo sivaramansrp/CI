@@ -61,14 +61,13 @@
                 <p>Mercancías Seleccionadas</p>
             </div>
             @if(esTipoDeSeleccionado){
-                <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
-                    [tipoSeleccionTabla]="TablaSeleccion.RADIO"
-                    [datos]="mercanciaDatos" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"></app-tabla-dinamica>
+            <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
+                [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaDatos"
+                (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"></app-tabla-dinamica>
             }
             @else{
-                <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
-                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-                [datos]="mercanciaDatos" ></app-tabla-dinamica>
+            <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
+                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos"></app-tabla-dinamica>
             }
             <div class="container text-end mt-5">
                 <button type="button" name="agregarMercancia" class="btn btn-primary" (click)="agregarMercancia()">
@@ -103,7 +102,7 @@
                     </div>
                     }
                 </form>
-          </div>
+            </div>
             <div class="modal-footer custom-footer">
                 <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
                 <button type="button" class="btn btn-primary" (click)="agregarExportador()">Agregar</button>
@@ -112,23 +111,9 @@
     </div>
 </div>
 
-<div class="modal" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 300px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" #closeModalMercancia
-                    (click)="cerrarModalMercancia()"></button>
-            </div>
-            <div class="modal-body m-3 p-2">
-                <p class="m-0">{{ mensajeDeAlerta }}</p>
-            </div>
-            <div class="modal-footer justify-content-center m-0">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModalMercancia
-                    (click)="cerrarModalMercancia()">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
+@if(nuevaNotificacion){
+<lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+}
 
 <div class="modal fade" id="modalMercancia" tabindex="-1" #modalMercancia aria-labelledby="modalMercancia"
     aria-hidden="true">
@@ -161,8 +146,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Valor de la mercancía(dólares)*:</label>
-                                <input type="text" required="true" class="form-control"
-                                    formControlName="valorMercancia"
+                                <input type="text" required="true" class="form-control" formControlName="valorMercancia"
                                     (change)="setValoresStore( 'formularioMercancia', 'valorMercancia') " />
                             </div>
                         </div>
@@ -199,7 +183,8 @@
             </div>
             <div class="modal-footer custom-footer mt-4">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-                <button type="submit" class="btn btn-primary" #modalBuscar data-bs-dismiss="modal" (click)="mercanciaAgregarSeleccionada()"> Agregar </button>
+                <button type="submit" class="btn btn-primary" #modalBuscar data-bs-dismiss="modal"
+                    (click)="mercanciaAgregarSeleccionada()"> Agregar </button>
             </div>
         </div>
     </div>

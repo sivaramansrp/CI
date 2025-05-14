@@ -116,6 +116,9 @@ export const CARGA_MERCANCIA_SELECCIONADAS = [
   }
 ];
 
+
+
+
 /**
 * Clave para identificar la entidad federativa.
 * @type {string}

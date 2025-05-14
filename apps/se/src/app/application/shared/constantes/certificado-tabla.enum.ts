@@ -40,6 +40,24 @@ export const CONFIGURACION_PRODUCTOR_EXPORTADOR = [
      },
 ];
 
+/**
+ * @constant CONFIGURACION_MERCANCIA
+ * 
+ * Configuración de la tabla de mercancías utilizada en la aplicación.
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * definiendo su encabezado, la clave para obtener el valor correspondiente
+ * de un objeto `MercanciaTabla`, y el orden en el que se muestra en la tabla.
+ * 
+ * @property {string} encabezado - El título de la columna que se muestra en la tabla.
+ * @property {function} clave - Función que toma un objeto `MercanciaTabla` y devuelve el valor correspondiente para la columna.
+ * @property {number} orden - Posición de la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * CONFIGURACION_MERCANCIA.forEach(columna => {
+ *   console.log(columna.encabezado);
+ * });
+ */
 export const CONFIGURACION_MERCANCIA = [
   {
     encabezado: 'RFC Productor ',
