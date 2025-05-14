@@ -3,8 +3,9 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Pantallas301Service } from '../../services/pantallas301.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { ConsultaioQuery, ConsultaioState, TieneConsultaio } from '@libs/shared/data-access-user/src';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 220401
@@ -22,6 +23,12 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
   public datos = [];
   private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!:ConsultaioState;
+  public tieneConsulta:TieneConsultaio = {
+    readonly: false,
+    create: false,
+    update: false,
+  }
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
@@ -34,18 +41,25 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   }
   constructor(
     public pantallasSvc: Pantallas301Service,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
   ) { 
 
   }
 
   ngOnInit(): void {
-    const PROCEDURE_NUMBER = this.route.snapshot.paramMap.get('procedureId');
-    if(PROCEDURE_NUMBER !== '' && PROCEDURE_NUMBER !== null && PROCEDURE_NUMBER !== undefined) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.readonly) {
       this.pantallasSvc.getPantallaDatos().subscribe((response) => {
         this.datos = JSON.parse(JSON.stringify(response));
       });
     }
+    console.log('====>',this.consultaState.readonly);
+    this.tieneConsulta.readonly = this.consultaState.readonly;
+    this.tieneConsulta.create = this.consultaState.create;
+    this.tieneConsulta.update = this.consultaState.update;
   }
 
     /**

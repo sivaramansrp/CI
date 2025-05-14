@@ -42,6 +42,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
   @Input() public procedureDatos:Array<any> = [];
+  @Input() public procedureState: any;
   /**
    * Datos del catálogo relacionados con la mercancía.
    *
@@ -162,6 +163,10 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
+    if(this.procedureState.readonly) {
+      this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
+      this.Informaciondela.get('datosImportadorExportador.mercancia')?.disable();
+    }
     this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
     this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
   }

@@ -44,6 +44,7 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
 
   @Input() public procedureDatos:Array<any> = [];
+  @Input() public procedureState: any;
   /**
    * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
@@ -191,6 +192,17 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
+    if(this.procedureState.readonly) {
+      this.informacionDeLaform.get('fraccionArancelaria')?.disable();
+      this.informacionDeLaform.get('descripcionFraccion')?.disable();
+      this.informacionDeLaform.get('nico')?.disable();
+      this.informacionDeLaform.get('descripcionNico')?.disable();
+      this.informacionDeLaform.get('nombreQuimico')?.disable();
+      this.informacionDeLaform.get('nombreComercial')?.disable();
+      this.informacionDeLaform.get('numeroCAS')?.disable();
+      this.informacionDeLaform.get('estadoFisico')?.disable();
+      this.informacionDeLaform.get('acondicionamiento')?.disable();
+    }
     this.informacionDeLaform.get('fraccionArancelaria')?.setValue(this.procedureDatos[0].registroPara.fraccionArancelaria);
     this.informacionDeLaform.get('descripcionFraccion')?.setValue(this.procedureDatos[0].registroPara.descripcionFraccion);
     this.informacionDeLaform.get('nico')?.setValue(this.procedureDatos[0].registroPara.nico);

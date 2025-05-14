@@ -15,6 +15,7 @@ import {
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
+import { TieneConsultaio } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente `PagoDeDerechosComponent`
@@ -37,6 +38,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   @Input() public procedureDatos:Array<any> = [];
+  @Input() public procedureState!: TieneConsultaio;
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
@@ -142,10 +144,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
+    if(this.procedureState.readonly) {
+      this.FormSolicitud.get('pagodederechos.linea')?.disable();
+      this.FormSolicitud.get('pagodederechos.monto')?.disable();
+      this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.disable();
+
+    }
     this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
-      this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
-      this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
-      this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+    this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { TablePaginationComponent } from '../table-pagination/table-pagination.c
   ],
   templateUrl: './lib-bandeja.component.html',
   styleUrl: './lib-bandeja.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibBandejaComponent<T> implements OnInit {
 
@@ -47,6 +49,7 @@ export class LibBandejaComponent<T> implements OnInit {
     public currentPage: number = 1;
     public itemsPerPage: number = 5;
     public miembroDeLaEmpresaBodyData: unknown[] = [];
+    public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
 
 
     constructor(
@@ -93,9 +96,9 @@ export class LibBandejaComponent<T> implements OnInit {
       this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
       this.procedureUrl = this.tramiteData[0].linkDashboard;
       //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
-      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,false,false,false);
+      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,true,false,false);
 
-      this.router.navigate([this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento]);
+      this.router.navigate([this.procedureUrl]);
     }
 
     public mostrarColapsable(orden:number): void {
