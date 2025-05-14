@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123,240112
 ];
 
 /**
