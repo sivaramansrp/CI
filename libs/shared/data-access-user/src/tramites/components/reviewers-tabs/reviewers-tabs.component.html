@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            @for (item of listaDeTabulaciones;let i=$index; track item.id) {
+            <li [ngClass]="{
+                'active': indice === i,
+                'disabled': item?.disabled,
+              }">
+                <a data-toggle="tab" (click)=" seleccionaTab(i,item)" (keydown.enter)=" seleccionaTab(i,item)"
+                    (keydown.space)=" seleccionaTab(i,item)" role="button" tabindex="0">{{item.titulo}}</a>
+            </li>
+            }
+        </ul>
+        <ng-container>
+            @switch (indice) {
+            @case (0) {
+            <ng-template #childContainer></ng-template>
+            }
+            @default {
+            <p>tab</p>
+            }
+            }
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+[
+    {
+        "registroPara": {
+            "registro": "Si",
+            "fraccionArancelaria": "No",
+            "descripcionFraccion": "sadagsdsa dsadsad",
+            "nico": "Si",
+            "descripcionNico": "jhvhjbh dsadsad",
+            "nombreQuimico": "nuhiui nkk",
+            "nombreComercial": "kjhkjhkjhkjh",
+            "numeroCAS": "123456789",
+            "estadoFisico": "Sinaloa",
+            "acondicionamiento": "bytrfdtrtr",
+            "mercancia": "No",
+            "folio": "123456789"
+	    },
+        "pagoDeDerechos": {
+            "linea": "hsdsa fdgsafg",
+            "monto": 1000,
+            "lineaCheckbox": "Si",
+            "comprobantePago": "123456789"
+        }
+
+    }
+]

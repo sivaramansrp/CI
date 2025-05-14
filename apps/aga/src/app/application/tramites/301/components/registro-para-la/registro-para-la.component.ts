@@ -3,15 +3,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Aviso,
+  ConsultaioQuery,
   Importante,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import {
   Solicitud301State,
   Tramite301Store,
@@ -21,6 +23,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -40,6 +43,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './registro-para-la.component.html',
   styleUrls: ['./registro-para-la.component.scss'], // Corregido de styleUrl a styleUrls
   imports: [
+    CommonModule,
     AlertComponent,
     TituloComponent,
     CatalogoSelectComponent,
@@ -49,6 +53,10 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   standalone: true,
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
+
+  /** Datos del procedimiento recibidos como entrada desde el componente padre. */
+  @Input() public procedureDatos: Array<any> = [];
+  
   /**
    * Formulario principal del componente.
    * Este formulario contiene el campo de registro de importaciones/exportaciones.
@@ -130,9 +138,21 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
+  * Indica si el formulario está en modo de actualización (patch).
+  * Si es `true`, el formulario se utiliza para editar un registro existente.
+  */
+  public esFormularioActualizacion: boolean = false; 
+
+  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor del componente `RegistroParaLaComponent`.
@@ -144,8 +164,23 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
-  ) {}
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.esFormularioActualizacion = [
+        'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
+        'FLUJO_FUNCIONARIO_AUTORIZACION',
+        'FLUJO_FUNCIONARIO_EVALUAR'
+      ].includes(seccionState.parameter);
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -155,6 +190,16 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+
+ /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
+  inicializarFormulario(): void {
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
         .pipe(
@@ -170,6 +215,10 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     this.registroParaLaForm = this.fb.group({
       registro: [this.solicitudState?.registro, Validators.required],
     });
+
+    if(this.procedureDatos.length > 0) {
+      this.registroParaLaForm.get('registro')?.setValue(this.procedureDatos[0].registroPara.registro);
+    }
   }
 
   /**
@@ -216,5 +265,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
