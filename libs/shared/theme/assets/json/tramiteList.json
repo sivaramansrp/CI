@@ -2179,15 +2179,15 @@
   {
     "id": 312,
     "tramite": 319,
-    "linkDashboard": "/aga/operaciones-de-comercio/exterior",
-    "linkDepartment": "/pago/operaciones-de-comercio/exterior",
+    "linkDashboard": "",
+    "linkDepartment": "",
     "department": "aga"
   },
   {
     "id": 313,
     "tramite": 420102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/concluir-relacion/solicitud",
+    "linkDepartment": "/pago/concluir-relacion/solicitud",
     "department": "aga"
   },
   {
