@@ -8,12 +8,12 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DatosCertificadoComponent } from './datos-certificado.component';
 import { FormBuilder } from '@angular/forms';
-import { CertificadoDeService } from '../../services/validar-inicialmente-certificado.service';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 
 @Injectable()
-class MockCamCertificadoService {}
+class MockValidarInicialmenteCertificadoService {}
 
 @Injectable()
 class MockcamCertificadoStore {}
@@ -38,7 +38,7 @@ describe('DatosCertificadoComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: CertificadoDeService, useClass: MockCamCertificadoService },
+        { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
         { provide: Tramite110222Store, useClass: MockcamCertificadoStore },
         { provide: Tramite110222Query, useClass: MockcamCertificadoQuery }
       ]
@@ -63,9 +63,9 @@ describe('DatosCertificadoComponent', () => {
     component.entidadFederativasOpcion = jest.fn();
     component.representacionFederalOpcion = jest.fn();
     component.ngOnInit();
-    // expect(component.idiomOpcion).toHaveBeenCalled();
-    // expect(component.entidadFederativasOpcion).toHaveBeenCalled();
-    // expect(component.representacionFederalOpcion).toHaveBeenCalled();
+    expect(component.idiomOpcion).toHaveBeenCalled();
+    expect(component.entidadFederativasOpcion).toHaveBeenCalled();
+    expect(component.representacionFederalOpcion).toHaveBeenCalled();
   });
 
 });

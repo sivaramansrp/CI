@@ -9,12 +9,12 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { HistoricoDeProductoresComponent } from './historico-de-productores.component';
 import { FormBuilder } from '@angular/forms';
-import { CertificadoDeService } from '../../services/validar-inicialmente-certificado.service';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 
 @Injectable()
-class MockCertificadoDeService {}
+class MockValidarInicialmenteCertificadoService {}
 
 @Injectable()
 class MockTramite110222Store {}
@@ -33,7 +33,7 @@ describe('HistoricoDeProductoresComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: CertificadoDeService, useClass: MockCertificadoDeService },
+        { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
         { provide: Tramite110222Store, useClass: MockTramite110222Store },
         { provide: Tramite110222Query, useClass: MockTramite110222Query }
       ]
@@ -63,26 +63,26 @@ describe('HistoricoDeProductoresComponent', () => {
 
 
   it('should run #cargarProductorPorExportador()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerProductorPorExportador = jest.fn().mockReturnValue(observableOf({
+    component.ValidarInicialmenteCertificadoService = component.certificadoDeService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerProductorPorExportador = jest.fn().mockReturnValue(observableOf({
       datos: {}
     }));
     component.cargarProductorPorExportador();
     expect(component.certificadoDeService.obtenerProductorPorExportador).toHaveBeenCalled();
   });
   it('should run #facturaOpcion()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    component.ValidarInicialmenteCertificadoService = component.certificadoDeService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.facturaOpcion();
     expect(component.certificadoDeService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
   it('should run #cargarMercancia()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerMercancia = jest.fn().mockReturnValue(observableOf({
+    component.ValidarInicialmenteCertificadoService = component.certificadoDeService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerMercancia = jest.fn().mockReturnValue(observableOf({
       datos: {}
     }));
     component.cargarMercancia();
-    expect(component.certificadoDeService.obtenerMercancia).toHaveBeenCalled();
+    expect(component.ValidarInicialmenteCertificadoService.obtenerMercancia).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
