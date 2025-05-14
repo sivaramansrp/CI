@@ -257,11 +257,20 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
       import('./evaluar/evaluar.component').then(
         (m) => m.EvaluarComponent
       ),
+
   },
   {
     path: 'autorizar',
@@ -269,6 +278,7 @@ const ROUTES: Routes = [
       import('./autorizar/autorizar.component').then(
         (m) => m.AutorizarComponent
       ),
+
   },
 ];
 
