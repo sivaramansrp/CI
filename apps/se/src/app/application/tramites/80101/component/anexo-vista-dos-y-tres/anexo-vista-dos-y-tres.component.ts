@@ -54,6 +54,12 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor de la clase AnexoVistaDosYTresComponent.
+   * 
+   * @param query - Servicio de consulta para Tramite80101.
+   * @param store - Almacén de estado para Tramite80101.
+   */
   constructor(private query: Tramite80101Query,
     private store: Tramite80101Store
   ) {
@@ -61,13 +67,16 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * 
-   * - Suscribe a los observables `anexoDosTableLista$` y `anexoTresTablaLista$` para obtener
-   *   las listas correspondientes de datos y asignarlas a las propiedades del componente
-   *   (`anexoDosTablaLista` y `anexoTresTablaLista`) si contienen elementos.
-   * - Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria,
-   *   asegurándose de que las suscripciones se cancelen cuando el componente se destruya.
+   * Este método suscribe a dos observables (`anexoDosTableLista$` y `anexoTresTablaLista$`) 
+   * para obtener las listas de datos correspondientes a los anexos dos y tres. 
+   * Los datos se asignan a las propiedades `anexoDosTablaLista` y `anexoTresTablaLista` 
+   * respectivamente, siempre que las listas no estén vacías.
+   * 
+   * Además, utiliza el operador `takeUntil` para gestionar la suscripción y 
+   * garantizar que se complete cuando el observable `destroyNotifier$` emita un valor, 
+   * evitando así posibles fugas de memoria.
    */
   ngOnInit(): void {
     this.query.anexoDosTableLista$
