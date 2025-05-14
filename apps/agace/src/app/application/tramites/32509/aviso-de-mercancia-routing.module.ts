@@ -4,12 +4,12 @@ import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
-    path: 'desrtrucion-o-donacion',
+    path: 'desrtruccion-o-donacion',
     component: DestructionODonacionComponent,
   },
   {
     path: '',
-    redirectTo: 'desrtrucion-o-donacion',
+    redirectTo: 'desrtruccion-o-donacion',
     pathMatch: 'full'
   }
 ];

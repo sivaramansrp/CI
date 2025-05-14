@@ -1,20 +1,36 @@
 export interface LISTAPASOWIZARD {
-    /** Index of the step */
-    indice: number;
-    /** Title of the step */
-    titulo: string;
-    /** Indicates if the step is active */
-    activo: boolean;
-    /** Indicates if the step is completed */
-    completado: boolean;
-  }
-  
   /**
-   * Interface representing an action button.
+   * @descripcion Índice del paso.
    */
-  export interface ACCIONBOTON {
-    /** Action to be performed */
-    accion: string;
-    /** Value associated with the action */
-    valor: number;
-  }
+  indice: number;
+
+  /**
+   * @descripcion Título del paso.
+   */
+  titulo: string;
+
+  /**
+   * @descripcion Indica si el paso está activo.
+   */
+  activo: boolean;
+
+  /**
+   * @descripcion Indica si el paso está completado.
+   */
+  completado: boolean;
+}
+
+/**
+ * @descripcion Interfaz que representa un botón de acción.
+ */
+export interface ACCIONBOTON {
+  /**
+   * @descripcion Acción que se debe realizar.
+   */
+  accion: string;
+
+  /**
+   * @descripcion Valor asociado a la acción.
+   */
+  valor: number;
+}

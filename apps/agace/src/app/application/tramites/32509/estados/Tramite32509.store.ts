@@ -6,41 +6,180 @@ import { Injectable } from '@angular/core';
  * @description Representa el estado del formulario de destrucción.
  */
 export interface DestruccionState {
-    tipoDeAviso: string;
-    nombre: string;
-    rfc: string;
-    entidadFederativa: string;
-    alcaldiaMunicipo: string;
-    colonia: string;
-    calle: string;
-    numeroExterior: string;
-    numeroInterior: string;
-    codigoPostal: string;
-    cartaCupo: string;
-    numeraDeAcuse: string;
-    destruccionMercancia: string;
-    merccanciaEntidadFederativa: string;
-    merccanciaAlcaldiaMunicipo: string;
-    merccanciaColonia: string;
-    merccanciaCalle: string;
-    merccanciaNumeroExterior: string;
-    merccanciaNumeroInterior: string;
-    merccanciaCodigoPostal: string;
-    destruir: string;
-    tarifa: string;
-    destruccionEntidadFederativa: string;
-    destruccionAlcaldiaMunicipo: string;
-    destruccionColonia: string;
-    destruccionCalle: string;
-    destruccionNumeroExterior: string;
-    destruccionNumeroInterior: string;
-    destruccionCodigoPostal: string;
-    destruccionHora: string;
-    desturccionProceso: string;
-    casofortuito: string;
-    donoMercancia: string;
-    condicionesMateriales: string;
-    caboDestruccionFecha: string;
+    /**
+ * @descripcion Tipo de aviso relacionado con la destrucción.
+ */
+tipoDeAviso: string;
+
+/**
+ * @descripcion Nombre del solicitante.
+ */
+nombre: string;
+
+/**
+ * @descripcion RFC del solicitante.
+ */
+rfc: string;
+
+/**
+ * @descripcion Entidad federativa del solicitante.
+ */
+entidadFederativa: string;
+
+/**
+ * @descripcion Alcaldía o municipio del solicitante.
+ */
+alcaldiaMunicipo: string;
+
+/**
+ * @descripcion Colonia del solicitante.
+ */
+colonia: string;
+
+/**
+ * @descripcion Calle del solicitante.
+ */
+calle: string;
+
+/**
+ * @descripcion Número exterior del domicilio del solicitante.
+ */
+numeroExterior: string;
+
+/**
+ * @descripcion Número interior del domicilio del solicitante.
+ */
+numeroInterior: string;
+
+/**
+ * @descripcion Código postal del domicilio del solicitante.
+ */
+codigoPostal: string;
+
+/**
+ * @descripcion Carta cupo asociada al trámite.
+ */
+cartaCupo: string;
+
+/**
+ * @descripcion Número de acuse del trámite.
+ */
+numeraDeAcuse: string;
+
+/**
+ * @descripcion Información sobre la destrucción de mercancía.
+ */
+destruccionMercancia: string;
+
+/**
+ * @descripcion Entidad federativa donde se encuentra la mercancía.
+ */
+merccanciaEntidadFederativa: string;
+
+/**
+ * @descripcion Alcaldía o municipio donde se encuentra la mercancía.
+ */
+merccanciaAlcaldiaMunicipo: string;
+
+/**
+ * @descripcion Colonia donde se encuentra la mercancía.
+ */
+merccanciaColonia: string;
+
+/**
+ * @descripcion Calle donde se encuentra la mercancía.
+ */
+merccanciaCalle: string;
+
+/**
+ * @descripcion Número exterior del lugar donde se encuentra la mercancía.
+ */
+merccanciaNumeroExterior: string;
+
+/**
+ * @descripcion Número interior del lugar donde se encuentra la mercancía.
+ */
+merccanciaNumeroInterior: string;
+
+/**
+ * @descripcion Código postal del lugar donde se encuentra la mercancía.
+ */
+merccanciaCodigoPostal: string;
+
+/**
+ * @descripcion Información sobre la acción de destruir la mercancía.
+ */
+destruir: string;
+
+/**
+ * @descripcion Tarifa asociada al trámite.
+ */
+tarifa: string;
+
+/**
+ * @descripcion Entidad federativa donde se llevará a cabo la destrucción.
+ */
+destruccionEntidadFederativa: string;
+
+/**
+ * @descripcion Alcaldía o municipio donde se llevará a cabo la destrucción.
+ */
+destruccionAlcaldiaMunicipo: string;
+
+/**
+ * @descripcion Colonia donde se llevará a cabo la destrucción.
+ */
+destruccionColonia: string;
+
+/**
+ * @descripcion Calle donde se llevará a cabo la destrucción.
+ */
+destruccionCalle: string;
+
+/**
+ * @descripcion Número exterior del lugar donde se llevará a cabo la destrucción.
+ */
+destruccionNumeroExterior: string;
+
+/**
+ * @descripcion Número interior del lugar donde se llevará a cabo la destrucción.
+ */
+destruccionNumeroInterior: string;
+
+/**
+ * @descripcion Código postal del lugar donde se llevará a cabo la destrucción.
+ */
+destruccionCodigoPostal: string;
+
+/**
+ * @descripcion Hora en la que se llevará a cabo la destrucción.
+ */
+destruccionHora: string;
+
+/**
+ * @descripcion Proceso de destrucción de la mercancía.
+ */
+desturccionProceso: string;
+
+/**
+ * @descripcion Información sobre el caso fortuito relacionado con la destrucción.
+ */
+casofortuito: string;
+
+/**
+ * @descripcion Información sobre la donación de mercancía.
+ */
+donoMercancia: string;
+
+/**
+ * @descripcion Condiciones materiales relacionadas con la destrucción.
+ */
+condicionesMateriales: string;
+
+/**
+ * @descripcion Fecha en la que se llevó a cabo la destrucción.
+ */
+caboDestruccionFecha: string;
 }
 
 /**
