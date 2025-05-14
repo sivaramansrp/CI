@@ -773,7 +773,7 @@
     "id": 111,
     "tramite": 260912,
     "linkDashboard": "/cofepris/mod-permiso-importacion/permiso-sanitario",
-    "linkDepartment": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+    "linkDepartment": "/pago/mod-permiso-importacion/permiso-sanitario",
     "department": "cofepris"
   },
   {
