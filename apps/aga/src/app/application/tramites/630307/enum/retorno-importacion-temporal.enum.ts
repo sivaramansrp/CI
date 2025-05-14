@@ -137,7 +137,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
    
 ];
