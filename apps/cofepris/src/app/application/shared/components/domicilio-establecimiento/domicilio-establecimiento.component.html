@@ -9,11 +9,25 @@
           id="codigoPostal"
           placeholder=""
           type="text"
+          maxlength="12"
           formControlName="codigoPostal"
           (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
           "
         />
+        <div
+          *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['required']"
+          class="text-danger">
+          Este campo es obligatorio
+        </div>
+        <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['maxlength']"
+          class="text-danger">
+          El código postal no puede tener más de 12 caracteres.
+        </div>
+        <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['pattern']"
+          class="text-danger">
+          El valor capturado no es válido.
+        </div>
       </div>
     </div>
     <div class="col-md-4">

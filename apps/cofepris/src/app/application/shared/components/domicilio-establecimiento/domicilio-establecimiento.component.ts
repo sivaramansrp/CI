@@ -10,6 +10,8 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  REGEX_CODIGO_POSTAL,
+  REGEX_POSTAL,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -331,7 +333,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [this.solicitudState?.estado, Validators.required],
       muncipio: [this.solicitudState?.muncipio, Validators.required],
       localidad: [this.solicitudState?.localidad],
