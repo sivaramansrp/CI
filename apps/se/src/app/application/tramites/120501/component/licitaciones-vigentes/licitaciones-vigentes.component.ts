@@ -108,7 +108,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos:any;
+  datos:Complementaria[] = [];
   /**
    * Datos de los pasos del asistente.
    */
@@ -375,7 +375,7 @@ getDetallesDelalicitacion():void{
      */ 
   obtenerDatosDeTabla(): void {
     this.service.getTableData().subscribe(
-        (data: any) => {
+        (data: Complementaria[]) => {
             this.datos = data;
         }
     );

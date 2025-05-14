@@ -1,3 +1,4 @@
+import { Complementaria } from '../../../tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
@@ -26,7 +27,7 @@ export class LicitacionesDisponiblesService {
   getAdquiriente(): Observable<any> {
     return this.http.get('assets/json/120501/adquiriente.json');
   }
-  getTableData(): Observable<unknown> {
-    return this.http.get('assets/json/120501/datos-de-la-tabla.json');
+  getTableData(): Observable<Complementaria[]> {
+    return this.http.get<Complementaria[]>('assets/json/120501/datos-de-la-tabla.json');
   }
 }
