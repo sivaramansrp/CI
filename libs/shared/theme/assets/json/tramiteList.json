@@ -779,8 +779,8 @@
   {
     "id": 112,
     "tramite": 40403,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/atencion-de-renovacion/solicitante",
+    "linkDepartment": "/pago/atencion-de-renovacion/solicitante",
     "department": "aga"
   },
   {
@@ -2102,8 +2102,8 @@
   {
     "id": 301,
     "tramite": 6403,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/retorno-de-partes/solicitante",
+    "linkDepartment": "/pago/retorno-de-partes/solicitante",
     "department": "aga"
   },
   {
@@ -2179,8 +2179,8 @@
   {
     "id": 312,
     "tramite": 319,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/operaciones-de-comercio/exterior",
+    "linkDepartment": "/pago/operaciones-de-comercio/exterior",
     "department": "aga"
   },
   {
@@ -2193,22 +2193,22 @@
   {
     "id": 314,
     "tramite": 80303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificacion-programa-immex-baja-submanufacturera",
+    "linkDepartment": "/pago/modificacion-programa-immex-baja-submanufacturera",
     "department": "se"
   },
   {
     "id": 315,
     "tramite": 90302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/programa-prosec/registro",
+    "linkDepartment": "/pago/programa-prosec/registro",
     "department": "se"
   },
   {
     "id": 316,
     "tramite": 120401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/asignacion-directa-cupo-personas-fisicas/solicitante",
+    "linkDepartment": "/pago/asignacion-directa-cupo-personas-fisicas/solicitante",
     "department": "se"
   },
   {
@@ -2249,8 +2249,8 @@
   {
     "id": 323,
     "tramite": 110205,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-certificado/peru",
+    "linkDepartment": "/pago/validar-certificado/peru",
     "department": "se"
   },
   {
@@ -4212,6 +4212,13 @@
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
+  },
+  {
+    "id": 603,
+    "tramite": 32514,
+    "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
+    "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
+    "department": "agace"
   },
   {
     "id": 604,

@@ -32,6 +32,12 @@ import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensi
   styleUrl: './anexo.component.scss',
 })
 export class AnexoComponent implements OnInit, OnDestroy {
+
+  /**
+   * Representa la selección de la tabla en el componente.
+   * Utiliza la enumeración `TablaSeleccion` para definir el tipo de selección.
+   * En este caso, está configurado como `RADIO`.
+   */
   tabSelection: TablaSeleccion = TablaSeleccion.RADIO;
   /**
    * Grupo de formularios principal.
@@ -45,10 +51,28 @@ export class AnexoComponent implements OnInit, OnDestroy {
    */
   fraccionArancelaria!: FormGroup;
 
+  /**
+   * Sujeto utilizado como notificador para la destrucción de componentes.
+   * Este observable se utiliza para gestionar la limpieza de suscripciones
+   * y evitar fugas de memoria al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Representa el estado de la solicitud para la ampliación de sensibles en el contexto de IMMEX.
+   * 
+   * Esta propiedad almacena el estado actual de la solicitud, que incluye información
+   * relevante para el proceso de ampliación de sensibles. Es utilizada para gestionar
+   * y rastrear el estado de la solicitud dentro del componente.
+   */
   public solicitudState!: ImmexAmpliacionSensiblesState;
 
+  /**
+   * Estado de la sección utilizado para gestionar el estado interno de la aplicación.
+   * Este objeto contiene información relevante sobre la sección actual y su estado.
+   * 
+   * @private
+   */
   private seccionState!: SeccionLibState;
 
   /**
@@ -107,13 +131,21 @@ export class AnexoComponent implements OnInit, OnDestroy {
     metodoNombre: keyof ImmexAmpliacionSensiblesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: any) => void)(
+    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: string | number | boolean) => void)(
       VALOR
     );
   }
 
+  /**
+   * Verifica si un campo específico en un formulario es válido.
+   *
+   * @param form - El formulario reactivo (FormGroup) que contiene los campos a validar.
+   * @param field - El nombre del campo dentro del formulario que se desea validar.
+   * @returns `true` si el campo es válido, `false` en caso contrario o si no se puede determinar.
+   */
   isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field)!;
+    const IS_VALID = this.validacionesService.isValid(form, field);
+    return IS_VALID !== null && IS_VALID !== undefined ? IS_VALID : false;
   }
 
   /**
@@ -251,6 +283,11 @@ export class AnexoComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Este método emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
+   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

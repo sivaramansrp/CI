@@ -1,0 +1,12 @@
+<app-datos-certificado-de
+    [idioma]="idioma" 
+    [idiomaDatos]="idiomaDatos || []" 
+    [entidadFederativaDatos]="entidadFederativas || []"
+    [representacionFederalDatos]="representacionFederal || []"
+    (idiomaSeleccionEvent)="idiomaSeleccion($event)"
+    (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
+    (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
+    [datosFormCertificado]="formDatosCertificadoValues"
+    (formaValida)="setFormValida($event)"
+    (formDatosCertificadoEvent)="setValoresStore($event)"
+></app-datos-certificado-de>

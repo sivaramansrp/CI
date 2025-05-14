@@ -1,0 +1,252 @@
+<form [formGroup]="avisoForm" (ngSubmit)="validarDestinatarioFormulario()">
+  <ng-titulo titulo="Datos de residencia" />
+  <div class="col-12">
+    <label
+      >Indique si es residente en territorio nacional o residente en el
+      extranjero :*</label
+    >
+    <app-input-radio
+      [radioOptions]="radioOpcions"
+      [isRequired]="true"
+      [layout]="'horizontal'"
+      formControlName="residenteNacExt"
+      (change)="setValoresStore('residenteNacExt')"
+    ></app-input-radio>
+  </div>
+
+  <div class="row mt-5">
+    <ng-titulo titulo="Tipo de solicitud" />
+    <div class="col-12">
+      <label>Señale el antecedente de la Regla 4.2.20 de las RGCE :*</label>
+      <app-input-radio
+        [radioOptions]="radioTotal"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+        formControlName="tipoSolicitude"
+        (change)="setValoresStore('tipoSolicitude')"
+      ></app-input-radio>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <ng-titulo titulo="Datos generales del tipo de solicitud" />
+  </div>
+
+  <div class="row mt-5">
+    <ng-titulo *ngIf="avisoForm.get('tipoSolicitude')?.value === 'numero'"
+      titulo="Datos de la solicitud del permiso de internación temporal de vehículos"
+    />
+    <ng-titulo *ngIf="avisoForm.get('tipoSolicitude')?.value !== 'numero'"
+      titulo="Datos de la solicitud del permiso de importación temporal"
+    />
+
+    <div class="col-md-6">
+      <label>Número de permiso de internación temporal del vehículo:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="numeroPermiso"
+        (change)="setValoresStore('numeroPermiso')"
+      />
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <input-fecha
+          [datos]="fechaInitialInput"
+          [setFecha]="avisoForm.get('fechaEmision')?.value"
+        ></input-fecha>
+      </div>
+      <div class="col-md-6">
+        <input-fecha
+          [datos]="fechaPagoInput"
+          [setFecha]="avisoForm.get('fechaVencimiento')?.value"
+        ></input-fecha>
+      </div>
+    </div>
+    <!-- write logic -->
+    <div class="row mt-3" *ngIf="avisoForm.get('tipoSolicitude')?.value === 'numero'">
+      <label
+        >Número del pedimento de importación definitiva a región o franja
+        fronteriza*:
+      </label>
+
+      <div class="col-md-10">
+        <input
+          type="text"
+          class="form-control"
+          required
+          formControlName="numeroFranja"
+          (change)="setValoresStore('numeroFranja')"
+        />
+      </div>
+      <div class="col-md-10">
+        <input-fecha
+          [datos]="fechaFranjo"
+          [setFecha]="avisoForm.get('fechaFranja')?.value"
+        ></input-fecha>
+      </div>
+    </div>
+    <div class="col-md-6 mt-3">
+      <app-catalogo-select
+        [catalogo]="anoCatalogo.catalogos"
+        [label]="anoCatalogo.labelNombre"
+        formControlName="numeroPedimento"
+        (change)="setValoresStore('numeroPedimento')"
+      ></app-catalogo-select>
+    </div>
+  </div>
+
+  <ng-titulo titulo="Información adicional" />
+  <div class="row mt-5 radios">
+    <label
+      >¿Es la segunda ocasion en la que se presenta el aviso?*:
+    </label>
+
+    <app-input-radio
+      [radioOptions]="radioParcial"
+      [isRequired]="true"
+      [layout]="'horizontal'"
+      formControlName="avisoNacExt"
+      (change)="setValoresStore('avisoNacExt')"
+    ></app-input-radio>
+
+    <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
+      <app-catalogo-select
+        [catalogo]="anoCatalogo.catalogos"
+        [label]="'Fecha de acuse de recibo:*'"
+        (change)="setValoresStore('fechaAcuse')"
+        formControlName="fechaAcuse"
+      ></app-catalogo-select>
+    </div>
+    <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
+      <label
+        >Señale las razones de fuerza mayor o caso fortuito, por las cuales no
+        se realizó el traslado del vehículo a la franja ao región fronteriza o a
+        la aduana de salida, de conformidad con el primer aviso*:</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="conformidad"
+        (change)="setValoresStore('conformidad')"
+      />
+    </div>
+  </div>
+
+  <ng-titulo titulo="Información relacionada con el tramite" />
+  <ng-titulo titulo="Información general del vehículo" />
+
+  <div class="row">
+    <div class="col-4 mt-3">
+      <label>Marca:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="marca"
+        (change)="setValoresStore('marca')"
+      />
+    </div>
+    <div class="col-4 mt-3">
+      <label>Tipo:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="tipo"
+        (change)="setValoresStore('tipo')"
+      />
+    </div>
+    <div class="col-4 mt-3">
+      <label>Modelo:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="modelo"
+        (change)="setValoresStore('modelo')"
+      />
+    </div>
+    <div class="col-4 mt-3">
+      <label>NIV:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="niv"
+        (change)="setValoresStore('niv')"
+      />
+    </div>
+    <div class="col-4 mt-3">
+      <label>Número de placas:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="numeroDePlacas"
+        (change)="setValoresStore('numeroDePlacas')"
+      />
+    </div>
+    <div class="col-4 mt-3">
+      <label>Estado que espidió las placas:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="estadoPlacas"
+        (change)="setValoresStore('estadoPlacas')"
+      />
+    </div>
+    <div class="col-12 mt-3">
+      <label class="mt-4"
+        >¿Declara, bajo protesta de decir verdad, que el vehículo descrito no se
+        encuentra sujeto a ningún PAMA o procesojidicial?*:
+      </label>
+      <app-input-radio
+        [radioOptions]="radioParcial"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+        formControlName="declara"
+        (change)="setValoresStore('declara')"
+      ></app-input-radio>
+    </div>
+  </div>
+  <ng-titulo titulo="Medio de transporte que movera la mercancía" />
+  <div class="row">
+    <div class="col-md-8 mt-3">
+      <!-- <label
+        >Indique, en su caso, en medio en que sera transportado dicho
+        vehículos:*</label
+      > -->
+      <app-catalogo-select
+        [catalogo]="fetchVehiculo"
+        [label]="'Indique, en su caso, en medio en que sera transportado dicho vehículos:*'"
+        (change)="setValoresStore('tipoVehiculo')"
+        formControlName="tipoVehiculo"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-3" *ngIf="avisoForm.get('tipoVehiculo')?.value === '1'">
+      <label>Especifique:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="especifique"
+        (change)="setValoresStore('especifique')"
+      />
+    </div>
+    <div class="col-md-8 mt-3">
+      <label>Número de Serie:*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        formControlName="numeroSerie"
+        (change)="setValoresStore('numeroSerie')"
+      />
+    </div>
+  </div>
+</form>
