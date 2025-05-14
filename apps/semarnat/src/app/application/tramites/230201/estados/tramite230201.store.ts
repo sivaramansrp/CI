@@ -266,7 +266,7 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
 
   public setUnidadDeMedida(unidadDeMedida: Catalogo[]): void {
     this.update((state) => ({
-      ...this.getValue(),
+      ...state,
       unidadDeMedida,
     }));
   }
