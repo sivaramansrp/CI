@@ -8,7 +8,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
@@ -156,16 +156,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Botones para gestionar la lista de países de origen.
-   */
-  // public paisDeOrigenBotons = this.getCrossListBtn(0);
-
-  /**
-   * Botones para gestionar la lista de entidades.
-   */
-  // public entidadesBotons = this.getCrossListBtn(0);
-
-  /**
    * Etiquetas para la lista de países de origen.
    */
   public paisDeOrigenLabel: CrossListLable = {
@@ -311,6 +301,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
         lungarDeEntrada: [
           this.solicitudState?.lungarDeEntrada,
+          Validators.required,
+        ],
+        destinoDeImportador: [
+          this.solicitudState?.destinoDeImportador,
           Validators.required,
         ],
         medioDeTransporte: [
@@ -654,7 +648,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Agrega un nuevo detalle a la lista de detalles.
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    */
-  agregarDetalle() {
+  agregarDetalle(): void {
     this.phytosanitaryExportacionService
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -676,7 +670,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    * También reinicia el formulario de la solicitud.
    */
-  agregarSolicitud() {
+  agregarSolicitud(): void {
     this.phytosanitaryExportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta?.success) {

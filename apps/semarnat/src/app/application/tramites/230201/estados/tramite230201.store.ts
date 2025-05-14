@@ -42,6 +42,7 @@ export interface Solicitud230201State {
   nombreComun: Catalogo[] | null;
   unidadDeMedida: Catalogo[] | null;
   lungarDeEntrada: string;
+  destinoDeImportador: string;
   medioDeTransporte: Catalogo[] | null;
   numeroYDescripcion: string;
   codigoPostal: string;
@@ -112,6 +113,7 @@ export function createInitialState(): Solicitud230201State {
     nombreComun: null,
     unidadDeMedida: null,
     lungarDeEntrada: '',
+    destinoDeImportador: '',
     medioDeTransporte: null,
     numeroYDescripcion: '',
     codigoPostal: '',
@@ -264,7 +266,7 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
 
   public setUnidadDeMedida(unidadDeMedida: Catalogo[]): void {
     this.update((state) => ({
-      ...this.getValue(),
+      ...state,
       unidadDeMedida,
     }));
   }
@@ -273,6 +275,13 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     this.update((state) => ({
       ...state,
       lungarDeEntrada: lungarDeEntrada,
+    }));
+  }
+
+  public setDestinoDeImportador(destinoDeImportador: string): void {
+    this.update((state) => ({
+      ...state,
+      destinoDeImportador: destinoDeImportador,
     }));
   }
 
