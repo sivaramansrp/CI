@@ -151,6 +151,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoOpcionSeguroGlobalModule),
   },
   {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule),
+  },
+  {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
