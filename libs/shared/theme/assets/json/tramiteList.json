@@ -1983,8 +1983,8 @@
   {
     "id": 284,
     "tramite": 290301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+   "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
+   "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
     "department": "amecafe"
   },
   {
@@ -3201,8 +3201,8 @@
   {
     "id": 459,
     "tramite": 260919,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importar-de-remedios-herbals/permiso-remedios-herbals",
+    "linkDepartment": "/pago/importar-de-remedios-herbals/permiso-remedios-herbals",
     "department": "cofepris"
   },
   {
