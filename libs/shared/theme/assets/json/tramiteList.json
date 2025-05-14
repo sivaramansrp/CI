@@ -2837,8 +2837,8 @@
   {
     "id": 407,
     "tramite": 420101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registrar-proveedores/solicitud",
+    "linkDepartment": "/pago/registrar-proveedores/solicitud",
     "department": "aga"
   },
   {
