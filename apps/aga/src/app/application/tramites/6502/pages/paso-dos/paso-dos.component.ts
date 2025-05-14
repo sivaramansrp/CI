@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 
+/**
+ * Componente para gestionar el paso tres del trámite.
+ * Este componente maneja la obtención de la firma del usuario y la redirección a la pantalla de acuse.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -13,9 +17,9 @@ export class PasoDosComponent implements OnDestroy{
  * Sujeto utilizado para manejar la destrucción de observables.
  * Este objeto se utiliza para evitar pérdidas de memoria al cancelar suscripciones activas.
  * 
- * @private
+ * @public
  */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente.
