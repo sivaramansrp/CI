@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  TablaAcciones,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -110,11 +111,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+
+  public accionesServcios: TablaAcciones[] = [];
+
+
+
   /**
    * Asigna el valor de `TIPO_TABLA_DATOS` a la variable `tipoTablaDatos`.
    * `TIPO_TABLA_DATOS` es un objeto o constante que define los tipos de datos para las tablas.
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
+
+
+  listaDeTablasSeleccionadasDestinatario: Destinatario[] = [];
+  listaDeTablasSeleccionadasFabricante: Fabricante[] = [];
 
   /**
    * @constructor
@@ -138,7 +148,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
-
+ this.accionesServcios = [TablaAcciones.VER];
     this.fabricanteTablaDatos$ = this.tramiteQuery.getFabricanteTablaDatos$;
   }
 
@@ -162,6 +172,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedROute,
     });
   }
+
+
+onListaDeFilaSeleccionada(
+  filasSeleccionadas: Destinatario[] | Fabricante[],
+  tableName: string
+): void {
+  if (tableName === 'destinatario') {
+    this.listaDeTablasSeleccionadasDestinatario = filasSeleccionadas as Destinatario[];
+  } else if (tableName === 'fabricante') {
+    this.listaDeTablasSeleccionadasFabricante = filasSeleccionadas as Fabricante[];
+  }
+}
+
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
