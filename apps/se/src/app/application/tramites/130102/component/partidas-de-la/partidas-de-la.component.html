@@ -7,13 +7,25 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="cantidad">Cantidad*:</label>
-                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" libUppercase
+                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" maxlength="18" libUppercase
                             aria-labelledby="cantidad"   (change)="setValoresStore(form,'cantidad', 'setCantidad_partidas')" >
-                            <div *ngIf="esInvalido('cantidad')" class="text-danger">
-                                <small *ngIf="form.controls['cantidad'].hasError('required')">Cantidad es obligatoria.</small>
-                                <small *ngIf="form.controls['cantidad'].hasError('pattern')">Solo se permiten números.</small>
-                                <small *ngIf="form.controls['cantidad'].hasError('maxlength')">Máximo 18 caracteres.</small>
-                            </div>    
+                            @if (esInvalido('cantidad')) {
+                                <div class="text-danger">
+                                  @if (form.controls['cantidad'].hasError('required')) {
+                                    <small>Cantidad es obligatoria.</small>
+                                  }
+                                  @if (form.controls['cantidad'].hasError('pattern')) {
+                                    <small>Solo se permiten números.</small>
+                                  }
+                                  @if (form.controls['cantidad'].hasError('maxlength')) {
+                                    <small>Máximo 18 caracteres.</small>
+                                  }
+                                  @if (form.controls['cantidad'].hasError('leadingSpaces')) {
+                                    <small>No se permiten espacios al inicio del campo.</small>
+                                  }
+                                </div>
+                              }
+                                
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -21,29 +33,55 @@
                         <label class="form-label" for="fraccionArancelariaTIGIE">Fracción Arancelaria TIGIE*:</label>
                         <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
                             formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')">
-                            <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
-                                <small>Debe seleccionar una fracción.</small>
-                            </div>
+                            @if (esInvalido('fraccionArancelariaTIGIE')) {
+                                <div class="text-danger">
+                                  @if (form.controls['fraccionArancelariaTIGIE'].errors?.['required']) {
+                                    <small>La fracción arancelaria es obligatoria.</small>
+                                  }
+                                  @if (form.controls['fraccionArancelariaTIGIE'].errors?.['pattern']) {
+                                    <small>Debe ingresar una fracción válida (por ejemplo: 0101.21.01).</small>
+                                  }
+                                  @if (form.controls['fraccionArancelariaTIGIE'].errors?.['leadingSpaces']) {
+                                    <small>No se permiten espacios al inicio del campo.</small>
+                                  }
+                                </div>
+                              }
+                              
                     </div>
                 </div>
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
                     [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"></app-catalogo-select>
-                        <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
+                    @if (esInvalido('fraccionArancelariaTIGIE')) {
+                        <div class="text-danger">
+                          @if (form.controls['fraccionArancelariaTIGIE_TIGIE'].errors?.['required']) {
                             <small>Debe seleccionar una fracción.</small>
+                          }
                         </div>
+                      }
+                      
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="descripcion">Descripción*:</label>
-                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion"
+                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion" maxlength="255"
                             aria-labelledby="descripcion" (change)="setValoresStore(form,'descripcion', 'setdescripcion_partidas')"></textarea>
-                            <div *ngIf="esInvalido('descripcion')" class="text-danger">
-                                <small *ngIf="form.controls['descripcion'].hasError('required')">Descripción es obligatoria.</small>
-                                <small *ngIf="form.controls['descripcion'].hasError('maxlength')">Máximo 255 caracteres.</small>
-                            </div>
+                            @if (esInvalido('descripcion')) {
+                                <div class="text-danger">
+                                  @if (form.controls['descripcion'].hasError('required')) {
+                                    <small>Descripción es obligatoria.</small>
+                                  }
+                                  @if (form.controls['descripcion'].hasError('maxlength')) {
+                                    <small>Máximo 255 caracteres.</small>
+                                  }
+                                  @if (form.controls['descripcion'].hasError('leadingSpaces')) {
+                                    <small>No se permiten espacios al inicio del campo.</small>
+                                  }
+                                </div>
+                              }
+                              
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -51,12 +89,23 @@
                         <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
                         <input class="form-control" type="number" id="valorPartidaUSD" formControlName="valorPartidaUSD"
                             aria-labelledby="valorPartidaUSD" (change)="setValoresStore(form,'valorPartidaUSD', 'setvalorPartidaUSD')">
-                            <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
-                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('required')">Este campo es obligatorio.</small>
-                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')">Ingrese un número válido.</small>
-                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('min')">El valor debe ser mayor o igual a 0.</small>
-                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('maxlength')">Máximo 20 caracteres permitidos.</small>
-                            </div>
+                            @if (esInvalido('valorPartidaUSD')) {
+                                <div class="text-danger">
+                                  @if (form.controls['valorPartidaUSD'].hasError('required')) {
+                                    <small>Este campo es obligatorio.</small>
+                                  }
+                                  @if (form.controls['valorPartidaUSD'].hasError('pattern')) {
+                                    <small>Ingrese un número válido.</small>
+                                  }
+                                  @if (form.controls['valorPartidaUSD'].hasError('min')) {
+                                    <small>El valor debe ser mayor o igual a 0.</small>
+                                  }
+                                  @if (form.controls['valorPartidaUSD'].hasError('maxlength')) {
+                                    <small>Máximo 20 caracteres permitidos.</small>
+                                  }
+                                </div>
+                              }
+                              
                     </div>
                 </div>
             </div>

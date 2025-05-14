@@ -55,3 +55,12 @@ export interface ListaPasosWizard {
   activo: boolean;
   completado: boolean;
 }
+/**
+ * @description Representa la estructura de una vista emergente.
+ * @property {boolean} abierto - Indica si la vista emergente está abierta o cerrada.
+ * @property {number} indice - Representa el índice asociado a la vista emergente.
+ */
+export interface VistaEmergente {
+  abierto: boolean;
+  indice: number;
+}

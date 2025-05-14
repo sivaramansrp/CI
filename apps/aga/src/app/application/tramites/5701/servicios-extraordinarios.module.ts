@@ -1,35 +1,21 @@
-import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, NotificacionesComponent, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, NavComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SolicitanteComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CheckInputTextComponent } from '../../shared/components/check-input-text/check-input-text.component';
 import { CommonModule } from '@angular/common';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputHoraComponent } from '@ng-mf/data-access-user';
-import { NavComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TercerosComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -55,6 +41,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => InputFechaComponent),
     forwardRef(() => InputHoraComponent),
     forwardRef(() => NavComponent),
+    forwardRef(() => NotificacionesComponent),
     forwardRef(() => PedimentoComponent),
     ReactiveFormsModule,
     forwardRef(() => RepresentanteFiscalComponent),
@@ -73,7 +60,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   ],
   providers: [
     ToastrService,
-    CatalogosService
+    CatalogosService,
+    BsModalService
   ]
 })
 export class ServiciosExtraordinariosModule {}

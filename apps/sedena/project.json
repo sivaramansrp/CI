@@ -16,7 +16,7 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/sedena/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-       "assets": [
+        "assets": [
           {
             "glob": "**/*",
             "input": "apps/sedena/src/assets/",
@@ -30,20 +30,55 @@
           }
         ],
         "styles": [
-          "node_modules/bootstrap/scss/bootstrap.scss",
-           "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-           "node_modules/ngx-toastr/toastr.css",
-          "libs/shared/theme/assets/styles/main.scss"
-         ],
-     "scripts": [
-       "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-     ],
+             "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+             "libs/shared/theme/assets/styles/main.scss"
+            ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        ],
         "customWebpackConfig": {
           "path": "apps/sedena/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/sedena/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/sedena/src/app/environments/environment.ts",
+              "with": "apps/sedena/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
           "budgets": [
             {
               "type": "initial",
@@ -57,9 +92,22 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/sedena/webpack.prod.config.ts"
-          }
+            "path": "apps/sedena/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/sedena/src/app/environments/environment.ts",
+              "with": "apps/sedena/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -70,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4219,
-        "publicHost": "http://localhost:4219"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -84,6 +132,9 @@
         },
         "development": {
           "buildTarget": "sedena:build:development"
+        },
+        "qa": {
+          "buildTarget": "sedena:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -106,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "sedena:build",
         "port": 4219,

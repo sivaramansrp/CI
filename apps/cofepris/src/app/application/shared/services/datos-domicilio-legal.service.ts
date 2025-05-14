@@ -6,7 +6,8 @@ import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
-
+import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
+import { DatosDomicilioLegalState } from '../estados/stores/datos-domicilio-legal.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -21,7 +22,7 @@ export class DatosDomicilioLegalService {
    *
    * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
    */
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient,private query: DatosDomicilioLegalQuery) {
     // Constructor del servicio
   }
 
@@ -73,5 +74,13 @@ export class DatosDomicilioLegalService {
    */
   getTable(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260501/terceros.json');
+  }
+
+   /**
+   * Obtiene el estado completo de DatosDomicilioLegal.
+   * @returns Observable<DatosDomicilioLegalState>
+   */
+   getDatosDomicilioLegalState(): Observable<DatosDomicilioLegalState> {
+    return this.query.selectSolicitud$;
   }
 }

@@ -1,19 +1,14 @@
-/* eslint-disable no-empty-function */
-
-import {
-  Tramite40403Store,
-  Tramitenacionales40403State,
-} from '../../estados/tramite40403.store';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
-import { Subject } from 'rxjs';
-import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
+
+import { AtencionRenovacion40403State, Tramite40403Store } from '../../estados/tramite40403.store';
+import { SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
+import { Tramite40403Query } from '../../estados/tramite40403.query';
+
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
@@ -29,6 +24,9 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Componente para gestionar la página del solicitante en el asistente de solicitud.
+ */
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
@@ -48,7 +46,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de las secciones del formulario, gestionado por el store.
    */
-  public seccion!: Tramitenacionales40403State;
+  public seccion!: AtencionRenovacion40403State;
 
   /**
    * Notificador para gestionar la destrucción de suscripciones activas.
@@ -78,7 +76,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   constructor(
     private tramite40403Query: Tramite40403Query,
     private tramite40403Store: Tramite40403Store
-  ) {}
+  ) { }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
