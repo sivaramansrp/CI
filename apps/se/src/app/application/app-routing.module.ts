@@ -553,6 +553,13 @@ const ROUTES: Routes = [
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
   },
+  {
+        path: 'programa-prosec',
+        loadChildren: () =>
+          import('./tramites/90302/programa-prosec.module').then(
+            (m) => m.ProgramaProsecModule
+          ),
+  },
 
   {
     path: 'validar-certificado',
