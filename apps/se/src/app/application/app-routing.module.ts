@@ -48,7 +48,9 @@ const ROUTES: Routes = [
   {
     path: 'tramites-disponibles',
     loadChildren: () =>
-      import('./tramites/110210/tramites-disponibles.module').then((m) => m.TramitesDisponiblesModule),
+      import('./tramites/110210/tramites-disponibles.module').then(
+        (m) => m.TramitesDisponiblesModule
+      ),
   },
   {
     path: 'empresa-frontera',
@@ -123,7 +125,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado-tecnico-japon',
-    loadChildren: () => import('./tramites/110218/certificado-tecnico-japon.module').then((m) => m.CertificadoTecnicoJaponModule)
+    loadChildren: () =>
+      import('./tramites/110218/certificado-tecnico-japon.module').then(
+        (m) => m.CertificadoTecnicoJaponModule
+      ),
   },
   {
     path: 'desmantelar',
@@ -135,8 +140,9 @@ const ROUTES: Routes = [
   {
     path: 'cancelacion-de-certificados-de-cupo',
     loadChildren: () =>
-      import('./tramites/140104/cancelacion-de-certificados-de-cupo.module').then(
-        (m) => m.CancelacionDeCertificadosDeCupoModule)
+      import(
+        './tramites/140104/cancelacion-de-certificados-de-cupo.module'
+      ).then((m) => m.CancelacionDeCertificadosDeCupoModule),
   },
   {
     path: 'desistimiento-de-permiso',
@@ -220,7 +226,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130114/diamante-bruto.module').then(
         (m) => m.DiamanteBrutoModule
-      )
+      ),
   },
   {
     path: 'solicitud-modificacion',
@@ -232,16 +238,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion-material-de-investigacion-cientifica',
     loadChildren: () =>
-      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
-        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
-      ),
+      import(
+        './tramites/130112/importacion-material-de-investigacion-cientifica.module'
+      ).then((m) => m.ImportacionMaterialDeInvestigacionCientificaModule),
   },
   {
     path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
       import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
         (m) => m.ImportacionVehiculosNuevosModule
-      )
+      ),
   },
   {
     path: 'cancelaciones-ministerio',
@@ -262,7 +268,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110219/certificado.module').then(
         (m) => m.CertificadoModule
-      )
+      ),
   },
   {
     path: 'nuevo-programa-industrial',
@@ -275,7 +281,8 @@ const ROUTES: Routes = [
     path: 'certificado-validacion',
     loadChildren: () =>
       import('./tramites/110202/certificado-validacion.module').then(
-        (m) => m.CertificadoValidacionModule),
+        (m) => m.CertificadoValidacionModule
+      ),
   },
   {
     path: 'exportacion-minerales',
@@ -294,30 +301,28 @@ const ROUTES: Routes = [
   {
     path: 'tecnicos',
     loadChildren: () =>
-      import('./tramites/110203/tecnicos.module').then(
-        (m) => m.TecnicosModule
-      ),
+      import('./tramites/110203/tecnicos.module').then((m) => m.TecnicosModule),
   },
   {
     path: 'previos-exportacion',
     loadChildren: () =>
-      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
-        (m) => m.ControlPermisosPreviosExportacionModule
-      )
+      import(
+        './tramites/130217/control-permisos-previos-exportacion.module'
+      ).then((m) => m.ControlPermisosPreviosExportacionModule),
   },
   {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      )
+      ),
   },
   {
     path: 'validador-certificado-cam',
     loadChildren: () =>
       import('./tramites/110221/validador-certificado-cam.module').then(
         (m) => m.ValidadorCertificadoCamModule
-      )
+      ),
   },
   {
     path: 'registro-solicitud-anual',
@@ -334,7 +339,9 @@ const ROUTES: Routes = [
   {
     path: 'solicitud-prorroga',
     loadChildren: () =>
-      import('./tramites/130301/solicitud-prorroga.module').then((m) => m.SolicitudProrrogaModule),
+      import('./tramites/130301/solicitud-prorroga.module').then(
+        (m) => m.SolicitudProrrogaModule
+      ),
   },
   {
     path: 'aviso-importacion-maquinas',
@@ -361,7 +368,8 @@ const ROUTES: Routes = [
     path: 'solicitud-de-cancelacion',
     loadChildren: () =>
       import('./tramites/140101/solicitud-de-cancelacion.module').then(
-        (m) => m.SolicitudDeCancelacionModule),
+        (m) => m.SolicitudDeCancelacionModule
+      ),
   },
   {
     path: 'validar-certificado',
@@ -380,9 +388,9 @@ const ROUTES: Routes = [
   {
     path: 'importacion-vehiculos-usados-donacion',
     loadChildren: () =>
-      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
-        (m) => m.ImportacionVehiculosUsadosDonacionModule
-      )
+      import(
+        './tramites/130105/importacion-vehiculos-usados-donacion.module'
+      ).then((m) => m.ImportacionVehiculosUsadosDonacionModule),
   },
   {
     path: 'importacion',
@@ -409,14 +417,15 @@ const ROUTES: Routes = [
     path: 'expedicion-certificado-cupos',
     loadChildren: () =>
       import('./tramites/120204/expedicion-certificado-cupos.module').then(
-        (m) => m.ExpedicionCertificadoModule),
+        (m) => m.ExpedicionCertificadoModule
+      ),
   },
   {
     path: 'exportar-diamantes',
     loadChildren: () =>
       import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
         (m) => m.ExportaciónDeDiamantesEnBrutoModule
-      )
+      ),
   },
   {
     path: 'importacion-otros-vehiculos-usados',
@@ -537,6 +546,13 @@ const ROUTES: Routes = [
         (m) => m.RegistroComoEmpresaModule
       ),
   },
+  {
+    path: 'modificacion-programa-immex-baja-submanufacturera',
+    loadChildren: () =>
+      import(
+        './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
+      ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
+  },
 
   {
     path: 'validar-certificado',
@@ -554,4 +570,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
