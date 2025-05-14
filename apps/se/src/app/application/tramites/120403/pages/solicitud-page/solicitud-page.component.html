@@ -1,0 +1,25 @@
+<div class="page">
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <h2>Asignación directa de cupo personas físicas (ampliación)</h2>
+        <div *ngIf="alerta">
+          <div class="alert alert-danger" role="alert">
+            <p>Corrija los siguientes errores:</p>
+            <span style="color: rgb(134, 17, 17);"> 1. La ampliación que desea realizar no puede llevarse a cabo, debido a que el mecanismo de asignación directa sobre el cual fue autorizada al Asignación no cuenta con saldo disponible. </span>
+          </div>
+        </div>
+      </div>
+      <app-wizard [listaPasos]="pasos"></app-wizard>
+    </div>
+    <div class="row"> @switch (indice) { @case (1) { <app-paso-uno (dataEmitter)="receiveData($event)"></app-paso-uno> } @case (2) { <app-paso-dos></app-paso-dos> } @case (3) { <app-paso-tres></app-paso-tres> } } 
+      <ng-container *ngIf="datos === 1">
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      </ng-container>
+      <ng-container *ngIf="datos === 2">
+        <btn-continuar [datos]="datoPaso" (continuarEvento)="getValorIndices($event)"></btn-continuar>
+      </ng-container>
+    </div>
+    <ng-alert [CONTENIDO]="avisoPrivacidad"></ng-alert>
+  </div>
+</div>
