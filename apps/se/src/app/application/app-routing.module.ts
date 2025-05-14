@@ -121,9 +121,9 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule
       ),
   },
-  {  
-    path:'certificado-tecnico-japon',
-    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  {
+    path: 'certificado-tecnico-japon',
+    loadChildren: () => import('./tramites/110218/certificado-tecnico-japon.module').then((m) => m.CertificadoTecnicoJaponModule)
   },
   {
     path: 'desmantelar',
@@ -214,8 +214,8 @@ const ROUTES: Routes = [
       import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
         (m) => m.ImportacionDeVehiculosUsadosModule
       ),
-  },   
-  {      
+  },
+  {
     path: 'diamante-bruto',
     loadChildren: () =>
       import('./tramites/130114/diamante-bruto.module').then(
@@ -259,11 +259,11 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110219/certificado.module').then(
         (m) => m.CertificadoModule
       )
-  }, 
+  },
   {
     path: 'nuevo-programa-industrial',
     loadChildren: () =>
@@ -276,7 +276,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110202/certificado-validacion.module').then(
         (m) => m.CertificadoValidacionModule),
-      },
+  },
   {
     path: 'exportacion-minerales',
     loadChildren: () =>
@@ -291,7 +291,8 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
-  { path: 'tecnicos',
+  {
+    path: 'tecnicos',
     loadChildren: () =>
       import('./tramites/110203/tecnicos.module').then(
         (m) => m.TecnicosModule
@@ -313,7 +314,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'validador-certificado-cam',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110221/validador-certificado-cam.module').then(
         (m) => m.ValidadorCertificadoCamModule
       )
@@ -377,7 +378,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path:'importacion-vehiculos-usados-donacion',
+    path: 'importacion-vehiculos-usados-donacion',
     loadChildren: () =>
       import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
         (m) => m.ImportacionVehiculosUsadosDonacionModule
@@ -385,17 +386,17 @@ const ROUTES: Routes = [
   },
   {
     path: 'importacion',
-      loadChildren: () =>
-        import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
-          (m) => m.ImportacionNeumaticosComercializarModule
-        ),
+    loadChildren: () =>
+      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+        (m) => m.ImportacionNeumaticosComercializarModule
+      ),
   },
   {
     path: 'importacion',
-      loadChildren: () =>
-        import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
-          (m) => m.ImportacionEquipoAnticontaminanteModule
-        ),
+    loadChildren: () =>
+      import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+        (m) => m.ImportacionEquipoAnticontaminanteModule
+      ),
   },
   {
     path: 'importacion-de',
@@ -404,7 +405,7 @@ const ROUTES: Routes = [
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
   },
-    {
+  {
     path: 'expedicion-certificado-cupos',
     loadChildren: () =>
       import('./tramites/120204/expedicion-certificado-cupos.module').then(
@@ -412,7 +413,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'exportar-diamantes',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
         (m) => m.ExportaciónDeDiamantesEnBrutoModule
       )
@@ -423,7 +424,7 @@ const ROUTES: Routes = [
       import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
         (m) => m.ImportacionOtrosVehiculosUsadosModule
       )
-    },
+  },
   {
     path: 'modalidad-ampliacion',
     loadChildren: () =>
@@ -495,7 +496,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado-alianza-posteriori',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110223/certificado-alianza-posteriori.module').then(
         (m) => m.CertificadoAlianzaPosterioriModule
       )
@@ -553,4 +554,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
