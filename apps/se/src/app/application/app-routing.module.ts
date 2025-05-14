@@ -575,7 +575,13 @@ const ROUTES: Routes = [
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
-
+  {
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
+      ),
+  }
 ];
 
 @NgModule({
