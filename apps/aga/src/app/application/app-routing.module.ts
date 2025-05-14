@@ -316,6 +316,13 @@ const ROUTES: Routes = [
         (m) => m.OperacionesDeComercioExteriorModule)
   },
   {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
+      ),
+  },
+  {
     path: 'concluir-relacion',
     loadChildren: () =>
       import('./tramites/420102/concluir-relacion.module').then(
