@@ -256,6 +256,7 @@
               [required]="true"
               name="claveScianModal"
               (change)="
+                onClaveScianChange($event);
                 setValoresStore(
                   formAgente,
                   'claveScianModal',
@@ -264,13 +265,14 @@
               "
             ></app-catalogo-select>
           </div>
+
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
+            <label for="nombreComun">Descripción del S.C.I.A.N.</label>
+            <input
+              type="text"
+              id="claveDescripcionModal"
               formControlName="claveDescripcionModal"
-              [label]="'Descripción del S.C.I.A.N.'"
-              [required]="false"
-              name="claveDescripcionModal"
+              class="form-control"
               (change)="
                 setValoresStore(
                   formAgente,
@@ -278,7 +280,7 @@
                   'setClaveDescripcionModal'
                 )
               "
-            ></app-catalogo-select>
+            />
           </div>
         </form>
       </div>
@@ -307,13 +309,13 @@
   <div class="modal-dialog modal-dialog-centered modal-datos-generales">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Datos mercancías</h4>
+        <h4 class="modal-title">Datos mercancía</h4>
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial:</label>
+            <label for="nombreComercial">Nombre comercial*:</label>
             <input
               type="text"
               id="nombreComercial"
@@ -327,9 +329,27 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('nombreComercial')?.invalid &&
+                formMercancias.get('nombreComercial')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('nombreComercial')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('nombreComercial')?.errors?.['maxlength']"
+              >
+                Máximo 1000 caracteres permitidos
+              </small>
+            </div>
           </div>
           <div class="form-group">
-            <label for="nombreComun">nombre común:</label>
+            <label for="nombreComun">Nombre común*:</label>
             <input
               type="text"
               id="nombreComun"
@@ -343,9 +363,27 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('nombreComun')?.invalid &&
+                formMercancias.get('nombreComun')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('nombreComun')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('nombreComun')?.errors?.['maxlength']"
+              >
+                Por favor, no escribas más de 250 caracteres
+              </small>
+            </div>
           </div>
           <div class="form-group">
-            <label for="nombreCientifico">nombre científico:</label>
+            <label for="nombreCientifico">Nombre químico o científico:</label>
             <input
               type="text"
               id="nombreCientifico"
@@ -359,10 +397,23 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('nombreCientifico')?.invalid &&
+                formMercancias.get('nombreCientifico')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('nombreCientifico')?.errors?.['maxlength']"
+              >
+                Por favor, no escribas más de 250 caracteres
+              </small>
+            </div>
           </div>
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start"
-              >uso específico:</label
+              >Uso específico*:</label
             >
             <textarea
               id="usoEspecifico"
@@ -376,9 +427,33 @@
                 )
               "
             ></textarea>
+            <div
+              *ngIf="
+                formMercancias.get('usoEspecifico')?.invalid &&
+                formMercancias.get('usoEspecifico')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('usoEspecifico')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('usoEspecifico')?.errors?.['maxlength']"
+              >
+                Máximo 1000 caracteres permitidos
+              </small>
+            </div>
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <span
+              class="bi bi-question-circle-fill fs-4 m-1"
+              [title]="'Fracción arancelaria'"
+              ata-bs-toggle="tooltip"
+            >
+            </span>
             <input
               type="text"
               id="fraccionArancelaria"
@@ -392,9 +467,34 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('fraccionArancelaria')?.invalid &&
+                formMercancias.get('fraccionArancelaria')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['pattern']"
+              >
+                Por favor, sólo escribe dígitos
+              </small>
+              <small
+                *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['minlength']"
+              >
+                Por favor, no escribas menos de 8 caracteres
+              </small>
+            </div>
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">descripción de la fracción:</label>
+            <label for="descripcionFraccion"
+              >Descripción de la fracción arancelaria:</label
+            >
             <input
               type="text"
               id="descripcionFraccion"
@@ -409,53 +509,130 @@
               "
             />
           </div>
-          <div class="form-group">
-            <label for="cantidadUMT">Cantidad UMT*:</label>
-            <input
-              type="text"
-              id="cantidadUMT"
-              formControlName="cantidadUMT"
-              class="form-control"
-              (change)="
-                setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')
-              "
-            />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cantidadUMT">Cantidad UMT*:</label>
+                <input
+                  type="text"
+                  id="cantidadUMT"
+                  formControlName="cantidadUMT"
+                  class="form-control"
+                  (change)="
+                    setValoresStore(
+                      formMercancias,
+                      'cantidadUMT',
+                      'setCantidadUMT'
+                    )
+                  "
+                />
+                <div
+                  *ngIf="
+                    formMercancias.get('cantidadUMT')?.invalid &&
+                    formMercancias.get('cantidadUMT')?.touched
+                  "
+                  class="text-danger"
+                >
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMT')?.errors?.['required']"
+                  >
+                    Este campo es obligatorio
+                  </small>
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMT')?.errors?.['pattern']"
+                  >
+                    Este campo permite quince números enteros y hasta tres
+                    decimales
+                  </small>
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMT')?.errors?.['nonNumeric']"
+                  >
+                    Por favor, escribe un número entero válido
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="UMT">UMT*:</label>
+                <span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  [title]="'UMT'"
+                  ata-bs-toggle="tooltip"
+                >
+                </span>
+                <input
+                  type="text"
+                  id="UMT"
+                  formControlName="UMT"
+                  class="form-control"
+                  (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')"
+                />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="UMT">UMT*:</label>
-            <input
-              type="text"
-              id="UMT"
-              formControlName="UMT"
-              class="form-control"
-              (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')"
-            />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cantidadUMC">Cantidad UMC*:</label>
+                <input
+                  type="text"
+                  id="cantidadUMC"
+                  formControlName="cantidadUMC"
+                  class="form-control"
+                  (change)="
+                    setValoresStore(
+                      formMercancias,
+                      'cantidadUMC',
+                      'setCantidadUMC'
+                    )
+                  "
+                />
+                <div
+                  *ngIf="
+                    formMercancias.get('cantidadUMC')?.invalid &&
+                    formMercancias.get('cantidadUMC')?.touched
+                  "
+                  class="text-danger"
+                >
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMC')?.errors?.['required']"
+                  >
+                    Este campo es obligatorio
+                  </small>
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMC')?.errors?.['pattern']"
+                  >
+                    Este campo permite quince números enteros y hasta tres
+                    decimales
+                  </small>
+                  <small
+                    *ngIf="formMercancias.get('cantidadUMC')?.errors?.['nonNumeric']"
+                  >
+                    Por favor, escribe un número entero válido
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <app-catalogo-select
+                  [catalogo]="estado"
+                  formControlName="UMC"
+                  [label]="'UMC'"
+                  [required]="true"
+                  name="UMC"
+                  [placeholder]="'Seleccione un valor'"
+                  [tooltipQuestionCircle]="true"
+                  (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
+                ></app-catalogo-select>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="cantidadUMC">Cantidad UMC*:</label>
-            <input
-              type="text"
-              id="cantidadUMC"
-              formControlName="cantidadUMC"
-              class="form-control"
-              (change)="
-                setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')
-              "
-            />
-          </div>
-          <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="UMC"
-              [label]="'UMC'"
-              [required]="true"
-              name="UMC"
-              (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
-            ></app-catalogo-select>
-          </div>
+
           <div class="form-group">
             <label for="porcentajeConcentracion"
-              >porcentaje de concentración:</label
+              >porcentaje de concentración*:</label
             >
             <input
               type="text"
@@ -470,6 +647,24 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('porcentajeConcentracion')?.invalid &&
+                formMercancias.get('porcentajeConcentracion')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['maxlength']"
+              >
+                Máximo 100 caracteres permitidos
+              </small>
+            </div>
           </div>
           <div class="form-group">
             <label for="numeroRegistro">Número de registro sanitario*:</label>
@@ -486,6 +681,24 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                formMercancias.get('numeroRegistro')?.invalid &&
+                formMercancias.get('numeroRegistro')?.touched
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="formMercancias.get('numeroRegistro')?.errors?.['required']"
+              >
+                Este campo es obligatorio
+              </small>
+              <small
+                *ngIf="formMercancias.get('numeroRegistro')?.errors?.['maxlength']"
+              >
+                Máximo 50 caracteres permitidos
+              </small>
+            </div>
           </div>
 
           @if (configuracionVisibilidad.paisOrigen) {

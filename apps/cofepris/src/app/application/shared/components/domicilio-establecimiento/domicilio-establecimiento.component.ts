@@ -10,6 +10,8 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
+  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -352,21 +354,55 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
     this.formAgente = this.fb.group({
       claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
+      claveDescripcionModal: [{ value: '', disabled: true }],
     });
     this.formMercancias = this.fb.group({
-      nombreComercial: ['', Validators.required],
-      nombreComun: ['', Validators.required],
-      nombreCientifico: ['', Validators.required],
-      usoEspecifico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+       nombreComercial: [
+    '',
+    [Validators.required, Validators.maxLength(1000)], 
+  ],
+    nombreComun: ['', [Validators.required, Validators.maxLength(250)]],
+      nombreCientifico: ['', [Validators.maxLength(250)]],
+      usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
+    fraccionArancelaria: [
+    '',
+    [
+      Validators.required,
+     Validators.pattern(REGEX_SOLO_DIGITOS)],
+      Validators.minLength(8), 
+    ],
+  
+      descripcionFraccion: [{ value: '', disabled: true }],
+      cantidadUMT: [
+    '',
+    [
+      Validators.required, 
+      Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES), 
+    ],
+  ],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+    cantidadUMC: [
+    '',
+    [
+      Validators.required, 
+      Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES),
+    ],
+  ],
       UMC: ['', Validators.required],
-      porcentajeConcentracion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
+     porcentajeConcentracion: [
+    '',
+    [
+      Validators.required, 
+      Validators.maxLength(100), 
+    ],
+  ],
+      numeroRegistro: [
+    '',
+    [
+      Validators.required, 
+      Validators.maxLength(50), 
+    ],
+  ],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
@@ -504,7 +540,21 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.estado = data?.data;
       });
   }
+ /**
+   * @method onClaveScianChange
+   * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
+   * @param {Event} event - Evento de cambio del dropdown.
+   */
+  onClaveScianChange(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
 
+    if (SELECTED_OPTION) {
+      this.formAgente.patchValue({
+        claveDescripcionModal: SELECTED_OPTION.descripcion,
+      });
+    }
+  }
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
