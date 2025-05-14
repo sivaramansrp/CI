@@ -1,0 +1,271 @@
+<div class="container" [formGroup]="formularioEmpresa">
+    <ng-titulo titulo="Representación federal"></ng-titulo>
+    <div class="row">
+        <div class="col-md-3">
+            <app-catalogo-select 
+             [catalogo]="estadoData.catalogos" 
+             [label]="'Estado'"   
+             [required]="false" 
+             name="Estado"
+            formControlName="estado" 
+            (change)="setValoresStore(formularioEmpresa,'estado', 'setEstado')">
+            </app-catalogo-select>
+        </div>
+        <div class="col-md-3">
+            <app-catalogo-select 
+            [catalogo]="representacionFederalData.catalogos" 
+            [label]="'Representación federal'" 
+            [required]="true"
+            name="Representación federal" 
+            formControlName="representacionFederal" 
+            (change)="setValoresStore(formularioEmpresa,'representacionFederal', 'setRepresentacionFederal')">
+            </app-catalogo-select>
+        </div>
+    </div>
+    @if (nuevaNotificacion) {
+        <section >
+        <lib-notificaciones 
+        [notificacionInput]="nuevaNotificacion" 
+        (confirmacionModal)="eliminarPedimento($event)">
+        </lib-notificaciones>
+        </section>
+        }
+
+    <h6 class="gap">Selección de sucursal</h6>
+
+    <app-tabla-dinamica 
+     [configuracionTabla]="sucursalData" 
+    ></app-tabla-dinamica>
+
+    <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
+
+    <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select 
+                [catalogo]="tipoEmpresaData.catalogos" 
+                [label]="'Tipo de empresa:'" 
+                [required]="true" 
+                formControlName="tipoEmpresa"
+                (change)="setValoresStore(formularioEmpresa,'tipoEmpresa', 'setTipoEmpresa')"
+            ></app-catalogo-select>
+
+        </div>
+        <div class="col-md-8">
+            <label for="especifique" class="form-label">Especifique:</label>
+            <input type="text" class="form-control" id="especifique" formControlName="especifique" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-12">
+            <label for="actividad-economica-preponderante" class="form-label">Clasificación del Catálogo de Actividades
+                Económicas del SAT conforme a la Actividad Económica Preponderante":</label>
+            <input type="text" id="actividad-economica-preponderante" class="form-control"
+                name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante"
+                (change)="setValoresStore(formularioEmpresa,'actividadEconomicaPreponderante', 'setActividadEconomicaPreponderante')"
+                >
+        </div>
+        <div class="col-md-12">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea id="descripcion" class="form-control" formControlName="descripcion" [readonly]="true"
+            (change)="setValoresStore(formularioEmpresa,'descripcion', 'setDescripcion')"
+            ></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
+
+        <div class="col-md-4">
+            <label for="País" class="form-label">País:</label>
+            <input type="text" id="País" class="form-control" formControlName="pais" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Código postal" class="form-label">Código postal:
+            </label>
+            <input type="text" id="Código postal" class="form-control" formControlName="codigoPostal" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="EstadoDomicilio" class="form-label">Estado</label>
+            <input type="text" id="estadoDomicilio" class="form-control" formControlName="estadoDomicilio" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="alcaldía:" class="form-label">Municipio o alcaldía:</label>
+            <input type="text" id="alcaldía:" class="form-control" formControlName="municipioAlcaldia" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Localidad" class="form-label">Localidad:</label>
+            <input type="text" id="Localidad" class="form-control" formControlName="localidad" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Colonia" class="form-label">Colonia:</label>
+            <input type="text" id="Colonia" class="form-control" formControlName="colonia" readonly [disabled]="true">
+        </div>
+        <div class="col-md-8">
+            <label for="Calle" class="form-label">Calle:</label>
+            <input type="text" id="Calle" class="form-control" formControlName="calle" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="exterior" class="form-label">Número exterior:</label>
+            <input type="text" id="exterior" class="form-control" formControlName="numeroExterior" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="interior" class="form-label">Número interior:</label>
+            <input type="text" id="interior" class="form-control" formControlName="numeroInterior" readonly
+                [disabled]="true">
+        </div>
+        <div class="col-md-2">
+            <label for="Lada" class="form-label">Lada:</label>
+            <input type="text" id="Lada" class="form-control" formControlName="lada" readonly [disabled]="true">
+        </div>
+        <div class="col-md-3">
+            <label for="Teléfono" class="form-label">Teléfono:</label>
+            <input type="text" id="Teléfono" class="form-control" formControlName="telefono" readonly [disabled]="true">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo>
+        <div class="col-md-6">
+            <label class="form-label">Nacionalidad mexicana:</label>
+            <app-input-radio 
+                [radioOptions]="opcionSeleccionMexicana" 
+                [selectedValue]="selectedNacionalidad"
+                [isRequired]="false" 
+                [layout]="'horizontal'" 
+                formControlName="nacionalidad"
+                (valueChange)="setSelectedNacionalidad($event.toString())" 
+                (change)="setValoresStore(formularioEmpresa,'nacionalidad', 'setNacionalidad')"
+                >
+            </app-input-radio>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Tipo de persona:</label>
+            <app-input-radio 
+              [radioOptions]="opcionSeleccionPersona" 
+              [selectedValue]="selectedTipoPersona"
+              [isRequired]="false" 
+              [layout]="'horizontal'" 
+              formControlName="tipoDePersona"
+              (valueChange)="setSelectedTipoDePersona($event.toString())" 
+              (change)="setValoresStore(formularioEmpresa,'tipoDePersona', 'setTipoDePersona')"
+              >
+            </app-input-radio>
+        </div>
+    </div>
+    <ng-container>
+    @if (selectedNacionalidad === 'Si') {
+    <div class="row">
+        <div class="col-md-6">
+            <label for="registroFederal" class="form-label">Registro federal de contribuyentes*:</label>
+            <input type="text" id="registroFederal" class="form-control" formControlName="registroFederal"
+            (change)="setValoresStore(formularioEmpresa,'registroFederal', 'setRegistroFederal')"
+               >
+        </div>
+    </div>
+  }
+  
+    @if (selectedNacionalidad === 'No' || selectedTipoPersona === 'Persona Moral') {
+   <div>
+      @if(selectedTipoPersona === 'Persona Física') {
+     <div class="row">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre"
+            (change)="setValoresStore(formularioEmpresa,'nombre', 'setNombre')"
+               >
+        </div>
+        <div class="col-md-6">
+            <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
+            <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno"
+            (change)="setValoresStore(formularioEmpresa,'apellidoPaterno', 'setApellidoPaterno')"
+               >
+        </div>
+     </div>
+    }
+     <div class="row">
+        <div class="col-md-6">
+            <label for="taxId" class="form-label">TAX ID*:</label>
+            <input type="text" id="taxId" class="form-control" formControlName="taxId"
+            (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
+               >
+        </div>
+     </div>
+     <div class="row" >
+        <div class="row" *ngIf="selectedTipoPersona !== 'Persona Física'">
+         <div class="col-md-6">
+            <label for="razonSocial" class="form-label">Denominación o razón social:</label>
+            <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
+            (change)="setValoresStore(formularioEmpresa,'razonSocial', 'setRazonSocial')"
+
+            >
+        </div>
+      </div>
+        <div class="col-md-6">
+            <app-catalogo-select 
+              [catalogo]="paisData.catalogos" 
+              [label]="'País'" 
+              [required]="true"
+              name="País"
+              formControlName="datosPais"
+              (change)="setValoresStore(formularioEmpresa,'datosPais', 'setDatosPais')"
+              >
+            </app-catalogo-select>
+
+        </div>
+        <div class="col-md-6">
+            <label for="Código postal" class="form-label">Código postal:</label>
+            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal"
+            (change)="setValoresStore(formularioEmpresa,'datosCodigoPostal', 'setDatosCodigoPostal')"
+
+             >
+        </div>
+        <div class="col-md-6">
+            <label for="Estado" class="form-label">Estado:</label>
+            <input type="text" id="Estado" class="form-control" formControlName="datosEstado"
+            (change)="setValoresStore(formularioEmpresa,'datosEstado', 'setDatosEstado')"
+
+           >
+        </div>
+        <div class="col-md-6">
+            <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
+            <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico"
+            (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')"
+         >
+        </div>
+      </div> 
+    </div>
+   }
+</ng-container>
+    <div class="col-md-12 d-flex justify-content-end mt-2 mb-4">
+        <button type="button" class="btn btn-primary" (click)="onAgregar()">Agregar</button>
+    </div>
+
+    <h6 class="margin-header">Socios y Accionistas</h6>
+    <h6>Datos de los socios y/o accionistas:</h6>
+
+    <app-tabla-dinamica 
+    [tipoSeleccionTabla]="tipoSeleccionTabla" 
+    [configuracionTabla]="sociosYAccionistasData"
+    [datos]="datosGenerales"></app-tabla-dinamica>
+
+    <div class=" text-end">
+        <button type="button" class="btn btn-primary">Eliminar</button>
+    </div>
+
+    <h6 class="margin-header">Socios y Accionistas Extranjeros</h6>
+    <h6>Datos de los socios y/o accionistas:</h6>
+
+    <app-tabla-dinamica 
+        [tipoSeleccionTabla]="tipoSeleccionTabla" 
+        [configuracionTabla]="socioYAccionistasExtranjerosData"
+        [datos]="datosTablaExtranjeros"
+        ></app-tabla-dinamica>
+
+    <div class="text-end mt-5">
+        <button type="button" class="btn btn-primary">Eliminar</button>
+    </div>
+</div>
