@@ -323,6 +323,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registrar-proveedores',
+    loadChildren: () =>
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
+  },
+  {
     path: 'concluir-relacion',
     loadChildren: () =>
       import('./tramites/420102/concluir-relacion.module').then(
