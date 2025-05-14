@@ -1171,8 +1171,8 @@
   {
     "id": 168,
     "tramite": 140111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-derechos-de-permisos/solicitante",
+    "linkDepartment": "/pago/renuncia-de-derechos-de-permisos/solicitante",
     "department": "sener"
   },
   {
