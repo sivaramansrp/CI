@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PhytosanitaryReexportacionService } from './phytosanitary-reexportacion.service';
+import { PhytosanitaryExportacionService } from './phytosanitary-exportacion.service';
 
 describe('PhytosanitaryReexportacionService', () => {
-  let service: PhytosanitaryReexportacionService;
+  let service: PhytosanitaryExportacionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PhytosanitaryReexportacionService);
+    service = TestBed.inject(PhytosanitaryExportacionService);
   });
 
   it('should be created', () => {

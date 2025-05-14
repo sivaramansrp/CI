@@ -8,7 +8,7 @@ import { Tramite230201Store } from '../estados/tramite230201.store';
 @Injectable({
   providedIn: 'root'
 })
-export class PhytosanitaryReexportacionService {
+export class PhytosanitaryExportacionService {
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.

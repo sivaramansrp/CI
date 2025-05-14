@@ -14,9 +14,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MetaInfo } from '../../models/datos-tramite.model';
-import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
-// import { Tramite230201Query } from '../../estados/tramite230201.query';
 
 /**
  * Componente que gestiona los datos relacionados con terceros en el trámite "230201".
@@ -150,7 +149,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * y los datos relacionados con terceros.
    */
   constructor(
-    private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
+    private phytosanitaryReexportacionService: PhytosanitaryExportacionService,
     private tramite230201Store: Tramite230201Store,
     private tramite230201Query: Tramite230201Query,
     private modalService: BsModalService,

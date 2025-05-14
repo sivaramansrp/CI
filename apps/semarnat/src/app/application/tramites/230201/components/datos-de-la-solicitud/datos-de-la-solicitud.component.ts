@@ -15,7 +15,7 @@ import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite2
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
 
 /**
@@ -70,7 +70,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos disponibles para países.
    */
-  pais!: Catalogo[];
 
   /**
    * Lista de catálogos disponibles para entidades.
@@ -90,7 +89,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = [];
 
   /**
    * Lista de entidades seleccionadas.
@@ -140,7 +138,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Referencia a los componentes Crosslist en la vista.
    */
-  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  // @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Referencia al modal para agregar mercancías.
@@ -160,12 +158,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Botones para gestionar la lista de países de origen.
    */
-  public paisDeOrigenBotons = this.getCrossListBtn(0);
+  // public paisDeOrigenBotons = this.getCrossListBtn(0);
 
   /**
    * Botones para gestionar la lista de entidades.
    */
-  public entidadesBotons = this.getCrossListBtn(1);
+  // public entidadesBotons = this.getCrossListBtn(0);
 
   /**
    * Etiquetas para la lista de países de origen.
@@ -249,13 +247,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * @param phytosanitaryReexportacionService Servicio para gestionar datos fitosanitarios.
+   * @param phytosanitaryExportacionService Servicio para gestionar datos fitosanitarios.
    * @param store Almacén del estado del trámite.
    * @param query Consulta del estado del trámite.
    * @param fb Constructor de formularios reactivos.
    */
   constructor(
-    public phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
+    public phytosanitaryExportacionService: PhytosanitaryExportacionService,
     public store: Tramite230201Store,
     public query: Tramite230201Query,
     public fb: FormBuilder
@@ -298,11 +296,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       exportacionForm: this.fb.group({
         paisDeProcedencia: [
-          this.solicitudState?.paisDeProcedencia,
+          0,
           [Validators.required],
         ],
         aduana: [this.solicitudState?.aduana, [Validators.required]],
-        pais: [this.solicitudState?.pais, [Validators.required]],
         entidades: [this.solicitudState?.entidades, [Validators.required]],
         descripcionProducto: [
           this.solicitudState?.descripcionProducto,
@@ -348,7 +345,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.colonia,
           Validators.required,
         ],
-        fechasSeleccionadas: [this.solicitudState?.fechasSeleccionadas, Validators.required]
+        fechasSeleccionadas: this.fb.array([]),
       }),
     });
 
@@ -380,30 +377,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
-    const PAIS_DE_PROCEDENCIA$ = this.phytosanitaryReexportacionService
+    const PAIS_DE_PROCEDENCIA$ = this.phytosanitaryExportacionService
       .getPaisDeProcedencia()
       .pipe(
         map((resp) => {
           this.paisDeProcedencia = resp.data;
+          if(this.paisDeProcedencia.length > 0) {
+            this.solicitudForm.patchValue({
+              "exportacionForm.paisDeProcedencia": this.paisDeProcedencia[0].id,
+            });
+          }
         })
       );
 
-    const ADUANA$ = this.phytosanitaryReexportacionService.getAduana().pipe(
+    const ADUANA$ = this.phytosanitaryExportacionService.getAduana().pipe(
       map((resp) => {
         this.aduana = resp.data;
       })
     );
 
-    const PAIS$ = this.phytosanitaryReexportacionService.getPais().pipe(
-      map((resp) => {
-        this.pais = resp.data;
-        this.selectRangoDias = this.pais.map(
-          (pais: Catalogo) => pais.descripcion
-        );
-      })
-    );
-
-    const ENTIDADES$ = this.phytosanitaryReexportacionService
+    const ENTIDADES$ = this.phytosanitaryExportacionService
       .getEntidades()
       .pipe(
         map((resp) => {
@@ -414,7 +407,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryReexportacionService
+    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryExportacionService
       .getDescripcionProducto()
       .pipe(
         map((resp) => {
@@ -422,7 +415,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const FRACCION$ = this.phytosanitaryReexportacionService
+    const FRACCION$ = this.phytosanitaryExportacionService
       .getFraccionArancelaria()
       .pipe(
         map((resp) => {
@@ -430,19 +423,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const GENERO$ = this.phytosanitaryReexportacionService.getGenero().pipe(
+    const GENERO$ = this.phytosanitaryExportacionService.getGenero().pipe(
       map((resp) => {
         this.genero = resp.data;
       })
     );
 
-    const ESPECIE$ = this.phytosanitaryReexportacionService.getEspecie().pipe(
+    const ESPECIE$ = this.phytosanitaryExportacionService.getEspecie().pipe(
       map((resp) => {
         this.especie = resp.data;
       })
     );
 
-    const NOMBRECOMUN$ = this.phytosanitaryReexportacionService
+    const NOMBRECOMUN$ = this.phytosanitaryExportacionService
       .getNombreComun()
       .pipe(
         map((resp) => {
@@ -450,14 +443,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const UNIDADDEMEDIDA$ = this.phytosanitaryReexportacionService
+    const UNIDADDEMEDIDA$ = this.phytosanitaryExportacionService
       .getUnidadDeMedida().pipe(
         map((resp) => {
           this.unidadDeMedida = resp.data;
         })
       );
 
-    const MEDIODETRANSPORTE$ = this.phytosanitaryReexportacionService
+    const MEDIODETRANSPORTE$ = this.phytosanitaryExportacionService
       .getMedioDeTransporte()
       .pipe(
         map((resp) => {
@@ -465,7 +458,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const ESTADO$ = this.phytosanitaryReexportacionService
+    const ESTADO$ = this.phytosanitaryExportacionService
       .getEstado().pipe(
         map((resp) => {
           this.estado = resp.data;
@@ -475,7 +468,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     merge(
       PAIS_DE_PROCEDENCIA$,
       ADUANA$,
-      PAIS$,
       ENTIDADES$,
       DESCRIPCIONPRODUCTO$,
       FRACCION$,
@@ -504,7 +496,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   paisDeProcedenciaSeleccion(): void {
     const PAISE_DE_PROCEDENCIA = this.solicitudForm.get(
-      'reexportacionForm.paisDeProcedencia'
+      'exportacionForm.paisDeProcedencia'
     )?.value;
     this.store.setpaisDeProcedencia(PAISE_DE_PROCEDENCIA);
   }
@@ -514,7 +506,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   aduanaSeleccion(): void {
-    const ADUANA = this.solicitudForm.get('reexportacionForm.aduana')?.value;
+    const ADUANA = this.solicitudForm.get('exportacionForm.aduana')?.value;
     this.store.setAduana(ADUANA);
   }
 
@@ -523,7 +515,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   paisSeleccion(): void {
-    const PAIS = this.solicitudForm.get('reexportacionForm.pais')?.value;
+    const PAIS = this.solicitudForm.get('exportacionForm.pais')?.value;
     this.store.setPais(PAIS);
   }
 
@@ -533,7 +525,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   entidadesSeleccion(): void {
     const ENTIDADES = this.solicitudForm.get(
-      'reexportacionForm.entidades'
+      'exportacionForm.entidades'
     )?.value;
     this.store.setEntidades(ENTIDADES);
   }
@@ -543,7 +535,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   descripcionProductoSeleccion(): void {
-    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('exportacionForm.descripcionProducto')?.value;
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
@@ -593,7 +585,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   unidadDeMedidaSeleccion(): void {
     const UNIDADDEMEDIDA = this.solicitudForm.get(
-      'reexportacionForm.unidadDeMedida'
+      'exportacionForm.unidadDeMedida'
     )?.value;
     this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
   }
@@ -604,7 +596,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   medioDeTransporteSeleccion(): void {
     const MEDIODETRANSPORTE = this.solicitudForm.get(
-      'reexportacionForm.medioDeTransporte'
+      'exportacionForm.medioDeTransporte'
     )?.value;
     this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
   }
@@ -614,34 +606,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   estadoSeleccion(): void {
-    const ESTADO = this.solicitudForm.get('reexportacionForm.estado')?.value;
+    const ESTADO = this.solicitudForm.get('exportacionForm.estado')?.value;
     this.store.setEstado(ESTADO);
   }
-
-  public getCrossListBtn(index: number) {
-    return [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[index].agregar('t'),
-      },
-      {
-        btnNombre: 'Agregar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[index].agregar(''),
-      },
-      {
-        btnNombre: 'Restar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[index].quitar(''),
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[index].quitar('t'),
-      },
-    ];
-  }
+  
 
   /**
    * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
@@ -670,11 +638,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  onEntidadesSeleccionadasChange(fechas: string[]): void {
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.store.setFechasSeleccionadas(fechas);
+  }
+
+  /**
    * Agrega un nuevo detalle a la lista de detalles.
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    */
   agregarDetalle() {
-    this.phytosanitaryReexportacionService
+    this.phytosanitaryExportacionService
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
@@ -696,7 +677,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * También reinicia el formulario de la solicitud.
    */
   agregarSolicitud() {
-    this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
+    this.phytosanitaryExportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosSolicitud.length + 1;

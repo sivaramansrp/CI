@@ -102,7 +102,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         subscribe: (callback: (response: any) => void) => callback(mockResponse),
       }),
     });
-    component.phytosanitaryReexportacionService.agregarSolicitud = mockServiceMethod as any;
+    component.phytosanitaryExportacionService.agregarSolicitud = mockServiceMethod as any;
     const mockStoreMethod = jest.fn();
     component.store.setDatosSolicitud = mockStoreMethod as any;
     const mockCerrarModal = jest.fn();

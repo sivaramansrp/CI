@@ -24,30 +24,21 @@
               formControlName="paisDeProcedencia"
               [required]="true"
               name="paisDeProcedencia"
-              [disabled]=true
+              [isDisabled]="true"
+              (change)="paisDeProcedenciaSeleccion()"
             >
             </app-catalogo-select>
           </div>
         </div>
-        <ng-titulo titulo="Pais"></ng-titulo>
-        <label class="form-label">País de origen*</label>
-        <crosslist
-          [fechas]="selectRangoDias"
-          [label]="paisDeOrigenLabel"
-          [botones]="paisDeOrigenBotons"
-          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
-          (fechasSeleccionadasChange)="changeCrosslist($event)"
-        ></crosslist>
-        <br />
-        <label class="form-label"
-          >Lungar de procedencia en el terretorio nacional*</label
-        >
+        <ng-titulo titulo="Entidad federativa origen o procedencia"></ng-titulo>
         <crosslist
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
-          [botones]="entidadesBotons"
+          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          (fechasSeleccionadasChange)="onEntidadesSeleccionadasChange($event)"
         ></crosslist>
-        <div class="row">
+
+        <div class="row mt-5">
           <div class="col-md-12">
             <app-catalogo-select
               [catalogo]="descripcionProducto"
@@ -60,7 +51,11 @@
             </app-catalogo-select>
           </div>
         </div>
-        <ng-titulo titulo="Mercancías"></ng-titulo>
+        <div class="row mt-5 ">
+          <div class="col-md-12">
+            <label>Mercancías</label>
+          </div>
+        </div>
         <div class="table-responsive">
           <div class="innercontainer">
             <app-tabla-dinamica
