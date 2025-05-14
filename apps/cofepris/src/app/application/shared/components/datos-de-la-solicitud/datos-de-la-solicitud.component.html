@@ -123,6 +123,8 @@
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
             "
           />
+          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['required'] && datosSolicitudForm.get('codigoPostal')?.touched">
+            Este campo es obligatorio.</div>
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['pattern']">
             por favor escribe un número entero valido</div>
         </div>
@@ -154,6 +156,11 @@
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
             "
           />
+          <div class="mensaje-error" 
+            *ngIf="datosSolicitudForm.get('municipioAlcaldia')?.errors?.['required'] 
+              && datosSolicitudForm.get('municipioAlcaldia')?.touched">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -235,6 +242,11 @@
             formControlName="calle"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''"
           />
+          <div class="mensaje-error" 
+          *ngIf="datosSolicitudForm.get('calle')?.errors?.['required'] 
+            && datosSolicitudForm.get('calle')?.touched">
+          Este campo es obligatorio.
+        </div>
         </div>
       </div>
       }
@@ -292,7 +304,6 @@
             id="lada"
             type="number"
             formControlName="lada"
-            [ngClass]="isValid(datosSolicitudForm, 'lada') ? 'required' : ''"
           />
         </div>
       </div>
@@ -308,6 +319,8 @@
               isValid(datosSolicitudForm, 'telefono') ? 'required' : ''
             "
           />
+          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('telefono')?.errors?.['required'] && datosSolicitudForm.get('telefono')?.touched">
+            Este campo es obligatorio.</div>
         </div>
       </div>
     </div>
@@ -383,9 +396,6 @@
           id="licenciaSanitaria"
           type="text"
           formControlName="licenciaSanitaria"
-          [ngClass]="
-            isValid(datosSolicitudForm, 'licenciaSanitaria') ? 'required' : ''
-          "
         />
       </div>
     </div>
@@ -603,6 +613,8 @@
             "
           />
         </div>
+        <div class="mensaje-error" *ngIf="datosSolicitudForm.get('representanteRfc')?.errors?.['required'] && datosSolicitudForm.get('representanteRfc')?.touched">
+          Este campo es obligatorio.</div>
       </div>
       <div class="col-md-2 mt-5">
         <button
@@ -632,6 +644,8 @@
                 : ''
             "
           />
+          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('representanteNombre')?.errors?.['required'] && datosSolicitudForm.get('representanteNombre')?.touched">
+            Este campo es obligatorio.</div>
         </div>
       </div>
       <div class="col-md-4">
@@ -648,6 +662,8 @@
               isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
             "
           />
+          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('apellidoPaterno')?.errors?.['required'] && datosSolicitudForm.get('apellidoPaterno')?.touched">
+            Este campo es obligatorio.</div>
         </div>
       </div>
       <div class="col-md-4">
@@ -660,9 +676,6 @@
             id="apellidoMaterno"
             type="text"
             formControlName="apellidoMaterno"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'apellidoMaterno') ? 'required' : ''
-            "
           />
         </div>
       </div>
@@ -687,9 +700,11 @@
           formControlName="correoElectronico"
           (change)="cambireCorreoElectronico()"
           [ngClass]="
-            isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+            (isValid(datosSolicitudForm, 'correoElectronico') && esCampoRequerido('correoElectronico')) ? 'required' : ''
           "
         />
+        <div class="mensaje-error" *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required']">
+          Este campo es obligatorio.</div>
       </div>
     </ng-template>
   </form>

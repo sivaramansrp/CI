@@ -442,7 +442,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
         [
-          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
@@ -454,7 +453,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
         [
-          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
@@ -497,12 +495,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada, [Validators.required]],
+      lada: [this.datosSolicitudFormState.lada,],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
       aviso: [this.datosSolicitudFormState.aviso],
       licenciaSanitaria: [
         this.datosSolicitudFormState.licenciaSanitaria,
-        [Validators.required],
       ],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
@@ -544,7 +541,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.idProcedimiento
           ),
         },
-        [Validators.required],
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
