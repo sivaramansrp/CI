@@ -1,0 +1,89 @@
+<div class="container" >
+  <div class="row">
+ 
+  <div class="row" *ngIf="!periodoView" >
+    <div class="row">
+        <ng-titulo [titulo]="'Operaciones de Comercio Exterior'"></ng-titulo>
+      </div>
+      <div class="row">
+        <form [formGroup]="miformulario" >
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="optionsPaisList" [label]="'Operación'" [required]="true" id="operacion"
+            formControlName="operacion"  (change)="actualizarOperacionDesdeSeleccion()" 
+          ></app-catalogo-select>
+        </div>
+          </form>
+      </div>
+      <div class="row" *ngIf="miformulario.valid">
+        <div class="col-md-12">
+          <ng-titulo [titulo]="'Periodo(s) a solicitar'"></ng-titulo>
+        </div>
+        <div class="col-md-12">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="tipoSolicitarSeleccion"
+            [configuracionTabla]="configuracionSolicitarColumnas"
+            [datos]="cuerpoSolicitarTablaFila"
+            (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
+          >
+          </app-tabla-dinamica>
+          <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="abrirModuloPersonasNotificaciones(true)">Agregar</button>
+            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()" [disabled]="cuerpoSolicitarTablaFila.length === 0 ? true : false">Eliminar</button>
+           
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <ng-titulo [titulo]="'Personas para oír y recibir notificaciones'"></ng-titulo>
+      </div>
+      <div class="row">
+       <div class="col-md-12">
+        <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoPersonasSeleccion"
+        [configuracionTabla]="configuracionPersonasColumnas"
+        [datos]="cuerpoPersonasTablaFila"
+      >
+      </app-tabla-dinamica>
+   
+       </div>
+
+      </div>
+      </div>
+      <div class="row" *ngIf="periodoView">
+        <div class="col-md-12 mt-5" *ngIf="vistaAlerta">
+          <ng-alert [CONTENIDO]="textos"  [CUSTOMECLASS]="infoAlerta"></ng-alert>
+        </div>
+        <form [formGroup]="periodoForm">
+          <lib-notificaciones [notificacionInput]="nuevaAlertaNotificacion" *ngIf="modalEmergente" (confirmacionModal)="eliminarPedimento($event)">
+          </lib-notificaciones>
+    <div class="col-md-12">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="periodoList" [label]="'Periodo'" [required]="true" id="operacion"
+        formControlName="periodo"  ></app-catalogo-select>
+        </div>
+      </div>
+      <div class="col-md-12"> <label class="form-label" for="periodoInicial">Fecha sobre el periodo :</label>
+        </div>
+
+      <div class="col-md-12">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="periodoInicial">Periodo inicial*:</label>
+            <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" />
+          </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="periodoFinal">Periodo final*:</label>
+              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal" />
+            </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" (click)="abrirModuloPersonasNotificaciones(false)">Cancelar</button>
+          <button type="button" class="btn btn-primary ms-3" (click)="agregarPersona()">Agregar</button>
+          </div>
+      </form>
+        </div>
+
+</div>

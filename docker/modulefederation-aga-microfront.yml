@@ -4,7 +4,7 @@ services:
     image: modulefederation-aga-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/aga/Dockerfile
+      dockerfile: apps/aga/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-aga-microfront
