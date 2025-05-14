@@ -16,28 +16,74 @@ import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+/**
+ * @typedef ComplimentariaResponse
+ * @description Representa la respuesta que contiene un arreglo de objetos de tipo `Complimentaria`.
+ * @property {Complimentaria[]} data - Lista de objetos de tipo `Complimentaria`.
+ */
 interface ComplimentariaResponse {
   data: Complimentaria[];
 }
+/**
+ * @typedef {AnexoResponse}
+ * @description Representa la respuesta que contiene un conjunto de anexos.
+ * @property {Anexo[]} data - Lista de objetos de tipo Anexo incluidos en la respuesta.
+ */
 interface AnexoResponse {
   data: Anexo[];
 }
+/**
+ * @typedef {FederetariosResponse}
+ * @description Representa la respuesta que contiene un arreglo de objetos `Federetarios`.
+ * 
+ * @property {Federetarios[]} data - Lista de objetos `Federetarios` incluidos en la respuesta.
+ */
 interface FederetariosResponse {
   data: Federetarios[];
 }
+/**
+ * @typedef OperacionsResponse
+ * @description Representa la estructura de la respuesta que contiene un arreglo de operaciones.
+ * @property {Operacions[]} data - Lista de operaciones devueltas en la respuesta.
+ */
 interface OperacionsResponse {
   data: Operacions[];
 }
 
+/**
+ * @interface DomicilioInfoResponse
+ * @description Representa la respuesta que contiene un arreglo de información de domicilios.
+ * @property {DomicilioInfo[]} data - Lista de objetos que contienen la información de los domicilios.
+ */
 interface DomicilioInfoResponse {
   data: DomicilioInfo[];
 }
+/**
+ * @interface BitacoraResponse
+ * @description Representa la estructura de la respuesta que contiene un arreglo de objetos de tipo Bitacora.
+ * @property {Bitacora[]} data - Arreglo de objetos de tipo Bitacora que contiene la información de la bitácora.
+ */
+/**
+ * @typedef {BitacoraResponse}
+ * @description Representa la respuesta de la bitácora que contiene un arreglo de objetos de tipo `Bitacora`.
+ * @property {Bitacora[]} data - Lista de elementos de la bitácora.
+ */
 interface BitacoraResponse {
   data: Bitacora[];
 }
+/**
+ * @typedef DatosModificacionResponse
+ * @description Representa la respuesta que contiene los datos de modificación.
+ * @property {DatosModificacion} data - Los datos específicos de la modificación.
+ */
 interface DatosModificacionResponse {
   data: DatosModificacion;
 }
+/**
+ * @typedef {CatalogoResponse}
+ * @description Representa la respuesta de un catálogo que contiene un arreglo de elementos de tipo `Catalogo`.
+ * @property {Catalogo[]} data - Lista de elementos del catálogo.
+ */
 interface CatalogoResponse {
   data: Catalogo[];
 }
@@ -181,18 +227,30 @@ export class ImmerModificacionService {
       .pipe(map((res: CatalogoResponse) => res.data));
   }
 
+  /**
+   * @descripcion Obtiene una lista de domicilios desde un archivo JSON local.
+   * @retorna Un observable que emite un arreglo de objetos `DomicilioInfo`.
+   */
   obtenerDomicilios(): Observable<DomicilioInfo[]> {
     return this.http
       .get<DomicilioInfoResponse>('assets/json/80314/domicilio.json')
       .pipe(map((res: DomicilioInfoResponse) => res.data));
   }
 
+  /**
+   * @descripcion Obtiene la bitácora desde un archivo JSON localizado en los assets.
+   * @retorna Un observable que emite un arreglo de objetos de tipo `Bitacora`.
+   */
   obtenerBitacora(): Observable<Bitacora[]> {
     return this.http
       .get<BitacoraResponse>('assets/json/80314/bitacora.json')
       .pipe(map((res: BitacoraResponse) => res.data));
   }
 
+  /**
+   * @descripcion Obtiene los datos generales de modificación desde un archivo JSON local.
+   * @retorno Un observable que emite un objeto de tipo `DatosModificacion`.
+   */
   obtenerDatosGenerales(): Observable<DatosModificacion> {
     return this.http
       .get<DatosModificacionResponse>('assets/json/80314/datos-modificacion.json')
