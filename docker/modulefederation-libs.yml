@@ -4,7 +4,7 @@ services:
     image: modulefederation-libs:1.0.0
     build: 
       context: ./../
-      dockerfile: libs/shared/Dockerfile
+      dockerfile: libs/shared/Dockerfile.dev
     container_name: modulefederation-libs
     restart: on-failure
     expose:

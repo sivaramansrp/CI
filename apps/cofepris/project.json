@@ -110,13 +110,12 @@
             ]
           },
           "development": {
-            "optimization": true,
-            "sourceMap": false,
-            "namedChunks": false,
-            "aot": true,
-            "extractLicenses": true,
+            "buildOptimizer": false,
+            "optimization": false,
             "vendorChunk": true,
-            "buildOptimizer": true
+            "extractLicenses": false,
+            "sourceMap": true,
+            "namedChunks": true
           }
         },
         "defaultConfiguration": "development"
