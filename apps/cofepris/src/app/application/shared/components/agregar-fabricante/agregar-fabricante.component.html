@@ -60,7 +60,7 @@
 
     @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">R.F.C.*:</label>
         <span
         class="bi bi-question-circle-fill"
@@ -136,7 +136,7 @@
     </div>
     } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row mt-3">
-      <div class="col-md-12">
+      <div class="col-md-8">
         <label class="form-label">Denominación/razón social*:</label>
         <input type="text" class="form-control" [maxlength]="250" formControlName="razonSocial" />
         <div *ngIf="esInvalido('razonSocial')" class="text-danger">
@@ -247,7 +247,7 @@
     }
 
     <div class="row mt-3">
-      <div class="col-md-9">
+      <div class="col-md-8">
         <label class="form-label">Calle*:</label>
         <span
         class="bi bi-question-circle-fill"
@@ -261,7 +261,7 @@
           </small>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label class="form-label">Número exterior*:</label>
         <input
           type="text"
