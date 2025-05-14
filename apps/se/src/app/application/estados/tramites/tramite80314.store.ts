@@ -109,31 +109,114 @@ export interface Solicitud80314State {
   monto: string;
 }
 
+/**
+ * Crea el estado inicial para la solicitud 80314.
+ *
+ * @returns {Solicitud80314State} El estado inicial de la solicitud.
+ */
 export function createInitialState(): Solicitud80314State {
   return {
+    /**
+     * Menú desplegable seleccionado.
+     */
     menuDesplegable: '',
+
+    /**
+     * Datos del solicitante.
+     */
     datosSolicitante: {
+      /**
+       * RFC del solicitante.
+       */
       rfc: '',
+      /**
+       * Denominación del solicitante.
+       */
       denominacion: '',
+      /**
+       * Actividad económica del solicitante.
+       */
       actividadEconomica: '',
+      /**
+       * Correo electrónico del solicitante.
+       */
       correoElectronico: '',
     },
+
+    /**
+     * Información relacionada con la modificación.
+     */
     datosModificacion: {
+      /**
+       * RFC relacionado con la modificación.
+       */
       rfc: '',
+      /**
+       * Información federal relacionada.
+       */
       federal: '',
+      /**
+       * Tipo de modificación.
+       */
       tipo: '',
+      /**
+       * Programa relacionado con la modificación.
+       */
       programa: '',
+      /**
+       * Actividad productiva actual.
+       */
       actividadProductivaActual: '',
     },
+
+    /**
+     * Lista de datos del contenedor.
+     */
     datosDelContenedor: [],
+
+    /**
+     * Tipo de búsqueda seleccionada.
+     */
     tipoBusqueda: '',
+
+    /**
+     * Aduana seleccionada.
+     */
     aduana: '',
+
+    /**
+     * Iniciales del contenedor.
+     */
     inicialesContenedor: '',
+
+    /**
+     * Número del contenedor.
+     */
     numeroContenedor: '',
+
+    /**
+     * Dígito de control del contenedor.
+     */
     digitoDeControl: '',
+
+    /**
+     * Contenedores asociados.
+     */
     contenedores: '',
+
+    /**
+     * Fecha de ingreso.
+     */
     fechaIngreso: '',
+
+    /**
+     * Menú desplegable de aduanas.
+     */
     aduanaMenuDesplegable: '',
+
+    /**
+     * Estado de las casillas de verificación individuales.
+     */
     casillaDeVerificacionindividual: [
       false,
       false,
@@ -152,11 +235,35 @@ export function createInitialState(): Solicitud80314State {
       false,
       false,
     ],
+
+    /**
+     * Número del manifiesto.
+     */
     numeroManifiesta: 0,
+
+    /**
+     * Fecha de ingreso del manifiesto.
+     */
     fechaDeIngreso: '',
+
+    /**
+     * Archivo seleccionado.
+     */
     archivoSeleccionado: '',
+
+    /**
+     * Línea asociada.
+     */
     linea: '',
+
+    /**
+     * Línea asociada al checkbox.
+     */
     lineaCheckbox: '',
+
+    /**
+     * Monto asociado.
+     */
     monto: '',
   };
 }
