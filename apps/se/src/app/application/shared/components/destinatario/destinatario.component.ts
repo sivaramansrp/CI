@@ -25,6 +25,25 @@ export class DestinatarioComponent implements OnDestroy {
   @Input() paisDestino!: boolean;
 
   /**
+   * @input
+   * Indica si se debe ocultar la lada (código de área telefónico).
+   * 
+   * @type {boolean}
+   * @memberof DestinatarioComponent
+   */
+  @Input() ocultarLada!: boolean;
+
+
+  /**
+   * @input
+   * Indica si se debe ocultar el campo de fax.
+   * 
+   * @type {boolean}
+   * @memberof DestinatarioComponent
+   */
+  @Input() ocultarFax!: boolean;
+  
+  /**
    * Datos para los menús desplegables
    * @type {MenusDesplegables[]}
    */
@@ -56,9 +75,9 @@ export class DestinatarioComponent implements OnDestroy {
 
   /**
    * Datos del formulario completo
-   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @type { [key: string]: unknown }
    */
-  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+  @Input() datosForm!: { [key: string]: unknown };
 
   /**
    * FormGroup para el formulario de destinatario
