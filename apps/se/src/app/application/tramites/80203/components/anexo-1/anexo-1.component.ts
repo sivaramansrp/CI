@@ -39,13 +39,11 @@ import { NICO_TABLA } from '../../modelos/immex-registro-de-solicitud-modality.m
 import { NicoService } from '../../servicios/nico/nico.service';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 
-import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 
 import { delay, map, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

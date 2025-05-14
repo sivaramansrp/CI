@@ -1,16 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
 /**
  * @Injectable
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
-import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
-import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { nicoInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

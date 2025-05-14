@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture } from '@angular/core/testing';
+import { EventEmitter } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { SolicitanteComponent, SolicitanteService } from '@ng-mf/data-access-user';

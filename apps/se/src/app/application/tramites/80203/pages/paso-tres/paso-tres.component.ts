@@ -1,4 +1,3 @@
-/* eslint-disable @angular-eslint/component-selector */
 /**
  * @component PasoTresComponent
  * @description
