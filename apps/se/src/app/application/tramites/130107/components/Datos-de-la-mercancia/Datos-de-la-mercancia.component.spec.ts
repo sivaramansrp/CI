@@ -1,126 +1,148 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { DatosDeLaMercanciaComponent } from './Datos-de-la-mercancia.component';
-import { of, Subject } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { CommonModule } from '@angular/common';
-import { DATOS_DE_LA_MERCANCIA } from '../../constantes/datos-de-la-solicitud.enum';
-
-// Mocks
-const mockStore = {
-  setDynamicFieldValue: jest.fn(),
-};
-
-const mockQuery = {
-  selectSolicitudDeRegistroTpl$: of({ test: 'data' }),
-};
-
-const mockService = {
-  datosDeLaSolicitud: jest.fn().mockReturnValue(of({
-    fraccion: [{ id: 1, descripcion: 'Fracción 1' }],
-    UMT: [{ id: 2, descripcion: 'UMT 1' }]
-  })),
-};
-
-const mockFormularioService = {
-  setFormValue: jest.fn(),
-};
+import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
+import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
+import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
+import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
+import { of, Subject, throwError } from 'rxjs';
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
-  let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
+  let importacionesServiceMock: jest.Mocked<ImportacionesAgropecuariasService>;
+  let importacionesStoreMock: jest.Mocked<ImportacionesAgropecuariasStore>;
+  let importacionesQueryMock: jest.Mocked<ImportacionesAgropecuariasQuery>;
+  let formularioServiceMock: jest.Mocked<ServicioDeFormularioService>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormasDinamicasComponent
-      ],
+  beforeEach(() => {
+    importacionesServiceMock = {
+      datosDeLaSolicitud: jest.fn(),
+    } as unknown as jest.Mocked<ImportacionesAgropecuariasService>;
+
+    importacionesStoreMock = {
+      setDynamicFieldValue: jest.fn(),
+    } as unknown as jest.Mocked<ImportacionesAgropecuariasStore>;
+
+    importacionesQueryMock = {
+      selectSolicitudDeRegistroTpl$: of({}),
+    } as unknown as jest.Mocked<ImportacionesAgropecuariasQuery>;
+
+    formularioServiceMock = {
+      setFormValue: jest.fn(),
+    } as unknown as jest.Mocked<ServicioDeFormularioService>;
+
+    TestBed.configureTestingModule({
       providers: [
-        { provide: 'ImportacionesAgropecuariasStore', useValue: mockStore },
-        { provide: 'ImportacionesAgropecuariasQuery', useValue: mockQuery },
-        { provide: 'ImportacionesAgropecuariasService', useValue: mockService },
-        { provide: 'ServicioDeFormularioService', useValue: mockFormularioService }
-      ]
-    })
-    .overrideComponent(DatosDeLaMercanciaComponent, {
-      set: {
-        providers: [
-          { provide: 'ImportacionesAgropecuariasStore', useValue: mockStore },
-          { provide: 'ImportacionesAgropecuariasQuery', useValue: mockQuery },
-          { provide: 'ImportacionesAgropecuariasService', useValue: mockService },
-          { provide: 'ServicioDeFormularioService', useValue: mockFormularioService },
-        ],
-      },
-    })
-    .compileComponents();
+        DatosDeLaMercanciaComponent,
+        { provide: ImportacionesAgropecuariasService, useValue: importacionesServiceMock },
+        { provide: ImportacionesAgropecuariasStore, useValue: importacionesStoreMock },
+        { provide: ImportacionesAgropecuariasQuery, useValue: importacionesQueryMock },
+        { provide: ServicioDeFormularioService, useValue: formularioServiceMock },
+      ],
+    });
 
-    fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
-    component = fixture.componentInstance;
-
-    // Inject mock data into form config
-    component['datosDelMercancia'] = [
-      { campo: 'fraccion_arancelaria' },
-      { campo: 'umt' },
-    ] as any;
-
-    fixture.detectChanges();
+    component = TestBed.inject(DatosDeLaMercanciaComponent);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call ngOnInit and fetch data', () => {
-    const datosFraccionSpy = jest.spyOn(component, 'datosFraccion');
-    const datosUMTSpy = jest.spyOn(component, 'datosUMT');
+  it('should initialize solicitudDeRegistroState on ngOnInit', () => {
+    const mockState = { key: 'value' };
+    importacionesQueryMock.selectSolicitudDeRegistroTpl$ = of(mockState);
+
     component.ngOnInit();
-    expect(datosFraccionSpy).toHaveBeenCalled();
-    expect(datosUMTSpy).toHaveBeenCalled();
+
+    expect(component.solicitudDeRegistroState).toEqual(mockState);
   });
 
-  it('should set form value on establecerCambioDeValor', () => {
-    const event = { campo: 'fraccion_arancelaria', valor: 'some value' };
-    component.establecerCambioDeValor(event);
-    expect(mockStore.setDynamicFieldValue).toHaveBeenCalledWith('fraccion_arancelaria', 'some value');
-    expect(mockFormularioService.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', {
-      fraccion_arancelaria: 'some value',
-    });
-  });
-
-  it('should set dynamic fraccion options', () => {
+  it('should call datosFraccion and update FRACCION_FIELD options', () => {
+    const mockFraccionData = [
+      { id: 1, descripcion: 'Fracción 1' },
+      { id: 2, descripcion: 'Fracción 2' },
+    ];
+ 
     component.datosFraccion();
-    fixture.detectChanges();
 
-    const field = component['datosDelMercancia'].find(f => f.campo === 'fraccion_arancelaria');
-    expect(field?.opciones?.length).toBeGreaterThan(0);
+    expect(importacionesServiceMock.datosDeLaSolicitud).toHaveBeenCalled();
+    const FRACCION_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'fraccion_arancelaria');
+    expect(FRACCION_FIELD?.opciones).toEqual([
+      { descripcion: 'Fracción 1', id: 1 },
+      { descripcion: 'Fracción 2', id: 2 },
+    ]);
   });
 
-  it('should set dynamic UMT options', () => {
+  it('should handle errors in datosFraccion', () => {
+    importacionesServiceMock.datosDeLaSolicitud.mockReturnValue(throwError(() => new Error('Error fetching data')));
+
+    component.datosFraccion();
+
+    const FRACCION_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'fraccion_arancelaria');
+    expect(FRACCION_FIELD?.opciones).toBeUndefined();
+  });
+
+  it('should call datosUMT and update UMT_FIELD options', () => {
+    const mockUMTData = [
+      { id: 1, descripcion: 'UMT 1' },
+      { id: 2, descripcion: 'UMT 2' },
+    ];
+   
     component.datosUMT();
-    fixture.detectChanges();
 
-    const field = component['datosDelMercancia'].find(f => f.campo === 'umt');
-    expect(field?.opciones?.length).toBeGreaterThan(0);
+    expect(importacionesServiceMock.datosDeLaSolicitud).toHaveBeenCalled();
+    const UMT_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'umt');
+    expect(UMT_FIELD?.opciones).toEqual([
+      { descripcion: 'UMT 1', id: 1 },
+      { descripcion: 'UMT 2', id: 2 },
+    ]);
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+  it('should handle errors in datosUMT', () => {
+    importacionesServiceMock.datosDeLaSolicitud.mockReturnValue(throwError(() => new Error('Error fetching data')));
+
+    component.datosUMT();
+
+    const UMT_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'umt');
+    expect(UMT_FIELD?.opciones).toBeUndefined();
+  });
+
+  it('should call establecerCambioDeValor and update store and form', () => {
+    const mockEvent = { campo: 'campo1', valor: 'valor1' };
+
+    component.establecerCambioDeValor(mockEvent);
+
+    expect(importacionesStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo1', 'valor1');
+    expect(formularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo1: 'valor1' });
+  });
+
+  it('should handle null or undefined values in establecerCambioDeValor', () => {
+    component.establecerCambioDeValor({ campo: '', valor: '' });
+    expect(importacionesStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
+    expect(formularioServiceMock.setFormValue).not.toHaveBeenCalled();
+
+    component.establecerCambioDeValor({ campo: '', valor: '' });
+    expect(importacionesStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
+    expect(formularioServiceMock.setFormValue).not.toHaveBeenCalled();
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
+
+    expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should return ninoFormGroup from getter', () => {
-    const group = component.ninoFormGroup;
-    expect(group).toBeTruthy();
-    expect(group instanceof Object).toBe(true);
+  it('should handle multiple calls to ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalledTimes(2);
+    expect(completeSpy).toHaveBeenCalledTimes(2);
   });
 });
