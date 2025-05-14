@@ -171,7 +171,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public aduanasEntradaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas',
+    derecha: 'Aduanas de entrada seleccionadas*',
   };
 
   /**
@@ -339,9 +339,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       calle: [this.solicitudState?.calle],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox,Validators.required],
       licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false },Validators.required
       ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
