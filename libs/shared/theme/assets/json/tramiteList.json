@@ -3775,8 +3775,8 @@
   {
     "id": 541,
     "tramite": 240112,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/agregar/destinatario",
+    "linkDepartment": "/pago/agregar/destinatario",
     "department": "sedena"
   },
   {

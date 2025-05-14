@@ -148,6 +148,12 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
   },
   {
+    path: 'agregar',
+    loadChildren: () =>
+      import(
+      './tramites/240112/agregar-destinatario.module'
+      ).then((m) => m.AgregarDestinatarioModule),
+    },{
     path: 'aviso-de-exportacion',
     loadChildren: () =>
       import(

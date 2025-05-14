@@ -192,7 +192,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112];
 
 
 /**
