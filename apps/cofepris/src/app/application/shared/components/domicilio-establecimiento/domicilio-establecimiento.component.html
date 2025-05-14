@@ -37,6 +37,7 @@
         [label]="'Estado'"
         [required]="true"
         name="estado"
+        [placeholder]="'Selecciona un valor'"
         (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
       ></app-catalogo-select>
     </div>
@@ -48,9 +49,14 @@
           id="muncipio"
           placeholder=""
           type="text"
+          maxlength="120"
           formControlName="muncipio"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')"
         />
+        <div *ngIf="domicilio.get('muncipio')?.touched && domicilio.get('muncipio')?.errors?.['required']"
+          class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
   </div>
@@ -63,6 +69,7 @@
           id="localidad"
           placeholder=""
           type="text"
+          maxlength="120"
           formControlName="localidad"
           (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')"
         />
@@ -76,6 +83,7 @@
           id="colonia"
           placeholder=""
           type="text"
+          maxlength="120"
           formControlName="colonia"
           (change)="setValoresStore(domicilio, 'colonia', 'setColonia')"
         />
@@ -91,9 +99,13 @@
           id="calle"
           placeholder=""
           type="text"
+          maxlength="100"
           formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')"
         />
+        <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']" class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
   </div>
@@ -106,6 +118,7 @@
           id="lada"
           placeholder=""
           type="number"
+          maxlength="5"
           formControlName="lada"
           (change)="setValoresStore(domicilio, 'lada', 'setLada')"
         />
@@ -119,9 +132,14 @@
           id="telefono"
           placeholder=""
           type="number"
+          maxlength="24"
           formControlName="telefono"
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')"
         />
+      <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
+          class="text-danger">
+          Este campo es obligatorio.
+      </div>
       </div>
     </div>
   </div>

@@ -338,7 +338,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       muncipio: [this.solicitudState?.muncipio, Validators.required],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
+      calle: [this.solicitudState?.calle,Validators.required],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, Validators.required],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox,Validators.required],
