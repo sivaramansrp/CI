@@ -26,6 +26,13 @@ import { takeUntil } from 'rxjs';
 })
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
 
+  /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Este valor se utiliza para determinar qué pestaña está activa en el componente.
+   * 
+   * @type {number}
+   * @default 0
+   */
   @Input() tabIndex: number = 0;
 
   /**
@@ -39,7 +46,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * Lista de estados obtenida del servicio.
    * @property {Catalogo[]} estadoCatalogo
    */
-
   estadoCatalogo: Catalogo[] = [];
 
   /**
@@ -87,9 +93,40 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Configuración de la tabla para mostrar las plantas disponibles de subfabricantes.
+   * 
+   * Esta propiedad utiliza una configuración de columnas específica definida por 
+   * `SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION` para estructurar y 
+   * renderizar los datos de las plantas disponibles en la tabla.
+   * 
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]} 
+   */
   configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
+  /**
+   * Configuración de la tabla para las plantas seleccionadas de subfabricantes.
+   * 
+   * Esta propiedad define la configuración de las columnas que se utilizarán
+   * para mostrar los datos de las plantas seleccionadas en la tabla. Utiliza
+   * una configuración predefinida que se encuentra en 
+   * `SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION`.
+   * 
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]} 
+   */
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
 
+  /**
+   * Constructor de la clase EmpresasSubfabricanteComponent.
+   * 
+   * @param nuevoProgramaIndustrialService - Servicio para manejar la lógica relacionada con el programa industrial.
+   * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param query - Consulta asociada al trámite 80101.
+   * @param store - Almacén para gestionar el estado del trámite 80101.
+   * @param router - Servicio de enrutamiento para la navegación entre rutas.
+   * @param activatedRoute - Información sobre la ruta activa, incluyendo parámetros y datos asociados.
+   * 
+   * Este constructor inicializa el formulario de datos del subcontratista llamando al método `inicializarFormularioDatosSubcontratista`.
+   */
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
     private fb: FormBuilder,
     public query: Tramite80101Query,
@@ -283,6 +320,16 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     }
   }
 
+  /**
+   * Complementa las plantas subfabricantes y realiza la navegación a la ruta correspondiente.
+   *
+   * @param complementarPlantas - Arreglo de objetos de tipo `PlantasSubfabricante` que contiene las plantas a complementar.
+   * 
+   * Este método realiza las siguientes acciones:
+   * - Si se proporciona el parámetro `complementarPlantas`, actualiza el estado de las plantas por completar en el store.
+   * - Si existe un índice de pestaña (`tabIndex`), lo guarda como índice previo en el store.
+   * - Navega a la ruta relativa `../complementar-plantas` utilizando el enrutador.
+   */
   complementarPlantas(complementarPlantas: PlantasSubfabricante[]): void {
     if (complementarPlantas) {
       this.store.setPlantasPorCompletar(complementarPlantas);

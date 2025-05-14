@@ -90,7 +90,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Needed for git diff
 
@@ -154,7 +154,7 @@ jobs:
           echo "Deployment to Kubernetes: $DEPLOY_TO_K8S"
 
       - name: Setup Node.js for detection
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -400,7 +400,7 @@ jobs:
       DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
@@ -408,7 +408,7 @@ jobs:
           sudo apt-get install -y build-essential libpng-dev
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -507,7 +507,7 @@ jobs:
       manifests_ready: ${{ steps.check-manifests.outputs.manifests_ready }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Create Kubernetes manifests
         run: |
@@ -696,7 +696,7 @@ jobs:
           fi
 
       - name: Upload kubernetes manifests
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: k8s-manifests
           path: |
@@ -713,7 +713,7 @@ jobs:
       DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: k8s-manifests
 
