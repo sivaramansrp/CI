@@ -575,6 +575,13 @@ const ROUTES: Routes = [
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
+  {
+    path: 'validar-certificado-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
 
 ];
 

@@ -1,6 +1,6 @@
 import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
-import { CatalogoSelectComponent, InputFechaComponent, Notificacion } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent, Notificacion } from "@ng-mf/data-access-user";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
