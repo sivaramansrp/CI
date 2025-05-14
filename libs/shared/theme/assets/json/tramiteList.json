@@ -255,7 +255,7 @@
     "id": 37,
     "tramite": 110101,
     "linkDashboard": "/se/pantallas/datosdecomponentes",
-    "linkDepartment": "/se/pantallas/datosdecomponentes",
+    "linkDepartment": "/pago/pantallas/datosdecomponentes",
     "department": "se"
   },
   {
@@ -283,7 +283,7 @@
     "id": 41,
     "tramite": 110203,
     "linkDashboard": "/se/tecnicos/solicitante",
-    "linkDepartment": "/se/tecnicos/solicitante",
+    "linkDepartment": "/pago/tecnicos/solicitante",
     "department": "se"
   },
   {
@@ -297,7 +297,7 @@
     "id": 43,
     "tramite": 110208,
     "linkDashboard": "/se/validar-inicialmente/certificado-origen",
-    "linkDepartment": "/se/validar-inicialmente/certificado-origen",
+    "linkDepartment": "/pago/validar-inicialmente/certificado-origen",
     "department": "se"
   },
   {
@@ -395,7 +395,7 @@
     "id": 57,
     "tramite": 120602,
     "linkDashboard": "/se/empresa-frontera/datos-empresa",
-    "linkDepartment": "/pago/empresa-frontera/datos-empresad",
+    "linkDepartment": "/pago/empresa-frontera/datos-empresa",
     "department": "se"
   },
   {
@@ -409,7 +409,7 @@
     "id": 59,
     "tramite": 130106,
     "linkDashboard": "/se/desmantelar/solicitante",
-    "linkDepartment": "/desmantelar/solicitante",
+    "linkDepartment": "/pago/desmantelar/solicitante",
     "department": "se"
   },
   {
@@ -451,7 +451,7 @@
     "id": 65,
     "tramite": 140103,
     "linkDashboard": "/se/cancelacion-de/solicitante",
-    "linkDepartment": "/se/pago/cancelacion-de/solicitante",
+    "linkDepartment": "/pago/cancelacion-de/solicitante",
     "department": "se"
   },
   {
@@ -465,7 +465,7 @@
     "id": 67,
     "tramite": 140201,
     "linkDashboard": "/se/cancelaciones-ministerio/solicitud",
-    "linkDepartment": "/se/cancelaciones-ministerio/solicitud",
+    "linkDepartment": "/pago/cancelaciones-ministerio/solicitud",
     "department": "se"
   },
   {
@@ -1277,7 +1277,7 @@
     "id": 183,
     "tramite": 130301,
     "linkDashboard": "/se/solicitud-prorroga/solicitud",
-    "linkDepartment": "/se/solicitud-prorroga/solicitud",
+    "linkDepartment": "/pago/solicitud-prorroga/solicitud",
     "department": "se"
   },
   {
@@ -1564,7 +1564,7 @@
     "id": 224,
     "tramite": 260515,
     "linkDashboard": "/cofepris/sustancias-permitidas",
-    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas",
     "department": "cofepris"
   },
   {
