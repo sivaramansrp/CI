@@ -131,14 +131,14 @@ export const INSTRUCCION_DOBLE_CLIC = 'AI dar clic en el boton "Cargar" se crear
  * Define las instrucciones necesarias para las tablas marcadas con un asterisco.
  * @constant {string}
  */
-export const MANDATORY_INSTRUCTION = 'Se requieren las constantes que definen las tablas de instrucciones marcadas con un asterisco.';
+export const MANDATORY_INSTRUCTION = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 /**
  * Configuración para la fecha de expedición de la factura.
  * Define las propiedades del campo de fecha de expedición.
  */
 export const EXPEDICION_FACTURA_FECHA = {
-    labelNombre: 'Fecha de expedición de la factura:',
+    labelNombre: 'Fecha de expedición de la factura',
     required: true,
     habilitado: true,
 };
