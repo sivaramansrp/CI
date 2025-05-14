@@ -1,0 +1,96 @@
+<div class="container">
+  <div class="row mt-5">
+      <div class="col-md-12">
+        <ng-titulo titulo="Terceros relacionados" /> 
+        <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_TERCEROS"></ng-alert>
+        <div class="col-md-12 mt-5">
+          <label class="form-label" for="">Fabricante:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="fabricanteDatos"
+          >
+          </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+            <button
+            type="button"
+            class="btn btn-primary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+          >
+            Agregar
+          </button>
+          </div>
+        </div>
+        <div class="col-md-12 mt-5">
+          <label class="form-label" for="">Destinatario(destino final)*:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="destinatarioDatos"
+          >
+          </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+            <button
+            type="button"
+            class="btn btn-primary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+          >
+            Agregar
+          </button>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label" for="">Proveedor*:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="proveedorDatos"
+             
+             >
+          </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+             
+            >
+              Agregar
+            </button>
+          </div>  
+      </div>
+        <div class="col-md-12 mt-5">
+          <label class="form-label" for="">Facturador*:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="facturadorDatos"
+          >
+          </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+            <button
+            type="button"
+            class="btn btn-primary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+          >
+            Agregar
+          </button>
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+  
+  

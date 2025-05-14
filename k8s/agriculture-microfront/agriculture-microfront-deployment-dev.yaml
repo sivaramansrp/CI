@@ -14,11 +14,18 @@ spec:
     spec:
       containers:
       - name: modulefederation-agriculture-microfront-deployment-dev
-        image: ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:latest
+        image: ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:1.0.0
         ports:
         - containerPort: 80
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: dev
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
       imagePullSecrets:
       - name: vucem30registrykey

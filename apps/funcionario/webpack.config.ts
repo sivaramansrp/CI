@@ -28,6 +28,7 @@ module.exports = {
    filename: 'remoteAppEntry.js',
    exposes: {
     './Module': 'apps/funcionario/src/app/application/app.module.ts',
+    './Routes': 'apps/funcionario/src/app/remote-entry/entry.routes.ts'
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
@@ -39,7 +40,10 @@ module.exports = {
      strictVersion: true,
      requiredVersion: 'auto'
     },
-
+    "@ng-mf/data-access-user": {
+      "singleton": false,
+      "import": "libs/shared/data-access-user/src/index.ts",
+    },    
     ...sharedMappings.getDescriptors()
    })
   }),

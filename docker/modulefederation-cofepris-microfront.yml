@@ -4,7 +4,7 @@ services:
     image: modulefederation-cofepris-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/cofepris/Dockerfile
+      dockerfile: apps/cofepris/Dockerfile.dev
     container_name: modulefederation-cofepris-microfront
     restart: on-failure
     expose:
