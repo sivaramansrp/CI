@@ -175,4 +175,8 @@ export const appRoutes: Route[] = [
     path: 'confirmar-notificacion',
     component: ConfirmarNotificacionComponent,
   },
+  {
+    path: 'confirmar-resolucion',
+    component: ConfirmarNotificacionComponent,
+  },
 ];
