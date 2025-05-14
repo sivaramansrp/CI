@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Inject } from '@angular/core';
 import { MercanciaForm } from '../../modelos/acta-de-hechos.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -85,8 +86,8 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
    */ 
     constructor(
-       private fb: FormBuilder,
-       private router: Router,
+      @Inject(FormBuilder) private fb: FormBuilder,
+      private router: Router,
       private readonly catalogosService: CatalogosService,
       private tramiteStoreQuery: TramiteStoreQuery,
       private tramiteStore: TramiteStore,
