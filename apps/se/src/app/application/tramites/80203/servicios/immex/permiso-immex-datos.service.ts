@@ -28,7 +28,6 @@ export class PermisoImmexDatosService {
    * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
    * @returns {Observable<any[]>} Observable que emite los datos del permiso IMMEX.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getDatos(): Observable<any> {
     return this.httpClient.get<any[]>(this.jsonUrl).pipe(
     );
