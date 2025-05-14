@@ -514,7 +514,13 @@ const ROUTES: Routes = [
       ),
   },
   {
-
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120403/cupos.module').then(
+        (m) => m.CuposModule
+      ),
+  },
+{
     path: 'informe-anual-programa',
     loadChildren: () =>
       import('./tramites/150103/informe-anual-programa.module').then(
