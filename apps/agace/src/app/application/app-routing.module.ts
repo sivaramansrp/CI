@@ -169,7 +169,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32514/aviso-retorno.module').then(
         (m) => m.AvisoRetornoModule)
-  }
+  },
+  {
+    path: 'aviso-mercancia',
+    loadChildren: () =>
+      import('./tramites/32509/aviso-de-mercancia.module').then(
+        (m) => m.AvisoDeMercanciaModule
+      ),
+  },
 ];
 
 @NgModule({

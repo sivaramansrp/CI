@@ -87,7 +87,7 @@
     "id": 13,
     "tramite": 11202,
     "linkDashboard": "/aga/retorno-contenedores/solicitante",
-    "linkDepartment": "/aga/retorno-contenedores/solicitante",
+    "linkDepartment": "/pago/retorno-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -346,7 +346,7 @@
     "id": 50,
     "tramite": 110221,
     "linkDashboard": "/se/validador-certificado-cam",
-    "linkDepartment": "/se/validador-certificado-cam",
+    "linkDepartment": "/pago/validador-certificado-cam",
     "department": "se"
   },
   {
@@ -1242,7 +1242,7 @@
     "id": 178,
     "tramite": 260906,
     "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/cofepris/modificacion-permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario",
     "department": "cofepris"
   },
   {
@@ -3075,8 +3075,8 @@
   {
     "id": 441,
     "tramite": 32509,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-mercancia/desrtruccion-o-donacion",
+    "linkDepartment": "/pago/aviso-mercancia/desrtruccion-o-donacion",
     "department": "agace"
   },
   {
@@ -4219,5 +4219,12 @@
     "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
     "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
     "department": "agace"
+  },
+  {
+    "id": 604,
+    "tramite": 103,
+    "linkDashboard": "/aga/autorizacion/mercancia-donada",
+    "linkDepartment": "/pago/autorizacion/mercancia-donada",
+    "department": "aga"
   }
 ]
