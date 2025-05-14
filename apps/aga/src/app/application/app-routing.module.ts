@@ -169,11 +169,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'attention-Of-Renewal',
+    path: 'atencion-de-renovacion',
     loadChildren: () =>
-      import('./tramites/40403/atencionDeRenovacion.module').then(
+      import('./tramites/40403/atencion-de-renovacion.module').then(
         (m) => m.AtencionDeRenovacionModule
-
       ),
   },
   {
@@ -280,11 +279,60 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule
+        (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
+  },
+  {
+    path: 'operaciones-de-comercio',
+    loadChildren: () =>
+      import('./tramites/319/operaciones-de-comercio-exterior.module').then(
+        (m) => m.OperacionesDeComercioExteriorModule)
+  },
+  {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
       ),
+  },
+  {
+    path: 'registrar-proveedores',
+    loadChildren: () =>
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
+  },
+  {
+    path: 'concluir-relacion',
+    loadChildren: () =>
+      import('./tramites/420102/concluir-relacion.module').then(
+        (m) => m.ConcluirRelacionModule),
   }
 ];
 

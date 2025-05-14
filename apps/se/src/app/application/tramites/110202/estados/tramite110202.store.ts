@@ -4,6 +4,42 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/configuracion-columna.model';
 
 // Interfaz que define el estado del trámite.
+/**
+ * @interface TramiteState
+ * @description Representa el estado de un trámite en la aplicación, incluyendo datos relacionados con catálogos, formularios, mercancías y destinatarios.
+ * 
+ * @property {Catalogo[]} idiomaDatos - Lista de datos de idiomas disponibles.
+ * @property {Catalogo} idiomaDatosSeleccion - Idioma seleccionado.
+ * @property {Catalogo[]} paisDestin - Lista de países de destino disponibles.
+ * @property {Catalogo} paisDestinSeleccion - País de destino seleccionado.
+ * @property {Catalogo[]} medioDeTransporte - Lista de medios de transporte disponibles.
+ * @property {Catalogo} medioDeTransporteSeleccion - Medio de transporte seleccionado.
+ * @property {Catalogo} entidadFederativaSeleccion - Entidad federativa seleccionada.
+ * @property {Catalogo[]} entidadFederativaDatos - Lista de entidades federativas disponibles.
+ * @property {Catalogo[]} representacionFederalDatos - Lista de representaciones federales disponibles.
+ * @property {Catalogo} representacionFederalSeleccion - Representación federal seleccionada.
+ * @property {Catalogo[]} altaPlanta - Lista de plantas disponibles para alta.
+ * @property {Catalogo} estado - Estado actual del trámite.
+ * @property {Catalogo[]} factura - Lista de facturas disponibles.
+ * @property {Catalogo} facturas - Factura seleccionada.
+ * @property {Catalogo} umc - Unidad de medida y conteo seleccionada.
+ * @property {Catalogo[]} umcs - Lista de unidades de medida y conteo disponibles.
+ * @property {Catalogo} masa - Masa seleccionada.
+ * @property {Catalogo[]} masaBruta - Lista de masas brutas disponibles.
+ * @property {Catalogo[]} paisBloques - Lista de bloques de países disponibles.
+ * @property {Catalogo} paisBloque - Bloque de país seleccionado.
+ * @property {{ [key: string]: unknown }} formCertificado - Datos del formulario de certificado.
+ * @property {{ [key: string]: unknown }} formDatosCertificado - Datos específicos del formulario de certificado.
+ * @property {{ [key: string]: unknown }} mercanciaForm - Datos del formulario de mercancía.
+ * @property {{ [key: string]: boolean }} formaValida - Validación de los formularios.
+ * @property {Mercancia[]} buscarMercancia - Lista de mercancías buscadas.
+ * @property {Mercancia[]} mercanciaTabla - Lista de mercancías mostradas en la tabla.
+ * @property {{ [key: string]: unknown }} destinatarioForm - Datos del formulario del destinatario.
+ * @property {{ [key: string]: unknown }} formDestinatario - Datos específicos del destinatario.
+ * @property {{ [key: string]: unknown }} formDatosDelDestinatario - Datos adicionales del destinatario.
+ * 
+ * @command Este estado se utiliza para gestionar los datos y formularios relacionados con un trámite específico.
+ */
 export interface TramiteState {
   idiomaDatos: Catalogo[];
   idiomaDatosSeleccion: Catalogo;
@@ -25,16 +61,16 @@ export interface TramiteState {
   masaBruta: Catalogo[],
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
-  formCertificado: { [key: string]: undefined | boolean | string | number | object };
-  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
-  mercanciaForm: { [key: string]: undefined | boolean | string | number | object }
+  formCertificado: { [key: string]: unknown};
+  formDatosCertificado: { [key: string]: unknown};
+  mercanciaForm: { [key: string]: unknown}
   formaValida: { [key: string]: boolean };
   buscarMercancia: Mercancia[];
   mercanciaTabla: Mercancia[];
 
-  destinatarioForm: { [key: string]: undefined | boolean | string | number | object };
-  formDestinatario: { [key: string]: undefined | boolean | string | number | object };
-  formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  destinatarioForm: { [key: string]: unknown};
+  formDestinatario: { [key: string]: unknown};
+  formDatosDelDestinatario: { [key: string]: unknown};
 }
 
 // Interfaz que define el estado de la solicitud 110204.
@@ -406,7 +442,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosCertificado(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -422,7 +458,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificado(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -438,7 +474,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+  setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -453,7 +489,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormMercancia(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       mercanciaForm: {
         ...state.mercanciaForm,
@@ -683,7 +719,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * Actualiza el estado del formulario de destinatario con nuevos valores
    * @param values Objeto con los valores a actualizar en el formulario.
    */
-  setDestinatarioForm(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setDestinatarioForm(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       destinatarioForm: {
         ...state.destinatarioForm,
@@ -696,7 +732,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * Actualiza el estado del formulario de destinatario (sección principal) con nuevos valores
    * @param values Objeto con los valores a actualizar en el formulario.
    */
-  setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDestinatario: {
         ...state.formDestinatario,
@@ -709,7 +745,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * Actualiza el estado del formulario de datos del destinatario con nuevos valores
    * @param values Objeto con los valores a actualizar en el formulario.
    */
-  setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
         ...state.formDatosDelDestinatario,
