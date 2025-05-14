@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DestinatarioDeComponent } from './destinatario-de.component';
+import { DestinatarioDeCertificadoComponent } from './destinatario-de-certificado.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('DestinatarioDeComponent', () => {
-  let component: DestinatarioDeComponent;
-  let fixture: ComponentFixture<DestinatarioDeComponent>;
+describe('DestinatarioDeCertificadoComponent', () => {
+  let component: DestinatarioDeCertificadoComponent;
+  let fixture: ComponentFixture<DestinatarioDeCertificadoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DestinatarioDeComponent],
+      declarations: [DestinatarioDeCertificadoComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DestinatarioDeComponent);
+    fixture = TestBed.createComponent(DestinatarioDeCertificadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

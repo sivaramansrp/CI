@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CertificadoDeService } from './certificado-de.service';
+import { ValidarInicialmenteCertificadoService } from './validar-inicialmente-certificado.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('CertificadoDeService', () => {
-  let service: CertificadoDeService;
+describe('ValidarInicialmenteCertificadoService', () => {
+  let service: ValidarInicialmenteCertificadoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     });
-    service = TestBed.inject(CertificadoDeService);
+    service = TestBed.inject(ValidarInicialmenteCertificadoService);
   });
 
   it('should be created', () => {

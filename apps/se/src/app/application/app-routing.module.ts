@@ -576,7 +576,7 @@ const ROUTES: Routes = [
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
   {
-    path: 'validar-certificado-inicalmente',
+    path: 'validar-certificado-inicialmente',
     loadChildren: () =>
       import('./tramites/110222/validar-inicialmente-certificado.module').then(
         (m) => m.ValidarInicialmenteCertificadoModule

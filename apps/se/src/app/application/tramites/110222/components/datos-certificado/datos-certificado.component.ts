@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CertificadoDeService } from '../../services/certificado-de.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 
 /**
@@ -43,24 +43,31 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   representacionFederal: Catalogo[] = [];
 
+  /**
+   * @private
+   * Sujeto utilizado como notificador para destruir observables y evitar fugas de memoria.
+   * Se completa cuando el componente se destruye.
+   * 
+   * @command Utilice `this.destroyNotifier$.next(); this.destroyNotifier$.complete();` en el método `ngOnDestroy`.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @descripcion
    * Almacena los valores del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formDatosCertificadoValues!:{ [key: string]: unknown};
 
   /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
-   * @param CertificadoDeService - Servicio para obtener datos relacionados con el certificado.
+   * @param ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    */
   constructor(
     private readonly fb: FormBuilder,
-    private CertificadoDeService: CertificadoDeService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     private store: Tramite110222Store,
     private query: Tramite110222Query,
   ) {
@@ -97,7 +104,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de idiomas disponibles.
    */
   idiomOpcion(): void {
-    this.CertificadoDeService.obtenerMenuDesplegable('idioma.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('idioma.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )
@@ -117,7 +124,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas disponibles.
    */
   entidadFederativasOpcion(): void {
-    this.CertificadoDeService.obtenerMenuDesplegable('entidadFederativas.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )
@@ -137,7 +144,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de representaciones federales disponibles.
    */
   representacionFederalOpcion(): void {
-    this.CertificadoDeService.obtenerMenuDesplegable('representacionFederal.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )

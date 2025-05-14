@@ -7,7 +7,7 @@ import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 
 interface FormValues {
-  [key: string]: string | number | boolean | object | undefined;
+  [key: string]: unknown;
 }
 /**
  * @descripcion
@@ -15,11 +15,11 @@ interface FormValues {
  * relacionadas con el formulario de destinatario en el módulo PERU.
  */
 @Component({
-  selector: 'app-destinatario-de',
-  templateUrl: './destinatario-de.component.html',
-  styleUrl: './destinatario-de.component.scss',
+  selector: 'app-destinatario-de-certificado',
+  templateUrl: './destinatario-de-certificado.component.html',
+  styleUrl: './destinatario-de-certificado.component.scss',
 })
-export class DestinatarioDeComponent implements OnInit, OnDestroy {
+export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * @descripcion

@@ -8,7 +8,7 @@ import { DatosCertificadoComponent } from './components/datos-certificado/datos-
 import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
-import { DestinatarioDeComponent } from './components/destinatario-de/destinatario-de.component';
+import { DestinatarioDeCertificadoComponent } from './components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { HistoricoDeProductoresComponent } from './components/historico-de-productores/historico-de-productores.component';
 import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
@@ -27,7 +27,7 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     PasoDosComponent,
     DatosCertificadoComponent,
     CertificadoComponent,
-    DestinatarioDeComponent,
+    DestinatarioDeCertificadoComponent,
     CertificadoOrigenComponent,
     HistoricoDeProductoresComponent,
     MercanciaComponent,

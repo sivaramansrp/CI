@@ -8,17 +8,17 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Interfaz que define el estado del certificado Tramite110222Store.
  */
 export interface Tramite110222State {
-  formCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formCertificado: { [key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
-  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+  mercanciaForm: { [key: string]: unknown};
   mercanciaTabla: Mercancia[];
-  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formDatosCertificado: { [key: string]: unknown};
   idiomaDatosSeleccion: Catalogo;
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
-  formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
-  formExportor: { [key: string]: undefined | boolean | string | number | object };
+  formDatosDelDestinatario: { [key: string]: unknown};
+  formExportor: { [key: string]: unknown};
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -34,12 +34,12 @@ export interface Tramite110222State {
   numeroFactura: string;
   tipoFactura: Catalogo[];
   formaValida: { [key: string]: boolean };
-  formDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formDestinatario: { [key: string]: unknown};
   datosConfidencialesProductor?: boolean;
   si?: boolean;
   productorMismoExportador?: boolean;
-  agregarDatosProductorFormulario: { [key: string]: undefined | boolean | string | number | object };
-  formulario: { [key: string]: undefined | boolean | string | number | object };
+  agregarDatosProductorFormulario: { [key: string]: unknown};
+  formulario: { [key: string]: unknown};
 }
 
 /**
@@ -184,7 +184,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de certificado.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificado(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -199,7 +199,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
    * Actualiza los datos del formulario de formulario.
    * @param values - Valores a actualizar en el formulario.
    */
-    setFormHistorico(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    setFormHistorico(values: { [key: string]: unknown}): void {
       this.update((state) => ({
         formulario: {
           ...state.formulario,
@@ -213,7 +213,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
      * Actualiza los datos del formulario de productor.
      * @param values - Valores a actualizar en el formulario.
      * */
-    setAgregarFormDatosProductor(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    setAgregarFormDatosProductor(values: { [key: string]: unknown}): void {
       this.update((state) => ({
         agregarDatosProductorFormulario: {
           ...state.agregarDatosProductorFormulario,
@@ -250,7 +250,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
        * Actualiza los datos del formulario de mercancía en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de mercancía.
        */
-      setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormMercancia(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           mercanciaForm: {
             ...state.mercanciaForm,
@@ -276,7 +276,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
        * Actualiza los datos del formulario de certificado en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
        */
-      setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDatosCertificado(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDatosCertificado: {
             ...state.formDatosCertificado,
@@ -326,7 +326,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
        * Actualiza los datos del formulario de destinatario en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
        */
-      setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDatosDelDestinatario: {
             ...state.formDatosDelDestinatario,
@@ -340,7 +340,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
        * Actualiza los datos del formulario de exportador en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
        */
-      setFormExportador(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormExportador(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formExportor: {
             ...state.formExportor,
@@ -548,7 +548,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
      * Actualiza los datos del formulario de destinatario en el almacén.
      * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
      */
-      setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDestinatario(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDestinatario: {
             ...state.formDestinatario,
@@ -562,7 +562,7 @@ export class Tramite110222Store extends Store<Tramite110222State> {
        * Actualiza los datos del formulario de certificado en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
        */
-      setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+      setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
         this.update((state) => ({
           formCertificado: {
             ...state.formCertificado,

@@ -2256,8 +2256,8 @@
   {
     "id": 324,
     "tramite": 110222,
-    "linkDashboard": "",
-    "linkDepartment": "/pago/validar-certificado-inicalmente/certificado",
+    "linkDashboard": "se/validar-certificado-inicialmente/certificado",
+    "linkDepartment": "/pago/validar-certificado-inicialmente/certificado",
     "department": "se"
   },
   {

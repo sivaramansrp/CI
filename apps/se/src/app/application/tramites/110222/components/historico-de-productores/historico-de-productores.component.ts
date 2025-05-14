@@ -1,11 +1,11 @@
 import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject ,map,takeUntil} from 'rxjs';
-import { CertificadoDeService } from '../../services/certificado-de.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Component({
   selector: 'app-historico-de-productores',
@@ -29,6 +29,11 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
    */
   esTipoDeSeleccionado: boolean = true;
 
+  /**
+   * @property {Catalogo[]} optionsTipoFactura
+   * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
+   * @command Este arreglo se utiliza para poblar un componente de selección en la interfaz de usuario.
+   */
   optionsTipoFactura: Catalogo[] = [];
     /**
      * Lista de productores disponibles para el exportador.
@@ -48,27 +53,27 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     /**
      * Estado actual del trámite.
      */
-    public tramiteState!:{ [key: string]: string | number | boolean | object | undefined };
+    public tramiteState!:{ [key: string]: unknown};
     /**
      * @public
      * @property
-     * @type {{ [key: string]: string | number | boolean | object | undefined }}
+     * @type { [key: string]: unknown}
      * @comando
      * Este objeto debe ser inicializado antes de su uso para evitar errores.
      */
-    public agregarDatosProductor!: { [key: string]: string | number | boolean | object | undefined };
+    public agregarDatosProductor!: { [key: string]: unknown};
 
     /**
      * Constructor del componente.
      * 
      * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-     * @param {certificadoDeService} certificadoDeService - Servicio para obtener datos relacionados con los productores.
+     * @param {ValidarInicialmenteCertificadoService} ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con los productores.
      * @param {Tramite110222Store} store - Store para gestionar el estado del trámite.
      * @param {Tramite110222Query} tramiteQuery - Query para obtener el estado del trámite.
     */
     constructor(
       public fb: FormBuilder,
-      private certificadoDeService: CertificadoDeService,
+      private certificadoDeService: ValidarInicialmenteCertificadoService,
       public store: Tramite110222Store,
       public tramiteQuery: Tramite110222Query,
     ) { }

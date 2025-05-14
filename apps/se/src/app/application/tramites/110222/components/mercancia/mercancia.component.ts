@@ -3,11 +3,11 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
-import { CertificadoDeService } from '../../services/certificado-de.service';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 
 /**
@@ -103,7 +103,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
-   * @param certificadoDeService - Servicio para obtener datos relacionados con el certificado.
+   * @param ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de mercancías.
    * @param query - Consulta para obtener el estado del formulario.
    * @param seccionStore - Almacén para gestionar el estado de la sección.
@@ -111,7 +111,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private certificadoDeService: CertificadoDeService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     private store: Tramite110222Store,
     private query: Tramite110222Query,
     private seccionStore: SeccionLibStore,
@@ -192,7 +192,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Obtiene la lista de unidades de medida y clasificación (UMC) disponibles.
    */
   umcOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('umc.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('umc.json')
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
       next: (data) => {
@@ -210,7 +210,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Obtiene la lista de facturas disponibles.
    */
   facturasOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('factura.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('factura.json')
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
       next: (data) => {

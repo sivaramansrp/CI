@@ -8,10 +8,10 @@ import { FormBuilder } from '@angular/forms';
 import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
-import { CertificadoDeService } from '../../services/certificado-de.service';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 @Injectable()
-class MockCertificadoDeService {
+class MockValidarInicialmenteCertificadoService {
   obtenerMenuDesplegable(fileName: string): Observable<any> {
     return observableOf([]); 
   }
@@ -38,7 +38,7 @@ describe('CertificadoOrigenComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: CertificadoDeService, useClass: MockCertificadoDeService },
+        { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
         { provide: Tramite110222Store, useClass: MockTramite110222Store },
         { provide: Tramite110222Query, useClass: MockTramite110222Query },
         SeccionLibStore,

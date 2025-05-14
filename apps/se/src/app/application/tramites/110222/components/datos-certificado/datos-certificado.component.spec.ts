@@ -8,7 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DatosCertificadoComponent } from './datos-certificado.component';
 import { FormBuilder } from '@angular/forms';
-import { CertificadoDeService } from '../../services/certificado-de.service';
+import { CertificadoDeService } from '../../services/validar-inicialmente-certificado.service';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 

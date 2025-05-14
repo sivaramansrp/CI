@@ -2,13 +2,13 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
-import { CertificadoDeService } from '../../services/certificado-de.service';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 /**
  * @descripcion
@@ -76,11 +76,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   mercanciasDisponibles: boolean = true;
 
   /**
-   * Estado actual del trámite.
-   */
-  public tramiteState!: { [key: string]: string | number | boolean | object | undefined };
-  
-  /**
    * @descripcion
    * Observable para los datos de la tabla.
    */
@@ -90,7 +85,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Valores actuales del formulario de certificado.
    */
-  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formCertificadoValues!:{ [key: string]: unknown };
 
   /**
    * @descripcion
@@ -126,7 +121,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
-   * @param certificadoDeService - Servicio para obtener datos relacionados con el certificado.
+   * @param ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    * @param query - Consulta para obtener el estado del formulario.
    * @param seccionStore - Almacén para gestionar el estado de la sección.
@@ -134,7 +129,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   constructor(
     private readonly fb: FormBuilder,
-    private certificadoDeService: CertificadoDeService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     private store: Tramite110222Store,
     private query: Tramite110222Query,
     private seccionStore: SeccionLibStore,
@@ -144,8 +139,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
-        this.tramiteState = estado;
-      });
+    });
   }
 
   /**
@@ -192,7 +186,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('estados.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('estados.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )
@@ -212,7 +206,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.certificadoDeService.obtenerMenuDesplegable('pais.json')
+    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('pais.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )
@@ -232,7 +226,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.certificadoDeService.obtenerTablaDatos('disponibles-datos.json')
+    this.ValidarInicialmenteCertificadoService.obtenerTablaDatos('disponibles-datos.json')
     .pipe(
       takeUntil(this.destroyNotifier$),
     )
