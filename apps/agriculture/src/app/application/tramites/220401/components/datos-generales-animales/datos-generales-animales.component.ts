@@ -1,36 +1,16 @@
-/* eslint-disable class-methods-use-this */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import aduanasJson from '../../../../../../../../../libs/shared/theme/assets/json/220401/umc.json';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import sexoJson from '../../../../../../../../../libs/shared/theme/assets/json/220401/sexo.json';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import {
-  REGEX_DESCRIPCION_ESPECIALES,
-  REGEX_LEADING_SPACES,
-} from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
+import { AbstractControl,FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} from '@ng-mf/data-access-user';
+import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import aduanasJson from '@libs/shared/theme/assets/json/220401/umc.json';
+import sexoJson from '@libs/shared/theme/assets/json/220401/sexo.json';
+
 /**
  * DatosGeneralsAnimalsComponent es un componente que maneja la selección de aduanas y otros datos generales de animales.
  */
@@ -53,7 +33,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
     public solicitudState!: solicitud220401State;
   /** Configuración del primer select de aduanas */
   aduanas: Catalogo[] = aduanasJson;
-  // fraccionF: Catalogo[] = fractionValues;
+ 
   /** Configuración del segundo select de aduanas */
   sexo: Catalogo[] = sexoJson;
 
@@ -66,7 +46,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * Maneja la selección de una aduana en el primer select.
    * @param e - La aduana seleccionada.
    */
-  // eslint-disable-next-line no-empty-function
+  
   constructor(private fb: FormBuilder, 
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
@@ -80,16 +60,16 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * @returns Un objeto de error de validación `{ descripcionEspeciales: 'Ingresa datos válidos.' }` si el valor no cumple con las reglas,
    *          o `null` si el valor es válido.
    */
-  // eslint-disable-next-line class-methods-use-this
-  descripcionEspecialesValidator(
+ 
+  static descripcionEspecialesValidator(
     control: AbstractControl
   ): ValidationErrors | null {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const value = control.value;
+   
+    const VALUE = control.value;
 
     if (
-      REGEX_LEADING_SPACES.test(value) ||
-      !REGEX_DESCRIPCION_ESPECIALES.test(value)
+      REGEX_LEADING_SPACES.test(VALUE) ||
+      !REGEX_DESCRIPCION_ESPECIALES.test(VALUE)
     ) {
       return { descripcionEspeciales: 'Ingresa datos válidos.' }; // Error message
     }
@@ -101,12 +81,12 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * @param control - El control de formulario a validar.
    * @returns Un objeto de error de validación o nulo.
    */
-  // eslint-disable-next-line class-methods-use-this
-  descripcionValidator(control: AbstractControl): ValidationErrors | null {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const value = control.value;
+ 
+  static descripcionValidator(control: AbstractControl): ValidationErrors | null {
+    
+    const VALUE = control.value;
     // Implement your custom validation logic here
-    if (value && value.length > 0) {
+    if (VALUE && VALUE.length > 0) {
       return null;
     }
     return { descripcion: true };
@@ -118,12 +98,12 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * @param max - El valor máximo.
    * @returns Una función de validación.
    */
-  // eslint-disable-next-line class-methods-use-this
-  valueRangeValidator(min: number, max: number) {
+ 
+  static valueRangeValidator(min: number, max: number) {
     return (control: AbstractControl): ValidationErrors | null => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const value = parseFloat(control.value);
-      if (isNaN(value) || value < min || value > max) {
+      
+      const VALUE = parseFloat(control.value);
+      if (isNaN(VALUE) || VALUE < min || VALUE > max) {
         return { valueRange: true };
       }
       return null;
@@ -157,7 +137,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.maxLength(1000),
-          this.descripcionEspecialesValidator, // Validador personalizado
+          DatosGeneralesAnimalesComponent.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
       presentacion: [
@@ -166,14 +146,14 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.maxLength(15),
           Validators.pattern('^[0-9]*.?[0-9]+$'), // debe ser un numero
-          this.valueRangeValidator(0.01, 999999999999.99), // Validador personalizado para rango de valores
+          DatosGeneralesAnimalesComponent.valueRangeValidator(0.01, 999999999999.99), // Validador personalizado para rango de valores
         ],
       ],
       marcaEmbarque: [
         '',
         [
           Validators.maxLength(30),
-          this.descripcionValidator, // Custom validator
+          DatosGeneralesAnimalesComponent.descripcionValidator, // Custom validator
         ],
       ],
       fechaCaducidad: [
@@ -182,7 +162,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.maxLength(15),
           Validators.pattern('^[0-9]*.?[0-9]+$'), // debe ser un numero
-          this.valueRangeValidator(0.01, 999999999999.99), // Validador personalizado para rango de valores
+          DatosGeneralesAnimalesComponent.valueRangeValidator(0.01, 999999999999.99), // Validador personalizado para rango de valores
         ],
       ],
       aduana: [this.solicitudState?.aduana || '',[ Validators.required]], // Agregue FormControl para el campo seleccionado
@@ -192,7 +172,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(200),
-          this.descripcionEspecialesValidator, // Validador personalizado
+          DatosGeneralesAnimalesComponent.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
       numeroAutorizacionCITES: [ this.solicitudState?.raza || '',[Validators.maxLength(15)]],
@@ -200,7 +180,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         this.solicitudState?.raza || '',
         [
           Validators.maxLength(50),
-          this.descripcionEspecialesValidator, // Validador personalizado
+          DatosGeneralesAnimalesComponent.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
       edadAnimal: [
@@ -208,7 +188,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(50),
-          this.descripcionEspecialesValidator, // Validador personalizado
+          DatosGeneralesAnimalesComponent.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
       sexo:[
@@ -218,7 +198,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         this.solicitudState?.color || '',
         [
           Validators.maxLength(30),
-          this.descripcionEspecialesValidator, // Validador personalizado
+          DatosGeneralesAnimalesComponent.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
     });
@@ -235,8 +215,8 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    * @param value - El valor de la fracción arancelaria.
    * @param length - La longitud del valor de la fracción arancelaria.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  obtenerDescripcionFraccion(value: string, length: number): void {
+  
+  obtenerDescripcionFraccion(): void {
     // Implementar la lógica para obtener la descripción de la fracción
     this.frmMercanciaAnimal
       .get('descFraccionArancelaria')
@@ -247,50 +227,23 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    */
   limpiarDatosCapturaMercancia(): void {
     this.frmMercanciaAnimal.reset();
-    this.ocultarErrores();
+    
   }
   /**
-   * Guarda los datos capturados en el formulario de mercancía.
-   * Muestra un mensaje si el formulario es válido, de lo contrario muestra los errores.
+   * @method setValoresStore
+   * @description Establece los valores en el store de textiles.
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} campo - El nombre del campo.
+   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El método del store a invocar.
    */
-  guardarCapturaMercancia(): void {
-    if (this.frmMercanciaAnimal.valid) {
-      this.mostrarMensaje();
-    } else {
-      this.mostrarErrores();
-    }
-  }
-  /**
-   * Cierra la captura de mercancía animal y oculta los errores.
-   */
-  cerrarCapturaMercanciaAnimal(): void {
-    this.ocultarErrores();
-  }
-  /**
-   * Muestra un mensaje.
-   */
-  // eslint-disable-next-line class-methods-use-this
-  mostrarMensaje(): void {
-    // Implementar la lógica para mostrar un mensaje
-  }
-  /**
-   * Oculta los errores.
-   */
-  ocultarErrores(): void {
-    // Implementar la lógica para ocultar los errores
-  }
-  /**
-   * Muestra los errores.
-   */
-  mostrarErrores(): void {
-    // Implementar la lógica para mostrar los errores
-  }
-
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
-
+/**
+   * @method crearFormCombinacion
+   * @description Método para crear el formulario formCombinacion.
+   */   
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -4,7 +4,7 @@ services:
     image: modulefederation-stps-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/stps/Dockerfile
+      dockerfile: apps/stps/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-stps-microfront
