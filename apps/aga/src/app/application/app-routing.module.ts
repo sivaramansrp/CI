@@ -255,7 +255,15 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
         (m) => m.RegistroTransportistaModule),
-  }
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+
+  },
 ];
 
 @NgModule({
