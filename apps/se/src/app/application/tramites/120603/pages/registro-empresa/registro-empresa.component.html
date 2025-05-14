@@ -1,0 +1,39 @@
+<div class="page">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Registro como Empresa en la Región Chetumal</h2>
+      </div>
+      <div *ngIf="showAlert && indice === 1" class="alert alert-danger" role="alert" (click)="onAlertClick()">
+        Corrija los siguientes errores: <br>
+     1.Domicilio donde se almacenaran las mercancias a importar es un campo requerido
+      </div>     
+      @if (nuevaNotificacion) { 
+        <section>
+        <lib-notificaciones  
+        [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimento($event)">
+        </lib-notificaciones>
+        </section>
+      }
+      <app-wizard [listaPasos]="pasos"></app-wizard>
+
+    </div>
+
+    <div class="row">
+      @switch (indice) {
+      @case (1) {
+      <paso-uno></paso-uno>
+      }
+      @case (2) {
+        <app-paso-dos></app-paso-dos>
+        }
+      @case (3) {
+      <app-paso-tres></app-paso-tres>
+      }
+      }
+
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    </div>
+  </div>
+</div>

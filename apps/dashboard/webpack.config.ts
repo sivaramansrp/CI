@@ -13,7 +13,8 @@ function getPublicPath() {
   if (process.env.NODE_ENV === 'production') {
     return 'https://front.v30.ultrasist.net/';
   } else {
-    return 'http://localhost:4200/';
+    // return 'http://localhost:4200/';
+    return 'https://front.v30.ultrasist.net/';
   }
 }
 
@@ -50,6 +51,10 @@ module.exports = {
           strictVersion: true,
           requiredVersion: 'auto'
         },
+        "@ng-mf/data-access-user": {
+              "singleton": false,
+              "import": "libs/shared/data-access-user/src/index.ts",
+          },
         ...sharedMappings.getDescriptors()
       })
     }),
