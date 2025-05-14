@@ -2837,8 +2837,8 @@
   {
     "id": 407,
     "tramite": 420101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registrar-proveedores/solicitud",
+    "linkDepartment": "/pago/registrar-proveedores/solicitud",
     "department": "aga"
   },
   {
@@ -3075,8 +3075,8 @@
   {
     "id": 441,
     "tramite": 32509,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-mercancia/desrtruccion-o-donacion",
+    "linkDepartment": "/pago/aviso-mercancia/desrtruccion-o-donacion",
     "department": "agace"
   },
   {
@@ -3124,8 +3124,8 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/acta-de-hechos/solicituds",
+    "linkDepartment": "/pago/acta-de-hechos/solicitud",
     "department": "agace"
   },
   {
@@ -3908,8 +3908,8 @@
   {
     "id": 560,
     "tramite": 240321,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/modificacion-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/modificacion-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {

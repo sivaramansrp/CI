@@ -321,7 +321,13 @@ const ROUTES: Routes = [
       import('./tramites/103/autorizacion-mercancia-donada.module').then(
         (m) => m.AutorizacionMercanciaDonadaModule
       ),
-  }
+  },
+  {
+    path: 'registrar-proveedores',
+    loadChildren: () =>
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
+  },
 ];
 
 @NgModule({

@@ -166,6 +166,13 @@ const ROUTES: Routes = [
       import(
         './tramites/240407/solicitud-prorroga-aviso-importacion.module'
       ).then((m) => m.SolicitudProrrogaAvisoImportacionModule),
+  },
+  {
+    path:'modificacion-exportacion',
+    loadChildren: () =>
+      import(
+        './tramites/240321/modificacion-exportacion.module'
+      ).then((m) => m.ModificacionExportacionModule),
   }
 ];
 
