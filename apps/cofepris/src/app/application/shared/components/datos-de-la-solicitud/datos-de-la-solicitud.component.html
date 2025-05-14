@@ -331,7 +331,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="pull-right ml-2">
-          <button
+          <button *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
@@ -497,11 +497,11 @@
             Modificar
           </button>
           <button
+          *ngIf="tablaMercanciasConfig.datos.length > 0"
             type="button"
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarMercancias()"
-            [disabled]="!this.tablaMercanciasLista.length"
           >
             Eliminar
           </button>
@@ -693,6 +693,22 @@
       </div>
     </ng-template>
   </form>
+</div>
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
+[ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
+<div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
+    <div class="modal-content">
+        <div class="modal-header" style="height: 50px;">
+        </div>
+        <div class="modal-body">
+            <p>{{ mensajeDeAlerta }}</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
+        </div>
+    </div>
+</div>
 </div>
 
 
