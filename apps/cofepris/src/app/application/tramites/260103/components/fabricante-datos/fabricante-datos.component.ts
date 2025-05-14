@@ -103,6 +103,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
+      id:[0],
       curp: [''],
       rfc: [''],
       nombreDescripcion: [''],
@@ -238,7 +239,11 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.agregarDatosForm.patchValue(data);
+        const DATOS_CON_ID = {
+        ...data,
+        id: Math.floor(100000 + Math.random() * 900000),
+      };
+        this.agregarDatosForm.patchValue(DATOS_CON_ID);
       });
   }
 

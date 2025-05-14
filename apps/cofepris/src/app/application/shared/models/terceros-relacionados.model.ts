@@ -13,6 +13,7 @@ export const MENSAJE_TABLA_OBLIGATORIA =
  * @description Representa los datos correspondientes a un fabricante.
  */
 export interface Fabricante {
+  id?:number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
