@@ -4,7 +4,7 @@ services:
     image: modulefederation-inbal-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/inbal/Dockerfile
+      dockerfile: apps/inbal/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-inbal-microfront
