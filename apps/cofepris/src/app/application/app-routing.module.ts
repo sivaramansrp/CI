@@ -526,6 +526,13 @@ const ROUTES: Routes = [
         ).then((m) => m.ImportacionMateriasPrimasModule),
 },
 {
+  path: 'importacion-plafest',
+  loadChildren: () =>
+    import('./tramites/260507/importacion-plafest.module').then(
+      (m) => m.ImportacionPlafestModule
+    ),
+},
+{
       path: 'medicamentos-donacion',
       loadChildren: () =>
         import('./tramites/260909/medicamentos-donacion.module').then(
