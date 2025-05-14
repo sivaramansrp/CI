@@ -73,7 +73,7 @@
     "id": 11,
     "tramite": 11105,
     "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -1319,7 +1319,7 @@
     "id": 189,
     "tramite": 11106,
     "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -2025,8 +2025,8 @@
   {
     "id": 290,
     "tramite": 80314,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/immex-modificacion-cambio-de-sector/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion-cambio-de-sector/registro-modificacion",
     "department": "se"
   },
   {
