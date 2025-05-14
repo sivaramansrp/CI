@@ -692,23 +692,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * También reinicia el formulario de la solicitud.
    */
   agregarSolicitud() {
-    this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((respuesta) => {
-        if (respuesta?.success) {
-          respuesta.datos.id = this.datosSolicitud.length + 1;
-          this.datosSolicitud = [...this.datosSolicitud, respuesta.datos];
-          this.store.setDatosSolicitud(this.datosSolicitud);
-          this.solicitudForm.patchValue({
-            fraccionArancelaria: this.solicitudState?.fraccionArancelaria,
-            cantidad: this.solicitudState?.cantidad,
-            cantidadLetra: this.solicitudState?.cantidadLetra,
-          });
-          this.solicitudForm.reset();
-          this.solicitudForm.markAsUntouched();
-          this.solicitudForm.markAsPristine();
-          this.cerrarModal();
-        }
-      });
+    if (this.agregarMercanciasForm.valid) {
+      this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta) => {
+          if (respuesta?.success) {
+            respuesta.datos.id = this.datosSolicitud.length + 1;
+            this.datosSolicitud = [...this.datosSolicitud, respuesta.datos];
+            this.store.setDatosSolicitud(this.datosSolicitud);
+            this.solicitudForm.patchValue({
+              fraccionArancelaria: this.solicitudState?.fraccionArancelaria,
+              cantidad: this.solicitudState?.cantidad,
+              cantidadLetra: this.solicitudState?.cantidadLetra,
+            });
+            this.solicitudForm.reset();
+            this.solicitudForm.markAsUntouched();
+            this.solicitudForm.markAsPristine();
+            this.cerrarModal();
+          }
+        });
+    } else {
+      this.agregarMercanciasForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -780,6 +784,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean | undefined {
+    const CONTROL = this.agregarMercanciasForm.get('datosMercancia')?.get(id);
+    // return CONTROL?.invalid && CONTROL?.touched;
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
   }
 
   /**
