@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Permiso de importación de plaguicidas por dependencias
+                y entidades de la administración pública con el propósito
+                de atender situaciones de emergencia declaradas
+                conforme a los ordenamientos legales aplicables</h4>
+        </div>
+        <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+    </div>
+    <div class="row">
+        @switch (indice) {
+        @case (1) {
+        <app-datos></app-datos>
+        } @case (2) {
+        <app-paso-dos></app-paso-dos>
+        } @case (3) {
+        <app-paso-tres></app-paso-tres>
+        }
+        }
+    </div>
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)">
+    </btn-continuar>
+    @if (indice === 1) {
+    <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    }
+</div>
