@@ -3075,8 +3075,8 @@
   {
     "id": 441,
     "tramite": 32509,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-mercancia/desrtruccion-o-donacion",
+    "linkDepartment": "/pago/aviso-mercancia/desrtruccion-o-donacion",
     "department": "agace"
   },
   {
