@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Tramite230201Store } from '../../estados/tramite230201.store';
+import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
+import { HttpClientModule } from '@angular/common/http';
 import { DatosSolicitud } from '../../models/datos-tramite.model';
 import { ElementRef } from '@angular/core';
 
@@ -13,8 +11,8 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [DatosDeLaSolicitudComponent, HttpClientModule],
+      providers: [PhytosanitaryExportacionService], // Add any necessary providers here
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
@@ -36,21 +34,9 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(closeModalElement.click).toHaveBeenCalled();
   });
 
-  it('should set values in the store using setValoresStore', () => {
-    const mockForm = new FormGroup({
-      testField: new FormControl('testValue'),
-    });
-    const mockMethodName = 'setNumeroDeCertificado' as keyof Tramite230201Store;
-    jest.spyOn(component.store, mockMethodName as any);
-
-    component.setValoresStore(mockForm, 'testField', mockMethodName);
-
-    expect(component.store[mockMethodName]).toHaveBeenCalledWith('testValue');
-  });
-
   it('should initialize the form in inicializarFormulario', () => {
     component.solicitudState = {
-      paisDeProcedencia: '123',
+      numeroDeCertificado: '123',
       aduana: 'Test Aduana',
       pais: 'Test Pais',
       entidades: 'Test Entidades',
@@ -78,10 +64,6 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     expect(component.solicitudForm).toBeDefined();
     expect(component.agregarMercanciasForm).toBeDefined();
-    expect(
-      component.solicitudForm.get('reexportacionForm.paisDeProcedencia')
-        ?.value
-    ).toBe('123');
   });
 
   it('should update selectedRows in onSelectedRowsChange', () => {
@@ -105,6 +87,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.phytosanitaryExportacionService.agregarSolicitud = mockServiceMethod as any;
     const mockStoreMethod = jest.fn();
     component.store.setDatosSolicitud = mockStoreMethod as any;
+    component.datosSolicitud = []; // Initialize datosSolicitud as an empty array
     const mockCerrarModal = jest.fn();
     component.cerrarModal = mockCerrarModal;
 

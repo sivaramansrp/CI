@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { of } from 'rxjs';
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
@@ -17,22 +17,27 @@ describe('PagoDeDerechoComponent', () => {
 
   beforeEach(() => {
     mockMedioDeTransporteService = {
-      getMedioDeTransporte: jest.fn(),
+      getMedioDeTransporte: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Banco 1' }] })),
     };
 
     mockSolicitudQuery = {
       selectSolicitud$: of({
         claveDeReferencia: 'REF123',
-        cadenaDependencia: 'DEPENDENCIA',
+        cadenaPagoDependencia: 'DEPENDENCIA',
         banco: 'BANCO',
         llaveDePago: 'LLAVE',
-        fechaPago: '2025-03-20',
-        importePago: 1000,
+        fecPago: '2025-03-20',
+        impPago: 1000,
       }),
     };
 
     mockSolicitudStore = {
-      set: jest.fn(),
+      setClaveDeReferencia: jest.fn(),
+      setCadenaPagoDependencia: jest.fn(),
+      setBanco: jest.fn(),
+      setllaveDePago: jest.fn(),
+      setFecPago: jest.fn(),
+      setImpPago: jest.fn(),
     };
 
     mockValidacionesService = {
@@ -40,8 +45,7 @@ describe('PagoDeDerechoComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [PagoDeDerechoComponent],
+      imports: [ReactiveFormsModule,PagoDeDerechoComponent],
       providers: [
         FormBuilder,
         { provide: MediodetransporteService, useValue: mockMedioDeTransporteService },
@@ -53,5 +57,65 @@ describe('PagoDeDerechoComponent', () => {
 
     fixture = TestBed.createComponent(PagoDeDerechoComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should fetch banco data on initialization', () => {
+    component.fetchBancoData();
+    expect(mockMedioDeTransporteService.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
+  });
+
+  it('should initialize FormSolicitud on ngOnInit', () => {
+    component.ngOnInit();
+
+    expect(component.FormSolicitud.get('pagodeDerechos.claveDeReferencia')?.value).toBe('REF123');
+    expect(component.FormSolicitud.get('pagodeDerechos.cadenaPagoDependencia')?.value).toBe('DEPENDENCIA');
+    expect(component.FormSolicitud.get('pagodeDerechos.banco')?.value).toBe('BANCO');
+    expect(component.FormSolicitud.get('pagodeDerechos.llaveDePago')?.value).toBe('LLAVE');
+    expect(component.FormSolicitud.get('pagodeDerechos.fecPago')?.value).toBe('2025-03-20');
+    expect(component.FormSolicitud.get('pagodeDerechos.impPago')?.value).toBe(1000);
+  });
+
+  it('should validate form fields correctly', () => {
+    const form = new FormGroup({
+      claveDeReferencia: new FormControl(''),
+    });
+
+    const result = component.isValid(form, 'claveDeReferencia');
+    expect(mockValidacionesService.isValid).toHaveBeenCalledWith(form, 'claveDeReferencia');
+    expect(result).toBe(true);
+  });
+
+  it('should set values in the store using setValoresStore', () => {
+    const form = new FormGroup({
+      claveDeReferencia: new FormControl('REF123'),
+    });
+
+    component.setValoresStore(form, 'claveDeReferencia', 'setClaveDeReferencia');
+    expect(mockSolicitudStore.setClaveDeReferencia).toHaveBeenCalledWith('REF123');
+  });
+
+  it('should clean up observables on ngOnDestroy', () => {
+    const destroyedNextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const destroyedCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroyNotifierNextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroyedNextSpy).toHaveBeenCalledWith(true);
+    expect(destroyedCompleteSpy).toHaveBeenCalled();
+    expect(destroyNotifierNextSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should return pagodeDerechos form group', () => {
+    const result = component.pagodeDerechos;
+    expect(result).toBe(component.FormSolicitud.get('pagodeDerechos'));
   });
 });
