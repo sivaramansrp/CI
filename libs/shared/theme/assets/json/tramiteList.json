@@ -765,8 +765,8 @@
   {
     "id": 110,
     "tramite": 260911,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-de-dispositivos/permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-de-dispositivos/permiso-sanitario",
     "department": "cofepris"
   },
   {
