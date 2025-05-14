@@ -65,12 +65,10 @@
     });
   
     it('should toggle isManualSelected and CargaMasiva in setManual', () => {
-      // Test when isManual is set to true
       component.setManual(true);
       expect(component.isManualSelected).toBe(true);
       expect(component.CargaMasiva).toBe(false);
     
-      // Test when isManual is set to false
       component.setManual(false);
       expect(component.isManualSelected).toBe(false);
       expect(component.CargaMasiva).toBe(true);

@@ -4,7 +4,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Modelo de estado para el trámite 40402.
+ * Modelo de estado para el trámite 11101.
  */
 export interface Tramitenacionales11101State {
   /**
