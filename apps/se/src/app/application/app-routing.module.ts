@@ -551,7 +551,8 @@ const ROUTES: Routes = [
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
-  },{
+  },
+  {
     path: 'asignacion-directa-cupo-personas-fisicas',
     loadChildren: () =>
       import(
