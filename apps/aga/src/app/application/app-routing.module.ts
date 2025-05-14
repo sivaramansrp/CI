@@ -322,6 +322,13 @@ const ROUTES: Routes = [
         (m) => m.ExencionImpuestosModule
       ),
   },
+  {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
+      ),
+  },
 ];
 
 @NgModule({
