@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/agriculture
 
 # Build the application
-RUN npx nx build agriculture --configuration=production --skip-nx-cache --verbose
+RUN npx nx build agriculture --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/agriculture" && test -f "/app/dist/apps/agriculture/index.html" || exit 1

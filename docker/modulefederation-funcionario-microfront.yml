@@ -4,7 +4,7 @@ services:
     image: modulefederation-funcionario-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/funcionario/Dockerfile
+      dockerfile: apps/funcionario/Dockerfile.dev
     container_name: modulefederation-funcionario-microfront
     restart: on-failure
     expose:

@@ -4,7 +4,7 @@ services:
     image: modulefederation-inah-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/inah/Dockerfile
+      dockerfile: apps/inah/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-inah-microfront
