@@ -59,7 +59,7 @@
     "id": 9,
     "tramite": 10301,
     "linkDashboard": "/aga/importador-exportador/solicitud",
-    "linkDepartment": "/aga/importador-exportador/solicitud",
+    "linkDepartment": "/pago/importador-exportador/solicitud",
     "department": "aga"
   },
   {
@@ -724,7 +724,7 @@
     "id": 104,
     "tramite": 290201,
     "linkDashboard": "/amecafe/registrar-solicitud/solicitud",
-    "linkDepartment": "/amecafe/registrar-solicitud/solicitud",
+    "linkDepartment": "/pago/registrar-solicitud/solicitud",
     "department": "amecafe"
   },
   {
@@ -800,8 +800,8 @@
   {
     "id": 115,
     "tramite": 110207,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/reportes/solicitud",
+    "linkDepartment": "/pago/reportes/solicitud",
     "department": "se"
   },
   {
@@ -849,8 +849,8 @@
   {
     "id": 122,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
@@ -947,8 +947,8 @@
   {
     "id": 136,
     "tramite": 32605,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/importador-y-o-exportador/solicitud",
+    "linkDepartment": "/pago/importador-y-o-exportador/solicitud",
     "department": "agace"
   },
   {
@@ -982,8 +982,8 @@
   {
     "id": 141,
     "tramite": 32506,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-destruccion/solicitante",
+    "linkDepartment": "/pago/aviso-destruccion/solicitante",
     "department": "agace"
   },
   {
@@ -1228,7 +1228,7 @@
     "id": 176,
     "tramite": 260702,
     "linkDashboard": "/cofepris/registrar-solicitud-mcp/registro",
-    "linkDepartment": "/cofepris/registrar-solicitud-mcp/registro",
+    "linkDepartment": "/pago/registrar-solicitud-mcp/registro",
     "department": "cofepris"
   },
   {
@@ -1906,8 +1906,8 @@
   {
     "id": 273,
     "tramite": 230202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/phytosanitary-rexportation/solicitud",
+    "linkDepartment": "/pago/phytosanitary-rexportation/solicitud",
     "department": "semarnat"
   },
   {
@@ -1983,8 +1983,8 @@
   {
     "id": 284,
     "tramite": 290301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+   "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
+   "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
     "department": "amecafe"
   },
   {
@@ -2095,8 +2095,8 @@
   {
     "id": 300,
     "tramite": 6402,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/autorizacion-importacion/solicitante",
+    "linkDepartment": "/pago/autorizacion-importacion/solicitante",
     "department": "aga"
   },
   {
@@ -2228,8 +2228,8 @@
   {
     "id": 319,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+   "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
@@ -2312,8 +2312,8 @@
   {
     "id": 332,
     "tramite": 324,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/tecnologicos/solicitud",
+    "linkDepartment": "/pago/tecnologicos/solicitud",
     "department": "aga"
   },
   {
@@ -3201,8 +3201,8 @@
   {
     "id": 459,
     "tramite": 260919,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importar-de-remedios-herbals/permiso-remedios-herbals",
+    "linkDepartment": "/pago/importar-de-remedios-herbals/permiso-remedios-herbals",
     "department": "cofepris"
   },
   {
@@ -4194,9 +4194,23 @@
   },
   {
     "id": 601,
+    "tramite": 120603,
+    "linkDashboard": "/se/registro-como-expresa/registro-empresa",
+    "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
+     "department": "se"
+},
+  {
+    "id": 602,
     "tramite": 231002,
     "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
     "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
     "department": "semarnat"
+  },
+  {
+     "id": 602,
+    "tramite": 120403,
+    "linkDashboard": "se/cupos/solicitud",
+    "linkDepartment": "/pago/cupos/solicitud",
+    "department": "se"
   }
 ]

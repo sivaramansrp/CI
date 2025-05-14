@@ -280,6 +280,18 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
 
     path: 'autorizacion-importacion-temporal',
     loadChildren: () =>
@@ -290,7 +302,8 @@ const ROUTES: Routes = [
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule),
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
   }
 ];
 

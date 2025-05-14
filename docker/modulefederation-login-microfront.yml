@@ -4,7 +4,7 @@ services:
     image: modulefederation-login-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/login/Dockerfile
+      dockerfile: apps/login/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-login-microfront

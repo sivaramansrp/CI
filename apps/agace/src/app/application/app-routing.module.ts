@@ -91,6 +91,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-destruccion',
+    loadChildren: () =>
+      import('./tramites/32506/aviso-destruccion.module').then(
+        (m) => m.AvisoDestruccionModule
+      ),
+  },
+  {
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
@@ -148,6 +155,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
         (m) => m.EntregaActaModule
+      ),
+  },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
       ),
   },
   {
