@@ -59,7 +59,7 @@
     "id": 9,
     "tramite": 10301,
     "linkDashboard": "/aga/importador-exportador/solicitud",
-    "linkDepartment": "/aga/importador-exportador/solicitud",
+    "linkDepartment": "/pago/importador-exportador/solicitud",
     "department": "aga"
   },
   {
@@ -2312,8 +2312,8 @@
   {
     "id": 332,
     "tramite": 324,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/tecnologicos/solicitud",
+    "linkDepartment": "/pago/tecnologicos/solicitud",
     "department": "aga"
   },
   {

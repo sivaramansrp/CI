@@ -280,6 +280,12 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
     path: 'autorizacion-importacion',
     loadChildren: () =>
       import('./tramites/6402/autorizacion-importacion.module').then(
