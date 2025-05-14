@@ -6,12 +6,13 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - host: front.v30.ultrasist.net
     http:
       paths:
-      - path: /inbal
+      - path: /inbal(/|$)(.*)
         pathType: Prefix
         backend:
           service:

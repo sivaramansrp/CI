@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { ESTADO_REGISTRO, TEXTO_FILA_REGISTRO } from '../../../tramites/constantes/constantes';
 import { TablaAcciones, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 
@@ -132,6 +133,8 @@ export class TablaDinamicaComponent<T> {
    * Almacena un array de los indices de las acciones para la tabla definidos en el enum TablaAcciones
    */
   public accionesEnum = TablaAcciones;
+
+  public batonValor:string=ESTADO_REGISTRO.BAJA
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
@@ -227,5 +230,29 @@ export class TablaDinamicaComponent<T> {
    */
   cambiarValor(row: T): void {
     this.alternarValor.emit(row);
+  }
+
+
+/**
+ * Obtiene el texto del botón basado en el estado de la fila proporcionada.
+ *
+ * @param fila - Objeto que representa una fila, el cual puede contener la propiedad `desEstatus`.
+ * @returns El valor del botón (`batonValor`) basado en el estado de la fila.
+ *
+ * @remarks
+ * Si la propiedad `desEstatus` de la fila es igual a `TEXTO_FILA_REGISTRO.BAJA`,
+ * el valor del botón (`batonValor`) se establece en `ESTADO_REGISTRO.ACTIVAR`.
+ */
+// 'fila' proviene de tablas con tipos de fila variables; solo algunas tienen 'desEstatus'.
+// Se usa 'any' para permitir acceso flexible en este componente compartido.
+// El encadenamiento opcional garantiza seguridad en tiempo de ejecución.
+// El uso de 'any' es intencional y limitado a este método.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+obtenerTextoBoton(fila:any):string{
+ if(fila?.desEstatus && fila?.desEstatus===TEXTO_FILA_REGISTRO.BAJA){
+     this.batonValor=ESTADO_REGISTRO.ACTIVAR
+  }
+  return this.batonValor
+ 
   }
 }

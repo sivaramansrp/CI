@@ -13,8 +13,27 @@ import { Component } from '@angular/core';
   styleUrl: './complementar-fraccion-vista.component.scss',
 })
 export class ComplementarFraccionVistaComponent {
+  /**
+   * Propiedad que almacena los datos complementarios relacionados con la fracción.
+   * 
+   * @type {ComplimentarFraccionResoponse}
+   * @public
+   */
   public complimentarDatos!: ComplimentarFraccionResoponse;
+  /**
+   * Datos seleccionados de la categoría que se utilizan para complementar la fracción.
+   * Esta propiedad almacena un arreglo de objetos del tipo `Catalogo`, 
+   * inicializado con los datos definidos en `COMPLEMENTAR_FRACCION_CATALOGO_DATOS`.
+   */
   public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
+  /**
+   * Datos utilizados para complementar la fracción en el componente.
+   * 
+   * @type {ComplimentarFraccion}
+   * @constant
+   * @description Esta propiedad contiene los datos necesarios para complementar 
+   * la fracción, utilizando la constante `COMPLEMENTAR_FRACCION_DATOS`.
+   */
   public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
   /**

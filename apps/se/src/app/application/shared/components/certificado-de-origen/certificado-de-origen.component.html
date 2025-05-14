@@ -85,36 +85,85 @@
             <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
+        
         <div class="col-md-4 form-field">
             <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
         <div class="row w-100">
-            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
-            </div>
+            @if(mercanciasDisponibles){
+                <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                    <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
+                </div>
+            } @else {
+                <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                    <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+                </div>
+            }
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <ng-titulo titulo="Mercancías disponibles" />
-
+          @if (mercanciasDisponibles) {
+            <div class="row">
+                <div class="col-md-12 my-3">
+                    <label for="mercancíasDisponibles" class="form-label">Mercancías disponibles</label>
+                </div>
             </div>
-        </div>
+          } @else {
+            <div class="row">
+                <div class="col-md-12">
+                    <ng-titulo titulo="Mercancías disponibles" />
+
+                </div>
+            </div>
+          }
+  
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+        
+            @if (cargoDeMercancias) {
+                <div class="row">
+                    <div class="col-md-12">
+                        <ng-titulo titulo="Carga de mercancías por archivo" />
+                    </div>
+                </div>
 
+                <div class="row d-flex justify-content-end">
+                    <div class="col-12 container text-end">
+                      <button class="btn btn-primary my-5">Carga por archivo</button>
+                    </div>
+                </div>
+
+                <div class="my-5">
+                    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+                </div>
+            }
             
             @if(tablaSeleccionEvent){
-            <div class="row">
-                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
-                [datos]="guardarClicado || []"  ></app-tabla-dinamica>
-              </div>
+
+                @if (mercanciasDisponibles) {
+                <div class="row">
+                    <div class="col-md-12 my-3">
+                        <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
+                    </div>
+                </div>
+                }
+
+                @if (mercanciasDisponibles) {
+                    <div class="row">
+                        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
+                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"></app-tabla-dinamica>                     
+                    </div>
+                } @else {
+                    <div class="row">
+                        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
+                        [datos]="guardarClicado || []"  ></app-tabla-dinamica>
+                    </div>
+                }
 
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
-                    <button class="btn btn-default me-2">Eliminar</button>
+                    <button class="btn btn-default me-2"(click)="eliminarSeleccionados()">Eliminar</button>
                     <button class="btn btn-primary"  (click)="abrirModal(tableData[0])">Modificar</button>
                   </div>
               </div>
