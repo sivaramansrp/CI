@@ -431,6 +431,12 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {path: 'reportes',
+    loadChildren:() =>
+      import('./tramites/110207/reportes.module').then(
+        (m) => m.ReportesModule
+      )
+  },
   {
     path: 'catalogos',
     loadChildren: () =>
@@ -507,6 +513,29 @@ const ROUTES: Routes = [
         (m) => m.ProsecModule
       ),
   },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120403/cupos.module').then(
+        (m) => m.CuposModule
+      ),
+  },
+{
+    path: 'informe-anual-programa',
+    loadChildren: () =>
+      import('./tramites/150103/informe-anual-programa.module').then(
+        (m) => m.InformeAnualProgramaModule
+      ),
+  },
+  {
+
+    path: 'registro-como-expresa',
+    loadChildren: () =>
+      import('./tramites/120603/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+
   {
     path: 'modalidad-terciarización',
     loadChildren: () =>

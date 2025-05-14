@@ -169,11 +169,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'attention-Of-Renewal',
+    path: 'atencion-de-renovacion',
     loadChildren: () =>
-      import('./tramites/40403/atencionDeRenovacion.module').then(
+      import('./tramites/40403/atencion-de-renovacion.module').then(
         (m) => m.AtencionDeRenovacionModule
-
       ),
   },
   {
@@ -280,6 +279,18 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
 
     path: 'autorizacion-importacion-temporal',
     loadChildren: () =>
@@ -291,6 +302,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
         (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
   }
 ];
 
