@@ -308,6 +308,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/6403/retorno-de-partes.module').then(
         (m) => m.RetornoDePartesModule),
+  },
+  {
+    path: 'operaciones-de-comercio',
+    loadChildren: () =>
+      import('./tramites/319/operaciones-de-comercio-exterior.module').then(
+        (m) => m.OperacionesDeComercioExteriorModule)
   }
 ];
 

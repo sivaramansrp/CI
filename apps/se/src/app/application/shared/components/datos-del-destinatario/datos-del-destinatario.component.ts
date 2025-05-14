@@ -15,9 +15,9 @@ export class DatosDelDestinatarioComponent implements OnDestroy {
 
   /**
    * Datos del formulario para inicializar los valores
-   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @type { [key: string]: unknown }
    */
-  @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+  @Input() datosForm!:{ [key: string]: unknown };
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
