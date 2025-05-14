@@ -1,6 +1,5 @@
-<div class="container">
+  <form [formGroup]="datosDelTramiteForm">
     <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
-    <form [formGroup]="datosDelTramiteForm">
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="opcionesDeRegimen" [label]="'Régimen'" [required]="true"
@@ -14,4 +13,3 @@
             </div>
         </div>
     </form>
-</div>

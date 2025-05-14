@@ -1,6 +1,5 @@
-<div class="container">
-    <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
     <form [formGroup]="formularioRepresentacionFederalForm">
+    <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select (change)="setValoresStore(formularioRepresentacionFederalForm,'estado')" [catalogo]="opcionesEstado"
@@ -16,4 +15,3 @@
 
         </div>
     </form>
-</div>
