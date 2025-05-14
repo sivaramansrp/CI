@@ -71,14 +71,39 @@ export const CONFIGURACION_SERVICIO = [
     },
 ]
 
+/**
+ * Representa la información de un servicio.
+ *
+ * @interface ServicioInfo
+ * @property {string} descripcionDelServicio - Descripción detallada del servicio.
+ * @property {string} tipoDeServicio - Tipo o categoría del servicio.
+ * @property {boolean} estatus - Indica si el servicio está activo (true) o inactivo (false).
+ */
 export interface ServicioInfo {
     descripcionDelServicio: string;
     tipoDeServicio: string;
     estatus: boolean;
 }
 
+/**
+ * Representa la configuración de una columna en una tabla.
+ * @typeParam T - Tipo genérico que representa el tipo de datos de la columna.
+ */
 export interface ConfiguracionColumna<T> {
+    /**
+     * Encabezado de la columna.
+     */
     encabezado: string;
+
+    /**
+     * Función que obtiene el valor de la clave de un elemento.
+     * @param ele - Elemento del tipo genérico T.
+     * @returns Valor de la clave que puede ser string, number, undefined o boolean.
+     */
     clave: (ele: T) => string | number | undefined | boolean;
+
+    /**
+     * Orden de la columna en la tabla.
+     */
     orden: number;
 }
