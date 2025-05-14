@@ -93,8 +93,8 @@
   {
     "id": 14,
     "tramite": 11204,
-    "linkDashboard": "/aga/transferencia-contenedores/solicitud",
-    "linkDepartment": "/pago/transferencia-contenedores/solicitud",
+    "linkDashboard": "/aga/transferencia-contenedores/solicitante",
+    "linkDepartment": "/pago/transferencia-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -899,7 +899,7 @@
     "id": 129,
     "tramite": 10302,
     "linkDashboard": "/aga/exencion-impuestos/solicitud",
-    "linkDepartment": "/aga/exencion-impuestos/solicitud",
+    "linkDepartment": "/pago/exencion-impuestos/solicitud",
     "department": "aga"
   },
   {
