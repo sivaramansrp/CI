@@ -59,7 +59,7 @@
     "id": 9,
     "tramite": 10301,
     "linkDashboard": "/aga/importador-exportador/solicitud",
-    "linkDepartment": "/aga/importador-exportador/solicitud",
+    "linkDepartment": "/pago/importador-exportador/solicitud",
     "department": "aga"
   },
   {
