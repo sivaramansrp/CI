@@ -4198,5 +4198,14 @@
     "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
     "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
     "department": "semarnat"
+  },
+  {
+    "id": 602,
+    "tramite": 140205,
+    "linkDashboard": "/se/cancelaciones-certificado/solicitud",
+    "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
+    "department": "se"
   }
+
+
 ]
