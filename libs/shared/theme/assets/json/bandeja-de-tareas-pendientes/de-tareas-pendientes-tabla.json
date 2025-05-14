@@ -1,4 +1,5 @@
 [
+    
     {
         "folioTramite": "12345",
         "tipoDeTramite": "Solicitud",
@@ -7,8 +8,7 @@
         "estadoDeTramite": "En Proceso",
         "departamento": "Recursos Humanos",
         "numeroDeProcedimiento": "301",
-        "origin": "FLUJO_FUNCIONARIO_EVALUAR",
-        "acciones": "T"
+        "origin": "FLUJO_FUNCIONARIO_EVALUAR"
     },
     {
         "folioTramite": "67890",
@@ -23,7 +23,7 @@
     {
         "folioTramite": "54321",
         "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Funcionario de informes",
+        "nombreDeLaTarea": "Atender requerimiento",
         "fechaDeAsignacion": "2023-10-03",
         "estadoDeTramite": "Completado",
         "departamento": "Administración",
@@ -33,7 +33,7 @@
     {
         "folioTramite": "98765",
         "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Actualización de base de datos",
+        "nombreDeLaTarea": "Authorizar solicitud",
         "fechaDeAsignacion": "2023-10-04",
         "estadoDeTramite": "En Proceso",
         "departamento": "Tecnología de la Información",
@@ -43,7 +43,7 @@
     {
         "folioTramite": "13579",
         "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "confirmar resolución",
+        "nombreDeLaTarea": "confirmar notificación de resolución",
         "fechaDeAsignacion": "2023-10-05",
         "estadoDeTramite": "Pendiente",
         "departamento": "Recursos Humanos",
