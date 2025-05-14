@@ -2200,8 +2200,8 @@
   {
     "id": 315,
     "tramite": 90302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/programa-prosec/registro",
+    "linkDepartment": "/pago/programa-prosec/registro",
     "department": "se"
   },
   {
@@ -2249,8 +2249,8 @@
   {
     "id": 323,
     "tramite": 110205,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-certificado/peru",
+    "linkDepartment": "/pago/validar-certificado/peru",
     "department": "se"
   },
   {
