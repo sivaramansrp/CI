@@ -88,15 +88,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   @Input() mercanciasDisponibles!: boolean;
 
   /**
-<<<<<<< HEAD
    * Propiedad de entrada que representa el estado del formulario histórico.
    * @type {FormularioSi}
    */
   @Input() tramiteState: FormularioSi = {};
 
   /**
-=======
->>>>>>> c534d5c26497bd256912bb4d2f2a533ae18c2615
    * Propiedad de entrada que recibe los datos de los tratados/acuerdos.
    * @type {Catalogo[]}
    */
