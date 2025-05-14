@@ -11,6 +11,8 @@ import {
 } from '@angular/forms';
 import {
   Notificacion,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_RFC_FISICA,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -132,14 +134,14 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
+      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
       denominacion: [
         { value: this.solicitudState?.denominacion, disabled: true },
         Validators.required,
       ],
       correo: [
         { value: this.solicitudState?.correo, disabled: true },
-        Validators.required,
+        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
       ],
     });
   }
