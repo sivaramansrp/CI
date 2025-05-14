@@ -9,7 +9,7 @@
     <!-- Renderizar Tablas Dinámicamente Basadas en una Orden -->
     <div *ngFor="let tabla of getSortedTablas()">
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
-        <h5>Fabricante:</h5>
+        <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
         </div>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
-        <h5>Formulador:</h5>
+        <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData"></ng-table>
         </div>
@@ -43,7 +43,7 @@
       </div>
 
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
-        <h5>Proveedor:</h5>
+        <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"></ng-table>
         </div>
