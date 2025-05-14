@@ -4,7 +4,7 @@ services:
     image: modulefederation-agace-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agace/Dockerfile
+      dockerfile: apps/agace/Dockerfile.dev
     container_name: modulefederation-agace-microfront
     restart: on-failure
     expose:

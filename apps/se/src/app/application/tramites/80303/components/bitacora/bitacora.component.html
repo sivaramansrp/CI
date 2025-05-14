@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="row mt-5">
+    <ng-titulo titulo="Bitácora"></ng-titulo>
+  </div>
+  <div class="row">
+    <app-tabla-dinamica
+      [configuracionTabla]="bitacoraTablaConfiguracion.configuracionTabla"
+      [datos]="bitacoraTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+</div>
