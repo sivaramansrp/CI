@@ -16,6 +16,20 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
 
+/**
+ * Componente para gestionar las empresas subfabricantes.
+ * Este componente permite realizar operaciones como agregar, eliminar y complementar plantas subfabricantes,
+ * así como manejar la selección de registros en tablas y gestionar formularios relacionados con los datos del subcontratista.
+ *
+ * @class EmpresasSubfabricanteComponent
+ * @implements {OnDestroy, OnInit}
+ * @selector app-empresas-subfabricante
+ * @standalone true
+ * @imports [CommonModule, EmpresasSubfabricantesComponent]
+ * @templateUrl ./empresas-subfabricante.component.html
+ * @styleUrl ./empresas-subfabricante.component.scss
+ * @host { hostID: crypto.randomUUID().toString() }
+ */
 @Component({
   selector: 'app-empresas-subfabricante',
   standalone: true,
@@ -26,6 +40,13 @@ import { takeUntil } from 'rxjs';
 })
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
 
+  /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Este valor se utiliza para determinar qué pestaña está activa.
+   * 
+   * @type {number}
+   * @default 0
+   */
   @Input() tabIndex: number = 0;
 
   /**

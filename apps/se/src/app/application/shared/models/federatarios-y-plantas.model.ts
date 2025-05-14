@@ -1,15 +1,46 @@
+
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
+/**
+ * Representa la configuración para Federatarios y Plantas.
+ * 
+ * @template T - El tipo genérico que se utilizará para las columnas de la tabla.
+ * 
+ * @property {TablaSeleccion} TablaSeleccion - Configuración de la tabla de selección.
+ * @property {ConfiguracionColumna<T>[]} TablaEncabezado - Configuración de las columnas del encabezado de la tabla.
+ */
 export interface FederatariosYPlantasConfiguration<T> {
   TablaSeleccion: TablaSeleccion;
   TablaEncabezado: ConfiguracionColumna<T>[];
 }
 
+/**
+ * Representa la configuración para un componente de tipo "Expresas".
+ * 
+ * @template T - El tipo genérico que se utilizará para las columnas de la tabla.
+ * 
+ * @property {TablaSeleccion} TablaSeleccion - Configuración de la tabla de selección.
+ * @property {ConfiguracionColumna<T>[]} TablaEncabezado - Configuración de las columnas del encabezado de la tabla.
+ */
 export interface ExpresasConfiguration<T> {
   TablaSeleccion: TablaSeleccion;
   TablaEncabezado: ConfiguracionColumna<T>[];
 }
+/**
+ * Representa el encabezado de un federatario, incluyendo información personal y de su acta notarial.
+ *
+ * @interface FederatariosEncabezado
+ * 
+ * @property {string} nombre - Nombre del federatario.
+ * @property {string} primerApellido - Primer apellido del federatario.
+ * @property {string} segundoApellido - Segundo apellido del federatario.
+ * @property {string} numeroDeActa - Número del acta asociada al federatario.
+ * @property {string} fechaDelActa - Fecha en que se emitió el acta.
+ * @property {string} numeroDeNotaria - Número de la notaría a la que pertenece el federatario.
+ * @property {string} entidadFederativa - Entidad federativa donde se encuentra la notaría.
+ * @property {string} municipioODelegacion - Municipio o delegación donde se encuentra la notaría.
+ */
 export interface FederatariosEncabezado {
   nombre: string;
   primerApellido: string;
@@ -21,6 +52,22 @@ export interface FederatariosEncabezado {
   municipioODelegacion: string;
 }
 
+/**
+ * Constante que define una lista de encabezados y claves asociadas para los datos de federatarios.
+ * 
+ * Cada objeto en la lista representa un encabezado de columna y su clave asociada, que se utiliza
+ * para acceder a los valores correspondientes en un objeto de tipo `FederatariosEncabezado`.
+ * 
+ * Propiedades de cada objeto:
+ * - `encabezado`: Nombre del encabezado que se mostrará en la interfaz de usuario.
+ * - `clave`: Función que toma un objeto de tipo `FederatariosEncabezado` y devuelve el valor correspondiente
+ *   para esa columna.
+ * - `orden`: Número que indica el orden en el que se deben mostrar los encabezados.
+ * 
+ * Uso:
+ * Esta constante puede ser utilizada para generar dinámicamente tablas o listas basadas en los datos
+ * de federatarios, asegurando un mapeo consistente entre los encabezados y los valores de los datos.
+ */
 export const FEDERATARIOS = [
   {
     encabezado: 'Nombre(s)',
@@ -64,6 +111,22 @@ export const FEDERATARIOS = [
   },
 ];
 
+/**
+ * Representa la información de las plantas disponibles.
+ * 
+ * @property calle - Nombre de la calle donde se encuentra la planta.
+ * @property numeroExterior - Número exterior del domicilio de la planta.
+ * @property numeroInterior - Número interior del domicilio de la planta.
+ * @property codigoPostal - Código postal del domicilio de la planta.
+ * @property localidad - Localidad donde se encuentra la planta.
+ * @property colonia - Colonia donde se encuentra la planta.
+ * @property municipioODelegacion - Municipio o delegación donde se encuentra la planta.
+ * @property entidadFederativa - Entidad federativa donde se encuentra la planta.
+ * @property pais - País donde se encuentra la planta.
+ * @property registroFederalDeContribuyentes - RFC de la planta.
+ * @property domicilioFiscalDelSolicitante - Domicilio fiscal del solicitante asociado a la planta.
+ * @property razonSocial - Razón social de la planta.
+ */
 export interface PlantasDisponibles {
   calle: string;
   numeroExterior: string;
@@ -79,6 +142,18 @@ export interface PlantasDisponibles {
   razonSocial: string;
 }
 
+/**
+ * Constante que define una lista de objetos que representan las columnas disponibles
+ * para la visualización de información de plantas disponibles. Cada objeto contiene:
+ * 
+ * - `encabezado`: El nombre de la columna que se mostrará en la interfaz de usuario.
+ * - `clave`: Una función que toma un objeto de tipo `PlantasDisponibles` y devuelve
+ *   el valor correspondiente a la columna.
+ * - `orden`: Un número que indica el orden en el que se deben mostrar las columnas.
+ * 
+ * Esta estructura es utilizada para mapear los datos de las plantas disponibles
+ * a una representación tabular en la interfaz de usuario.
+ */
 export const PLANTAS_DIPONIBLES = [
   {
     encabezado: 'Calle',
@@ -144,6 +219,25 @@ export const PLANTAS_DIPONIBLES = [
   },
 ];
 
+/**
+ * Representa la información de una planta IMMEX.
+ *
+ * @interface PlantasImmex
+ * 
+ * @property {string} planta - Nombre de la planta.
+ * @property {string} calle - Calle donde se encuentra la planta.
+ * @property {string} numeroExterior - Número exterior del domicilio de la planta.
+ * @property {string} numeroInterior - Número interior del domicilio de la planta.
+ * @property {string} codigoPostal - Código postal del domicilio de la planta.
+ * @property {string} localidad - Localidad donde se encuentra la planta.
+ * @property {string} colonia - Colonia donde se encuentra la planta.
+ * @property {string} delegacionMunicipio - Delegación o municipio donde se encuentra la planta.
+ * @property {string} entidadFederativa - Entidad federativa (estado) donde se encuentra la planta.
+ * @property {string} pais - País donde se encuentra la planta.
+ * @property {string} registroFederalDeContribuyentes - Registro Federal de Contribuyentes (RFC) asociado a la planta.
+ * @property {string} domicilioDelSolicitante - Domicilio del solicitante relacionado con la planta.
+ * @property {string} razonSocial - Razón social de la planta o del solicitante.
+ */
 export interface PlantasImmex {
   planta: string;
   calle: string;
@@ -160,6 +254,14 @@ export interface PlantasImmex {
   razonSocial: string;
 }
 
+/**
+ * Representa la información de una empresa extranjera.
+ *
+ * @property {string} taxId - Identificador fiscal de la empresa.
+ * @property {string} nombreDelEmpresa - Nombre de la empresa.
+ * @property {string} pais - País donde se encuentra la empresa.
+ * @property {string} direccion - Dirección física de la empresa.
+ */
 export interface EmpresasEXtranjeras {
   taxId: string;
   nombreDelEmpresa: string;
@@ -168,6 +270,23 @@ export interface EmpresasEXtranjeras {
 }
 
 
+/**
+ * Constante que define una lista de configuraciones para las propiedades de las plantas IMMEX.
+ * Cada elemento de la lista contiene información sobre el encabezado, la clave para acceder
+ * a la propiedad correspondiente de un objeto `PlantasImmex` y el orden en el que debe aparecer.
+ *
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: PlantasImmex) => string; orden: number }>}
+ *
+ * @property {string} encabezado - El título o nombre que se mostrará como encabezado en la representación de la propiedad.
+ * @property {(ele: PlantasImmex) => string} clave - Una función que toma un objeto `PlantasImmex` y devuelve el valor de la propiedad correspondiente.
+ * @property {number} orden - El orden en el que esta propiedad debe aparecer en la lista.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * const encabezados = PLANTAS_IMMEX.map(item => item.encabezado);
+ * const valores = PLANTAS_IMMEX.map(item => item.clave(miObjetoPlantasImmex));
+ */
 export const PLANTAS_IMMEX: {
   encabezado: string;
   clave: (ele: PlantasImmex) => string;
@@ -240,6 +359,22 @@ export const PLANTAS_IMMEX: {
   },
 ];
 
+/**
+ * Constante que define una lista de configuraciones para representar información
+ * de empresas extranjeras en una tabla o estructura similar.
+ * 
+ * Cada objeto en la lista contiene:
+ * - `encabezado`: El título de la columna que se mostrará.
+ * - `clave`: Una función que toma un objeto de tipo `EmpresasEXtranjeras` y devuelve
+ *   el valor correspondiente para esa columna.
+ * - `orden`: El orden en el que se debe mostrar la columna.
+ * 
+ * Propiedades:
+ * - `encabezado`: Cadena que representa el nombre de la columna.
+ * - `clave`: Función que define cómo obtener el valor de la columna desde un objeto
+ *   de tipo `EmpresasEXtranjeras`.
+ * - `orden`: Número que indica la posición de la columna en la tabla.
+ */
 export const EXPRESAS_EXTRANJERAS= [
   {
     encabezado: 'Tax ID',
@@ -263,4 +398,11 @@ export const EXPRESAS_EXTRANJERAS= [
   }
 ];
 
+/**
+ * Texto de alerta utilizado para informar al usuario sobre el procedimiento
+ * en caso de no encontrar plantas que cumplan con los criterios de búsqueda.
+ * 
+ * Si no se encuentran plantas, se tomará el domicilio fiscal como referencia,
+ * sujeto a aprobación durante la visita domiciliaria.
+ */
 export const TEXTO_DE_ALERTA = `Si no se encuentran plantas con los criterios de búsqueda, el domicilio marcado como fiscal, será tomado para tal efecto, lo cual estará sujeto a aprobación al momento de la visita domiciliaria`;

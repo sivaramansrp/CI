@@ -365,6 +365,19 @@ public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
  * Catálogo que contiene los datos de los tipos de documentos disponibles.
  */
 public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
+
+
+  /**
+   * Crea y configura los formularios reactivos utilizados en el componente.
+   * 
+   * - `anexoUnoFormGroup`: Formulario para capturar información relacionada con la fracción arancelaria y su descripción.
+   * - `formularioProveedorCliente`: Formulario para capturar datos del proveedor o cliente, incluyendo descripción comercial, país de destino, RFC y razón social.
+   * - `proyectoForm`: Formulario para capturar información del proyecto, como descripción, tipo de documento, fechas relevantes, RFC/Tax ID y razón social.
+   * - `anexoDosFormGroup`: Formulario para capturar información adicional relacionada con la fracción arancelaria y su descripción.
+   * - `complimentarForm`: Formulario para capturar datos complementarios, como categoría, descripción, valores en moneda nacional y volúmenes mensuales.
+   * 
+   * Cada formulario incluye validaciones específicas según los requisitos de los campos.
+   */
   crearFormularioAnexoUno(): void {
     this.anexoUnoFormGroup = this.fb.group({
       fraccionArancelaria: [''],

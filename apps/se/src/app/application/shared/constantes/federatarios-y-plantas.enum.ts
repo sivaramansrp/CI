@@ -1,8 +1,41 @@
+
+
+/**
+ * Constante que representa la configuración de la fecha de pago.
+ * 
+ * @property {string} labelNombre - Etiqueta que describe el nombre del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
+ */
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha del acta',
   required: true,
   habilitado: true,
 };
+
+
+/**
+ * Constante que define los datos de configuración para los campos de entrada
+ * relacionados con federatarios y plantas.
+ * 
+ * Cada objeto dentro del arreglo `DATOS_FEDERATARIOS` representa un campo con
+ * las siguientes propiedades:
+ * 
+ * - `id`: Identificador único del campo.
+ * - `labelNombre`: Etiqueta que se muestra como nombre del campo.
+ * - `campo`: Nombre del atributo asociado al campo.
+ * - `clase`: Clase CSS que define el diseño del campo.
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, texto, fecha, select, etc.).
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `solo_lectura`: Indica si el campo es de solo lectura.
+ * - `validadores`: Arreglo de validadores aplicados al campo, cada validador tiene:
+ *   - `tipo`: Tipo de validación (por ejemplo, requerido).
+ * - `marcadorDePosicion`: Texto que se muestra como marcador de posición en el campo.
+ * - `valorPredeterminado`: Valor inicial del campo.
+ * - `margin_top`: Margen superior aplicado al campo (en unidades CSS).
+ * - `marginTop`: Alternativa para definir el margen superior (en unidades CSS).
+ * - `habilitado`: Indica si el campo está habilitado (opcional).
+ */
 export const DATOS_FEDERATARIOS = [
   {
     id: 'nombre',
@@ -128,6 +161,30 @@ export const DATOS_FEDERATARIOS = [
   },
 ];
 
+/**
+ * Constante `EXPRESAS` que define un arreglo de objetos utilizados para configurar
+ * los campos de un formulario. Cada objeto representa un campo con sus propiedades
+ * y validaciones específicas.
+ * 
+ * Propiedades de cada objeto:
+ * - `id`: Identificador único del campo.
+ * - `labelNombre`: Etiqueta que describe el nombre del campo.
+ * - `campo`: Nombre del campo asociado.
+ * - `clase`: Clase CSS aplicada al campo para definir su estilo.
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, texto, selección, área de texto).
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `solo_lectura`: Indica si el campo es de solo lectura.
+ * - `validadores`: Arreglo de validaciones aplicadas al campo. Cada validador tiene:
+ *   - `tipo`: Tipo de validación (por ejemplo, requerido).
+ * - `marcadorDePosicion`: Texto de marcador de posición para el campo.
+ * - `valorPredeterminado`: Valor inicial del campo.
+ * - `margin_top`: Margen superior aplicado al campo.
+ * 
+ * Ejemplo de uso:
+ * Esta constante puede ser utilizada para generar dinámicamente un formulario
+ * en una aplicación Angular, donde cada campo se renderiza según las propiedades
+ * definidas en este arreglo.
+ */
 export const EXPRESAS = [
   {
     id: 'taxId',

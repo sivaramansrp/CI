@@ -60,6 +60,15 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
     //constructor vacío
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Suscribe a los observables `anexoDosTableLista$` y `anexoTresTablaLista$` para obtener
+   *   las listas correspondientes de datos y asignarlas a las propiedades del componente
+   *   (`anexoDosTablaLista` y `anexoTresTablaLista`) si contienen elementos.
+   * - Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria,
+   *   asegurándose de que las suscripciones se cancelen cuando el componente se destruya.
+   */
   ngOnInit(): void {
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))

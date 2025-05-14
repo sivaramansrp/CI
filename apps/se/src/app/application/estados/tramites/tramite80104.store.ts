@@ -42,9 +42,43 @@ export function createInitialState(): Solicitud80104State {
 
   };
 }
+/**
+ * @fileoverview Este archivo contiene la definición de la clase `Tramite80104Store`, 
+ * que extiende la funcionalidad de la clase `Store` para gestionar el estado de la 
+ * solicitud 80104. Proporciona métodos para actualizar diferentes propiedades del 
+ * estado, como RFC, estado, empresas disponibles y seleccionadas, fracciones 
+ * arancelarias y descripciones asociadas.
+ * 
+ * @remarks
+ * Esta clase utiliza decoradores de Angular y Akita para configurar la inyección 
+ * de dependencias y la configuración del almacenamiento. Los métodos públicos 
+ * permiten modificar el estado de manera controlada.
+ * 
+ * @author [Tu Nombre]
+ * @version 1.0
+ */
+
 @Injectable({
     providedIn: 'root',
   })
+
+  /**
+ * @fileoverview
+ * Este archivo contiene la definición de la clase `Tramite80104Store`, que extiende la funcionalidad de la clase `Store` 
+ * para gestionar el estado de la solicitud 80104 en una aplicación Angular. 
+ * Proporciona métodos para actualizar diferentes propiedades del estado, como RFC, estado, empresas disponibles y seleccionadas, 
+ * así como información relacionada con los anexos dos y tres.
+ * 
+ * @remarks
+ * La clase utiliza decoradores de Angular y Akita para configurar la inyección de dependencias y la gestión del estado.
+ * Cada método de la clase actualiza una propiedad específica del estado utilizando el método `update` proporcionado por Akita.
+ * 
+ * @author
+ * Equipo de desarrollo de iLink Digital
+ * 
+ * @version
+ * 1.0.0
+ */
   @StoreConfig({ name: 'tramite80104', resettable: true })
   export class Tramite80104Store extends Store<Solicitud80104State> {
     constructor() {
