@@ -793,7 +793,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   isInvalid(id: string): boolean | undefined {
     const CONTROL = this.agregarMercanciasForm.get('datosMercancia')?.get(id);
-    // return CONTROL?.invalid && CONTROL?.touched;
     return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
   }
 
