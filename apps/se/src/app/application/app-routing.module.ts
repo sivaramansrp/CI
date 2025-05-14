@@ -48,7 +48,9 @@ const ROUTES: Routes = [
   {
     path: 'tramites-disponibles',
     loadChildren: () =>
-      import('./tramites/110210/tramites-disponibles.module').then((m) => m.TramitesDisponiblesModule),
+      import('./tramites/110210/tramites-disponibles.module').then(
+        (m) => m.TramitesDisponiblesModule
+      ),
   },
   {
     path: 'empresa-frontera',
@@ -121,9 +123,12 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule
       ),
   },
-  {  
-    path:'certificado-tecnico-japon',
-    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  {
+    path: 'certificado-tecnico-japon',
+    loadChildren: () =>
+      import('./tramites/110218/certificado-tecnico-japon.module').then(
+        (m) => m.CertificadoTecnicoJaponModule
+      ),
   },
   {
     path: 'desmantelar',
@@ -135,8 +140,9 @@ const ROUTES: Routes = [
   {
     path: 'cancelacion-de-certificados-de-cupo',
     loadChildren: () =>
-      import('./tramites/140104/cancelacion-de-certificados-de-cupo.module').then(
-        (m) => m.CancelacionDeCertificadosDeCupoModule)
+      import(
+        './tramites/140104/cancelacion-de-certificados-de-cupo.module'
+      ).then((m) => m.CancelacionDeCertificadosDeCupoModule),
   },
   {
     path: 'desistimiento-de-permiso',
@@ -214,13 +220,13 @@ const ROUTES: Routes = [
       import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
         (m) => m.ImportacionDeVehiculosUsadosModule
       ),
-  },   
-  {      
+  },
+  {
     path: 'diamante-bruto',
     loadChildren: () =>
       import('./tramites/130114/diamante-bruto.module').then(
         (m) => m.DiamanteBrutoModule
-      )
+      ),
   },
   {
     path: 'solicitud-modificacion',
@@ -232,16 +238,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion-material-de-investigacion-cientifica',
     loadChildren: () =>
-      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
-        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
-      ),
+      import(
+        './tramites/130112/importacion-material-de-investigacion-cientifica.module'
+      ).then((m) => m.ImportacionMaterialDeInvestigacionCientificaModule),
   },
   {
     path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
       import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
         (m) => m.ImportacionVehiculosNuevosModule
-      )
+      ),
   },
   {
     path: 'cancelaciones-ministerio',
@@ -259,11 +265,11 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110219/certificado.module').then(
         (m) => m.CertificadoModule
-      )
-  }, 
+      ),
+  },
   {
     path: 'nuevo-programa-industrial',
     loadChildren: () =>
@@ -275,8 +281,9 @@ const ROUTES: Routes = [
     path: 'certificado-validacion',
     loadChildren: () =>
       import('./tramites/110202/certificado-validacion.module').then(
-        (m) => m.CertificadoValidacionModule),
-      },
+        (m) => m.CertificadoValidacionModule
+      ),
+  },
   {
     path: 'exportacion-minerales',
     loadChildren: () =>
@@ -291,32 +298,31 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
-  { path: 'tecnicos',
+  {
+    path: 'tecnicos',
     loadChildren: () =>
-      import('./tramites/110203/tecnicos.module').then(
-        (m) => m.TecnicosModule
-      ),
+      import('./tramites/110203/tecnicos.module').then((m) => m.TecnicosModule),
   },
   {
     path: 'previos-exportacion',
     loadChildren: () =>
-      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
-        (m) => m.ControlPermisosPreviosExportacionModule
-      )
+      import(
+        './tramites/130217/control-permisos-previos-exportacion.module'
+      ).then((m) => m.ControlPermisosPreviosExportacionModule),
   },
   {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      )
+      ),
   },
   {
     path: 'validador-certificado-cam',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110221/validador-certificado-cam.module').then(
         (m) => m.ValidadorCertificadoCamModule
-      )
+      ),
   },
   {
     path: 'registro-solicitud-anual',
@@ -333,7 +339,9 @@ const ROUTES: Routes = [
   {
     path: 'solicitud-prorroga',
     loadChildren: () =>
-      import('./tramites/130301/solicitud-prorroga.module').then((m) => m.SolicitudProrrogaModule),
+      import('./tramites/130301/solicitud-prorroga.module').then(
+        (m) => m.SolicitudProrrogaModule
+      ),
   },
   {
     path: 'aviso-importacion-maquinas',
@@ -360,7 +368,8 @@ const ROUTES: Routes = [
     path: 'solicitud-de-cancelacion',
     loadChildren: () =>
       import('./tramites/140101/solicitud-de-cancelacion.module').then(
-        (m) => m.SolicitudDeCancelacionModule),
+        (m) => m.SolicitudDeCancelacionModule
+      ),
   },
   {
     path: 'validar-certificado',
@@ -377,25 +386,25 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path:'importacion-vehiculos-usados-donacion',
+    path: 'importacion-vehiculos-usados-donacion',
     loadChildren: () =>
-      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
-        (m) => m.ImportacionVehiculosUsadosDonacionModule
-      )
+      import(
+        './tramites/130105/importacion-vehiculos-usados-donacion.module'
+      ).then((m) => m.ImportacionVehiculosUsadosDonacionModule),
   },
   {
     path: 'importacion',
-      loadChildren: () =>
-        import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
-          (m) => m.ImportacionNeumaticosComercializarModule
-        ),
+    loadChildren: () =>
+      import(
+        './tramites/130110/importacion-neumaticos-comercializar.module'
+      ).then((m) => m.ImportacionNeumaticosComercializarModule),
   },
   {
     path: 'importacion',
-      loadChildren: () =>
-        import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
-          (m) => m.ImportacionEquipoAnticontaminanteModule
-        ),
+    loadChildren: () =>
+      import(
+        './tramites/130113/importacion-equipo-anticontaminante.module'
+      ).then((m) => m.ImportacionEquipoAnticontaminanteModule),
   },
   {
     path: 'importacion-de',
@@ -404,26 +413,27 @@ const ROUTES: Routes = [
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
   },
-    {
+  {
     path: 'expedicion-certificado-cupos',
     loadChildren: () =>
       import('./tramites/120204/expedicion-certificado-cupos.module').then(
-        (m) => m.ExpedicionCertificadoModule),
+        (m) => m.ExpedicionCertificadoModule
+      ),
   },
   {
     path: 'exportar-diamantes',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
         (m) => m.ExportaciónDeDiamantesEnBrutoModule
-      )
+      ),
   },
   {
     path: 'importacion-otros-vehiculos-usados',
     loadChildren: () =>
-      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
-        (m) => m.ImportacionOtrosVehiculosUsadosModule
-      )
-    },
+      import(
+        './tramites/130104/importacion-otros-vehiculos-usados.module'
+      ).then((m) => m.ImportacionOtrosVehiculosUsadosModule),
+  },
   {
     path: 'modalidad-ampliacion',
     loadChildren: () =>
@@ -431,7 +441,26 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {path: 'reportes',
+    loadChildren:() =>
+      import('./tramites/110207/reportes.module').then(
+        (m) => m.ReportesModule
+      )
+  },
   {
+    path: 'catalogos',
+    loadChildren: () =>
+      import('./tramites/90303/catalogos.module').then(
+        (m) => m.CatalogosModule
+      ),
+  },
+{  
+    path: 'expedicion-certificados-asignacion-directa',
+    loadChildren: () =>
+      import('./tramites/120202/expedicion-certificado-asignacion.module').then(
+        (m) => m.ExpedicionCertificadoAsignacionModule
+      ),
+  },  {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
@@ -439,6 +468,20 @@ const ROUTES: Routes = [
       ),  
    },
    {
+    path: 'registro-solicitud-immex',
+    loadChildren: () =>
+      import('./tramites/80210/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
+      ),
+   },
+  {
+    path:'registro-expansion',
+    loadChildren: () =>
+      import('./tramites/80211/registro-expansion.module').then(
+        (m) => m.RegistroExpansionModule
+      ),    
+  },
+  {
     path: 'validar-inicialmente-certificado',
     loadChildren: () =>
       import('./tramites/110214/validar-inicialmente-certificado.module').then(
@@ -481,12 +524,42 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'programa-prosec',
+    path: 'cupos',
     loadChildren: () =>
-      import('./tramites/90302/programa-prosec.module').then(
-        (m) => m.ProgramaProsecModule
+      import('./tramites/120403/cupos.module').then(
+        (m) => m.CuposModule
       ),
   },
+{
+    path: 'informe-anual-programa',
+    loadChildren: () =>
+      import('./tramites/150103/informe-anual-programa.module').then(
+        (m) => m.InformeAnualProgramaModule
+      ),
+  },
+  {
+
+    path: 'registro-como-expresa',
+    loadChildren: () =>
+      import('./tramites/120603/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+  {
+    path: 'modificacion-programa-immex-baja-submanufacturera',
+    loadChildren: () =>
+      import(
+        './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
+      ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
+  },
+  {
+        path: 'programa-prosec',
+        loadChildren: () =>
+          import('./tramites/90302/programa-prosec.module').then(
+            (m) => m.ProgramaProsecModule
+          ),
+  },
+
 ];
 
 
