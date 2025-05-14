@@ -115,15 +115,23 @@
                 Seleccionar participante 
             </button>
             </div>
-            <div class="row" *ngIf="showSeleccionarParticipante">
+            <div class="row rfc1" *ngIf="showSeleccionarParticipante">
               <div class="col-md-4">
                 <label class="form-label" for="rfc1">RFC:</label>
-                <input type="text" class="form-control" id="rfc1" formControlName="rfc1">
+                <input type="text" class="form-control bg-white" id="rfc1" formControlName="rfc1">
               </div>
               <div class="col-md-4 mt-5">
-                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+                <button type="button" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
+              </div>
+             <div class="row d-flex justify-content-center mt-5">
+              <div class="col-md-4">
+                <label class="form-label" for="participantes">Participantes</label>
+                <app-tabla-dinamica [configuracionTabla]="configTableArray1"
+                [datos] = "datos1" (filaClic)="moverRFC1($event)"></app-tabla-dinamica>
+                </div>
               </div>
             </div>
+             
             <div class="col-md-4">
               <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
               <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
