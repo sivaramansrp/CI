@@ -1,13 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz para la acción de los botones
  */
-
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -29,11 +28,6 @@ export class SolicitudPageComponent {
   tituloMensaje: string | null =
     'Registro de solicitud IMMEX modalidad ampliación sensibles';
 
-  /**
-   * Mensaje de éxito para el primer paso.
-   * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
-   *
-   **/
 
   /**
    * Mensaje de éxito para el primer paso.
