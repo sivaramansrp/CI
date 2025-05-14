@@ -123,7 +123,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Formulario reactivos para el pago de derechos.
    * Cada campo es obligatorio.
    */
-  public pagoDerechos: FormGroup = this.fb.group({
+ public pagoDerechos: FormGroup = this.fb.group({
 
     claveDeReferncia: ['', [Validators.required]],
 

@@ -5,34 +5,25 @@
       <table class="table table-responsive table-striped table-hover">
         <thead>
           <tr>
+            <th> #</th>
+            <th> departmento</th>
             <th>Tipo tr&aacute;mite</th>
             <th>URL</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>130121</td>
-            <td>
-              <a routerLink="/sener/permiso-de-hidrocarburos/datos"
-                >{{ ruta }}/sener/permiso-de-hidrocarburos/datos</a
-              >
-            <td>130108</td>
-            <td><a routerLink="/pago/producto-petrolifero/solicitud"
-              >{{ ruta }}/pago/producto-petrolifero/solicitud</a
-            ></td>
-            <td>140111</td>
-            <td>
-              <a routerLink="/sener/renuncia-de-derechos-de-permisos/solicitante">{{ ruta }}/sener/renuncia-de-derechos-de-permisos/solicitante</a>
-            </td>
-          </tr>
-          <tr>
-            <td>140112</td>
-            <td>
-              <a routerLink="/sener/hidrocarburos-de-petroleo/permiso-de-retiro"
-                >{{ ruta }}/hidrocarburos-de-petroleo/permiso-de-retiro</a>
-            </td>
-          </tr>
-        </tbody>
+          @for(item of tramiteData; track $index) {
+            @if(item?.linkDepartment) {
+              <tr>
+                <td> {{$index + 1}}</td>
+                <td> {{item?.department}}</td>
+                <td> {{item?.tramite}}</td>
+                <td> <a [routerLink]=item.linkDepartment>{{ ruta }}{{item.linkDepartment}}</a>
+                </td>
+              </tr>
+            }
+          }
+          </tbody>
       </table>
     </div>
   </div>

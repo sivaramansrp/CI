@@ -1,5 +1,5 @@
+import { Aviso, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -26,6 +26,12 @@ interface AccionBoton {
   templateUrl: './datos.component.html',
 })
 export class DatosComponent {
+
+  /**
+   * Mensaje de alerta relacionado con el aviso de privacidad.
+   */
+  mensajeAlertaAvisoPrivacidad: string = Aviso.Aviso;
+
   /**
    * Lista de pasos en el asistente.
    */

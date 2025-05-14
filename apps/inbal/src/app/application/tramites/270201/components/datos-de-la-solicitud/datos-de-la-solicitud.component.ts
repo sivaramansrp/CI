@@ -1,13 +1,13 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { Component,OnDestroy, OnInit } from '@angular/core';
-
-import { Subject } from 'rxjs';
-
-import { REGEX_ALTO, REGEX_ANCHO, REGEX_ANO_DE_CREACION, REGEX_AVALUO, REGEX_DIAMETRO, REGEX_PROFUNDIDAD } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs';
-
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -15,36 +15,27 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  SolicitanteComponent,
+  REGEX_ALTO,
+  REGEX_ANCHO,
+  REGEX_ANO_DE_CREACION,
+  REGEX_AVALUO,
+  REGEX_DIAMETRO,
+  REGEX_PROFUNDIDAD,
 } from '@libs/shared/data-access-user/src';
-
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { TableComponent } from '@libs/shared/data-access-user/src';
-
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
-
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-
-import { ModalComponent } from '../modal/modal.component';
-
 import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../modal/modal.component';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
+import { ObraTablaDatos } from '../../models/aviso-siglos.models';
 import { SolicitudService } from '../../services/solicitud.service';
-
+import { Subject } from 'rxjs';
 import { TablaDatos } from '../../models/aviso-siglos.models';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TableComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
-
-export interface ObraTablaDatos {
-  columns: string[];
-}
+import { takeUntil } from 'rxjs';
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -269,74 +260,82 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
      */
-    this.solicitudService.getOperacionData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.operacionData = data;
-    });
+    this.solicitudService
+      .getOperacionData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.operacionData = data;
+      });
 
     /**
      * Obtiene los datos de movimiento desde el servicio y los asigna a `movimientoData`.
      */
-    this.solicitudService.getMovimientoData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.movimientoData = data;
-    });
+    this.solicitudService
+      .getMovimientoData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.movimientoData = data;
+      });
 
     /**
      * Obtiene los datos de país desde el servicio y los asigna a `paisData`.
      */
-    this.solicitudService.getPaisData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.paisData = data;
-    });
+    this.solicitudService
+      .getPaisData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.paisData = data;
+      });
 
     /**
      * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
      */
-    this.solicitudService.getTransporteData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.transporteData = data;
-    });
+    this.solicitudService
+      .getTransporteData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.transporteData = data;
+      });
 
     /**
      * Obtiene los datos de aduana desde el servicio y los asigna a `aduanaData`.
      */
-    this.solicitudService.getAduanaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.aduanaData = data;
-    });
+    this.solicitudService
+      .getAduanaData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.aduanaData = data;
+      });
 
     /**
      * Obtiene los datos de motivo desde el servicio y los asigna a `motivoData`.
      */
-    this.solicitudService.getMotivoData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.motivoData = data;
-    });
+    this.solicitudService
+      .getMotivoData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.motivoData = data;
+      });
 
     /**
      * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
      */
-    this.solicitudService.getMonedaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.monedaData = data;
-    });
+    this.solicitudService
+      .getMonedaData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.monedaData = data;
+      });
 
     /**
      * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
      */
-    this.solicitudService.getArancelariaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.arancelariaData = data;
-    });
+    this.solicitudService
+      .getArancelariaData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.arancelariaData = data;
+      });
 
     /**
      * Inicializa el formulario reactivo principal para gestionar la solicitud.
@@ -547,10 +546,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      alto: [
-        '',
-        [Validators.required, Validators.pattern(REGEX_ALTO)],
-      ],
+      alto: ['', [Validators.required, Validators.pattern(REGEX_ALTO)]],
 
       /**
        * @control ancho
@@ -559,10 +555,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      ancho: [
-        '',
-        [Validators.required, Validators.pattern(REGEX_ANCHO)],
-      ],
+      ancho: ['', [Validators.required, Validators.pattern(REGEX_ANCHO)]],
 
       /**
        * @control profundidad
@@ -583,10 +576,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      diametro: [
-        '',
-        [Validators.required, Validators.pattern(REGEX_DIAMETRO)],
-      ],
+      diametro: ['', [Validators.required, Validators.pattern(REGEX_DIAMETRO)]],
 
       /**
        * @control variables
@@ -702,7 +692,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarMovimiento(): void {
     const MOVIMIENTO = this.solicitudFormGroup.get('tipoDeMovimiento')?.value;
-    this.tramite270201Store.setOperacion(MOVIMIENTO);
+    this.tramite270201Store.setMovimiento(MOVIMIENTO);
   }
 
   /**
@@ -720,7 +710,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarMotivo(): void {
     const MOTIVO = this.solicitudFormGroup.get('motivo')?.value;
-    this.tramite270201Store.setOperacion(MOTIVO);
+    this.tramite270201Store.setMotivo(MOTIVO);
   }
 
   /**
@@ -738,7 +728,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarPais(): void {
     const PAIS = this.solicitudFormGroup.get('pais')?.value;
-    this.tramite270201Store.setOperacion(PAIS);
+    this.tramite270201Store.setPais(PAIS);
   }
 
   /**
@@ -756,7 +746,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarCiudad(): void {
     const CIUDAD = this.solicitudFormGroup.get('ciudad')?.value;
-    this.tramite270201Store.setOperacion(CIUDAD);
+    this.tramite270201Store.setCiudad(CIUDAD);
   }
 
   /**
@@ -774,7 +764,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarTransporte(): void {
     const TRANSPORTE = this.solicitudFormGroup.get('medioTransporte')?.value;
-    this.tramite270201Store.setOperacion(TRANSPORTE);
+    this.tramite270201Store.setTransporte(TRANSPORTE);
   }
 
   /**
@@ -792,7 +782,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   actualizarAduana(): void {
     const ADUANA = this.solicitudFormGroup.get('aduanaEntrada')?.value;
-    this.tramite270201Store.setOperacion(ADUANA);
+    this.tramite270201Store.setAduana(ADUANA);
   }
 
   /**
@@ -809,8 +799,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarAutor(): void {
-    const AUTOR = this.solicitudFormGroup.get('autor')?.value;
-    this.tramite270201Store.setOperacion(AUTOR);
+    const AUTOR = this.obraDeArteFormgroup.get('autor')?.value;
+    this.tramite270201Store.setAutor(AUTOR);
   }
 
   /**
@@ -827,8 +817,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarTitulo(): void {
-    const TITULO = this.solicitudFormGroup.get('titulo')?.value;
-    this.tramite270201Store.setOperacion(TITULO);
+    const TITULO = this.obraDeArteFormgroup.get('titulo')?.value;
+    this.tramite270201Store.setTitulo(TITULO);
   }
 
   /**
@@ -845,8 +835,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarTecnica(): void {
-    const TECNICA = this.solicitudFormGroup.get('tecnicaDeRealizacion')?.value;
-    this.tramite270201Store.setOperacion(TECNICA);
+    const TECNICA = this.obraDeArteFormgroup.get('tecnicaDeRealizacion')?.value;
+    this.tramite270201Store.setTecnica(TECNICA);
   }
 
   /**
@@ -863,8 +853,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarAlto(): void {
-    const ALTO = this.solicitudFormGroup.get('alto')?.value;
-    this.tramite270201Store.setOperacion(ALTO);
+    const ALTO = this.obraDeArteFormgroup.get('alto')?.value;
+    this.tramite270201Store.setAlto(ALTO);
   }
 
   /**
@@ -881,8 +871,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarAncho(): void {
-    const ANCHO = this.solicitudFormGroup.get('ancho')?.value;
-    this.tramite270201Store.setOperacion(ANCHO);
+    const ANCHO = this.obraDeArteFormgroup.get('ancho')?.value;
+    this.tramite270201Store.setAncho(ANCHO);
   }
 
   /**
@@ -899,8 +889,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarProfundidad(): void {
-    const PROFUNDIDAD = this.solicitudFormGroup.get('profundidad')?.value;
-    this.tramite270201Store.setOperacion(PROFUNDIDAD);
+    const PROFUNDIDAD = this.obraDeArteFormgroup.get('profundidad')?.value;
+    this.tramite270201Store.setProfundidad(PROFUNDIDAD);
   }
 
   /**
@@ -917,8 +907,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarDiametro(): void {
-    const DIAMETRO = this.solicitudFormGroup.get('diametro')?.value;
-    this.tramite270201Store.setOperacion(DIAMETRO);
+    const DIAMETRO = this.obraDeArteFormgroup.get('diametro')?.value;
+    this.tramite270201Store.setDiametro(DIAMETRO);
   }
 
   /**
@@ -935,8 +925,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarVariables(): void {
-    const VARIABLES = this.solicitudFormGroup.get('variables')?.value;
-    this.tramite270201Store.setOperacion(VARIABLES);
+    const VARIABLES = this.obraDeArteFormgroup.get('variables')?.value;
+    this.tramite270201Store.setVariables(VARIABLES);
   }
 
   /**
@@ -953,8 +943,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarAnoDeCreacion(): void {
-    const ANO_DE_CREACION = this.solicitudFormGroup.get('anoDeCreacion')?.value;
-    this.tramite270201Store.setOperacion(ANO_DE_CREACION);
+    const ANO_DE_CREACION =
+      this.obraDeArteFormgroup.get('anoDeCreacion')?.value;
+    this.tramite270201Store.setAnoDeCreacion(ANO_DE_CREACION);
   }
 
   /**
@@ -971,8 +962,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarAvaluo(): void {
-    const AVALUO = this.solicitudFormGroup.get('avaluo')?.value;
-    this.tramite270201Store.setOperacion(AVALUO);
+    const AVALUO = this.obraDeArteFormgroup.get('avaluo')?.value;
+    this.tramite270201Store.setAvaluo(AVALUO);
   }
 
   /**
@@ -989,8 +980,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarMoneda(): void {
-    const MONEDA = this.solicitudFormGroup.get('moneda')?.value;
-    this.tramite270201Store.setOperacion(MONEDA);
+    const MONEDA = this.obraDeArteFormgroup.get('moneda')?.value;
+    this.tramite270201Store.setMoneda(MONEDA);
   }
 
   /**
@@ -1007,8 +998,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarPropietario(): void {
-    const PROPIETARIO = this.solicitudFormGroup.get('propietario')?.value;
-    this.tramite270201Store.setOperacion(PROPIETARIO);
+    const PROPIETARIO = this.obraDeArteFormgroup.get('propietario')?.value;
+    this.tramite270201Store.setPropietario(PROPIETARIO);
   }
 
   /**
@@ -1025,11 +1016,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarFraccionArancelaria(): void {
-    const FRACCION_ARANCELARIA = this.solicitudFormGroup.get(
+    const FRACCION_ARANCELARIA = this.obraDeArteFormgroup.get(
       'fraccionArancelaria'
     )?.value;
     if (FRACCION_ARANCELARIA !== null && FRACCION_ARANCELARIA !== undefined) {
-      this.tramite270201Store.setOperacion(FRACCION_ARANCELARIA);
+      this.tramite270201Store.setFraccionArancelaria(FRACCION_ARANCELARIA);
     }
   }
 
@@ -1047,10 +1038,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   actualizarDescArancelaria(): void {
-    const DESCRIPCION_ARANCELARIA = this.solicitudFormGroup.get(
+    const DESCRIPCION_ARANCELARIA = this.obraDeArteFormgroup.get(
       'descripcionArancelaria'
     )?.value;
-    this.tramite270201Store.setOperacion(DESCRIPCION_ARANCELARIA);
+    this.tramite270201Store.setDescripcionArancelaria(DESCRIPCION_ARANCELARIA);
   }
 
   /**

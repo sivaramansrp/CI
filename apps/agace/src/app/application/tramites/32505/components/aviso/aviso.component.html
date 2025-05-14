@@ -1,0 +1,431 @@
+<form [formGroup]="aviosForm">
+    <div class="col-md-8 mb-3">
+        <ng-container formGroupName="adaceForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="adace">ADACE:</label>
+                    <input type="text" class="form-control" style="cursor:not-allowed" formControlName="adace"
+                        [readonly]="true" id="adace" />
+                </div>
+
+            </div>
+            <ng-titulo titulo="Datos del periodo del aviso" />
+            <div class="row align-items-center">
+                <div class="col-md-6 ">
+                    <label for="pais"> Mes al que corrosponde el aviso*:</label>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [required]="true" id="pais"
+                            formControlName="pais" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''"
+                            (change)="setValoresStore(adaceForm, 'pais', 'setPais')">
+                        </app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-6 ">
+                    <label for="anio"> Año al que corrosponde el aviso*:</label>
+                </div>
+
+                <div class="col-md-6 ">
+                    <div>
+                        <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [required]="true" id="anio"
+                            formControlName="anio" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''"
+                            (change)="setValoresStore(adaceForm, 'anio', 'setAnio')">
+                        </app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container formGroupName="adaceForm">
+            <ng-titulo titulo="Tipo de aviso" />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <app-input-radio [radioOptions]="radioTipoAviso" formControlName="tipoBusqueda"
+                            [layout]="'horizontal'"
+                            (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos()"></app-input-radio>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container formGroupName="adaceForm" *ngIf="datosDelAvisoVisible">
+
+            <ng-titulo titulo="Datos del aviso" />
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos"
+                    (listaDeFilaSeleccionada)="filaSeleccionada($event)">
+
+                </app-tabla-dinamica>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="true"
+                        (click)="accionesBotones(botonAccionesTipos.ELIMINAR)">
+                        Eliminar
+                    </button>
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
+                        Modificar
+                    </button>
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
+                        Agregar
+                    </button>
+                </div>
+            </div>
+
+
+        </ng-container>
+
+        <ng-container *ngIf="datosCargaMasiva">
+            <app-carga-masiva></app-carga-masiva>
+
+        </ng-container>
+
+        <ng-container formGroupName="adaceForm" *ngIf="esPopupAbierto">
+            <div class="modal fade" id="datosAviso" tabindex="-1" #datosAviso aria-labelledby="datosAviso"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <ng-titulo titulo="Datos del aviso" />
+                            <div class="row align-items-center">
+                                <ng-titulo titulo="Tipo de operación" />
+                                <div class="row">
+                                    <div class="col-md-12 d-flex align-items-center">
+                                        <div class="col-md-4">
+                                            Datos del tipo de registro*:
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <app-input-radio [radioOptions]="radioOpcionsAviso"
+                                                formControlName="tipoBusquedaAviso" [layout]="'horizontal'"
+                                                (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()"></app-input-radio>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br><br>
+                                <ng-container *ngIf="datosFolioVUCEM">
+                                    <div class="row">
+                                        <!-- folioTipo -->
+                                        <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                ¿Cuentas con el folio VUCEM de la importación?
+                                            </div>
+                                            <div class="col-md-3">
+                                                <app-input-radio [radioOptions]="radioOpcions"
+                                                    formControlName="folioTipo" [layout]="'horizontal'"
+                                                    (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()"></app-input-radio>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <ng-container *ngIf="datosNIVNumeroSerie">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label>NIV o número de serie*:</label>
+                                        <input type="text" class="form-control" id="numeroSerie"
+                                            formControlName="numeroSerie"
+                                            [ngClass]="isValid(adaceForm,'numeroSerie') ? 'required' : ''"
+                                            (change)="setValoresStore(adaceForm, 'numeroSerie', 'setNumeroSerie')" />
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="datosDelVehiculo">
+                                <ng-titulo titulo="Datos del vehículo" />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 mb-3">
+                                            <label>NIV o número de serie*:</label>
+                                            <input type="text" class="form-control" formControlName="numeroNIV"
+                                                [ngClass]="isValid(adaceForm,'numeroNIV') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'numeroNIV', 'setNumeroNIV')" />
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label>Año modelo*:</label>
+                                            <input type="text" class="form-control" id="anoModelo"
+                                                formControlName="anoModelo"
+                                                [ngClass]="isValid(adaceForm,'anoModelo') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'anoModelo','setAnoModelo')" />
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label>Marca*:</label>
+                                            <input type="text" class="form-control" id="marca" formControlName="marca"
+                                                [ngClass]="isValid(adaceForm,'marca') ? 'required' : ''" (change)="
+                                          setValoresStore(adaceForm, 'marca', 'setMarca')" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 mb-3">
+                                            <label>Modelo*:</label>
+                                            <input type="text" class="form-control" formControlName="modelo"
+                                                [ngClass]="isValid(adaceForm,'modelo') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'modelo', 'setModelo')" />
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label>Tipo/Variante/Versión*:</label>
+                                            <input type="text" class="form-control" id="tipoVariante"
+                                                formControlName="tipoVariante"
+                                                [ngClass]="isValid(adaceForm,'tipoVariante') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'anoModelo','setTipoVariante')" />
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <app-catalogo-select class="optionCilindros" [label]="'No. de cilindros'"
+                                                [catalogo]="optionCilindros" [required]="true" id="cilindros"
+                                                formControlName="cilindros"
+                                                [ngClass]="isValid(adaceForm,'cilindros') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'cilindros', 'setCilindros')">
+                                            </app-catalogo-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 mb-3">
+                                            <app-catalogo-select class="optionCilindros" [label]="'No. de puertas'"
+                                                [catalogo]="optionCilindros" [required]="true" id="cilindros"
+                                                formControlName="puertas"
+                                                [ngClass]="isValid(adaceForm,'puertas') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'puertas', 'setPuertas')">
+                                            </app-catalogo-select>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <app-catalogo-select class="optionCombustible"
+                                                [label]="'Tipo de combustible'" [catalogo]="optionCombustible"
+                                                [required]="true" id="combustible" formControlName="combustible"
+                                                [ngClass]="isValid(adaceForm,'combustible') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'combustible', 'setCombustible')">
+                                            </app-catalogo-select>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label>No. del título de propiedad*:</label>
+                                            <input type="text" class="form-control" formControlName="propiedad"
+                                                [ngClass]="isValid(adaceForm,'propiedad') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'propiedad', 'setPropiedad')" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12 mb-3">
+                                            <label>Nombre en el título de propiedad extranjero o en su caso, nombre de
+                                                la persona a la que se haya concedido la propiedad*:
+                                                :</label>
+                                            <input type="text" class="form-control" formControlName="nombreTitulo"
+                                                [ngClass]="isValid(adaceForm,'nombreTitulo') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'nombreTitulo', 'setNombreTitulo')" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 mb-3">
+                                            <app-catalogo-select class="paisIssued"
+                                                [label]="'País que emitió el título de propiedad'"
+                                                [catalogo]="paisIssued" [required]="true" id="paisEmitio"
+                                                formControlName="paisEmitio"
+                                                [ngClass]="isValid(adaceForm,'paisEmitio') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'paisEmitio', 'setPaisEmitio')">
+                                            </app-catalogo-select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>Estado o provincia de emisión del título de propiedad</label>
+                                            <input type="text" class="form-control" formControlName="provinciaEmision"
+                                                [ngClass]="isValid(adaceForm,'provinciaEmision') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'provinciaEmision', 'setProvinciaEmision')" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 mb-3">
+                                            <label>No. de placas de circulación en el país de procedencia</label>
+                                            <input type="text" class="form-control" formControlName="procedencia"
+                                                (change)="setValoresStore(adaceForm, 'procedencia', 'setProcedencia')" />
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <app-catalogo-select class="paisIssued"
+                                                [label]="'Forma de adquisición del vehículo importado'"
+                                                [catalogo]="paisIssued" [required]="true" id="vehiculoImportado"
+                                                formControlName="paisEmitio"
+                                                [ngClass]="isValid(adaceForm,'vehiculoImportado') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'vehiculoImportado', 'setVehiculoImportado')">
+                                            </app-catalogo-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 mb-3">
+                                            <label>No. de documento de exportación*:</label>
+                                            <input type="text" class="form-control" formControlName="exportacion"
+                                                [ngClass]="isValid(adaceForm,'exportacion') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'exportacion', 'setExportacion')" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="datosDelImportacion">
+                                <ng-titulo titulo="Datos de la importación" />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <app-catalogo-select class="paisIssued" [label]="'Aduana de importación'"
+                                                [catalogo]="optionAduana" [required]="true" id="aduanaImportacion"
+                                                formControlName="aduanaImportacion"
+                                                [ngClass]="isValid(adaceForm,'aduanaImportacion') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'aduanaImportacion', 'setAduanaImportacion')">
+                                            </app-catalogo-select>
+                                        </div>
+
+                                        <div class="col-md-4 ">
+                                            <label>Patente de importación*:</label>
+                                            <input type="text" class="form-control" formControlName="patenteImportacion"
+                                                [ngClass]="isValid(adaceForm,'patenteImportacion') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'patenteImportacion', 'setPatenteImportacion')" />
+                                        </div>
+
+                                        <div class="col-md-4 ">
+                                            <label>Pedimento de importación*:</label>
+                                            <input type="text" class="form-control"
+                                                formControlName="pedimentoImportacion"
+                                                [ngClass]="isValid(adaceForm,'pedimentoImportacion') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'pedimentoImportacion', 'setPedimentoImportacion')" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- second row -->
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="col-md-6 ">
+                                            <label>Kilometraje a la fecha de la importación*:</label>
+                                            <input type="text" class="form-control" formControlName="kilometraje"
+                                                [ngClass]="isValid(adaceForm,'kilometraje') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'kilometraje', 'setKilometraje')" />
+                                        </div>
+
+                                        <div class="col-md-6 ">
+                                            <label>Valor en la aduana*:</label>
+                                            <input type="text" class="form-control" formControlName="valorAduana"
+                                                [ngClass]="isValid(adaceForm,'valorAduana') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'valorAduana', 'setValorAduana')" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- third row -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 ">
+                                            <label>Monto de IGI pagado*:</label>
+                                            <input type="text" class="form-control" formControlName="montoIGI"
+                                                [ngClass]="isValid(adaceForm,'montoIGI') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'montoIGI', 'setMontoIGI')" />
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <app-catalogo-select class="paisIssued" [label]="'Forma de pago del IGI*:'"
+                                                [catalogo]="optionAduana" [required]="true" id="formaPagoIGI"
+                                                formControlName="formaPagoIGI"
+                                                [ngClass]="isValid(adaceForm,'formaPagoIGI') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'formaPagoIGI', 'setFormaPagoIGI')">
+                                            </app-catalogo-select>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <label>Monto de DTA pagado*:</label>
+                                            <input type="text" class="form-control" formControlName="montoDTA"
+                                                [ngClass]="isValid(adaceForm,'montoDTA') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'montoDTA', 'setMontoDTA')" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- fourth row  -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 ">
+                                            <label>Monto de IVA pagado*:</label>
+                                            <input type="text" class="form-control" formControlName="montoIVA"
+                                                [ngClass]="isValid(adaceForm,'montoIVA') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'montoIVA', 'setMontoIVA')" />
+                                        </div>
+
+                                        <div class="col-md-4 ">
+                                            <label>Valor en dólares*:</label>
+                                            <input type="text" class="form-control" formControlName="valorDolares"
+                                                [ngClass]="isValid(adaceForm,'valorDolares') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'valorDolares', 'setValorDolares')" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 5th -->
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="col-md-12 ">
+                                            <label>Folio del CFDI por el servicio de importación:</label>
+                                            <input type="text" class="form-control" formControlName="folioCFDI"
+                                                [ngClass]="isValid(adaceForm,'folioCFDI') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'folioCFDI', 'setFolioCFDI')" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="datosDelVenta">
+                                <ng-titulo titulo="Datos de la venta en territorio nacional" />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 ">
+                                            <label>Folio del CFDI por la venta en territorio nacional*:</label>
+                                            <input type="text" class="form-control" formControlName="folioVenta"
+                                                [ngClass]="isValid(adaceForm,'folioVenta') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'folioVenta', 'setFolioVenta')" />
+                                        </div>
+
+                                        <div class="col-md-6 ">
+                                            <label>Valor de venta en territorio nacional sin IVA*:</label>
+                                            <input type="text" class="form-control" formControlName="valorVenta"
+                                                [ngClass]="isValid(adaceForm,'valorVenta') ? 'required' : ''"
+                                                (change)="setValoresStore(adaceForm, 'valorVenta', 'setValorVenta')" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <div class="mt-5 d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio>
+                                    Cancelar </button>
+                                <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()"> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</form>

@@ -20,8 +20,12 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   templateUrl: './proyecto-immex-vista.component.html',
   styleUrl: './proyecto-immex-vista.component.scss',
 })
+
 /**
- * Componente para la vista de proyecto IMMEX.
+ * Componente para la vista del proyecto IMMEX.
+ * Este componente permite visualizar y manejar los datos del proyecto IMMEX en el trámite 80102.
+ *
+ * @export ProyectoImmexVistaComponent
  */
 export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
   /**

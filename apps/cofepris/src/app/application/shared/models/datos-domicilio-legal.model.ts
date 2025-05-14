@@ -254,3 +254,13 @@ export interface PermisoModel {
       orden: 20,
     },
   ];
+  /**
+   * Interfaz que representa la configuración de visibilidad para varios campos relacionados con países.
+   */
+  export interface ConfiguracionVisibilidad {
+    paisOrigen: boolean;
+    paisFabrica: boolean;
+    paisElaboracion: boolean;
+    paisProveedor: boolean;
+    paisProcedencia: boolean;
+  }

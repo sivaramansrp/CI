@@ -280,18 +280,19 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       case 260207:
       case 260209:
       case 260208:
+      case 260219:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
         break;
       case 260201:
-        this.elementosDeshabilitados = ['pais','estado',
+        this.elementosDeshabilitados = [
+          'pais',
+          'estado',
           'municipio',
           'telefono',
-          'correoElectronico'];
-        this.elementosNoRequeridos = [
-          'localidad',
-          'colonia',
+          'correoElectronico',
         ];
+        this.elementosNoRequeridos = ['localidad', 'colonia'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -304,27 +305,36 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
+    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    }
     const NUEVO_FABRICANTE: Fabricante = {
-      nombreRazonSocial:
-        this.agregarFabricanteForm.value.razonSocial ||
-        `${this.agregarFabricanteForm.value.nombres} ${
-          this.agregarFabricanteForm.value.primerApellido
-        } ${this.agregarFabricanteForm.value.segundoApellido || ''}`.trim(),
-      rfc: this.agregarFabricanteForm.value.rfc,
-      curp: this.agregarFabricanteForm.value.curp,
-      telefono: this.agregarFabricanteForm.value.telefono,
-      correoElectronico: this.agregarFabricanteForm.value.correoElectronico,
-      calle: this.agregarFabricanteForm.value.calle,
-      numeroExterior: this.agregarFabricanteForm.value.numeroExterior,
-      numeroInterior: this.agregarFabricanteForm.value.numeroInterior || '',
-      pais: this.agregarFabricanteForm.value.pais,
-      colonia: this.agregarFabricanteForm.value.colonia,
-      municipioAlcaldia: this.agregarFabricanteForm.value.municipio,
-      localidad: this.agregarFabricanteForm.value.localidad,
-      entidadFederativa: this.agregarFabricanteForm.value.estado,
-      estadoLocalidad: this.agregarFabricanteForm.value.estado,
-      codigoPostal: this.agregarFabricanteForm.value.codigoPostal,
-      coloniaEquivalente: this.agregarFabricanteForm.value.correoElectronico,
+      nombreRazonSocial: nombreRazonSocial,
+      rfc: VALOR_FORMULARIO.rfc,
+      curp: VALOR_FORMULARIO.curp,
+      telefono: VALOR_FORMULARIO.telefono,
+      correoElectronico: VALOR_FORMULARIO.correoElectronico,
+      calle: VALOR_FORMULARIO.calle,
+      numeroExterior: VALOR_FORMULARIO.numeroExterior,
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais,
+      colonia: VALOR_FORMULARIO.colonia,
+      municipioAlcaldia: VALOR_FORMULARIO.municipio,
+      localidad: VALOR_FORMULARIO.localidad,
+      entidadFederativa: VALOR_FORMULARIO.estado,
+      estadoLocalidad: VALOR_FORMULARIO.estado,
+      codigoPostal: VALOR_FORMULARIO.codigoPostal,
+      coloniaEquivalente: VALOR_FORMULARIO.correoElectronico,
     };
 
     // Agregar el nuevo fabricante al arreglo

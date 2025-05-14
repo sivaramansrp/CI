@@ -248,3 +248,81 @@ export interface PersonaFisicaExtranjeraForm {
      */
     nombreDG: string;
 }
+
+/**
+ * PersonaMoralExtranjeraForm: Interface para la información de la persona moral extranjera
+ * @interface PersonaMoralExtranjeraForm
+ */
+export interface PersonaMoralExtranjeraForm {
+    /**
+     * Denominación de la persona moral extranjera
+     * @type {string}
+     */
+    denominacionPME: string;
+
+    /**
+     * Domicilio de la persona moral extranjera
+     * @type {string}
+     */
+    domicilioPME: string;
+
+    /**
+     * País de la persona moral extranjera
+     * @type {number | string}
+     */
+    paisPME: number | string;
+
+    /**
+     * Estado de la persona moral extranjera
+     * @type {string}
+     */
+    estadoPME: string;
+
+    /**
+     * Código postal de la persona moral extranjera
+     * @type {string}
+     */
+    codigoPostalPME: string;
+
+    /**
+     * Nombre del director general de la persona moral extranjera
+     * @type {string}
+     */
+    nombreDG: string;
+
+    /**
+     * Correo electrónico de la persona moral extranjera
+     * @type {string}
+     */
+    correoPME: string;
+
+    /**
+     * Primer apellido del director general de la persona moral extranjera
+     * @type {string}
+     */
+    apellidoPaternoDG?: string;
+
+    /**
+     * Segundo apellido del director general de la persona moral extranjera
+     * @type {string}
+     */
+    apellidoMaternoDG?: string;
+
+    /**
+     * Calle de la persona moral extranjera
+     * @type {string}
+     */
+    callePME?: string;
+
+    /**
+     * Número exterior de la persona moral extranjera
+     * @type {string}
+     */
+    numeroExteriorPME?: string;
+
+    /**
+     * Número interior de la persona moral extranjera
+     * @type {string}
+     */
+    numeroInteriorPME?: string;
+}

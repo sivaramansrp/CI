@@ -27,8 +27,7 @@ describe('SolicitantetabComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [SolicitantetabComponent],
+      imports: [SolicitantetabComponent, ReactiveFormsModule],
       providers: [
         { provide: SolicitanteasigncionserviceService, useValue: serviceSpy }
       ]

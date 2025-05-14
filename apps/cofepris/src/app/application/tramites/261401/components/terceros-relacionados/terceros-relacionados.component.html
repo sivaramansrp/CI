@@ -1,0 +1,31 @@
+<div class="container">
+    <ng-titulo titulo="Terceros relacionados"></ng-titulo>
+  
+    <div class="row mt-5">
+      <ng-alert
+        [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
+        [CUSTOMECLASS]="infoAlert"
+      ></ng-alert>
+    </div>
+    <div class="row mt-5"><h6>Destinatario (destino final) :</h6></div>
+    <div class="row mt-5">
+      <app-tabla-dinamica
+        [configuracionTabla]="configuracionTablaDestinatarioFinal"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [datos]="destinatarioDatos"
+      ></app-tabla-dinamica>
+    </div>
+    
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

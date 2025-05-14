@@ -35,6 +35,14 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
       this.ruta = AMBIENTES.DESARROLLO
     }
 
-    this.tramiteData = tramiteDetailsData as TramiteDetails[];
+    this.tramiteData = (tramiteDetailsData as TramiteDetails[]).sort((a, b) => {
+      if (a.tramite < b.tramite) {
+        return -1;
+      }
+      if (a.tramite > b.tramite) {
+        return 1;
+      }
+      return 0;
+    });
   }
 }

@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -30,7 +30,6 @@ export class InputFechaComponent implements OnChanges {
   mountSelect!: { name: string; value: number; indexWeek: number }[];
   mostrar: boolean = false;
   Formulario!: FormGroup;
-
 
   constructor(
     private fb: FormBuilder
@@ -194,6 +193,37 @@ export class InputFechaComponent implements OnChanges {
   mostrarCalendario(): void {
     if (this.datos.habilitado) {
       this.mostrar = true;
+    }
+  }
+
+  /**
+  * @method onDocumentClick
+  * @description
+  * Este método escucha eventos de clic en el documento para determinar si el usuario hizo clic fuera del calendario. 
+  * Si el clic ocurre fuera del calendario, se oculta el componente del calendario.
+  * 
+  * Funcionalidad:
+  * - Verifica si el calendario está visible (`mostrar`).
+  * - Comprueba si el clic ocurrió fuera del elemento del calendario.
+  * - Si el clic es externo, cambia la propiedad `mostrar` a `false` para ocultar el calendario.
+  * 
+  * @param {Event} event - Evento de clic en el documento.
+  * 
+  * @example
+  * // Si el usuario hace clic fuera del calendario:
+  * this.onDocumentClick(event);
+  * // El calendario se oculta.
+  */
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.mostrar) {
+      return;
+    }
+    const ELEMENTO_OBJETIVO = event.target as HTMLElement;
+    const CALENDARIO = document.querySelector('#calendario');
+    
+    if (CALENDARIO && !CALENDARIO.contains(ELEMENTO_OBJETIVO)) {
+      this.mostrar = false;
     }
   }
 

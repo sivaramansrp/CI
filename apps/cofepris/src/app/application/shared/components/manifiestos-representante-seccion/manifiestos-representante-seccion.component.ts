@@ -7,7 +7,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
@@ -49,6 +49,7 @@ import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la
 export class ManifiestosRepresentanteSeccionComponent
   implements OnInit, OnDestroy
 {
+@Input() showRepresentanteLegal: boolean = true;
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -80,7 +81,9 @@ export class ManifiestosRepresentanteSeccionComponent
     private representanteStore: DatosDelSolicituteSeccionStateStore,
     private representanteQuery: DatosDelSolicituteSeccionQuery,
     private establecimientoService :EstablecimientoService
-  ) {}
+  ) {
+    // Inicializa el formulario y carga los datos iniciales.
+  }
 
   /**
    * Ciclo de vida `OnInit`.
@@ -95,7 +98,7 @@ export class ManifiestosRepresentanteSeccionComponent
       informacionConfidencialRadio: ['', Validators.required],
       representanteNombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
+      apellidoMaterno: [''],
     });
 
     // Cargar el estado inicial en el formulario
@@ -117,6 +120,14 @@ export class ManifiestosRepresentanteSeccionComponent
         this.informacionConfidencialRadioOption = data; // Bind the fetched data
        
       });
+  }
+  /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
+  hasError(controlName: string, errorName: string) {
+    return this.manifiestosRepresentanteForm.get(controlName)?.touched &&
+           this.manifiestosRepresentanteForm.get(controlName)?.hasError(errorName);
   }
    /**
    * Maneja los cambios en los controles del formulario y actualiza el estado global.

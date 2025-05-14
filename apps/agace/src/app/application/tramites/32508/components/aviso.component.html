@@ -1,0 +1,131 @@
+<form [formGroup]="avisoForm" (ngSubmit)="validarDestinatarioFormulario()">
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>ADACE:</label>
+        <input type="text" class="form-control gris-color" readonly required />
+      </div>
+    </div>
+    <ng-titulo titulo="Datos del recinto fiscalizado que presenta el dictamen" />
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>Clave de recinto fiscalizado:*</label>
+        <input type="text" class="form-control" required formControlName="claveFiscalizado" (change)=" setValoresStore( avisoForm, 'claveFiscalizado', 'setClaveFiscalizador' ) " />
+      </div>
+    </div>
+    <ng-titulo titulo="Tipo de dictamen" />
+    <div class="row mt-5 radios">
+      <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioOpcions" [isRequired]="true" [layout]="'horizontal'" formControlName="tipoDictamen" (change)=" setValoresStore( avisoForm, 'tipoDictamen', 'setTipoDictamen' ) "></app-input-radio>
+    </div>
+    <ng-titulo titulo="Datos del CPI que elaboró el dictamen" />
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>RFC:*</label>
+        <input type="text" class="form-control" required formControlName="rfc" (change)=" setValoresStore( avisoForm, 'rfc', 'setRfc' ) " />
+      </div>
+      <div class="col-md-6">
+        <label>Nombre:*</label>
+        <input type="text" class="form-control gris-color" required readonly />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>Número de inscripción o registro:*</label>
+        <input type="text" class="form-control" required formControlName="numeroInscripcion" (change)=" setValoresStore( avisoForm, 'numeroInscripcion', 'setNumeroInscripcion' ) " />
+      </div>
+    </div>
+    <ng-titulo titulo="Datos del dictamen que se presenta" />
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del periodo reportado'" formControlName="ano" (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) "></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [label]="'Mes del periodo reportado'" formControlName="mes" (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) "></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <input-fecha [setFecha]="avisoForm.get('fechaElaboracion')?.value" [datos]="fechaInitialInput" (valorCambiado)="cambioFechaInitial($event)"></input-fecha>
+      </div>
+    </div>
+    <ng-titulo titulo="Resultado del periodo" />
+    <div class="row">
+      <div class="col-auto">
+        <label class="label-spacing">{{textoParcial}}</label>
+      </div>
+      <div class="col" style="margin-left: 245px;">
+        <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioParcial" [isRequired]="true" [layout]="'horizontal'" formControlName="radioParcial" (change)=" setValoresStore( avisoForm, 'radioParcial', 'setRadioPartial' ) "></app-input-radio>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <label class="label-spacing">{{textoTotal}}</label>
+      </div>
+      <div class="col" style="margin-left: 350px;">
+        <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioTotal" [isRequired]="true" [layout]="'horizontal'" formControlName="radioTotal" (change)=" setValoresStore( avisoForm, 'radioTotal', 'setRadioTotal' ) "></app-input-radio>
+      </div>
+    </div>
+    <ng-titulo titulo="Cantidades del periodo dictaminado" />
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
+        <input type="text" class="form-control" required formControlName="saldoPendiente" (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>Aprovechamiento total a cargo:*</label>
+        <input type="text" class="form-control" required formControlName="aprovechamiento" (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " />
+      </div>
+      <div class="col-md-4">
+        <label>Disminución aplicada:*</label>
+        <input type="text" class="form-control" required formControlName="disminucionAplicada" (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " />
+      </div>
+      <div class="col-md-4">
+        <label>Saldo pendiente de disminuir:*</label>
+        <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir" (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>Cantidad pagada:*</label>
+        <input type="text" class="form-control" required formControlName="cantidad" (change)=" setValoresStore( avisoForm, 'cantidad', 'setCantidad' ) " />
+      </div>
+      <div class="col-md-4">
+        <label>Llave de pago:*</label>
+        <input type="text" class="form-control" required formControlName="llaveDePago" (change)=" setValoresStore( avisoForm, 'llaveDePago', 'setLlaveDePago' ) " />
+      </div>
+      <div class="col-md-4">
+        <input-fecha [setFecha]="avisoForm.get('fechaPago')?.value" [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
+      </div>
+    </div>
+    <div class="row mt-5"></div>
+    <div class="row mt-5"></div>
+    <div class="row mt-5">
+      <label>Plantilla de disminución:*</label>
+      <label>Para descargar plantilla del archivo excel da click <a href="aqui">aquí</a>
+      </label>
+    </div>
+    <div class="row mt-3">
+      <div class="bottom-buffer">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <div>
+                <label class="control-label"> Archivo excel a incorporar: </label>
+              </div>
+              <input class="visually-hidden-file" type="file" id="archivoAdjuntar" size="60" (change)="alSeleccionarArchivo($event)" formControlName="archivo" (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " />
+              <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo" style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
+              <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
+              <br />
+            </div>
+          </div>
+          <div class="col-md-4 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="!avisoForm.get('archivo')?.value"> Cargar archivo </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="cargarArchivo">
+          <p>El archivo fue procesado exitosamente.</p>
+        </div>
+      </div>
+    </div> @if (nuevaNotificacion ) { <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+    </section> }
+  </form>

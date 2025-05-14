@@ -1,0 +1,283 @@
+import { ADUANA_CATALOGO, HEADERS_ACCESOS_TABLA, MOVIMIENTO_CATALOGO, ROL_CATALOGO, SISTEMA_CATALOGO } from '../constantes/tecnologicos.enum';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud324State, Tramite324Store } from '../state/Tramite324.store';
+import { AccesosTabla } from '../models/tecnologicos.model';
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
+import { TecnologicosService } from '../service/tecnologicos.service';
+import { Tramite324Query } from '../state/Tramite324.query';
+
+/**
+ * Componente para gestionar la configuración de accesos en el trámite 324.
+ * Incluye la configuración de catálogos, formularios y tablas dinámicas.
+ */
+@Component({
+  selector: 'app-gestion-de-cuentas',
+  standalone: true,
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, CatalogoSelectComponent, ReactiveFormsModule, NotificacionesComponent],
+  templateUrl: './gestion-de-cuentas.component.html',
+  styleUrl: './gestion-de-cuentas.component.scss',
+})
+export class GestionDeCuentasComponent implements OnInit, OnDestroy {
+  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * ReplaySubject utilizado para gestionar la destrucción de observables.
+   * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Referencia al elemento modal para gestionar accesos.
+   */
+  @ViewChild('modalAccesos') modalElementAccesos!: ElementRef;
+
+  /**
+   * Configuración de columnas para la tabla de accesos.
+   */
+  public headers: ConfiguracionColumna<AccesosTabla>[] = HEADERS_ACCESOS_TABLA;
+
+  /**
+   * Catálogo de opciones para "Tipo Movimiento".
+   */
+  public movimientoCatalogo: CatalogosSelect = MOVIMIENTO_CATALOGO;
+
+  /**
+   * Catálogo de opciones para "Sistema".
+   */
+  public sistemaCatalogo: CatalogosSelect = SISTEMA_CATALOGO;
+
+  /**
+   * Catálogo de opciones para "Aduana".
+   */
+  public aduanaCatalogo: CatalogosSelect = ADUANA_CATALOGO;
+
+  /**
+   * Catálogo de opciones para "Rol".
+   */
+  public rolCatalogo: CatalogosSelect = ROL_CATALOGO;
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud324State;
+
+  /**
+   * Datos de la tabla de accesos.
+   */
+  public accesosTablaDatos: AccesosTabla[] = [];
+
+  /**
+   * Enumeración para la selección de tablas dinámicas.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Formulario reactivo para gestionar accesos.
+   */
+  accesosForm!: FormGroup;
+
+   /**
+   *  Arreglo que contiene los pedimentos registrados.
+   * */
+  public pedimentos: Array<Pedimento> = [];
+
+  /**
+   *  Índice del pedimento marcado para eliminación.
+   * */
+  public elementoParaEliminar!: number;
+  /**
+   * Constructor del componente.
+   * @param tecnologicos Servicio para obtener datos tecnológicos.
+   * @param store Almacén para gestionar el estado del trámite.
+   * @param query Consulta para obtener el estado del trámite.
+   * @param fb Constructor de formularios reactivos.
+   * @param validacionesService Servicio para validar formularios.
+   */
+  constructor(
+    private tecnologicos: TecnologicosService,
+    private store: Tramite324Store,
+    private query: Tramite324Query,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) { }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura el formulario, obtiene datos iniciales y suscribe al estado del trámite.
+   */
+  ngOnInit(): void {
+    this.accesosForm = this.fb.group({
+      rfc: ['', Validators.required],
+      aduana: ['', Validators.required],
+      sistema: ['', Validators.required],
+      rol: ['', Validators.required],
+      tipoMovimiento: ['', Validators.required],
+    });
+
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.donanteDomicilio();
+    this.obtenerDatosAduana();
+    this.obtenerDatosRol();
+    this.obtenerDatosSistema();
+    this.obtenerDatosTipoMovimiento();
+  }
+
+  /**
+   * Obtiene los datos del catálogo de "Aduana".
+   */
+  obtenerDatosAduana(): void {
+    this.tecnologicos
+      .obtenerDatosAduana()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.aduanaCatalogo.catalogos = resp as Catalogo[];
+      });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de "Rol".
+   */
+  obtenerDatosRol(): void {
+    this.tecnologicos
+      .obtenerDatosRol()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.rolCatalogo.catalogos = resp as Catalogo[];
+      });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de "Sistema".
+   */
+  obtenerDatosSistema(): void {
+    this.tecnologicos
+      .obtenerDatosSistema()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.sistemaCatalogo.catalogos = resp as Catalogo[];
+      });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de "Tipo Movimiento".
+   */
+  obtenerDatosTipoMovimiento(): void {
+    this.tecnologicos
+      .obtenerDatosTipoMovimiento()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.movimientoCatalogo.catalogos = resp as Catalogo[];
+      });
+  }
+
+  /**
+   * Abre el modal para gestionar accesos.
+   */
+  abrirAccesos(): void {
+    if (this.modalElementAccesos) {
+      const MODAL_INSTANCE_ACCESOS = new Modal(this.modalElementAccesos.nativeElement);
+      MODAL_INSTANCE_ACCESOS.show();
+    }
+  }
+
+  /**
+   * Agrega un nuevo acceso a la tabla si el formulario es válido.
+   */
+  agregarAccesos(): void {
+    if (this.accesosForm.valid) {
+      const NUEVO_ACCESO = this.accesosForm.value;
+      this.accesosTablaDatos.push(NUEVO_ACCESO);
+      this.accesosForm.reset();
+    }
+    this.abrirModal();
+  }
+  // Elimina un pedimento si se confirma la acción.
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+  // Abre el modal y configura la notificación para eliminar un pedimento.
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El acceso se agrego correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Valida todos los campos del formulario.
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.accesosForm.invalid) {
+      this.accesosForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo a verificar.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo a actualizar.
+   * @param metodoNombre Nombre del método del almacén para actualizar el estado.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite324Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Configura el formulario con los valores iniciales del estado.
+   */
+  donanteDomicilio(): void {
+    this.accesosForm = this.fb.group({
+      rfc: [this.solicitudState?.rfc, [Validators.required,Validators.maxLength(15)]],
+      aduana: [this.solicitudState?.aduana, [Validators.required]],
+      sistema: [this.solicitudState?.sistema, [Validators.required]],
+      rol: [this.solicitudState?.rol, [Validators.required]],
+      tipoMovimiento: [this.solicitudState?.tipoMovimiento, [Validators.required]],
+    });
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Cancela las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+}
+
+function abrirModal(i: any, arg1: number) {
+  throw new Error('Function not implemented.');
+}

@@ -14,6 +14,7 @@ import {
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
+import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
@@ -47,32 +48,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   tramiteAsociados!: TramiteAsociados[];
 
   /**
-   * Configuración para las columnas de la tabla.
-   * Define cómo se mostrarán los datos de los trámites asociados.
+   * Configuración de las columnas de la tabla para mostrar los trámites asociados.
    */
-  configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = [
-    { encabezado: '', clave: (item: TramiteAsociados) => item.id, orden: 1 },
-    {
-      encabezado: 'Folio trámite',
-      clave: (item: TramiteAsociados) => item.folioTramite,
-      orden: 2,
-    },
-    {
-      encabezado: 'Tipo trámite',
-      clave: (item: TramiteAsociados) => item.tipoTramite,
-      orden: 3,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (item: TramiteAsociados) => item.estatus,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha alta de registro',
-      clave: (item: TramiteAsociados) => item.fetchaAltaDeRegistro,
-      orden: 5,
-    },
-  ];
+  configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] =
+    CONFIGURACIONCOLUMNA;
 
   /**
    * Lista de bancos disponibles para seleccionar.
@@ -112,7 +91,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.solicitudPermisoService
       .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe(tramiteAsociados => {
+      .subscribe((tramiteAsociados) => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
@@ -127,28 +106,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   crearformularioPagoDerechos(): void {
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(
-        this.estadoSolicitudPermiso.claveDeReferencia,
-        Validators.required
+        this.estadoSolicitudPermiso.claveDeReferencia
       ),
       cadenaPagoDependencia: new FormControl(
-        this.estadoSolicitudPermiso.cadenaPagoDependencia,
-        Validators.required
+        this.estadoSolicitudPermiso.cadenaPagoDependencia
       ),
-      bancoClave: new FormControl(
-        this.estadoSolicitudPermiso.bancoClave,
-        Validators.required
-      ),
-      llaveDePago: new FormControl(
-        this.estadoSolicitudPermiso.llaveDePago,
-        Validators.required
-      ),
-      fecPago: new FormControl(
-        this.estadoSolicitudPermiso.fecPago,
-        Validators.required
-      ),
+      bancoClave: new FormControl(this.estadoSolicitudPermiso.bancoClave),
+      llaveDePago: new FormControl(this.estadoSolicitudPermiso.llaveDePago),
+      fecPago: new FormControl(this.estadoSolicitudPermiso.fecPago),
       impPago: new FormControl(
         this.estadoSolicitudPermiso.impPago,
-        [Validators.required, Validators.min(0)]
+        Validators.min(0)
       ),
     });
   }
@@ -162,7 +130,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     campo: string;
   }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
-    this.tramite260703Store.actualizarEstado({[$event.campo]: VALOR});
+    this.tramite260703Store.actualizarEstado({ [$event.campo]: VALOR });
   }
 
   /**

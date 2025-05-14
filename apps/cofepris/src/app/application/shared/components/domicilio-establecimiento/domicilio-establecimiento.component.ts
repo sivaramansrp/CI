@@ -1,6 +1,7 @@
 import {
   CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
 } from '../../constantes/datos-domicilio-legal.enum';
 import {
@@ -22,6 +23,13 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {
+  ConfiguracionVisibilidad,
+  MERCANCIAS_DATA,
+  MercanciasInfo,
+  NICO_TABLA,
+  NicoInfo,
+} from '../../models/datos-domicilio-legal.model';
+import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from '../../estados/stores/datos-domicilio-legal.store';
@@ -32,12 +40,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/datos-domicilio-legal.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -70,16 +72,20 @@ export interface MercanciasTabla {
     CrosslistComponent,
   ],
   templateUrl: './domicilio-establecimiento.component.html',
-  styleUrls: ['./domicilio-establecimiento.component.css'],
+  styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+/**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
@@ -102,6 +108,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  /**
+   * Configuración de visibilidad de los campos.
+   */
+  @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
+
   /**
    * Constructor del componente.
    * @param fb
@@ -168,15 +179,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
+
   /**
-   * Maneja el cambio de selección de países de origen.
-   * @param events Lista de países seleccionados.
+   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
+   *
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(this.domicilio, 'paisDeOriginDatos', 'setPaisDeOriginDatos');
   }
 
   /**
@@ -291,6 +306,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Objeto que representa la configuración de etiquetas para la selección de país de origen.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "País de origen".
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+   */
+  public paisDeOrigen: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionados',
+  };
+  /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
@@ -321,6 +346,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
+      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
+      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
     this.formAgente = this.fb.group({
@@ -343,6 +370,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+    this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
   }
 
   /**

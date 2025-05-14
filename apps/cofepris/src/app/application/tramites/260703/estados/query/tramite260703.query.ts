@@ -16,6 +16,11 @@ export class Tramite260703Query extends Query<SolicitudPermisoState> {
   });
 
 
+  /**
+   * Constructor de la clase Tramite260703Query.
+   * 
+   * store - La instancia de `Tramite260703Store` que se utiliza para gestionar el estado de la aplicación.
+   */
   constructor(
     protected override store: Tramite260703Store) {
     super(store);

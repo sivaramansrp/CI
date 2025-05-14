@@ -6,7 +6,7 @@ import { SolicitudPermisoService } from '../../services/solicitud-permiso.servic
 import { of, Subject } from 'rxjs';
 import { Tramite260703Store } from '../../estados/store/tramite260703.store';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
-import { DatosSolitudeComponent } from '../../components/datos-solicitud/datos-solitude.component';
+import { DatosSolitudeComponent } from '../../components/datos-solicitud/datos-solicitude.component';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';

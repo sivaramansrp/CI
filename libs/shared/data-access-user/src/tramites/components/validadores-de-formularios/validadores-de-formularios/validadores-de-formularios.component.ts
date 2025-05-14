@@ -67,5 +67,5 @@ export class ValidadoresDeFormulariosComponent {
   * Esta propiedad de entrada permite establecer si el componente debe aplicar 
   * una altura mínima. Por defecto, está configurada como `true`.
   */
-@Input() setMinHeight: boolean = true;
+@Input() setMinHeight: boolean = false;
 }

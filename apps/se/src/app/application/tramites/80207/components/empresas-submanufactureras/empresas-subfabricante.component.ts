@@ -373,6 +373,18 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
     this.store.eliminarPlantas(this.listaDeSubfabricantesPorEliminar);
   }
 
+    /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+    esInvalido(nombreControl: string): boolean {
+      const CONTROL = this.formularioDatosSubcontratista.get(nombreControl);
+      return CONTROL
+        ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+        : false;
+    }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.

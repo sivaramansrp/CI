@@ -19,6 +19,8 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
+import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
@@ -44,12 +46,16 @@ import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/repre
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
+  /**
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
@@ -87,6 +93,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Notificador para destruir observables.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * Configuración de visibilidad de los campos.
+   */
+   @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
   /**
    * Constructor del componente.

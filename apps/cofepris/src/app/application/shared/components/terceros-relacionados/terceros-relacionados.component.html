@@ -8,7 +8,12 @@
     ></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Fabricante :</h6>
+    <div class="col-md-3">
+        <h6>Fabricante
+          <span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span>
+          <span class="form-label">:</span>
+        </h6>
+    </div>
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica
@@ -50,7 +55,14 @@
       </div>
     </div>
   </div>
-  <div class="row mt-5"><h6>Destinatario (destino final) :</h6></div>
+  <div class="row mt-5">
+    <div class="col-md-3">
+      <h6> Destinatario (destino final)
+        <span class="form-label" *ngIf="esCampoRequerido('destinoFinal')">*</span>
+        <span class="form-label">:</span>
+      </h6>
+    </div>
+  </div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaDestinatarioFinal"

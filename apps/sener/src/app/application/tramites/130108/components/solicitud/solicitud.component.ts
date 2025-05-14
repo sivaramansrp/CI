@@ -1,7 +1,10 @@
 import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { TITULO_ORIGEN } from '../../../../shared/constantes/pais-titulo.enum';
+
 import { Tramite130108State, Tramite130108Store } from '../../estados/tramites/tramites130108.store';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -132,63 +135,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Datos de los campos de entrada del formulario.
    * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} Arreglo que contiene los datos de los campos del formulario de mercancía.
    */
-  datosInputFields = [
-    {
-      label: 'Régimen al que se destinará la mercancía',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'regimen',
-    },
-    {
-      label: 'Clasificación del régimen',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'clasificacion',
-    },
-  ];
+  datosInputFields = DATOS_INPUT_FIELDS;
 
   /**
  * Datos de los campos de entrada para la mercancía.
  * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} 
  * Arreglo que contiene los datos de los campos que serán utilizados en el formulario de mercancía.
  */
-  mercanciaInputValues = [
-    /**
-     * Fracción arancelaria.
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar la fracción arancelaria de la mercancía.
-     */
-    {
-      label: 'Fracción arancelaria',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'fraccion',
-    },
-
-    /**
-     * Unidad de medida de la tarifa (UMT).
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar la unidad de medida de la tarifa asociada a la mercancía.
-     */
-    {
-      label: 'Unidad de medida de la tarifa (UMT)',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'umt',
-    },
-
-    /**
-     * NICO (Número de Identificación de la Carga).
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar el número de identificación de la carga (NICO) de la mercancía.
-     */
-    {
-      label: 'NICO',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'nico',
-    },
-  ];
+  mercanciaInputValues = MERCANCIA_INPUT_VALUES;
   /**
  * Array de catálogos.
  * @type {Catalogo[][]} Arreglo bidimensional de catálogos que contiene los valores para las solicitudes.
@@ -269,6 +223,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los catálogos disponibles para el número de identificación de la carga (NICO).
    */
   nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
+
+ /**
+ * @property
+ * @name tituloParte
+ * @description
+ * Título que se utiliza para mostrar el encabezado de la sección relacionada con los países de origen.
+ * Este valor se asigna desde la constante `TITULO_ORIGEN` para mantener consistencia en los textos utilizados.
+ * 
+ * @type {string}
+ * @default 'Pais(es) de origen'
+ * 
+ * @example
+ * <h1>{{ tituloParte }}</h1>
+ */
+tituloParte = TITULO_ORIGEN;
  
   /**
  * @public

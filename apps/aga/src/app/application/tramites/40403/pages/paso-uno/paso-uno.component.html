@@ -2,37 +2,23 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(1)"
-          (keydown.enter)="seleccionaTab(1)"
-          (keydown.space)="seleccionaTab(1)"
-          role="button"
-          tabindex="1"
-          >Solicitante</a
-        >
+        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Solicitante</a>
       </li>
 
       <li [ngClass]="indice === 2 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(2)"
-          (keydown.enter)="seleccionaTab(2)"
-          (keydown.space)="seleccionaTab(2)"
-          role="button"
-          tabindex="2"
-          >Datos del trámite</a
-        >
+        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos del Trámite</a>
       </li>
     </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <app-solicitante #Solicitante></app-solicitante>
+      @switch (indice) {
+      @case (1) {
+      <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
-      <app-contenido-tabs-wizard></app-contenido-tabs-wizard>
-      } @case (3) {
-      <app-datos-tramite-renovacion> </app-datos-tramite-renovacion>
-      }  }
+      <app-datos-tramite-renovacion [tabindex]="2"> </app-datos-tramite-renovacion>
+      }
+      }
     </ng-container>
   </div>
 </div>

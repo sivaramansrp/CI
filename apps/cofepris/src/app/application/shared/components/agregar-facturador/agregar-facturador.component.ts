@@ -186,25 +186,36 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
+    const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    }
     const NUEVO_FACTURADOR: Facturador = {
-      nombreRazonSocial: `${this.agregarFacturadorForm.value.nombres} ${
-        this.agregarFacturadorForm.value.primerApellido
-      } ${this.agregarFacturadorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial:nombreRazonSocial,
       rfc: '',
       curp: '',
-      telefono: this.agregarFacturadorForm.value.telefono || '',
+      telefono: VALOR_FORMULARIO.telefono || '',
       correoElectronico:
-        this.agregarFacturadorForm.value.correoElectronico || '',
-      calle: this.agregarFacturadorForm.value.calle || '',
-      numeroExterior: this.agregarFacturadorForm.value.numeroExterior || '',
-      numeroInterior: this.agregarFacturadorForm.value.numeroInterior || '',
-      pais: this.agregarFacturadorForm.value.pais || '',
-      colonia: this.agregarFacturadorForm.value.colonia || '',
+        VALOR_FORMULARIO.correoElectronico || '',
+      calle: VALOR_FORMULARIO.calle || '',
+      numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais || '',
+      colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa: this.agregarFacturadorForm.value.estado || '',
+      entidadFederativa: VALOR_FORMULARIO.estado || '',
       estadoLocalidad: '',
-      codigoPostal: this.agregarFacturadorForm.value.codigoPostal || '',
+      codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
     };
 

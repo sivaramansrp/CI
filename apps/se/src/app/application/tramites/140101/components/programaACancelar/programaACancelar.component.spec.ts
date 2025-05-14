@@ -77,7 +77,7 @@ describe('ProgramaACancelarComponent', () => {
     component.ngOnInit();
   
     // Verify that the form is initialized
-    expect(component.formGroup).toBeTruthy();
+    expect(component.ProgramaForm).toBeTruthy();
   
     // Verify that datosTabla is populated with the mock data
     expect(component.datosTabla).toEqual(ProgramaACancelar);
@@ -102,13 +102,13 @@ describe('ProgramaACancelarComponent', () => {
     expect(tramite140101StoreMock.setRadioSelection).toHaveBeenCalledWith(-1);
     // expect(tramite140101StoreMock.setSolicitudObservaciones).toHaveBeenCalledWith('Observaciones');
     // expect(tramite140101StoreMock.setConfirmar).toHaveBeenCalledWith('false');
-    expect(component.formGroup.value).toEqual(mockRow);
+    expect(component.ProgramaForm.value).toEqual(mockRow);
   });
 
   it('should call setValoresStore with the correct parameters', () => {
     const spy = jest.spyOn(tramite140101StoreMock, 'setPrograma');
-    component.setValoresStore(component.formGroup, 'folioPrograma', 'setPrograma');
-    expect(spy).toHaveBeenCalledWith(component.formGroup.get('folioPrograma')?.value);
+    component.setValoresStore(component.ProgramaForm, 'folioPrograma', 'setPrograma');
+    expect(spy).toHaveBeenCalledWith(component.ProgramaForm.get('folioPrograma')?.value);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
