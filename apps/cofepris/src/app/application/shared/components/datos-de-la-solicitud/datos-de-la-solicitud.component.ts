@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  MENSAJE_SIN_FILA_SELECCIONADA,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
@@ -309,6 +310,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public etiquetaMunicipio: string = 'Municipio o alcaldía';
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
+   * Mensaje de alerta que se muestra al usuario.
+   * @property {string} mensajeDeAlerta
+   */
+  public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -429,7 +442,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
         [
-          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
@@ -441,7 +453,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
         [
-          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
@@ -484,12 +495,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada, [Validators.required]],
+      lada: [this.datosSolicitudFormState.lada,],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
       aviso: [this.datosSolicitudFormState.aviso],
       licenciaSanitaria: [
         this.datosSolicitudFormState.licenciaSanitaria,
-        [Validators.required],
       ],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
@@ -531,7 +541,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.idProcedimiento
           ),
         },
-        [Validators.required],
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
@@ -605,6 +614,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarScian(): void {
     if (!this.scianLista.length) {
+      this.mostrarAlerta=true;
       return;
     }
     this.scianConfig.datos = this.scianConfig.datos.filter(
@@ -619,6 +629,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+   /**
+   * Cierra el modal de alerta.
+   * @method cerrarModal
+   * @returns {void}
+   */
+   aceptar(): void {
+    this.mostrarAlerta = false;
+  }
+
   /**
    * Elimina las mercancías seleccionadas de la lista de datos de la tabla.
    *
@@ -631,6 +650,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
+      this.mostrarAlerta=true;
       return;
     }
     this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(

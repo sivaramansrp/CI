@@ -20,20 +20,24 @@
           <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
         </div>
 
-        <div class="col-md-1 form-group">
-          <label class="form-label" for="lada">Lada:</label>
-          <input type="text" id="lada" class="form-control" formControlName="lada" (change)="setValoresStore('formDestinatario','lada','setFormDestinatario')" />
-        </div>
+        @if(!ocultarLada){
+          <div class="col-md-1 form-group">
+            <label class="form-label" for="lada">Lada:</label>
+            <input type="text" id="lada" class="form-control" formControlName="lada" (change)="setValoresStore('formDestinatario','lada','setFormDestinatario')" />
+          </div>
+        }
 
         <div class="col-md-3 form-group">
           <label class="form-label" for="telefono">Teléfono:</label>
           <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
         </div>
 
-        <div class="col-md-4 form-group">
-          <label class="form-label" for="fax">Fax:</label>
-          <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
-        </div>
+        @if(!ocultarFax){
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="fax">Fax:</label>
+            <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+          </div>
+        }
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="correoElectronico"

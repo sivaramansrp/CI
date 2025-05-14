@@ -105,6 +105,9 @@ export class ScianTablaComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   agregarScian(): void {
+    if (this.scianForm.invalid) {
+      return;
+    }
     const SCIAN_IDX: TablaScianConfig = {
       clave: this.scianNinoLista[0].descripcion,
       descripcion: this.scianForm.get('scianNino')?.value
