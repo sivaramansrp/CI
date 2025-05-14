@@ -44,17 +44,17 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Tipo de selección para la tabla dinámica (CHECKBOX)
    */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Instancia del modal de Bootstrap
    */
-  modalInstance!: modal;
+  public modalInstance!: modal;
 
   /**
    * Formulario reactivo para el modal de actualización
    */
-  modalForma!: FormGroup;
+  public modalForma!: FormGroup;
 
   /**
    * Estado actual de la solicitud del trámite
@@ -100,17 +100,17 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Configuración de columnas para la tabla de instalaciones
    */
-  instalacionesPrincipalesTabla: ConfiguracionColumna<InstalacionesPrincipalesTablaInfo>[] = INSTALACIONES_PRINCIPALES_TABLA;
+  public instalacionesPrincipalesTabla: ConfiguracionColumna<InstalacionesPrincipalesTablaInfo>[] = INSTALACIONES_PRINCIPALES_TABLA;
 
   /**
    * Datos para poblar la tabla de instalaciones
    */
-  instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
+  public instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
 
   /**
    * Datos del formulario principal
    */
-  formaDatos: formaDatosInfo[] = [];
+  public formaDatos: formaDatosInfo[] = [];
 
   /**
    * Inicialización del componente
@@ -154,7 +154,7 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Crea el formulario reactivo para el modal
    */
-  crearFormulario(): void {
+  public crearFormulario(): void {
     this.modalForma = this.fb.group({
       nombre: [{ value: this.formaDatos[0]?.nombre, disabled: true }],
       registroFederal: [{ value: this.formaDatos[0]?.registroFederal, disabled: true }],
@@ -173,7 +173,7 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Obtiene datos de instalaciones principales desde el servicio
    */
-  obtenerInstalacionesPrincipalesTablaDatos(): void {
+  public obtenerInstalacionesPrincipalesTablaDatos(): void {
     this.service.obtenerInstalacionesPrincipalesTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -188,7 +188,7 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Obtiene datos del formulario desde el servicio
    */
-  obtenerFormaDatos(): void {
+  public obtenerFormaDatos(): void {
     this.service.obtenerFromaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -204,15 +204,51 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Abre el modal de actualización
    */
-  openModal(): void {
+  public openModal(): void {
     this.modalInstance?.show();
   }
 
   /**
    * Cierra el modal de actualización
    */
-  hideModal(): void {
+  public hideModal(): void {
     this.modalInstance?.hide();
+  }
+  /**
+ * Obtiene los valores actuales del formulario modal y los muestra en consola.
+ * Si el formulario no está inicializado, registra un mensaje de error.
+ * Finalmente cierra el modal.
+ * 
+ * @returns {void}
+ */
+  public obtenerValoresFormulario():void{
+    if (this.modalForma) {
+      const VALORES = this.modalForma.getRawValue();
+      this.instalacionesPrincipalesTablaDatos[0].nombre = VALORES.nombre
+      this.instalacionesPrincipalesTablaDatos[0].registro_poblacional = VALORES.curpActualizada
+      this.instalacionesPrincipalesTablaDatos[0].rfc = VALORES.registroFederal
+    } else {
+      console.error('El formulario no está inicializado.');
+    }
+    this.hideModal()
+  }
+
+  /**
+ * Limpia los valores del formulario modal y habilita todos los controles.
+ * Si el formulario no está inicializado, registra un mensaje de error.
+ * 
+ * @returns {void}
+ */
+
+  public limpiarValoresFormulario():void{
+    if (this.modalForma) {
+      this.modalForma.reset();
+      Object.keys(this.modalForma.controls).forEach((key) => {
+        this.modalForma.get(key)?.enable();
+      });
+    } else {
+      console.error('El formulario no está inicializado.');
+    }
   }
 
   /**

@@ -23,7 +23,7 @@ export class SolicitudPasoComponent {
    * @type {number}
    * @memberof SolicitudPasoComponent
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * Referencia al componente del asistente (wizard).
@@ -41,7 +41,7 @@ export class SolicitudPasoComponent {
    * @type {ListaPasosWizard[]}
    * @memberof SolicitudPasoComponent
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  public pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Datos de los pasos del asistente.
@@ -50,7 +50,7 @@ export class SolicitudPasoComponent {
    * @type {DatosPasos}
    * @memberof SolicitudPasoComponent
    */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     /** Número total de pasos en el asistente. */
     nroPasos: this.pasos.length,
     /** Índice del paso actual. */
@@ -72,7 +72,7 @@ export class SolicitudPasoComponent {
    * @returns {void}
    * @memberof SolicitudPasoComponent
    */
-  getValorIndice(e: AccionBoton): void {
+  public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
 
