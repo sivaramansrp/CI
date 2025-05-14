@@ -4212,5 +4212,12 @@
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
+  },
+  {
+    "id": 603,
+    "tramite": 32514,
+    "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
+    "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
+    "department": "agace"
   }
 ]
