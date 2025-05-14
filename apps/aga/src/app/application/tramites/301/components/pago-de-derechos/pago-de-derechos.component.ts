@@ -13,6 +13,9 @@ import {
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Solocitud301Service } from '../../services/service301.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import { TieneConsultaio } from '@libs/shared/data-access-user/src';
@@ -33,11 +36,10 @@ import { TieneConsultaio } from '@libs/shared/data-access-user/src';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
-  @Input() public procedureDatos:Array<any> = [];
   @Input() public procedureState!: TieneConsultaio;
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
@@ -58,9 +60,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
+   * Indica si el formulario está en modo de actualización (patch).
+   * Si es `true`, el formulario se utiliza para editar un registro existente.
+   */
+  public esFormularioActualizacion: boolean = false;
+
+  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente `PagoDeDerechosComponent`.
@@ -72,18 +86,54 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
-  ) {}
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioActualizacion = [
+            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
+            'FLUJO_FUNCIONARIO_AUTORIZACION',
+            'FLUJO_FUNCIONARIO_EVALUAR'
+          ].includes(seccionState.parameter);
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * Método del ciclo de vida `ngOnInit()`.
-   * Este método se ejecuta cuando el componente se inicializa y realiza las siguientes acciones:
-   * - Inicializa el formulario reactivo `FormSolicitud` con dos campos: `linea` y `monto`.
-   * - Llama al método `updateformfied()` para configurar el campo 'monto', deshabilitándolo y estableciendo un valor predeterminado.
-   *
-   * @memberof PagoDeDerechosComponent
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.
+   * Llama a la función para inicializar el estado del formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioActualizacion) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     // Inicializa el formulario con validaciones requeridas
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
@@ -103,13 +153,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         lineaCheckbox: [this.solicitudState?.lineaCheckbox],
       }),
     });
-
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
-    if(this.procedureDatos.length > 0) {
+    if (this.procedureState.readonly) {
       this.getProcedureDatos();
     }
   }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+      this.FormSolicitud.disable();
+    } else if (!this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+      this.FormSolicitud.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
    * Método `updateformfied()`.
@@ -144,15 +212,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
-    if(this.procedureState.readonly) {
-      this.FormSolicitud.get('pagodederechos.linea')?.disable();
-      this.FormSolicitud.get('pagodederechos.monto')?.disable();
-      this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.disable();
-
-    }
-    this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
-    this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
-    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
+    this.FormSolicitud.get('pagodederechos.linea')?.disable();
+    this.FormSolicitud.get('pagodederechos.monto')?.disable();
+    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.disable();
+    // this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
+    // this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+    // this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
   }
 
   /**
@@ -164,5 +229,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

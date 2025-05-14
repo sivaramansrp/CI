@@ -15,8 +15,11 @@ import {
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -36,13 +39,12 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   selector: 'app-de-la-muestra',
   templateUrl: './de-la-muestra.component.html',
   styleUrls: ['./de-la-muestra.component.scss'],
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
   standalone: true,
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
-  @Input() public procedureDatos:Array<any> = [];
-  @Input() public procedureState: any;
+  @Input() public procedureState!: TieneConsultaio;
   /**
    * Datos del catálogo relacionados con la mercancía.
    *
@@ -69,9 +71,21 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
+  * Indica si el formulario está en modo de actualización (patch).
+  * Si es `true`, el formulario se utiliza para editar un registro existente.
+  */
+  public esFormularioActualizacion: boolean = false; 
+
+  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor del componente `DeLaMuestraComponent`.
@@ -83,9 +97,23 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // add initialization code here
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.esFormularioActualizacion = [
+          'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
+          'FLUJO_FUNCIONARIO_AUTORIZACION',
+          'FLUJO_FUNCIONARIO_EVALUAR'
+        ].includes(seccionState.parameter);
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -98,14 +126,34 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   validarFormulario(): void {}
 
   /**
-   * Método del ciclo de vida `ngOnInit()` de Angular.
-   *
-   * Este método se ejecuta una vez que el componente ha sido inicializado.
-   * Realiza las siguientes acciones:
-   * - Llama al método `getMercancia()` para inicializar el objeto `mercancia`.
-   * - Crea el formulario reactivo `FormSolicitud` y lo inicializa con un campo obligatorio `folio`.
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.  
+   * Llama a la función para inicializar el estado del formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioActualizacion) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    this.getMercancia();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
         .pipe(
@@ -116,16 +164,30 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-    this.getMercancia();
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
         folio: [this.solicitudState?.folio, Validators.required],
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
-    if(this.procedureDatos.length > 0) {
+    if(this.procedureState.readonly) {
       this.getProcedureDatos();
     }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+        this.Informaciondela.disable();
+      } else if (!this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+        this.Informaciondela.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
@@ -163,12 +225,10 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
-    if(this.procedureState.readonly) {
-      this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
-      this.Informaciondela.get('datosImportadorExportador.mercancia')?.disable();
-    }
-    this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
-    this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
+    this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
+    this.Informaciondela.get('datosImportadorExportador.mercancia')?.disable();
+    // this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
+    // this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
   }
 
   /**
@@ -195,5 +255,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

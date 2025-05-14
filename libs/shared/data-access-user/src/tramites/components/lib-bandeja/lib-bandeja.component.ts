@@ -3,12 +3,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
-import { ConsultaioStore } from '../../../core/estados/consulta.store';
-import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
+// import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
 
@@ -85,22 +86,19 @@ export class LibBandejaComponent<T> implements OnInit {
 
     public onFilaClic(event:any):void {
       const ROW_OBJETO = event;
-      let PROCEDURE: unknown;
-      let ORIGIN: string = ''; // Inicializar ORIGEN con un valor predeterminado
-      this.configuracionTablaDatos.forEach((datos) => {
-        if (datos.numeroDeProcedimiento === ROW_OBJETO.numeroDeProcedimiento) {
-          ORIGIN = datos.origin;
-          PROCEDURE = Number(datos.numeroDeProcedimiento);
-        }
-      });
+      const PROCEDURE: unknown | number = Number(ROW_OBJETO.numeroDeProcedimiento);
+      const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
       this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
       this.procedureUrl = this.tramiteData[0].linkDashboard;
-      //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
-      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,true,false,false);
-
-      this.router.navigate([this.procedureUrl]);
+      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,ROW_OBJETO.folioTramite, ROW_OBJETO.tipoDeTramite, true,true,true);
+      if(!this.tieneBandeja) {
+        this.router.navigate([this.procedureUrl]);
+      }
+      if((ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO')) {
+        this.router.navigate([`/${this.tramiteData[0].department}/proceso-requerimiento`]);  
+      }
+      
     }
-
     public mostrarColapsable(orden:number): void {
       if (orden === 1) {
         this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
