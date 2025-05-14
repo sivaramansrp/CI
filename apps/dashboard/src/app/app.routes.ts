@@ -77,8 +77,7 @@ export const appRoutes: Route[] = [
         remoteName: 'sener',
         exposedModule: './Module'
       }).then((m) => m.AppSenerModule)
-  },
-  
+  },  
   {
     path: 'funcionario',
     loadChildren: () =>
@@ -89,14 +88,14 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppFuncionarioModule)
   },
   {
-  path: 'amecafe',
-  loadChildren: () =>
+    path: 'amecafe',
+    loadChildren: () =>
       loadRemoteModule({
           remoteEntry: `${ENVIRONMENT.REMOTE_APPS.amecafe}/remoteAppEntry.js`,
           remoteName: 'amecafe',
           exposedModule: './Module'
       }).then((m) => m.AppAmecafeModule)
-  } ,
+  },
   {
     path: 'sedena',
     loadChildren: () =>
@@ -133,5 +132,4 @@ export const appRoutes: Route[] = [
             exposedModule: './Module'
         }).then((m) => m.AppProfepaModule)
   }
-
 ];
