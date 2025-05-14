@@ -87,7 +87,7 @@
     "id": 13,
     "tramite": 11202,
     "linkDashboard": "/aga/retorno-contenedores/solicitante",
-    "linkDepartment": "/aga/retorno-contenedores/solicitante",
+    "linkDepartment": "/pago/retorno-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -346,7 +346,7 @@
     "id": 50,
     "tramite": 110221,
     "linkDashboard": "/se/validador-certificado-cam",
-    "linkDepartment": "/se/validador-certificado-cam",
+    "linkDepartment": "/pago/validador-certificado-cam",
     "department": "se"
   },
   {
@@ -1242,7 +1242,7 @@
     "id": 178,
     "tramite": 260906,
     "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/cofepris/modificacion-permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario",
     "department": "cofepris"
   },
   {
