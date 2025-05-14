@@ -49,6 +49,17 @@ export const DATOS_DEL_TRAMITE = [
     valorPredeterminado: '',
     marginTop: 0
   },
+   {
+    id: '',
+    labelNombre: ' ',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    soloLectura: false,
+    valorPredeterminado: '',
+    marginTop: 0
+  },
   {
     id: 'clasificacion',
     labelNombre: 'Clasificación del régimen',
@@ -119,7 +130,7 @@ export const DATOS_DE_LA_MERCANCIA = [
   },
   {
     id: 'fraccion_arancelaria',
-    labelNombre: 'Fracción Arancelaria',
+    labelNombre: 'Fracción arancelaria',
     campo: 'fraccion_arancelaria',
     clase: 'col-md-12',
     tipoInput: 'select-catalogos',

@@ -115,8 +115,8 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
    * @type {CrossListLable}
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País disponible',
+    derecha: 'País seleccionados',
   };
 
   /**

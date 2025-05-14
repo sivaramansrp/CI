@@ -8,19 +8,19 @@ import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agr
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 const mockService = {
-  datosDeLaSolicitud: jest.fn()
+  datosDeLaSolicitud: jest.fn().mockReturnValue(of({ regimen: [], clasificacion: [] })), // Mocked to return an observable
 };
 
 const mockStore = {
-  setDynamicFieldValue: jest.fn()
+  setDynamicFieldValue: jest.fn(),
 };
 
 const mockQuery = {
-  selectSolicitudDeRegistroTpl$: of({ someState: true })
+  selectSolicitudDeRegistroTpl$: of({ someState: true }),
 };
 
 const mockFormService = {
-  setFormValue: jest.fn()
+  setFormValue: jest.fn(),
 };
 
 describe('DatosDeLaSolicitudComponent (Jest)', () => {
@@ -29,7 +29,7 @@ describe('DatosDeLaSolicitudComponent (Jest)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDeLaSolicitudComponent],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent],
       declarations: [],
       providers: [
         { provide: ImportacionesAgropecuariasService, useValue: mockService },
