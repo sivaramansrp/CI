@@ -104,6 +104,18 @@
               (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
           </div>
+          <div class="col-md-4">
+            <label>Destino en el país importador </label>
+            <span class="require">*:</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="destinoDeImportador"
+              id="destinoDeImportador"
+              [required]="true"
+              (change)="setValoresStore(exportacionForm, 'destinoDeImportador', 'setDestinoDeImportador')"
+            />
+          </div>
         </div>
         <ng-titulo titulo="Datos del transporte"></ng-titulo>
         <div class="row">

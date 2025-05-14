@@ -156,16 +156,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Botones para gestionar la lista de países de origen.
-   */
-  // public paisDeOrigenBotons = this.getCrossListBtn(0);
-
-  /**
-   * Botones para gestionar la lista de entidades.
-   */
-  // public entidadesBotons = this.getCrossListBtn(0);
-
-  /**
    * Etiquetas para la lista de países de origen.
    */
   public paisDeOrigenLabel: CrossListLable = {
@@ -311,6 +301,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
         lungarDeEntrada: [
           this.solicitudState?.lungarDeEntrada,
+          Validators.required,
+        ],
+        destinoDeImportador: [
+          this.solicitudState?.destinoDeImportador,
           Validators.required,
         ],
         medioDeTransporte: [
