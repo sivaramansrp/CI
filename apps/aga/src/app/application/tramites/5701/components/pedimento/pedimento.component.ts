@@ -184,12 +184,13 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
           map((response) => {
             if (response.codigo === '00') {
               const PEDIMENTO = {
+                idPedimento: response.datos.pedimento,
                 patente: response.datos.patente,
                 pedimento: response.datos.pedimento,
                 aduana: response.datos.aduana,
                 estadoPedimento: response.datos.estado_pedimento,
                 subEstadoPedimento: response.datos.sub_estado_pedimento,
-                idTipoPedimento: 0,
+                tipoPedimento: 0,
                 descTipoPedimento: 'Por evaluar',
                 numero: '',
                 comprobanteValor: '',

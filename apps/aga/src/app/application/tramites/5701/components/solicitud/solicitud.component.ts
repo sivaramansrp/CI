@@ -361,7 +361,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    this.tipoSolicitudSeleccion();
+    // this.tipoSolicitudSeleccion();
 
     this.verificarDatosExistentesStore();
   }
@@ -712,6 +712,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         this.solicitudState?.tipoSolicitud,
         [Validators.required],
       ],
+      descripcionTipoSolicitud: ['', [Validators.required]],
       datosImportadorExportador: this.fb.group({
         apoderadoPatente: [],
         empresaApoderado: [],
@@ -777,11 +778,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
+        tipoDespacho: [this.solicitudState?.tipoDespacho],
+        descripcionTipoDespacho: [this.solicitudState?.descripcionTipoDespacho],
         tipoOperacion: [this.solicitudState?.tipoOperacion],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
         relacionSociedad: [this.solicitudState?.relacionSociedad],
         encargoConferido: [this.solicitudState?.encargoConferido],
         domicilioDespacho: [this.solicitudState?.domicilioDespacho],
+        especifique: [this.solicitudState?.especifique],
       }),
 
       mercancia: this.fb.group({
@@ -972,28 +976,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
+    const TIPO_SOLICITUD = parseInt(this.FormSolicitud.get('tipoSolicitud')?.value, 10);
 
-    if (this.solicitudState.tipoSolicitud && (TIPO_SOLICITUD !== this.solicitudState.tipoSolicitud)) {
-      //Abre el modal de aviso
-      alert('Tipo de solicitud seleccionado: ');
-      this.tramite5701Store.limpiarSolicitud();
-      this.FormSolicitud.reset(
-        {
-          tipoSolicitud: TIPO_SOLICITUD
-        }
-      );
-      this.setValoresStore(this.FormSolicitud, 'tipoSolicitud', 'setTipoSolicitud');
-    }
+    const SOLICITUD_DESRIPCION = this.tiposSolicitud.find((tipo) => tipo.id === TIPO_SOLICITUD)?.descripcion;
+    this.FormSolicitud.get('descripcionTipoSolicitud')?.setValue(SOLICITUD_DESRIPCION);
 
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
-    this.tramite5701Store.setTipoSolicitud(TIPO_SOLICITUD);
-
-
+    this.setValoresStore(this.FormSolicitud, 'tipoSolicitud', 'setTipoSolicitud');
+    this.setValoresStore(this.FormSolicitud, 'descripcionTipoSolicitud', 'setDescripcionTipoSolicitud');
   }
 
   /**
@@ -1723,15 +1717,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   limpiaCamposDdaLda(): void {
-    this.despacho.get('idAduanaDespacho')?.setValue('');
+    this.despacho.get('idAduanaDespacho')?.setValue(-1);
     this.despacho.get('aduanaDespacho')?.setValue('');
-    this.despacho.get('idSeccionDespacho')?.setValue('');
+    this.despacho.get('idSeccionDespacho')?.setValue(-1);
     this.despacho.get('seccionAduanera')?.setValue('');
-    this.despacho.get('nombreRecinto')?.setValue('');
+    this.despacho.get('nombreRecinto')?.setValue(-1);
     this.despacho.get('tipoOperacion')?.setValue('');
     this.despacho.get('relacionSociedad')?.setValue(false);
     this.despacho.get('encargoConferido')?.setValue(false);
     this.despacho.get('domicilioDespacho')?.setValue('');
+    this.despacho.get('tipoDespacho')?.setValue(-1);
+    this.despacho.get('tipoDespachoDescripcion')?.setValue('');
 
     this.setValoresStore(this.despacho, 'idAduanaDespacho', 'setIdAduanaDespacho');
     this.setValoresStore(this.despacho, 'aduanaDespacho', 'setAduanaDespacho');
@@ -1743,6 +1739,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.despacho, 'relacionSociedad', 'setRelacionSociedad');
     this.setValoresStore(this.despacho, 'encargoConferido', 'setEncargoConferido');
     this.setValoresStore(this.despacho, 'domicilioDespacho', 'setDomicilioDespacho');
+    this.setValoresStore(this.despacho, 'tipoDespacho', 'setTipoDespacho');
+    this.setValoresStore(this.despacho, 'tipoDespachoDescripcion', 'setDescripcionTipoDespacho');
+
   }
 
   /**
@@ -1762,9 +1761,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Guarda los datos del pedimento en el store.
    * @param {datosPedimento[]} Lista con los datos del pedimento.
-   * @returns {void} No retorna ningún valor.
+   * @returns {void} No retorna ningún v(alor.
    */
   changeAgregarPedimento(datosPedimento: Pedimento[]): void {
     this.tramite5701Store.setPedimentos(datosPedimento);
+  }
+
+
+  /**
+   * Cambia el tipo de despacho y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
+  */
+  changeTipoDespacho(): void {
+    const TIPO_DESPACHO = parseInt(this.despacho.get('tipoDespacho')?.value, 10);
+
+    const TIPO_DESPACHO_DESCRIPCION = this.selectCatalogoDespacho.find((tipo) => tipo.id === TIPO_DESPACHO)?.descripcion;
+    this.despacho.get('tipoDespachoDescripcion')?.setValue(TIPO_DESPACHO_DESCRIPCION);
+
+    this.setValoresStore(this.despacho, 'tipoDespacho', 'setTipoDespacho');
+    this.setValoresStore(this.despacho, 'tipoDespachoDescripcion', 'setDescripcionTipoDespacho');
   }
 }

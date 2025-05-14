@@ -129,12 +129,13 @@ export interface Persona {
  * @property {string} pedimentoValidado - Indicador de validación del pedimento.
  */
 export interface Pedimento {
+    idPedimento: number;
     patente: number;
     pedimento: number;
     aduana: number;
+    tipoPedimento: number;
     estadoPedimento: string;
     subEstadoPedimento: string;
-    idTipoPedimento: number;
     descTipoPedimento: string;
     numero: string;
     comprobanteValor: string;

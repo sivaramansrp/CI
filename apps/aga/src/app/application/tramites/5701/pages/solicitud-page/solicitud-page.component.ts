@@ -11,11 +11,13 @@ import {
   TercerosStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
-import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Solicitud5701State, Tercero5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { ListPersonaNoti, PersonaResponsableDespacho, SolicitudPayload } from '../../../../core/models/5701/solicitud-payload.model';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud5701State, Tercero5701State } from '../../../../core/estados/tramites/tramite5701.store';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { Pedimento } from '../../../../core/models/5701/solicitud-payload.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { TIPO_TRAMITE } from '../../../../core/enums/5701/tramite5701.enum';
 
 interface AccionBoton {
   accion: string;
@@ -144,15 +146,44 @@ export class SolicitudPageComponent implements OnInit {
 
     const PERSONAS_NOTIFICACION: ListPersonaNoti[] = this.tercerosState.terceros.map((persona, i) => {
       return {
-        id_solicitud: parseInt(this.solicitudState.idSolicitud, 10),
         id_persona_noti: i + 1,
         correo_electronico: persona.nombre,
         nombreTercero: persona.correo,
       };
     });
 
+    const PEDIMENTOS_LISTA: Pedimento[] = this.solicitudState.pedimentos.map((pedimento, i) => {
+      return {
+        id_pedimento: i + 1,
+        patente: pedimento.patente,
+        pedimento: pedimento.pedimento.toString(),
+        aduana: pedimento.aduana.toString(),
+        tipo_pedimento: pedimento.tipoPedimento.toString(),
+        numeros: pedimento.numero,
+        cove: pedimento.comprobanteValor,
+        estado_pedimento: parseInt(pedimento.estadoPedimento, 10),
+        sub_estado_pedimento: parseInt(pedimento.subEstadoPedimento, 10),
+        numero_pedimento: pedimento.pedimento,
+        tipo_pedimento_por_evaluacion: '',
+        bln_valido_pedimento: pedimento.pedimentoValidado === 'SI' ? true : false,
+        fecha_edo_ws_pedimento: '',
+        bln_activo: false,
+      }
+    });
+
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
-      id_solicitud: 1,
+      id_solicitud: this.solicitudState.idSolicitud,
+      id_tipo_tramite: TIPO_TRAMITE,
+      costo_total: '',
+      rfc: '', //Este viene del store con los datos del inicio de sesión
+      representante_legal: {
+        rfc: '',
+        telefono: '',
+        nombre: '',
+        ap_paterno: '',
+        ap_materno: '',
+
+      },
       datos_tramite: {
         importador_exportador: {
           rfc: this.solicitudState.RFCImportadorExportador,
@@ -163,6 +194,7 @@ export class SolicitudPageComponent implements OnInit {
           desc_programa_fomento: this.solicitudState.descripcionProgramaFomento,
           immex: this.solicitudState.checkIMMEX,
           desc_inmex: this.solicitudState.descripcionImmex,
+          numero_registro: this.solicitudState.descripcionNumeroRegistro !== '' ? true : false,
           desc_numero_registro: this.solicitudState.descripcionNumeroRegistro,
           certificacion_a: this.solicitudState.tipoEmpresaCertificada === 'a' ? true : false,
           certificacion_aa: this.solicitudState.tipoEmpresaCertificada === 'aa' ? true : false,
@@ -175,14 +207,14 @@ export class SolicitudPageComponent implements OnInit {
         despacho: {
           aduana_despacho: this.solicitudState.aduanaDespacho,
           id_seccion_despacho: parseInt(this.solicitudState.idSeccionDespacho, 10),
-          lda: this.solicitudState.lda,
+          bln_lda: this.solicitudState.lda,
           rfc_despacho_lda: this.solicitudState.autorizacionLDA,
-          dd: this.solicitudState.dd,
+          bln_dd: this.solicitudState.dd,
           folio_ddex: this.solicitudState.autorizacionDDEX,
-          tipo_despacho: this.solicitudState.tipoDespacho,
+          tipo_despacho: this.solicitudState.descripcionTipoDespacho,
           nombre_recinto: this.solicitudState.nombreRecinto,
           domicilio: this.solicitudState.domicilioDespacho,
-          especifique_domicilio: '',
+          especifique: this.solicitudState.especifique,
           fecha_inicio: this.solicitudState.fechaInicio,
           fecha_final: this.solicitudState.fechaFinal,
           hora_inicio: this.solicitudState.horaInicio,
@@ -190,41 +222,23 @@ export class SolicitudPageComponent implements OnInit {
           tipo_operacion: this.solicitudState.tipoOperacion,
           encargo_conferido: this.solicitudState.encargoConferido,
           relacion: this.solicitudState.relacionSociedad,
+          bln_despacho: true,
         },
-        pedimentos:
-          [
-            {
-              id_pedimento: 1,
-              id_solicitud: parseInt(this.solicitudState.idSolicitud, 10),
-              numero_pedimento: this.solicitudState.idPedimento,
-              patente: this.solicitudState.patentePedimento,
-              pedimento: '',
-              aduana: this.solicitudState.aduanaDespacho,
-              tipo_pedimento: this.solicitudState.tipoPedimento,
-              numeros: this.solicitudState.numero.toString(),
-              cove: this.solicitudState.comprobanteValor,
-              pedimento_validado: this.solicitudState.pedimentoValidado,
-              tipo_pedimento_por_evaluacion: '',
-              estado_pedimento: 1,
-              sub_estado_pedimento: 2,
-            }
-          ],
+        pedimentos: PEDIMENTOS_LISTA,
         tipo_servicio: {
-          id_solicitud: parseInt(this.solicitudState.idSolicitud, 10),
           bln_activo: false,
-          cve_tipo_servicio: 0,
-          desc_tipo_servicio: '',
+          cve_tipo_servicio: this.solicitudState.tipoSolicitud,
+          desc_tipo_servicio: this.solicitudState.descripcionTipoSolicitud,
           numero_svex: '',
           rni: 0,
           fecha_inicio_servicio: this.solicitudState.fechaInicio,
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
           hora_fin_servicio: this.solicitudState.horaFinal,
-          patente: 1,
+          patente: parseInt(this.solicitudState.patente.patente, 10),
           id_patentes_aduanales: 1,
         },
         lista_pagos: [{
-          id_solicitud: parseInt(this.solicitudState.idSolicitud, 10),
           linea_captura: this.solicitudState.lineaCaptura,
           monto: parseFloat(this.solicitudState.monto),
           bln_activo: true,

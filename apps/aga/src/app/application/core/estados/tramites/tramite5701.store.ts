@@ -14,8 +14,9 @@ import { Patente } from '../../models/5701/Patente.model';
  * @returns Solicitud5701
  */
 export interface Solicitud5701State {
-  idSolicitud: string;
-  tipoSolicitud: string;
+  idSolicitud: number | null;
+  tipoSolicitud: number;
+  descripcionTipoSolicitud: string;
 
   RFCImportadorExportador: string;
   rfcGenerico: boolean;
@@ -72,13 +73,15 @@ export interface Solicitud5701State {
   idSeccionDespacho: string;
   seccionAduanera: string;
   nombreRecinto: string;
-  tipoDespacho: string;
+  tipoDespacho: number;
+  descripcionTipoDespacho: string;
   tipoOperacion: string;
   patente: Patente;
   patenteApoderado: Patente[];
   relacionSociedad: boolean;
   encargoConferido: boolean;
   domicilioDespacho: string;
+  especifique: string;
 
   paisOrigen: number;
   paisProcedencia: number;
@@ -113,8 +116,9 @@ export interface Terceros5701State {
 
 export function createInitialState(): Solicitud5701State {
   return {
-    idSolicitud: '',
-    tipoSolicitud: '',
+    idSolicitud: 0,
+    descripcionTipoSolicitud: '',
+    tipoSolicitud: -1,
     RFCImportadorExportador: '',
     rfcGenerico: false,
     nombre: '',
@@ -154,13 +158,15 @@ export function createInitialState(): Solicitud5701State {
     idSeccionDespacho: '',
     seccionAduanera: '',
     nombreRecinto: '',
-    tipoDespacho: '',
+    tipoDespacho: -1,
+    descripcionTipoDespacho: '',
     tipoOperacion: '',
     patente: {} as Patente,
     patenteApoderado: [],
     relacionSociedad: false,
     encargoConferido: false,
     domicilioDespacho: '',
+    especifique: '',
     paisOrigen: 0,
     paisProcedencia: 0,
     descripcionGenerica: '',
@@ -203,15 +209,29 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
   /**
    * Guarda el tipo de solicitud en el estado.
    *
    * @param tipoSolicitud - El tipo de solicitud que se va a guardar.
    */
-  public setTipoSolicitud(tipoSolicitud: string): void {
+  public setTipoSolicitud(tipoSolicitud: number): void {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
+    }));
+  }
+
+  public setDescripcionTipoSolicitud(descripcionTipoSolicitud: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionTipoSolicitud,
     }));
   }
 
@@ -484,10 +504,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTipoDespacho(tipoDespacho: string): void {
+  public setTipoDespacho(tipoDespacho: number): void {
     this.update((state) => ({
       ...state,
       tipoDespacho,
+    }));
+  }
+
+  public setDescripcionTipoDespacho(descripcionTipoDespacho: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionTipoDespacho,
     }));
   }
 
@@ -530,6 +557,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       domicilioDespacho,
+    }));
+  }
+
+  public setEspecifique(especifique: string): void {
+    this.update((state) => ({
+      ...state,
+      especifique,
     }));
   }
 
@@ -598,8 +632,8 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] 
-    
+  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[]
+
   ): void {
     this.update((state) => ({
       ...state,

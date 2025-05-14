@@ -316,8 +316,8 @@
         </div>
         } @else {
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="selectCatalogoDespacho" formControlName="nombreRecinto"
-            [label]="'Tipo despacho'" [required]="false" [isDisabled]="activarCatalogoDespacho"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="selectCatalogoDespacho" formControlName="tipoDespacho"
+            [label]="'Tipo despacho'" [required]="false" [isDisabled]="activarCatalogoDespacho" (change)="changeTipoDespacho()"></app-catalogo-select>
         </div>
         }
 
