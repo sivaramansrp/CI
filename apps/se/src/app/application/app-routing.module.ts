@@ -501,14 +501,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130401/modificacion-descripcion.module').then(
         (m) => m.ModificacionDescripcionModule
-      )
+      ),
   },
   {
     path: 'certificado-alianza-posteriori',
     loadChildren: () =>
       import('./tramites/110223/certificado-alianza-posteriori.module').then(
         (m) => m.CertificadoAlianzaPosterioriModule
-      )
+      ),
   },
   {
     path: 'validacion-posteriori',
@@ -568,10 +568,15 @@ const ROUTES: Routes = [
         (m) => m.ValidarCertificadoModule
       ),
   },
+  {
+    path: 'asignacion-directa-cupo-personas-fisicas',
+    loadChildren: () =>
+      import(
+        './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
+      ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
+  },
 
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],

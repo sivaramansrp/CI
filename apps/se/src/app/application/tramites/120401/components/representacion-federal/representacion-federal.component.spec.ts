@@ -9,16 +9,19 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 import { FormBuilder } from '@angular/forms';
-import { RepresentacionFederalService } from '@ng-mf/data-access-user';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
+import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
+import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
-class MockTramite120402Store {}
+class MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService {}
 
 @Injectable()
-class MockTramite120402Query {
+class MockTramite120401Store {}
+
+@Injectable()
+class MockTramite120401Query {
   entidad$ = {};
   representacion$ = {};
 }
@@ -29,20 +32,27 @@ describe('RepresentacionFederalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RepresentacionFederalComponent , HttpClientModule],
-      declarations: [],
+      imports: [ FormsModule, ReactiveFormsModule , RepresentacionFederalComponent,HttpClientModule],
+      declarations: [
+    
+      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        RepresentacionFederalService,
-        { provide: Tramite120402Store, useClass: MockTramite120402Store },
-        { provide: Tramite120402Query, useClass: MockTramite120402Query }
+        { provide: AsignacionDirectaCupoPersonasFisicasPrimeraVezService, useClass: MockAsignacionDirectaCupoPersonasFisicasPrimeraVezService },
+        { provide: Tramite120401Store, useClass: MockTramite120401Store },
+        { provide: Tramite120401Query, useClass: MockTramite120401Query }
       ]
     }).overrideComponent(RepresentacionFederalComponent, {
 
     }).compileComponents();
     fixture = TestBed.createComponent(RepresentacionFederalComponent);
     component = fixture.debugElement.componentInstance;
+  });
+
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -53,25 +63,23 @@ describe('RepresentacionFederalComponent', () => {
     component.initializeForm = jest.fn();
     component.loadEntidad = jest.fn();
     component.loadRepresentacion = jest.fn();
-    component.entidad$ = component.entidad$ || {};
-    component.entidad$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
-    component.representacionForm = component.representacionForm || {};
-    component.representacionForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+    component.service = component.service || {};
+    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
+    component.service.getRepresentacion = jest.fn().mockReturnValue(observableOf({}));
+    component.tramite120401Query = component.tramite120401Query || {};
+    component.tramite120401Query.tramiteState$ = observableOf({
+      entidad: {},
+      representacion: {}
     });
-    component.representacion$ = component.representacion$ || {};
-    component.representacion$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
+    component.representacionForm = component.representacionForm || {};
+    component.representacionForm.patchValue = jest.fn();
     component.ngOnInit();
     // expect(component.initializeForm).toHaveBeenCalled();
     // expect(component.loadEntidad).toHaveBeenCalled();
     // expect(component.loadRepresentacion).toHaveBeenCalled();
-    // expect(component.entidad$.subscribe).toHaveBeenCalled();
-    // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.representacion$.subscribe).toHaveBeenCalled();
+    // expect(component.service.getEntidad).toHaveBeenCalled();
+    // expect(component.service.getRepresentacion).toHaveBeenCalled();
+    // expect(component.representacionForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -99,9 +107,9 @@ describe('RepresentacionFederalComponent', () => {
 
   it('should run #loadRepresentacion()', async () => {
     component.service = component.service || {};
-    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
+    component.service.getRepresentacion = jest.fn().mockReturnValue(observableOf({}));
     component.loadRepresentacion();
-    // expect(component.service.getEntidad).toHaveBeenCalled();
+    // expect(component.service.getRepresentacion).toHaveBeenCalled();
   });
 
   it('should run #getEntidad()', async () => {
@@ -109,11 +117,11 @@ describe('RepresentacionFederalComponent', () => {
     component.representacionForm.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.tramite120402Store = component.tramite120402Store || {};
-    component.tramite120402Store.setEntidad = jest.fn();
+    component.tramite120401Store = component.tramite120401Store || {};
+    component.tramite120401Store.setEntidad = jest.fn();
     component.getEntidad();
     // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.tramite120402Store.setEntidad).toHaveBeenCalled();
+    // expect(component.tramite120401Store.setEntidad).toHaveBeenCalled();
   });
 
   it('should run #getRepresentacion()', async () => {
@@ -121,11 +129,11 @@ describe('RepresentacionFederalComponent', () => {
     component.representacionForm.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.tramite120402Store = component.tramite120402Store || {};
-    component.tramite120402Store.setRepresentacion = jest.fn();
+    component.tramite120401Store = component.tramite120401Store || {};
+    component.tramite120401Store.setRepresentacion = jest.fn();
     component.getRepresentacion();
     // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.tramite120402Store.setRepresentacion).toHaveBeenCalled();
+    // expect(component.tramite120401Store.setRepresentacion).toHaveBeenCalled();
   });
 
 });
