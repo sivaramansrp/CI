@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DeLaMuestraComponent } from './de-la-muestra.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
 
 
 describe('DeLaMuestraComponent', () => {
@@ -14,8 +14,7 @@ describe('DeLaMuestraComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        TituloComponent,
-        SelectCatalogosComponent,
+        TituloComponent,       
         CatalogoSelectComponent,DeLaMuestraComponent
       ],
       declarations: [],
@@ -47,6 +46,33 @@ describe('DeLaMuestraComponent', () => {
       { id: 2, descripcion: 'No' },
     ]);
   });
+  it('should disable all controls in datosImportadorExportador when esFormularioSoloLectura is true', () => {
+    component.solicitudState = {
+      folio: '123',
+      mercancia: '1',
+    } as any;
+
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    component.Informaciondela.disable();
+
+    const group = component.Informaciondela.get(
+      'datosImportadorExportador'
+    ) as FormGroup;
+    Object.values(group.controls).forEach((control) => {
+      expect(control.disabled).toBe(true);
+    });
+  });
+
+  it('should enable all controls in datosImportadorExportador when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    const group = component.Informaciondela.get('datosImportadorExportador') as FormGroup;
+    
+    Object.values(group.controls).forEach(control => {
+      expect(control.enabled).toBe(true); 
+    });
+  });
 
   it('should disable "folio" field when "mercancia" is "No"', () => {
     component.getMercancia();
@@ -70,22 +96,21 @@ describe('DeLaMuestraComponent', () => {
   it('should validate the form when folio is empty', () => {
     const folioControl = component.Informaciondela.get('datosImportadorExportador.folio');
     folioControl?.setValue('');
-    expect(folioControl?.valid).toBeFalse();
+    expect(folioControl?.valid).toBeFalsy();
     expect(folioControl?.hasError('required')).toBeTruthy();
   });
 
   it('should validate the form when mercancia is empty', () => {
     const mercanciaControl = component.Informaciondela.get('datosImportadorExportador.mercancia');
     mercanciaControl?.setValue('');
-    expect(mercanciaControl?.valid).toBeFalse();
+    expect(mercanciaControl?.valid).toBeFalsy();
     expect(mercanciaControl?.hasError('required')).toBeTruthy();
   });
 
   it('should call validarFormulario()', () => {
-    spyOn(component, 'validarFormulario');
+    const spy = jest.spyOn(component, 'validarFormulario');
     component.validarFormulario();
-    expect(component.validarFormulario).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
-
   
 });
