@@ -1,11 +1,11 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
+import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
 
 @Component({
   selector: 'app-capturar-requerimiento',
