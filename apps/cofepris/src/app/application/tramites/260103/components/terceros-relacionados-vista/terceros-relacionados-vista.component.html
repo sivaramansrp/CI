@@ -8,7 +8,7 @@
     ></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Destinatario(Destino final)*:</h6>
+    <h6>Destinatario (destino final)*:</h6>
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica
@@ -20,11 +20,12 @@
 
   <div class="row mt-5">
     <div class="col-md-12">
-      <div class="pull-right">
+      <div class="pull-right" *ngIf="(destinatarioTablaDatos$ | async) as datos">
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+           *ngIf= "datos.length !== 0"
         >
           Modificar
         </button>
@@ -32,6 +33,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+         *ngIf= "datos.length !== 0"
         >
           Eliminar
         </button>
@@ -59,11 +61,12 @@
 
   <div class="row mt-5">
     <div class="col-md-12">
-      <div class="pull-right">
+      <div class="pull-right" *ngIf="(fabricanteTablaDatos$ | async) as datos">
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+           *ngIf= "datos.length !== 0"
         >
           Modificar
         </button>
@@ -71,6 +74,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          *ngIf= "datos.length !== 0"
         >
           Eliminar
         </button>
