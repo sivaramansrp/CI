@@ -62,7 +62,7 @@ export class AutorizarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
-      this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_AUTORIZACION', 'AGA', true, false, false);
+      // this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_AUTORIZACION', 'AGA', true, false, false);
     } else {
       this.router.navigate(['/se/seleccion-tramite']);
     }

@@ -8,6 +8,8 @@ export interface ConsultaioState {
     procedureId: string;
     parameter: string;
     department: string;
+    folioTramite:string;
+    tipoDeTramite:string;
     readonly: boolean;
     create: boolean;
     update: boolean;
@@ -22,9 +24,11 @@ export function createConsultaInitialState(): ConsultaioState {
     procedureId: '',
     parameter: '',
     department: '',
+    folioTramite:'',
+    tipoDeTramite:'',
     readonly: false,
     create: true,
-    update: false
+    update: false,
   };
 }
 
@@ -45,15 +49,17 @@ export class ConsultaioStore extends Store<ConsultaioState> {
    * @param nombre
    */
   public establecerConsultaio(procedureId: string, parameter: string,
-    department: string, readonly: boolean, create: boolean, update: boolean): void {
+    department: string, folioTramite:string, tipoDeTramite:string, readonly: boolean, create: boolean, update: boolean): void {
     this.update(state => ({
       ...state,
       procedureId,
       parameter,
       department,
+      folioTramite,
+      tipoDeTramite,
       readonly,
       create,
-      update
+      update,
     }));
   }
 }

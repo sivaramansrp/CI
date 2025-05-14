@@ -62,7 +62,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
-      this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_EVALUAR', 'AGA', true, false, false);
+      // this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_EVALUAR', 'AGA', true, false, false);
     } else {
       this.router.navigate(['/se/seleccion-tramite']);
     }

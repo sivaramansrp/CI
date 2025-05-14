@@ -27,18 +27,18 @@
         "titulo": "Solicitud",
         "id": "solicitud",
         "disabled": false,
-        "tramite": 11106
+        "tramite": 301
     },
     {
         "titulo": "Documentos",
         "id": "documentos",
         "disabled": false,
-        "tramite": 11106
+        "tramite": 301
     },
     {
         "titulo": "Dictamen",
         "id": "dictamen",
         "disabled": false,
-        "tramite": 11106
+        "tramite": 301
     }
 ]

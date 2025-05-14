@@ -1,4 +1,4 @@
-import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
+import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/atender-requerimientos.model';
 
 export const LISTA_TRIMITES: AccuseComponentes[] = [
     {
@@ -9,5 +9,5 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'DatosComponent',
 
         }]
-    },
+    }
 ];

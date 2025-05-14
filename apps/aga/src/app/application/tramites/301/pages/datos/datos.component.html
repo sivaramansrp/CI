@@ -34,9 +34,11 @@
       <!-- <p>componente de solicitud aquí</p> -->
       <solicitante #Solicitante></solicitante>
       } @case (2) {
+        @if(esDatosRespuesta){
       <app-registro-para-la [procedureDatos]="datos"></app-registro-para-la>
       <app-de-la-muestra [procedureDatos]="datos"></app-de-la-muestra>
       <app-informacion-de-la [procedureDatos]="datos"></app-informacion-de-la>
+      }
       } @case (3) {
       <app-pago-de-derechos [procedureDatos]="datos"></app-pago-de-derechos>
       } }

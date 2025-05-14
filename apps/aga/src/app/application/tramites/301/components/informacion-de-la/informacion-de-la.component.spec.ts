@@ -1,13 +1,9 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InformacionDeLaComponent } from './informacion-de-la.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { BtnContinuarComponent, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('InformacionDeLaComponent', () => {
   let component: InformacionDeLaComponent;
@@ -21,7 +17,8 @@ describe('InformacionDeLaComponent', () => {
         CommonModule,
         BtnContinuarComponent,
         CatalogoSelectComponent,
-        TituloComponent,InformacionDeLaComponent
+        TituloComponent,
+        InformacionDeLaComponent
       ]
     }).compileComponents();
   });
@@ -52,26 +49,25 @@ describe('InformacionDeLaComponent', () => {
   it('should enable descripcionFraccion when a fraccionArancelaria is selected', () => {
     component.informacionDeLaform.get('fraccionArancelaria')?.setValue('some value');
     component.valorSeleccionadoFraccion();
-    expect(component.informacionDeLaform.get('descripcionFraccion')?.enabled).toBeTrue();
+    expect(component.informacionDeLaform.get('descripcionFraccion')?.enabled).toBe(true);
   });
 
   it('should disable descripcionFraccion when no fraccionArancelaria is selected', () => {
     component.informacionDeLaform.get('fraccionArancelaria')?.setValue('');
     component.valorSeleccionadoFraccion();
-    expect(component.informacionDeLaform.get('descripcionFraccion')?.disabled).toBeTrue();
+    expect(component.informacionDeLaform.get('descripcionFraccion')?.disabled).toBe(true);
   });
 
   it('should enable descripcionNico when a nico is selected', () => {
     component.informacionDeLaform.get('nico')?.setValue('some value');
     component.valorSeleccionadoNico();
-    expect(component.informacionDeLaform.get('descripcionNico')?.enabled).toBeTrue();
+    expect(component.informacionDeLaform.get('descripcionNico')?.enabled).toBe(true);
   });
 
   it('should disable descripcionNico when no nico is selected', () => {
     component.informacionDeLaform.get('nico')?.setValue('');
     component.valorSeleccionadoNico();
-    expect(component.informacionDeLaform.get('descripcionNico')?.disabled).toBeTrue();
+    expect(component.informacionDeLaform.get('descripcionNico')?.disabled).toBe(true);
   });
-
 
 });

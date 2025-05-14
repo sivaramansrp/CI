@@ -12,7 +12,3 @@ export interface ListaComponentes {
     componentPath: () => Promise<unknown>;
     componentName: string;
 }
-export interface DetallesDelTramite {
-    numFolioTramite: string;
-    tipoTramite: string;
-}
