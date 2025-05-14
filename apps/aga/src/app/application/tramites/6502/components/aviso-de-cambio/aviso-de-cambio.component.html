@@ -46,9 +46,9 @@
             </div>
             <h6 class="para-title">Actualización de la clave única de registro poblacional (CURP).</h6>
             <div class="row mt-3">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <label for="curpActualizada"><span class="danger">*</span>Clave única de registro poblacional (CURP) actualizada:</label>
-                    <input type="text" class="form-control" id="curpActualizada" formControlName="curpActualizada">
+                    <input type="text" class="form-control" id="curpActualizada" formControlName="curpActualizada" (change)="setValoresStore(modalForma,'curpActualizada', 'setCurpActualizada')">
                     @if(modalForma.controls['curpActualizada'].invalid && modalForma.controls['curpActualizada'].touched){
                         <div class="d-grid">
                             @if(modalForma.controls['curpActualizada'].errors?.['required']) {
@@ -60,9 +60,9 @@
                 </div>
             </div>
             <div class="row mt-3">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <label for="confirmacioCurpActualizada"><span class="danger">*</span>Confirmación de clave única de registro poblacional (CUR P) actualizada:</label>
-                    <input type="text" class="form-control" id="confirmacioCurpActualizada" formControlName="confirmacioCurpActualizada">
+                    <input type="text" class="form-control" id="confirmacioCurpActualizada" formControlName="confirmacioCurpActualizada" (change)="setValoresStore(modalForma,'confirmacioCurpActualizada', 'setConfirmacioCurpActualizada')">
                     @if(modalForma.controls['confirmacioCurpActualizada'].invalid && modalForma.controls['confirmacioCurpActualizada'].touched){
                         <div class="d-grid">
                             @if(modalForma.controls['confirmacioCurpActualizada'].errors?.['required']) {
