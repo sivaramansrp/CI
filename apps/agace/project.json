@@ -38,9 +38,13 @@
         "scripts": [
           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
         ],
-        "customWebpackConfig": { 
+        "customWebpackConfig": {
           "path": "apps/agace/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
@@ -57,9 +61,53 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/agace/webpack.prod.config.ts"
-          }
+            "path": "apps/agace/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/agace/src/app/environments/environment.ts",
+              "with": "apps/agace/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/agace/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/agace/src/app/environments/environment.ts",
+              "with": "apps/agace/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -70,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4209,
-        "publicHost": "http://localhost:4209"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -84,6 +132,9 @@
         },
         "development": {
           "buildTarget": "agace:build:development"
+        },
+        "qa": {
+          "buildTarget": "agace:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -106,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "agace:build",
         "port": 4209,
