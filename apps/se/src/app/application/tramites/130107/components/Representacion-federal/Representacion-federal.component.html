@@ -1,5 +1,6 @@
 <form [formGroup]="forma">
     <div class="row">
-        <formas-dinamicas formularioTitulo="Representación federal" [forma]="ninoFormGroup" [formularioDatos]="datosRepresentacionFederal"></formas-dinamicas>
+        <formas-dinamicas formularioTitulo="Representación federal" [forma]="ninoFormGroup" [formularioDatos]="datosRepresentacionFederal"         [estado]="solicitudDeRegistroState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
 </form>

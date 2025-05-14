@@ -3,71 +3,97 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../constantes/importaciones-agropecuarias.enum';
 import { Subject } from 'rxjs';
 
+/**
+ * @component TodosPasosComponent
+ * @description
+ * Componente encargado de gestionar la navegación entre todos los pasos del trámite 130107.
+ * Este componente incluye la lógica para manejar el flujo del wizard, actualizar los títulos
+ * de los pasos y controlar la navegación entre ellos.
+ * 
+ * @selector app-todos-pasos
+ * @templateUrl ./todos-pasos.component.html
+ */
 @Component({
   selector: 'app-todos-pasos',
   templateUrl: './todos-pasos.component.html',
 })
-
 export class TodosPasosComponent implements OnDestroy {
-/**
-* Esta variable se utiliza para almacenar la lista de pasos.
-*/
- pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
- /**
-  * Esta variable se utiliza para almacenar el índice del paso.
-  */
- indice: number = 1;
- /**
- * Representa el título del paso actual en el proceso.
- * Este valor se inicializa con una constante que representa el título del primer paso.
- */
- public titulo: string = TITULO_PASO_UNO;
+  /**
+   * @property pantallasPasos
+   * @description
+   * Lista de pasos del wizard, representada como un arreglo de objetos `ListaPasosWizard`.
+   * 
+   * @type {ListaPasosWizard[]}
+   */
+  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
 
   /**
-   * Notificador para destruir observables activos.
+   * @property indice
+   * @description
+   * Índice del paso actual en el wizard.
+   * 
+   * @type {number}
+   */
+  indice: number = 1;
+
+  /**
+   * @property titulo
+   * @description
+   * Título del paso actual en el wizard.
+   * Se actualiza dinámicamente según el paso seleccionado.
+   * 
+   * @type {string}
+   */
+  public titulo: string = TITULO_PASO_UNO;
+
+  /**
+   * @property destroyed$
+   * @description
+   * Sujeto utilizado para destruir observables y evitar fugas de memoria.
+   * 
+   * @type {Subject<void>}
+   * @private
    */
   private destroyed$ = new Subject<void>();
-  
+
   /**
-  * Esta variable se utiliza para almacenar el componente wizard.
-  * @param wizardComponent - El componente wizard.
-  */
+   * @property wizardComponent
+   * @description
+   * Referencia al componente `WizardComponent` para controlar la navegación entre pasos.
+   * 
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-   /**
-    * Esta variable se utiliza para almacenar los datos de los pasos.
-    * @param datosPasos - Los datos de los pasos.
-    * @param nroPasos - El número de pasos.
-    * @param indice - El índice.
-    * @param txtBtnAnt - El texto del botón anterior.
-    * @param txtBtnSig - El texto del botón siguiente.
-    */
+  /**
+   * @property datosPasos
+   * @description
+   * Datos relacionados con los pasos del wizard, como el número total de pasos,
+   * el índice actual y los textos de los botones de navegación.
+   * 
+   * @type {DatosPasos}
+   */
+  public datosPasos: DatosPasos = {
+    nroPasos: this.pantallasPasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
 
   /**
-   * Represents the data for the steps in the process.
+   * @method getValorIndice
+   * @description
+   * Método utilizado para actualizar el índice del paso actual y el título correspondiente.
+   * También controla la navegación hacia adelante o atrás en el wizard.
    * 
-   * @property {number} nroPasos - The number of steps.
-   * @property {number} indice - The current index of the step.
-   * @property {string} txtBtnAnt - The text for the "Previous" button.
-   * @property {string} txtBtnSig - The text for the "Continue" button.
+   * @param e Objeto de tipo `AccionBoton` que contiene el valor del índice y la acción a realizar.
    */
-   public datosPasos: DatosPasos = {
-     nroPasos: this.pantallasPasos.length,
-     indice: this.indice,
-     txtBtnAnt: 'Anterior',
-     txtBtnSig: 'Continuar',
-   };
-
-
-   /**
-   * Este método se utiliza para inicializar el componente.
-   */
-   public getValorIndice(e: AccionBoton) {
+  public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      if(this.indice === 2) {
+      if (this.indice === 2) {
         this.titulo = TITULO_PASO_DOS;
-      } else if(this.indice === 3) {
+      } else if (this.indice === 3) {
         this.titulo = TITULO_PASO_TRES;
       } else {
         this.titulo = TITULO_PASO_UNO;
@@ -80,12 +106,14 @@ export class TodosPasosComponent implements OnDestroy {
     }
   }
 
-    /**
+  /**
+   * @method ngOnDestroy
+   * @description
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Este método completa el observable `destroyed$` para cancelar las suscripciones activas.
    */
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }
