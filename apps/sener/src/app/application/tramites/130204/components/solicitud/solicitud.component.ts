@@ -474,7 +474,7 @@ tituloParte = TITULO_DESTINO;
        * Entidad que representa al solicitante en el trámite.
        * Es un campo obligatorio.
        */
-      entidad: [this.seccionState?.entidad, Validators.required],
+      entidad: [this.seccionState?.entidad],
 
       /**
        * Representación legal o nombre del representante.
