@@ -24,7 +24,7 @@ export class TipodeAvisoComponent implements OnInit {
      * Indica si la carga masiva está habilitada.
      * @type {boolean}
      */
-    CargaMasiva: boolean = false;
+    cargaMasiva: boolean = false;
 
     /**
      * Formulario reactivo para capturar los datos del aviso.
@@ -87,6 +87,6 @@ export class TipodeAvisoComponent implements OnInit {
      */
     setManual(isManual: boolean): void {
         this.isManualSelected = isManual;
-        this.CargaMasiva = !isManual;
+        this.cargaMasiva = !isManual;
     }
 }

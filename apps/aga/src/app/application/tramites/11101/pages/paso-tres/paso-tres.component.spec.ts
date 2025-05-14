@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteFolioStore } from '@ng-mf/data-access-user';
-import { JSONResponse } from '../../../570101/service/servicios-extraordinarios.service';
-import { PasoTresComponent } from '../../../5701/pages/paso-tres/paso-tres.component';
+import { JSONResponse } from '../../service/servicios-extraordinarios.service';
+import { PasoTresComponent } from './paso-tres.component';
 import { ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {

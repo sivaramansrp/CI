@@ -61,17 +61,17 @@
       expect(component.isManualSelected).toBe(true);
       component.setManual(false);
       expect(component.isManualSelected).toBe(false);
-      expect(component.CargaMasiva).toBe(true);
+      expect(component.cargaMasiva).toBe(true);
     });
   
     it('should toggle isManualSelected and CargaMasiva in setManual', () => {
       component.setManual(true);
       expect(component.isManualSelected).toBe(true);
-      expect(component.CargaMasiva).toBe(false);
+      expect(component.cargaMasiva).toBe(false);
     
       component.setManual(false);
       expect(component.isManualSelected).toBe(false);
-      expect(component.CargaMasiva).toBe(true);
+      expect(component.cargaMasiva).toBe(true);
     });
   });
   
