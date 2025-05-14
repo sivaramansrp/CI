@@ -16,7 +16,6 @@ import { PASOS_EXPORTACION } from '../../constantes/elegibilidad-de-textiles.enu
 @Component({
   selector: 'app-registro-modificacion-page',
   templateUrl: './registro-modificacion-page.component.html',
-  styleUrls: ['./registro-modificacion-page.component.scss'],
 })
 export class RegistroModificacionPageComponent {
   /**

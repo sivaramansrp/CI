@@ -60,7 +60,6 @@
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
         <td *ngFor="let col of obtenerConfiguracionOrdenada()">
-          
           @if(col.opcionDeEntrada === tablaCampoSeleccion.INPUT) {
           <input
             type="text"
@@ -69,8 +68,15 @@
             class="form-control"
             (change)="changeInputValue($event, i, col.llave)"
           />
+          }@else if(col.opcionDeEntrada === tablaCampoSeleccion.CHECKBOX) {
+          <input
+            type="checkbox"
+            [value]="col.clave(fila)"
+            class="form-check-input"
+            (change)="changeCheckBoxValue($event, i, col.llave)"
+          />
           } @else {
-            {{ col.clave(fila) || ' ' }}
+          {{ col.clave(fila) || ' ' }}
           }
         </td>
       </tr>

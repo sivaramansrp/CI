@@ -483,6 +483,13 @@ const ROUTES: Routes = [
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
+},
 {   
   path: 'exportacion-materias-primas-estupefacientes',
   loadChildren: () =>
@@ -524,7 +531,15 @@ const ROUTES: Routes = [
         import('./tramites/260909/medicamentos-donacion.module').then(
           (m) => m.MedicamentosDonacionModule
         )
-    }
+    },
+    
+{
+  path: 'importar-de-remedios-herbals',
+  loadChildren: () =>
+    import('./tramites/260919/importar-de-remedios-herbals.module').then(
+      (m) => m.ImportarDeRemediosHerbalsModule
+    ),
+},
 ];
 
 @NgModule({

@@ -1,108 +1,108 @@
-/* eslint-disable dot-notation */
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TratadosComponent } from './tratados.component';
-import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
-import tratadosTable from '../../../../../assets/json/110101/tratados-table.json';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { TratadosStore } from '../../estados/tramites/tratados110101.store';
+import { TratadosQuery } from '../../estados/queries/tratados110101.query';
 
 
-fdescribe('TratadosComponent', () => {
+jest.mock('libs/shared/theme/assets/json/110101/tratdos-dropdown.json', () => ({
+  __esModule: true,
+  default: {
+    pais: ['MX', 'US'],
+    tratado: ['TLCAN'],
+    origen: ['CDMX']
+  }
+}));
+
+jest.mock('libs/shared/theme/assets/json/110101/tratados-table.json', () => ({
+  __esModule: true,
+  default: {
+    tableHeader: ['País', 'Tratado', 'Origen'],
+    tableBody: []
+  }
+}));
+
+describe('TratadosComponent', () => {
   let component: TratadosComponent;
   let fixture: ComponentFixture<TratadosComponent>;
 
+  const mockStore = {
+    updateTratado: jest.fn()
+  };
+
+  const mockQuery = {
+    selectTratados$: of([])
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        TratadosComponent,
-        CommonModule,
-        TableComponent,
-        AlertComponent,
-        TituloComponent,
-        CatalogoSelectComponent,
-        ReactiveFormsModule
-      ],
-      providers: [FormBuilder]
+      imports: [TratadosComponent, ReactiveFormsModule],
+      providers: [
+        { provide: TratadosStore, useValue: mockStore },
+        { provide: TratadosQuery, useValue: mockQuery }
+      ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TratadosComponent);
     component = fixture.componentInstance;
-    component.cuerpoTabla = [];
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have empty table body initially', () => {
-    console.log('Initial cuerpoTabla:', component.cuerpoTabla);
-    expect(component.cuerpoTabla).toEqual([]);
+  it('should initialize the form with required controls', () => {
+    const form = component.formularioTratados;
+    expect(form.contains('pais')).toBeTruthy();
+    expect(form.contains('tratado')).toBeTruthy();
+    expect(form.contains('origen')).toBeTruthy();
   });
 
-
-  it('should initialize form on ngOnInit', () => {
-    expect(component.formularioTratados).toBeDefined();
-    // eslint-disable-next-line dot-notation
-    expect(component.formularioTratados.controls['pais']).toBeDefined();
-    // eslint-disable-next-line dot-notation
-    expect(component.formularioTratados.controls['tratado']).toBeDefined();
-    expect(component.formularioTratados.controls['origen']).toBeDefined();
+  it('should set dropdown values correctly from JSON', () => {
+    expect(component.configuracionesDropdown[0].catalogos).toEqual(['MX', 'US']);
+    expect(component.configuracionesDropdown[1].catalogos).toEqual(['TLCAN']);
+    expect(component.configuracionesDropdown[2].catalogos).toEqual(['CDMX']);
   });
 
-
-  it('should not add tratado if form is invalid', () => {
-    spyOn(component.cuerpoTabla, 'push');
+  it('should not add tratado when form is invalid', () => {
+    component.formularioTratados.setValue({ pais: '', tratado: '', origen: '' });
+    const resetSpy = jest.spyOn(component.formularioTratados, 'reset');
     component.agregarTratado();
-    expect(component.cuerpoTabla.push).not.toHaveBeenCalled();
+    expect(resetSpy).not.toHaveBeenCalled();
   });
 
-  it('should add tratado to table if form is valid', () => {
+  it('should reset form when valid tratado is added', () => {
     component.formularioTratados.setValue({
-      pais: 'CANADA',
-      tratado: 'Free Trade Agreement',
-      origen: 'Preferential Origin'
+      pais: 'MX',
+      tratado: 'TLCAN',
+      origen: 'CDMX'
     });
-
+    const resetSpy = jest.spyOn(component.formularioTratados, 'reset');
     component.agregarTratado();
-    expect(component.cuerpoTabla.length).toBe(1);
-    expect(component.cuerpoTabla[0]).toEqual({
-      pais: 'CANADA',
-      tratado: 'Free Trade Agreement',
-      origen: 'Preferential Origin'
-    });
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should reset form after adding tratado', () => {
-    spyOn(component.formularioTratados, 'reset');
+  it('should update store on form value change', () => {
     component.formularioTratados.setValue({
-      pais: 'CANADA',
-      tratado: 'Free Trade Agreement',
-      origen: 'Preferential Origin'
+      pais: 'MX',
+      tratado: 'TLCAN',
+      origen: 'CDMX'
     });
-    component.agregarTratado();
-    expect(component.formularioTratados.reset).toHaveBeenCalled();
+    component['actualizarEstado']();
+    expect(mockStore.updateTratado).toHaveBeenCalledWith({
+      pais: 'MX',
+      tratado: 'TLCAN',
+      origen: 'CDMX'
+    });
   });
 
-  it('should initialize dropdown configurations correctly', () => {
-    expect(component.configuracionesDropdown.length).toBe(3);
-    expect(component.configuracionesDropdown[0].catalogos).toEqual(tratadosDropdown.pais);
-    expect(component.configuracionesDropdown[1].catalogos).toEqual(tratadosDropdown.tratado);
-    expect(component.configuracionesDropdown[2].catalogos).toEqual(tratadosDropdown.origen);
-  });
-
-  it('should have correct table headers', () => {
-    expect(component.encabezadosComunesTabla).toEqual(tratadosTable.tableHeader);
-  });
-
-  it('should have empty table body initially', () => {
-    expect(component.cuerpoTabla).toEqual([]);
+  it('should clean up subscriptions on destroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

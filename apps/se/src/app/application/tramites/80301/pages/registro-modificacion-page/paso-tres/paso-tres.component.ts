@@ -12,7 +12,6 @@ import { TramiteStore } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent implements OnDestroy {
   /**
