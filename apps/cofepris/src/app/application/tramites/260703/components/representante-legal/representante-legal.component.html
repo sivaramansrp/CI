@@ -5,7 +5,7 @@
         <div class="col-md-4">
             <label for="rfc" class="form-label">RFC*:</label>
             <input type="text" class="form-control" formControlName="rfc" id="representanteLegalRFC"
-              placeholder="LEQI810131457"  (change)="setValoresStore('rfc')">
+              placeholder="LEQI810131457" maxlength="13" (change)="setValoresStore('rfc')">
         </div>
         <div class="col-md-4 btn-buscar">
             <button type="button" class="btn btn-primary" name="consultarIDC" id="consultarIDC"
@@ -19,7 +19,7 @@
              placeholder="MISAEL">
         </div>
         <div class="col-md-4">
-            <label for="apellidoPaterno" class="form-label">Apellido paterno:</label>
+            <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
             <input type="text" class="form-control" formControlName="apellidoPaterno" id="representanteLegalApPaterno"
               placeholder="BARRAGAN">
         </div>
