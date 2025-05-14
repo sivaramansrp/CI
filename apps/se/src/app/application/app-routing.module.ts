@@ -526,7 +526,16 @@ const ROUTES: Routes = [
       import('./tramites/150103/informe-anual-programa.module').then(
         (m) => m.InformeAnualProgramaModule
       ),
-  }
+  },
+  {
+
+    path: 'registro-como-expresa',
+    loadChildren: () =>
+      import('./tramites/120603/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+
 ];
 
 

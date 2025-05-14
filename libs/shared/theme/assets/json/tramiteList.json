@@ -724,7 +724,7 @@
     "id": 104,
     "tramite": 290201,
     "linkDashboard": "/amecafe/registrar-solicitud/solicitud",
-    "linkDepartment": "/amecafe/registrar-solicitud/solicitud",
+    "linkDepartment": "/pago/registrar-solicitud/solicitud",
     "department": "amecafe"
   },
   {
@@ -1228,7 +1228,7 @@
     "id": 176,
     "tramite": 260702,
     "linkDashboard": "/cofepris/registrar-solicitud-mcp/registro",
-    "linkDepartment": "/cofepris/registrar-solicitud-mcp/registro",
+    "linkDepartment": "/pago/registrar-solicitud-mcp/registro",
     "department": "cofepris"
   },
   {
@@ -4194,6 +4194,13 @@
   },
   {
     "id": 601,
+    "tramite": 120603,
+    "linkDashboard": "/se/registro-como-expresa/registro-empresa",
+    "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
+     "department": "se"
+},
+  {
+    "id": 602,
     "tramite": 231002,
     "linkDashboard": "/semarnat/aviso-retorno/primera-subsecuente",
     "linkDepartment": "/pago/aviso-retorno/primera-subsecuente",
