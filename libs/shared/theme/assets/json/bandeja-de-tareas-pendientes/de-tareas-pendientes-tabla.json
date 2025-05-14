@@ -1,93 +1,93 @@
 [
-    {
-        "folioTramite": "12345",
-        "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Evaluar solicitud",
-        "fechaDeAsignacion": "2023-10-01",
-        "estadoDeTramite": "En Proceso",
-        "departamento": "Recursos Humanos",
-        "numeroDeProcedimiento": "301",
-        "origin": "FLUJO_FUNCIONARIO_EVALUAR",
-        "acciones": "T"
-    },
-    {
-        "folioTramite": "67890",
-        "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "confirmar notificación",
-        "fechaDeAsignacion": "2023-10-02",
-        "estadoDeTramite": "Pendiente",
-        "departamento": "Finanzas",
-        "numeroDeProcedimiento": "12345",
-        "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
-    },
-    {
-        "folioTramite": "54321",
-        "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Funcionario de informes",
-        "fechaDeAsignacion": "2023-10-03",
-        "estadoDeTramite": "Completado",
-        "departamento": "Administración",
-        "numeroDeProcedimiento": "301",
-        "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
-    },
-    {
-        "folioTramite": "98765",
-        "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Actualización de base de datos",
-        "fechaDeAsignacion": "2023-10-04",
-        "estadoDeTramite": "En Proceso",
-        "departamento": "Tecnología de la Información",
-        "numeroDeProcedimiento": "54321",
-        "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
-    },
-    {
-        "folioTramite": "13579",
-        "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "confirmar resolución",
-        "fechaDeAsignacion": "2023-10-05",
-        "estadoDeTramite": "Pendiente",
-        "departamento": "Recursos Humanos",
-        "numeroDeProcedimiento": "24680",
-        "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
-    },
-    {
-        "folioTramite": "24680",
-        "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Functionario verificar requerimiento",
-        "fechaDeAsignacion": "2023-10-06",
-        "estadoDeTramite": "Completado",
-        "departamento": "Marketing",
-        "numeroDeProcedimiento": "13579",
-        "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-    },
-    {
-        "folioTramite": "86420",
-        "tipoDeTramite": "Solicitud",
-        "nombreDeLaTarea": "Generar opinión",
-        "fechaDeAsignacion": "2023-10-07",
-        "estadoDeTramite": "En Proceso",
-        "departamento": "Legal",
-        "numeroDeProcedimiento": "97531",
-        "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-    },
-    {
-        "folioTramite": "97531",
-        "tipoDeTramite": "Consulta",
-        "nombreDeLaTarea": "Subsecuente",
-        "fechaDeAsignacion": "2023-10-08",
-        "estadoDeTramite": "Pendiente",
-        "departamento": "Compras",
-        "numeroDeProcedimiento": "86420",
-        "origin": "SUBSECUENTES"
-    },
-    {
-        "folioTramite": "11111",
-        "tipoDeTramite": "Informe",
-        "nombreDeLaTarea": "Revisión de presupuesto",
-        "fechaDeAsignacion": "2023-10-09",
-        "estadoDeTramite": "Completado",
-        "departamento": "Finanzas",
-        "numeroDeProcedimiento": "22222",
-        "origin": "READ_PROCEDURE"
-    }
+  {
+    "folioTramite": "12345",
+    "tipoDeTramite": "Solicitud",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "Recursos Humanos",
+    "numeroDeProcedimiento": "301",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR",
+    "acciones": "T"
+  },
+  {
+    "folioTramite": "67890",
+    "tipoDeTramite": "Consulta",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "Finanzas",
+    "numeroDeProcedimiento": "301",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "54321",
+    "tipoDeTramite": "Informe",
+    "nombreDeLaTarea": "Funcionario de informes",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "Administración",
+    "numeroDeProcedimiento": "301",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "98765",
+    "tipoDeTramite": "Solicitud",
+    "nombreDeLaTarea": "Actualización de base de datos",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "Tecnología de la Información",
+    "numeroDeProcedimiento": "54321",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "13579",
+    "tipoDeTramite": "Consulta",
+    "nombreDeLaTarea": "confirmar resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "Recursos Humanos",
+    "numeroDeProcedimiento": "301",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "24680",
+    "tipoDeTramite": "Informe",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "Marketing",
+    "numeroDeProcedimiento": "13579",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "86420",
+    "tipoDeTramite": "Solicitud",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "Legal",
+    "numeroDeProcedimiento": "97531",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
+    "folioTramite": "97531",
+    "tipoDeTramite": "Consulta",
+    "nombreDeLaTarea": "Subsecuente",
+    "fechaDeAsignacion": "2023-10-08",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "Compras",
+    "numeroDeProcedimiento": "86420",
+    "origin": "SUBSECUENTES"
+  },
+  {
+    "folioTramite": "11111",
+    "tipoDeTramite": "Informe",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "Finanzas",
+    "numeroDeProcedimiento": "22222",
+    "origin": "READ_PROCEDURE"
+  }
 ]
