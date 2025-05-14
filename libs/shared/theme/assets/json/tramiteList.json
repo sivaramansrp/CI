@@ -863,9 +863,9 @@
   {
     "id": 124,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/sanidadacuicola/certificado",
+    "linkDepartment": "/pago/sanidadacuicola/certificado",
+    "department": "agriculture"
   },
   {
     "id": 125,
