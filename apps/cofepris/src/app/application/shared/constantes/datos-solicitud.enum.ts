@@ -670,3 +670,5 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR = "Algodón absorbente o g
  * @valor "Kilogramo"
  */
 export const UMT_DESHABILITADO_VALOR="Kilogramo";
+
+export const MENSAJE_SIN_FILA_SELECCIONADA="Seleciona un registro";
