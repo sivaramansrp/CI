@@ -124,6 +124,16 @@ export class Tramite5601Store extends Store<Tramite5601State> {
         super(createInitialState());
     }
 
+    /**
+     * Actualiza dinámicamente el valor de un campo en el estado del store.
+     * 
+     * @template TKey - Tipo de la clave del estado (nombre del campo).
+     * @param {TKey} fieldName - Nombre del campo a actualizar.
+     * @param {Tramite5601State[TKey]} value - Nuevo valor para el campo especificado.
+     * 
+     * Esta función permite modificar cualquier propiedad del estado de manera dinámica,
+     * facilitando la actualización de campos sin necesidad de métodos específicos para cada uno.
+     */
     public setDynamicFieldValue<TKey extends keyof Tramite5601State>(
         fieldName: TKey,
         value: Tramite5601State[TKey]

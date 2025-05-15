@@ -1,5 +1,6 @@
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 /**
  * Componente que representa el paso dos del flujo de trabajo.
  * En este paso, se gestionan los formularios relacionados con los datos
@@ -9,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Asigna el valor de la constante TEXTOS al mismo nombre para su uso en el componente.
    */
@@ -31,10 +32,9 @@ export class PasoDosComponent implements OnInit {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * Documentos seleccionados por el usuario.
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
-  documentosSeleccionados: Catalogo[] = [];
-
+  private destruir$: Subject<void> = new Subject<void>();
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios.
@@ -50,33 +50,37 @@ export class PasoDosComponent implements OnInit {
   ngOnInit(): void {
     // Obtiene los tipos de documentos disponibles para el trámite.
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía'
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-      }
-    ];
   }
 
+
   /**
- * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
- */
+   * Obtiene los tipos de documentos disponibles desde el servicio de catálogos.
+   * Asigna la respuesta al catálogo de documentos si existen resultados.
+   */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
         next: (resp): void => {
+          // Si la respuesta contiene elementos, se asignan al catálogo de documentos
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
         },
         error: (_error: unknown): unknown => {
+          // Manejo de errores en la obtención del catálogo
           return _error;
         }
       });
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destruir$.next();
+    this.destruir$.complete();
+  }
+
 }
