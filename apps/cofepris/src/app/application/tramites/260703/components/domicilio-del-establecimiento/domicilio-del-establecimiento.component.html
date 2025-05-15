@@ -234,8 +234,9 @@
           [catalogo]="solicitudPermisoService.regimen"
           formControlName="regimen"
           [placeholder]="'Definitivos'"
-          [label]="'Regimen al que se destinara la mercancia:'"
+          [label]="'Regimen al que se destinara la mercancia'"
           [required]="true"
+          [tooltipQuestionCircle]="true"
           name="regimen"
           (onChange)="setValoresStore('regimen')"
         ></app-catalogo-select>
