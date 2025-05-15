@@ -555,6 +555,13 @@ const ROUTES: Routes = [
       (m) => m.ImportarDeRemediosHerbalsModule
     ),
 },
+{
+  path: 'permiso-vegetales-nutrientes',
+  loadChildren: () =>
+    import('./tramites/260509/permiso-vegetales-nutrientes.module').then(
+      (m) => m.PermisoVegetalesNutrientesModule
+    ),
+},
 ];
 
 @NgModule({
