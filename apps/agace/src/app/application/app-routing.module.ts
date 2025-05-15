@@ -18,9 +18,9 @@ const ROUTES: Routes = [
   {
     path: 'registros-de-comercio-exterior',
     loadChildren: () =>
-      import('./tramites/31602/comercio-exterior/comercio-exterior.module').then(
-        (m) => m.ComercioExteriorModule
-      ),
+      import(
+        './tramites/31602/comercio-exterior/comercio-exterior.module'
+      ).then((m) => m.ComercioExteriorModule),
   },
   {
     path: 'aviso',
@@ -38,14 +38,16 @@ const ROUTES: Routes = [
     path: 'aviso-unico-renovacion',
     loadChildren: () =>
       import('./tramites/317/aviso-unico-renovacion.module').then(
-        (m) => m.AvisoUnicoRenovacionModule)
-      },
-      {
+        (m) => m.AvisoUnicoRenovacionModule
+      ),
+  },
+  {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule),
-   },
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
   {
     path: 'autoridad',
     loadChildren: () =>
@@ -70,16 +72,16 @@ const ROUTES: Routes = [
   {
     path: 'manifiesto-aereo',
     loadChildren: () =>
-      import(
-        './tramites/32401/manifiesto-aereo.module'
-      ).then((m) => m.ManifiestoAereoModule),
+      import('./tramites/32401/manifiesto-aereo.module').then(
+        (m) => m.ManifiestoAereoModule
+      ),
   },
   {
     path: 'consulta-aviso-acreditacion',
     loadChildren: () =>
-      import(
-        './tramites/32101/Consulta-Aviso-Acreditacion.module'
-      ).then((m) => m.ConsultaAvisoAcreditacionModule),
+      import('./tramites/32101/Consulta-Aviso-Acreditacion.module').then(
+        (m) => m.ConsultaAvisoAcreditacionModule
+      ),
   },
   {
     path: 'aviso-traslado',
@@ -89,17 +91,23 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-destruccion',
+    loadChildren: () =>
+      import('./tramites/32506/aviso-destruccion.module').then(
+        (m) => m.AvisoDestruccionModule
+      ),
+  },
+  {
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
-        (m) => m.AvisoProcesosModule)
+        (m) => m.AvisoProcesosModule
+      ),
   },
   {
     path: 'adace',
     loadChildren: () =>
-      import('./tramites/32508/adace.module').then(
-        (m) => m.AdaceModule
-      ),
+      import('./tramites/32508/adace.module').then((m) => m.AdaceModule),
   },
   {
     path: 'anexo-veintiocho',
@@ -113,6 +121,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/31301/endoso-garantia.module').then(
         (m) => m.EndosoGarantiaModule
+      ),
+  },
+  {
+    path: 'aviso-de-ampliacion',
+    loadChildren: () =>
+      import('./tramites/32102/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule
       ),
   },
   {
@@ -134,7 +149,40 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32515/aviso-opcion-seguro-global.module').then(
         (m) => m.AvisoOpcionSeguroGlobalModule),
-  }
+  },
+  {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule),
+  },
+  {
+    path: 'entrega-acta-solicitante',
+    loadChildren: () =>
+      import('./tramites/32507/entrega-acta.module').then(
+        (m) => m.EntregaActaModule
+      ),
+  },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
+  { 
+    path: 'retorno-seguro-vehiculos-extranjeros',
+    loadChildren: () =>
+      import('./tramites/32514/aviso-retorno.module').then(
+        (m) => m.AvisoRetornoModule)
+  },
+  {
+    path: 'aviso-mercancia',
+    loadChildren: () =>
+      import('./tramites/32509/aviso-de-mercancia.module').then(
+        (m) => m.AvisoDeMercanciaModule
+      ),
+  },
 ];
 
 @NgModule({

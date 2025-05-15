@@ -1,50 +1,48 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
 import { RepresentanteLegalComponent } from './representante-legal.component';
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
-  let mockStore: Partial<Tramite110218Store>;
-  let mockQuery: Partial<Tramite110218Query>;
-  let mockService: Partial<CertificadoTecnicoJaponService>;
+  let serviceMock: jest.Mocked<CertificadoTecnicoJaponService>;
+  let storeMock: jest.Mocked<Tramite110218Store>;
+  let queryMock: jest.Mocked<Tramite110218Query>;
   let destroyed$: Subject<void>;
 
   beforeEach(async () => {
+    serviceMock = {
+      getrepresentante: jest.fn(),
+    } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
+
+    storeMock = {
+      setTramite110218State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite110218Store>;
+
+    queryMock = {
+      selectTramite110218State$: of({
+        nombredelRepresentante: 'Juan Pérez',
+        cargo: 'Gerente',
+        telefonos: '1234567890',
+        faxs: '0987654321',
+        correoElectronicos: 'juan.perez@example.com',
+      }),
+    } as unknown as jest.Mocked<Tramite110218Query>;
+
     destroyed$ = new Subject<void>();
 
-    mockStore = {
-      establecerNombredelRepresentante: jest.fn(),
-      establecerCargo: jest.fn(),
-      establecerTeléfonos: jest.fn(),
-      establecerFaxs: jest.fn(),
-      establecerCorreoElectrónicos: jest.fn(),
-    };
-
-    mockQuery = {
-      nombredelRepresentante$: of('John Doe'),
-      cargo$: of('Manager'),
-      telefonos$: of('123456789'),
-      faxs$: of('987654321'),
-      correoElectronicos$: of('test@example.com'),
-    };
-
-    mockService = {
-      getrepresentante: jest.fn().mockReturnValue(of({ empresa: 'Test Corp' })),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,RepresentanteLegalComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule],
+      declarations: [RepresentanteLegalComponent],
       providers: [
-        FormBuilder,
-        { provide: Tramite110218Store, useValue: mockStore },
-        { provide: Tramite110218Query, useValue: mockQuery },
-        { provide: CertificadoTecnicoJaponService, useValue: mockService },
+        { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
+        { provide: Tramite110218Store, useValue: storeMock },
+        { provide: Tramite110218Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -58,49 +56,63 @@ describe('RepresentanteLegalComponent', () => {
     destroyed$.complete();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores predeterminados', () => {
+    component.inicializarFormulario();
     expect(component.datosdelexportador.value).toEqual({
-      nombredelRepresentante: '',
+      nombredelRepresentante: 'Juan Pérez',
       empresa: '',
-      cargo: '',
-      telefonos: '',
-      faxs: '',
-      correoElectronico: '',
+      cargo: 'Gerente',
+      telefonos: '1234567890',
+      faxs: '0987654321',
+      correoElectronicos: 'juan.perez@example.com',
     });
   });
 
-  it('should call obtenerDatosDeTabla() and update the form', () => {
+  it('debería obtener los datos del representante legal desde el servicio', () => {
+    const representanteMock = { empresa: 'Empresa XYZ' };
+    serviceMock.getrepresentante.mockReturnValue(of(representanteMock));
+
     component.obtenerDatosDeTabla();
-    expect(mockService.getrepresentante).toHaveBeenCalled();
-    expect(component.datosdelexportador.get('empresa')?.value).toBe('Test Corp');
+
+    expect(serviceMock.getrepresentante).toHaveBeenCalled();
+    expect(component.datosdelexportador.get('empresa')?.value).toEqual('Empresa XYZ');
   });
 
-  it('should subscribe to store changes and update form values', () => {
-    component.suscribirseACambiosDeTienda();
-    expect(component.datosdelexportador.get('nombredelRepresentante')?.value).toBe('John Doe');
-    expect(component.datosdelexportador.get('cargo')?.value).toBe('Manager');
-    expect(component.datosdelexportador.get('telefonos')?.value).toBe('123456789');
-    expect(component.datosdelexportador.get('faxs')?.value).toBe('987654321');
-    expect(component.datosdelexportador.get('correoElectronicos')?.value).toBe('test@example.com');
+  it('debería actualizar un valor en el store', () => {
+    component.datosdelexportador = component.formBuilder.group({
+      nombredelRepresentante: ['Nuevo Representante'],
+    });
+
+    component.setValorStore(component.datosdelexportador, 'nombredelRepresentante');
+
+    expect(storeMock.setTramite110218State).toHaveBeenCalledWith({
+      nombredelRepresentante: 'Nuevo Representante',
+    });
   });
 
-  it('should call the correct store method on form change', () => {
-    component.datosdelexportador.get('nombredelRepresentante')?.setValue('New Name');
-    component.onDatosdelexportadorChange('nombredelRepresentante');
-    expect(mockStore.establecerNombredelRepresentante).toHaveBeenCalledWith('New Name');
+  it('debería obtener el estado actual del trámite desde el store', () => {
+    component.getValorStore();
 
-    component.datosdelexportador.get('cargo')?.setValue('New Role');
-    component.onDatosdelexportadorChange('cargo');
-    expect(mockStore.establecerCargo).toHaveBeenCalledWith('New Role');
+    expect(component.estadoSeleccionado).toEqual({
+      nombredelRepresentante: 'Juan Pérez',
+      cargo: 'Gerente',
+      telefonos: '1234567890',
+      faxs: '0987654321',
+      correoElectronicos: 'juan.perez@example.com',
+    });
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const destroyedSpy = jest.spyOn(destroyed$, 'next');
+    const completeSpy = jest.spyOn(destroyed$, 'complete');
+
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

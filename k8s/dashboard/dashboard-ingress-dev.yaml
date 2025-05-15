@@ -11,7 +11,7 @@ spec:
   - host: front.v30.ultrasist.net
     http:
       paths:
-      - path: /dashboard
+      - path: /
         pathType: Prefix
         backend:
           service:
