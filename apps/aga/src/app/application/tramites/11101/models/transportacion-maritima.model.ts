@@ -8,7 +8,7 @@ export interface DiscripccionDeLaMercanciaForm {
      * Denominación de la persona fisca
      * @type {string}
      */
-    Consecutivo: string;
+    consecutivo: string;
 
     /**
      * Estado de la persona fisca
@@ -16,17 +16,17 @@ export interface DiscripccionDeLaMercanciaForm {
      */
     estado: string;
 
-        /**
-     * Denominación de la persona fisca
-     * @type {string}
-     */
-        Cantidad: string;
+    /**
+ * Denominación de la persona fisca
+ * @type {string}
+ */
+    cantidad: string;
 
 
     /**
      *  Forma parte de patrimonio persona fisca
      * @type { string; }
      */
-    FormaParteDePatrimonio:string;
-  
+    formaParteDePatrimonio: string;
+
 }

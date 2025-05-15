@@ -78,16 +78,15 @@ export class MercanciaComponent implements OnInit {
             .pipe(
                 takeUntil(this.destruirNotificador$),
                 map((seccionState) => {
-                    const sessionStateMock = [
+                    const sessionStateMock : DiscripccionDeLaMercanciaForm[] =[
                         {
-                            Consecutivo: "1",
+                            consecutivo: "1",
                             estado: "Nuevo",
-                            Cantidad: "1",
-                            FormaParteDePatrimonio: "SI",
-                            Descripcion: "asd",
+                            cantidad: "1",
+                            formaParteDePatrimonio: "SI",
                         }
                     ]
-                    this.discripccionDeLaMercanciaForm = seccionState.discripccionDeLaMercanciaTabla || sessionStateMock;
+                       this.discripccionDeLaMercanciaForm = seccionState.discripccionDeLaMercanciaTabla || sessionStateMock;
                 })
             )
             .subscribe();
