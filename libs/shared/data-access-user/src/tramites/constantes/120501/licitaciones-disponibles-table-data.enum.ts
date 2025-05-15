@@ -11,6 +11,15 @@ export interface Adquiriente {
     adquirienteMontoDisponible:string,
     montoRecibir:string
 }
+export interface LicitacionesDisponibles {
+  numerodelicitacion: string;
+  fechadelicitacion: string;
+  descripcion: string;
+  montoadjudicado: string;
+  fechainiciovigencia: string;
+  fechafinvigencia: string;
+
+}
 export interface DetallesLicitacion {
   numeraDelicitacion: string;
   fechaDelEventoDelicitacion: string;
