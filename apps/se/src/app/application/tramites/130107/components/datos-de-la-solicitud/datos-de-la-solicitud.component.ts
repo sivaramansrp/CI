@@ -11,7 +11,7 @@ import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agr
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { PaisProcedenciaComponent } from '../pais-procedencia/pais-procedencia.component';
 import { PartidasDeLaMercanciaComponent } from '../partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-import { RepresentacionFederalComponent } from '../representacion-federal/Representacion-federal.component';
+import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 /**
