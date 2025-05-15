@@ -55,8 +55,7 @@ import { Tramite260304Query } from '../../estados/tramite260304Query.query';
   providers: [DatosSolicitudService],
 })
 export class ExporticonMercanciaEstupefacientesComponent
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
@@ -69,6 +68,13 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public mercanciaFormState!: MercanciaFormEstupefacientes;
 
+  /**
+   * @public
+   * @property {TablaMercanciasDatos} detalleMercanciaDatosSeleccionados
+   * @description
+   * Propiedad que almacena los datos seleccionados de la mercancía en la tabla.
+   */
+  public detalleMercanciaDatosSeleccionados!: TablaMercanciasDatos;
   /**
    * @property {Catalogo[]} clasificacionProductoDatos
    * @description Catalog of product classifications used to populate the form.
@@ -265,12 +271,23 @@ export class ExporticonMercanciaEstupefacientesComponent
         tap((seccionState) => {
           this.tramiteState = seccionState;
           this.mercanciaFormState = this.tramiteState.mercanciaForm;
+          if (seccionState.tablaMercanciasConfigDatos[0]) {
+            this.detalleMercanciaDatosSeleccionados = seccionState.seleccionadoTablaMercanciasDatos[0];
+          }
           this.crearMercanciaForm();
         })
       )
       .subscribe();
   }
 
+  /**
+    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+    * @param {keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes} field - Nombre del campo a obtener.
+    * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+    */
+  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes): string | number | undefined | string[] {
+    return this.detalleMercanciaDatosSeleccionados?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes];
+  }
   /**
    * @method crearMercanciaForm
    * @description Crea y configura el formulario reactivo para la gestión de mercancías estupefacientes.
@@ -283,70 +300,35 @@ export class ExporticonMercanciaEstupefacientesComponent
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
-        this.mercanciaFormState.clasificacionProducto,
+        this.obtenerValor('clasificacionProducto'),
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.mercanciaFormState.especificarClasificacionProducto,
+        this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionCumonInternacional: [
-        this.mercanciaFormState.denominacionCumonInternacional,
+        this.obtenerValor('denominacionCumonInternacional'),
         Validators.required,
       ],
-      marcaComercialDenominacion: [
-        this.mercanciaFormState.marcaComercialDenominacion,
-        Validators.required,
-      ],
-      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
-      formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica,
-        Validators.required,
-      ],
-      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
-      fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria,
-        Validators.required,
-      ],
-      descripcionFraccion: [
-        this.mercanciaFormState.descripcionFraccion,
-        Validators.required,
-      ],
-      unidadMedidaTarifa: [
-        this.mercanciaFormState.cantidadUmtValor,
-        Validators.required,
-      ],
-      cantidadUMT: [this.mercanciaFormState.cantidadUmt, Validators.required],
-      cantidadUMC: [
-        this.mercanciaFormState.cantidadUmcValor,
-        Validators.required,
-      ],
-      unidadMedidaComercializacion: [
-        this.mercanciaFormState.cantidadUmc,
-        Validators.required,
-      ],
-
-      numeroCAS: [this.mercanciaFormState.numeroCAS],
-      cantidadDeLotes: [
-        this.mercanciaFormState.cantidadDeLotes,
-        Validators.required,
-      ],
-
-      paisDeDestino: ['101', Validators.required],
-
-      paisDeProcedencia: [
-        this.mercanciaFormState.paisDeProcedencia,
-        Validators.required,
-      ],
-
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
-
-      numeroRegistroSanitario: [
-        this.mercanciaFormState.numeroRegistroSanitario,
-        Validators.required,
-      ],
-
-      usoEspecifico: [this.mercanciaFormState.usoEspecifico],
+      marcaComercialDenominacion: [this.obtenerValor('marcaComercialDenominacion'), Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required,],
+      formaFarmaceutica: [this.obtenerValor('formaFarmaceutica'), Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
+      fraccionArancelaria: [this.obtenerValor('fraccionArancelaria'), Validators.required],
+      descripcionFraccion: [this.obtenerValor('descripcionFraccion'), Validators.required],
+      unidadMedidaTarifa: [this.obtenerValor('unidadMedidaTarifa'), Validators.required],
+      cantidadUMT: [this.obtenerValor('cantidadUMT'), Validators.required],
+      cantidadUMC: [this.obtenerValor('cantidadUMC'), Validators.required],
+      unidadMedidaComercializacion: [this.obtenerValor('unidadMedidaComercializacion'), Validators.required],
+      numeroCAS: [this.obtenerValor('numeroCAS')],
+      cantidadDeLotes: [this.obtenerValor('cantidadDeLotes'), Validators.required],
+      paisDeDestino: [this.obtenerValor('paisDeDestino'), Validators.required],
+      paisDeProcedencia: [this.obtenerValor('paisDeProcedencia'), Validators.required],
+      presentacion: [this.obtenerValor('presentacion'), Validators.required],
+      numeroRegistroSanitario: [this.obtenerValor('numeroRegistroSanitario'), Validators.required],
+      usoEspecifico: [this.obtenerValor('usoEspecifico')],
+      detallarUsoEspecifico:[this.obtenerValor('detallarUsoEspecifico')],
     });
   }
 
@@ -517,11 +499,11 @@ export class ExporticonMercanciaEstupefacientesComponent
     this.detalleMercanciaDatos = VALOR
       ? []
       : this.detalleMercanciaDatos.filter((item) =>
-          this.tablaMercanciasLista.some(
-            (tablaItem) =>
-              tablaItem.registroSanitario === item.registroSanitario
-          )
-        );
+        this.tablaMercanciasLista.some(
+          (tablaItem) =>
+            tablaItem.registroSanitario === item.registroSanitario
+        )
+      );
   }
 
   /**
