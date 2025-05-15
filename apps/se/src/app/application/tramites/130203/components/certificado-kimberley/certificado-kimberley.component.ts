@@ -347,7 +347,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getNombreExportador(): void {
     const NOMBRE_EXPORTADOR =
       this.datosDelExportador.get('nombreExportador')?.value;
-    this.tramite130203Store.setNombreExportador(NOMBRE_EXPORTADOR);
+    this.tramite130203Store.actualizarEstado(NOMBRE_EXPORTADOR);
   }
 
   /**
@@ -358,7 +358,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const DIRECCION_EXPORTADOR = this.datosDelExportador.get(
       'direccionExportador'
     )?.value;
-    this.tramite130203Store.setDireccionExportador(DIRECCION_EXPORTADOR);
+    this.tramite130203Store.actualizarEstado(DIRECCION_EXPORTADOR);
   }
 
   /**
@@ -368,7 +368,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getNombreImportador(): void {
     const NOMBRE_IMPORTADOR =
       this.datosDelImportador.get('nombreImportador')?.value;
-    this.tramite130203Store.setNombreImportador(NOMBRE_IMPORTADOR);
+    this.tramite130203Store.actualizarEstado(NOMBRE_IMPORTADOR);
   }
 
   /**
@@ -379,7 +379,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const DIRECCION_IMPORTADOR = this.datosDelImportador.get(
       'direccionImportador'
     )?.value;
-    this.tramite130203Store.setDireccionImportador(DIRECCION_IMPORTADOR);
+    this.tramite130203Store.actualizarEstado(DIRECCION_IMPORTADOR);
   }
 
   /**
@@ -390,7 +390,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const NUMERO_EN_LETRA_DE_LOS_LOTES = this.datosDeLaRemesa.get(
       'numeroEnLetraDeLosLotes'
     )?.value;
-    this.tramite130203Store.setNumeroEnLetraDeLosLotes(
+    this.tramite130203Store.actualizarEstado(
       NUMERO_EN_LETRA_DE_LOS_LOTES
     );
   }
@@ -402,7 +402,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES = this.datosDeLaRemesa.get(
       'numeroEnLetraDeLosLotesEnIngles'
     )?.value;
-    this.tramite130203Store.setNumeroEnLetraDeLosLotesEnIngles(
+    this.tramite130203Store.actualizarEstado(
       NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES
     );
   }
@@ -413,7 +413,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getNumeroDeFactura(): void {
     const NUMERO_DE_FACTURA =
       this.datosDeLaRemesa.get('numeroDeFactura')?.value;
-    this.tramite130203Store.setNumeroDeFactura(NUMERO_DE_FACTURA);
+    this.tramite130203Store.actualizarEstado(NUMERO_DE_FACTURA);
   }
 
   /**
@@ -423,7 +423,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getCantidadEnQuilates(): void {
     const CANTIDAD_EN_QUILATES =
       this.datosDeLosDiamantes.get('cantidadEnQuilates')?.value;
-    this.tramite130203Store.setCantidadEnQuilates(CANTIDAD_EN_QUILATES);
+    this.tramite130203Store.actualizarEstado(CANTIDAD_EN_QUILATES);
   }
 
   /**
@@ -434,6 +434,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const VALOR_DE_LOS_DIAMANTES = this.datosDeLosDiamantes.get(
       'valorDeLosDiamantes'
     )?.value;
-    this.tramite130203Store.setValorDeLosDiamantes(VALOR_DE_LOS_DIAMANTES);
+    this.tramite130203Store.actualizarEstado(VALOR_DE_LOS_DIAMANTES);
   }
 }
