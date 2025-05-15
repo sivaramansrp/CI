@@ -4,6 +4,7 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 import { enviroment } from '@libs/shared/data-access-user/src';
+import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 
@@ -14,17 +15,17 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4201/remoteAppEntry.js`,
         remoteName: 'login',
-        exposedModule: './Module'
-      }).then((m) => m.RemoteEntryModule)
+        exposedModule: './Module',
+      }).then((m) => m.RemoteEntryModule),
   },
   {
     path: '',
     redirectTo: 'login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteDesdePanelComponent
+    component: SeleccionTramiteDesdePanelComponent,
   },
   {
     path: 'aga',
@@ -32,8 +33,8 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4202/remoteAppEntry.js`,
         remoteName: 'aga',
-        exposedModule: './Module'
-      }).then((m) => m.AppAgaModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppAgaModule),
   },
   {
     path: 'agace',
@@ -42,7 +43,7 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
         remoteName: 'agace',
-        exposedModule: './Module'
+        exposedModule: './Module',
       }).then((m) => m.AppAgaceModule),
   },
   {
@@ -51,8 +52,8 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4204/remoteAppEntry.js`,
         remoteName: 'agriculture',
-        exposedModule: './Module'
-      }).then((m) => m.AppAgriculturaModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppAgriculturaModule),
   },
   {
     path: 'se',
@@ -60,8 +61,8 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4205/remoteAppEntry.js`,
         remoteName: 'se',
-        exposedModule: './Module'
-      }).then((m) => m.AppSEModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppSEModule),
   },
   {
     path: 'semarnat',
@@ -69,26 +70,26 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4206/remoteAppEntry.js`,
         remoteName: 'semarnat',
-        exposedModule: './Module'
-      }).then((m) => m.AppSemarnatModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppSemarnatModule),
   },
   {
     path: 'sener',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
-            remoteName: 'sener',
-            exposedModule: './Module'
-        }).then((m) => m.AppSenerModule)
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+        remoteName: 'sener',
+        exposedModule: './Module',
+      }).then((m) => m.AppSenerModule),
   },
   {
     path: 'funcionario',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4210/remoteAppEntry.js`,
-            remoteName: 'funcionario',
-            exposedModule: './Module'
-        }).then((m) => m.AppFuncionarioModule)
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4210/remoteAppEntry.js`,
+        remoteName: 'funcionario',
+        exposedModule: './Module',
+      }).then((m) => m.AppFuncionarioModule),
   },
   {
     path: 'agace',
@@ -96,8 +97,8 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
         remoteName: 'agace',
-        exposedModule: './Module'
-      }).then((m) => m.AppAgaceModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppAgaceModule),
   },
   {
     path: 'cofepris',
@@ -105,17 +106,17 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
         remoteName: 'cofepris',
-        exposedModule: './Module'
-      }).then((m) => m.AppCofeprisModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppCofeprisModule),
   },
   {
     path: 'sener',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
-            remoteName: 'sener',
-            exposedModule: './Module'
-        }).then((m) => m.AppSenerModule)
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+        remoteName: 'sener',
+        exposedModule: './Module',
+      }).then((m) => m.AppSenerModule),
   },
   {
     path: 'cofepris',
@@ -123,52 +124,59 @@ export const appRoutes: Route[] = [
       loadRemoteModule({
         remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
         remoteName: 'cofepris',
-        exposedModule: './Module'
-      }).then((m) => m.AppCofeprisModule)
+        exposedModule: './Module',
+      }).then((m) => m.AppCofeprisModule),
   },
   {
-  path: 'amecafe',
-  loadChildren: () =>
+    path: 'amecafe',
+    loadChildren: () =>
       loadRemoteModule({
-          remoteEntry: `${enviroment.WEB_HOST}:4212/remoteAppEntry.js`,
-          remoteName: 'amecafe',
-          exposedModule: './Module'
-      }).then((m) => m.AppAmecafeModule)
-  } ,
+        remoteEntry: `${enviroment.WEB_HOST}:4212/remoteAppEntry.js`,
+        remoteName: 'amecafe',
+        exposedModule: './Module',
+      }).then((m) => m.AppAmecafeModule),
+  },
   {
     path: 'sedena',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4219/remoteAppEntry.js`,
-            remoteName: 'sedena',
-            exposedModule: './Module'
-        }).then((m) => m.AppSedenaModule)
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4219/remoteAppEntry.js`,
+        remoteName: 'sedena',
+        exposedModule: './Module',
+      }).then((m) => m.AppSedenaModule),
   },
   {
     path: 'inbal',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
-            remoteName: 'inbal',
-            exposedModule: './Module'
-        }).then((m) => m.AppInbalModule)
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+        remoteName: 'inbal',
+        exposedModule: './Module',
+      }).then((m) => m.AppInbalModule),
   },
   {
     path: 'profepa',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: 'http://localhost:4220/remoteAppEntry.js',
-            remoteName: 'profepa',
-            exposedModule: './Module'
-        }).then((m) => m.AppProfepaModule)
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4220/remoteAppEntry.js',
+        remoteName: 'profepa',
+        exposedModule: './Module',
+      }).then((m) => m.AppProfepaModule),
   },
   {
     path: 'bandeja-de-solicitudes',
-    component: BandejaDeSolicitudesComponent
+    component: BandejaDeSolicitudesComponent,
   },
   {
     path: 'bandeja-de-tareas-pendientes',
-    component: BandejaDeTareasPendientesComponent
-  }
-
+    component: BandejaDeTareasPendientesComponent,
+  },
+  {
+    path: 'confirmar-notificacion',
+    component: ConfirmarNotificacionComponent,
+  },
+  {
+    path: 'confirmar-resolucion',
+    component: ConfirmarNotificacionComponent,
+  },
 ];

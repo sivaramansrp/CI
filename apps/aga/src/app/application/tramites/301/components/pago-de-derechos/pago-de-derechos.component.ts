@@ -18,6 +18,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solocitud301Service } from '../../services/service301.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
+import { TieneConsultaio } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente `PagoDeDerechosComponent`
@@ -38,9 +39,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-  /** Datos del procedimiento recibidos como entrada desde el componente padre. */
-  @Input() public procedureDatos:Array<any> = [];  
-  
+
+  @Input() public procedureState!: TieneConsultaio;
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
@@ -155,7 +155,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
-    if (this.procedureDatos.length > 0) {
+    if (this.procedureState.readonly) {
       this.getProcedureDatos();
     }
   }
@@ -212,10 +212,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
-    this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
-    this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
-    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
-    this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+    this.FormSolicitud.get('pagodederechos.linea')?.disable();
+    this.FormSolicitud.get('pagodederechos.monto')?.disable();
+    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.disable();
+    // this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
+    // this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
+    // this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
   }
 
   /**

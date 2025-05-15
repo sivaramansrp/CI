@@ -7,3 +7,9 @@ export interface BandejaDeSolicitudes {
     departamento: string;
     numeroDeProcedimiento: string;
   }
+
+  export interface TieneConsultaio {
+   readonly: boolean,
+    create: boolean,
+    update: boolean
+}

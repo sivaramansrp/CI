@@ -22,7 +22,7 @@ import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
@@ -44,9 +44,7 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 })
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
 
-  /** Datos del procedimiento recibidos como entrada desde el componente padre. */
-  @Input() public procedureDatos: Array<any> = [];
-  
+  @Input() public procedureState!: TieneConsultaio;
   /**
    * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
@@ -198,7 +196,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     });
     this.valorSeleccionadoFraccion(); // enable descripcionFraccion if fraccionArancelaria has value
     this.valorSeleccionadoNico(); // enable descripcionNico if nico has value
-    if(this.procedureDatos.length > 0) {
+    if(this.procedureState.readonly) {
       this.getProcedureDatos();
     }
   }
@@ -261,15 +259,24 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
-    this.informacionDeLaform.get('fraccionArancelaria')?.setValue(this.procedureDatos[0].registroPara.fraccionArancelaria);
-    this.informacionDeLaform.get('descripcionFraccion')?.setValue(this.procedureDatos[0].registroPara.descripcionFraccion);
-    this.informacionDeLaform.get('nico')?.setValue(this.procedureDatos[0].registroPara.nico);
-    this.informacionDeLaform.get('descripcionNico')?.setValue(this.procedureDatos[0].registroPara.descripcionNico);
-    this.informacionDeLaform.get('nombreQuimico')?.setValue(this.procedureDatos[0].registroPara.nombreQuimico);
-    this.informacionDeLaform.get('nombreComercial')?.setValue(this.procedureDatos[0].registroPara.nombreComercial);
-    this.informacionDeLaform.get('numeroCAS')?.setValue(this.procedureDatos[0].registroPara.numeroCAS);
-    this.informacionDeLaform.get('estadoFisico')?.setValue(this.procedureDatos[0].registroPara.estadoFisico);
-    this.informacionDeLaform.get('acondicionamiento')?.setValue(this.procedureDatos[0].registroPara.acondicionamiento);
+    this.informacionDeLaform.get('fraccionArancelaria')?.disable();
+      this.informacionDeLaform.get('descripcionFraccion')?.disable();
+      this.informacionDeLaform.get('nico')?.disable();
+      this.informacionDeLaform.get('descripcionNico')?.disable();
+      this.informacionDeLaform.get('nombreQuimico')?.disable();
+      this.informacionDeLaform.get('nombreComercial')?.disable();
+      this.informacionDeLaform.get('numeroCAS')?.disable();
+      this.informacionDeLaform.get('estadoFisico')?.disable();
+      this.informacionDeLaform.get('acondicionamiento')?.disable();
+    // this.informacionDeLaform.get('fraccionArancelaria')?.setValue(this.procedureDatos[0].registroPara.fraccionArancelaria);
+    // this.informacionDeLaform.get('descripcionFraccion')?.setValue(this.procedureDatos[0].registroPara.descripcionFraccion);
+    // this.informacionDeLaform.get('nico')?.setValue(this.procedureDatos[0].registroPara.nico);
+    // this.informacionDeLaform.get('descripcionNico')?.setValue(this.procedureDatos[0].registroPara.descripcionNico);
+    // this.informacionDeLaform.get('nombreQuimico')?.setValue(this.procedureDatos[0].registroPara.nombreQuimico);
+    // this.informacionDeLaform.get('nombreComercial')?.setValue(this.procedureDatos[0].registroPara.nombreComercial);
+    // this.informacionDeLaform.get('numeroCAS')?.setValue(this.procedureDatos[0].registroPara.numeroCAS);
+    // this.informacionDeLaform.get('estadoFisico')?.setValue(this.procedureDatos[0].registroPara.estadoFisico);
+    // this.informacionDeLaform.get('acondicionamiento')?.setValue(this.procedureDatos[0].registroPara.acondicionamiento);
 
   }
 
