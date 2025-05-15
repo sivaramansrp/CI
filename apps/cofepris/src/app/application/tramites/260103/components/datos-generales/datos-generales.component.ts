@@ -152,6 +152,7 @@ export class DatosGeneralesComponent implements OnDestroy {
    */
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
+      id:[Math.floor(100000 + Math.random() * 900000), Validators.required],
       rfc: ['', Validators.required],
       nombreRazonSocial: [
         '',

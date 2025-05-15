@@ -194,6 +194,13 @@ eliminarFabricante(): void {
   }
 }
 
+eliminarDestinatario(): void {
+  const DESTINATARIO_ID = this.listaDeTablasSeleccionadasDestinatario[0]?.id;
+  if (DESTINATARIO_ID !== undefined) {
+    this.tramiteQuery.eliminarDestinatarioPorId(DESTINATARIO_ID);
+      this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
+  }
+}
 
 
   /**

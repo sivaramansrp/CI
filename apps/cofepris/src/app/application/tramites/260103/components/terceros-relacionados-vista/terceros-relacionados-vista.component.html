@@ -38,6 +38,7 @@
           class="btn btn-danger ms-2"
          *ngIf= "datos.length !== 0"
          [disabled]="listaDeTablasSeleccionadasDestinatario.length !== 1"
+         (click)="eliminarDestinatario()"
         >
           Eliminar
         </button>
