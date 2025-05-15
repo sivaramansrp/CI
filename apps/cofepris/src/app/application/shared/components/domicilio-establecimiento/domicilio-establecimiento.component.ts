@@ -48,7 +48,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -74,6 +74,7 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    TablePaginationComponent
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
@@ -117,6 +118,39 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
+/**
+   * Indica si el campo esPaginacionVisible es visible.
+   */
+  @Input() esPaginacionVisible: boolean = false;
+
+ /**
+   * Número total de elementos en la tabla.
+   */
+  totalElementos: number = 0;
+
+  /**
+   * Página actual de la paginación.
+   */
+  paginaActual: number = 1;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+   */
+  elementosPorPagina: number = 5;
+ /**
+   * Encabezados de la tabla de establecimientos.
+   */
+  public establecimientoHeaderData: string[] = [];
+
+  /**
+   * Contiene los datos del cuerpo de la tabla de establecimientos.
+   */
+  public establecimientoBodyData = [];
+
+  /**
+   * Datos completos de los establecimientos.
+   */
+  public fullEstablecimientoBodyData = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -635,6 +669,46 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       ) => void
     )(VALOR);
   }
+
+ /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  actualizarPaginacion(): void {
+    const INDICE_INICIAL = (this.paginaActual - 1) * this.elementosPorPagina;
+    this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(
+      INDICE_INICIAL,
+      INDICE_INICIAL + this.elementosPorPagina
+    );
+  }
+
+/**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} pagina - Número de la página seleccionada.
+   */
+  onCambioDePagina(pagina: number): void {
+    this.paginaActual = pagina;
+    this.actualizarPaginacion();
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} elementosPorPagina - Número de elementos a mostrar por página.
+   */
+  onCambioElementosPorPagina(elementosPorPagina: number): void {
+    this.elementosPorPagina = elementosPorPagina;
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
+  }
+
 
   /**
   * @method limpiar
