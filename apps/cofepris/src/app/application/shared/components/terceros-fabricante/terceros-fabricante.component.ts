@@ -124,7 +124,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de fabricante.
    */
   showFabricanteButtons = false;
-
+  
+  onFabricanteSeleccionCambio(isChecked: boolean): void {
+    this.showFabricanteButtons = isChecked;
+  }
   /**
    * Indicador de visibilidad para los botones del formulario de formulador.
    * Inicialmente no visible (`false`).
@@ -132,7 +135,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de formulador.
    */
   showFormuladorButtons = false;
-
+  onFormuladorSeleccionCambio(isChecked: boolean): void {
+    this.showFormuladorButtons = isChecked;
+  }
   /**
    * Indicador de visibilidad para los botones del formulario de proveedor.
    * Inicialmente no visible (`false`).
@@ -140,7 +145,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de proveedor.
    */
   showProveedorButtons = false;
-
+  onProveedorSeleccionCambio(isChecked: boolean): void {
+    this.showProveedorButtons = isChecked;
+  }
   /**
    * Selección del tipo de persona.
    */
