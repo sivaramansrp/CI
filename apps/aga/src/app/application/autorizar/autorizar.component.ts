@@ -112,7 +112,7 @@ export class AutorizarComponent implements OnInit, OnDestroy {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['confirmar-notificacion']);
+      this.router.navigate([`confirmar-notificacion`], { state: { isAcuseRecibo: true } });
     }
   }
 
