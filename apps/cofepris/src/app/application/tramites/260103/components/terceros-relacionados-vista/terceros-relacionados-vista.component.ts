@@ -186,6 +186,15 @@ onListaDeFilaSeleccionada(
 }
 
 
+eliminarFabricante(): void {
+  const FABRICANTE_ID = this.listaDeTablasSeleccionadasFabricante[0]?.id;
+  if (FABRICANTE_ID !== undefined) {
+    this.tramiteQuery.eliminarFabricantePorId(FABRICANTE_ID);
+      this.fabricanteTablaDatos$ = this.tramiteQuery.getFabricanteTablaDatos$;
+  }
+}
+
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

@@ -97,6 +97,7 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
  * @description Representa los datos correspondientes a un destinatario.
  */
 export interface Destinatario {
+  id?:number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;

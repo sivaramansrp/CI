@@ -83,6 +83,7 @@
           class="btn btn-danger ms-2"
           *ngIf= "datos.length !== 0"
           [disabled]="listaDeTablasSeleccionadasFabricante.length !== 1"
+          (click)="eliminarFabricante()"
         >
           Eliminar
         </button>
