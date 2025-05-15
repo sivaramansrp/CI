@@ -2,10 +2,11 @@ import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/
 import { Component, OnDestroy } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
-import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
-import { ConsultaioStore } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
+import { FECHA_DE_INICIO } from '../core/enums/evaluar.trimites.enums';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
 import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
@@ -15,7 +16,6 @@ import { Subject } from 'rxjs';
 import { Type } from "@angular/core";
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { FECHA_DE_INICIO } from '../core/enums/evaluar.trimites.enums';
 
 
 @Component({
@@ -112,7 +112,7 @@ export class AutorizarComponent implements OnInit, OnDestroy {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['bandeja-de-tareas-pendientes']);
+      this.router.navigate(['confirmar-notificacion']);
     }
   }
 
