@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,8 @@ import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.compone
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+// import { ConsultaioStore } from '../../../core/estados/consulta.store';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'lib-bandeja',
@@ -23,6 +25,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
   ],
   templateUrl: './lib-bandeja.component.html',
   styleUrl: './lib-bandeja.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibBandejaComponent<T> implements OnInit {
   @Input() public titulo!: string;
@@ -38,6 +41,7 @@ export class LibBandejaComponent<T> implements OnInit {
     bandejaSolicitudeFormGroup: new FormGroup({}),
   });
 
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   public originalConfiguracionTabla: any[] = [];
   public tramiteData: TramiteDetails[] = [];
   public paisDeOriginColapsable = false;
@@ -90,17 +94,19 @@ export class LibBandejaComponent<T> implements OnInit {
       (v) => v.tramite === PROCEDURE
     );
     this.procedureUrl = this.tramiteData[0].linkDashboard;
-    //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
     this.consultaioStore.establecerConsultaio(
       String(PROCEDURE),
       ORIGIN,
       this.tramiteData[0].department,
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
-      false,
+      true,
       false,
       false
     );
+    if (!this.tieneBandeja) {
+      this.router.navigate([this.procedureUrl]);
+    }
     if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,

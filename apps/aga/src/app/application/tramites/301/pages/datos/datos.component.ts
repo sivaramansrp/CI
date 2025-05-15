@@ -1,8 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, TieneConsultaio } from '@ng-mf/data-access-user';
 import { Pantallas301Service } from '../../services/pantallas301.service';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { Solocitud301Service } from '../../services/service301.service';
@@ -23,9 +22,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /** Arreglo que almacena los datos obtenidos del servidor. */
-  public datos = [];
-
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   
@@ -37,7 +33,12 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  public consultaState!:ConsultaioState;
+  public tieneConsulta:TieneConsultaio = {
+    readonly: false,
+    create: false,
+    update: false,
+  }
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
@@ -52,14 +53,14 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     public pantallasSvc: Pantallas301Service,
     private solocitud301Service: Solocitud301Service,
     private consultaioQuery: ConsultaioQuery,
-    private route: ActivatedRoute
+    private consultaQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioActualizacion =
-            seccionState.parameter === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || seccionState.parameter === 'FLUJO_FUNCIONARIO_AUTORIZACION' || seccionState.parameter === 'FLUJO_FUNCIONARIO_EVALUAR'
+            seccionState.parameter === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || seccionState.parameter === 'FLUJO_FUNCIONARIO_AUTORIZACION' || seccionState.parameter === 'FLUJO_FUNCIONARIO_EVALUAR' || seccionState.parameter === 'BANDEJA_SOLICITUDES'
               ? true
               : false;
         })
@@ -68,17 +69,26 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   }
 
   ngOnInit(): void {
-    const PROCEDURE_NUMBER = this.route.snapshot.paramMap.get('procedureId');
-    if(PROCEDURE_NUMBER !== '' && PROCEDURE_NUMBER !== null && PROCEDURE_NUMBER !== undefined) {
-      this.pantallasSvc.getPantallaDatos().subscribe((response) => {
-        this.datos = JSON.parse(JSON.stringify(response));
-      });
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.readonly) {
+      this.getBandejaSolicitudesDatos();
     }
     if(this.esFormularioActualizacion){
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
+  }
+
+  public getBandejaSolicitudesDatos(): void {
+    this.tieneConsulta.readonly = this.consultaState.readonly;
+    this.tieneConsulta.create = this.consultaState.create;
+    this.tieneConsulta.update = this.consultaState.update;
+    this.pantallasSvc.getPantallaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      this.solocitud301Service.actualizarEstadoFormulario(response);
+    });
   }
 
   /**
