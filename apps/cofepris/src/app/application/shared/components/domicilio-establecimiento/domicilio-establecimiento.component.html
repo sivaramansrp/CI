@@ -4,39 +4,21 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="codigoPostal">Código postal*:</label>
-        <input
-          class="form-control"
-          id="codigoPostal"
-          placeholder=""
-          type="text"
-          formControlName="codigoPostal"
+        <input class="form-control" id="codigoPostal" placeholder="" type="text" formControlName="codigoPostal"
           (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
-          "
-        />
+          " />
       </div>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select
-        [catalogo]="estado"
-        formControlName="estado"
-        [label]="'Estado'"
-        [required]="true"
-        name="estado"
-        (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
-      ></app-catalogo-select>
+      <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
+        name="estado" (change)="setValoresStore(domicilio, 'estado', 'setEstado')"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="muncipio">Municipio o alcaldía*:</label>
-        <input
-          class="form-control"
-          id="muncipio"
-          placeholder=""
-          type="text"
-          formControlName="muncipio"
-          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')"
-        />
+        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio"
+          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
       </div>
     </div>
   </div>
@@ -44,27 +26,15 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="localidad">Localidad:</label>
-        <input
-          class="form-control"
-          id="localidad"
-          placeholder=""
-          type="text"
-          formControlName="localidad"
-          (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')"
-        />
+        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad"
+          (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="colonia">Colonia:</label>
-        <input
-          class="form-control"
-          id="colonia"
-          placeholder=""
-          type="text"
-          formControlName="colonia"
-          (change)="setValoresStore(domicilio, 'colonia', 'setColonia')"
-        />
+        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia"
+          (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
       </div>
     </div>
   </div>
@@ -72,14 +42,8 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="calle">Calle*:</label>
-        <input
-          class="form-control"
-          id="calle"
-          placeholder=""
-          type="text"
-          formControlName="calle"
-          (change)="setValoresStore(domicilio, 'calle', 'setCalle')"
-        />
+        <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle"
+          (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
       </div>
     </div>
   </div>
@@ -87,27 +51,15 @@
     <div class="col-md-1">
       <div class="form-group">
         <label class="form-label" for="lada">Lada:</label>
-        <input
-          class="form-control"
-          id="lada"
-          placeholder=""
-          type="number"
-          formControlName="lada"
-          (change)="setValoresStore(domicilio, 'lada', 'setLada')"
-        />
+        <input class="form-control" id="lada" placeholder="" type="number" formControlName="lada"
+          (change)="setValoresStore(domicilio, 'lada', 'setLada')" />
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
         <label class="form-label" for="telefono">Teléfono*:</label>
-        <input
-          class="form-control"
-          id="telefono"
-          placeholder=""
-          type="number"
-          formControlName="telefono"
-          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')"
-        />
+        <input class="form-control" id="telefono" placeholder="" type="number" formControlName="telefono"
+          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
       </div>
     </div>
   </div>
@@ -117,18 +69,11 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-      [configuracionTabla]="nicoTabla"
-      [datos]="nicoTablaDatos"
-    ></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+      [datos]="nicoTablaDatos"></app-tabla-dinamica>
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2">Eliminar</button>
-      <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAddAgent"
-      >
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
         Agregar
       </button>
     </div>
@@ -136,16 +81,10 @@
   <div *ngIf="isAvisoLicenciaVisible" class="row align-item-center">
     <div class="col-md-4">
       <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="avisoCheckbox"
-          formControlName="avisoCheckbox"
-          (change)="
+        <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="
             onAvisoCheckboxChange($event);
             setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
-          "
-        />
+          " />
         <label class="form-check-label" for="avisoCheckbox">
           <span>Aviso de funcionamiento:</span>
         </label>
@@ -153,35 +92,23 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria:</label
-        >
-        <input
-          class="form-control"
-          id="licenciaSanitaria"
-          placeholder=""
-          type="text"
-          formControlName="licenciaSanitaria"
-          (change)="
+        <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:</label>
+        <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+          formControlName="licenciaSanitaria" (change)="
             setValoresStore(
               domicilio,
               'licenciaSanitaria',
               'setLicenciaSanitaria'
             )
-          "
-        />
+          " />
       </div>
     </div>
   </div>
   <div *ngIf="isAduanasEntradaVisible" class="row">
     <div class="panel-body">
-      <crosslist
-        [fechas]="seleccionarAduanasEntrada"
-        [label]="aduanasEntradaLabel"
-        [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
-        [botones]="aduanasEntradaBotons"
-        (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)"
-      ></crosslist>
+      <crosslist [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
+        [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos" [botones]="aduanasEntradaBotons"
+        (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)"></crosslist>
     </div>
   </div>
   <div class="row">
@@ -190,25 +117,21 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-      [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos"
-    ></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+      [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+
+    <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
+      <app-table-pagination [totalItems]="totalElementos" [itemsPerPage]="elementosPorPagina" [currentPage]="paginaActual"
+        (pageChange)="onCambioDePagina($event)" (itemsPerPageChange)="onCambioElementosPorPagina($event)">
+      </app-table-pagination>
+    </div>
+
     <div class="container text-end mt-5">
-      <button
-        class="btn btn-default me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias"
-      >
+      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
         Modificar
       </button>
       <button class="btn btn-default me-2">Eliminar</button>
-      <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias"
-      >
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
         Agregar
       </button>
     </div>
@@ -218,29 +141,19 @@
       <label for="garantiasOfrecidas" class="form-label text-start">
         Garantías ofrecidas*:
       </label>
-      <textarea
-        id="garantiasOfrecidas"
-        class="form-control text-area-garantias"
-        formControlName="garantiasOfrecidas"
+      <textarea id="garantiasOfrecidas" class="form-control text-area-garantias" formControlName="garantiasOfrecidas"
         (change)="
           setValoresStore(
             formMercancias,
             'garantiasOfrecidas',
             'setGarantiasOfrecidas'
           )
-        "
-      ></textarea>
+        "></textarea>
     </div>
   </div>
 </form>
 
-<div
-  class="modal fade"
-  id="modalAddAgent"
-  tabindex="-1"
-  aria-labelledby="modalAddAgentLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content overflow-auto">
       <div class="modal-header">
@@ -249,36 +162,24 @@
       <div class="modal-body">
         <form [formGroup]="formAgente">
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="claveScianModal"
-              [label]="'Clave S.C.I.A.N.'"
-              [required]="true"
-              name="claveScianModal"
-              (change)="
+            <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
+              [required]="true" name="claveScianModal" (change)="
                 setValoresStore(
                   formAgente,
                   'claveScianModal',
                   'setClaveScianModal'
                 )
-              "
-            ></app-catalogo-select>
+              "></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="claveDescripcionModal"
-              [label]="'Descripción del S.C.I.A.N.'"
-              [required]="false"
-              name="claveDescripcionModal"
-              (change)="
+            <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
+              [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal" (change)="
                 setValoresStore(
                   formAgente,
                   'claveDescripcionModal',
                   'setClaveDescripcionModal'
                 )
-              "
-            ></app-catalogo-select>
+              "></app-catalogo-select>
           </div>
         </form>
       </div>
@@ -297,13 +198,8 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="modalAddAgentMercancias"
-  tabindex="-1"
-  aria-labelledby="modalAddAgentMercanciasLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-datos-generales">
     <div class="modal-content">
       <div class="modal-header">
@@ -314,203 +210,122 @@
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
             <label for="nombreComercial">Nombre comercial:</label>
-            <input
-              type="text"
-              id="nombreComercial"
-              formControlName="nombreComercial"
-              class="form-control"
-              (change)="
+            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="nombreComun">nombre común:</label>
-            <input
-              type="text"
-              id="nombreComun"
-              formControlName="nombreComun"
-              class="form-control"
-              (change)="
+            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="nombreCientifico">nombre científico:</label>
-            <input
-              type="text"
-              id="nombreCientifico"
-              formControlName="nombreCientifico"
-              class="form-control"
-              (change)="
+            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
-            <label for="usoEspecifico" class="form-label text-start"
-              >uso específico:</label
-            >
-            <textarea
-              id="usoEspecifico"
-              class="form-control text-area-uso"
-              formControlName="usoEspecifico"
-              (change)="
+            <label for="usoEspecifico" class="form-label text-start">uso específico:</label>
+            <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
                 setValoresStore(
                   formMercancias,
                   'acondicionamiento',
                   'setDenominacionEspecifica'
                 )
-              "
-            ></textarea>
+              "></textarea>
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <input
-              type="text"
-              id="fraccionArancelaria"
-              formControlName="fraccionArancelaria"
-              class="form-control"
+            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
               (change)="
                 setValoresStore(
                   formMercancias,
                   'fraccionArancelaria',
                   'setFraccionArancelaria'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="descripcionFraccion">descripción de la fracción:</label>
-            <input
-              type="text"
-              id="descripcionFraccion"
-              formControlName="descripcionFraccion"
-              class="form-control"
+            <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control"
               (change)="
                 setValoresStore(
                   formMercancias,
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="cantidadUMT">Cantidad UMT*:</label>
-            <input
-              type="text"
-              id="cantidadUMT"
-              formControlName="cantidadUMT"
-              class="form-control"
-              (change)="
+            <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="
                 setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="UMT">UMT*:</label>
-            <input
-              type="text"
-              id="UMT"
-              formControlName="UMT"
-              class="form-control"
-              (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')"
-            />
+            <input type="text" id="UMT" formControlName="UMT" class="form-control"
+              (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
           </div>
           <div class="form-group">
             <label for="cantidadUMC">Cantidad UMC*:</label>
-            <input
-              type="text"
-              id="cantidadUMC"
-              formControlName="cantidadUMC"
-              class="form-control"
-              (change)="
+            <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="
                 setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')
-              "
-            />
+              " />
           </div>
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="UMC"
-              [label]="'UMC'"
-              [required]="true"
-              name="UMC"
-              (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
-            ></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true" name="UMC"
+              (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"></app-catalogo-select>
           </div>
           <div class="form-group">
-            <label for="porcentajeConcentracion"
-              >porcentaje de concentración:</label
-            >
-            <input
-              type="text"
-              id="porcentajeConcentracion"
-              formControlName="porcentajeConcentracion"
-              class="form-control"
-              (change)="
+            <label for="porcentajeConcentracion">porcentaje de concentración:</label>
+            <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
+              class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              "
-            />
+              " />
           </div>
           <div class="form-group">
             <label for="numeroRegistro">Número de registro sanitario*:</label>
-            <input
-              type="text"
-              id="numeroRegistro"
-              formControlName="numeroRegistro"
-              class="form-control"
-              (change)="
+            <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
                   'numeroRegistro',
                   'setNumeroRegistro'
                 )
-              "
-            />
+              " />
           </div>
 
           @if (configuracionVisibilidad.paisOrigen) {
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsable()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de origen</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPais"
-                      [label]="paisDeOrigen"
-                      [botones]="paisDeProcedenciaBotones"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigen"
+                      [botones]="paisDeProcedenciaBotones"></crosslist>
                   </div>
                 </div>
                 }
@@ -521,27 +336,17 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsable()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">
                     país donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPais"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotones"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotones"></crosslist>
                   </div>
                 </div>
                 }
@@ -552,25 +357,15 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableDuos()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title">país donde se elabora el producto</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisDuos"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesDuos"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonesDuos"></crosslist>
                   </div>
                 </div>
                 }
@@ -581,25 +376,15 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableTres()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">país proveedor</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisTres"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesTres"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonesTres"></crosslist>
                   </div>
                 </div>
                 }
@@ -610,27 +395,17 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableTres()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">
                     país de procedencia/país de último puerto de embarque
                   </p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisCuatro"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesCuatro"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonesCuatro"></crosslist>
                   </div>
                 </div>
                 }
@@ -639,28 +414,16 @@
           </div>
           }
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="clasificacionToxicologica"
-              [label]="'clasificación toxicológica'"
-              [required]="true"
-              name="clasificacionToxicologica"
-              (change)="
+            <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
+              [label]="'clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-              "
-            ></app-catalogo-select>
+              "></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="objetoImportacion"
-              [label]="'objeto de importación'"
-              [required]="true"
-              name="objetoImportacion"
-              (change)="
+            <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
+              [label]="'objeto de importación'" [required]="true" name="objetoImportacion" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-              "
-            ></app-catalogo-select>
+              "></app-catalogo-select>
           </div>
         </form>
       </div>

@@ -65,6 +65,12 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   public solicitudState!: DatosDomicilioLegalState;
 
   /**
+   * Indica si el campo esPaginacionVisible es visible.
+   */
+  @Input() esPaginacionVisible: boolean = false;
+
+
+  /**
    * Método que se llama cuando se elimina un pedimento.
    * @param {boolean} borrar - Indica si se debe eliminar el pedimento.
    * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
