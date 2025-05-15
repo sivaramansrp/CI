@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -8,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, Complementaria, Complementaria1 } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria, Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -370,7 +369,7 @@ getValorIndice(e: AccionBoton):void{
  */
 getDetallesDelalicitacion():void{
   this.service.getDetallesDelalicitacion().subscribe(
-    (data:any)=>{
+    (data:DetallesLicitacion)=>{
       this.detalledelaLicitacionForm.patchValue({
         numeraDelicitacion:data.numeraDelicitacion,
         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
@@ -409,7 +408,7 @@ getDetallesDelalicitacion():void{
  */
 getAdquiriente():void{
   this.service.getAdquiriente().subscribe(
-    (data:any)=>{
+    (data:Adquiriente)=>{
       this.adquiriente.patchValue({
         rfc:data.rfc,
         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
@@ -428,7 +427,7 @@ getAdquiriente():void{
      */
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
   const VALOR = form.get(campo)?.value;
-  (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
+  (this.tramite120501Store[metodoNombre] as (value: unknown) => void)(VALOR);
 }
 
 /**
