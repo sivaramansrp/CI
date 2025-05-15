@@ -17,7 +17,7 @@
   <ng-titulo titulo="Tipo de dictamen" />
   <div class="row mt-5 radios">
     <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioOpcions" [isRequired]="true"
-      [layout]="'horizontal'" formControlName="tipoDictamen" 
+      [layout]="'horizontal'" formControlName="tipoDictamen"
       (change)=" setValoresStore( avisoForm, 'tipoDictamen', 'setTipoDictamen' ) "></app-input-radio>
   </div>
   <ng-titulo titulo="Datos del CPI que elaboró el dictamen" />
@@ -62,8 +62,8 @@
       <label class="label-spacing">{{textoParcial}}</label>
     </div>
     <div class="col" style="margin-left: 245px;">
-      <app-input-radio [selectedValue]="this.avisoForm.get('tipoDictamen')?.value" [radioOptions]="radioParcial" [isRequired]="true"
-        [layout]="'horizontal'" formControlName="radioParcial" 
+      <app-input-radio [selectedValue]="this.avisoForm.get('tipoDictamen')?.value" [radioOptions]="radioParcial"
+        [isRequired]="true" [layout]="'horizontal'" formControlName="radioParcial"
         (change)=" setValoresStore( avisoForm, 'radioParcial', 'setRadioPartial' ) "></app-input-radio>
     </div>
   </div>
@@ -212,7 +212,7 @@
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
       </div>
-       <div class="col-md-6">
+      <div class="col-md-6">
         <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
@@ -282,7 +282,7 @@
       </div>
     </div>
     <!-- Plantilla de disminución -->
-     <div class="row mt-5">
+    <div class="row mt-5">
       <label>Plantilla de disminución:*</label>
       <label>Para descargar plantilla del archivo excel da click <a href="aqui">aquí</a>
       </label>
