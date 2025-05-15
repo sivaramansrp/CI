@@ -143,13 +143,13 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
 
   /**
    * Establece los valores en el store.
-   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
-   * @param {string} campo - El nombre del campo del formulario.
-   * @param {keyof Tramite110102Store} metodoNombre - El nombre del método del store.
+   * Actualiza el estado del store con el valor del campo especificado del formulario.
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario a actualizar en el store.
    */
-setValoresStore(form: FormGroup, campo: string): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    this.tramite110102Store.establecerDatos({[campo]: VALOR});
+    this.tramite110102Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**
