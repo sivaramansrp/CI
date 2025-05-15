@@ -1969,8 +1969,8 @@
   {
     "id": 282,
     "tramite": 420103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/concluir-relacion/solicitud",
+    "linkDepartment": "/pago/concluir-relacion/solicitud",
     "department": "aga"
   },
   {
