@@ -2067,15 +2067,15 @@
   {
     "id": 296,
     "tramite": 120702,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-frontera/solicitante",
+    "linkDepartment": "/pago/expedicion-certificados-frontera/solicitante",
     "department": "se"
   },
   {
     "id": 297,
     "tramite": 130302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/parmiso-importacion-petroleo/pantallas",
+    "linkDepartment": "/pago/parmiso-importacion-petroleo/pantallas",
     "department": "sener"
   },
   {
