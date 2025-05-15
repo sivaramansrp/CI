@@ -170,7 +170,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
-    if(this.procedureState.readonly) {
+    if(this.esFormularioSoloLectura) {
       this.getProcedureDatos();
     }
   }
@@ -181,9 +181,9 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
       this.inicializarFormulario();
-      if (this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+      if (this.esFormularioSoloLectura) {
         this.Informaciondela.disable();
-      } else if (!this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+      } else if (!this.esFormularioSoloLectura) {
         this.Informaciondela.enable();
       } else {
         // No se requiere ninguna acción en el formulario
