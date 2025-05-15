@@ -1,9 +1,9 @@
 import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '@libs/shared/data-access-user/src/tramites/constantes/valores-constantes.enum';
+import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TITULO_ORIGEN } from '@libs/shared/data-access-user/src/tramites/constantes/Pais-titulo.enum';
+import { TITULO_ORIGEN } from '../../../../shared/constantes/pais-titulo.enum';
 
 import { Tramite130108State, Tramite130108Store } from '../../estados/tramites/tramites130108.store';
 

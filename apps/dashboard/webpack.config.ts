@@ -8,11 +8,26 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
   /* mapped paths to share */
 ]);
 
+// Determinar dinámicamente la publicPath
+function getPublicPath() {
+  console.log('NODE_ENV: ', process.env.NODE_ENV);
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://front.v30.ultrasist.net/';
+  } else {
+    // return 'http://localhost:4200/';
+    return 'https://front.v30.ultrasist.net/';
+  }
+}
+
 module.exports = {
   output: {
     uniqueName: 'dashboard',
-    publicPath: 'auto',
-    scriptType: 'text/javascript'
+    // Usar URL absoluta en lugar de 'auto' para evitar problemas
+    publicPath: getPublicPath(),
+    scriptType: 'text/javascript',
+    // Asegurar que el nombre del archivo sea consistente
+    filename: '[name].js',
+    chunkFilename: '[name].js',
   },
   optimization: {
     runtimeChunk: false
@@ -24,7 +39,9 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'dashboard',      
+      name: 'dashboard',
+      // Agregar filename para asegurar que el punto de entrada remoto sea constante
+      filename: 'remoteAppEntry.js',
       shared: share({ 
         '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
@@ -35,6 +52,10 @@ module.exports = {
           strictVersion: true,
           requiredVersion: 'auto'
         },
+        "@ng-mf/data-access-user": {
+              "singleton": false,
+              "import": "libs/shared/data-access-user/src/index.ts",
+          },
         ...sharedMappings.getDescriptors()
       })
     }),

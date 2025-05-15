@@ -19,7 +19,7 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { MANIFIESTO_ACEPTACION_TEXTO } from '@libs/shared/data-access-user/src/tramites/constantes/manifesto-texto.enum';
+import { MANIFIESTO_ACEPTACION_TEXTO } from '../../../../shared/constantes/manifesto-texto.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
  
 /**

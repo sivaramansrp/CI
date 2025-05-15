@@ -1,5 +1,6 @@
+import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
-import { AMBIENTES } from '@ng-mf/data-access-user';
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 @Component({
   selector: 'app-seleccion-tramite',
@@ -11,6 +12,13 @@ export class SeleccionTramiteComponent implements OnInit {
    * Variable para asingar el endpoint de la ruta
    */
   public ruta = '';
+
+  /**
+   * Un arreglo que contiene los detalles de varios "Trámites" (procedimientos o procesos).
+   * Cada elemento en el arreglo es de tipo `TramiteDetails`.
+   * Estos datos se utilizan para gestionar y mostrar información relacionada con diferentes trámites.
+   */
+  public tramiteData: TramiteDetails[] = [];
   
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
@@ -18,6 +26,6 @@ export class SeleccionTramiteComponent implements OnInit {
     } else {
       this.ruta = AMBIENTES.DESARROLLO
     }
+     this.tramiteData = tramiteDetailsData.filter((v) => v.department === "profepa") ;   
   }
-  
 }

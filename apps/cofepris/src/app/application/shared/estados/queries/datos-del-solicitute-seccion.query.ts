@@ -53,6 +53,7 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   regimen = this.select('regimen');  
   aduanasEntradas = this.select('aduanasEntradas');  
   aifaCheckbox = this.select('aifaCheckbox');  
+  descripcionScian = this.select('descripcionScian');
 
   constructor(protected override store: DatosDelSolicituteSeccionStateStore) {
     super(store);

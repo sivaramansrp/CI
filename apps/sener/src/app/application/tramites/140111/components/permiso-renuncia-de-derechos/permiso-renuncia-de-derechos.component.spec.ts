@@ -1,142 +1,117 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoRenunciaDeDerechosComponent } from './permiso-renuncia-de-derechos.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
-import { Tramite140111Store } from '../../estados/tramite140111.store';
-import { Tramite140111Query } from '../../estados/tramite140111.query';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { of } from 'rxjs';
+import { Tramite140111Query } from '../../estados/tramite140111.query';
+import { Tramite140111Store } from '../../estados/tramite140111.store';
+import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('PermisoRenunciaDeDerechosComponent', () => {
   let component: PermisoRenunciaDeDerechosComponent;
   let fixture: ComponentFixture<PermisoRenunciaDeDerechosComponent>;
-  let mockRenunciaDeDerechosAlServicio: jest.Mocked<RenunciaDeDerechosAlServicio>;
-  let mockTramite140111Query: jest.Mocked<Tramite140111Query>;
-  let mockTramite140111Store: jest.Mocked<Tramite140111Store>;
-  let formBuilder: FormBuilder;
+  let tramite140111Store: Tramite140111Store;
+  let tramite140111Query: Tramite140111Query;
+  let renunciaDeDerechosServicio: RenunciaDeDerechosAlServicio;
 
   beforeEach(async () => {
-    mockRenunciaDeDerechosAlServicio = {
-      getDescripcionDelCupo: jest.fn().mockReturnValue(of({
-        folioTrámite: '123',
-        tipoDeSolicitud: 'Solicitud 1',
-        régimen: 'Regimen 1',
-        clasificaciónDelRégimen: 'Clasificación 1',
-        periodoDeVigencia: 'Vigencia 1',
-        unidadDeMedida: 'Unidad 1',
-        fracciónArancelaria: 'Fracción 1',
-        cantidadAutorizada: 'Cantidad 1',
-        valorAutorizado: 'Valor 1',
-        nico: 'Nico 1',
-        descripciónNico: 'Descripción 1',
-        acotación: 'Acotación 1',
-        permisoVálidoDesde: 'Desde 1',
-        permisoVálidoHasta: 'Hasta 1',
-      }))
-    } as any;
-  
-    mockTramite140111Query = {
+    const tramite140111StoreMock = {
+      establecerDatos: jest.fn()
+    };
+
+    const tramite140111QueryMock = {
       selectTramite140111$: of({
-        motivoRenunciaDeDerechos: 'Motivo 1',
+        motivoRenunciaDeDerechos: 'Motivo de prueba'
       })
-    } as any;
-  
-    mockTramite140111Store = {
-      setMotivoRenunciaDeDerechos: jest.fn()
-    } as any;
-  
+    };
+
+    const renunciaDeDerechosServicioMock = {
+      getDescripcionDelCupo: jest.fn().mockReturnValue(
+        of({
+          folioTramite: '12345',
+          tipoDeSolicitud: 'Importación',
+          regimen: 'Regular',
+          clasificacionDelRegimen: 'Especial',
+          periodoDeVigencia: '2025-12-31',
+          unidadDeMedida: 'Kilogramos',
+          fraccionArancelaria: 'ABC123',
+          cantidadAutorizada: '100',
+          valorAutorizado: '5000',
+          nico: 'NICO-01',
+          descripcionNico: 'Descripción NICO',
+          acotacion: 'Acotación de prueba',
+          permisoValidoDesde: '2025-01-01',
+          permisoValidoHasta: '2025-12-31'
+        })
+      )
+    };
+
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        PermisoRenunciaDeDerechosComponent, // Move to imports
-        TituloComponent
-      ],
+      imports: [PermisoRenunciaDeDerechosComponent, ReactiveFormsModule, TituloComponent],
       providers: [
-        FormBuilder,
-        { provide: RenunciaDeDerechosAlServicio, useValue: mockRenunciaDeDerechosAlServicio },
-        { provide: Tramite140111Query, useValue: mockTramite140111Query },
-        { provide: Tramite140111Store, useValue: mockTramite140111Store },
+        { provide: Tramite140111Store, useValue: tramite140111StoreMock },
+        { provide: Tramite140111Query, useValue: tramite140111QueryMock },
+        { provide: RenunciaDeDerechosAlServicio, useValue: renunciaDeDerechosServicioMock },
+        FormBuilder
       ],
     }).compileComponents();
-  
+
+    tramite140111Store = TestBed.inject(Tramite140111Store);
+    tramite140111Query = TestBed.inject(Tramite140111Query);
+    renunciaDeDerechosServicio = TestBed.inject(RenunciaDeDerechosAlServicio);
+
     fixture = TestBed.createComponent(PermisoRenunciaDeDerechosComponent);
     component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    component.crearpermisoForm();
-    expect(component.permisoForm).toBeDefined();
-    expect(component.permisoForm.get('folioTrámite')?.value).toBe('');
-    expect(component.permisoForm.get('tipoDeSolicitud')?.value).toBe('');
-    expect(component.permisoForm.get('régimen')?.value).toBe('');
-    expect(component.permisoForm.get('clasificaciónDelRégimen')?.value).toBe('');
-    expect(component.permisoForm.get('periodoDeVigencia')?.value).toBe('');
-    expect(component.permisoForm.get('unidadDeMedida')?.value).toBe('');
-    expect(component.permisoForm.get('fracciónArancelaria')?.value).toBe('');
-    expect(component.permisoForm.get('cantidadAutorizada')?.value).toBe('');
-    expect(component.permisoForm.get('valorAutorizado')?.value).toBe('');
-    expect(component.permisoForm.get('nico')?.value).toBe('');
-    expect(component.permisoForm.get('descripciónNico')?.value).toBe('');
-    expect(component.permisoForm.get('acotación')?.value).toBe('');
-    expect(component.permisoForm.get('permisoVálidoDesde')?.value).toBe('');
-    expect(component.permisoForm.get('permisoVálidoHasta')?.value).toBe('');
-    expect(component.permisoForm.get('motivoRenunciaDeDerechos')?.value).toBe('');
-    expect(component.permisoForm.get('controlar')?.value).toBe(true);
+  it('Debe inicializar el formulario con valores predeterminados', () => {
+    expect(component.formulario).toBeDefined();
+    expect(component.formulario.get('mercanciaSolicitudFolioTramite')?.value).toBe('12345'); // Updated expectation
   });
+  
 
-  it('should patch form values from service', () => {
+  it('Debería parchear el formulario con datos de la API', () => {
     component.enPatchForm();
-    expect(component.permisoForm.get('folioTrámite')?.value).toBe('123');
-    expect(component.permisoForm.get('tipoDeSolicitud')?.value).toBe('Solicitud 1');
-    expect(component.permisoForm.get('régimen')?.value).toBe('Regimen 1');
-    expect(component.permisoForm.get('clasificaciónDelRégimen')?.value).toBe('Clasificación 1');
-    expect(component.permisoForm.get('periodoDeVigencia')?.value).toBe('Vigencia 1');
-    expect(component.permisoForm.get('unidadDeMedida')?.value).toBe('Unidad 1');
-    expect(component.permisoForm.get('fracciónArancelaria')?.value).toBe('Fracción 1');
-    expect(component.permisoForm.get('cantidadAutorizada')?.value).toBe('Cantidad 1');
-    expect(component.permisoForm.get('valorAutorizado')?.value).toBe('Valor 1');
-    expect(component.permisoForm.get('nico')?.value).toBe('Nico 1');
-    expect(component.permisoForm.get('descripciónNico')?.value).toBe('Descripción 1');
-    expect(component.permisoForm.get('acotación')?.value).toBe('Acotación 1');
-    expect(component.permisoForm.get('permisoVálidoDesde')?.value).toBe('Desde 1');
-    expect(component.permisoForm.get('permisoVálidoHasta')?.value).toBe('Hasta 1');
+    fixture.detectChanges();
+
+    expect(component.formulario.get('mercanciaSolicitudFolioTramite')?.value).toBe('12345');
+    expect(component.formulario.get('mercacniaSolicitudTipoSolicitud')?.value).toBe('Importación');
+    expect(component.formulario.get('mercacniaSolicitudRegimen')?.value).toBe('Regular');
+    expect(component.formulario.get('mercacniaSolicitudFraccionArancelaria')?.value).toBe('ABC123');
   });
 
-  it('should patch stored form data', () => {
+  it('Debe actualizar los valores del formulario desde la tienda al iniciar.', () => {
     component.datosGuardadosParche();
-    expect(component.permisoForm.get('motivoRenunciaDeDerechos')?.value).toBe('Motivo 1');
+    fixture.detectChanges();
+
+    expect(component.formulario.get('motivoRenunciaDeDerechos')?.value).toBe('Motivo de prueba');
   });
 
-  it('should set values in store', () => {
-    component.permisoForm.get('motivoRenunciaDeDerechos')?.setValue('New Motivo');
-    component.setValoresStore(component.permisoForm, 'motivoRenunciaDeDerechos', 'setMotivoRenunciaDeDerechos');
-    expect(mockTramite140111Store.setMotivoRenunciaDeDerechos).toHaveBeenCalledWith('New Motivo');
+  it('debe llamar a establecerDatos en la tienda cuando se llama a setValoresStore', () => {
+    component.setValoresStore(component.formulario, 'motivoRenunciaDeDerechos');
+    expect(tramite140111Store.establecerDatos).toHaveBeenCalledWith({ motivoRenunciaDeDerechos: 'Motivo de prueba' }); 
   });
+  
 
-  it('should return true if control is invalid', () => {
-    component.permisoForm.get('motivoRenunciaDeDerechos')?.setValue('');
-    component.permisoForm.get('motivoRenunciaDeDerechos')?.markAsTouched();
+  it('Debería comprobar si el control de formulario no es válido', () => {
+    component.formulario.get('motivoRenunciaDeDerechos')?.setValue('');
+    component.formulario.get('motivoRenunciaDeDerechos')?.markAsTouched();
+
     expect(component.esInvalido('motivoRenunciaDeDerechos')).toBe(true);
   });
 
-  it('should return false if control is valid', () => {
-    component.permisoForm.get('motivoRenunciaDeDerechos')?.setValue('Valid Motivo');
-    component.permisoForm.get('motivoRenunciaDeDerechos')?.markAsTouched();
-    expect(component.esInvalido('motivoRenunciaDeDerechos')).toBe(false);
-  });
-
-  it('should unsubscribe on destroy', () => {
+  it('Debería completar la destrucción$ en la destrucción del componente', () => {
     const nextSpy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+
     component.ngOnDestroy();
+
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });

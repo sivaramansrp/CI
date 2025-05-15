@@ -1,44 +1,17 @@
-/**
- * @component HistoricoFabricantesComponent
- * @description Este componente es responsable de manejar el historial de fabricantes.
- * Incluye un formulario para capturar los datos de los fabricantes y tablas para mostrar los fabricantes nacionales y sus datos.
- * 
- * @import { Component, OnDestroy, OnInit } from '@angular/core';
- * @import { CommonModule } from '@angular/common';
- * @import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
- * @import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
- * @import radioOptionsData from '../../../../../assets/json/120301/tipos-de-fabricante-exportador.json';
- * @import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
- * @import { CatalogosSelect } from '../../../../core/models/shared/components.model';
- * @import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
- * @import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
- * @import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
- * @import { HISTORICO_TBCOL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
- */
-
+import { CatalogosSelect, ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore,TablaSeleccion} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import {
-  CatalogosSelect,
-  ConfiguracionColumna,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
-  TablaSeleccion
-} from '@ng-mf/data-access-user';
-
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
+
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
@@ -50,15 +23,12 @@ import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
 import { CATALOGOS, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
-
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 
-import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
-
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
 /**
  * @component HistoricoFabricantesComponent
