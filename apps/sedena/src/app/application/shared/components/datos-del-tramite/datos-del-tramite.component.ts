@@ -37,6 +37,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
 import {
   DatosDelTramiteFormState,
   FECHA_DE_PAGO,
@@ -55,6 +56,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -382,7 +384,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   crearFormaulario(): void {
     this.form = this.fb.group({
-      permisoGeneral: ['', Validators.required],
+      permisoGeneral: ['', [Validators.required, Validators.maxLength(22), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       paisDestino: [
         { value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true },
       ],

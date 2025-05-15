@@ -54,6 +54,7 @@
             id="permisoGeneral"
             class="form-control"
             formControlName="permisoGeneral"
+            maxlength="22"
             [required]="true"
           />
         </div>
@@ -104,7 +105,12 @@
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
           Uso final de la mercancía*
-          <i class="bi bi-info-circle" title="Información adicional"></i>
+                    <span
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="Uso final de la mercancía"
+          ata-bs-toggle="tooltip"
+        >
+        </span>
         </label>
         <textarea
           id="usoFinal"
