@@ -48,7 +48,7 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Almacena los valores del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formDatosCertificadoValues!: { [key: string]: unknown};
 
   /**
    * @descripcion
@@ -157,7 +157,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * @param e - Los datos del formulario a almacenar.
    */
   obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormDatosCertificado(e as { [key: string]: string | number | boolean | object | undefined });
+    this.store.setFormDatosCertificado(e as { [key: string]: unknown});
   }
 
   /**

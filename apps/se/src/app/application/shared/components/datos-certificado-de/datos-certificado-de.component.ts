@@ -85,11 +85,10 @@ export class DatosCertificadoDeComponent implements OnDestroy {
 
   /**
    * Objeto que contiene los datos del formulario del certificado.
-   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @type {{ [key:string]: unknown }}
    * @input
    */
-  @Input() datosFormCertificado!: { [key: string]: string | number | boolean | object | undefined };
-
+  @Input() datosFormCertificado!:{[key:string]:unknown};
 
   /**
    * Emisor de eventos para indicar si el formulario es válido.
