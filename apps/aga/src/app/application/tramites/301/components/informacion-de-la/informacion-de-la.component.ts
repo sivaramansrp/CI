@@ -196,7 +196,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     });
     this.valorSeleccionadoFraccion(); // enable descripcionFraccion if fraccionArancelaria has value
     this.valorSeleccionadoNico(); // enable descripcionNico if nico has value
-    if(this.procedureState.readonly) {
+    if(this.esFormularioSoloLectura) {
       this.getProcedureDatos();
     }
   }
