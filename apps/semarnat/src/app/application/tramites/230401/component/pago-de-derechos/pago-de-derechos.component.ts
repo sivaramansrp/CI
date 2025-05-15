@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PagoDerechosState, dateLessThanOrEqualToday } from '../../models/tramies230401.models';
+import { REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import {
   delay,
   map,
@@ -9,7 +10,6 @@ import {
   tap,
 } from 'rxjs';
 import { PantallasActionService } from '../../services/pantallas-action.service';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
@@ -94,9 +94,9 @@ export class PagoDeDerechosComponent implements OnInit {
       clave:  [this.pagoDerechosState.clave, [Validators.required, Validators.maxLength(50)]],
       dependencia: [this.pagoDerechosState.dependencia, [Validators.required, Validators.maxLength(50)]],
       banco: [this.pagoDerechosState.banco, [Validators.required]],
-      llavePago: [ this.pagoDerechosState.llavePago, [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{10}$/)]],
+      llavePago: [ this.pagoDerechosState.llavePago, [Validators.required, Validators.pattern(REGEX_LLAVE_DE_PAGO)]],
       fecha: [this.pagoDerechosState.fecha, [Validators.required, dateLessThanOrEqualToday]],
-      importePago: [ this.pagoDerechosState.importePago, [Validators.required, Validators.maxLength(16), Validators.pattern(/^\d{1,16}$/)]],
+      importePago: [ this.pagoDerechosState.importePago, [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_IMPORTE_PAGO)]],
     });
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
     if (FETCHA_CONTROL) {

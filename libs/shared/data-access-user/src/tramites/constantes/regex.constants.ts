@@ -427,3 +427,23 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+
+/**
+ * Expresión regular para validar números decimales con un máximo de 12 dígitos enteros 
+ * y hasta 3 dígitos decimales opcionales. 
+ * 
+ * - Permite números enteros de hasta 12 dígitos.
+ * - Si incluye decimales, estos deben estar precedidos por un punto (`.`) 
+ *   y pueden tener hasta 3 dígitos.
+ * 
+ * Ejemplos válidos:
+ * - `123`
+ * - `123.456`
+ * - `123456789012.123`
+ * 
+ * Ejemplos no válidos:
+ * - `1234567890123` (más de 12 dígitos enteros)
+ * - `123.4567` (más de 3 dígitos decimales)
+ * - `abc` (no es un número)
+ */
+export const REGEX_PATRON_DECIMAL_12_3 = /^\d{1,12}(\.\d{1,3})?$/;

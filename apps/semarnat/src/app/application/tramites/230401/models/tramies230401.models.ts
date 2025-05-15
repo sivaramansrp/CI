@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { REGEX_FECHA_VALIDA } from "@libs/shared/data-access-user/src";
+import { REGEX_FECHA_VALIDA, REGEX_PATRON_DECIMAL_12_3 } from "@libs/shared/data-access-user/src";
 /**
  * Representa el estado de Pago de Derechos.
  * Esta interfaz se utiliza para el FormGroup del componente de pago de derechos.
@@ -66,7 +66,7 @@ export function maxDigitsValidator(): (control: AbstractControl) => ValidationEr
     if (VALOR === null || VALOR === undefined || VALOR === '') {
       return null;
     }
-    const REGEX = /^\d{1,12}(\.\d{1,3})?$/;
+    const REGEX = REGEX_PATRON_DECIMAL_12_3;
     return REGEX.test(VALOR) ? null : { maxDigits: true };
   };
 }

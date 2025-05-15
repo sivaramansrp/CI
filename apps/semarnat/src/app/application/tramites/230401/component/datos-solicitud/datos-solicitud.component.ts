@@ -684,7 +684,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @returns {void} Este método no retorna ningún valor.
    */
-  aggregarListaDeNumeros(): void {
+  agregarListaDeNumeros(): void {
     const SUSTANCIA_SENSIBLE: SustanciaSensible = {
       numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
       cas: '',
