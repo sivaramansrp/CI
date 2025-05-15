@@ -241,28 +241,28 @@ this.id=ID;
    * Si la nacionalidad no es 'true', habilita todos los campos del formulario.
    * Si la nacionalidad es 'true', deshabilita algunos campos y habilita otros dependiendo de la tipoPersona.
    */
-  // changeNacionalidad(): void {
-  //   if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
-  //     this.agregarDatosForm.enable();
-  //   } else {
-  //     this.agregarDatosForm.disable();
-  //     this.agregarDatosForm.get('nacionalidad')?.enable();
-  //     this.agregarDatosForm.get('tipoPersona')?.enable();
-  //     this.agregarDatosForm.get('nombreDescripcion')?.enable();
-  //     this.agregarDatosForm.get('rfc')?.enable();
-  //     this.agregarDatosForm.get('curp')?.enable();
+  changeNacionalidad(): void {
+    if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
+      this.agregarDatosForm.enable();
+    } else {
+      this.agregarDatosForm.disable();
+      this.agregarDatosForm.get('nacionalidad')?.enable();
+      this.agregarDatosForm.get('tipoPersona')?.enable();
+      this.agregarDatosForm.get('nombreDescripcion')?.enable();
+      this.agregarDatosForm.get('rfc')?.enable();
+      this.agregarDatosForm.get('curp')?.enable();
 
-  //     if (
-  //       this.agregarDatosForm.value.tipoPersona !==
-  //       this.tipoPersona.NO_CONTRIBUYENTE
-  //     ) {
-  //       this.agregarDatosForm.get('curp')?.disable();
-  //     } else {
-  //       this.agregarDatosForm.get('curp')?.enable();
-  //       this.agregarDatosForm.get('rfc')?.disable();
-  //     }
-  //   }
-  // }
+      if (
+        this.agregarDatosForm.value.tipoPersona !==
+        this.tipoPersona.NO_CONTRIBUYENTE
+      ) {
+        this.agregarDatosForm.get('curp')?.disable();
+      } else {
+        this.agregarDatosForm.get('curp')?.enable();
+        this.agregarDatosForm.get('rfc')?.disable();
+      }
+    }
+  }
 
   /**
    * Realiza una búsqueda para obtener datos de importación y los asigna al formulario.
