@@ -3,13 +3,10 @@
     <!-- Título en español -->
     <ng-titulo titulo="Terceros relacionados" />
 
-    <!-- cuadro de alerta -->
-    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-
     <!-- Renderizar Tablas Dinámicamente Basadas en una Orden -->
     <div *ngFor="let tabla of getSortedTablas()">
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
-        <h5>Fabricante:</h5>
+        <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
         </div>
@@ -26,7 +23,7 @@
       </div>
 
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
-        <h5>Formulador:</h5>
+        <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData"></ng-table>
         </div>
@@ -43,7 +40,7 @@
       </div>
 
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
-        <h5>Proveedor:</h5>
+        <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"></ng-table>
         </div>
@@ -393,7 +390,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFabricanteFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
                 Guardar
               </button>
@@ -734,7 +731,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFormulador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFormuladorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFormuladorForm()">
                 Guardar
               </button>
@@ -1074,7 +1071,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarProveedorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
                 Guardar
               </button>

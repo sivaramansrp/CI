@@ -585,6 +585,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
+  * @method limpiar
+  * @description
+  * Método que limpia el formulario del agente aduanal.
+  * @param {forma}
+  */
+  // eslint-disable-next-line class-methods-use-this
+  public limpiar(forma: FormGroup): void {
+    if (forma) {
+      forma.reset();
+    }
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */

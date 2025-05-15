@@ -143,6 +143,15 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   }
 
   /**
+  * @method borrarDatos
+  * @description
+  * Método que limpia los datos del formulario relacionado con el importador/exportador.
+  */
+  borrarDatos(): void {
+    this.datosImportadorExportador.reset();
+  }
+
+  /**
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.
    */
