@@ -336,17 +336,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -392,30 +392,30 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
@@ -578,10 +578,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       formGroup.get('rfc')?.enable();
       formGroup.get('curp')?.enable();
       formGroup.get('denominacionRazonSocial')?.enable();
+      formGroup.get('nombre')?.enable();
+      formGroup.get('primerApellido')?.enable();
+      formGroup.get('segundoApellido')?.enable();
+      formGroup.get('calle')?.enable();
+      formGroup.get('numeroExterior')?.enable();
+      formGroup.get('numeroInterior')?.enable();
+      formGroup.get('lada')?.enable();
+      formGroup.get('telefono')?.enable();
+      formGroup.get('correoElectronico')?.enable();
     } else {
       formGroup.get('rfc')?.disable();
       formGroup.get('curp')?.disable();
       formGroup.get('denominacionRazonSocial')?.disable();
+      formGroup.get('nombre')?.disable();
+      formGroup.get('primerApellido')?.disable();
+      formGroup.get('segundoApellido')?.disable();
+      formGroup.get('calle')?.disable();
+      formGroup.get('numeroExterior')?.disable();
+      formGroup.get('numeroInterior')?.disable();
+      formGroup.get('lada')?.disable();
+      formGroup.get('telefono')?.disable();
+      formGroup.get('correoElectronico')?.disable();
     }
   }
 

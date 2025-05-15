@@ -296,13 +296,38 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
-
+  /**
+   * Lista de mercancías agregadas por el usuario.
+   */
+  listaMercancias: any[] = [];
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País productor del ingrediente activo',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * Objeto que representa la configuración de etiquetas para la selección del país donde se elabora el producto.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "país donde se elabora el producto".
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+   */
+  public paisDondeSeElabora: CrossListLable = {
+    tituluDeLaIzquierda: 'país donde se elabora el producto',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+    /**
+     * Objeto que representa la configuración de la lista cruzada para el campo "País de procedencia".
+     * 
+     * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra en el lado izquierdo de la lista, indicando el país de procedencia.
+     * @property {string} derecha - Etiqueta que se muestra en el lado derecho de la lista, indicando los países seleccionados.
+     */
+    public paisDeProcedencia: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    derecha: 'País(es) seleccionado(s)',
   };
 
   /**
@@ -315,6 +340,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionados',
   };
+
+  /**
+   * Catálogo de fracciones arancelarias y sus descripciones.
+   * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
+   */
+  fraccionesCatalogo = [
+    { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
+    { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
+    { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
+    { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
+  ];
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -371,6 +407,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       objetoImportacion: ['', Validators.required],
     });
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
+
+    this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+      const matched = this.fraccionesCatalogo.find(item =>
+        item.fraccion.startsWith(valor)
+      );
+      const descripcion = matched ? matched.descripcion : '';
+      this.formMercancias.get('descripcionFraccion')?.setValue(descripcion);
+    });
   }
 
   /**
@@ -521,12 +565,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerMercanciasDatos(): void {
-    this.service
-      .getObtenerMercanciasDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
-      });
+    this.mercanciasTablaDatos = this.listaMercancias
   }
 
   /**
@@ -582,6 +621,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+  }
+
+    /**
+     * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
+     * 
+     * - Si el formulario `formMercancias` es válido, obtiene los valores actuales del formulario,
+     *   crea un nuevo objeto de mercancía y lo agrega a `listaMercancias`.
+     * - Luego, imprime la lista actualizada en la consola y reinicia el formulario.
+     * 
+     * @remarks
+     * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
+     */
+    agregarMercancia(): void {
+    if (this.formMercancias.valid) {
+      const nuevaMercancia = { ...this.formMercancias.getRawValue() };
+      this.listaMercancias.push(nuevaMercancia);
+      console.log('Lista actualizada:', this.listaMercancias);
+      this.formMercancias.reset();
+    } 
   }
 
   /**

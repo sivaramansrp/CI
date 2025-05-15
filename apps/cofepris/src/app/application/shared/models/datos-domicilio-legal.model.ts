@@ -51,21 +51,24 @@ export interface PermisoModel {
   export const MERCANCIAS_DATA = [
     {
       encabezado: 'Nombre comercial',
+      encabezado: 'Nombre comercial',
       clave: (ele: MercanciasInfo) => ele.nombreComercial,
       orden: 1,
     },
     {
+      encabezado: 'Nombre común',
       encabezado: 'Nombre común',
       clave: (ele: MercanciasInfo) => ele.nombreComun,
       orden: 2,
     },
     {
       encabezado: 'Nombre científico',
+      encabezado: 'Nombre científico',
       clave: (ele: MercanciasInfo) => ele.nombreCientifico,
       orden: 3,
     },
     {
-      encabezado: 'Porcentaje de Concentración',
+      encabezado: 'Porcentaje de concentración',
       clave: (ele: MercanciasInfo) => ele.porcentajeConcentracion,
       orden: 4,
     },
@@ -145,7 +148,7 @@ export interface PermisoModel {
       orden: 19,
     },
     {
-      encabezado: 'Umc',
+      encabezado: 'UMC',
       clave: (ele: MercanciasInfo) => ele.umc,
       orden: 20,
     },
