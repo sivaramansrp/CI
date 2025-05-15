@@ -1,9 +1,10 @@
 import { COLONIA_FIELD_FLAG, NUMERO_TRAMITE, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL,DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 import { CommonModule } from '@angular/common';
