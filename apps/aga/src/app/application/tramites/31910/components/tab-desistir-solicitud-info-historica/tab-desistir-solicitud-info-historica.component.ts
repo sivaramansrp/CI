@@ -18,9 +18,9 @@ import { Tramite31910Query } from '../../../../estados/queries/tramite31910.quer
 })
 export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo para capturar las observaciones del usuario.
+   * solicitud reactivo para capturar las observaciones del usuario.
    */
-  formulario!: FormGroup;
+  solicitud!: FormGroup;
 
   /**
    * Estado actual de la solicitud 31910.
@@ -54,11 +54,11 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
   }
 
   /**
-   * Crea el formulario reactivo con los campos necesarios.
+   * Crea el solicitud reactivo con los campos necesarios.
    */
   crearFormulario(): void {
-    this.formulario = this.fb.group({
-      observaciones: [this.seccionState?.observaciones, [Validators.required]],
+    this.solicitud = this.fb.group({
+      justificacion: [this.seccionState?.justificacion, [Validators.required, Validators.maxLength(4000)]],
     });
   }
 
