@@ -247,10 +247,15 @@ this.id=ID;
     } else {
       this.agregarDatosForm.disable();
       this.agregarDatosForm.get('nacionalidad')?.enable();
+      this.agregarDatosForm.get('nacionalidad')?.setValidators([Validators.required])
       this.agregarDatosForm.get('tipoPersona')?.enable();
+           this.agregarDatosForm.get('tipoPersona')?.setValidators([Validators.required])
       this.agregarDatosForm.get('nombreDescripcion')?.enable();
+           this.agregarDatosForm.get('nombreDescripcion')?.setValidators([Validators.required])
       this.agregarDatosForm.get('rfc')?.enable();
+            this.agregarDatosForm.get('rfc')?.setValidators([Validators.required])
       this.agregarDatosForm.get('curp')?.enable();
+            this.agregarDatosForm.get('curp')?.setValidators([Validators.required])
 
       if (
         this.agregarDatosForm.value.tipoPersona !==
@@ -259,6 +264,7 @@ this.id=ID;
         this.agregarDatosForm.get('curp')?.disable();
       } else {
         this.agregarDatosForm.get('curp')?.enable();
+        this.agregarDatosForm.get('curp')?.setValidators([Validators.required])
         this.agregarDatosForm.get('rfc')?.disable();
       }
     }
