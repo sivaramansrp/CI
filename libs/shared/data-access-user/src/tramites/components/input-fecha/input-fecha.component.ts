@@ -53,6 +53,11 @@ export class InputFechaComponent implements OnChanges {
       );
       this.Formulario.controls['fechaString'].disable();
     }
+    else{
+      this.Formulario.controls['fechaString'].enable();
+      this.Formulario.get('fechaString')?.setValue('');
+      this.Formulario.controls['fechaString'].disable();
+    }
   }
 
   get fechaString(): string {

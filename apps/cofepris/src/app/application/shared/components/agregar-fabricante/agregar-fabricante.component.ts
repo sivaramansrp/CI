@@ -1,4 +1,4 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
@@ -199,12 +199,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     this.agregarFabricanteForm = this.fb.group({
       nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
-      rfc: ['', Validators.required],
+      rfc: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       curp: ['', Validators.required],
-      nombres: ['', [Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      razonSocial: ['', Validators.required],
+      nombres: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      primerApellido: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      segundoApellido: ['', [Validators.pattern(REGEX_NOMBRE)]],
+      razonSocial: ['', [Validators.pattern(REGEX_NOMBRE)]],
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
@@ -255,6 +255,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
             : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
@@ -413,6 +414,18 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   cancelar(): void {
     this.ubicaccion.back();
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+    public esInvalido(nombreControl: string): boolean {
+      const CONTROL = this.agregarFabricanteForm.get(nombreControl);
+      return CONTROL
+        ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+        : false;
+    }
 
   /**
    * Hook que se ejecuta al destruir el componente.

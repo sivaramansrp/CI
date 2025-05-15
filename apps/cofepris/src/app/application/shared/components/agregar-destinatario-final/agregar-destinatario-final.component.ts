@@ -1,4 +1,4 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
@@ -153,6 +153,11 @@ export class AgregarDestinatarioFinalComponent
    */
   public elementosRequeridos: string[] = [];
 
+  /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -233,6 +238,7 @@ export class AgregarDestinatarioFinalComponent
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
+    this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
@@ -302,10 +308,9 @@ export class AgregarDestinatarioFinalComponent
         '',
         [
           Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(13),
+          Validators.pattern(REGEX_NOMBRE)
         ],
-      ],
+      ],      
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
@@ -313,9 +318,9 @@ export class AgregarDestinatarioFinalComponent
             : '',
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
-        [Validators.required, Validators.maxLength(200)],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
       ],
-      denominacionRazon: ['', Validators.required],
+      denominacionRazon: ['', Validators.required, Validators.pattern(REGEX_NOMBRE)],
       primerApellido: [
         {
           value: this.elementosDeshabilitados.includes('pais')
@@ -323,7 +328,7 @@ export class AgregarDestinatarioFinalComponent
             : '',
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        [Validators.required],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       segundoApellido: [
         {
@@ -332,6 +337,7 @@ export class AgregarDestinatarioFinalComponent
             : '',
           disabled: this.elementosDeshabilitados.includes('segundoApellido'),
         },
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [
         {
@@ -371,6 +377,7 @@ export class AgregarDestinatarioFinalComponent
             : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
@@ -379,7 +386,7 @@ export class AgregarDestinatarioFinalComponent
             : '',
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.required, Validators.email],
+        [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
@@ -398,17 +405,9 @@ export class AgregarDestinatarioFinalComponent
         this.elementosNoRequeridos = ['colonia'];
         break;
       case 260201:
-        this.elementosDeshabilitados = [
-          'pais',
-          'estado',
-          'municipio',
-          'telefono',
-          'correoElectronico',
-          'nombres',
-          'primerApellido',
-          'segundoApellido',
-        ];
+        this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
         break;
         case 260219:
           this.elementosRequeridos = ['calle', 'numeroExterior'];
@@ -439,6 +438,42 @@ export class AgregarDestinatarioFinalComponent
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarDestinatarioFinal.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el valor de 'tipoPersona'.
+   * 
+   * Si 'tipoPersona' está vacío, deshabilita todos los controles excepto 'tipoPersona'.
+   * Si 'tipoPersona' tiene un valor, habilita todos los controles y activa el desplegable.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
+        this.agregarDestinatarioFinal.get(controlName)?.disable();
+        if (controlName === 'tipoPersona') {
+          this.agregarDestinatarioFinal.get(controlName)?.enable();
+        }
+      });
+    } else {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
+        this.agregarDestinatarioFinal.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
   }
 
   /**
