@@ -4,7 +4,7 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 /**
- * Mock component for 'solicitante' to avoid dependency errors
+ * Componente simulado para 'solicitante' para evitar errores de dependencia
  */
 @Component({
   selector: 'solicitante',
@@ -18,8 +18,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declare the mock
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
+      declarations: [PasoUnoComponent, MockSolicitanteComponent], //Declarar la burla
+      schemas: [NO_ERRORS_SCHEMA], // Ignorar elementos desconocidos
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

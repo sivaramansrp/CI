@@ -395,16 +395,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion',
     loadChildren: () =>
-      import(
-        './tramites/130110/importacion-neumaticos-comercializar.module'
-      ).then((m) => m.ImportacionNeumaticosComercializarModule),
+      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+        (m) => m.ImportacionNeumaticosComercializarModule
+      ),
   },
   {
     path: 'importacion',
     loadChildren: () =>
-      import(
-        './tramites/130113/importacion-equipo-anticontaminante.module'
-      ).then((m) => m.ImportacionEquipoAnticontaminanteModule),
+      import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+        (m) => m.ImportacionEquipoAnticontaminanteModule
+      ),
   },
   {
     path: 'importacion-de',
@@ -430,9 +430,9 @@ const ROUTES: Routes = [
   {
     path: 'importacion-otros-vehiculos-usados',
     loadChildren: () =>
-      import(
-        './tramites/130104/importacion-otros-vehiculos-usados.module'
-      ).then((m) => m.ImportacionOtrosVehiculosUsadosModule),
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
   },
   {
     path: 'modalidad-ampliacion',
@@ -448,6 +448,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
+  },
+  {
     path: 'catalogos',
     loadChildren: () =>
       import('./tramites/90303/catalogos.module').then(
@@ -460,7 +467,8 @@ const ROUTES: Routes = [
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
       ),
-  },  {
+  },  
+  {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
@@ -500,14 +508,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130401/modificacion-descripcion.module').then(
         (m) => m.ModificacionDescripcionModule
-      )
+      ),
   },
   {
     path: 'certificado-alianza-posteriori',
-    loadChildren:() =>
+    loadChildren: () =>
       import('./tramites/110223/certificado-alianza-posteriori.module').then(
         (m) => m.CertificadoAlianzaPosterioriModule
-      )
+      ),
   },
   {
     path: 'validacion-posteriori',
@@ -552,7 +560,42 @@ const ROUTES: Routes = [
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
   },
+  {
+        path: 'programa-prosec',
+        loadChildren: () =>
+          import('./tramites/90302/programa-prosec.module').then(
+            (m) => m.ProgramaProsecModule
+          ),
+  },
 
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110205/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
+  },
+  {
+    path: 'asignacion-directa-cupo-personas-fisicas',
+    loadChildren: () =>
+      import(
+        './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
+      ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
+  },
+  {   
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
+      ),
+  },
+  {
+    path: 'validar-certificado-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
   {
     path: 'modalidad-terciarización',
     loadChildren: () =>
@@ -561,8 +604,6 @@ const ROUTES: Routes = [
       ),
   }
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
