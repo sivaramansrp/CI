@@ -18,7 +18,8 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h3>Aviso de Cálculo de contribuciones a que refiere el artículo 99 de la Ley, correspondiente al ejercicio inmediato anterior.</h3>
+      <h3>Aviso de Cálculo de contribuciones a que refiere el artículo 99 de la Ley, correspondiente al ejercicio
+        inmediato anterior.</h3>
       <hr class="red porcentaje">
     </div>
   </div>
@@ -35,33 +36,24 @@
         <div class="col-md-1"></div>
         <div class="col-md-3">
           <div class="form-check">
-            <input
-              type="radio"
-              class="form-check-input"
-              id="idEjercicioSi"
-              formControlName="capacidadAlmacenamiento"
+            <input type="radio" class="form-check-input" id="idEjercicioSi" formControlName="capacidadAlmacenamiento"
               value="1"
-              (change)="validaRadioCalculo()"
-            />
+              (change)="validaRadioCalculo(); setValoresStore(avisoDeCalForm,'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento')" />
             <label class="form-check-label" for="idEjercicioSi">Si</label>
           </div>
         </div>
         <div class="col-md-3" id="divEscicion">
           <div class="form-check">
-            <input
-              type="radio"
-              class="form-check-input"
-              id="idEjercicioNo"
-              formControlName="capacidadAlmacenamiento"
+            <input type="radio" class="form-check-input" id="idEjercicioNo" formControlName="capacidadAlmacenamiento"
               value="0"
-              (change)="validaRadioCalculo()"
-            />
+              (change)="validaRadioCalculo(); setValoresStore(avisoDeCalForm,'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento')" />
             <label class="form-check-label" for="idEjercicioNo">No</label>
           </div>
         </div>
       </div>
       <!-- Validation error for capacidadAlmacenamiento -->
-      <div *ngIf="avisoDeCalForm.get('capacidadAlmacenamiento')?.errors?.['required'] && (avisoDeCalForm.get('capacidadAlmacenamiento')?.touched || avisoDeCalForm.get('capacidadAlmacenamiento')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('capacidadAlmacenamiento')?.errors?.['required'] && (avisoDeCalForm.get('capacidadAlmacenamiento')?.touched || avisoDeCalForm.get('capacidadAlmacenamiento')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
@@ -77,14 +69,11 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <input
-          type="text"
-          class="form-control"
-          formControlName="tipoSolicitudPexim"
-          id="idMontoContribuciones"
-        />
+        <input type="text" class="form-control" formControlName="tipoSolicitudPexim" id="idMontoContribuciones"
+          (change)="setValoresStore(avisoDeCalForm,'tipoSolicitudPexim', 'setTipoSolicitudPexim')" />
         <!-- Validation error for tipoSolicitudPexim -->
-        <div *ngIf="avisoDeCalForm.get('tipoSolicitudPexim')?.errors?.['required'] && (avisoDeCalForm.get('tipoSolicitudPexim')?.touched || avisoDeCalForm.get('tipoSolicitudPexim')?.dirty)">
+        <div
+          *ngIf="avisoDeCalForm.get('tipoSolicitudPexim')?.errors?.['required'] && (avisoDeCalForm.get('tipoSolicitudPexim')?.touched || avisoDeCalForm.get('tipoSolicitudPexim')?.dirty)">
           <small class="text-danger">Este campo es requerido.</small>
         </div>
       </div>
@@ -111,38 +100,29 @@
 
   <div class="row">
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="actividadProductiva"
-        id="idMargen"
-      />
+      <input type="text" class="form-control" formControlName="actividadProductiva" id="idMargen"
+        (change)="setValoresStore(avisoDeCalForm,'actividadProductiva','setActividadProductiva')" />
       <!-- Validation error for actividadProductiva -->
-      <div *ngIf="avisoDeCalForm.get('actividadProductiva')?.errors?.['required'] && (avisoDeCalForm.get('actividadProductiva')?.touched || avisoDeCalForm.get('actividadProductiva')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('actividadProductiva')?.errors?.['required'] && (avisoDeCalForm.get('actividadProductiva')?.touched || avisoDeCalForm.get('actividadProductiva')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="tipoCaat"
-        id="idCe"
-      />
+      <input type="text" class="form-control" formControlName="tipoCaat" id="idCe"
+        (change)="setValoresStore(avisoDeCalForm,'tipoCaat', 'setTipoCaat')" />
       <!-- Validation error for tipoCaat -->
-      <div *ngIf="avisoDeCalForm.get('tipoCaat')?.errors?.['required'] && (avisoDeCalForm.get('tipoCaat')?.touched || avisoDeCalForm.get('tipoCaat')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('tipoCaat')?.errors?.['required'] && (avisoDeCalForm.get('tipoCaat')?.touched || avisoDeCalForm.get('tipoCaat')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="tipoProgFomExp"
-        id="idCdv"
-      />
+      <input type="text" class="form-control" formControlName="tipoProgFomExp" id="idCdv"
+        (change)="setValoresStore(avisoDeCalForm,'tipoProgFomExp', 'setTipoProgFomExp')" />
       <!-- Validation error for tipoProgFomExp -->
-      <div *ngIf="avisoDeCalForm.get('tipoProgFomExp')?.errors?.['required'] && (avisoDeCalForm.get('tipoProgFomExp')?.touched || avisoDeCalForm.get('tipoProgFomExp')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('tipoProgFomExp')?.errors?.['required'] && (avisoDeCalForm.get('tipoProgFomExp')?.touched || avisoDeCalForm.get('tipoProgFomExp')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
@@ -175,38 +155,29 @@
 
   <div class="row">
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="tipoTransito"
-        id="idCo"
-      />
+      <input type="text" class="form-control" formControlName="tipoTransito" id="idCo"
+        (change)="setValoresStore(avisoDeCalForm,'tipoTransito', 'setTipoTransito')" />
       <!-- Validation error for tipoTransito -->
-      <div *ngIf="avisoDeCalForm.get('tipoTransito')?.errors?.['required'] && (avisoDeCalForm.get('tipoTransito')?.touched || avisoDeCalForm.get('tipoTransito')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('tipoTransito')?.errors?.['required'] && (avisoDeCalForm.get('tipoTransito')?.touched || avisoDeCalForm.get('tipoTransito')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="numeroEstablecimiento"
-        id="idCdr"
-      />
+      <input type="text" class="form-control" formControlName="numeroEstablecimiento" id="idCdr"
+        (change)="setValoresStore(avisoDeCalForm,'numeroEstablecimiento', 'setNumeroEstablecimiento')" />
       <!-- Validation error for numeroEstablecimiento -->
-      <div *ngIf="avisoDeCalForm.get('numeroEstablecimiento')?.errors?.['required'] && (avisoDeCalForm.get('numeroEstablecimiento')?.touched || avisoDeCalForm.get('numeroEstablecimiento')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('numeroEstablecimiento')?.errors?.['required'] && (avisoDeCalForm.get('numeroEstablecimiento')?.touched || avisoDeCalForm.get('numeroEstablecimiento')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="medioTransporte"
-        id="idCpo"
-      />
+      <input type="text" class="form-control" formControlName="medioTransporte" id="idCpo"
+        (change)="setValoresStore(avisoDeCalForm,'medioTransporte', 'setMedioTransporte')" />
       <!-- Validation error for medioTransporte -->
-      <div *ngIf="avisoDeCalForm.get('medioTransporte')?.errors?.['required'] && (avisoDeCalForm.get('medioTransporte')?.touched || avisoDeCalForm.get('medioTransporte')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('medioTransporte')?.errors?.['required'] && (avisoDeCalForm.get('medioTransporte')?.touched || avisoDeCalForm.get('medioTransporte')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
@@ -227,26 +198,20 @@
 
   <div class="row">
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="nombreBanco"
-        id="idPco"
-      />
+      <input type="text" class="form-control" formControlName="nombreBanco" id="idPco"
+        (change)="setValoresStore(avisoDeCalForm,'nombreBanco', 'setNombreBanco')" />
       <!-- Validation error for nombreBanco -->
-      <div *ngIf="avisoDeCalForm.get('nombreBanco')?.errors?.['required'] && (avisoDeCalForm.get('nombreBanco')?.touched || avisoDeCalForm.get('nombreBanco')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('nombreBanco')?.errors?.['required'] && (avisoDeCalForm.get('nombreBanco')?.touched || avisoDeCalForm.get('nombreBanco')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
     <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        formControlName="nomOficialAutorizado"
-        id="idDesarrollo"
-      />
+      <input type="text" class="form-control" formControlName="nomOficialAutorizado" id="idDesarrollo"
+        (change)="setValoresStore(avisoDeCalForm,'nomOficialAutorizado', 'setNomOficialAutorizado')" />
       <!-- Validation error for nomOficialAutorizado -->
-      <div *ngIf="avisoDeCalForm.get('nomOficialAutorizado')?.errors?.['required'] && (avisoDeCalForm.get('nomOficialAutorizado')?.touched || avisoDeCalForm.get('nomOficialAutorizado')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('nomOficialAutorizado')?.errors?.['required'] && (avisoDeCalForm.get('nomOficialAutorizado')?.touched || avisoDeCalForm.get('nomOficialAutorizado')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
@@ -254,43 +219,35 @@
 
   <div class="row">
     <div class="col-md-12">
-      <label class="form-label">El porcentaje de contribuciones y cuotas compensatorias omitidas, es mayor al Margen de Error</label>
+      <label class="form-label">El porcentaje de contribuciones y cuotas compensatorias omitidas, es mayor al Margen de
+        Error</label>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-md-8">
       <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3">
           <div class="form-check">
-            <input
-              type="radio"
-              class="form-check-input"
-              id="idPorcentajeSi"
-              formControlName="empresaControladora"
+            <input type="radio" class="form-check-input" id="idPorcentajeSi" formControlName="empresaControladora"
               value="1"
-              (change)="validaRadioCalculo()"
-            />
+              (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'empresaControladora', 'setEmpresaControladora')" />
             <label class="form-check-label" for="idPorcentajeSi">Si</label>
           </div>
         </div>
         <div class="col-md-3" id="divEscicion">
           <div class="form-check">
-            <input
-              type="radio"
-              class="form-check-input"
-              id="idPorcentajeNo"
-              formControlName="empresaControladora"
+            <input type="radio" class="form-check-input" id="idPorcentajeNo" formControlName="empresaControladora"
               value="0"
-              (change)="validaRadioCalculo()"
-            />
+              (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'empresaControladora', 'setEmpresaControladora')" />
             <label class="form-check-label" for="idPorcentajeNo">No</label>
           </div>
         </div>
       </div>
       <!-- Validation error for empresaControladora -->
-      <div *ngIf="avisoDeCalForm.get('empresaControladora')?.errors?.['required'] && (avisoDeCalForm.get('empresaControladora')?.touched || avisoDeCalForm.get('empresaControladora')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('empresaControladora')?.errors?.['required'] && (avisoDeCalForm.get('empresaControladora')?.touched || avisoDeCalForm.get('empresaControladora')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>
@@ -299,19 +256,16 @@
   <div id="montoTotalContribuciones" *ngIf="montoTotalContribucionesVisible">
     <div class="row">
       <div class="col-md-12">
-        <label class="form-label">Señale el monto total por concepto de contribuciones y cuotas compensatorias a pagar por el importador</label>
+        <label class="form-label">Señale el monto total por concepto de contribuciones y cuotas compensatorias a pagar
+          por el importador</label>
         <span class="require">*</span>
         <label for="puntos"></label>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <input
-          type="text"
-          class="form-control"
-          formControlName="descripcionLugarEmbarque"
-          id="idTotalConcepto"
-        />
+        <input type="text" class="form-control" formControlName="descripcionLugarEmbarque" id="idTotalConcepto"
+          (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'descripcionLugarEmbarque', 'setDescripcionLugarEmbarque')" />
         <!-- No validation error for descripcionLugarEmbarque because it's not in the form group with validators -->
       </div>
     </div>
@@ -327,13 +281,11 @@
 
   <div class="row">
     <div class="col-md-12">
-      <textarea
-        class="form-control"
-        formControlName="observaciones"
-        id="idObservacionesCalculo"
-      ></textarea>
+      <textarea class="form-control" formControlName="observaciones" id="idObservacionesCalculo"
+        (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'observaciones', 'setObservaciones')"></textarea>
       <!-- Validation error for observaciones -->
-      <div *ngIf="avisoDeCalForm.get('observaciones')?.errors?.['required'] && (avisoDeCalForm.get('observaciones')?.touched || avisoDeCalForm.get('observaciones')?.dirty)">
+      <div
+        *ngIf="avisoDeCalForm.get('observaciones')?.errors?.['required'] && (avisoDeCalForm.get('observaciones')?.touched || avisoDeCalForm.get('observaciones')?.dirty)">
         <small class="text-danger">Este campo es requerido.</small>
       </div>
     </div>

@@ -24,7 +24,7 @@ export interface Solicitud30505State {
   folioAcuse: string;
 
   cantidadBienes: string;
-  capacidadAlmacenamiento: string;
+  capacidadAlmacenamiento2: string;
   numeroTotalCarros: string;
   fechaInspeccion: string;
   descripcionClobGenerica2: string;
@@ -32,6 +32,19 @@ export interface Solicitud30505State {
   razonSocialSC: string;
   numFolioTramite: string;
   fechafinVigencia2: string;
+  tipoSolicitudPexim: string;
+  capacidadAlmacenamiento: string;
+  tipoCaat: string;
+  tipoProgFomExp: string;
+  tipoTransito: string;
+  numeroEstablecimiento: string;
+  medioTransporte: string;
+  nombreBanco: string;
+  nomOficialAutorizado: string;
+  empresaControladora: string;
+  observaciones: string;
+  descripcionLugarEmbarque: string;
+  actividadProductiva: string;
 }
 
 /**
@@ -55,14 +68,27 @@ export function createInitialSolicitudState(): Solicitud30505State {
     rfcIdc: 'AAL0409235E6',
     razonSocialIdc: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
     folioAcuse: '',
-    capacidadAlmacenamiento: '',
+    capacidadAlmacenamiento2: '',
     cantidadBienes: '',
     numeroTotalCarros: '',
     fechaInspeccion: '',
     descripcionClobGenerica2: '',
     razonSocial: '',
     razonSocialSC: '',
-    numFolioTramite: ''
+    numFolioTramite: '',
+    tipoSolicitudPexim: '',
+    capacidadAlmacenamiento: '',
+    tipoCaat: '',
+    tipoProgFomExp: '',
+    tipoTransito: '',
+    numeroEstablecimiento: '',
+    medioTransporte: '',
+    nombreBanco: '',
+    nomOficialAutorizado: '',
+    empresaControladora: '',
+    observaciones: '',
+    descripcionLugarEmbarque: '',
+    actividadProductiva: '',
   };
 }
 
@@ -128,4 +154,97 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
       [field]: aviso,
     }));
   }
+  /** aviso-calculo comenzar*/
+
+  public setTipoSolicitudPexim(tipoSolicitudPexim: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoSolicitudPexim,
+    }));
+  }
+
+  public setCapacidadAlmacenamiento(capacidadAlmacenamiento: string): void {
+    this.update((state) => ({ 
+      ...state,
+      capacidadAlmacenamiento,
+    }));
+  }
+
+  public setTipoCaat(tipoCaat: string): void {
+    this.update((state) => ({   
+      ...state,
+      tipoCaat,
+    }));
+  }
+
+public setTipoProgFomExp(tipoProgFomExp: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoProgFomExp,
+    }));
+  }
+
+public setTipoTransito(tipoTransito: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoTransito,
+    }));
+  }
+
+public setNumeroEstablecimiento(numeroEstablecimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroEstablecimiento,
+    }));
+  }
+
+public setMedioTransporte(medioTransporte: string): void {
+    this.update((state) => ({
+      ...state,
+      medioTransporte,
+    }));
+  }
+
+public setNombreBanco(nombreBanco: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreBanco,
+    }));
+  }
+
+public setNomOficialAutorizado(nomOficialAutorizado: string): void {
+    this.update((state) => ({
+      ...state,
+      nomOficialAutorizado,
+    }));
+  }
+
+public setEmpresaControladora(empresaControladora: string): void {
+    this.update((state) => ({
+      ...state,
+      empresaControladora,
+    }));
+  }
+
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({
+      ...state,
+      observaciones,
+    }));
+  }
+
+  public setDescripcionLugarEmbarque(descripcionLugarEmbarque: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionLugarEmbarque,
+    }));
+  }
+
+  public setActividadProductiva(actividadProductiva: string): void {
+    this.update((state) => ({
+      ...state,
+      actividadProductiva,
+    }));
+  }
+
 }

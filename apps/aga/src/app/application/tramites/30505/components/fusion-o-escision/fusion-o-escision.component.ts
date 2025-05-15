@@ -70,7 +70,7 @@ export class FusionOEscisionComponent implements OnInit {
             .subscribe()
             
   this.formulario = this.fb.group({
-      'capacidadAlmacenamiento': [this.AvisoState?.capacidadAlmacenamiento, Validators.required],
+      'capacidadAlmacenamiento': [this.AvisoState?.capacidadAlmacenamiento2, Validators.required],
       'numeroTotalCarros': [this.AvisoState?.numeroTotalCarros, Validators.required],
       'cantidadBienes': [this.AvisoState?.cantidadBienes, Validators.required],
       'fechaInspeccion': [this.AvisoState?.fechaInspeccion, Validators.required],
@@ -93,7 +93,7 @@ export class FusionOEscisionComponent implements OnInit {
 
   mostrarFusionada():void{
     const DATOS = this.formulario.get('capacidadAlmacenamiento')?.value;
-    this.tramiteStore.setAvisoDatos(DATOS,'capacidadAlmacenamiento');
+    this.tramiteStore.setAvisoDatos(DATOS,'capacidadAlmacenamiento2');
   }
 
   // Method to show or hide the complete section based on selected option
