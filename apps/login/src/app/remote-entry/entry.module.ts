@@ -9,7 +9,7 @@ import { provideRouter } from '@angular/router';
 
 @NgModule({
   declarations: [
-    
+
   ],
   imports: [
     BrowserModule,

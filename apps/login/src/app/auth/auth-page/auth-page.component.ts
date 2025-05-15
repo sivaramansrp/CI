@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
-import { Rol } from  '@ng-mf/data-access-user';
-import { Router } from '@angular/router'; 
-import { TipoPersona } from '@ng-mf/data-access-user';
 import * as uuid from 'uuid';
+import { AMBIENTES, PerfilUsuario, Rol, TipoPersona } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { UsuarioStore } from './../../estados/usuario.store';
 @Component({
@@ -12,7 +10,7 @@ import { UsuarioStore } from './../../estados/usuario.store';
   styleUrl: './auth-page.component.scss',
   host: { 'hostID': uuid.v4().toString() }
 })
-export class AuthPageComponent {
+export class AuthPageComponent implements OnInit {
   indice: number = 1;
   public ruta: string = '';
   
@@ -39,8 +37,8 @@ export class AuthPageComponent {
 
   validarEFirma(login: boolean) {
     if ( login ) {
-      const roles: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
-      const perfilUsuario: PerfilUsuario = {
+      const ROLES: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
+      const PERFILUSUARIO: PerfilUsuario = {
         nombre: '',
         apellidoPaterno: '',
         apellidoMaterno: '',
@@ -49,7 +47,7 @@ export class AuthPageComponent {
         correoElectronico: '',
         tipoPersona: TipoPersona.FISICA
       }
-      this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
+      this.usuarioStore.establecerUsuario('LEQI', PERFILUSUARIO, ROLES, '');
 
       window.location.href = '/seleccion-tramite';
     }
