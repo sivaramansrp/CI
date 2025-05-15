@@ -65,7 +65,7 @@ describe('PasoUnoComponent', () => {
     component.solicitante = component.solicitante || {};
     component.solicitante.obtenerTipoPersona = jest.fn();
     component.ngAfterViewInit();
-    // expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
+    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {

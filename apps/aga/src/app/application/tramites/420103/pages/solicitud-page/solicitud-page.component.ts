@@ -1,11 +1,6 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
-//import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 
@@ -78,7 +73,7 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
   //@typescript-eslint/explicit-function-return-type
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

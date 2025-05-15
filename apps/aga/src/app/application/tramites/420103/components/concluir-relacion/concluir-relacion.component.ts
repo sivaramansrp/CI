@@ -121,13 +121,13 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    *
    * valor - Nuevo valor del RFC.
    */
-  // actualizarFechaFinVigencia(event: Event): void {
-  //   const VALOR = (event.target as HTMLInputElement).value;
-  //   this.formularioConcluirRelacion.patchValue({
-  //     rfc: VALOR,
-  //   });
-  //   this.almacenamientoTramite420103.setRFC(VALOR);
-  // }
+  actualizarFechaFinVigencia(event: Event): void {
+    const VALOR = (event.target as HTMLInputElement).value;
+    this.formularioConcluirRelacion.patchValue({
+      rfc: VALOR,
+    });
+    this.almacenamientoTramite420103.setRFC(VALOR);
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
