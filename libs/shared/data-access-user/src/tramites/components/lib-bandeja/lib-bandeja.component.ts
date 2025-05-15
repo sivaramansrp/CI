@@ -8,7 +8,7 @@ import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/f
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
-import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
 // import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
@@ -90,10 +90,22 @@ export class LibBandejaComponent<T> implements OnInit {
       ROW_OBJETO.numeroDeProcedimiento
     );
     const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
-    this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
+    this.tramiteData = tramiteDetailsData.filter(
+      (v) => v.tramite === PROCEDURE
+    );
     this.procedureUrl = this.tramiteData[0].linkDashboard;
-    this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,ROW_OBJETO.folioTramite,ROW_OBJETO.tipoDeTramite,ROW_OBJETO.estadoDeTramite,true,false,false);
-    if(!this.tieneBandeja) {
+    this.consultaioStore.establecerConsultaio(
+      String(PROCEDURE),
+      ORIGIN,
+      this.tramiteData[0].department,
+      ROW_OBJETO.folioTramite,
+      ROW_OBJETO.tipoDeTramite,
+      ROW_OBJETO.estadoDeTramite,
+      true,
+      false,
+      false
+    );
+    if (!this.tieneBandeja) {
       this.router.navigate([this.procedureUrl]);
     }
     if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
@@ -108,6 +120,13 @@ export class LibBandejaComponent<T> implements OnInit {
       this.router.navigate([`/${this.tramiteData[0].department}/evaluar`]);
     } else if ((ORIGIN === 'FLUJO_FUNCIONARIO_AUTORIZACION')) {
       this.router.navigate([`/${this.tramiteData[0].department}/autorizar`]);
+    }
+    else if (ORIGIN === 'SUBSECUENTES') {
+      this.router.navigate(['/subsecuentes']);
+    } else {
+      this.router.navigate([
+        this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento,
+      ]);
     }
   }
   public mostrarColapsable(orden: number): void {
@@ -134,6 +153,4 @@ export class LibBandejaComponent<T> implements OnInit {
     this.currentPage = 1;
     this.updatePagination();
   }
-
-
 }
