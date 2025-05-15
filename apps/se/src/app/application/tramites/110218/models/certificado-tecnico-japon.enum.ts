@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export interface CompliMentaria {
+  id: number;
   numerodeOrden: string;
   fraccionArancelaria: string;
   nombreTecnico: string;

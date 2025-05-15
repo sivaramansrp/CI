@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123, 240321,240112
 ];
 
 /**
@@ -47,7 +47,7 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118, 240123];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121, 240107,240311, 240407, 240123 ];
+export const OCULTAR_BOTONES = [240121, 240107,240311, 240407, 240123,240321, 240118];
 
  /**
  * @const NO_VISIBILIDAD_UMC
@@ -99,7 +99,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111,240305, 240311, 240411, 240407
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111,240305, 240311, 240411, 240407,240321
 ];
 
 /**
@@ -188,7 +188,7 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
  * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
  */
-export const PERMISO_JUSTIFICACION = [240308, 240405,240305, 240411, 240407];
+export const PERMISO_JUSTIFICACION = [240308, 240405,240305, 240411, 240407,240321];
 
 /**
  * Constante que define una lista de permisos generales que deben ser ocultados.
@@ -216,7 +216,7 @@ export const ES_RFC = [240117];
  * @description Contiene un arreglo de identificadores numéricos que representan permisos generales desactivados en el sistema.
  * Este valor es utilizado para identificar permisos que no están habilitados o disponibles en ciertas funcionalidades.
  */
-export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411];
+export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
 /**
  * @constant
  * @name ADUANA_TEXTO

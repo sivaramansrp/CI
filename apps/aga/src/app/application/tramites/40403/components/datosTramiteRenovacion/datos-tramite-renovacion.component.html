@@ -1,58 +1,31 @@
-<form [formGroup]="formulario" (ngSubmit)="buscarSolicitudPorCAAT()">
+<form [formGroup]="formulario">
   <div>
     <div class="row">
       <div class="col-md-12">
-        <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
-        <input type="hidden" formControlName="idPersonaSolicitud" />
-        <input type="hidden" formControlName="ideGenerica1" />
-        <input
-          type="hidden"
-          formControlName="fechaInicioVigencia"
-          id="fechaInicioVigencia"
-        />
-        <input
-          type="hidden"
-          formControlName="fechaFinVigencia"
-          id="fechaFinVigencia"
-        />
+        <input type="hidden" name="idSolicitud" id="idSolicitud" />
+        <input type="hidden" name="idPersonaSolicitud" />
+        <input type="hidden" name="ideGenerica1" />
+        <input type="hidden" name="fechaInicioVigencia" id="fechaInicioVigencia" />
+        <input type="hidden" name="fechaFinVigencia" id="fechaFinVigencia" />
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8">
         <div class="mt-4">
-          <label for="claveFolioCAAT"
-            >Codigo Alfanumerico del Transportista(CAAT):</label
-          >
-          <span class="require">*</span>
+          <label for="claveFolioCAAT">Código Alfanumerico Armonizado del Transportista (CAAT) *:</label>
         </div>
         <div>
-          <input
-            type="text"
-            formControlName="claveFolioCAAT"
-            id="claveFolioCAAT"
-            maxlength="4"
-            (blur)="caatConMayusculas($event)"
-            class="form-control"
-          />
-          <div
-            *ngIf="
-              formulario.get('claveFolioCAAT')?.invalid &&
-              formulario.get('claveFolioCAAT')?.touched
-            "
-          >
-            <small class="text-danger">Clave Folio CAAT is required</small>
-          </div>
+          <input type="text" formControlName="claveFolioCAAT" id="claveFolioCAAT" maxlength="4"
+            (blur)="caatConMayusculas($event)" class="form-control"
+            (change)="setValoresStore(formulario,'claveFolioCAAT', 'establecerClaveFolioCAAT')" />
         </div>
       </div>
 
       <div class="col-md-12">
         <div class="pull-right">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="buscarSolicitudPorCAAT()"
-          >
+          <button type="button" class="btn btn-primary" name="buscarSolicitudPorCAAT" id="buscarSolicitudPorCAAT"
+            (click)="buscarSolicitudPorCAAT()">
             Buscar
           </button>
         </div>
@@ -65,14 +38,8 @@
           <label for="caatAereoRenovacionCaat">CAAT:</label>
         </div>
         <div>
-          <input
-            type="text"
-            readonly
-            formControlName="cveFolioCaat"
-            maxlength="4"
-            class="form-control"
-            readonly
-          />
+          <input type="text" formControlName="cveFolioCaat" name="caat" maxlength="4" class="form-control"
+            (change)="setValoresStore(formulario,'cveFolioCaat', 'establecerCveFolioCaat')" readonly />
         </div>
       </div>
       <div class="col col-md-4 mt-4">
@@ -80,53 +47,31 @@
           <label for="descripcionTipoCaat">Perfil:</label>
         </div>
         <div>
-          <input
-            type="text"
-            readonly
-            formControlName="descripcionTipoCaat"
-            id="descripcionTipoCaat"
-            maxlength=""
-            class="form-control"
-            readonly
-          />
+          <input type="text" formControlName="descripcionTipoCaat" id="descripcionTipoCaat" class="form-control"
+            (change)="setValoresStore(formulario,'descripcionTipoCaat', 'establecerDescripcionTipoCaat')" readonly />
         </div>
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-md-4">
-        <app-catalogo-select
-          class="tipoDeCaatAerea"
-          [catalogo]="tipoDeCaatAerea"
-          formControlName="tipoDeCaatAerea"
-          [required]="true"
-          label="Tipo de CAAT Aérea"
-          name="tipoDeCaatAerea"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="tipoDeCaatAerea" formControlName="tipoDeCaatAerea"
+          [label]="'Tipo de CAAT Aéreo'" name="tipoDeCaatAerea" [isDisabled]="true"
+          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select
-          class="ideCodTransportacionAerea"
-          [catalogo]="ideCodTransportacionAerea"
-          formControlName="ideCodTransportacionAerea"
-          [required]="true"
-          label="Codigo Transportación Aérea"
-          name="ideCodTransportacionAerea"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="ideCodTransportacionAerea" formControlName="ideCodTransportacionAerea"
+          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="true"
+          (change)="setValoresStore(formulario, 'ideCodTransportacionAerea', 'establecerIdeCodTransportacionAerea')"></app-catalogo-select>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <label for="solicitudIataIcao" class="form-label">Codigo:</label>
-        <input
-          type="text"
-          readonly
-          formControlName="codIataIcao"
-          maxlength="3"
-          class="form-control"
-        />
+        <label for="solicitudIataIcao" class="form-label">Código:</label>
+        <input type="text" formControlName="codIataIcao" maxlength="3" class="form-control"
+          (change)="setValoresStore(formulario,'codIataIcao', 'establecerCodIataIcao')" readonly />
       </div>
     </div>
   </div>

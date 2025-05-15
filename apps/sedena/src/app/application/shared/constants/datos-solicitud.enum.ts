@@ -117,6 +117,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240122: 240122,
   TRAMITE_240407: 240407,
   TRAMITE_240123: 240123,
+  TRAMITE_240321: 240321,
 }
 
 /**
@@ -191,7 +192,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111, 240120];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120];
 
 
 /**
@@ -213,4 +214,36 @@ export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
  * Este valor se utiliza para identificar trámites o procesos asociados a terceros con una nacionalidad específica.
  */
 export const TERCEROS_NACIONALIDAD = [240123];
+
+
+
+/**
+ * Constante que representa los títulos personalizados para el destinatario.
+ * 
+ * @const DESTINATARIO_TITULO_CUSTOM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los títulos personalizados que se aplican al destinatario en el sistema.
+ */
+
+export const DESTINATARIO_TITULO_CUSTOM=[240321];
+/**
+ * Constante que representa los títulos personalizados para el proveedor.
+ * 
+ * @const PROVEEDOR_TITULO_CUSTOM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los títulos personalizados que se aplican al proveedor en el sistema.
+ */
+export const PROVEEDOR_TITULO_CUSTOM=[240321];
+/**
+ * Constante que representa los identificadores para ocultar el botón "Modificar Terceros".
+ * 
+ * @const OCULTAR_BOTON_MODIFICAR_TERCEROS
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * las condiciones en las que se debe ocultar el botón "Modificar Terceros" en el sistema.
+ */
+
+export const OCULTAR_BOTON_MODIFICAR_TERCEROS=[240321];
 

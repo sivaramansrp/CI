@@ -47,13 +47,15 @@
         @if(!ocultarPermisoGeneral){
         <div class="col-md-4">
           <label for="permisoGeneral" class="form-label"
-            >Permiso general*</label
+            >Permiso general: *</label
           >
           <input
             type="text"
             id="permisoGeneral"
             class="form-control"
             formControlName="permisoGeneral"
+            maxlength="22"
+            [required]="true"
           />
         </div>
         }
@@ -102,8 +104,13 @@
         }
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
-          Uso final de la mercancía*
-          <i class="bi bi-info-circle" title="Información adicional"></i>
+          Uso final de la mercancía: *
+                    <span
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="Uso final de la mercancía"
+          ata-bs-toggle="tooltip"
+        >
+        </span>
         </label>
         <textarea
           id="usoFinal"
@@ -111,29 +118,51 @@
           rows="3"
           formControlName="usoFinal"
           style="height: 90px"
+          [required]="true"
         ></textarea>
       </div>
     </form>
   </div>
   <div class="row mt-5">
-    <h5>Mercancías*</h5>
+    <h5>Mercancías: *</h5>
     <app-tabla-dinamica
       [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
       [datos]="datosMercanciaTabla"
+      (listaDeFilaSeleccionada)="mercanciaTablaSeleccionada = $event"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button
+@if(ocultarBotones){
+          <button
           type="button"
-          name="agregarClave"
-          class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-datos-mercancia')"
+          name="modificarMercancias"
+          class="btn btn-default"
+          (click)="modificarDestinatario()"
+          [disabled]="mercanciaTablaSeleccionada.length !== 1"
         >
-          Agregar
+          Modificar
         </button>
+          <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+          (click)="eliminarDestinatarioFinal()"
+          [disabled]="mercanciaTablaSeleccionada.length === 0"
+        >
+          Eliminar
+        </button>
+      }
+            <button
+              type="button"
+              name="agregarClave"
+              class="btn btn-primary ms-2"
+              (click)="irAAcciones('../agregar-datos-mercancia')"
+            >
+              Agregar
+            </button>
       </div>
     </div>
   </div>

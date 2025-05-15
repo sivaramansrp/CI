@@ -1,0 +1,57 @@
+import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent } from "@ng-mf/data-access-user";
+import { CertificadoComponent } from './page/certificado/certificado.component';
+import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+import { CommonModule } from '@angular/common';
+import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
+import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
+import { DestinatarioDeCertificadoComponent } from './components/destinatario-de-certificado/destinatario-de-certificado.component';
+import { HistoricoDeProductoresComponent } from './components/historico-de-productores/historico-de-productores.component';
+import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
+import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { NgModule } from '@angular/core';
+import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
+import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RouterModule } from '@angular/router';
+import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialmente-certificado-routing.module';
+
+
+@NgModule({
+  declarations: [
+    PasoUnoComponent,
+    PasoDosComponent,
+    DatosCertificadoComponent,
+    CertificadoComponent,
+    DestinatarioDeCertificadoComponent,
+    CertificadoOrigenComponent,
+    HistoricoDeProductoresComponent,
+    MercanciaComponent,
+  ],
+  imports: [
+    CommonModule,
+    ValidarInicialmenteCertificadoRoutingModule,
+    SharedModule,
+    ReactiveFormsModule,
+    WizardComponent,
+    SolicitanteComponent,
+    BtnContinuarComponent,
+    FirmaElectronicaComponent,
+    CatalogoSelectComponent,
+    RouterModule,
+    InputFechaComponent,
+    CertificadoDeOrigenComponent,
+    DatosCertificadoDeComponent,
+    DatosDelDestinatarioComponent,
+    HistoricoProductoresComponent,
+    DestinatarioComponent,
+    TituloComponent,
+    AlertComponent,
+    RepresentanteLegalComponent,
+  ]
+})
+export class ValidarInicialmenteCertificadoModule { }
