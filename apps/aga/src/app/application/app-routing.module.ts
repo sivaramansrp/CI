@@ -290,8 +290,7 @@ const ROUTES: Routes = [
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule
-      ),
+        (m) => m.ModificacionDonacionesImmexModule),
   },
   {
     path: 'fronteriza',
