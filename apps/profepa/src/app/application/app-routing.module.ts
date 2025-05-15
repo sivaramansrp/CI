@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.FloraFaunaModule
       ),
   },
+  {
+    path: 'flora-fauna-silvestre',
+    loadChildren: () =>
+      import('./tramites/250102/flora-fauna.module').then(
+        (m) => m.FloraFaunaModule
+      ),
+  },
 ];
 
 @NgModule({
