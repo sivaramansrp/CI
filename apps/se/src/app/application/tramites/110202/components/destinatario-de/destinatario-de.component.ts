@@ -33,7 +33,7 @@ import { takeUntil } from 'rxjs';
  * @interface FormValues
  */
 interface FormValues {
-  [key: string]: string | number | boolean | object | undefined;
+  [key: string]: unknown;
 }
 
 @Component({

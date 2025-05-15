@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -12,14 +13,22 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+
+  /**
+   * 
+   * @type {number}
+   * @remarks
+   * Este identificador se utiliza para enlazar el componente con un procedimiento específico.
+   */
+  @Input() idProcedimiento!: number;
   
     /**
      * Datos del formulario para inicializar los valores
-     * @type { [key: string]: unknown }
+     * @type {{ [key: string]: unknown }}
      */
     @Input() datosForm!: { [key: string]: unknown };
+
   
-    
     /**
      * Emisor de eventos para manejar cambios en el formulario exportador.
      * 
@@ -50,6 +59,14 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );  
+
+  /**
+   * @description Indica si el campo relacionado con el destinatario está habilitado o no.
+   * @type {boolean}
+   * @memberof RepresentanteLegalComponent
+   */
+  campoDestinatario = false;
+
     /**
      * Constructor del componente
      * @param {FormBuilder} fb - Servicio para crear formularios reactivos
@@ -74,6 +91,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
       this.initActionFormBuilder();
+      this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
     }
 
     /**
@@ -92,8 +110,29 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         lada: ['',Validators.required],
         telfono: ['',Validators.required],
         fax: ['',Validators.required],
-        correo: ['',Validators.required]
+        correo: ['',Validators.required],
+        numeroDeRegistroFiscal: [''],
       });
+    }
+
+    /**
+     * @descripcion
+     * Cambia las validaciones del campo `numeroDeRegistroFiscal` en función del estado de `campoDestinatario`.
+     * 
+     * @remarks
+     * Si `campoDestinatario` es verdadero, se establece la validación como requerida para el campo `numeroDeRegistroFiscal`.
+     * Si es falso, se eliminan las validaciones del campo.
+     * Finalmente, se actualiza el estado y la validez del campo.
+     */
+    campoObligatorioChange(): void {
+      const NUMERODEREGISTROFISCAL = this.formExportor.get('numerodeRegistroFiscal');
+      if(this.campoDestinatario){
+        NUMERODEREGISTROFISCAL?.setValidators([Validators.required]);
+      }
+      else{
+        NUMERODEREGISTROFISCAL?.clearValidators();
+      }
+      NUMERODEREGISTROFISCAL?.updateValueAndValidity();
     }
 
     /**

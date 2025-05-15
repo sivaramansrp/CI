@@ -73,7 +73,7 @@
     "id": 11,
     "tramite": 11105,
     "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -87,14 +87,14 @@
     "id": 13,
     "tramite": 11202,
     "linkDashboard": "/aga/retorno-contenedores/solicitante",
-    "linkDepartment": "/aga/retorno-contenedores/solicitante",
+    "linkDepartment": "/pago/retorno-contenedores/solicitante",
     "department": "aga"
   },
   {
     "id": 14,
     "tramite": 11204,
-    "linkDashboard": "/aga/transferencia-contenedores/solicitud",
-    "linkDepartment": "/pago/transferencia-contenedores/solicitud",
+    "linkDashboard": "/aga/transferencia-contenedores/solicitante",
+    "linkDepartment": "/pago/transferencia-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -346,7 +346,7 @@
     "id": 50,
     "tramite": 110221,
     "linkDashboard": "/se/validador-certificado-cam",
-    "linkDepartment": "/se/validador-certificado-cam",
+    "linkDepartment": "/pago/validador-certificado-cam",
     "department": "se"
   },
   {
@@ -765,15 +765,15 @@
   {
     "id": 110,
     "tramite": 260911,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-de-dispositivos/permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-de-dispositivos/permiso-sanitario",
     "department": "cofepris"
   },
   {
     "id": 111,
     "tramite": 260912,
     "linkDashboard": "/cofepris/mod-permiso-importacion/permiso-sanitario",
-    "linkDepartment": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+    "linkDepartment": "/pago/mod-permiso-importacion/permiso-sanitario",
     "department": "cofepris"
   },
   {
@@ -863,9 +863,9 @@
   {
     "id": 124,
     "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/sanidadacuicola/certificado",
+    "linkDepartment": "/pago/sanidadacuicola/certificado",
+    "department": "agriculture"
   },
   {
     "id": 125,
@@ -899,7 +899,7 @@
     "id": 129,
     "tramite": 10302,
     "linkDashboard": "/aga/exencion-impuestos/solicitud",
-    "linkDepartment": "/aga/exencion-impuestos/solicitud",
+    "linkDepartment": "/pago/exencion-impuestos/solicitud",
     "department": "aga"
   },
   {
@@ -1171,8 +1171,8 @@
   {
     "id": 168,
     "tramite": 140111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-derechos-de-permisos/solicitante",
+    "linkDepartment": "/pago/renuncia-de-derechos-de-permisos/solicitante",
     "department": "sener"
   },
   {
@@ -1242,7 +1242,7 @@
     "id": 178,
     "tramite": 260906,
     "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/cofepris/modificacion-permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario",
     "department": "cofepris"
   },
   {
@@ -1319,7 +1319,7 @@
     "id": 189,
     "tramite": 11106,
     "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -2025,8 +2025,8 @@
   {
     "id": 290,
     "tramite": 80314,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/immex-modificacion-cambio-de-sector/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion-cambio-de-sector/registro-modificacion",
     "department": "se"
   },
   {
@@ -2067,15 +2067,15 @@
   {
     "id": 296,
     "tramite": 120702,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-frontera/solicitante",
+    "linkDepartment": "/pago/expedicion-certificados-frontera/solicitante",
     "department": "se"
   },
   {
     "id": 297,
     "tramite": 130302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/parmiso-importacion-petroleo/pantallas",
+    "linkDepartment": "/pago/parmiso-importacion-petroleo/pantallas",
     "department": "sener"
   },
   {
@@ -2186,8 +2186,8 @@
   {
     "id": 313,
     "tramite": 420102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/concluir-relacion/solicitud",
+    "linkDepartment": "/pago/concluir-relacion/solicitud",
     "department": "aga"
   },
   {
@@ -2207,8 +2207,8 @@
   {
     "id": 316,
     "tramite": 120401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/asignacion-directa-cupo-personas-fisicas/solicitante",
+    "linkDepartment": "/pago/asignacion-directa-cupo-personas-fisicas/solicitante",
     "department": "se"
   },
   {
@@ -2256,8 +2256,8 @@
   {
     "id": 324,
     "tramite": 110222,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "se/validar-certificado-inicialmente/certificado",
+    "linkDepartment": "/pago/validar-certificado-inicialmente/certificado",
     "department": "se"
   },
   {
@@ -2837,8 +2837,8 @@
   {
     "id": 407,
     "tramite": 420101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registrar-proveedores/solicitud",
+    "linkDepartment": "/pago/registrar-proveedores/solicitud",
     "department": "aga"
   },
   {
@@ -3075,8 +3075,8 @@
   {
     "id": 441,
     "tramite": 32509,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-mercancia/desrtruccion-o-donacion",
+    "linkDepartment": "/pago/aviso-mercancia/desrtruccion-o-donacion",
     "department": "agace"
   },
   {
@@ -3124,8 +3124,8 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/acta-de-hechos/solicituds",
+    "linkDepartment": "/pago/acta-de-hechos/solicitud",
     "department": "agace"
   },
   {
@@ -3425,8 +3425,8 @@
   {
     "id": 491,
     "tramite": 250102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/profepa/flora-fauna-silvestre/solictud/",
+    "linkDepartment": "/pago/flora-fauna-silvestre/solictud/",
     "department": "profepa"
   },
   {
@@ -3775,8 +3775,8 @@
   {
     "id": 541,
     "tramite": 240112,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/agregar/destinatario",
+    "linkDepartment": "/pago/agregar/destinatario",
     "department": "sedena"
   },
   {
@@ -3908,8 +3908,8 @@
   {
     "id": 560,
     "tramite": 240321,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/modificacion-exportacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/modificacion-exportacion/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -4212,5 +4212,19 @@
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
+  },
+  {
+    "id": 603,
+    "tramite": 32514,
+    "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
+    "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
+    "department": "agace"
+  },
+  {
+    "id": 604,
+    "tramite": 103,
+    "linkDashboard": "/aga/autorizacion/mercancia-donada",
+    "linkDepartment": "/pago/autorizacion/mercancia-donada",
+    "department": "aga"
   }
 ]

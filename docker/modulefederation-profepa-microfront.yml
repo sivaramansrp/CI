@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-profepa-microfront:
-    image: modulefederation-profepa-microfront:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:1.0.0
     build: 
       context: ./../
       dockerfile: apps/profepa/Dockerfile.dev
