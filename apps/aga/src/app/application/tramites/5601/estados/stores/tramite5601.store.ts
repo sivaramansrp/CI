@@ -2,13 +2,24 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
 
+/**
+ * Interfaz que define la estructura del estado para el trámite 5601.
+ * 
+ * Cada propiedad representa un campo específico del trámite, permitiendo
+ * almacenar y manipular la información correspondiente en el store.
+ * 
+ * Se incluye un índice de tipo string para permitir la adición dinámica
+ * de nuevas propiedades si es necesario.
+ */
 export interface Tramite5601State {
-    // formularioCertificacion
+    // Indica si se cuenta con certificación
     tieneCertificacion: boolean;
+    // Nombre de la empresa certificadora
     certificacionEmpresa: string;
+    // Otra certificación distinta a la principal
     otraCertificacion: string;
 
-    // formulario
+    // Datos relacionados con la aduana y la operación
     aduana: string;
     seccionAduanera: string;
     tipoOperacion: string;
@@ -16,26 +27,42 @@ export interface Tramite5601State {
     motivoDespachoDomicilio: string;
     observaciones: string;
 
-    // formularioMercancia
+    // Información sobre la mercancía
     especificacionesMercancia: string;
     descripcionMercancia: string;
     tipoMoneda: string;
     valorMercancia: string;
 
-    // formularioLogistica
+    // Esquemas de control y seguridad
     esquemasControlSeguridad: string;
     distanciaRutaTiempos: string;
 
-    // formularioUbicacionMercancia
+    // Datos de contacto y ubicación
     direccion: string;
     telefono: string;
     distanciaAduana: string;
     referencias: string;
 
-    // Index signature for dynamic keys
+    /**
+     * Permite agregar propiedades adicionales de forma dinámica.
+     * La clave es de tipo string y el valor puede ser de cualquier tipo.
+     */
     [key: string]: unknown;
 }
 
+/**
+ * Crea y devuelve el estado inicial para el trámite 5601.
+ * 
+ * Este estado inicializa todos los campos requeridos por el trámite con valores predeterminados,
+ * asegurando que el store comience siempre con una estructura consistente y sin datos residuales.
+ * 
+ * Los valores por defecto son:
+ * - Campos booleanos: false
+ * - Campos de texto: cadena vacía ('')
+ * 
+ * Esta función puede ser modificada para agregar nuevos campos o cambiar los valores iniciales
+ * según evolucionen los requisitos del trámite.
+ */
 export function createInitialState(): Tramite5601State {
     return {
         tieneCertificacion: false,
