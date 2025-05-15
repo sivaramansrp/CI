@@ -28,78 +28,20 @@
 <div class="row">
   <div class="col-md-12">
     <div class="form-check">
-      <input
-        type="radio"
-        id="fusion1"
-        formControlName="capacidadAlmacenamiento"
-        value="1"
-        class="form-check-input"
-        (click)="ocultarEscicion()"
-      />
-      <label for="fusion1" class="form-check-label">
-        Aviso de fusión o escisión de empresas que cuente con la autorización en el Registro del Despacho de las Mercancías y subsista una de ellas.
-      </label>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    <div class="form-check">
-      <input
-        type="radio"
-        id="fusion2"
-        formControlName="capacidadAlmacenamiento"
-        value="2"
-        class="form-check-input"
-        (click)="ocultarEscicion()"
-      />
-      <label for="fusion2" class="form-check-label">
-        Aviso de fusión o escisión dos o más empresas que cuenten con la autorización en el registro del despacho de mercancías de las empresas y resulte una nueva
-      </label>
-    </div>
-  </div>
-</div>
-
-
-<!-- <div class="row">
-  <div class="col-md-12">
-    <br />
-  </div>
-</div> -->
-
-<div class="row">
-  <div class="col-md-8">
-    <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-3">
-        <div class="form-check">
-          <input
-            type="radio"
-            id="idFusion"
-            formControlName="numeroTotalCarros"
-            value="1"
-            class="form-check-input"
-            (change)="mostrarFusionOEscision()"
-          />
-          <label for="idFusion" class="form-check-label">
-            Fusión
-          </label>
-        </div>
+      <app-input-radio [radioOptions]="radioOpciones" [layout]="'vertical'"
+      formControlName="capacidadAlmacenamiento" (change)="mostrarFusionada()">
+      </app-input-radio>
       </div>
-      <div class="col-md-3" id="divEscicion">
+  </div>
+</div>
+
+<div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-8">
         <div class="form-check">
-          <input
-            type="radio"
-            id="idEscision"
-            formControlName="numeroTotalCarros"
-            value="0"
-            class="form-check-input"
-            (change)="mostrarFusionOEscision()"
-          />
-          <label for="idEscision" class="form-check-label">
-          Escisión
-          </label>
+          <app-input-radio [radioOptions]="fusionEscisionOpciones" [layout]="'horizontal'"
+          formControlName="numeroTotalCarros" (change)="mostrarFusionOEscision()">
+          </app-input-radio>
         </div>
       </div>
     </div>
@@ -115,8 +57,6 @@
         </span>
       </div>
     </div>
-  </div>
-</div>
 
 <div class="row">
   <div class="col-md-12">
@@ -156,35 +96,10 @@
 
   <div class="row">
     <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-4">
           <div class="form-check">
-            <input
-              type="radio"
-              id="idSiCertificacion"
-              formControlName="cantidadBienes"
-              value="1"
-              class="form-check-input"
-              (change)="mostrarCertificacionFusionada()"
-            />
-            <label for="idSiCertificacion" class="form-check-label">
-              Si
-            </label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <input
-              type="radio"
-              id="idNoCertificacion"
-              formControlName="cantidadBienes"
-              value="0"
-              class="form-check-input"
-              (change)="mostrarCertificacionFusionada()"
-            />
-            <label for="idNoCertificacion" class="form-check-label">
-            No
-            </label>
+             <app-input-radio [radioOptions]="fusionadaOpciones" [layout]="'horizontal'"
+          formControlName="cantidadBienes" (change)="mostrarCertificacionFusionada()">
+          </app-input-radio>      
           </div>
         </div>
       </div>
@@ -200,8 +115,6 @@
           </span>
         </div>
       </div>
-    </div>
-  </div>
 
   <div id="conCertificacionPrincipal" *ngIf="conCertificacionPrincipalVisible">
     <div class="row">
@@ -219,6 +132,7 @@
           size="30"
           id="idRfcBusqueda"
           class="form-control"
+          (change)="cambioRFC()"
         />
         <span
           *ngIf="formulario.get('rfc')?.touched && formulario.get('rfc')?.hasError('required')"
@@ -359,13 +273,14 @@
         <label for="puntos"></label>
         <input
         type="text"
-        formControlName="razonSocial"
+        formControlName="razonSocialSC"
         size="30"
         id="idRazonSocialSC"
         class="form-control"
+        (change)="cambioRazonSocialSC()"
       />
       <span
-        *ngIf="formulario.get('razonSocial')?.touched && formulario.get('razonSocial')?.hasError('required')"
+        *ngIf="formulario.get('razonSocialSC')?.touched && formulario.get('razonSocialSC')?.hasError('required')"
         class="text-danger"
       >
         Este campo es requerido.
@@ -388,6 +303,7 @@
           formControlName="fechaInspeccion"
           id="fechaFusion"
           class="form-control"
+          (change)="cambioFechaInspeccion()"
         >
         <span>
           <i class="calendar pull-right" aria-hidden="true"></i>
@@ -409,6 +325,7 @@
         size="30"
         id="idFolioFusion"
         class="form-control"
+        (change)="cambioFolio()"
       />
       <span
         *ngIf="formulario.get('descripcionClobGenerica2')?.touched && formulario.get('descripcionClobGenerica2')?.hasError('required')"

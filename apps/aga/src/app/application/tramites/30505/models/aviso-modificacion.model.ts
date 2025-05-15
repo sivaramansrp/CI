@@ -119,3 +119,10 @@ export const AVISO_AGENTE_DE_TABLA: ConfiguracionColumna<AvisoAgente>[] =
   ];
 
   export const TABLE_ID = "gridFusionEscision";
+
+  export interface FusionDatos{
+          razonSocial: string,
+          numFolioTramite: string,
+          fechaInicioVigencia:string,
+          fechaFinVigencia: string
+  }

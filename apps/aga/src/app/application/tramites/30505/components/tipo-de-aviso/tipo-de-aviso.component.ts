@@ -5,7 +5,7 @@ import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-us
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud30505Store,Solicitud30505State } from '../../estados/tramites30505.store';
 import { Solicitud30505Query } from '../../estados/tramites30505.query';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -20,7 +20,7 @@ import { map, Subject, Subscription, takeUntil } from 'rxjs';
 /**
  * Componente que representa el primer paso de un trámite.
  */
-export class TipoDeAvisoComponent implements OnInit {
+export class TipoDeAvisoComponent implements OnDestroy,OnInit {
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
@@ -107,5 +107,10 @@ export class TipoDeAvisoComponent implements OnInit {
     console.log('Checkbox:', this.selectedCheckboxes);
     this.checkboxChange.emit(this.selectedCheckboxes); // Emit the updated array
     this.tramiteStore.setCheckboxDatos(this.selectedCheckboxes);
+  }
+
+   ngOnDestroy(): void {
+     this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TercerosRelacionados } from '../models/aviso-modificacion.model';
+import { FusionDatos, TercerosRelacionados } from '../models/aviso-modificacion.model';
 
 
 @Injectable({
@@ -25,4 +25,9 @@ export class TercerosRelacionadosService {
   obtenerDatos(): Observable<TercerosRelacionados> {
     return this.http.get<TercerosRelacionados>(`assets/json/30505/aviso.json`);
   }
+
+  obtenerDatosPersona(rfc: string): Observable<FusionDatos> {
+    return this.http.get<FusionDatos>(`assets/json/30505/fusion.json`, { params: { rfc } });
+  }
+
 }

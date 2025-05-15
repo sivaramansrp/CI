@@ -3,9 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router,ActivatedRoute } from '@angular/router';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../models/aviso-modificacion.model'
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AVISO_RADIO, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../enums/aviso-de-modificacion.enum';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud30505Store,Solicitud30505State } from '../../estados/tramites30505.store';
+import { Solicitud30505Query } from '../../estados/tramites30505.query';
 // import { FusionOEscisionService } from 'path-to-service'; // Commented out as per instructions
 
 @Component({
@@ -13,12 +18,12 @@ import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-acces
   templateUrl: './fusion-o-escision.component.html',
   styleUrl:'./fusion-o-escision.component.scss',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TablaDinamicaComponent,TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule,TablaDinamicaComponent,TituloComponent,InputRadioComponent],
   // providers: [FusionOEscisionService] // Commented out as per instructions
 })
 export class FusionOEscisionComponent implements OnInit {
   // Reactive Form Group
-  formulario: FormGroup;
+  formulario!: FormGroup;
 
   // Visibility controls
   dvMessageVisible: boolean = false;
@@ -35,25 +40,48 @@ export class FusionOEscisionComponent implements OnInit {
 
   TableId:string = TABLE_ID;
 
-  constructor(private fb: FormBuilder,private router:Router,private route:ActivatedRoute  /*, private fusionOEscisionService: FusionOEscisionService */) {
+  radioOpciones = AVISO_RADIO;
+
+  fusionEscisionOpciones = FUSION_ESCISION_RADIO;
+
+  fusionadaOpciones = SI_NO_RADIO;
+
+  public destroyNotifier$: Subject<void> = new Subject();
+  
+  public AvisoState!: Solicitud30505State;
+
+  constructor(private fb: FormBuilder,private router:Router,private route:ActivatedRoute,private tercerosService: TercerosRelacionadosService,public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query) {
     // Initialize the reactive form with flat FormControls to match the template's formControlName usage
-    this.formulario = this.fb.group({
-      'capacidadAlmacenamiento': ['', Validators.required],
-      'numeroTotalCarros': ['', Validators.required],
-      'cantidadBienes': ['', Validators.required],
-      'fechaInspeccion': ['', Validators.required],
-      'descripcionClobGenerica2': ['', Validators.required],
-      'rfc': ['', Validators.required],
-      'razonSocial': [{ value: '',disabled:true}, Validators.required],
-      'numFolioTramite': [{ value: '', disabled: true }, Validators.required],
-      'fechaInicioVigencia': [{ value: '', disabled: true }, Validators.required],
-      'fechaFinVigencia': [{ value: '', disabled: true }, Validators.required]
-    });
+    
   }
 
   ngOnInit(): void {
-    // Initialization logic can be added here
-    // this.cargarDatosIniciales(); // Commented out as per instructions
+    this.inicializarFormulario();
+  }
+
+  inicializarFormulario():void{
+    this.tramiteQuery.selectSolicitud$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState) => {
+                this.AvisoState = seccionState;
+              })
+            )
+            .subscribe()
+            
+  this.formulario = this.fb.group({
+      'capacidadAlmacenamiento': [this.AvisoState?.capacidadAlmacenamiento, Validators.required],
+      'numeroTotalCarros': [this.AvisoState?.numeroTotalCarros, Validators.required],
+      'cantidadBienes': [this.AvisoState?.cantidadBienes, Validators.required],
+      'fechaInspeccion': [this.AvisoState?.fechaInspeccion, Validators.required],
+      'descripcionClobGenerica2': [this.AvisoState?.descripcionClobGenerica2, Validators.required],
+      'rfc': [this.AvisoState?.rfcIdc, Validators.required],
+      'razonSocial': [{ value: this.AvisoState?.razonSocial,disabled:true}, Validators.required],
+      'razonSocialSC':[this.AvisoState?.razonSocialSC, Validators.required],
+      'numFolioTramite': [{ value: this.AvisoState?.numFolioTramite, disabled: true }, Validators.required],
+      'fechaInicioVigencia': [{ value: this.AvisoState?.fechaInicioVigencia, disabled: true }, Validators.required],
+      'fechaFinVigencia': [{ value: this.AvisoState?.fechafinVigencia2, disabled: true }, Validators.required]
+    });
   }
 
   // Method to hide 'Escision' related sections
@@ -63,13 +91,20 @@ export class FusionOEscisionComponent implements OnInit {
     // Additional logic can be added here if necessary
   }
 
+  mostrarFusionada():void{
+    const DATOS = this.formulario.get('capacidadAlmacenamiento')?.value;
+    this.tramiteStore.setAvisoDatos(DATOS,'capacidadAlmacenamiento');
+  }
+
   // Method to show or hide the complete section based on selected option
   mostrarFusionOEscision(): void {
-    const valor = this.formulario.get('numeroTotalCarros')?.value;
-    if (valor === '1' || valor === '0'){
+    const VALOR = this.formulario.get('numeroTotalCarros')?.value;
+    this.tramiteStore.setAvisoDatos(VALOR,'numeroTotalCarros');
+    if (VALOR === '1' || VALOR === '0'){
       this.divCompletoVisible = true;
       this.formulario.get('rfc')?.reset();
       this.formulario.get('razonSocial')?.reset();
+      this.formulario.get('razonSocialSC')?.reset();
       this.formulario.get('numFolioTramite')?.reset();
       this.formulario.get('fechaInicioVigencia')?.reset();
       this.formulario.get('fechaFinVigencia')?.reset();
@@ -82,15 +117,14 @@ export class FusionOEscisionComponent implements OnInit {
 
   // Method to show certification related sections based on selected option
   mostrarCertificacionFusionada(): void {
-    const valor = this.formulario.get('cantidadBienes')?.value;
-    this.conCertificacionPrincipalVisible = (valor === '1');
-    this.sinCertificacionPrincipalVisible = (valor === '0');
+    const VALOR = this.formulario.get('cantidadBienes')?.value;
+    this.tramiteStore.setAvisoDatos(VALOR,'cantidadBienes');
+    this.conCertificacionPrincipalVisible = (VALOR === '1');
+    this.sinCertificacionPrincipalVisible = (VALOR === '0');
 
     if (!this.conCertificacionPrincipalVisible) {
-      this.formulario.get('razonSocial')?.enable();
-      // Reset related form controls if certification is not selected
-      this.formulario.get('rfc')?.reset();
       this.formulario.get('razonSocial')?.reset();
+      this.formulario.get('razonSocialSC')?.reset();
       this.formulario.get('numFolioTramite')?.reset();
       this.formulario.get('fechaInicioVigencia')?.reset();
       this.formulario.get('fechaFinVigencia')?.reset();
@@ -99,35 +133,27 @@ export class FusionOEscisionComponent implements OnInit {
 
   // Method to load persona fusion data based on RFC
   cargarDatosPersonaFusion(): void {
-    const rfc = this.formulario.get('rfc')?.value;
-    if (rfc) {
-      // this.fusionOEscisionService.obtenerDatosPersona(rfc)
-      //   .subscribe(
-      //     datos => {
-      //       this.formulario.patchValue({
-      //         'personaFusionEscisionDTO.razonSocial': datos.razonSocial,
-      //         'personaFusionEscisionDTO.numFolioTramite': datos.numFolioTramite,
-      //         'personaFusionEscisionDTO.fechaInicioVigencia': datos.fechaInicioVigencia,
-      //         'personaFusionEscisionDTO.fechaFinVigencia': datos.fechaFinVigencia
-      //       });
-      //     },
-      //     error => {
-      //       this.dvMessageVisible = true;
-      //     }
-      //   );
-
-      // For now, since service calls are commented out, simulate data fetching
-      // This is a placeholder and should be replaced with actual service call
-      this.formulario.patchValue({
-        'razonSocial': 'Empresa Ejemplo S.A. de C.V.',
-        'numFolioTramite': '123456789',
-        'fechaInicioVigencia': '2024-01-01',
-        'fechaFinVigencia': '2024-12-31'
-      });
-      this.formulario.get('razonSocial')?.enable();
-      this.formulario.get('numFolioTramite')?.enable();
-      this.formulario.get('fechaInicioVigencia')?.enable();
-      this.formulario.get('fechaFinVigencia')?.enable();
+    const RFC = this.formulario.get('rfc')?.value;
+    if (RFC) {
+      this.tercerosService.obtenerDatosPersona(RFC).pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe(
+          (datos)=> {
+            console.log(datos,"datos");
+            this.formulario.patchValue({
+              'razonSocial': datos.razonSocial,
+              'numFolioTramite': datos.numFolioTramite,
+              'fechaInicioVigencia': datos.fechaInicioVigencia,
+              'fechaFinVigencia': datos.fechaFinVigencia
+            });
+            this.tramiteStore.setAvisoDatos(datos.razonSocial,'razonSocial'); 
+            this.tramiteStore.setAvisoDatos(datos.numFolioTramite,'numFolioTramite');
+            this.tramiteStore.setAvisoDatos(datos.fechaInicioVigencia,'fechaInicioVigencia');
+            this.tramiteStore.setAvisoDatos(datos.fechaFinVigencia,'fechaFinVigencia2');
+          },
+          error => {
+            this.dvMessageVisible = true;
+          });
     } else {
       this.dvMessageVisible = true;
     }
@@ -151,6 +177,38 @@ export class FusionOEscisionComponent implements OnInit {
     // this.fusionOEscisionService.abrirModalModificar();
     // Implement modal modification logic here
   }
+
+  cambioRFC():void{
+    const RFC = this.formulario.get('rfc')?.value;
+    this.tramiteStore.setAvisoDatos(RFC,'rfc');
+  }
+
+  cambioFechaInspeccion():void{
+    const FECHA_INSPECCION = this.formulario.get('fechaInspeccion')?.value;
+    this.tramiteStore.setAvisoDatos(FECHA_INSPECCION,'razonSocial');
+  }
+  cambioRazonSocialSC():void{
+    const RAZON_SOCIAL_SC = this.formulario.get('razonSocialSC')?.value;
+    this.tramiteStore.setAvisoDatos(RAZON_SOCIAL_SC,'razonSocialSC');
+  }
+  cambioFolio():void{
+    const FOLIO = this.formulario.get('descripcionClobGenerica2')?.value;
+    this.tramiteStore.setAvisoDatos(FOLIO,'descripcionClobGenerica2');
+  }
+  cambioFechaInicio():void{
+    const FECHA_INICIO = this.formulario.get('fechaInicioVigencia')?.value;
+    this.tramiteStore.setAvisoDatos(FECHA_INICIO,'fechaInicioVigencia');
+  }
+  cambioFechaFin():void{
+    const FECHA_FIN = this.formulario.get('fechaFinVigencia')?.value;
+   this.tramiteStore.setAvisoDatos(FECHA_FIN,'fechaFinVigencia');
+  } 
+
+  ngOnDestroy():void{
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 
   // Additional methods can be added below as needed
 }

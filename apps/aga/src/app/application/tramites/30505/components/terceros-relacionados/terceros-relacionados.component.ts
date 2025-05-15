@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {TERCEROS_ENCABEZADO_DE_TABLA,TercerosRelacionados } from '../../models/aviso-modificacion.model';
@@ -18,7 +18,7 @@ import { TercerosRelacionadosService } from '../../services/terceros-relacionado
     TituloComponent
   ]
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnDestroy,OnInit {
  
   public tercerosRelacionadosDatos:TercerosRelacionados[] = [];
 
@@ -48,6 +48,11 @@ export class TercerosRelacionadosComponent implements OnInit {
         // this.tramite140101Store.setDatosData(this.datosTabla);
       });
     
+  }
+
+   ngOnDestroy(): void {
+     this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   
