@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-inah-microfront:
-    image: modulefederation-inah-microfront:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-inah-microfront:1.0.0
     build: 
       context: ./../
       dockerfile: apps/inah/Dockerfile.dev

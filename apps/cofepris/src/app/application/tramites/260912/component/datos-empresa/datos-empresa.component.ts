@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,6 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
 import { Validators } from '@angular/forms';
 
 /**
@@ -57,6 +57,11 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   TEXTOS = ALERT;
 
+    /**
+     * Estado seleccionado del trámite 260911.
+     */
+    estadoSeleccionado!: Tramites260912State;
+
   /**
    * Opciones de botón de radio.
    */
@@ -73,34 +78,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   datosDelEstablecimiento!: FormGroup;
 
   /**
-   * Observable para el botón de radio.
-   */
-  btonDeRadio$: Observable<string | null> =
-    this.Tramite260912Query.btonDeRadio$;
-
-  /**
-   * Observable para la justificacion.
-   */
-  justificacion$: Observable<string | null> =
-    this.Tramite260912Query.justificacion$;
-
-  /**
-   * Observable para el RFC del establecimiento.
-   */
-  rfcDel$: Observable<string | null> = this.Tramite260912Query.rfcDel$;
-
-  /**
-   * Observable para la denominación del establecimiento.
-   */
-  denominacion$: Observable<string | null> =
-    this.Tramite260912Query.denominacion$;
-
-  /**
-   * Observable para el correo del establecimiento.
-   */
-  correo$: Observable<string | null> = this.Tramite260912Query.correo$;
-
-  /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   public destroyed$ = new Subject<void>();
@@ -114,8 +91,8 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private Tramite260912Query: Tramite260912Query,
-    private Tramite260912Store: Tramite260912Store
+ private tramite260912Query: Tramite260912Query,
+    private tramite260912Store: Tramite260912Store
   ) {
     // Constructor
   }
@@ -125,22 +102,8 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.Tramite260912Query.selectTramite260912$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((formData) => {
-      this.form.patchValue({
-        btonDeRadio: formData.btonDeRadio,
-        justificacion: formData.justificacion,
-      });
- 
-      this.datosDelEstablecimiento.patchValue({
-        rfcDel: formData.rfcDel,
-        denominacion: formData.denominacion,
-        correo: formData.correo,
-      });
-    });
-   
-    }
+    this.getValorStore();
+       }
 
   /**
    * Método para mostrar u ocultar el formulario colapsable.
@@ -179,47 +142,32 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     );
   }
 
+  
   /**
-   * Método para obtener el valor del botón de radio.
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
    */
-  getBtonDeRadio(): void {
-    const BTON_DE_RADIO = this.form.get('btonDeRadio')?.value;
-    this.Tramite260912Store.setBtonDeRadio(BTON_DE_RADIO);
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite260912Store.setTramite260912State({
+      [control]: VALOR
+    });
   }
 
   /**
-   * Método para obtener el valor de la justificación.
+   * Obtiene el estado actual del trámite desde el store.
    */
-  getJustificacion(): void {
-    const JUSTIFICACION = this.form.get('justificacion')?.value;
-    this.Tramite260912Store.setJustificacion(JUSTIFICACION);
+  getValorStore(): void {
+    this.tramite260912Query.selectTramite260912$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
   }
-
-  /**
-   * Método para obtener el valor del RFC del establecimiento.
-   */
-  getRfcDel(): void {
-    const RFC_DEL = this.datosDelEstablecimiento.get('rfcDel')?.value;
-    this.Tramite260912Store.setRfcDel(RFC_DEL);
-  }
-
-  /**
-   * Método para obtener el valor de la denominación del establecimiento.
-   */
-  getDenominacion(): void {
-    const DENOMINACION =
-      this.datosDelEstablecimiento.get('denominacion')?.value;
-    this.Tramite260912Store.setDenominacion(DENOMINACION);
-  }
-
-  /**
-   * Método para obtener el valor del correo del establecimiento.
-   */
-  getCorreo(): void {
-    const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
-    this.Tramite260912Store.setCorreo(CORREO);
-  }
-
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
