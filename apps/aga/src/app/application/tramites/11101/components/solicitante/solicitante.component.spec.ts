@@ -56,7 +56,7 @@ describe('SolicitanteComponent', () => {
 
   it('should have all form controls with readonly attribute', () => {
     const inputs = fixture.debugElement.queryAll(By.css('input[readonly]'));
-    expect(inputs.length).toBe(15); // Total number of readonly inputs
+    expect(inputs.length).toBe(15);
   });
 
   it('should have correct formControlName attributes', () => {

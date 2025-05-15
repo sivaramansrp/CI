@@ -29,9 +29,9 @@ export class MercanciaComponent implements OnInit {
 
     /**
      * Lista de descripciones de la mercancía.
-     * @type {DiscripccionDeLaMercanciaForm[]}
+     * @type {discripccionDeLaMercanciaForm[]}
      */
-    DiscripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
+    discripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
 
     /**
      * Subject para destruir notificador.
@@ -78,7 +78,7 @@ export class MercanciaComponent implements OnInit {
             .pipe(
                 takeUntil(this.destruirNotificador$),
                 map((seccionState) => {
-                    const SECCION_STATE_MOCK = [
+                    const sessionStateMock = [
                         {
                             Consecutivo: "1",
                             estado: "Nuevo",
@@ -87,7 +87,7 @@ export class MercanciaComponent implements OnInit {
                             Descripcion: "asd",
                         }
                     ]
-                    this.DiscripccionDeLaMercanciaForm = seccionState.DiscripccionDeLaMercanciaTabla || SECCION_STATE_MOCK;
+                    this.discripccionDeLaMercanciaForm = seccionState.discripccionDeLaMercanciaTabla || sessionStateMock;
                 })
             )
             .subscribe();

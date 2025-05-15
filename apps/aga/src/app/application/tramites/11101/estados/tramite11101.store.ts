@@ -92,15 +92,15 @@ export interface Tramitenacionales11101State {
 
       /**
        * Tabla de descripción de la mercancía.
-       * @type {DiscripccionDeLaMercanciaForm[]}
+       * @type {discripccionDeLaMercanciaForm[]}
        */
-      DiscripccionDeLaMercanciaTabla?: DiscripccionDeLaMercanciaForm[];
+      discripccionDeLaMercanciaTabla?: DiscripccionDeLaMercanciaForm[];
   
       /**
        * Tabla de personas morales extranjeras.
-       * @type {PersonaMoralExtranjeraForm[]}
+       * @type {discripccionDeLaMercanciaForm[]}
        */
-      DiscripccionDeLaMercanciaForm?: DiscripccionDeLaMercanciaForm[];
+      discripccionDeLaMercanciaForm?: DiscripccionDeLaMercanciaForm[];
           /**
      * Denominación de la persona moral extranjera.
      * @type {string}
@@ -197,7 +197,7 @@ export function createTramiteState(): Tramitenacionales11101State {
     numeroExteriorPFE: '',
     numeroInteriorPFE: '',
 
-    DiscripccionDeLaMercanciaTabla: [],
+    discripccionDeLaMercanciaTabla: [],
 
     denominacionPME: '',
     correoPME: '',
