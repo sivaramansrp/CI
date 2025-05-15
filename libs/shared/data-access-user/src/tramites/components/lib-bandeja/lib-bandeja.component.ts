@@ -87,9 +87,13 @@ export class LibBandejaComponent<T> implements OnInit {
       this.tramiteData = tramiteDetailsData.filter((v) => v.tramite === PROCEDURE);
       this.procedureUrl = this.tramiteData[0].linkDashboard;
       //this.consultaioStore.establecerConsultaio('301','BANDEJA_SOLICUD','AGA',false,false,false);
-      this.consultaioStore.establecerConsultaio(String(PROCEDURE),ORIGIN,this.tramiteData[0].department,ROW_OBJETO.folioTramite, ROW_OBJETO.tipoDeTramite, false,false,false);
-      if((ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO')) {
-        this.router.navigate([`/${this.tramiteData[0].department}/proceso-requerimiento`]);  
+      this.consultaioStore.establecerConsultaio(String(PROCEDURE), ORIGIN, this.tramiteData[0].department, ROW_OBJETO.folioTramite, ROW_OBJETO.tipoDeTramite, ROW_OBJETO.estadoDeTramite, false, false, false);
+      if ((ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO')) {
+        this.router.navigate([`/${this.tramiteData[0].department}/proceso-requerimiento`]);
+      } else if ((ORIGIN === 'FLUJO_FUNCIONARIO_EVALUAR')) {
+        this.router.navigate([`/${this.tramiteData[0].department}/evaluar`]);
+      } else if ((ORIGIN === 'FLUJO_FUNCIONARIO_AUTORIZACION')) {
+        this.router.navigate([`/${this.tramiteData[0].department}/autorizar`]);
       } else {
         this.router.navigate([this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento]);
       }

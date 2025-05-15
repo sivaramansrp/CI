@@ -1,4 +1,4 @@
-import { AccuseComponentes, DetallesDelTramite, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
+import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { Type } from "@angular/core";
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { FECHA_DE_INICIO } from '../core/enums/evaluar.trimites.enums';
 
 
 @Component({
@@ -35,7 +36,6 @@ export class AutorizarComponent implements OnInit, OnDestroy {
   viewChild!: Type<unknown>;
   tramite: number = 0;
   firmar: boolean = false;
-  detallesDelTramite!: DetallesDelTramite;
   private destroyNotifier$: Subject<void> = new Subject();
   guardarDatos!: ConsultaioState;
   constructor(private router: Router,
@@ -50,21 +50,27 @@ export class AutorizarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-    const NV = this.router.getCurrentNavigation();
-    // this.tramite = NV?.extras.state?.['tramite'];
-    this.tramite = 301;
-    this.detallesDelTramite = {
-      numFolioTramite: '02309482934723832',
-      tipoTramite: 'Registro de solicitud de servicios extraordinarios'
-    }
+    this.tramite = Number(this.guardarDatos?.procedureId);
+    this.consultaioStore.solicitanteConsultaio({
+      folioDelTramite: this.guardarDatos?.folioTramite,
+      fechaDeInicio: FECHA_DE_INICIO,
+      estadoDelTramite: this.guardarDatos?.estadoDeTramite
+    });
   }
 
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
-      // this.consultaioStore.establecerConsultaio('301', 'FLUJO_FUNCIONARIO_AUTORIZACION', 'AGA', true, false, false);
+      this.consultaioStore.establecerConsultaio(
+        this.guardarDatos?.procedureId,
+        this.guardarDatos?.parameter,
+        this.guardarDatos?.department,
+        this.guardarDatos?.folioTramite,
+        this.guardarDatos?.tipoDeTramite,
+        this.guardarDatos?.estadoDeTramite,
+        true, false, false);
     } else {
-      this.router.navigate(['/se/seleccion-tramite']);
+      this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
   }
 
@@ -105,6 +111,9 @@ export class AutorizarComponent implements OnInit, OnDestroy {
 
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
+    if (FIRMA) {
+      this.router.navigate(['bandeja-de-tareas-pendientes']);
+    }
   }
 
   ngOnDestroy(): void {

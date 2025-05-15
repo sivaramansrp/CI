@@ -1,5 +1,6 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
-import { Component, Input, OnInit,forwardRef } from '@angular/core';
+import { Component, Input,OnDestroy, OnInit,forwardRef } from '@angular/core';
+import { ConsultaioState, ConsultaioStore } from '../../../core/estados/consulta.store';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -16,13 +17,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '../../../core/queries/consulta.query';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',
@@ -37,7 +39,7 @@ import { tap } from 'rxjs';
   styleUrl: './solicitante.component.scss',
   host: {}
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit,OnDestroy {
   @Input() tabindex!: number;
 
   tipoPersona!: number;
@@ -47,17 +49,29 @@ export class SolicitanteComponent implements OnInit {
 
 
   form!: FormGroup;
+  guardarDatos!: ConsultaioState;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
-    private formServices: FormulariosService
+    private formServices: FormulariosService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.guardarDatos = seccionState;
+        })
+      )
+      .subscribe();
     this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
     this.inicializarFormGroup(this.datosTramite, 'datosTramite');
+    this.form.patchValue({datosTramite: this.guardarDatos?.consultaioSolicitante??{}});    
   }
 
   /**
@@ -208,5 +222,9 @@ export class SolicitanteComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
