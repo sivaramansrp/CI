@@ -1,6 +1,6 @@
+import { Component, OnDestroy } from '@angular/core';
+import { Subject,catchError, map} from 'rxjs';
 import { TramiteFolioService, TramiteFolioStore } from '@libs/shared/data-access-user/src';
-import { catchError, map } from 'rxjs';
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 /**
  * Componente que representa el paso tres del formulario o flujo de trabajo.
@@ -9,7 +9,13 @@ import { Router } from '@angular/router';
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
+
+  /**
+ * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+ */
+  private destruir$: Subject<void> = new Subject<void>();
+
 
   /**
  * Constructor del componente.
@@ -48,6 +54,15 @@ export class PasoTresComponent {
         )
         .subscribe();
     }
+  }
+
+    /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destruir$.next();
+    this.destruir$.complete();
   }
 
 }
