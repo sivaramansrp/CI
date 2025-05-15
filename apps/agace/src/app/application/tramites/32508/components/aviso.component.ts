@@ -260,23 +260,7 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.setValoresStore(this.avisoForm, 'fechaElaboracion', 'setFechaElaboracion');
   }
-  // onRadioSelected(): void {
-  //   const AVISO_RADIO = this.avisoForm.get('tipoDictamen')?.value;
 
-  //   if (AVISO_RADIO === 'disminucion') {
-  //     this.monstrarDisminucion = true;
-  //     this.mostrarCompensacion = false;
-  //     this.mostrarDisminucionYCompensacion = false;
-  //   } else if (AVISO_RADIO === 'compensacion') {
-  //     this.monstrarDisminucion = false;
-  //     this.mostrarCompensacion = true;
-  //     this.mostrarDisminucionYCompensacion = false;
-  //   } else if (AVISO_RADIO === 'disminucionYCompensacion') {
-  //     this.monstrarDisminucion = false;
-  //     this.mostrarCompensacion = false;
-  //     this.mostrarDisminucionYCompensacion = true;
-  //   }
-  // }
   /**
    * Valida el formulario y marca todos los campos como tocados si es inválido.
    */
