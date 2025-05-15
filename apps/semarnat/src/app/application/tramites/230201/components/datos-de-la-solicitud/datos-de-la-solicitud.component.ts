@@ -10,11 +10,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
+import { ENCABEZADO_DE_TABLA_DETALLE, ENCABEZADO_DE_TABLE_CONFIGURACION } from '../../enum/destinatario-tabla.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ENCABEZADO_DE_TABLE_CONFIGURACION } from '../../enum/destinatario-tabla.enum';
 import { Modal } from 'bootstrap';
 import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
@@ -205,19 +205,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla de detalles.
    */
-  public encabezadoDeTablaDetalle: ConfiguracionColumna<DatosDetalle>[] = [
-    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    {
-      encabezado: 'Nombre cietifico',
-      clave: (articulo) => articulo.nombreCientifico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre común',
-      clave: (articulo) => articulo.nombreComunDetalle,
-      orden: 3,
-    },
-  ];
+  public encabezadoDeTablaDetalle: ConfiguracionColumna<DatosDetalle>[] = ENCABEZADO_DE_TABLA_DETALLE;
 
   /**
    * Constructor del componente.
@@ -385,7 +373,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryExportacionService
+    const DESCRIPCION_PRODUCTO$ = this.phytosanitaryExportacionService
       .getDescripcionProducto()
       .pipe(
         map((resp) => {
@@ -413,7 +401,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
     );
 
-    const NOMBRECOMUN$ = this.phytosanitaryExportacionService
+    const NOMBRE_COMUN$ = this.phytosanitaryExportacionService
       .getNombreComun()
       .pipe(
         map((resp) => {
@@ -421,14 +409,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const UNIDADDEMEDIDA$ = this.phytosanitaryExportacionService
+    const UNIDAD_DE_MEDIDA$ = this.phytosanitaryExportacionService
       .getUnidadDeMedida().pipe(
         map((resp) => {
           this.unidadDeMedida = resp.data;
         })
       );
 
-    const MEDIODETRANSPORTE$ = this.phytosanitaryExportacionService
+    const MEDIO_DE_TRANSPORTE$ = this.phytosanitaryExportacionService
       .getMedioDeTransporte()
       .pipe(
         map((resp) => {
@@ -447,13 +435,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       PAIS_DE_PROCEDENCIA$,
       ADUANA$,
       ENTIDADES$,
-      DESCRIPCIONPRODUCTO$,
+      DESCRIPCION_PRODUCTO$,
       FRACCION$,
       GENERO$,
       ESPECIE$,
-      NOMBRECOMUN$,
-      UNIDADDEMEDIDA$,
-      MEDIODETRANSPORTE$,
+      NOMBRE_COMUN$,
+      UNIDAD_DE_MEDIDA$,
+      MEDIO_DE_TRANSPORTE$,
       ESTADO$
     )
       .pipe(takeUntil(this.destroyNotifier$))
@@ -513,8 +501,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   descripcionProductoSeleccion(): void {
-    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('exportacionForm.descripcionProducto')?.value;
-    this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
+    const DESCRIPCION_PRODUCTO = this.solicitudForm.get('exportacionForm.descripcionProducto')?.value;
+    this.store.setDescripcionProducto(DESCRIPCION_PRODUCTO);
   }
 
   /**
@@ -551,10 +539,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   nombreComunSeleccion(): void {
-    const NOMBRECOMUN = this.solicitudForm.get(
+    const NOMBRE_COMUN = this.solicitudForm.get(
       'datosMercancia.nombreComun'
     )?.value;
-    this.store.setNombreComun(NOMBRECOMUN);
+    this.store.setNombreComun(NOMBRE_COMUN);
   }
 
   /**
@@ -562,10 +550,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   unidadDeMedidaSeleccion(): void {
-    const UNIDADDEMEDIDA = this.solicitudForm.get(
+    const UNIDAD_DE_MEDIDA = this.solicitudForm.get(
       'exportacionForm.unidadDeMedida'
     )?.value;
-    this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
+    this.store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
   /**
@@ -573,10 +561,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el valor del formulario y lo establece en el store.
    */
   medioDeTransporteSeleccion(): void {
-    const MEDIODETRANSPORTE = this.solicitudForm.get(
+    const MEDIO_DE_TRANSPORTE = this.solicitudForm.get(
       'exportacionForm.medioDeTransporte'
     )?.value;
-    this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
+    this.store.setMedioDeTransporte(MEDIO_DE_TRANSPORTE);
   }
 
   /**

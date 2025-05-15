@@ -1,5 +1,5 @@
 import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosSolicitud } from '../models/datos-tramite.model';
+import { DatosDetalle, DatosSolicitud } from '../models/datos-tramite.model';
 
 /**
  * Representa la configuración de un destinatario con información detallada.
@@ -331,3 +331,29 @@ export const DESTINATARIO_BANCO: CatalogosSelect = {
   primerOpcion: 'Selecciona un valor',
   catalogos: [],
 };
+
+
+/**
+ * Representa la configuración para los encabezados de la tabla y su correspondiente mapeo de datos
+ * para la sección "Detalle" en la aplicación.
+ *
+ * Cada entrada en el arreglo define:
+ * - `encabezado`: El nombre mostrado en el encabezado de la columna.
+ * - `clave`: Una función que mapea un elemento de tipo `DatosDetalle` al valor mostrado en la columna.
+ * - `orden`: El orden en el que la columna aparece en la tabla.
+ *
+ * @type {ConfiguracionColumna<DatosDetalle>[]}
+ */
+export const ENCABEZADO_DE_TABLA_DETALLE: ConfiguracionColumna<DatosDetalle>[] = [
+  { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+  {
+    encabezado: 'Nombre científico',
+    clave: (articulo) => articulo.nombreCientifico,
+    orden: 2,
+  },
+  {
+    encabezado: 'Nombre común',
+    clave: (articulo) => articulo.nombreComunDetalle,
+    orden: 3,
+  },
+  ];
