@@ -75,6 +75,7 @@
           class="btn btn-default"
            *ngIf= "datos.length !== 0"
             [disabled]="listaDeTablasSeleccionadasFabricante.length !== 1"
+             (click)="navigateFabricante('edit')"
         >
           Modificar
         </button>

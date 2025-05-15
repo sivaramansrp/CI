@@ -34,6 +34,10 @@ const ROUTES: Routes = [
     path: 'agregar-fabricante',
     component: FabricanteDatosComponent
   },
+    {
+    path: 'agregar-fabricante/:id',
+    component: FabricanteDatosComponent
+  },
   {
     path: '',
     pathMatch: 'full',

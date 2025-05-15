@@ -167,10 +167,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
    * Navega a la ruta 'agregar-fabricante' de manera relativa a la ruta activada actual.
    */
-  navigateFabricante(): void {
-    this.router.navigate(['..', 'agregar-fabricante'], {
+  navigateFabricante(functionName?:string): void {
+    if(functionName === 'edit') {
+    this.router.navigate(['..', 'agregar-fabricante',this.listaDeTablasSeleccionadasFabricante[0]?.id], {
       relativeTo: this.activatedROute,
     });
+  }
+  else{
+  this.router.navigate(['..', 'agregar-fabricante'], {
+      relativeTo: this.activatedROute,
+    });
+  }
   }
 
 
