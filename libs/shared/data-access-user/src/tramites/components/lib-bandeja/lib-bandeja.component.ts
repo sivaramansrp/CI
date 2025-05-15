@@ -123,7 +123,8 @@ export class LibBandejaComponent<T> implements OnInit {
     }
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
-    } else {
+    } 
+    else {
       this.router.navigate([
         this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento,
       ]);
