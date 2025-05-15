@@ -1,10 +1,16 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Catalogo, REGEX_IMPORTE_PAGO, REGEX_PATRON_DECIMAL_2, REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -32,7 +38,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     InputFechaComponent,
-    TituloComponent
+    TituloComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
@@ -49,9 +55,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   @Input() public pagoDerechoFormState!: PagoDerechosFormState;
 
   /**
-  * Identificador del procedimiento recibido como entrada desde un componente padre.
-  * @type {number}
-  */
+   * Identificador del procedimiento recibido como entrada desde un componente padre.
+   * @type {number}
+   */
   @Input() public idProcedimiento!: number;
 
   /**
@@ -72,9 +78,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   /**
-    * Indica si se debe mostrar la sección de información bancaria en la interfaz.
-    * @type {boolean}
-  */
+   * Indica si se debe mostrar la sección de información bancaria en la interfaz.
+   * @type {boolean}
+   */
   public mostrarBanco = true;
 
   /**
@@ -102,10 +108,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public bancoDatos!: Catalogo[];
 
   /**
- * Indica si el campo "banco" es obligatorio.
- * @type {boolean}
- */
+   * Indica si el campo "banco" es obligatorio.
+   * @type {boolean}
+   */
   public bancoRequerido = true;
+
+  public esFechaValida: boolean = true;
 
   /**
    * @constructor
@@ -132,24 +140,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
-        Validators.required,
+        [Validators.required, Validators.maxLength(9)],
       ],
       cadenaDependencia: [
         this.pagoDerechoFormState?.cadenaDependencia || '',
-        Validators.required,
+        [Validators.required, Validators.maxLength(14)],
       ],
       estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
       llavePago: [
         this.pagoDerechoFormState?.llavePago || '',
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(30),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
       ],
       fechaPago: [
         this.pagoDerechoFormState?.fechaPago || '',
+        Validators.required,
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_PATRON_DECIMAL_2),
+          Validators.maxLength(16),
+        ],
       ],
     });
 
@@ -157,9 +174,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.updatePagoDerechos.emit(valores);
     });
 
-    this.mostrarBanco = BANCO.includes(this.idProcedimiento)
-      ? true
-      : false;
+    this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
 
     this.cargarDatos();
     this.getBancoDatos();
@@ -180,10 +195,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * @method getBancoDatos
-  * Recupera los datos del banco desde el servicio `datosSolicitudService`
-  * y los asigna a la propiedad `bancoDatos`.
-  */
+   * @method getBancoDatos
+   * Recupera los datos del banco desde el servicio `datosSolicitudService`
+   * y los asigna a la propiedad `bancoDatos`.
+   */
   getBancoDatos(): void {
     this.datosSolicitudService
       .getBancoDatos()
@@ -197,7 +212,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method onReset
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
-  onReset(): void {
+  alReiniciar(): void {
     this.pagoDerechosForm.reset();
   }
 
@@ -209,6 +224,69 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    if (
+      nombreControl === 'fechaPago' &&
+      this.pagoDerechosForm.get('fechaPago')?.value !== '' &&
+      this.pagoDerechosForm.get('fechaPago')?.value !== null
+    ) {
+      this.esFechaPasada(this.pagoDerechosForm.get('fechaPago')?.value);
+      if (!this.esFechaValida) {
+        this.pagoDerechosForm
+          .get('fechaPago')
+          ?.setErrors({ esFechaPasada: true });
+        return true;
+      }
+
+      this.pagoDerechosForm
+        .get('fechaPago')
+        ?.setErrors({ esFechaPasada: false });
+      return false;
+    }
+    const CONTROL = this.pagoDerechosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * @method esFechaPasada
+   * @description Verifica si una fecha proporcionada es anterior a la fecha actual.
+   *
+   * @param {string} fechaStr - La fecha en formato de cadena que se desea evaluar.
+   *
+   * @returns {void} No retorna ningún valor, pero actualiza la propiedad `esFechaValida`
+   * indicando si la fecha proporcionada es una fecha pasada.
+   *
+   * @example
+   * // Supongamos que la fecha actual es 2023-03-15
+   * this.esFechaPasada('2023-03-14'); // esFechaValida será true
+   * this.esFechaPasada('2023-03-16'); // esFechaValida será false
+   */
+  esFechaPasada(fechaStr: string): void {
+    if (!fechaStr) {
+      this.esFechaValida = false;
+      return;
+    }
+
+    const [DAY, MONTH, YEAR] = fechaStr.split('/').map(Number);
+
+    const FECHA_ENTRADA = new Date(YEAR, MONTH - 1, DAY);
+    const HOY = new Date();
+    if (isNaN(FECHA_ENTRADA.getTime())) {
+      this.esFechaValida = false;
+      return;
+    }
+    HOY.setHours(0, 0, 0, 0);
+    FECHA_ENTRADA.setHours(0, 0, 0, 0);
+    this.esFechaValida = FECHA_ENTRADA <= HOY;
   }
 
   /**
