@@ -19,7 +19,7 @@ import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -44,9 +44,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
-  /** Datos del procedimiento recibidos como entrada desde el componente padre. */
-  @Input() public procedureDatos: Array<any> = [];
-
+  @Input() public procedureState!: TieneConsultaio;
   /**
    * Datos del catálogo relacionados con la mercancía.
    *
@@ -172,7 +170,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
-    if(this.procedureDatos.length > 0) {
+    if(this.procedureState.readonly) {
       this.getProcedureDatos();
     }
   }
@@ -227,8 +225,10 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   public getProcedureDatos(): void {
-    this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
-    this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
+    this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
+    this.Informaciondela.get('datosImportadorExportador.mercancia')?.disable();
+    // this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
+    // this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
   }
 
   /**

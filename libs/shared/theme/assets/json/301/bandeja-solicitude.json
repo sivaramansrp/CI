@@ -1,17 +1,17 @@
 [
     {
         "registroPara": {
-            "registro": "Si",
-            "fraccionArancelaria": "No",
+            "registro": 1,
+            "fraccionArancelaria": 1,
             "descripcionFraccion": "sadagsdsa dsadsad",
-            "nico": "Si",
+            "nico": 1,
             "descripcionNico": "jhvhjbh dsadsad",
             "nombreQuimico": "nuhiui nkk",
             "nombreComercial": "kjhkjhkjhkjh",
             "numeroCAS": "123456789",
-            "estadoFisico": "Sinaloa",
+            "estadoFisico": 2,
             "acondicionamiento": "bytrfdtrtr",
-            "mercancia": "No",
+            "mercancia": 1,
             "folio": "123456789"
 	    },
         "pagoDeDerechos": {
