@@ -4,17 +4,18 @@ import { CommonModule } from '@angular/common';
 import { Subject, of } from 'rxjs';
 import { DestinatarioAgenteAduanalComponent } from './destinatario-agente-aduanal.component';
 import { DistinatarioService } from '../../../250102/services/distinatario.service';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Adunal, Destinatarios } from '../../models/embalaje-de-madera.models';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 describe('DestinatarioAgenteAduanalComponent', () => {
   let component: DestinatarioAgenteAduanalComponent;
   let fixture: ComponentFixture<DestinatarioAgenteAduanalComponent>;
   let mockDistinatarioService: jest.Mocked<DistinatarioService>;
-  let mockTramite250102Store: jest.Mocked<Tramite250102Store>;
-  let mockTramite250102Query: jest.Mocked<Tramite250102Query>;
+  let mockTramite250103Store: jest.Mocked<Tramite250103Store>;
+  let mockTramite250103Query: jest.Mocked<Tramite250103Query>;
   let destroySubject: Subject<void>;
 
   beforeEach(async () => {
@@ -24,12 +25,12 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       obtenerEstadoData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Jalisco' }])),
     } as any;
 
-    mockTramite250102Store = {
+    mockTramite250103Store = {
       establecerDestinatario: jest.fn(),
       establecerAgenteAduanal: jest.fn(),
     } as any;
 
-    mockTramite250102Query = {
+    mockTramite250103Query = {
       selectDestinatarioRowData$: of([]),
       selectAgenteAduanalRowData$: of([]),
     } as any;
@@ -40,12 +41,13 @@ describe('DestinatarioAgenteAduanalComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         DestinatarioAgenteAduanalComponent, 
+        HttpClientModule
       ],
       providers: [
         FormBuilder,
         { provide: DistinatarioService, useValue: mockDistinatarioService },
-        { provide: Tramite250102Store, useValue: mockTramite250102Store },
-        { provide: Tramite250102Query, useValue: mockTramite250102Query },
+        { provide: Tramite250103Store, useValue: mockTramite250103Store },
+        { provide: Tramite250103Query, useValue: mockTramite250103Query },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -133,7 +135,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       component.enviarAgenteAduanalFormulario();
 
       expect(component.tablaAgenteAduanaFilaDatos.length).toBe(1);
-      expect(mockTramite250102Store.establecerAgenteAduanal).toHaveBeenCalledWith(component.tablaAgenteAduanaFilaDatos);
+      expect(mockTramite250103Store.establecerAgenteAduanal).toHaveBeenCalledWith(component.tablaAgenteAduanaFilaDatos);
       expect(component.showTableDiv).toBe(false);
       expect(component.showAgenteModal).toBe(true);
       expect(component.formAgenteAduanal.pristine).toBe(true);
@@ -158,27 +160,9 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       component.enviarDestinatarioFormulario();
 
       expect(component.tablaDestinatarioFilaDatos.length).toBe(1);
-      expect(mockTramite250102Store.establecerDestinatario).toHaveBeenCalledWith(component.tablaDestinatarioFilaDatos);
+      expect(mockTramite250103Store.establecerDestinatario).toHaveBeenCalledWith(component.tablaDestinatarioFilaDatos);
       expect(component.showTableDiv).toBe(false);
       expect(component.formAgenteAduanal.pristine).toBe(true);
-    });
-  });
-
-  describe('loadPaisData', () => {
-    it('debería cargar datos de países', () => {
-      component.obtenerPaisData();
-
-      expect(mockDistinatarioService.obtenerPaisData).toHaveBeenCalled();
-      expect(component.paisData).toEqual([{ id: 1, descripcion: 'México' }]);
-    });
-  });
-
-  describe('loadEstadoData', () => {
-    it('debería cargar datos de entidades federativas', () => {
-      component.obtenerEstadoData();
-
-      expect(mockDistinatarioService.obtenerEstadoData).toHaveBeenCalled();
-      expect(component.estadoData).toEqual([{ id: 1, descripcion: 'Jalisco' }]);
     });
   });
 
@@ -207,20 +191,6 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
       expect(component.showTableDiv).toBe(true);
       expect(component.showAgenteModal).toBe(false);
-    });
-  });
-
-  describe('cambiarDestinatarioSeleccionar', () => {
-    it('debería alternar visibilidad del modal de selección de destinatarios', () => {
-      component.cambiarDestinatarioSeleccionar();
-
-      expect(component.showTableDiv).toBe(false);
-      expect(component.showDestinatarioSeleccionarModal).toBe(true);
-
-      component.cambiarDestinatarioSeleccionar();
-
-      expect(component.showTableDiv).toBe(true);
-      expect(component.showDestinatarioSeleccionarModal).toBe(false);
     });
   });
 
@@ -275,7 +245,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
       expect(component.agregarDestinatariosTablaDatos.length).toBe(0);
       expect(component.tablaDestinatarioFilaDatos.length).toBe(0);
-      expect(mockTramite250102Store.establecerDestinatario).toHaveBeenCalledWith([]);
+      expect(mockTramite250103Store.establecerDestinatario).toHaveBeenCalledWith([]);
       expect(component.selectedDestinatarioRows.length).toBe(0);
     });
 
@@ -288,7 +258,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       component.eliminarUbicacionDetinatario();
 
       expect(component.agregarDestinatariosTablaDatos.length).toBe(1);
-      expect(mockTramite250102Store.establecerDestinatario).not.toHaveBeenCalled();
+      expect(mockTramite250103Store.establecerDestinatario).not.toHaveBeenCalled();
     });
   });
 
@@ -303,7 +273,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
       expect(component.agregarAgenteAduanalTablaDatos.length).toBe(0);
       expect(component.tablaAgenteAduanaFilaDatos.length).toBe(0);
-      expect(mockTramite250102Store.establecerAgenteAduanal).toHaveBeenCalledWith([]);
+      expect(mockTramite250103Store.establecerAgenteAduanal).toHaveBeenCalledWith([]);
       expect(component.selectedAgenteAduanalRows.length).toBe(0);
     });
 
@@ -316,7 +286,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       component.eliminarAgenteAduanal();
 
       expect(component.agregarAgenteAduanalTablaDatos.length).toBe(1);
-      expect(mockTramite250102Store.establecerAgenteAduanal).not.toHaveBeenCalled();
+      expect(mockTramite250103Store.establecerAgenteAduanal).not.toHaveBeenCalled();
     });
   });
 

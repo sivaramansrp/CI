@@ -9,7 +9,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('RequisitosComponent', () => {
   let component: RequisitosComponent;
   let fixture: ComponentFixture<RequisitosComponent>;
-  let storeMock: any;
+  let storeMock: any; 
 
   const MOCK_STATE = {
     medio: 2,
