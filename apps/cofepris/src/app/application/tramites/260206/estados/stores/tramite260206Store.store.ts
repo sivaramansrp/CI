@@ -4,7 +4,6 @@ import { Fabricante } from '../../../../shared/models/terceros-relacionados.mode
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -15,8 +14,27 @@ import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.mod
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
 /**
- * @interface Tramite260206State
- * @description Define el estado para el trámite 260206, incluyendo datos de tablas, formularios y configuraciones.
+ * Representa el estado de la aplicación para el trámite 260206.
+ * Contiene las propiedades necesarias para gestionar los datos y configuraciones
+ * relacionadas con el trámite, incluyendo tablas de datos, formularios, configuraciones
+ * y estados seleccionados.
+ *
+ * Propiedades:
+ * - `destinatarioFinalTablaDatos`: Lista de destinatarios finales.
+ * - `facturadorTablaDatos`: Lista de facturadores.
+ * - `proveedorTablaDatos`: Lista de proveedores.
+ * - `fabricanteTablaDatos`: Lista de fabricantes.
+ * - `datosSolicitudFormState`: Estado del formulario de datos de la solicitud.
+ * - `mercanciaForm`: Información del formulario de mercancías.
+ * - `opcionConfigDatos`: Configuración de opciones para la tabla.
+ * - `scianConfigDatos`: Configuración de SCIAN para la tabla.
+ * - `tablaMercanciasConfigDatos`: Configuración de datos para la tabla de mercancías.
+ * - `seleccionadoopcionDatos`: Opciones seleccionadas de la tabla de configuración.
+ * - `seleccionadoScianDatos`: Configuración SCIAN seleccionada.
+ * - `seleccionadoTablaMercanciasDatos`: Datos seleccionados de la tabla de mercancías.
+ * - `opcionesColapsableState`: Estado de colapsabilidad de las opciones.
+ * - `pagoDerechos`: Estado del formulario de pago de derechos.
+ * - `tabSeleccionado`: Identificador de la pestaña seleccionada (opcional).
  */
 export interface Tramite260206State {
   destinatarioFinalTablaDatos: Destinatario[];
@@ -33,12 +51,29 @@ export interface Tramite260206State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
+  tabSeleccionado?: number;
 }
 
+
 /**
- * @function createInitialState
- * @description Crea y devuelve el estado inicial para el trámite 260206.
- * @returns {Tramite260206State} El estado inicial del trámite.
+ * Crea y devuelve el estado inicial para el trámite 260206.
+ * 
+ * @returns {Tramite260206State} El estado inicial del trámite, que incluye:
+ * - `destinatarioFinalTablaDatos`: Lista inicial vacía para los datos del destinatario final.
+ * - `facturadorTablaDatos`: Lista inicial vacía para los datos del facturador.
+ * - `proveedorTablaDatos`: Lista inicial vacía para los datos del proveedor.
+ * - `fabricanteTablaDatos`: Lista inicial vacía para los datos del fabricante.
+ * - `datosSolicitudFormState`: Objeto que contiene los datos iniciales del formulario de solicitud.
+ * - `mercanciaForm`: Objeto que contiene los datos iniciales del formulario de mercancías.
+ * - `opcionConfigDatos`: Configuración inicial para las opciones de tabla.
+ * - `scianConfigDatos`: Configuración inicial para los datos SCIAN.
+ * - `tablaMercanciasConfigDatos`: Configuración inicial para los datos de la tabla de mercancías.
+ * - `seleccionadoopcionDatos`: Lista inicial vacía para las opciones seleccionadas.
+ * - `seleccionadoScianDatos`: Lista inicial vacía para los datos SCIAN seleccionados.
+ * - `seleccionadoTablaMercanciasDatos`: Lista inicial vacía para los datos de la tabla de mercancías seleccionados.
+ * - `opcionesColapsableState`: Estado inicial del colapsable de opciones (por defecto `false`).
+ * - `pagoDerechos`: Objeto que contiene los datos iniciales del pago de derechos.
+ * - `tabSeleccionado`: Número de la pestaña seleccionada inicialmente (por defecto `1`).
  */
 export function createInitialState(): Tramite260206State {
   return {
@@ -92,7 +127,7 @@ export function createInitialState(): Tramite260206State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [], //PRODUCTO_TABLA_DATA,
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -105,6 +140,7 @@ export function createInitialState(): Tramite260206State {
       fechaPago: '',
       importePago: '',
     },
+    tabSeleccionado: 1,
   };
 }
 
@@ -227,6 +263,7 @@ public updateTablaMercanciasConfigDatos(
   this.update((state) => ({
     ...state,
     tablaMercanciasConfigDatos,
+    seleccionadoTablaMercanciasDatos:[]
   }));
 }
 
@@ -240,6 +277,18 @@ public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
   this.update((state) => ({
     ...state,
     pagoDerechos: nuevoPagoDerechos,
+  }));
+}
+
+/**
+   * @method updateTabSeleccionado
+   * @description Actualiza el índice de la pestaña seleccionada.
+   * @param {number} tabSeleccionado - Nuevo índice de la pestaña.
+   */
+public updateTabSeleccionado(tabSeleccionado: number): void {
+  this.update((state) => ({
+    ...state,
+    tabSeleccionado: tabSeleccionado,
   }));
 }
 }
