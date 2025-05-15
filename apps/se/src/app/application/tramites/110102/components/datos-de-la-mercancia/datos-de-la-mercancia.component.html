@@ -1,23 +1,27 @@
-<div class="container">
-    <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
-        <form [formGroup]="datosDeLamercanciaFrom">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-6 form-group">
-                        <label for="certificadoOrigenProductoNumRegistro" class="form-label text-start">Número de Registro de Productos Elegibles *:</label>
-                        <input type="text" id="cveRegistroProductor" formControlName="cveRegistroProductor" 
-                            class="form-control" size="30" [placeholder]="'254023028961'" (change)="setValoresStore(datosDeLamercanciaFrom,'cveRegistroProductor','setCveRegistroProductor')"/>
-                            <div *ngIf="esInvalido('cveRegistroProductor')" class="text-danger">
-                                <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('required')">Este campo es obligatorio.</small>
-                                <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('maxlength')">Máximo 12 caracteres.</small>
-                            </div> 
-                    </div>
-                    <div class="col-md-2 mt-4">
-                        <button type="button" class="btn btn-primary mt-4"
-                            (click)="actualizaGridComercializadoresProductos()">
-                            Buscar
-                        </button>
-                    </div>
+<form [formGroup]="datosDeLamercanciaFrom">
+    <div class="form">
+        <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
+        <div class="row d-flex align-items-center">
+            <div class="col-md-6 form-group">
+                <label for="certificadoOrigenProductoNumRegistro" class="form-label text-start">Número de Registro de
+                    Productos Elegibles *:</label>
+                <input type="text" id="cveRegistroProductor" formControlName="cveRegistroProductor" class="form-control"
+                    size="30" [placeholder]="'254023028961'"
+                    (change)="setValoresStore(datosDeLamercanciaFrom,'cveRegistroProductor')" />
+                <div *ngIf="esInvalido('cveRegistroProductor')" class="text-danger">
+                    <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('required')">Este
+                        campo
+                        es obligatorio.</small>
+                    <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('maxlength')">Máximo
+                        12
+                        caracteres.</small>
+                </div>
             </div>
-            </form>
-</div>
-  
+            <div class="col-md-2 mt-4">
+                <button type="button" class="btn btn-primary mt-4" (click)="actualizaGridComercializadoresProductos()">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
