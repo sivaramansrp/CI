@@ -109,6 +109,8 @@ export class LibBandejaComponent<T> implements OnInit {
       this.router.navigate(['/confirmar-notificacion']);
     } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION') {
       this.router.navigate(['/confirmar-resolucion']);
+    } else if (ORIGIN === 'SUBSECUENTES') {
+      this.router.navigate(['/subsecuentes']);
     } else {
       this.router.navigate([
         this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento,
