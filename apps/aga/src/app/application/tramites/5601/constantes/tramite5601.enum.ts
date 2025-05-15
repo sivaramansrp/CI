@@ -10,194 +10,218 @@ export const TITULO_MODAL = 'Aviso';
 export const MENSAJE_MODAL = '¿Cuenta con algún documento que acredite la autorización y A vigencia de su esquema de certificación?';
 
 
+/**
+ * Campos del formulario para los detalles de certificación.
+ */
 export const FORMULARIO_CERTIFICACION_DETALLES = [
-    {
-        id: 'tieneCertificacion',
-        labelNombre: '',
-        campo: 'tieneCertificacion',
-        clase: 'col-md-1',
-        tipoInput: 'checkbox',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop:0
-    },
-    {
-        id: 'certificacionEmpresa',
-        labelNombre: '',
-        campo: 'certificacionEmpresa',
-        clase: 'col-md-6',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'otraCertificacion',
-        labelNombre: 'Especifique otra certificación',
-        campo: 'otraCertificacion',
-        clase: 'col-md-7',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    }
-
+  {
+    // Indica si se cuenta con certificación
+    id: 'tieneCertificacion',
+    labelNombre: '',
+    campo: 'tieneCertificacion',
+    clase: 'col-md-1',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop:0
+  },
+  {
+    // Nombre de la empresa certificadora
+    id: 'certificacionEmpresa',
+    labelNombre: '',
+    campo: 'certificacionEmpresa',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    // Campo para especificar otra certificación
+    id: 'otraCertificacion',
+    labelNombre: 'Especifique otra certificación',
+    campo: 'otraCertificacion',
+    clase: 'col-md-7',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  }
 ]
 
+/**
+ * Campos del formulario para los detalles generales del trámite.
+ */
 export const FORMULARIO_DETALLES = [
-    {
-        id: 'aduana',
-        labelNombre: 'Aduana',
-        campo: 'aduana',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [{ tipo: 'required' }],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-      },
-      {
-        id: 'seccionAduanera',
-        labelNombre: 'Sección Aduanera',
-        campo: 'seccionAduanera',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-      },
-
-      {
-        id: 'tipoOperacion',
-        labelNombre: 'Tipo de operación',
-        campo: 'tipoOperacion',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [{ tipo: 'required' }],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-      },
-      {
-        id: 'fechaOperacion',
-        labelNombre: 'Fecha de operación',
-        campo: 'fechaOperacion',
-        clase: 'col-md-6',
-        tipoInput: 'date',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [{ tipo: 'required' }],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        habilitado: true,
-        mostrar: false
-      },
-      {
-        id: 'motivoDespachoDomicilio',
-        labelNombre: 'Motivo o justificación de despacho a domicilio',
-        campo: 'motivoDespachoDomicilio',
-        clase: 'col-md-6',
-        tipoInput: 'textarea',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [{ tipo: 'required' }],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-      },
-      {
-        id: 'observaciones',
-        labelNombre: 'Observaciones',
-        campo: 'observaciones',
-        clase: 'col-md-6',
-        tipoInput: 'textarea',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-      }       
+  {
+    // Aduana seleccionada
+    id: 'aduana',
+    labelNombre: 'Aduana',
+    campo: 'aduana',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    // Sección aduanera correspondiente
+    id: 'seccionAduanera',
+    labelNombre: 'Sección Aduanera',
+    campo: 'seccionAduanera',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    // Tipo de operación a realizar
+    id: 'tipoOperacion',
+    labelNombre: 'Tipo de operación',
+    campo: 'tipoOperacion',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    // Fecha en la que se realiza la operación
+    id: 'fechaOperacion',
+    labelNombre: 'Fecha de operación',
+    campo: 'fechaOperacion',
+    clase: 'col-md-6',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true,
+    mostrar: false
+  },
+  {
+    // Motivo o justificación para el despacho a domicilio
+    id: 'motivoDespachoDomicilio',
+    labelNombre: 'Motivo o justificación de despacho a domicilio',
+    campo: 'motivoDespachoDomicilio',
+    clase: 'col-md-6',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    // Observaciones adicionales
+    id: 'observaciones',
+    labelNombre: 'Observaciones',
+    campo: 'observaciones',
+    clase: 'col-md-6',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  }       
 ]
 
+/**
+ * Campos del formulario para los detalles de la mercancía.
+ */
 export const MERCANCIA_DETALLES = [
-    {
-      id: 'valorMercancia',
-      labelNombre: 'Valor de la mercancía',
-      campo: 'valorMercancia',
-      clase: 'col-md-6',
-      tipoInput: 'text',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      mostrar: true
-    },
-    {
-      id: 'tipoMoneda',
-      labelNombre: 'Tipo de moneda',
-      campo: 'tipoMoneda',
-      clase: 'col-md-6',
-      tipoInput: 'select-catalogos',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      mostrar: true
-    },
-    {
-      id: 'descripcionMercancia',
-      labelNombre: 'Nombre o descripción comercial de la mercancía',
-      campo: 'descripcionMercancia',
-      clase: 'col-md-6',
-      tipoInput: 'textarea',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      mostrar: true
-    },
-    {
-      id: 'especificacionesMercancia',
-      labelNombre: 'Descripción detallada y/o especificaciones técnicas de la mercancía',
-      campo: 'especificacionesMercancia',
-      clase: 'col-md-6',
-      tipoInput: 'textarea',
-      desactivado: false,
-      soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
-      valorPredeterminado: '',
-      marginTop: 0,
-      mostrar: true
-    }
-  ];
+  {
+    // Valor de la mercancía
+    id: 'valorMercancia',
+    labelNombre: 'Valor de la mercancía',
+    campo: 'valorMercancia',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: true
+  },
+  {
+    // Tipo de moneda utilizada
+    id: 'tipoMoneda',
+    labelNombre: 'Tipo de moneda',
+    campo: 'tipoMoneda',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: true
+  },
+  {
+    // Nombre o descripción comercial de la mercancía
+    id: 'descripcionMercancia',
+    labelNombre: 'Nombre o descripción comercial de la mercancía',
+    campo: 'descripcionMercancia',
+    clase: 'col-md-6',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: true
+  },
+  {
+    // Descripción detallada y/o especificaciones técnicas de la mercancía
+    id: 'especificacionesMercancia',
+    labelNombre: 'Descripción detallada y/o especificaciones técnicas de la mercancía',
+    campo: 'especificacionesMercancia',
+    clase: 'col-md-6',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: true
+  }
+];
   
+  /**
+   * Campos del formulario para la logística y operaciones.
+   */
   export const FORMULARIO_LOGISTICA_OPERACIONES = [
     {
+      // Esquemas de control y seguridad de las operaciones
       id: 'esquemasControlSeguridad',
       labelNombre: 'Señale los esquemas de control y seguridad de las operaciones',
       campo: 'esquemasControlSeguridad',
@@ -212,6 +236,7 @@ export const MERCANCIA_DETALLES = [
       habilitado: true
     },
     {
+      // Distancia, ruta y tiempos de las operaciones
       id: 'distanciaRutaTiempos',
       labelNombre: 'Indique distancia, ruta y tiempos de las operaciones',
       campo: 'distanciaRutaTiempos',
@@ -227,8 +252,12 @@ export const MERCANCIA_DETALLES = [
     }
   ];
 
-  export const UBICACION_MERCANCIA= [
+  /**
+   * Campos del formulario para la ubicación de la mercancía.
+   */
+  export const UBICACION_MERCANCIA = [
     {
+      // Dirección donde se encuentra la mercancía
       id: 'direccion',
       labelNombre: 'Dirección',
       campo: 'direccion',
@@ -243,6 +272,7 @@ export const MERCANCIA_DETALLES = [
       habilitado: true
     },
     {
+      // Teléfono de contacto en la ubicación de la mercancía
       id: 'telefono',
       labelNombre: 'Teléfono',
       campo: 'telefono',
@@ -257,6 +287,7 @@ export const MERCANCIA_DETALLES = [
       habilitado: true
     },
     {
+      // Distancia de la ubicación de la mercancía a la aduana (en kilómetros)
       id: 'distanciaAduana',
       labelNombre: 'Distancia a la aduana (km)',
       campo: 'distanciaAduana',
@@ -271,6 +302,7 @@ export const MERCANCIA_DETALLES = [
       habilitado: true
     },
     {
+      // Referencias adicionales para localizar la mercancía
       id: 'referencias',
       labelNombre: 'Referencias',
       campo: 'referencias',
