@@ -23,6 +23,6 @@ export class TercerosRelacionadosService {
    * @returns Observable que emite los datos del programa a cancelar.
    */
   obtenerDatos(): Observable<TercerosRelacionados> {
-    return this.http.get<TercerosRelacionados>(`assets/json/30505/Terceros.json`);
+    return this.http.get<TercerosRelacionados>(`assets/json/30505/aviso.json`);
   }
 }
