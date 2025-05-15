@@ -1,0 +1,232 @@
+
+<div class="container">
+    <form [formGroup]="dataDeLaSolicitudForm">
+    <ng-container formGroupName="datosDelTramiteRealizar"> 
+        <h5>seleccione el tipo operacion que desea realizer</h5>
+       <app-input-radio
+            [radioOptions]="opcionDeBotonDeRadio"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+            formControlName="tipoOperacion"
+            (change)="changeEvent()"
+            (change)="setValoresStore(datosDelTramiteRealizar,'tipoOperacion', 'setTipoOperacion')"
+          ></app-input-radio> 
+     <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="justification">justification</label>
+            <textarea class="form-control" id="justification" rows="2" height="50"
+            placeholder="" style="height: 100px" formControlName="justification" 
+            (change)="setValoresStore(datosDelTramiteRealizar,'justification', 'setJustification')"></textarea>
+          </div>
+        </div>
+        </div>   
+    <ng-titulo titulo="Datos del establecimiento" />
+        <div class="text-end">
+          <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento"  >Seleccionar establecimiento</button>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="rfcDel">RFC de responsable sanitario*:</label>
+            <input class="form-control" id="rfcDel" type="text" formControlName="rfcDel"
+            (change)="setValoresStore(datosDelTramiteRealizar,'rfcDel', 'setRfcDel')"
+            />
+        </div>
+            <div class="col-md-8">
+                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
+                />
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="correoelectronico">Correo electronico*:</label>
+            <input class="form-control" id="correoelectronico" type="text" formControlName="correoElectronico"
+            (change)="setValoresStore(datosDelTramiteRealizar,'correoElectronico', 'setCorreoElectronico')"
+            />
+        </div>
+        </div>
+        <ng-titulo titulo="Domicilio del establecimiento" />
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigoPostal')"
+                />
+              </div>
+              <div class="col-md-4 ">
+                <div class="form-group">
+                    <div class="form-group">
+                        <app-catalogo-select
+                        id="estadoData"
+                        formControlName="estado"
+                        [catalogo]="estadoData.catalogos"
+                        [label]="'Estado'"
+                        [required]="true"
+                        (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
+                      ></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="municipoyalcaldia">Municipio y alcaldia:</label>
+                <input class="form-control" id="municipoyalcaldia" type="text" formControlName="municipoyalcaldia"
+                (change)="setValoresStore(datosDelTramiteRealizar,'municipoyalcaldia', 'setMunicipoyalcaldia')"/>
+              </div>
+        </div>
+        <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="localidad">Localidad:</label>
+                <input class="form-control" id="localidad" type="text" formControlName="localidad"
+                (change)="setValoresStore(datosDelTramiteRealizar,'localidad', 'setLocalidad')"/>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="colonia">Colonia:</label>
+                <input class="form-control" id="colonia" type="text" formControlName="colonia"
+                (change)="setValoresStore(datosDelTramiteRealizar,'colonia', 'setColonia')"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label" for="calle">Calle*:</label>
+                <input class="form-control" id="calle" type="text" formControlName="calle"
+                (change)="setValoresStore(datosDelTramiteRealizar,'calle', 'setCalle')"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <label class="form-label" for="lada">Lada:</label>
+                <input class="form-control" id="lada" type="text" formControlName="lada"
+                (change)="setValoresStore(datosDelTramiteRealizar,'lada', 'setLada')"/>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="telefono">Telefono*:</label>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono', 'setTelefono')"/>
+            </div>
+        </div>
+      </ng-container>
+        <ng-titulo titulo="S.C.I.A.N.*" />
+        <app-tabla-dinamica
+      [configuracionTabla]="configuracionColumnasoli"
+       [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [datos]="tableData"
+        >
+    </app-tabla-dinamica>
+    <div class="col-md-12 d-flex justify-content-end">
+        <div class="btn-group">
+          <button class="btn btn-danger"
+            type="button">Eliminar</button>
+            <button class="btn btn-primary me-2"
+            type="submit">Agregar</button>
+        </div>
+    </div>
+   
+<ng-container formGroupName="datosDelTramiteRealizar"> 
+      <div class="row mt-5">
+        <div class="col-md-4 mt-4">
+          <lib-input-check
+          [id]="'avisoDeFuncionamiento'"
+          [label]="'Aviso de funcionamiento'"
+          [required]="true"
+          formControlName="avisoDeFuncionamiento"
+          (change)="toggleLicenciaSanitaria()"
+          (change)="setValoresStore(datosDelTramiteRealizar,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')"
+          ></lib-input-check>
+        </div>
+        <div class="col-md-4 mt-4">
+          <label class="form-label" for="licenciaSanitaria" >No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+          </label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"  
+          (change)="setValoresStore(datosDelTramiteRealizar,'licenciaSanitaria', 'setLicenciaSanitaria')"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select 
+            id="regimenalqueData"
+            formControlName="regimenalque"
+            [catalogo]="regimenalqueData.catalogos" 
+            [label]="'Régimen'" 
+            [required]="true"
+            (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select 
+            id="aduanaData"
+            formControlName="aduana"
+            [catalogo]="aduanaData.catalogos" 
+            [label]="'Aduana de entradas'" 
+            [required]="false"
+            (change)="setValoresStore(datosDelTramiteRealizar,'aduana', 'setAduana')">
+        </app-catalogo-select>
+        </div>
+      </div>
+    </ng-container>
+      <div class="col-md-12 mt-4">
+        <label class="form-label mb-5" for="">mercancías*:</label>
+        <app-tabla-dinamica 
+  [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+  [configuracionTabla]="mercanciasDatos"
+  [datos]="mercanciasData"
+  >
+</app-tabla-dinamica>
+    
+<div class="col-md-12 d-flex justify-content-end">
+  <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar" >Eliminar</button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar" >Modificar</button>
+  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" >Agregar</button>
+</div>
+  
+  <ng-titulo titulo="Manifiestos y declaraciones" />
+  <div class="alert alert-info">
+    <label style="font-weight: normal">
+      <div class="col-md-1 mt-5">
+        <input type="checkbox" class="mt-5" />
+        <b> *</b>
+      </div>
+      <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+    </label>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+    <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'"></app-input-radio>
+  </div>
+  <ng-container formGroupName="datosDelTramiteRealizar"> 
+
+<ng-titulo titulo="Representante legal" />
+<div class="row mt-5">
+  <div class="col-md-4 mt-2">
+    <label class="form-label" for="rfc">RFC*:</label>
+    <input class="form-control" type="text" formControlName="rfc"
+    (change)="setValoresStore(datosDelTramiteRealizar,'rfc', 'setRfc')"
+    />
+  </div>
+  <div class="col-md-2 mt-4">
+    <button type="button" class="btn btn-primary">Buscar</button>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
+    <input class="form-control" type="text" formControlName="legalRazonSocial"
+    (change)="setValoresStore(datosDelTramiteRealizar,'legalRazonSocial', 'setLegalRazonSocial')"
+    />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+    <input class="form-control" type="text" formControlName="apellidoPaterno"
+    (change)="setValoresStore(datosDelTramiteRealizar,'apellidoPaterno', 'setApellidoPaterno')"
+
+    />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+    <input class="form-control" type="text" formControlName="apellidoMaterno"
+    (change)="setValoresStore(datosDelTramiteRealizar,'apellidoMaterno', 'setApellidoMaterno')"/>
+  </div>
+</div>
+</ng-container>

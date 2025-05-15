@@ -526,17 +526,25 @@ const ROUTES: Routes = [
         ).then((m) => m.ImportacionMateriasPrimasModule),
 },
 {
+  path: 'importacion-plafest',
+  loadChildren: () =>
+    import('./tramites/260507/importacion-plafest.module').then(
+      (m) => m.ImportacionPlafestModule
+    ),
+},
+{
       path: 'medicamentos-donacion',
       loadChildren: () =>
         import('./tramites/260909/medicamentos-donacion.module').then(
           (m) => m.MedicamentosDonacionModule
         )
     },
+    
 {
-  path: 'permiso-nutrientes-exportacion',
+  path: 'importar-de-remedios-herbals',
   loadChildren: () =>
-    import('./tramites/260511/permiso-nutrientes-exportacion.module').then(
-      (m) => m.PermisoNutrientesExportacionModule
+    import('./tramites/260919/importar-de-remedios-herbals.module').then(
+      (m) => m.ImportarDeRemediosHerbalsModule
     ),
 },
 ];

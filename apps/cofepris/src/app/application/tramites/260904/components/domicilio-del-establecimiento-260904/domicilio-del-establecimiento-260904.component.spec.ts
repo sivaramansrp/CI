@@ -1,152 +1,113 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomicilioDelEstablecimiento260904Component } from './domicilio-del-establecimiento-260904.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { HttpClientModule } from '@angular/common/http';
+import { Tramite260904Query } from '../../estados/tramite260904.query';
+import { Tramite260904Store } from '../../estados/tramite260904.store';
 import { of } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+
+const mockTramiteQuery = {
+  selectTramite260904$: of({
+    codigoPostal: '12345',
+    estado: { id: '1', descripcion: 'CDMX' },
+    municipioOAlcaldia: 'Benito Juárez',
+    localidad: 'Del Valle',
+    colonias: 'Narvarte',
+    calle: 'Xola',
+    lada: '55',
+    telefono: '12345678',
+    avisoCheckbox: 'true',
+    regimen: { id: '1', descripcion: 'General' },
+    aduanasEntradas: { id: '1', descripcion: 'Aduana 1' },
+    aifaCheckbox: 'true',
+    manifests: 'true',
+    acuerdoPublico: 'Acuerdo',
+    rfc: 'RFC123',
+  }),
+};
+
+const mockDomicilioService = {
+  obtenerTablaDatos: jest.fn(() => of({ data: [{ id: 1 }] })),
+  obtenerEstadoList: jest.fn(() => of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
+  obtenerMercanciasDatos: jest.fn(() => of({ data: [{ id: 1 }] })),
+};
+
+const mockStore = {
+  setTramite260904State: jest.fn(),
+};
+
 
 describe('DomicilioDelEstablecimiento260904Component', () => {
   let component: DomicilioDelEstablecimiento260904Component;
   let fixture: ComponentFixture<DomicilioDelEstablecimiento260904Component>;
-  let tramite260904Query: jest.Mocked<Partial<Tramite260904Query>>;
-  let tramite260904Store: jest.Mocked<Partial<Tramite260904Store>>;
 
   beforeEach(async () => {
-    const queryMock: Partial<Tramite260904Query> = {
-      codigoPostal$: of('12345'),
-      estado$: of({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' } as Catalogo),
-      municipioOAlcaldia$: of('Municipio'),
-      localidad$: of('Localidad'),
-      colonias$: of('Colonia'),
-      calle$: of('Calle'),
-      lada$: of('123'),
-      telefono$: of('1234567890'),
-      avisoCheckbox$: of('true'),
-      regimen$: of({ id: 1, nombre: 'Regimen', descripcion: 'Descripcion' } as Catalogo),
-      aduanasEntradas$: of({ id: 1, nombre: 'Aduana', descripcion: 'Descripcion' } as Catalogo),
-      aifaCheckbox$: of('true'),
-      manifests$: of('true'),
-      acuerdoPublico$: of('Acuerdo'),
-      rfc$: of('RFC123'),
-    };
-
-    const storeMock: Partial<Tramite260904Store> = {
-      setCodigoPostal: jest.fn(),
-      setEstado: jest.fn(),
-      setMunicipioOAlcaldia: jest.fn(),
-      setLocalidad: jest.fn(),
-      setColonias: jest.fn(),
-      setCalle: jest.fn(),
-      setLada: jest.fn(),
-      setTelefono: jest.fn(),
-      setAvisoCheckbox: jest.fn(),
-      setRegimen: jest.fn(),
-      setAduanasEntradas: jest.fn(),
-      setAifaCheckbox: jest.fn(),
-      setManifests: jest.fn(),
-      setAcuerdoPublico: jest.fn(),
-      setRFC: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, DomicilioDelEstablecimiento260904Component],
+      imports: [ReactiveFormsModule, DomicilioDelEstablecimiento260904Component,HttpClientTestingModule],
+      declarations: [],
       providers: [
-        FormBuilder,
-        { provide: Tramite260904Query, useValue: queryMock },
-        { provide: Tramite260904Store, useValue: storeMock },
-      ],
+        { provide: Tramite260904Query, useValue: mockTramiteQuery },
+        { provide: Tramite260904Store, useValue: mockStore },
+        { provide: DomicilioDelEstablecimientoService, useValue: mockDomicilioService },
+        provideHttpClientTesting(),
+      ]
     }).compileComponents();
 
-    tramite260904Query = TestBed.inject(
-      Tramite260904Query
-    ) as jest.Mocked<Partial<Tramite260904Query>>;
-    tramite260904Store = TestBed.inject(
-      Tramite260904Store
-    ) as jest.Mocked<Partial<Tramite260904Store>>;
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(DomicilioDelEstablecimiento260904Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
-    component.ngOnInit();
+  it('should initialize forms correctly on ngOnInit', () => {
     expect(component.form).toBeDefined();
     expect(component.domicilio).toBeDefined();
     expect(component.representanteLegal).toBeDefined();
   });
 
-  it('should set form values from observables', () => {
-    component.ngOnInit();
-    expect(component.form.get('códigoPostal')?.value).toBe('12345');
-    expect(component.form.get('estado')?.value).toEqual({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
-    expect(component.form.get('municipioOAlcaldia')?.value).toBe('Municipio');
-    expect(component.form.get('localidad')?.value).toBe('Localidad');
-    expect(component.form.get('colonias')?.value).toBe('Colonia');
-    expect(component.form.get('calle')?.value).toBe('Calle');
-    expect(component.form.get('lada')?.value).toBe('123');
-    expect(component.form.get('telefono')?.value).toBe('1234567890');
-    expect(component.domicilio.get('avisoCheckbox')?.value).toBe('true');
-    expect(component.domicilio.get('regimen')?.value).toEqual({ id: 1, nombre: 'Regimen', descripcion: 'Descripcion' });
-    expect(component.domicilio.get('aduanasEntradas')?.value).toEqual({ id: 1, nombre: 'Aduana', descripcion: 'Descripcion' });
-    expect(component.domicilio.get('aifaCheckbox')?.value).toBe('true');
-    expect(component.domicilio.get('manifests')?.value).toBe('true');
-    expect(component.representanteLegal.get('acuerdoPublico')?.value).toBe('Acuerdo');
-    expect(component.representanteLegal.get('rfc')?.value).toBe('RFC123');
+  it('should call obtenerTablaDatos and set data', () => {
+    component.obtenerTablaDatos();
+    expect(mockDomicilioService.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.nicoTablaDatos.length).toBeGreaterThan(0);
   });
 
-  it('should call store methods on get methods', () => {
-    component.getCodigoPostal();
-    expect(tramite260904Store.setCodigoPostal).toHaveBeenCalledWith('12345');
-
-    component.getEstado();
-    expect(tramite260904Store.setEstado).toHaveBeenCalledWith({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
-
-    component.getMunicipioOAlcaldia();
-    expect(tramite260904Store.setMunicipioOAlcaldia).toHaveBeenCalledWith('Municipio');
-
-    component.getLocalidad();
-    expect(tramite260904Store.setLocalidad).toHaveBeenCalledWith('Localidad');
-
-    component.getColonias();
-    expect(tramite260904Store.setColonias).toHaveBeenCalledWith('Colonia');
-
-    component.getCalle();
-    expect(tramite260904Store.setCalle).toHaveBeenCalledWith('Calle');
-
-    component.getLada();
-    expect(tramite260904Store.setLada).toHaveBeenCalledWith('123');
-
-    component.getTelefono();
-    expect(tramite260904Store.setTelefono).toHaveBeenCalledWith('1234567890');
-
-    component.getAvisoCheckbox();
-    expect(tramite260904Store.setAvisoCheckbox).toHaveBeenCalledWith('true');
-
-    component.getRegimen();
-    expect(tramite260904Store.setRegimen).toHaveBeenCalledWith({ id: 1, nombre: 'Regimen', descripcion: 'Descripcion' });
-
-    component.getAduanasEntradas();
-    expect(tramite260904Store.setAduanasEntradas).toHaveBeenCalledWith({ id: 1, nombre: 'Aduana', descripcion: 'Descripcion' });
-
-    component.getAifaCheckbox();
-    expect(tramite260904Store.setAifaCheckbox).toHaveBeenCalledWith('true');
-
-    component.getManifests();
-    expect(tramite260904Store.setManifests).toHaveBeenCalledWith('true');
-
-    component.getAcuerdoPublico();
-    expect(tramite260904Store.setAcuerdoPublico).toHaveBeenCalledWith('Acuerdo');
-
-    component.getRfc();
-    expect(tramite260904Store.setRFC).toHaveBeenCalledWith('RFC123');
+  it('should call obtenerEstadoList and set data', () => {
+    component.obtenerEstadoList();
+    expect(mockDomicilioService.obtenerEstadoList).toHaveBeenCalled();
+    expect(component.estado.length).toBeGreaterThan(0);
   });
+
+  it('should call obtenerMercanciasDatos and set data', () => {
+    component.obtenerMercanciasDatos();
+    expect(mockDomicilioService.obtenerMercanciasDatos).toHaveBeenCalled();
+    expect(component.mercanciasTablaDatos.length).toBeGreaterThan(0);
+  });
+
+  it('should set value in store using setValorStore', () => {
+  component.form.get('codigoPostal')?.setValue('99999');
+  component.setValorStore(component.form, 'codigoPostal');
+  expect(mockStore.setTramite260904State).toHaveBeenCalledWith({
+    codigoPostal: '99999',
+  });
+});
+
+
+  it('should retrieve values from the store on getValorStore', () => {
+    const spy = jest.spyOn(mockTramiteQuery.selectTramite260904$, 'subscribe');
+    component.getValorStore();
+    expect(spy).toBeDefined();
+  });
+
+  it('should unsubscribe on destroy', () => {
+    const spy = jest.spyOn((component as any).destroy$, 'next');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
+
 });

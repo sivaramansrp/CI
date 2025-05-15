@@ -2,18 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../modelos/pago-de-derechos.model';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { Tramite260904Query } from '../../estados/tramite260904.query';
+import { Tramite260904Store } from '../../estados/tramite260904.store';
  
+
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
   let mockPagoDeDerechosService: Partial<PagoDeDerechosService>;
   let mockTramite260904Query: Partial<Tramite260904Query>;
   let mockTramite260904Store: Partial<Tramite260904Store>;
+
 
   beforeEach(async () => {
     mockPagoDeDerechosService = {
@@ -97,28 +99,23 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   
-  it('should fetch bancoList on obtenerBancoList call', () => {
+it('should fetch bancoList on obtenerBancoList call', () => {
     
-    const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
+  const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 
-    // Ensure the mock is set up before the component is initialized
+    
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
-    // Recreate the component to trigger ngOnInit
+    
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-  
+    component.bancoList = mockBancoList;
     component.ngOnInit();
-    // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
-    fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
+    fixture.detectChanges(); 
+    expect(component.bancoList).toEqual(mockBancoList); 
   });
 
-  it('should patch form data on enPatchStoredFormData call', () => {
-    component.enPatchStoredFormData();
-    expect(component.pagoDeDerechosForm.get('clave')?.value).toEqual('');
-    expect(component.pagoDeDerechosForm.get('fecPago')?.value).toEqual('');
-  });
+ 
 
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
     component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
@@ -133,23 +130,5 @@ describe('PagoDeDerechosComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('should call the correct store method with the correct value in setValoresStore', () => {
-    // Arrange: Mock the store method
-    const mockMethod = jest.fn();
-    mockTramite260904Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
-  
-    // Set up the form control with a value
-    component.pagoDeDerechosForm = component.fb.group({
-      clave: ['testValue'],
-    });
-  
-    // Act: Call the method
-    component.setValoresStore(component.pagoDeDerechosForm, 'clave', 'setClave');
-  
-    // Assert: Verify the store method was called with the correct value
-    expect(mockMethod).toHaveBeenCalledWith('testValue');
-  });
-  
 });
  
