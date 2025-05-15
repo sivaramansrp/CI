@@ -1,7 +1,7 @@
 <form [formGroup]="forma">
     <div class="row">
         <formas-dinamicas formularioTitulo="Partidas de la mercancía" [forma]="ninoFormGroup"
-            [formularioDatos]="PartidasDeLaMercancia" [estado]="solicitudDeRegistroState"
+            [formularioDatos]="partidasDeLaMercancia" [estado]="solicitudDeRegistroState"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     <div class="row mt-5">
@@ -19,11 +19,11 @@
     </div>
     <div class="row">
         <h6>Partidas:</h6>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="partidasTabla"
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="partidasTabla"
             [datos]="datospartidas"></app-tabla-dinamica>
     </div>
     <div class="row">
-        <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="PartidasDeLa" [estado]="solicitudDeRegistroState"
+        <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLa" [estado]="solicitudDeRegistroState"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     <div class="row mt-5 text-end">

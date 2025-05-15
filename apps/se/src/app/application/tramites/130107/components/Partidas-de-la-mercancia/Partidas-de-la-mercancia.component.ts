@@ -9,6 +9,7 @@ import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agr
 import { PARTIDAS } from '../../constantes/datos-de-la-solicitud.enum';
 import { PARTIDAS_DE_LA_MERCANCIA } from '../../constantes/datos-de-la-solicitud.enum';
 import { PARTIDAS_TABLA } from '../../constantes/importaciones-agropecuarias.enum';
+import { PLANTILLA_PRODUCTO } from '../../constantes/datos-de-la-solicitud.enum';
 import { Partidas } from '../../models/partidas.model';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
@@ -70,7 +71,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @type {ModeloDeFormaDinamica[]}
    */
-  public PartidasDeLaMercancia = PARTIDAS_DE_LA_MERCANCIA;
+  public partidasDeLaMercancia = PARTIDAS_DE_LA_MERCANCIA;
 
   /**
    * @property PartidasDeLa
@@ -79,7 +80,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @type {ModeloDeFormaDinamica[]}
    */
-  public PartidasDeLa = PARTIDAS;
+  public partidasDeLa = PARTIDAS;
 
   /**
    * @property partidasTabla
@@ -97,7 +98,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @type {TablaSeleccion}
    */
-  public TablaSeleccion = TablaSeleccion;
+  public tablaSeleccion = TablaSeleccion;
 
   /**
    * @property datospartidas
@@ -177,15 +178,12 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
         cantidad: this.ninoFormGroup.get('cantidad')?.value,
-        unidad_de_medida: 'Kilogramo',
-        fraccion_arancelaria_tigie: '9099',
+        unidad_de_medida: PLANTILLA_PRODUCTO.unidad_de_medida,
+        fraccion_arancelaria_tigie: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
         descripcion: this.ninoFormGroup.get('descripcion')?.value,
-        precio_unitario: 1.000,
+        precio_unitario: PLANTILLA_PRODUCTO.precio_unitario,
         total_usd: this.ninoFormGroup.get('valorPartidaUsd')?.value,
       };
-      this.ninoFormGroup.setValue({
-        cantidadTotal: '100',
-      });
       this.datospartidas?.push(PRODUCTOS);
       this.ninoFormGroup.reset();
     }

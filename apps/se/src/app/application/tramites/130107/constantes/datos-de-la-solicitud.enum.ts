@@ -49,7 +49,7 @@ export const DATOS_DEL_TRAMITE = [
     valorPredeterminado: '',
     marginTop: 0
   },
-   {
+  {
     id: '',
     labelNombre: ' ',
     campo: '',
@@ -403,3 +403,9 @@ export const REPRESENTACION_FEDERAL = [
     marginTop: 0
   },
 ];
+
+export const PLANTILLA_PRODUCTO = {
+  unidad_de_medida: 'Kilogramo',
+  fraccion_arancelaria_tigie: '9099',
+  precio_unitario: 1.0
+};
