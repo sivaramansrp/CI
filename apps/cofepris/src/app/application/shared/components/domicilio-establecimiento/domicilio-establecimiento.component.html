@@ -173,21 +173,20 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria:</label
+          >No. de licencia sanitaria*:</label
         >
-        <input
-          class="form-control"
-          id="licenciaSanitaria"
-          placeholder=""
-          type="text"
-          formControlName="licenciaSanitaria"
+        <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"
           (change)="
-            setValoresStore(
-              domicilio,
-              'licenciaSanitaria',
-              'setLicenciaSanitaria'
-            )
-          " />
+                    setValoresStore(
+                      domicilio,
+                      'licenciaSanitaria',
+                      'setLicenciaSanitaria'
+                    )
+                  " />
+           <div *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required']"
+          class="mensaje-error">
+          Este campo es obligatorio.
+      </div>
       </div>
     </div>
   </div>
