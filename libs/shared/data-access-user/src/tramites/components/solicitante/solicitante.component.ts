@@ -1,6 +1,6 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
 import { Component, Input,OnDestroy, OnInit,forwardRef } from '@angular/core';
-import { ConsultaioState, ConsultaioStore } from '../../../core/estados/consulta.store';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '../../../core/queries/consulta.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
@@ -63,6 +63,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.guardarDatos = seccionState;
+          console.log('guardarDatos', this.guardarDatos);
         })
       )
       .subscribe();

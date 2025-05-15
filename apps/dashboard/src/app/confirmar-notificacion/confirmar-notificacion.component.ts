@@ -24,8 +24,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 export class ConfirmarNotificacionComponent {
   indiceDePaso = 1;
   constructor(private router: Router) {
-    const NV = this.router.getCurrentNavigation();
-    if (NV?.extras.state?.['isAcuseRecibo']) {
+    const CURRENT_NAVIGATION = this.router.getCurrentNavigation();
+    if (CURRENT_NAVIGATION?.extras.state?.['isAcuseRecibo']) {
       this.indiceDePaso = 3;
     }
   }
