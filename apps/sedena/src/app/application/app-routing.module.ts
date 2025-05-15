@@ -148,6 +148,12 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
   },
   {
+    path: 'agregar',
+    loadChildren: () =>
+      import(
+      './tramites/240112/agregar-destinatario.module'
+      ).then((m) => m.AgregarDestinatarioModule),
+    },{
     path: 'aviso-de-exportacion',
     loadChildren: () =>
       import(
@@ -160,6 +166,13 @@ const ROUTES: Routes = [
       import(
         './tramites/240407/solicitud-prorroga-aviso-importacion.module'
       ).then((m) => m.SolicitudProrrogaAvisoImportacionModule),
+  },
+  {
+    path:'modificacion-exportacion',
+    loadChildren: () =>
+      import(
+        './tramites/240321/modificacion-exportacion.module'
+      ).then((m) => m.ModificacionExportacionModule),
   }
 ];
 

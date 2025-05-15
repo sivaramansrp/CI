@@ -1,0 +1,97 @@
+import {
+    HistoricoColumnas,
+    MercanciaTabla,
+  } from '../models/certificado-origen.model';
+  
+/**
+* Configuración para los campos de mercancía.
+* Define los encabezados, claves y el orden para mostrar los datos relacionados con las mercancías.
+*/
+export const CONFIGURACION_PRODUCTOR_EXPORTADOR = [
+   {
+       encabezado: 'Nombre del productor',
+        clave: (ele: HistoricoColumnas): string | undefined => ele.nombreProductor,
+       orden: 1
+     },
+     {
+       encabezado: 'Número de registro fiscal',
+       clave:(ele:HistoricoColumnas): string | undefined => ele.numeroRegistroFiscal,
+       orden: 2,
+     },
+     {
+       encabezado: 'Dirección',
+       clave: (ele:HistoricoColumnas): string | undefined => ele.direccion,
+       orden: 3,
+     },
+     {
+       encabezado: 'Correo Electrónico',
+       clave: (ele:HistoricoColumnas): string | undefined => ele.correoElectronico,
+       orden: 4,
+     },
+     {
+       encabezado: 'Teléfono',
+       clave: (ele:HistoricoColumnas): string | undefined => ele.telefono,
+       orden: 5,
+     },
+     {
+       encabezado: 'Fax',
+       clave: (ele:HistoricoColumnas): string | undefined => ele.fax,
+       orden: 6,
+     },
+];
+
+/**
+ * @constant CONFIGURACION_MERCANCIA
+ * 
+ * Configuración de la tabla de mercancías utilizada en la aplicación.
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * definiendo su encabezado, la clave para obtener el valor correspondiente
+ * de un objeto `MercanciaTabla`, y el orden en el que se muestra en la tabla.
+ * 
+ * @property {string} encabezado - El título de la columna que se muestra en la tabla.
+ * @property {function} clave - Función que toma un objeto `MercanciaTabla` y devuelve el valor correspondiente para la columna.
+ * @property {number} orden - Posición de la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * CONFIGURACION_MERCANCIA.forEach(columna => {
+ *   console.log(columna.encabezado);
+ * });
+ */
+export const CONFIGURACION_MERCANCIA = [
+  {
+    encabezado: 'RFC Productor ',
+    clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor,
+    orden: 0,
+  },
+   {
+        encabezado: 'Fracción arancelaria',
+        clave: (ele: MercanciaTabla): string | undefined => ele.fraccionArancelaria,
+        orden: 1,
+      },
+      {
+        encabezado: 'Nombre técnico',
+        clave: (ele: MercanciaTabla): string | undefined => ele.nombreTecnico,
+        orden: 2,
+      },
+      {
+        encabezado: 'cantidad',
+        clave: (ele: MercanciaTabla): string | undefined => ele.cantidad,
+        orden: 3,
+      },
+      {
+        encabezado: 'unidadMedida',
+        clave: (ele: MercanciaTabla): string | undefined => ele.unidadMedida,
+        orden: 4,
+      },
+      {
+        encabezado: 'valorMercancia',
+        clave: (ele: MercanciaTabla): string | undefined => ele.valorMercancia,
+        orden: 5,
+      },
+      {
+        encabezado: 'tipoFactura',
+        clave: (ele: MercanciaTabla): string | undefined => ele.tipoFactura,
+        orden: 6,
+      }
+    ];
