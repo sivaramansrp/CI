@@ -13,35 +13,11 @@
       <div class="col-md-6"></div>
       <div class="col-md-6 offset-md-6">
         <label class="form-label">Tipo persona*:</label>
-        <div class="form-check">
-          <input
-            type="radio"
-            class="form-check-input"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.FISICA"
-          />
-          Física
-          <span
-          class="bi bi-question-circle-fill"
-          title="Física"
-          data-bs-toggle="tooltip"
-        ></span>
-        </div>
-        <div class="form-check">
-          <input
-            type="radio"
-            class="form-check-input"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.MORAL"
-          />
-          Moral
-          <span
-          class="bi bi-question-circle-fill"
-          title="Física"
-          data-bs-toggle="tooltip"
-        ></span>
-        </div>
-        <div *ngIf="agregarDestinatarioFinal.get('tipoPersona')?.errors?.['required'] && (agregarDestinatarioFinal.get('tipoPersona')?.touched || agregarDestinatarioFinal.get('tipoPersona')?.dirty)">
+          <div class="mt-2">
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                  formControlName="tipoPersona"></app-input-radio>
+              </div>
+                  <div *ngIf="agregarDestinatarioFinal.get('tipoPersona')?.errors?.['required'] && (agregarDestinatarioFinal.get('tipoPersona')?.touched || agregarDestinatarioFinal.get('tipoPersona')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
         </div>
       </div>
@@ -62,8 +38,7 @@
       </div>
     </div>
 
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.MORAL) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === '0') {
     <div class="row">
       <div class="form-group">
         <label
@@ -85,8 +60,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === '1') {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">

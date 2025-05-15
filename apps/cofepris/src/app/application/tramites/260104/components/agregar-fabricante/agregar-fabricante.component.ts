@@ -5,13 +5,14 @@ import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/fo
 import { CommonModule,Location } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados-destino.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
+import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 
 /**
  * @component
@@ -41,6 +42,7 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.scss',
@@ -85,6 +87,14 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
    */
   public tipoPersona = TipoPersona;
 
+  /**
+     * Almacena las opciones disponibles para el botón de radio de selección de persona.
+     * Utiliza la constante `PERSONA_OPCIONES_DE_BOTON_DE_RADIO` para definir las opciones que el usuario puede elegir.
+     * 
+     * @see PERSONA_OPCIONES_DE_BOTON_DE_RADIO
+     */
+    personaOpcionDeBotonDeRadio = PERSONA_OPCIONES_DE_BOTON_DE_RADIO
+
 
   /**
    * Constructor de la clase AgregarFabricanteComponent.
@@ -121,9 +131,9 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
     let nombreRazonSocial: string;
 
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    if (VALOR_FORMULARIO.tipoPersona === '0') {
       nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    } else if (VALOR_FORMULARIO.tipoPersona === '1') {
       nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
         VALOR_FORMULARIO.primerApellido
       } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();

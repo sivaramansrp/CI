@@ -491,6 +491,13 @@ const ROUTES: Routes = [
     ),
 },
 {   
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+  },
+{   
   path: 'permiso-sanitario-productos',
   loadChildren: () =>
     import('./tramites/260104/permiso-sanitario-productos.module').then(

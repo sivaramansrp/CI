@@ -221,12 +221,40 @@ export interface NicoInfo {
     },
   ];
 
+  /**
+   * Representa el formulario completo que contiene la información de la solicitud,
+   * el agente y las mercancías.
+   *
+   * @property solicitudForm - Información del domicilio del establecimiento.
+   * @property formAgente - Información del agente asociado.
+   * @property formMercancias - Información relacionada con las mercancías.
+   */
   export interface CompleteForm {
     solicitudForm: DomicilioEstablecimiento;
     formAgente: AgenteForm;
     formMercancias: MercanciasForm;
   }
 
+  /**
+   * Representa la información del domicilio de un establecimiento.
+   *
+   * @property razonSocial - Razón social del establecimiento.
+   * @property correoElectronico - Correo electrónico de contacto.
+   * @property codigoPostal - Código postal del domicilio.
+   * @property estado - Estado donde se ubica el establecimiento.
+   * @property municipio - Municipio donde se ubica el establecimiento.
+   * @property localidad - Localidad donde se ubica el establecimiento.
+   * @property colonia - Colonia donde se ubica el establecimiento.
+   * @property calle - Calle del domicilio.
+   * @property lada - Clave LADA del teléfono.
+   * @property telefono - Número de teléfono de contacto.
+   * @property avisoCheckbox - Indicador de aceptación de aviso.
+   * @property licenciaSanitaria - Número de licencia sanitaria.
+   * @property regimen - Régimen del establecimiento.
+   * @property aduana - Aduana relacionada.
+   * @property manifesto - Manifesto correspondiente.
+   * @property hacerlosPublicos - Indicador para hacer públicos los datos.
+   */
   export interface DomicilioEstablecimiento {
     razonSocial: string;
     correoElectronico: string;
@@ -246,11 +274,37 @@ export interface NicoInfo {
     hacerlosPublicos:string;
   }
 
+  /**
+   * Representa el formulario de un agente con información relacionada al SCian.
+   *
+   * @property claveScianModal - Clave SCian seleccionada en el modal.
+   * @property claveDescripcionModal - Descripción asociada a la clave SCian en el modal.
+   */
   export interface AgenteForm {
     claveScianModal:string;
     claveDescripcionModal:string;
   }
 
+  /**
+   * Representa el formulario de mercancías con información detallada sobre el producto.
+   *
+   * @property {string} clasificacion - Clasificación general de la mercancía.
+   * @property {string} especificarClasificacionProducto - Detalle adicional sobre la clasificación del producto.
+   * @property {string} especifique - Campo para especificar información adicional relevante.
+   * @property {string} denominacionEspecifica - Denominación específica del producto.
+   * @property {string} marca - Marca de la mercancía.
+   * @property {string} especifiqueTipo - Especificación del tipo de producto.
+   * @property {string} fraccionArancelaria - Fracción arancelaria correspondiente.
+   * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+   * @property {string} cantidadUMT - Cantidad en la Unidad de Medida de Tarifa (UMT).
+   * @property {string} UMT - Unidad de Medida de Tarifa.
+   * @property {string} cantidadUMC - Cantidad en la Unidad de Medida Comercial (UMC).
+   * @property {string} UMC - Unidad de Medida Comercial.
+   * @property {string} claveDeLosLotes - Clave identificadora de los lotes.
+   * @property {string} fechaCaducidad - Fecha de caducidad del producto (formato string).
+   * @property {string} fechaFabricacion - Fecha de fabricación del producto (formato string).
+   * @property {string} tipoDeProducto - Tipo de producto especificado.
+   */
   export interface MercanciasForm {
     clasificacion: string;
     especificarClasificacionProducto: string;

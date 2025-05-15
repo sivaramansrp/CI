@@ -1,4 +1,4 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
@@ -20,6 +20,7 @@ import { DatosSolicitudService } from '../../../../shared/services/datos-solicit
 import { Destinatario } from '../../models/terceros-relacionados-destino.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
+import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 
 
 
@@ -48,6 +49,7 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.scss',
@@ -132,6 +134,14 @@ export class AgregarDestinatarioFinalComponent
    */
   public destinatarios: Destinatario[] = [];
 
+  /**
+   * Almacena las opciones disponibles para el botón de radio de selección de persona.
+   * Utiliza la constante `PERSONA_OPCIONES_DE_BOTON_DE_RADIO` para definir las opciones que el usuario puede elegir.
+   * 
+   * @see PERSONA_OPCIONES_DE_BOTON_DE_RADIO
+   */
+  personaOpcionDeBotonDeRadio = PERSONA_OPCIONES_DE_BOTON_DE_RADIO
+
 
   /**
    * Constructor de la clase AgregarDestinatarioFinalComponent.
@@ -169,9 +179,9 @@ export class AgregarDestinatarioFinalComponent
 
     let nombreRazonSocial: string;
 
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    if (VALOR_FORMULARIO.tipoPersona === '0') {
       nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    } else if (VALOR_FORMULARIO.tipoPersona === '1') {
       nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
         } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {

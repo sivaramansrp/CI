@@ -1,6 +1,5 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/260104/certificado.enum';
 import { CompleteForm } from '@libs/shared/data-access-user/src/core/models/260104/domicilo.model';
 import { PermisoSanitarioProductosService } from '../../services/permiso-sanitario-productos.service';
 
@@ -23,7 +22,7 @@ export class SolicitudPageComponent {
    * Constante de alerta utilizada en el componente.
    * @type {typeof ALERTA_COM}
    */
-  alerta = ALERTA_COM;
+  alerta = AVISO;
 
   /**
    * Índice actual del paso activo en el wizard.
