@@ -1,0 +1,157 @@
+<div class="container">
+    <form [formGroup]="formExportor">
+        <div class="row mt-5">
+            <ng-titulo titulo="Datos del representante legal del exportador" />
+            <div class="col-md-7">
+                <label class="form-label" for="lugar">Lugar*:</label>
+              <input type="text" id="lugar" class="form-control" formControlName="lugar"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'lugar',
+                'setFormExportador'
+                )" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-7">
+                <label class="form-label" for="exportador">Nombre del representante legal del exportador*:</label>
+              <input type="text" id="exportador" class="form-control" formControlName="exportador"
+              (change)="
+              setValoresStore(
+              'formExportor',
+              'exportador',
+              'setFormExportador'
+              )"/>
+            </div>
+        </div>
+
+        <div *ngIf="campoDestinatario; else defaultTemplate">
+          <div class="row mt-5">
+            <div class="col-md-4">
+                <label class="form-label" for="empresa">Empresa*:</label>
+              <input type="text" id="empresa" class="form-control" formControlName="empresa"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'empresa',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="cargo">Cargo*:</label>
+              <input type="text" id="cargo" class="form-control" formControlName="cargo"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'cargo',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal:</label>
+              <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="correo">Correo electrónico*:</label>
+          <input type="text" id="correo" class="form-control" formControlName="correo"
+          (change)="
+            setValoresStore(
+            'formExportor',
+            'correo',
+            'setFormExportador'
+            )" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="telfono">Teléfono*:</label>
+          <input type="text" id="telfono" class="form-control" formControlName="telfono"
+          (change)="
+            setValoresStore(
+            'formExportor',
+            'telfono',
+            'setFormExportador'
+            )" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="fax">FAX*:</label>
+          <input type="text" id="fax" class="form-control" formControlName="fax"
+          (change)="
+            setValoresStore(
+            'formExportor',
+            'fax',
+            'setFormExportador'
+            )" />
+        </div>
+        </div>
+        </div>
+
+        <ng-template #defaultTemplate>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <label class="form-label" for="empresa">Empresa*:</label>
+              <input type="text" id="empresa" class="form-control" formControlName="empresa"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'empresa',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="cargo">Cargo*:</label>
+              <input type="text" id="cargo" class="form-control" formControlName="cargo"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'cargo',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="lada">Lada:</label>
+              <input type="text" id="lada" class="form-control" formControlName="lada"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'lada',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="telfono">Teléfono*:</label>
+              <input type="text" id="telfono" class="form-control" formControlName="telfono"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'telfono',
+                'setFormExportador'
+                )" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <label class="form-label" for="fax">FAX*:</label>
+              <input type="text" id="fax" class="form-control" formControlName="fax"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'fax',
+                'setFormExportador'
+                )" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="correo">Correo electrónico*:</label>
+              <input type="text" id="correo" class="form-control" formControlName="correo"
+              (change)="
+                setValoresStore(
+                'formExportor',
+                'correo',
+                'setFormExportador'
+                )" />
+            </div>
+        </div>
+        </ng-template>
+    </form>
+</div>

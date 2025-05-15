@@ -19,7 +19,7 @@
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
-        @if(acciones){
+        @if(acciones && acciones.length){
         <th>Acciones</th>
         }
 
@@ -49,12 +49,12 @@
         @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
           <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
-            (click)="cambiarValor(fila)" aria-label="Seleccionar">BAJA</button>
+            (click)="cambiarValor(fila)" aria-label="Seleccionar">{{obtenerTextoBoton(fila)}}</button>
         </td>
         }
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
+        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
           {{ col.clave(fila) || ' ' }}
         </td>
         <td class="align-icon">

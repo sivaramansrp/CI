@@ -1,8 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { SubfabricanteDireccionModelo } from "../modelos/subfabricante.model";
-
-
+/**
+ * @const {Array<Object>} SUBFABRICANTE_TABLA_CONFIGURACION
+ * @description Configuración de la tabla para mostrar información de subfabricantes.
+ * Cada objeto en el arreglo representa una columna de la tabla con su encabezado, 
+ * clave para obtener el valor de cada fila y el orden en el que aparece.
+ * 
+ * @property {string} encabezado - Título de la columna que se muestra en la tabla.
+ * @property {Function} clave - Función que toma un objeto de tipo `SubfabricanteDireccionModelo` 
+ * y devuelve el valor correspondiente para la columna.
+ * @property {number} orden - Posición de la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * SUBFABRICANTE_TABLA_CONFIGURACION.forEach(columna => {
+ *   console.log(columna.encabezado); // Muestra el encabezado de cada columna
+ * });
+ */
 export const SUBFABRICANTE_TABLA_CONFIGURACION = 
     [
         {

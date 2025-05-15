@@ -1,0 +1,26 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "Enseñanza"
+    },
+    {
+      "id": 1,
+      "descripcion": "Investigación"
+    },
+    {
+      "id": 2,
+      "descripcion": "Salud Publica"
+    },
+    {
+      "id": 3,
+      "descripcion": "Servicio Social"
+    },
+    {
+      "id": 4,
+      "descripcion": "Culturales"
+    }
+  ],
+  "message": "destino Mercancia"
+}

@@ -17,7 +17,7 @@
                 <input type="text" class="form-control bg-white" id="complementoDelaDescripcion"
                     formControlName="complementoDelaDescripcion" placeholder="complemento de prueba"
                     [class.is-invalid]="modifydatosdelcertificado.get('complementoDelaDescripcion')?.touched && modifydatosdelcertificado.get('complementoDelaDescripcion')?.invalid"
-                    (change)="onMercanciaSeleccionadasChange('complementoDelaDescripcion')">
+                    (change)="setValorStore(modifydatosdelcertificado,'complementoDelaDescripcion')">
                 <div class="invalid-feedback">Este campo es obligatorio.</div>
             </div>
 
@@ -26,7 +26,7 @@
                 <input type="text" class="form-control bg-white" id="marca" formControlName="marca"
                     placeholder="Ejemplo: Toyota"
                     [class.is-invalid]="modifydatosdelcertificado.get('marca')?.touched && modifydatosdelcertificado.get('marca')?.invalid"
-                    (change)="onMercanciaSeleccionadasChange('marca')">
+                    (change)="setValorStore(modifydatosdelcertificado,'marca')">
                 <div class="invalid-feedback">Este campo es obligatorio.</div>
             </div>
 
@@ -35,7 +35,7 @@
                 <input type="text" class="form-control bg-white" id="valorMercancia" formControlName="valorMercancia"
                     placeholder="50000.0000"
                     [class.is-invalid]="modifydatosdelcertificado.get('valorMercancia')?.touched && modifydatosdelcertificado.get('valorMercancia')?.invalid"
-                    (change)="onMercanciaSeleccionadasChange('valorMercancia')">
+                    (change)="setValorStore(modifydatosdelcertificado,'valorMercancia')">
                 <div class="invalid-feedback">
                     <small *ngIf="modifydatosdelcertificado.get('valorMercancia')?.hasError('required')">Este campo es
                         obligatorio.</small>
@@ -51,11 +51,11 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-4 select-form-label">
                 <app-catalogo-select [catalogo]="unidaddeMedidadeComercializacionOptions"
                     formControlName="unidaddeMedidadeComercializacion" name="unidaddeMedidadeComercializacion"
                     [label]="'Unidad de medida de comercialización'"
-                    (change)="enCambioDeUnidadDeMedida()"></app-catalogo-select>
+                    (change)="setValorStore(modifydatosdelcertificado,'unidaddeMedidadeComercializacion')"></app-catalogo-select>
                 <div *ngIf="modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.touched &&
                              modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.invalid">
                     <small class="text-danger">Seleccione una opción.</small>
@@ -69,7 +69,7 @@
                 <input type="text" class="form-control bg-white" id="numerodeFactura" formControlName="numerodeFactura"
                     placeholder="fact12345"
                     [class.is-invalid]="modifydatosdelcertificado.get('numerodeFactura')?.touched && modifydatosdelcertificado.get('numerodeFactura')?.invalid"
-                    (change)="onMercanciaSeleccionadasChange('numerodeFactura')">
+                    (change)="setValorStore(modifydatosdelcertificado,'numerodeFactura')">
                 <div class="invalid-feedback">
                     <small *ngIf="modifydatosdelcertificado.get('numerodeFactura')?.hasError('required')">Este campo es
                         obligatorio.</small>
@@ -81,7 +81,7 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tipodeFacturaOptions" formControlName="tipodeFactura"
                     [label]="'Tipo de factura'" name="tipodeFactura"
-                    (change)="enCambioDeTipoDeFactura()"></app-catalogo-select>
+                    (change)="setValorStore(modifydatosdelcertificado,'tipodeFactura')"></app-catalogo-select>
                 <div *ngIf="modifydatosdelcertificado.get('tipodeFactura')?.touched &&
                              modifydatosdelcertificado.get('tipodeFactura')?.invalid">
                     <small class="text-danger">Seleccione un tipo de factura.</small>

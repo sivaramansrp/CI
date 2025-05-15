@@ -45,7 +45,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * Valores del formulario del certificado.
    * @type {Object}
    */
-  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formCertificadoValues!: { [key: string]: unknown };
 
   /**
    * Estado de selección de la tabla.

@@ -8,6 +8,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ELEMENTOS_REQUERIDOS } from '../../constants/remedios-herbolarios.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/remedios-herbolarios.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260219Query } from '../../estados/tramite260219Query.query';
@@ -70,6 +71,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Esta propiedad es de solo lectura y se inicializa con el valor constante `ID_PROCEDIMIENTO`.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+    public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
    * @constructor

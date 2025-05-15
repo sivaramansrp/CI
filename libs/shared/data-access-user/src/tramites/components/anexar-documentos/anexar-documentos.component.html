@@ -1,87 +1,252 @@
-<div class="container">
-  <div class="row d-flex align-items-end">
-    <div class="col-md-4">
-      <form [formGroup]="documentoForma">
-        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true" formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
-      </form>
-    </div>
-
-    <div class="col-md-4">
-      <div class="btn-upload">
-        <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
-          [disabled]="btnDesactivado">
-        <label for="file-input" class="btn" [ngClass]="!btnDesactivado ? 'btn-primary' : 'btn-disabled'">
-          <i class="bi bi-cloud-arrow-up"></i>
-          Subir documento
-        </label>
-      </div>
-    </div>
+@if(mostrarSeccionCargaArchivos) {
+<div class="row mt-5">
+  <div class="col-md-12 mb-3">
+    <span class="h3">Documentos obligatorios</span>
   </div>
+  <div class="col-md-12">
+    <div class="col-md-12 border rounded bg-file-container px-4">
+      @for (item of catalogoDocumentos; track item.id; let i = $index) {
+      <div class="row py-3">
+        <div class="col-md-5 d-flex flex-column">
+          <span>Documento {{ item.descripcion }}</span>
+          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) mínima para
+            imágenes: {{ item.dpi }} {{ DPI }}</small>
+        </div>
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="d-flex">
+                <label for="formFile{{item.id}}" class="form-label"></label>
+                <input class="form-control custom-file-label" type="file" [id]="'formFile' + item.id" #fileInput
+                  (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
+              </div>
+            </div>
 
-  <div class="row mt-3">
-    <div class="col-md-4">
-      @if (documentoSeleccionado) {
-      <div class="especificaciones">
-        <span>Tipo documento: {{PDF}}</span>
-        <span>Tamaño(KB): {{tamMaximo}} {{MB}} </span>
-        <span>Resolución(dpi): {{documentoSeleccionado.dpi}}
-          {{DPI}}</span>
-      </div>
+            <div class="col-md-3 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="item.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
 
-      }
-    </div>
-  </div>
-
-  <div class="row mt-5">
-    <div class="col-md-12">
-      @if (docCargados) {
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th colspan="2">Tipo Documento</th>
-            <th>Documento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of documentosCargados; track item.tipoDocumento.id; let i = $index) {
-          <tr>
-            <td> {{i+1}} </td>
-            <td>{{ item.tipoDocumento.descripcion}}</td>
-            <td>{{ item.nombreArchivo}}</td>
-            <td>
-              <button type="button" class="btn btn-link" (click)="verPdf(url)">
+              <button type="button" class="btn file-btn-add" title="Agregar documento"
+                (click)="agregarParte(item, 'obligatorios')">
+                <i class="bi bi-plus-circle-fill"></i>
+              </button>
+              @if (existePreview(item.id)) {
+              <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(item.id)">
                 <i class="bi bi-eye bi-c"></i>
               </button>
-
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="abrirModal(i)">
+              }
+              <button type="button" title="Quitar documento" class="btn btn-link"
+                (click)="limpiarFile(item, 'obligatorios')">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+            </div>
+          </div>
+          <div class="row">
+            @for (adicional of item.adicionales; let iAdicional = $index; track adicional.id) {
+            <div class="col-md-9 mt-2">
+              <div class="d-flex">
+                <label for="formFile{{adicional.id}}" class="form-label"></label>
+                <input class="form-control custom-file-label" type="file" id="formFile{{adicional.id}}" #fileInput
+                  (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')" title="Cargar documento">
+              </div>
+            </div>
+
+            <div class="col-md-3 mt-2 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="adicional.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+              @if (existePreview(adicional.id)) {
+              <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(adicional.id)">
+                <i class="bi bi-eye bi-c"></i>
+              </button>
+              }
+              <button type="button" title="Quitar documento" class="btn btn-link"
+                (click)="limpiarFile(adicional, 'obligatorios')">
+                <i class="bi bi-trash3 bi-c"></i>
+              </button>
+              <button type="button" class="btn file-btn-add" title="Eliminar documento"
+                (click)="eliminarNuevo({item,adicional},true)">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (documentosOpcionalesSeleccionados.length > 0) {
+      <span class="h3">Documentos opcionales</span>
+
+      @for (item of documentosOpcionalesSeleccionados; track item.id; let i = $index) {
+      <div class="row py-3">
+        <div class="col-md-5 d-flex flex-column">
+          <span>Documento {{ item.descripcion }}</span>
+          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) mínima para
+            imágenes: {{ item.dpi }} {{ DPI }}</small>
+        </div>
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="d-flex">
+                <label for="formFileOpcionales{{item.id}}" class="form-label"></label>
+                <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{item.id}}" #fileInput
+                  (change)="cargarDoc($event, fileInput,item.id,'opcional')" title="Cargar documento">
+              </div>
+            </div>
+            <div class="col-md-3 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="item.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+
+              <button type="button" title="Agregar documento" class="btn file-btn-add"
+                (click)="agregarParte(item, 'opcionales')">
+                <i class="bi bi-plus-circle-fill"></i>
+              </button>
+              @if (existePreview(item.id)) {
+              <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(item.id)">
+                <i class="bi bi-eye bi-c"></i>
+              </button>
+              }
+              <button type="button" title="Quitar documento" class="btn btn-link"
+                (click)="limpiarFile(item, 'opcionales')">
+                <i class="bi bi-trash3 bi-c"></i>
+              </button>
+              <button type="button" class="btn file-btn-add" title="Eliminar documento"
+                (click)="eliminarOpcional(item)">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            @for (adicional of item.adicionales; track adicional.id) {
+            <div class="col-md-9 mt-2">
+              <div class="d-flex">
+                <label for="formFileOpcionales{{adicional.id}}" class="form-label"></label>
+                <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{adicional.id}}"
+                  #fileInput (change)="cargarDoc($event, fileInput,adicional.id,'opcional')" placeholder=""
+                  title="Cargar documento">
+              </div>
+            </div>
+            <div class="col-md-3 mt-2 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="adicional.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+
+              @if (existePreview(adicional.id)) {
+              <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(adicional.id)">
+                <i class="bi bi-eye bi-c"></i>
+              </button>
+              }
+              <button type="button" title="Quitar documento" class="btn btn-link"
+                (click)="limpiarFile(adicional, 'opcionales')">
+                <i class="bi bi-trash3 bi-c"></i>
+              </button>
+              <button type="button" class="btn file-btn-add" title="Eliminar documento"
+                (click)="eliminarNuevo({item,adicional},true)">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
       }
     </div>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Eliminar archivo</h4>
+<div class="row mt-5">
+  <div class="col-md-12 mb-3">
+    <span class="h3 mt-3">Documentos opcionales</span>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-12 border rounded bg-file-container px-4 min-height">
+      <div class="form-group py-3">
+        <ng-select [items]="catalogoDocumentosOpcionales" [multiple]="true" bindLabel="descripcion" [closeOnSelect]="false"
+          bindValue="id" [(ngModel)]="listDocOpcionalesAgregar">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div [class.disabled-option]="item.disabled">
+              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" [disabled]="item.disabled"
+                title="Seleccionar" /> {{
+              item.descripcion }}
+            </div>
+          </ng-template>
+        </ng-select>
       </div>
-      <div class="modal-body">
-        <p>¿Desea eliminar el archivo</p>
+      <div class="d-flex justify-content-end w-100 mb-4 my-3">
+        <button class="btn-primary rounded" (click)="agregarOpcionales()">Agregar</button>
       </div>
-      <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" (click)="cerrarModal()">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="eliminarDocumento(indiceDocumento)">Eliminar</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
+}
+
+
+@if (cargarDocumentos && !mostrarSeccionCargaArchivos) {
+<div class="row">
+  <span class="h4">Carga de documentos</span>
+  <div class="col-md-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Documento obligatorio</th>
+          <th>Estatus</th>
+          <th>Mensaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (doc of archivosCargando.obligatorios; track doc.id) {
+        <tr>
+          <td>{{ doc.name }}</td>
+          <td>
+            @if (doc.estatus !== ESTATUS_CARGA_DOCUMENTO.PENDIENTE) {
+            @if (doc.cargado) {
+            <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
+            } @else {
+            <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
+            }
+            }
+          </td>
+          <td>{{ doc.estatus }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    @if (archivosCargando.opcionales.length > 0) {
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Documentos opcionales</th>
+          <th>Estatus</th>
+          <th>Mensaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (doc of archivosCargando.opcionales; track doc.id) {
+        <tr>
+          <td>{{ doc.name }}</td>
+          <td>
+            @if (doc.estatus !== ESTATUS_CARGA_DOCUMENTO.PENDIENTE) {
+            @if (doc.cargado) {
+            <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
+            } @else {
+            <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
+            }
+            }
+          </td>
+          <td>{{ doc.estatus }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</div>
+}
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmarCargaArchivos($event)">
+  </lib-notificaciones>
+</section>
+}

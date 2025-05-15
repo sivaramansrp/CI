@@ -7,17 +7,57 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @descripcion
  * Interfaz que define el estado del certificado CAM.
  */
+/**
+ * @interface CamState
+ * @description Representa el estado de la aplicación relacionado con el certificado CAM.
+ * Contiene información sobre formularios, catálogos, mercancías, datos del destinatario,
+ * y otros detalles necesarios para la gestión del certificado.
+ * 
+ * @property {Object} formCertificado - Objeto que contiene los datos del formulario del certificado.
+ * @property {Catalogo} estado - Catálogo que representa el estado actual.
+ * @property {Catalogo[]} paisBloques - Lista de catálogos que representan los bloques de países.
+ * @property {Object} mercanciaForm - Objeto que contiene los datos del formulario de mercancías.
+ * @property {Mercancia[]} mercanciaTabla - Lista de mercancías para la tabla.
+ * @property {Object} formDatosCertificado - Objeto que contiene los datos del formulario del certificado.
+ * @property {Catalogo} idiomaDatosSeleccion - Catálogo que representa el idioma seleccionado.
+ * @property {Catalogo} entidadFederativaSeleccion - Catálogo que representa la entidad federativa seleccionada.
+ * @property {Catalogo} representacionFederalSeleccion - Catálogo que representa la representación federal seleccionada.
+ * @property {Object} formDatosDelDestinatario - Objeto que contiene los datos del formulario del destinatario.
+ * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
+ * @property {string} nombreComercialMercancia - Nombre comercial de la mercancía.
+ * @property {string} nombreTecnico - Nombre técnico de la mercancía.
+ * @property {string} nombreIngles - Nombre en inglés de la mercancía.
+ * @property {string} criterioClasificacion - Criterio de clasificación de la mercancía.
+ * @property {string} cantidad - Cantidad de la mercancía.
+ * @property {Catalogo[]} umc - Lista de catálogos que representan las unidades de medida comercial.
+ * @property {string} valorMercancia - Valor de la mercancía.
+ * @property {string} complementoClasificacion - Complemento de clasificación de la mercancía.
+ * @property {string} numeroFactura - Número de la factura.
+ * @property {Catalogo[]} tipoFactura - Lista de catálogos que representan los tipos de factura.
+ * @property {string} lugar - Lugar relacionado con el certificado.
+ * @property {string} exportador - Nombre del exportador.
+ * @property {string} empresa - Nombre de la empresa.
+ * @property {string} cargo - Cargo del representante.
+ * @property {string} lada - Código de área telefónica.
+ * @property {string} telfono - Número de teléfono.
+ * @property {string} fax - Número de fax.
+ * @property {string} correo - Dirección de correo electrónico.
+ * @property {Object} formaValida - Objeto que indica la validez de los formularios.
+ * @property {Object} formDestinatario - Objeto que contiene los datos del formulario del destinatario.
+ * 
+ * @command Este estado se utiliza para gestionar los datos y formularios relacionados con el certificado CAM.
+ */
 export interface CamState {
-  formCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formCertificado: { [key: string]: unknown};
   estado: Catalogo;
   paisBloques: Catalogo[];
-  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+  mercanciaForm: { [key: string]: unknown};
   mercanciaTabla: Mercancia[];
-  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formDatosCertificado: { [key: string]: unknown};
   idiomaDatosSeleccion: Catalogo;
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
-  formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formDatosDelDestinatario: { [key: string]: unknown};
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -38,7 +78,7 @@ export interface CamState {
   fax: string;
   correo: string;
   formaValida: { [key: string]: boolean };
-  formDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formDestinatario: { [key: string]: unknown};
 }
 
 /**
@@ -161,7 +201,7 @@ export class camCertificadoStore extends Store<CamState> {
    * Actualiza los datos del formulario de certificado.
    * @param values - Valores a actualizar en el formulario.
    */
-  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificado(values: { [key: string]: unknown}): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -199,7 +239,7 @@ export class camCertificadoStore extends Store<CamState> {
        * Actualiza los datos del formulario de mercancía en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de mercancía.
        */
-      setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormMercancia(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           mercanciaForm: {
             ...state.mercanciaForm,
@@ -225,7 +265,7 @@ export class camCertificadoStore extends Store<CamState> {
        * Actualiza los datos del formulario de certificado en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
        */
-      setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDatosCertificado(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDatosCertificado: {
             ...state.formDatosCertificado,
@@ -275,7 +315,7 @@ export class camCertificadoStore extends Store<CamState> {
        * Actualiza los datos del formulario de destinatario en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
        */
-      setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDatosDelDestinatario(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDatosDelDestinatario: {
             ...state.formDatosDelDestinatario,
@@ -532,7 +572,7 @@ export class camCertificadoStore extends Store<CamState> {
      * Actualiza los datos del formulario de destinatario en el almacén.
      * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
      */
-      setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      setFormDestinatario(values: { [key: string]: unknown}): void {
         this.update((state) => ({
           formDestinatario: {
             ...state.formDestinatario,
@@ -546,7 +586,7 @@ export class camCertificadoStore extends Store<CamState> {
        * Actualiza los datos del formulario de certificado en el almacén.
        * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
        */
-      setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+      setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
         this.update((state) => ({
           formCertificado: {
             ...state.formCertificado,
