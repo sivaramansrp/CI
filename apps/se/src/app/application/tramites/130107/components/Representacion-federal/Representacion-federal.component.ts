@@ -24,8 +24,8 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   selector: 'app-representacion-federal',
   standalone: true,
   imports: [CommonModule, FormasDinamicasComponent, ReactiveFormsModule],
-  templateUrl: './Representacion-federal.component.html',
-  styleUrl: './Representacion-federal.component.scss',
+  templateUrl: './representacion-federal.component.html',
+  styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**

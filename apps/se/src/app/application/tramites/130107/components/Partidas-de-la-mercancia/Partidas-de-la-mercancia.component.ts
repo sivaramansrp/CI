@@ -27,8 +27,8 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   selector: 'app-partidas-de-la-mercancia',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TablaDinamicaComponent],
-  templateUrl: './Partidas-de-la-mercancia.component.html',
-  styleUrl: './Partidas-de-la-mercancia.component.scss',
+  templateUrl: './partidas-de-la-mercancia.component.html',
+  styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**

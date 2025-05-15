@@ -24,8 +24,8 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   selector: 'app-datos-de-la-mercancia',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
-  templateUrl: './Datos-de-la-mercancia.component.html',
-  styleUrl: './Datos-de-la-mercancia.component.scss',
+  templateUrl: './datos-de-la-mercancia.component.html',
+  styleUrl: './datos-de-la-mercancia.component.scss',
 })
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**

@@ -25,8 +25,8 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   selector: 'app-pais-procedencia',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, CrosslistComponent],
-  templateUrl: './Pais-procedencia.component.html',
-  styleUrl: './Pais-procedencia.component.scss',
+  templateUrl: './pais-procedencia.component.html',
+  styleUrl: './pais-procedencia.component.scss',
 })
 export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   /**
