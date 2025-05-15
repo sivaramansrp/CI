@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
@@ -29,9 +29,14 @@ describe('RepresentacionFederalComponent', () => {
 
     const tramite130119QueryMock = {
       selectTramite130119$: of({
-        estado: 'Estado 1',
+        estado: 'Estado 1', 
         representacionFederal: 'Representación 1'
       })
+    };
+    
+
+    const tramite130119StoreMock = {
+      establecerDatos: jest.fn()
     };
 
     await TestBed.configureTestingModule({
@@ -40,7 +45,7 @@ describe('RepresentacionFederalComponent', () => {
       providers: [
         { provide: DatosDeLaSolicitudService, useValue: datosDeLaSolicitudServiceMock },
         { provide: Tramite130119Query, useValue: tramite130119QueryMock },
-        { provide: Tramite130119Store, useValue: {} }
+        { provide: Tramite130119Store, useValue: tramite130119StoreMock }
       ]
     }).compileComponents();
 
@@ -55,49 +60,50 @@ describe('RepresentacionFederalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con valores predeterminados', () => {
     expect(component.formularioRepresentacionFederalForm).toBeDefined();
-    expect(component.formularioRepresentacionFederalForm.get('estado')?.value).toBe('');
-    expect(component.formularioRepresentacionFederalForm.get('representacionFederal')?.value).toBe('');
+    expect(component.formularioRepresentacionFederalForm.get('estado')?.value).toBe('Estado 1'); 
+    expect(component.formularioRepresentacionFederalForm.get('representacionFederal')?.value).toBe('Representación 1'); 
   });
+  
 
-  it('should fetch and set estado options on init', () => {
+  it('Debería obtener y configurar las opciones de estado al iniciar', () => {
     component.ngOnInit();
     expect(datosDeLaSolicitudService.getEstado).toHaveBeenCalled();
-    expect(component.estadoOptions.length).toBe(2);
-    expect(component.estadoOptions).toEqual([
+    expect(component.opcionesEstado.length).toBe(2);
+    expect(component.opcionesEstado).toEqual([
       { id: '1', nombre: 'Estado 1' },
       { id: '2', nombre: 'Estado 2' }
     ]);
   });
 
-  it('should fetch and set representacion federal options on init', () => {
+  it('Debe obtener y establecer las opciones de representación federal al iniciar', () => {
     component.ngOnInit();
     expect(datosDeLaSolicitudService.getRepresentacionfederal).toHaveBeenCalled();
-    expect(component.representacionFederalOptions.length).toBe(2);
-    expect(component.representacionFederalOptions).toEqual([
+    expect(component.opcionesRepresentacionFederal.length).toBe(2);
+    expect(component.opcionesRepresentacionFederal).toEqual([
       { id: '1', nombre: 'Representación 1' },
       { id: '2', nombre: 'Representación 2' }
     ]);
   });
 
-  it('should fetch and set form values from store on init', () => {
+  it('Debe obtener y establecer valores de formulario desde la tienda al iniciar', () => {
     component.ngOnInit();
     expect(component.formularioRepresentacionFederalForm.get('estado')?.value).toBe('Estado 1');
     expect(component.formularioRepresentacionFederalForm.get('representacionFederal')?.value).toBe('Representación 1');
   });
 
-  it('should set values in store when setValoresStore is called', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.setValoresStore(component.formularioRepresentacionFederalForm, 'estado', 'setEstado');
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formularioRepresentacionFederalForm, 'estado', 'setEstado');
+  it('Debe establecer valores en la tienda cuando se llama a setValoresStore', () => {
+    component.formularioRepresentacionFederalForm.patchValue({ estado: 'Estado 1' });
+    component.setValoresStore(component.formularioRepresentacionFederalForm, 'estado');
+    expect(tramite130119Store.establecerDatos).toHaveBeenCalledWith({ estado: 'Estado 1' });
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
+  it('Debería completar el tema destruido$ en destruir', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
