@@ -235,9 +235,19 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
 ];
 
 
+
 /**
-* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
-*/
+ * Constante que define las secciones y pasos de un trámite específico (230401).
+ * 
+ * Contiene la configuración de validación para cada paso y sección del trámite.
+ * 
+ * - `PASO_1`: Incluye las validaciones de tres secciones (`VALIDACION_SECCION_1`, `VALIDACION_SECCION_2`, `VALIDACION_SECCION_3`).
+ * - `PASO_2`: Contiene una validación general para la sección (`VALIDACION_SECCION`).
+ * - `PASO_3`: Indica si se requiere validación para este paso (`requiereValidacion`).
+ * 
+ * Esta constante es útil para gestionar el flujo y las validaciones necesarias
+ * en los diferentes pasos de un trámite.
+ */
 export const SECCIONES_TRAMITE_230401 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,

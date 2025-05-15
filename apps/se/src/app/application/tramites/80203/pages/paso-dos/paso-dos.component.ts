@@ -1,11 +1,10 @@
-/* eslint-disable @angular-eslint/component-selector */
-/* eslint-disable */
 /**
  * @component PasoDosComponent
- * @description Este componente es responsable de manejar el segundo paso del trámite.
- * Incluye la lógica para obtener y gestionar los tipos de documentos y los documentos seleccionados.
- * 
- * @import { Component } from '@angular/core';
+ * @description
+ * Componente responsable de manejar el segundo paso del trámite IMMEX.
+ * Este paso incluye la lógica para obtener y gestionar los tipos de documentos y los documentos seleccionados.
+ *
+ * @import { Component } from '@angular/core}
  * @import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
  */
 
@@ -19,7 +18,8 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 })
 export class PasoDosComponent {
   /**
-   * @property {any} TEXTOS - Constantes de textos utilizados en el componente.
+   * @property {any} TEXTOS
+   * @description Constantes de textos utilizadas en el componente, relacionadas con los mensajes e instrucciones del trámite.
    */
   TEXTOS = TEXTOS;
 }
