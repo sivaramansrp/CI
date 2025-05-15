@@ -1,8 +1,8 @@
 [
     
     {
-        "folioTramite": "12345",
-        "tipoDeTramite": "Solicitud",
+        "folioTramite": "0215523965732296454156770",
+        "tipoDeTramite": "Solicitud de Proceso Interno",
         "nombreDeLaTarea": "Evaluar solicitud",
         "fechaDeAsignacion": "2023-10-01",
         "estadoDeTramite": "En Proceso",
@@ -11,8 +11,8 @@
         "origin": "FLUJO_FUNCIONARIO_EVALUAR"
     },
     {
-        "folioTramite": "67890",
-        "tipoDeTramite": "Consulta",
+        "folioTramite": "0594662081554576343756766",
+        "tipoDeTramite": "Consulta de Proceso",
         "nombreDeLaTarea": "confirmar notificación",
         "fechaDeAsignacion": "2023-10-02",
         "estadoDeTramite": "Pendiente",
@@ -21,8 +21,8 @@
         "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
     },
     {
-        "folioTramite": "54321",
-        "tipoDeTramite": "Informe",
+        "folioTramite": "0201157325726982922695523",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "Atender requerimiento",
         "fechaDeAsignacion": "2023-10-03",
         "estadoDeTramite": "Completado",
@@ -31,8 +31,8 @@
         "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
     },
     {
-        "folioTramite": "98765",
-        "tipoDeTramite": "Solicitud",
+        "folioTramite": "07440025780842380388259713",
+        "tipoDeTramite": "Solicitud de Proceso Interno",
         "nombreDeLaTarea": "Authorizar solicitud",
         "fechaDeAsignacion": "2023-10-04",
         "estadoDeTramite": "En Proceso",
@@ -41,8 +41,8 @@
         "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
     },
     {
-        "folioTramite": "13579",
-        "tipoDeTramite": "Consulta",
+        "folioTramite": "0264261175179109616400775",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "confirmar notificación de resolución",
         "fechaDeAsignacion": "2023-10-05",
         "estadoDeTramite": "Pendiente",
@@ -51,8 +51,8 @@
         "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
     },
     {
-        "folioTramite": "24680",
-        "tipoDeTramite": "Informe",
+        "folioTramite": "0552097381203692547975670",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "Functionario verificar requerimiento",
         "fechaDeAsignacion": "2023-10-06",
         "estadoDeTramite": "Completado",
@@ -61,8 +61,8 @@
         "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
     },
     {
-        "folioTramite": "86420",
-        "tipoDeTramite": "Solicitud",
+        "folioTramite": "0453067309596292181625870",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "Generar opinión",
         "fechaDeAsignacion": "2023-10-07",
         "estadoDeTramite": "En Proceso",
@@ -71,8 +71,8 @@
         "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
     },
     {
-        "folioTramite": "97531",
-        "tipoDeTramite": "Consulta",
+        "folioTramite": "0863804153536145596022808",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "Subsecuente",
         "fechaDeAsignacion": "2023-10-08",
         "estadoDeTramite": "Pendiente",
@@ -81,8 +81,8 @@
         "origin": "SUBSECUENTES"
     },
     {
-        "folioTramite": "11111",
-        "tipoDeTramite": "Informe",
+        "folioTramite": "099226136147361192499352",
+        "tipoDeTramite": "Registro de solicitud de servicio",
         "nombreDeLaTarea": "Revisión de presupuesto",
         "fechaDeAsignacion": "2023-10-09",
         "estadoDeTramite": "Completado",
