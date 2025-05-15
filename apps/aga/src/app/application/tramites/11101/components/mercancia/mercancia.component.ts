@@ -19,7 +19,7 @@ export class MercanciaComponent implements OnInit {
      * Enumeración para la selección de tablas.
      * @type {typeof TablaSeleccion}
      */
-    TablaSeleccion = TablaSeleccion;
+    tablaSeleccion = TablaSeleccion;
 
     /**
      * Formulario reactivo para capturar los datos de la mercancía.
