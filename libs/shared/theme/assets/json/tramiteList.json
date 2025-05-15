@@ -1345,9 +1345,9 @@
     },
     {
         "id": 193,
-        "tramite": 30503,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "tramite": 30505,
+        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
         "department": "aga"
     },
     {

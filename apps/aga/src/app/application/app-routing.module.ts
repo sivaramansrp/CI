@@ -249,6 +249,13 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/40402/codigo-transportista.module').then(
         (m) => m.CodigoTransportistaModule)
+  },
+
+  {
+    path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
   }
 ];
 

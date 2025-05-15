@@ -19,7 +19,7 @@
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
-        @if(acciones){
+        @if(acciones && acciones.length>0){
         <th>Acciones</th>
         }
 

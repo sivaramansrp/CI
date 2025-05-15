@@ -1,0 +1,90 @@
+<div class="row mt-5">
+    <div class="col-md-12">
+    <ng-titulo titulo="Aviso de Agentes Aduanales y Apoderados Aduanales autorizados" />
+    </div>
+  
+    <div class="col-md-12">
+      <app-tabla-dinamica
+        [configuracionTabla]="AGENTE_CONFIGURATION_TABLA"
+        [datos]="avisoAgenteDatos"
+        [acciones]="acciones"
+      >
+      </app-tabla-dinamica>
+    </div>
+
+    <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          id="btnAgregarPersona"
+          class="btn btn-primary me-2"
+          data-bs-toggle="modal" 
+          data-bs-target="#modalAddAgent" 
+          (click)="AgregarTransportias()"
+        >
+          Agregar
+        </button>
+        <button
+          type="button"
+          id="btnEliminarPersona"
+          class="btn btn-danger me-2"
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          id="btnModificarPersona"
+          class="btn btn-secondary"
+        >
+          Modificar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+  <app-agregar-agente></app-agregar-agente>
+  </div> -->
+  <!-- <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Agregar</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" [formGroup]="formAgente">
+          <div class="form-group">
+            <label for="tipoFigura">Tipo de figura</label>
+            <input type="text" id="tipoFigura" formControlName="tipoFigura" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="nombres">Nombre(s)</label>
+            <input type="text" id="nombres" formControlName="nombres" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="primerApellido">Primer apellido</label>
+            <input type="text" id="primerApellido" formControlName="primerApellido" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="segundoApellido">Segundo apellido</label>
+            <input type="text" id="segundoApellido" formControlName="segundoApellido" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="patenteAutorizacion">Patente/Autorización</label>
+            <input type="text" id="patenteAutorizacion" formControlName="patenteAutorizacion" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="se">Se</label>
+            <input type="text" id="se" formControlName="se" class="form-control">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="agregarAgente()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+  
