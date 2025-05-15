@@ -3,7 +3,7 @@ import {
   Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Fabricante, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
+import { Fabricante, ManifiestosRespuesta, Mercancia } from '../model/solicitud-permiso.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -95,6 +95,18 @@ export class SolicitudPermisoService {
    */
   obtenerScianData(): Observable<ScianData[]> {
     return this.http.get<ScianData[]>('assets/json/260703/scian.json');
+  }
+
+  /**
+   * Obtiene los datos de mercancías desde un archivo JSON local.
+   * Realiza una solicitud HTTP GET para recuperar un arreglo de objetos de tipo Mercancia.
+   * 
+   * Un Observable que emite un arreglo de objetos Mercancia.
+   */
+  obtenerMercanciaData(): Observable<Mercancia[]> {
+    return this.http.get<Mercancia[]>(
+      'assets/json/260703/mercancia.json'
+    );
   }
 
   /**

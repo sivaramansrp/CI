@@ -13,22 +13,26 @@
           placeholder="95270"
           (change)="setValoresStore('codigoPostal')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
-        "
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
+          "
         />
         <div
-        class="invalid-feedback"
-        *ngIf="
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
-        "
-      >
-        <span
-          *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.hasError('required')"
-          >Este campo es obligatorio.</span
+          class="invalid-feedback"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
+          "
         >
-      </div>
+          <span
+            *ngIf="
+              domicilloDelEstablecimientoForm
+                .get('codigoPostal')
+                ?.hasError('required')
+            "
+            >Este campo es obligatorio.</span
+          >
+        </div>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
@@ -53,25 +57,34 @@
           formControlName="descripcionMunicipio"
           (change)="setValoresStore('descripcionMunicipio')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched &&
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid"
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')
+              ?.touched &&
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
+          "
         />
         <div
-        class="invalid-feedback"
-        *ngIf="
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched &&
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
-        "
-      >
-        <span
-          *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.hasError('required')"
-          >Este campo es obligatorio.</span
+          class="invalid-feedback"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')
+              ?.touched &&
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
+          "
         >
-      </div>
+          <span
+            *ngIf="
+              domicilloDelEstablecimientoForm
+                .get('descripcionMunicipio')
+                ?.hasError('required')
+            "
+            >Este campo es obligatorio.</span
+          >
+        </div>
       </div>
     </div>
     <div class="row mt-5">
-      <lib-notificaciones [notificacionInput]="notificacionInput"></lib-notificaciones>
+      <lib-notificaciones
+        [notificacionInput]="notificacionInput"
+      ></lib-notificaciones>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -111,9 +124,9 @@
           formControlName="calle"
           (change)="setValoresStore('calle')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('calle')?.touched &&
-          domicilloDelEstablecimientoForm.get('calle')?.invalid
-        "
+            domicilloDelEstablecimientoForm.get('calle')?.touched &&
+            domicilloDelEstablecimientoForm.get('calle')?.invalid
+          "
         />
       </div>
       <div
@@ -124,7 +137,9 @@
         "
       >
         <span
-          *ngIf="domicilloDelEstablecimientoForm.get('calle')?.hasError('required')"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('calle')?.hasError('required')
+          "
           >Este campo es obligatorio.</span
         >
       </div>
@@ -153,8 +168,9 @@
           placeholder="2979725632"
           (change)="setValoresStore('telefono')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('telefono')?.touched &&
-          domicilloDelEstablecimientoForm.get('telefono')?.invalid"
+            domicilloDelEstablecimientoForm.get('telefono')?.touched &&
+            domicilloDelEstablecimientoForm.get('telefono')?.invalid
+          "
         />
       </div>
       <div
@@ -165,7 +181,11 @@
         "
       >
         <span
-          *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.hasError('required')"
+          *ngIf="
+            domicilloDelEstablecimientoForm
+              .get('telefono')
+              ?.hasError('required')
+          "
           >Este campo es obligatorio.</span
         >
       </div>
@@ -176,7 +196,7 @@
         <label class="form-label" for="scian">S.C.I.A.N. *:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
-          [datos]="datos"
+          [datos]="scianDatos"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
         >
         </app-tabla-dinamica>
@@ -198,14 +218,14 @@
         <label class="form-label" for="licencia"
           >No. de licencia sanitaria:
         </label>
-        <input 
-        type="text"
-        id="licencia"
-        name="licencia"
-        class="form-control"
-        formControlName="licencia"
-        (change)="setValoresStore('licencia')"
-        >
+        <input
+          type="text"
+          id="licencia"
+          name="licencia"
+          class="form-control"
+          formControlName="licencia"
+          (change)="setValoresStore('licencia')"
+        />
       </div>
     </div>
     <div class="row mt-5">
@@ -232,7 +252,23 @@
         ></app-catalogo-select>
       </div>
     </div>
+    <div class="row mt-5">
+      <div class="form-group">
+        <label class="form-label" for="mercancias">Mercancías *:</label>
+        <app-tabla-dinamica
+          [configuracionTabla]="configuracionTablaMercancia"
+          [datos]="mercanciaDatos"
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+        >
+        </app-tabla-dinamica>
+        <div class="row" style="padding-bottom: 20px; text-align: right">
+          <div>
+            <button type="button" class="btn btn-default me-2">
+              Modificar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </form>
 </div>
-
-

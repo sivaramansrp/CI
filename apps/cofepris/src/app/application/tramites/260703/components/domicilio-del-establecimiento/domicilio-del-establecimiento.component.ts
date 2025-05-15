@@ -6,17 +6,17 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MERCANCIAS_DATA, NOTIFICION_INPUT } from '../../enum/solicitud-permiso.enum';
 import {
   SolicitudPermisoState,
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
-import { NOTIFICION_INPUT } from '../../enum/solicitud-permiso.enum';
+import { Mercancia } from '../../model/solicitud-permiso.model';
 import { SCIAN_DATA } from '../../../../shared/constantes/datos-scian.enum';
 import { ScianData } from '../../../../shared/models/datos-modificacion.model';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
-
 /**
  * Componente que representa la sección de domicilio del establecimiento.
  * Permite capturar y gestionar información relacionada con el domicilio del establecimiento.
@@ -45,7 +45,18 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla SCIAN.
    */
-  datos!: ScianData[];
+  scianDatos!: ScianData[];
+
+  /**
+   * Datos de la tabla de mercancías.
+   */
+  mercanciaDatos!: Mercancia[];
+
+  /**
+   * Configuración de las columnas de la tabla Mercancias.
+   */
+  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIAS_DATA;
+
 
   /**
    * Lista de estados disponibles.
@@ -96,6 +107,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
     this.solicitudPermisoService.obtenerDomicilioCatalogo();
     this.obtenerScianData();
+    this.obternerMercanciaData();
     this.inicializarFormularioDomicilioDelEstablecimiento();
   }
 
@@ -160,7 +172,23 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       .obtenerScianData()
       .pipe(takeUntil(this.destruirNotificacion$))
       .subscribe((data) => {
-        this.datos = data;
+        this.scianDatos = data;
+      });
+  }
+
+  /**
+   * Obtiene los datos de la mercancía desde el servicio de solicitud de permiso.
+   * Los datos obtenidos se asignan a la propiedad `mercanciaDatos`.
+   * 
+   * Este método utiliza un observable que se completa automáticamente al destruir el componente,
+   * evitando posibles fugas de memoria.
+   */
+  obternerMercanciaData():void {
+    this.solicitudPermisoService
+      .obtenerMercanciaData()
+      .pipe(takeUntil(this.destruirNotificacion$))
+      .subscribe((data) => {
+        this.mercanciaDatos = data;
       });
   }
 
