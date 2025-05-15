@@ -89,42 +89,6 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppFuncionarioModule)
   },
   {
-    path: 'agace',
-    loadChildren: () =>
-      loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
-        remoteName: 'agace',
-        exposedModule: './Module'
-      }).then((m) => m.AppAgaceModule)
-  },
-  {
-    path: 'cofepris',
-    loadChildren: () =>
-      loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
-        remoteName: 'cofepris',
-        exposedModule: './Module'
-      }).then((m) => m.AppCofeprisModule)
-  },
-  {
-    path: 'sener',
-    loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
-            remoteName: 'sener',
-            exposedModule: './Module'
-        }).then((m) => m.AppSenerModule)
-  },
-  {
-    path: 'cofepris',
-    loadChildren: () =>
-      loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
-        remoteName: 'cofepris',
-        exposedModule: './Module'
-      }).then((m) => m.AppCofeprisModule)
-  },
-  {
   path: 'amecafe',
   loadChildren: () =>
       loadRemoteModule({
