@@ -115,7 +115,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       rfc: [''],
       nombreDescripcion: [''],
       nacionalidad: ['true'],
-      tipoPersona: ['', Validators.required],
+      tipoPersona: ['Fisica', Validators.required],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
