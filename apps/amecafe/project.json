@@ -10,10 +10,6 @@
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "allowedCommonJsDependencies": [
-                  "node-forge",
-                  "moment"
-              ],
         "outputPath": "dist/apps/amecafe",
         "index": "apps/amecafe/src/index.html",
         "main": "apps/amecafe/src/main.ts",
@@ -25,29 +21,30 @@
             "glob": "**/*",
             "input": "apps/amecafe/src/assets/",
             "output": "./assets/"
-        },
-        {
-            "glob": "favicon.ico",
-            "input": "./",
-            "output": "./"
-        },
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
           {
             "glob": "**/*",
             "input": "libs/shared/theme/assets/",
             "output": "./assets/"
-        }
+          }
         ],
         "styles": [
-        "node_modules/bootstrap/scss/bootstrap.scss",
-        "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-        "node_modules/ngx-toastr/toastr.css",
-        "libs/shared/theme/assets/styles/main.scss"],
+             "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+             "libs/shared/theme/assets/styles/main.scss"
+            ],
         "scripts": [
-            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
         ],
         "customWebpackConfig": {
           "path": "apps/amecafe/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
@@ -64,9 +61,53 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/amecafe/webpack.prod.config.ts"
-          }
+            "path": "apps/amecafe/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/amecafe/src/app/environments/environment.ts",
+              "with": "apps/amecafe/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/amecafe/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/amecafe/src/app/environments/environment.ts",
+              "with": "apps/amecafe/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -77,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4212,
-        "publicHost": "http://localhost:4212"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -91,6 +132,9 @@
         },
         "development": {
           "buildTarget": "amecafe:build:development"
+        },
+        "qa": {
+          "buildTarget": "amecafe:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -113,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "amecafe:build",
         "port": 4212,
