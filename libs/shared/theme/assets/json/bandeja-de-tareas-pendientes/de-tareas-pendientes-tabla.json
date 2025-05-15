@@ -17,7 +17,7 @@
         "fechaDeAsignacion": "2023-10-02",
         "estadoDeTramite": "Pendiente",
         "departamento": "Finanzas",
-        "numeroDeProcedimiento": "12345",
+        "numeroDeProcedimiento": "301",
         "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
     },
     {
@@ -37,7 +37,7 @@
         "fechaDeAsignacion": "2023-10-04",
         "estadoDeTramite": "En Proceso",
         "departamento": "Tecnología de la Información",
-        "numeroDeProcedimiento": "54321",
+        "numeroDeProcedimiento": "301",
         "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
     },
     {
@@ -47,7 +47,7 @@
         "fechaDeAsignacion": "2023-10-05",
         "estadoDeTramite": "Pendiente",
         "departamento": "Recursos Humanos",
-        "numeroDeProcedimiento": "24680",
+        "numeroDeProcedimiento": "301",
         "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
     },
     {
@@ -57,7 +57,7 @@
         "fechaDeAsignacion": "2023-10-06",
         "estadoDeTramite": "Completado",
         "departamento": "Marketing",
-        "numeroDeProcedimiento": "13579",
+        "numeroDeProcedimiento": "301",
         "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
     },
     {
@@ -67,7 +67,7 @@
         "fechaDeAsignacion": "2023-10-07",
         "estadoDeTramite": "En Proceso",
         "departamento": "Legal",
-        "numeroDeProcedimiento": "97531",
+        "numeroDeProcedimiento": "301",
         "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
     },
     {
@@ -77,7 +77,7 @@
         "fechaDeAsignacion": "2023-10-08",
         "estadoDeTramite": "Pendiente",
         "departamento": "Compras",
-        "numeroDeProcedimiento": "86420",
+        "numeroDeProcedimiento": "301",
         "origin": "SUBSECUENTES"
     },
     {
@@ -87,7 +87,7 @@
         "fechaDeAsignacion": "2023-10-09",
         "estadoDeTramite": "Completado",
         "departamento": "Finanzas",
-        "numeroDeProcedimiento": "22222",
+        "numeroDeProcedimiento": "301",
         "origin": "READ_PROCEDURE"
     }
 ]
