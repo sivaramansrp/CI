@@ -1,13 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
+import { provideHttpClient } from '@angular/common/http';
+import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
 
+  // Mock ToastrService
+  const mockToastrService = {
+    success: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+    warning: jest.fn(),
+  };
+
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PasoTresComponent],
+       providers: [
+              { provide: ToastrService, useValue: mockToastrService },
+              { provide: TOAST_CONFIG, useValue: {} }, 
+              provideHttpClient()// Provide a mock configuration
+            ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
