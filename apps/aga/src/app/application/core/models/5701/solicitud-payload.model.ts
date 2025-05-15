@@ -20,13 +20,13 @@ export interface RepresentanteLegal {
 export interface DatosTramite {
     importador_exportador: ImportadorExportador;
     despacho: Despacho;
-    pedimentos: Pedimento[];
+    pedimentos?: Pedimento[];
     tipo_servicio: TipoServicio;
     lista_pagos: ListaPago[];
     mercancias: Mercancias;
-    tipo_transporte_despacho: string;
+    tipo_transporte_despacho?: string;
     list_transporte_despacho?: TransporteFerroviario[] | TransporteCarretero[] | TransportePeatonal[] | TransporteOtro[];
-    tipo_transporte_arribo: string;
+    tipo_transporte_arribo?: string;
     list_unidad_arribo?: TransporteCarretero[] | TransporteFerroviario[] | TransporteAereo[] | TransporteMaritimo[] | TransporteOtro[];
     persona_responsable?: PersonaResponsableDespacho[];
     list_fechas_sevex?: ListFechasSevex[];

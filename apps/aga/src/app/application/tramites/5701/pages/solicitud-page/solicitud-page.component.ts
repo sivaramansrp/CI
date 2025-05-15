@@ -264,7 +264,8 @@ export class SolicitudPageComponent implements OnInit {
       .pipe(
         map((response) => {
           return response;
-        })
+        }),
+        takeUntil(this.destroyNotifier$),
       )
       .subscribe();
   }
