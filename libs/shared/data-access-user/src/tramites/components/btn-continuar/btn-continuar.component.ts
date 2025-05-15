@@ -181,19 +181,19 @@ export class BtnContinuarComponent implements OnInit {
   continuar(): void {
     if(this.vistaEmergente.abierto && this.datos.indice === this.vistaEmergente.indice){
       this.moduloEmergente=true;
-    }
+    } else {
     const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
+      if (CONDICION) {
+        this.wizardService.cambio_indice(this.datos.indice);
+        const DATOS_CONTINUAR: AccionBoton = {
+          accion: 'cont',
+          valor: (this.datos.indice += 1),
+        };
+        this.continuarEvento.emit(DATOS_CONTINUAR);
+      }
     }
   }
-
   /**
    * @method anterior
    * @description Retrocede al paso anterior si el índice actual está dentro del rango permitido.

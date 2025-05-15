@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-login-microfront:
-    image: modulefederation-login-microfront:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-login-microfront:1.0.0
     build: 
       context: ./../
       dockerfile: apps/login/Dockerfile.dev

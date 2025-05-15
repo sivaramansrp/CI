@@ -33,3 +33,7 @@
 .modify{
     margin-top: 130px;
 }
+
+:host ::ng-deep .select-form-label .form-label{
+    text-align: left !important;
+}
