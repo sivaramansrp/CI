@@ -63,7 +63,6 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.guardarDatos = seccionState;
-          console.log('guardarDatos', this.guardarDatos);
         })
       )
       .subscribe();
