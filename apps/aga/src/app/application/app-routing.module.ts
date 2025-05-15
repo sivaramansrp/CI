@@ -291,6 +291,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
         (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'fronteriza',
+    loadChildren: () =>
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule),
   }
 ];
 
