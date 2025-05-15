@@ -1,21 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud30505AgregarAgenteState, Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-// import { ModalRegistroSociedadesSccService } from './modalRegistroSociedadesScc.service';
+import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
+import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 
 @Component({
   selector: 'app-agregar-agente',
   templateUrl: './agregar-agente.component.html',
    styleUrl: './agregar-agente.component.scss',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule,CatalogoSelectComponent]
 })
-export class AgregarAgenteComponent implements OnInit {
+export class AgregarAgenteComponent implements OnInit,OnDestroy {
   datosTramite!: FormGroup;
   mostrarAgente: boolean = false;
   mostrarAgencia: boolean = false;
+  public sectorProductivoAgace: Catalogo[] = productivo;
 
-  actionBean = {
+  public solicitudState!: Solicitud30505AgregarAgenteState;
+  public destroyNotifier$: Subject<void> = new Subject();
+  public actionBean = {
     agenteAduanalId: '',
     agenteAduanalDescripcion: '',
     apoderadoAduanalId: '',
@@ -26,32 +33,40 @@ export class AgregarAgenteComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    // private modalRegistroSociedadesSccService: ModalRegistroSociedadesSccService
+    private tramite30505Store: Tramite30505AgregarAgenteStore,
+    private tramite30505Query: Tramite30505AgregarAgenteQuery,
   ) {}
 
   ngOnInit(): void {
-      this.datosTramite = this.fb.group({
-        tipoFigura: ['', Validators.required],
-          patenteModificada: ['', Validators.required],
-      numPatenteModal: ['', [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(13)]],
-      ObligFisc: [false, Validators.requiredTrue],
-      AutPantente: [false, Validators.requiredTrue],
-          nombre: [{ value: '', disabled: true }, Validators.required],
-          apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-          apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
-          razonSocial: ['', Validators.required],
-      patente2: ['', [Validators.required, Validators.maxLength(15)]],
-      razonAgencia: ['', Validators.required]
-    });
-
-    // Initialize actionBean with default values or fetch from a service
-    // this.modalRegistroSociedadesSccService.getActionBean().subscribe(data => {
-    //   this.actionBean = data;
-    // });
+    this.tramite30505Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.crearFormulario()
   }
 
-  onSelectFigura(event: any): void {
+  public crearFormulario():void{
+    this.datosTramite = this.fb.group({
+      tipoFigura: [this.solicitudState?.tipoFigura, Validators.required],
+      patenteModificada: ['', Validators.required],
+      numPatenteModal: [this.solicitudState?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
+      rfcModal: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(13)]],
+      obligFisc: [this.solicitudState?.obligFisc, Validators.requiredTrue],
+      autPantente: [this.solicitudState?.autPantente, Validators.requiredTrue],
+      nombre: [{ value: '', disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
+      razonSocial: ['', Validators.required],
+      patente2: [this.solicitudState?.patente2, [Validators.required, Validators.maxLength(15)]],
+      razonAgencia: ['', Validators.required]
+    });
+  }
+
+  public onSelectFigura(event: any): void {
     const selectedValue = event.target.value;
     if (selectedValue === '1' || selectedValue === '2') {
       this.mostrarAgencia = false;
@@ -62,28 +77,42 @@ export class AgregarAgenteComponent implements OnInit {
     }
   }
 
-  cargarDatosPatente(): void {
+  public cargarDatosPatente(): void {
     // this.modalRegistroSociedadesSccService.cargarDatosPatente(this.form.value).subscribe(response => {
     //   // Handle the response data
     // });
     console.log('cargarDatosPatente called');
   }
 
-  guardarDatosSociedadScc(): void {
+  public guardarDatosSociedadScc(): void {
     // this.modalRegistroSociedadesSccService.guardarDatosSociedadScc(this.form.value).subscribe(response => {
     //   // Handle the response data
     // });
     console.log('guardarDatosSociedadScc called');
   }
 
-  limpiarSociedadesScc(): void {
+  public limpiarSociedadesScc(): void {
     this.datosTramite.reset();
     this.mostrarAgencia = false;
     this.mostrarAgente = false;
   }
 
-  cerrarDialogoSociedadesScc(): void {
+  public cerrarDialogoSociedadesScc(): void {
     // Implement dialog close functionality, possibly using a dialog service
     console.log('cerrarDialogoSociedadesScc called');
+  }
+
+  public setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite30505AgregarAgenteStore,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite30505Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
