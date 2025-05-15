@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite250102Store } from '../../estados/tramite250102.store';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
-import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
+import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/embalaje-de-madera.enum';
 import { of } from 'rxjs';
 
 const mockStore = {

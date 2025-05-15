@@ -16,19 +16,15 @@
         </li>
         <li [ngClass]="indice === 4 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
-            (keydown.space)="seleccionaTab(4)" role="button" tabindex="4">Certificados</a>
+            (keydown.space)="seleccionaTab(4)" role="button" tabindex="4">Mercancias sin CFI</a>
         </li>
         <li [ngClass]="indice === 5 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(5)" (keydown.enter)="seleccionaTab(5)"
-            (keydown.space)="seleccionaTab(5)" role="button" tabindex="5">Mercancias sin CFI</a>
+            (keydown.space)="seleccionaTab(5)" role="button" tabindex="5">Requisitos</a>
         </li>
         <li [ngClass]="indice === 6 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
-            (keydown.space)="seleccionaTab(6)" role="button" tabindex="6">Requisitos</a>
-        </li>
-        <li [ngClass]="indice === 7 ? 'active' : ''">
-          <a data-toggle="tab" (click)="seleccionaTab(7)" (keydown.enter)="seleccionaTab(7)"
-            (keydown.space)="seleccionaTab(7)" role="button" tabindex="7">Pago de derechos</a>
+            (keydown.space)="seleccionaTab(6)" role="button" tabindex="6">Pago de derechos</a>
         </li>
       </ul>
 
@@ -44,15 +40,12 @@
         <app-destinatario-agente-aduanal></app-destinatario-agente-aduanal>
         }
         @case (4) {
-        <app-certificados></app-certificados>
-        }
-        @case (5) {
           <app-mercancias></app-mercancias>
         } 
-        @case (6) {
+        @case (5) {
           <app-requisitos></app-requisitos>
         }
-        @case (7) {
+        @case (6) {
           <app-pago-de-derechos></app-pago-de-derechos>
              
         }

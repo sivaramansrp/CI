@@ -7,7 +7,7 @@ import { DistinatarioService } from '../../../250102/services/distinatario.servi
 import { Tramite250102Store } from '../../estados/tramite250102.store';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Adunal, Destinatarios } from '../../models/flora-fauna.models';
+import { Adunal, Destinatarios } from '../../models/embalaje-de-madera.models';
 
 describe('DestinatarioAgenteAduanalComponent', () => {
   let component: DestinatarioAgenteAduanalComponent;

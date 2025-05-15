@@ -1,16 +1,16 @@
-import { CONFIGURATION_TABLA_REQUISITOS,CONFIGURATION_TABLA_TRANSPORTE,Requisito,Transporte } from '../../models/flora-fauna.models';
+import { CONFIGURATION_TABLA_REQUISITOS,CONFIGURATION_TABLA_TRANSPORTE,Requisito,Transporte } from '../../models/embalaje-de-madera.models';
 import { Catalogo,CatalogoSelectComponent,ConfiguracionColumna,InputFechaComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
-import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
-import { INPUT_FECHA } from '../../constantes/flora-fauna.enum';
+import { Tramite250103State, Tramite250103Store } from '../../estados/tramite250103.store';
+import { INPUT_FECHA } from '../../constantes/embalaje-de-madera.enum';
 import { ModalComponent } from '../modal/modal.component';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
-import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
+import catalogoDatos from '@libs/shared/theme/assets/json/250103/banco.json';
 
 /**
- * Componente encargado de gestionar los requisitos y el transporte del trámite 250102.
+ * Componente encargado de gestionar los requisitos y el transporte del trámite 250103.
  * Permite agregar elementos a las tablas dinámicas y almacenar los valores en el estado del store.
  */
 @Component({
@@ -80,9 +80,9 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   transporteForm!: FormGroup;
 
   /**
-   * Estado actual del store del trámite 250102.
+   * Estado actual del store del trámite 250103.
    */
-  public solicitudState!: Tramite250102State;
+  public solicitudState!: Tramite250103State;
 
   /**
    * Subject para destruir suscripciones y evitar fugas de memoria.
@@ -105,12 +105,12 @@ export class RequisitosComponent implements OnInit, OnDestroy {
       this.transporteForm.patchValue({
         fechas: nuevo_valor,
       });
-      this.tramite250102Store.establecerDatos({ fechas: nuevo_valor });
+      this.tramite250103Store.establecerDatos({ fechas: nuevo_valor });
     }
   constructor(
     private fb: FormBuilder,
-    private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query
+    private tramite250103Store: Tramite250103Store,
+    private tramite250103Query: Tramite250103Query
   ) {
     // Constructor que inyecta las dependencias necesarias
   }
@@ -120,11 +120,11 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * y creando el formulario reactivo.
    */
   ngOnInit(): void {
-    this.tramite250102Query.selectTramiteState$
+    this.tramite250103Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState as Tramite250102State;
+          this.solicitudState = seccionState as Tramite250103State;
         })
       )
       .subscribe();
@@ -174,7 +174,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
     */
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    this.tramite250102Store.establecerDatos({ [campo]: VALOR });
+    this.tramite250103Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

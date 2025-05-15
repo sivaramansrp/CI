@@ -1,5 +1,5 @@
-/** Constante que representa las etapas del proceso de flora y fauna. */
-export const FLORA_FAUNA = [
+/** Constante que representa las tarimas y embalaje de madera como soporte de mercancía.*/
+export const MADERA = [
   {
     /** Índice del paso dentro del flujo. */
     indice: 1,
@@ -76,6 +76,9 @@ export const DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO = [
   }
 ];
 
+/**
+ * Constante que representa la fecha de pago como un campo de entrada.
+ */
 export const INPUT_FECHA_PAGO = {
   /**
    * Propiedad labelNombre
@@ -115,5 +118,6 @@ export const INPUT_FECHA = {
   habilitado: true,
 };
 
-export const FLORA_FAUNA_ALERT = 'La solicitud ha quedado registrada con el número temporal 202772451. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada';
+/** Mensaje de alerta para la tarima y embalaje de madera */
+export const MADERA_ALERT = 'La solicitud ha quedado registrada con el número temporal 202772448. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada';
 

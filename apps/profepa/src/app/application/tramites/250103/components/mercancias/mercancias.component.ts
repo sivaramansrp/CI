@@ -3,22 +3,22 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
+import { Tramite250103State, Tramite250103Store } from '../../estados/tramite250103.store';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 
 import { 
   CONFIGURATION_TABLA, 
   CONFIGURATION_TABLA_MERCANCIAS, 
   Detalle, 
   Producto 
-} from '../../models/flora-fauna.models';
-import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
+} from '../../models/embalaje-de-madera.models';
+import catalogoDatos from '@libs/shared/theme/assets/json/250103/banco.json';
 
 
 /**
- * Componente para gestionar las mercancías en el trámite 250102.
+ * Componente para gestionar las mercancías en el trámite 250103.
  * Permite agregar, visualizar y gestionar productos y sus detalles.
  */
 @Component({
@@ -94,7 +94,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /** Estado de la solicitud del trámite */
-  public solicitudState!: Tramite250102State;
+  public solicitudState!: Tramite250103State;
 
   /** Generar un ID único para los productos */
   private generarId = MercanciasComponent.generarId;
@@ -104,8 +104,8 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query
+    private tramite250103Store: Tramite250103Store,
+    private tramite250103Query: Tramite250103Query
   ) { }
 
   /**
@@ -113,11 +113,11 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Obtener el estado actual del store
-    this.tramite250102Query.selectTramiteState$
+    this.tramite250103Query.selectTramiteState$
       .pipe(
         takeUntil(this.notificadorDestruccion$),
         map((seccionState) => {
-          this.solicitudState = seccionState as Tramite250102State;
+          this.solicitudState = seccionState as Tramite250103State;
           
           // Si tenemos productos en el estado, los cargamos
           if (this.solicitudState.productos && this.solicitudState.productos.length > 0) {
@@ -207,12 +207,12 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     const VALOR = formulario.get(campo)?.value;
     if (VALOR !== undefined) {
       // Crear un objeto con la propiedad dinámica
-      const DATOS: Partial<Tramite250102State> = {
+      const DATOS: Partial<Tramite250103State> = {
         [campo]: VALOR
       };
       
       // Actualizar el store con el método establecerDatos
-      this.tramite250102Store.establecerDatos(DATOS);
+      this.tramite250103Store.establecerDatos(DATOS);
     }
   }
 
@@ -265,7 +265,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     );
     
     // Actualizar el store con el método establecerDatos
-    this.tramite250102Store.establecerDatos({
+    this.tramite250103Store.establecerDatos({
       productos: [...this.producto],
       detalles: ENTRADAS_DETALLES
     });

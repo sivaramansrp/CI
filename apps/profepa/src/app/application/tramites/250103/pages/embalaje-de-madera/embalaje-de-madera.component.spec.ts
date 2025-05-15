@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, EventEmitter } from '@angular/core';
-import { FloraFaunaComponent } from './flora-fauna.component';
+import { EmbalajeDeMaderaComponent } from './embalaje-de-madera.component';
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { FLORA_FAUNA, FLORA_FAUNA_ALERT, ALERTA_COM } from '../../constantes/flora-fauna.enum';
+import { MADERA, MADERA_ALERT } from '../../constantes/embalaje-de-madera.enum';
 import { DatosComponent } from '../datos/datos.component';
 import {HttpClientModule } from '@angular/common/http';
 
@@ -25,20 +25,20 @@ class MockWizardComponent {
   ngOnChanges = jest.fn();
 }
 
-describe('FloraFaunaComponent', () => {
-  let component: FloraFaunaComponent;
-  let fixture: ComponentFixture<FloraFaunaComponent>;
+describe('EmbalajeDeMaderaComponent', () => {
+  let component: EmbalajeDeMaderaComponent;
+  let fixture: ComponentFixture<EmbalajeDeMaderaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FloraFaunaComponent, MockWizardComponent,DatosComponent], 
+      declarations: [EmbalajeDeMaderaComponent, MockWizardComponent,DatosComponent], 
       imports: [AlertComponent,WizardComponent,BtnContinuarComponent,SolicitanteComponent,HttpClientModule], // Add any necessary imports here
       providers: [{ provide: WizardComponent, useClass: MockWizardComponent }],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FloraFaunaComponent);
+    fixture = TestBed.createComponent(EmbalajeDeMaderaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -48,13 +48,12 @@ describe('FloraFaunaComponent', () => {
   });
 
   it('Debería inicializar los pasos del asistente correctamente', () => {
-    expect(component.pantallasPasos).toEqual(FLORA_FAUNA);
-    expect(component.datosPasos.nroPasos).toBe(FLORA_FAUNA.length);
+    expect(component.pantallasPasos).toEqual(MADERA);
+    expect(component.datosPasos.nroPasos).toBe(MADERA.length);
   });
 
   it('Debería mostrar los textos de alerta correctos', () => {
-    expect(component.TEXTO_FLORA_FAUNA_ALERT).toBe(FLORA_FAUNA_ALERT);
-    expect(component.TEXTOS).toBe(ALERTA_COM);
+    expect(component.TEXTO_MADERA_ALERT).toBe(MADERA_ALERT);
   });
 
   it('Debe actualizar el índice y navegar hacia adelante cuando la acción es "cont"', () => {

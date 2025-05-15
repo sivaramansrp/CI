@@ -4,7 +4,7 @@ import {
   Destinatarios,
   TABLA_AGENT_ADUNALDATA,
   TablaDatos,
-} from '../../models/flora-fauna.models';
+} from '../../models/embalaje-de-madera.models';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -24,11 +24,11 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
-import { DistinatarioService } from '../../../250102/services/distinatario.service';
+import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/embalaje-de-madera.enum';
+import { DistinatarioService } from '../../../250103/services/distinatario.service';
 import { ModalComponent } from '../modal/modal.component';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
 
 
 @Component({
@@ -99,14 +99,14 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
    /**
    * Constructor.
    * @param fb Construye formularios reactivos.
-   * @param tramite250102Store Almacén de estado del trámite.
-   * @param tramite250102Query Consulta el estado del trámite.
+   * @param tramite250103Store Almacén de estado del trámite.
+   * @param tramite250103Query Consulta el estado del trámite.
    * @param destinatarioService Obtiene datos de países y entidades.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query,
+    private tramite250103Store: Tramite250103Store,
+    private tramite250103Query: Tramite250103Query,
     private destinatarioService: DistinatarioService
   ) {
     //
@@ -118,7 +118,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   ngOnInit(): void {
     this.obtenerPaisData();
     this.obtenerEstadoData();
-    this.tramite250102Query.selectDestinatarioRowData$
+    this.tramite250103Query.selectDestinatarioRowData$
     .pipe(takeUntil(this.destroy$))
     .subscribe((rowData) => {
       this.agregarDestinatariosTablaDatos = rowData.map((item: TablaDatos) => ({
@@ -131,7 +131,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
       }));
     });
 
-    this.tramite250102Query.selectAgenteAduanalRowData$
+    this.tramite250103Query.selectAgenteAduanalRowData$
     .pipe(takeUntil(this.destroy$))
     .subscribe((rowData) => {
       this.agregarAgenteAduanalTablaDatos = rowData.map(
@@ -220,7 +220,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
       ],
     };
     this.tablaAgenteAduanaFilaDatos.push(AGENTE_ADUANAL_FILA);
-    this.tramite250102Store.establecerAgenteAduanal(
+    this.tramite250103Store.establecerAgenteAduanal(
       this.tablaAgenteAduanaFilaDatos
     );
     this.showTableDiv = !this.showTableDiv;
@@ -254,7 +254,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
       };
 
     this.tablaDestinatarioFilaDatos.push(DESTINATARIO_FILA);
-    this.tramite250102Store.establecerDestinatario(
+    this.tramite250103Store.establecerDestinatario(
       this.tablaDestinatarioFilaDatos
     );
 
@@ -363,7 +363,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
         item.codigopostal,
       ],
     }));
-    this.tramite250102Store.establecerDestinatario(this.tablaDestinatarioFilaDatos);
+    this.tramite250103Store.establecerDestinatario(this.tablaDestinatarioFilaDatos);
     this.selectedDestinatarioRows = [];
   }
 
@@ -388,7 +388,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
       ],
     }));
 
-    this.tramite250102Store.establecerAgenteAduanal(this.tablaAgenteAduanaFilaDatos);
+    this.tramite250103Store.establecerAgenteAduanal(this.tablaAgenteAduanaFilaDatos);
     this.selectedAgenteAduanalRows = [];
   }
 

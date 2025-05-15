@@ -1,14 +1,14 @@
-import { Detalle, Producto, TablaDatos} from '../models/flora-fauna.models';
+import { Detalle, Producto, TablaDatos} from '../models/embalaje-de-madera.models';
 import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
- * Estado del trámite con clave 250102. Contiene toda la información capturada
+ * Estado del trámite con clave 250103. Contiene toda la información capturada
  * durante el proceso del trámite, incluyendo datos del destinatario, agente aduanal,
  * mercancía, y aspectos administrativos.
  */
-export interface Tramite250102State {
+export interface Tramite250103State {
   tipoMovimiento : string;
   /** Tipo de aduana seleccionada. */
   tipoAduana: CatalogoResponse | null;
@@ -95,15 +95,15 @@ export interface Tramite250102State {
 
 
 /**
- * Crea y retorna el estado inicial para el trámite 250102.
+ * Crea y retorna el estado inicial para el trámite 250103.
  *
  * Esta función se utiliza para inicializar todos los campos del estado
  * con valores por defecto (nulos, cadenas vacías o arreglos vacíos),
  * asegurando una estructura limpia para comenzar el flujo del trámite.
  *
- * @returns {Tramite250102State} Estado inicial del trámite.
+ * @returns {Tramite250103State} Estado inicial del trámite.
  */
-export function createInitialState(): Tramite250102State {
+export function createInitialState(): Tramite250103State {
   return {
     tipoMovimiento  :'',
     /** Valor inicial para tipo de aduana (sin seleccionar). */
@@ -194,8 +194,8 @@ export function createInitialState(): Tramite250102State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite250102', resettable: true })
-export class Tramite250102Store extends Store<Tramite250102State> {
+@StoreConfig({ name: 'tramite250103', resettable: true })
+export class Tramite250103Store extends Store<Tramite250103State> {
   constructor() {
     super(createInitialState());
   }
@@ -205,7 +205,7 @@ export class Tramite250102Store extends Store<Tramite250102State> {
  * @description Actualiza el estado con los datos proporcionados.
  * @param datos Datos parciales para actualizar el estado del trámite.
  */
-  public establecerDatos(datos: Partial<Tramite250102State>): void {
+  public establecerDatos(datos: Partial<Tramite250103State>): void {
     this.update((state) => ({
       ...state,
       ...datos,

@@ -2,12 +2,12 @@ import { Catalogo, CatalogoSelectComponent, InputFechaComponent, TituloComponent
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { INPUT_FECHA_PAGO } from '../../constantes/flora-fauna.enum';
-import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
-import pago from '@libs/shared/theme/assets/json/250102/pago-formdatos.json';
+import { INPUT_FECHA_PAGO } from '../../constantes/embalaje-de-madera.enum';
+import catalogoDatos from '@libs/shared/theme/assets/json/250103/banco.json';
+import pago from '@libs/shared/theme/assets/json/250103/pago-formdatos.json';
 
-import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103State, Tramite250103Store } from '../../estados/tramite250103.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221602.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,
@@ -18,7 +18,7 @@ import { Tramite250102Query } from '../../estados/tramite250102.query';
  * 
  * @component
  * @example
- * <app-pago-de-derechos250102</app-pago-de-derechos250102>
+ * <app-pago-de-derechos250103</app-pago-de-derechos250103>
  * 
  * @imports
  * - `TituloComponent`: Componente para mostrar el título en la interfaz.
@@ -41,14 +41,14 @@ import { Tramite250102Query } from '../../estados/tramite250102.query';
 })
 
 /**
- * Componente encargado de gestionar el pago de derechos del trámite 250102.
+ * Componente encargado de gestionar el pago de derechos del trámite 250103.
  * Utiliza un formulario reactivo para que el usuario ingrese datos como la clave, dependencia, banco, 
  * llave, fecha e importe. Además, actualiza el estado del trámite en el store.
  * 
  * @class
  * @implements OnInit, OnDestroy
  * @example
- * <app-pago-de-derechos250102></app-pago-de-derechos250102>
+ * <app-pago-de-derechos250103></app-pago-de-derechos250103>
  * 
  * @constructor
  * El constructor inicializa las dependencias necesarias y prepara el formulario reactivo para gestionar los 
@@ -57,7 +57,7 @@ import { Tramite250102Query } from '../../estados/tramite250102.query';
  * @property {FormGroup} pagoDerechosForm - Formulario reactivo que gestiona los datos relacionados con el 
  * pago de derechos, como clave, dependencia, banco, llave, fecha e importe.
  * @property {Catalogo[]} bancocatalogo - Lista de opciones de bancos obtenidas del catálogo.
- * @property {Solicitud250102State} solicitudState - Estado de la solicitud 250102 que contiene los valores actuales de la solicitud.
+ * @property {Solicitud250103State} solicitudState - Estado de la solicitud 250103 que contiene los valores actuales de la solicitud.
  * 
  * @method ngOnInit() - Método que se ejecuta cuando el componente es inicializado. Inicializa el formulario reactivo
  * y carga los datos de la solicitud.
@@ -73,9 +73,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public bancocatalogo: Catalogo[] = catalogoDatos.banco;
 
   /**
-   * Estado de la solicitud 250102, que contiene los valores actuales de la solicitud.
+   * Estado de la solicitud 250103, que contiene los valores actuales de la solicitud.
    */
-  public solicitudState!: Tramite250102State;
+  public solicitudState!: Tramite250103State;
 
   /**
    * Formulario reactivo que gestiona los datos relacionados con el pago de derechos, como clave, dependencia, banco,
@@ -102,8 +102,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query
+    private tramite250103Store: Tramite250103Store,
+    private tramite250103Query: Tramite250103Query
   ) { // Constructor que inyecta las dependencias necesarias
   }
 
@@ -123,11 +123,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
    */
   private inicializarFormulario(): void {
-    this.tramite250102Query.selectTramiteState$
+    this.tramite250103Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState as Tramite250102State;
+          this.solicitudState = seccionState as Tramite250103State;
         })
       )
       .subscribe();
@@ -157,7 +157,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     */
     setValoresStore(form: FormGroup, campo: string): void {
       const VALOR = form.get(campo)?.value;
-      this.tramite250102Store.establecerDatos({ [campo]: VALOR });
+      this.tramite250103Store.establecerDatos({ [campo]: VALOR });
     }
   /**
   * Maneja los cambios en el campo "Fecha de Pago".
@@ -167,7 +167,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.patchValue({
       fecha: nuevo_valor,
     });
-    this.tramite250102Store.establecerDatos({ fecha: nuevo_valor });
+    this.tramite250103Store.establecerDatos({ fecha: nuevo_valor });
   }
 
   /**

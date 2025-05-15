@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Detalle, Producto } from '../../models/flora-fauna.models';
+import { Detalle, Producto } from '../../models/embalaje-de-madera.models';
 
 const MOCK_STORE = {
   establecerDatos: jest.fn(),

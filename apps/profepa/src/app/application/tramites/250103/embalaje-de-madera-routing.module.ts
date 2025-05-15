@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
-import { FloraFaunaComponent } from './pages/flora-fauna/flora-fauna.component';
+import { EmbalajeDeMaderaComponent } from './pages/embalaje-de-madera/embalaje-de-madera.component';
 import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
     path:'solictud',
-    component:FloraFaunaComponent
+    component:EmbalajeDeMaderaComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class FloraFaunaRoutingModule { }
+export class EmbalajeDeMaderaRoutingModule { }

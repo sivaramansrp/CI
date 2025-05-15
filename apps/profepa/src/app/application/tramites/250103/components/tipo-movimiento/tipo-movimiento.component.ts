@@ -14,12 +14,12 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
+import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/embalaje-de-madera.enum';
 import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 import {
-  Tramite250102Store,
-} from '../../estados/tramite250102.store';
+  Tramite250103Store,
+} from '../../estados/tramite250103.store';
 
 
 @Component({
@@ -69,14 +69,14 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
  /**
    * Inicializa los servicios necesarios para el componente.
    * @param fb FormBuilder para la construcción del formulario reactivo.
-   * @param tramite250102Store Almacén de estado para gestionar los datos del trámite.
-   * @param tramite250102Query Consulta para obtener el estado del trámite.
+   * @param tramite250103Store Almacén de estado para gestionar los datos del trámite.
+   * @param tramite250103Query Consulta para obtener el estado del trámite.
    * @param tipoMovimientoService Servicio para obtener los datos del tipo de movimiento.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query,
+    private tramite250103Store: Tramite250103Store,
+    private tramite250103Query: Tramite250103Query,
     private tipoMovimientoService: TipoMovimientoService
   ) {
     // La lógica del constructor se puede añadir aquí si es necesario.
@@ -92,7 +92,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
     this.establecerTipoMovimientoFormGroup();
     this.getValoresStore();
 
-    this.tramite250102Query.selectTipoMovimiento$
+    this.tramite250103Query.selectTipoMovimiento$
       .pipe(takeUntil(this.destroy$))
       .subscribe((tipoMovimiento) => {
         if (tipoMovimiento) {
@@ -155,7 +155,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
    * Obtiene el estado del trámite desde el almacén de datos y actualiza el formulario reactivo.
    */
   getValoresStore(): void {
-    this.tramite250102Query.selectTramiteState$
+    this.tramite250103Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -179,7 +179,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    this.tramite250102Store.establecerDatos({ [campo]: VALOR });
+    this.tramite250103Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

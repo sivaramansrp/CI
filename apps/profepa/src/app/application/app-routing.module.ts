@@ -22,6 +22,13 @@ const ROUTES: Routes = [
         (m) => m.FloraFaunaModule
       ),
   },
+  {
+    path: 'embalaje-de-madera',
+    loadChildren: () =>
+      import('./tramites/250103/embalaje-de-madera.module').then(
+        (m) => m.EmbalajeDeMaderaModule
+      ),
+  },
 ];
 
 @NgModule({

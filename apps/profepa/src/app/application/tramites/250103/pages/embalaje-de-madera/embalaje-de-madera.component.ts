@@ -5,7 +5,7 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 
-import { FLORA_FAUNA, FLORA_FAUNA_ALERT } from '../../constantes/flora-fauna.enum';
+import { MADERA, MADERA_ALERT } from '../../constantes/embalaje-de-madera.enum';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 
 /**
@@ -19,29 +19,27 @@ interface AccionBoton {
   valor: number;
 }
 
-
 /**
- * Componente de Angular encargado de gestionar el proceso de Flora y Fauna
- * con un wizard para navegar entre pasos y mostrar alertas relacionadas.
+ * Componente angular para palets de madera y embalajes como soporte de mercancías
  */
 @Component({
-  selector: 'app-flora-fauna',
-  templateUrl: './flora-fauna.component.html',
+  selector: 'app-embalaje-de-madera',
+  templateUrl: './embalaje-de-madera.component.html',
 })
-export class FloraFaunaComponent {
+export class EmbalajeDeMaderaComponent {
   /**
    * Referencia al componente Wizard, utilizado para gestionar los pasos del proceso.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Lista de los pasos del wizard obtenidos de la constante FLORA_FAUNA.
+   * Lista de los pasos del wizard obtenidos de la constante MADERA.
    * Representa las distintas pantallas que se muestran al usuario en el flujo.
    */
-  pantallasPasos: ListaPasosWizard[] = FLORA_FAUNA;
+  pantallasPasos: ListaPasosWizard[] = MADERA;
   
   /** Mensaje de alerta que se muestra al usuario sobre la solicitud registrada. */
-  TEXTO_FLORA_FAUNA_ALERT = FLORA_FAUNA_ALERT;
+  TEXTO_MADERA_ALERT = MADERA_ALERT;
 
   /** Constantes relacionadas con las alertas, importadas desde ALERTA_COM. */
   TEXTOS = ALERTA_COM;
