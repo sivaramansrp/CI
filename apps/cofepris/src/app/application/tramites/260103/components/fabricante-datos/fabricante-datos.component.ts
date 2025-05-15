@@ -115,7 +115,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       rfc: [''],
       nombreDescripcion: [''],
       nacionalidad: ['true'],
-      tipoPersona: ['', Validators.required],
+      tipoPersona: ['Fisica', Validators.required],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
@@ -273,11 +273,34 @@ this.id=ID;
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
+        
         const DATOS_CON_ID = {
         ...data,
       };
-        this.agregarDatosForm.patchValue(DATOS_CON_ID);
+      
+
+        this.agregarDatosForm.patchValue({
+  curp: DATOS_CON_ID.curp || '',
+  nombreDescripcion: DATOS_CON_ID.nombreDescripcion || '',
+  nacionalidad: 'true',
+  nombres: DATOS_CON_ID.nombres || '',
+  primerApellido: DATOS_CON_ID.primerApellido || '',
+  segundoApellido: DATOS_CON_ID.segundoApellido || '',
+  pais: DATOS_CON_ID.pais || '',
+  estado: DATOS_CON_ID.estado || '',
+  codigoPostal: DATOS_CON_ID.codigoPostal || '',
+  colonia: DATOS_CON_ID.colonia || '',
+  calle: DATOS_CON_ID.calle || '',
+  numeroExterior: DATOS_CON_ID.numeroExterior || '',
+  numeroInterior: DATOS_CON_ID.numeroInterior || '',
+  lada: DATOS_CON_ID.lada || '',
+  telefono: DATOS_CON_ID.telefono || '',
+  correoElectronico: DATOS_CON_ID.correoElectronico || '',
+  localidad: DATOS_CON_ID.localidad || '',
+  municipioAlcaldia: DATOS_CON_ID.municipioAlcaldia || '',
+  denominacionRazon: DATOS_CON_ID.denominacionRazon || '',         
       });
+    });
   }
 
   /**

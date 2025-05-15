@@ -13,3 +13,35 @@ export interface TablaMercanciasImportacion extends TablaMercanciasDatos {
     cantidadUmcValor?:string;
     marca?:string;
   }
+
+
+  /**
+ * @interface Facturador
+ * @description Representa los datos correspondientes a un facturador.
+ */
+export interface Facturador {
+  id?: number;
+  curp: string;
+  rfc?: string;
+  nombreDescripcion: string;
+  nacionalidad: string;
+  tipoPersona: string;
+  nombres: string;
+  primerApellido: string;
+  segundoApellido: string;
+  pais: string;
+  estado: string;
+  codigoPostal: string;
+  colonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  lada: string;
+  telefono: string;
+  correoElectronico: string;
+  localidad: string;
+  municipioAlcaldia: string;
+  denominacionRazon: string;
+
+
+}

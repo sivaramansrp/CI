@@ -286,6 +286,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="guardar()"
+            [disabled]="!agregarDatosForm.valid"
           >
             Guardar
           </button>
