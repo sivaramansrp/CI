@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -387,15 +388,28 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     });
 
     this.datosDeLaRemesa = this.fb.group({
-      numeroEnLetraDeLosLotes: ['', [Validators.required]],
-      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required]],
-      numeroDeFactura: ['', [Validators.required]],
+      numeroEnLetraDeLosLotes: ['',
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroDeFactura: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
     });
 
     this.datosDeLosDiamantes = this.fb.group({
       cantidadEnQuilates: ['', [Validators.required]],
       valorDeLosDiamantes: ['', [Validators.required]],
     });
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.datosDeLaRemesa.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**

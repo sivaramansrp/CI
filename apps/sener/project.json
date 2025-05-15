@@ -40,10 +40,45 @@
         ],
         "customWebpackConfig": {
           "path": "apps/sener/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/sener/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/sener/src/app/environments/environment.ts",
+              "with": "apps/sener/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
           "budgets": [
             {
               "type": "initial",
@@ -57,9 +92,22 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/sener/webpack.prod.config.ts"
-          }
+            "path": "apps/sener/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/sener/src/app/environments/environment.ts",
+              "with": "apps/sener/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -70,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4217,
-        "publicHost": "http://localhost:4217"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -84,6 +132,9 @@
         },
         "development": {
           "buildTarget": "sener:build:development"
+        },
+        "qa": {
+          "buildTarget": "sener:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -106,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "sener:build",
         "port": 4217,

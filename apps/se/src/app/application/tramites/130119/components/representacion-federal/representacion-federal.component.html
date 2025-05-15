@@ -1,19 +1,17 @@
-<div class="container">
-    <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
     <form [formGroup]="formularioRepresentacionFederalForm">
+    <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select (change)="setValoresStore(formularioRepresentacionFederalForm,'estado','setEstado')" [catalogo]="opcionesEstado"
+                <app-catalogo-select (change)="setValoresStore(formularioRepresentacionFederalForm,'estado')" [catalogo]="opcionesEstado"
                     [label]="'Estado'" [required]="true"
                     formControlName="estado"></app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="opcionesRepresentacionFederal" [label]="'Representación federal'"
                     [required]="true" formControlName="representacionFederal"
-                    (change)="setValoresStore(formularioRepresentacionFederalForm,'representacionFederal','setRepresentacionFederal')">
+                    (change)="setValoresStore(formularioRepresentacionFederalForm,'representacionFederal')">
                 </app-catalogo-select>
             </div>
 
         </div>
     </form>
-</div>
