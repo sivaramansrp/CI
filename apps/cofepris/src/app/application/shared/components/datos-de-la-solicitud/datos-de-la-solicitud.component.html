@@ -43,6 +43,8 @@
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight"
+          (click)="abrirModal()"
+
         >
           Seleccionar establecimiento
         </button>
@@ -726,4 +728,10 @@
 </div>
 </div>
 
+@if (nuevaNotificacion && mostrarNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+}
 
