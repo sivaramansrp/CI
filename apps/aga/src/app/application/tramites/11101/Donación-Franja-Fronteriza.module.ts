@@ -2,7 +2,7 @@ import { AnexarDocumentosComponent, FirmaElectronicaComponent, TituloComponent, 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
-import { DonacionFranjaFronterizaRoutingModule } from './Donación-Franja-Fronteriza-routing.module';
+import { DonacionFranjaFronterizaRoutingModule } from './donación-franja-fronteriza-routing.module';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
