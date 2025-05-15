@@ -622,7 +622,7 @@
         <button
           type="button"
           name="representanteRfcBuscar"
-          class="btn btn-default"
+          class="btn btn-primary"
           (click)="buscarRepresentanteRfc()"
         >
           Buscar
@@ -734,4 +734,9 @@
     </lib-notificaciones>
   </section>
 }
-
+@if (mostrarRfcAlerta) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaRfcNotificacion" (confirmacionModal)="mostrarRfcAlerta = false">
+    </lib-notificaciones>
+  </section>
+}
