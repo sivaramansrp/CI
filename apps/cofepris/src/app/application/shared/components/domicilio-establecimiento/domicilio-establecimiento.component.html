@@ -17,15 +17,15 @@
         />
         <div
           *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['required']"
-          class="text-danger">
+          class="mensaje-error">
           Este campo es obligatorio
         </div>
         <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['maxlength']"
-          class="text-danger">
+          class="mensaje-error">
           El código postal no puede tener más de 12 caracteres.
         </div>
         <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['pattern']"
-          class="text-danger">
+          class="mensaje-error">
           El valor capturado no es válido.
         </div>
       </div>
@@ -54,7 +54,7 @@
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')"
         />
         <div *ngIf="domicilio.get('muncipio')?.touched && domicilio.get('muncipio')?.errors?.['required']"
-          class="text-danger">
+          class="mensaje-error">
           Este campo es obligatorio.
         </div>
       </div>
@@ -103,7 +103,7 @@
           formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')"
         />
-        <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']" class="text-danger">
+        <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']" class="mensaje-error">
           Este campo es obligatorio.
         </div>
       </div>
@@ -137,7 +137,7 @@
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')"
         />
       <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
-          class="text-danger">
+          class="mensaje-error">
           Este campo es obligatorio.
       </div>
       </div>
@@ -173,7 +173,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria*:</label
+          >No. de licencia sanitaria:</label
         >
         <input
           class="form-control"
@@ -279,7 +279,7 @@
                   'setClaveDescripcionModal'
                 )
               "
-            ></app-catalogo-select>
+            >
           </div>
         </form>
       </div>
@@ -328,7 +328,7 @@
                 formMercancias.get('nombreComercial')?.invalid &&
                 formMercancias.get('nombreComercial')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('nombreComercial')?.errors?.['required']"
@@ -362,7 +362,7 @@
                 formMercancias.get('nombreComun')?.invalid &&
                 formMercancias.get('nombreComun')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('nombreComun')?.errors?.['required']"
@@ -396,7 +396,7 @@
                 formMercancias.get('nombreCientifico')?.invalid &&
                 formMercancias.get('nombreCientifico')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('nombreCientifico')?.errors?.['maxlength']"
@@ -426,7 +426,7 @@
                 formMercancias.get('usoEspecifico')?.invalid &&
                 formMercancias.get('usoEspecifico')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('usoEspecifico')?.errors?.['required']"
@@ -466,7 +466,7 @@
                 formMercancias.get('fraccionArancelaria')?.invalid &&
                 formMercancias.get('fraccionArancelaria')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['required']"
@@ -524,7 +524,7 @@
                     formMercancias.get('cantidadUMT')?.invalid &&
                     formMercancias.get('cantidadUMT')?.touched
                   "
-                  class="text-danger"
+                  class="mensaje-error"
                 >
                   <small
                     *ngIf="formMercancias.get('cantidadUMT')?.errors?.['required']"
@@ -586,7 +586,7 @@
                     formMercancias.get('cantidadUMC')?.invalid &&
                     formMercancias.get('cantidadUMC')?.touched
                   "
-                  class="text-danger"
+                  class="mensaje-error"
                 >
                   <small
                     *ngIf="formMercancias.get('cantidadUMC')?.errors?.['required']"
@@ -645,7 +645,7 @@
                 formMercancias.get('porcentajeConcentracion')?.invalid &&
                 formMercancias.get('porcentajeConcentracion')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['required']"
@@ -674,7 +674,7 @@
                 formMercancias.get('numeroRegistro')?.invalid &&
                 formMercancias.get('numeroRegistro')?.touched
               "
-              class="text-danger"
+              class="mensaje-error"
             >
               <small
                 *ngIf="formMercancias.get('numeroRegistro')?.errors?.['required']"
