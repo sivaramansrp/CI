@@ -1,12 +1,11 @@
-<div class="container">
+   <form [formGroup]="datosDeLaMercanciaForm">
     <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
-    <form [formGroup]="datosDeLaMercanciaForm">
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="descripcion" class="form-label">Descripción de la mercancía *:</label>
                     <textarea id="descripcion" formControlName="descripcion" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'descripcion','setDescripcion')"></textarea>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'descripcion')"></textarea>
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('descripcion')?.touched && datosDeLaMercanciaForm.get('descripcion')?.invalid">
                         <small *ngIf="datosDeLaMercanciaForm.get('descripcion')?.errors?.['required']"
@@ -37,7 +36,7 @@
                 <div class="form-group">
                     <label for="cantidad" class="form-label">Cantidad *:</label>
                     <input type="text" id="cantidad" formControlName="cantidad" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'cantidad','setCantidad')">
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'cantidad')">
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('cantidad')?.touched && datosDeLaMercanciaForm.get('cantidad')?.invalid">
                         <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['required']"
@@ -57,7 +56,7 @@
                         data-bs-toggle="tooltip"></span></label>
                     
                     <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD','setValorFacturaUSD')">
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD')">
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched && datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid">
                         <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['required']"
@@ -71,7 +70,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <app-catalogo-select [label]="'País origen'" [required]="true" [catalogo]="pasises"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisOrigen','setPaisOrigen')"
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisOrigen')"
                         formControlName="paisOrigen"></app-catalogo-select>
                 </div>
             </div>
@@ -79,7 +78,7 @@
                 <div class="form-group">
                     <app-catalogo-select [label]="'País exportador'" [required]="true" [catalogo]="pasises"
                         formControlName="paisExportador"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisExportador','setPaisExportador')"></app-catalogo-select>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisExportador')"></app-catalogo-select>
                 </div>
             </div>
         </div>
@@ -88,7 +87,7 @@
                 <div class="form-group">
                     <label for="numeroFactura" class="form-label">Número de factura *:</label>
                     <input type="text" id="numeroFactura" formControlName="numeroFactura" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'numeroFactura','setNumeroFactura')">
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'numeroFactura')">
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.touched && datosDeLaMercanciaForm.get('numeroFactura')?.invalid">
                         <small *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['required']"
@@ -110,7 +109,7 @@
                 <div class="form-group">
                     <label for="observaciones" class="form-label">Observaciones:</label>
                     <textarea class="form-control" id="observaciones" formControlName="observaciones"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'observaciones','setObservaciones')"></textarea>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'observaciones')"></textarea>
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('observaciones')?.touched && datosDeLaMercanciaForm.get('observaciones')?.invalid">
                         <small *ngIf="datosDeLaMercanciaForm.get('observaciones')?.errors?.['pattern']"
@@ -120,4 +119,3 @@
             </div>
         </div>
     </form>
-</div>
