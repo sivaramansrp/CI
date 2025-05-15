@@ -12,7 +12,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DatosDeLaSolicitudComponent, HttpClientModule],
-      providers: [PhytosanitaryExportacionService], // Add any necessary providers here
+      providers: [PhytosanitaryExportacionService], // Agregar los proveedores necesarios aquí
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
@@ -87,7 +87,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.phytosanitaryExportacionService.agregarSolicitud = mockServiceMethod as any;
     const mockStoreMethod = jest.fn();
     component.store.setDatosSolicitud = mockStoreMethod as any;
-    component.datosSolicitud = []; // Initialize datosSolicitud as an empty array
+    component.datosSolicitud = []; // Inicializar datosSolicitud como un arreglo vacío
     const mockCerrarModal = jest.fn();
     component.cerrarModal = mockCerrarModal;
 

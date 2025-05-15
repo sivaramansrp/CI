@@ -228,23 +228,23 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const IS_FISICA = event === 'fisica';
     const NOMBRES = this.agregarMercanciasForm.get('nombre');
     const PRIMER_APELLIDO = this.agregarMercanciasForm.get('apellidoPaterno');
-    const SEGUNDO_APELLIDO = this.agregarMercanciasForm.get('segundoApellido');
+    const MATERNO_APELLIDO = this.agregarMercanciasForm.get('apellidoMaterno');
     const DENOMINACION_RAZON = this.agregarMercanciasForm.get('razonSocial');
     if (IS_FISICA) {
       NOMBRES?.setValidators([Validators.required, Validators.maxLength(200)]);
       PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
-      SEGUNDO_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
+      MATERNO_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
       DENOMINACION_RAZON?.clearValidators();
     } else {
       NOMBRES?.clearValidators();
       PRIMER_APELLIDO?.clearValidators();
-      SEGUNDO_APELLIDO?.clearValidators();
+      MATERNO_APELLIDO?.clearValidators();
       DENOMINACION_RAZON?.setValidators([Validators.required, Validators.maxLength(250)]);
     }
 
     NOMBRES?.updateValueAndValidity();
     PRIMER_APELLIDO?.updateValueAndValidity();
-    SEGUNDO_APELLIDO?.updateValueAndValidity();
+    MATERNO_APELLIDO?.updateValueAndValidity();
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
@@ -253,9 +253,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Abre un modal si la entidad federativa es válida.
    */
   manejarCambioEntidadFederativa(): void {
-    if (this.modalRef) {
-      this.modalRef = this.modalService.show(this.agregarModal, { class: 'modal-lg' });
-    }
+    this.modalRef = this.modalService.show(this.agregarModal, { class: 'modal-lg' });
   }
 
   /**
@@ -321,7 +319,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Elimina las filas seleccionadas de la tabla y restablece el formulario.
    */
-  eleminarSeleccionados(): void {
+  eliminarSeleccionados(): void {
     this.datosTabla = [];
     this.filaSeleccionada = [];
     this.tramite230201Store.setDatosDestinatario(this.datosTabla);

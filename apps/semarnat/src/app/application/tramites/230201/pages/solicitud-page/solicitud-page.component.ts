@@ -5,11 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-
-/**
- * Texto de alerta para terceros.
- */
-const TERCEROS_TEXTO_DE_ALERTA = 'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+import { TERCEROS_TEXTO_DE_ALERTA } from '../../enum/destinatario-tabla.enum';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -48,6 +44,11 @@ interface AccionBoton {
   ],
 })
 export class SolicitudPageComponent {
+  
+  /**
+   * Una constante de tipo cadena que contiene el texto de alerta para notificaciones a terceros.
+   * Este valor se asigna desde la constante `TERCEROS_TEXTO_DE_ALERTA`.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**

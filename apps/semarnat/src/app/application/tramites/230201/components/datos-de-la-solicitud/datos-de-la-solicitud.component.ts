@@ -14,6 +14,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFo
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ENCABEZADO_DE_TABLE_CONFIGURACION } from '../../enum/destinatario-tabla.enum';
 import { Modal } from 'bootstrap';
 import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
@@ -199,24 +200,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla de solicitudes.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
-    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (articulo) => articulo.fraccionArancelaria,
-      orden: 2,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (articulo) => articulo.cantidad,
-      orden: 3,
-    },
-    {
-      encabezado: 'Cantidad(letra)',
-      clave: (articulo) => articulo.cantidadLetra,
-      orden: 4,
-    },
-  ];
+  public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = ENCABEZADO_DE_TABLE_CONFIGURACION;
 
   /**
    * Configuración de las columnas de la tabla de detalles.

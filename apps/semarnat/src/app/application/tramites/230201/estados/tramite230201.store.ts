@@ -328,6 +328,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con el arreglo proporcionado de `DatosSolicitud`.
+   *
+   * @param datosSolicitud - Un arreglo de objetos `DatosSolicitud` que se establecerá en el estado.
+   */
   public setDatosSolicitud(datosSolicitud: DatosSolicitud[]): void {
     this.update((state) => ({
       ...state,

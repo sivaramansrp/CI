@@ -14,7 +14,7 @@
     @if(solicitudState.destinatarios.length > 0){
     <div class="row" style="padding-bottom: 20px; text-align: right">
       <div>
-        <button type="button" class="btn btn-default me-2" [disabled]="!botonModificarHabilitado" (click)="eleminarSeleccionados()">
+        <button type="button" class="btn btn-default me-2" [disabled]="!botonModificarHabilitado" (click)="eliminarSeleccionados()">
           Eliminar Seleccionados
         </button>
         <button type="button" [disabled]="!botonModificarHabilitado" class="btn btn-primary me-2" (click)="editDataModal(modalAgregarMercancias)">

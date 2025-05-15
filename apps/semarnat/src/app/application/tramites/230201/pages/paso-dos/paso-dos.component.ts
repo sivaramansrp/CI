@@ -47,7 +47,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   catalogoDocumentos: Catalogo[] = [];
 
   /** Lista de documentos preseleccionados, cargados desde un archivo JSON */
-  documentosSeleccionados = documentList.documentosSeleccionados ?? [];
+  documentosSeleccionados = documentList?.documentosSeleccionados ?? [];
 
   /** Observable para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
@@ -91,6 +91,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
          * @param _error Error devuelto por el servicio.
          */
         error: (_error): void => {
+          console.error('Error fetching document types:', _error);
           return _error;
         },
       });

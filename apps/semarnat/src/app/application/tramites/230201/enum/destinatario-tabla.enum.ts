@@ -1,4 +1,5 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DatosSolicitud } from '../models/datos-tramite.model';
 
 /**
  * Representa la configuración de un destinatario con información detallada.
@@ -61,6 +62,11 @@ export interface DestinatarioConfiguracionItem {
    */
   codigoPostal: number;
 }
+
+/**
+ * Texto de alerta para terceros.
+ */
+export const TERCEROS_TEXTO_DE_ALERTA = 'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 
 /**
  * Configuración de las columnas para la tabla de terceros.
@@ -155,6 +161,40 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
     orden: 8,
   },
 ];
+
+/**
+ * Representa la configuración para los encabezados de la tabla y su correspondiente mapeo de datos
+ * en la aplicación. Cada entrada en el arreglo define el encabezado de una columna, la clave para extraer
+ * datos de un elemento y el orden de la columna en la tabla.
+ *
+ * @constant
+ * @type {ConfiguracionColumna<DatosSolicitud>[]}
+ *
+ * @property {string} encabezado - El texto del encabezado mostrado para la columna.
+ * @property {(articulo: DatosSolicitud) => any} clave - Una función que mapea un elemento
+ * al valor mostrado en la columna.
+ * @property {number} orden - El orden en el que la columna aparece en la tabla.
+ */
+export const ENCABEZADO_DE_TABLE_CONFIGURACION: ConfiguracionColumna<DatosSolicitud>[] = [
+  { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (articulo) => articulo.fraccionArancelaria,
+    orden: 2,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (articulo) => articulo.cantidad,
+    orden: 3,
+  },
+  {
+    encabezado: 'Cantidad (letra)',
+    clave: (articulo) => articulo.cantidadLetra,
+    orden: 4,
+  },
+  ];
+
+
 
 /**
  * Entrada predeterminada para la tabla de destinatarios.
@@ -274,3 +314,20 @@ export const DESTINARIO_INFO = {
   ciudad: "Ciudad",
   domicilio: "Domicilio"
 }
+
+/**
+ * Representa la configuración para el destinatario "Banco" en la aplicación.
+ * 
+ * @constant
+ * @type {CatalogosSelect}
+ * @property {string} labelNombre - El nombre de la etiqueta para el destinatario, establecido como "Banco".
+ * @property {boolean} required - Indica si este campo es obligatorio.
+ * @property {string} primerOpcion - La primera opción predeterminada mostrada en la selección, establecida como "Selecciona un valor".
+ * @property {Array} catalogos - Un arreglo para contener las opciones del catálogo, inicialmente vacío.
+ */
+export const DESTINATARIO_BANCO: CatalogosSelect = {
+  labelNombre: 'Banco',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
+};

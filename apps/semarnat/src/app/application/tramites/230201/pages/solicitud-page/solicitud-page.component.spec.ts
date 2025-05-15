@@ -18,14 +18,14 @@ describe('SolicitudPageComponent', () => {
         CommonModule,
         PasoDosComponent,
         SolicitudPageComponent,
-        WizardComponent, // Import standalone component
-        PasoUnoComponent, // Import standalone component
-        PasoTresComponent, // Import standalone component
-        BtnContinuarComponent, // Import standalone component
+        WizardComponent, 
+        PasoUnoComponent, 
+        PasoTresComponent, 
+        BtnContinuarComponent, 
       ],
-      declarations: [], // Declare the main component
+      declarations: [], 
       providers: [
-        provideHttpClient(), // Provide HttpClient
+        provideHttpClient(),
         ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',

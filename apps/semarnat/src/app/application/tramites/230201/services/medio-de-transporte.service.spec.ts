@@ -9,7 +9,7 @@ describe('MediodetransporteService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Provide a mock HTTP client
+      imports: [HttpClientTestingModule], 
       providers: [MediodetransporteService],
     });
 
@@ -18,7 +18,7 @@ describe('MediodetransporteService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure there are no outstanding requests
+    httpMock.verify(); 
   });
 
   it('should be created', () => {

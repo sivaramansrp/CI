@@ -4,11 +4,11 @@ import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite2
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DESTINATARIO_BANCO } from '../../enum/destinatario-tabla.enum';
 import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
@@ -31,13 +31,6 @@ import { takeUntil } from 'rxjs';
   ],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
-
-  /**
-   * @property {ReplaySubject<boolean>} destroyed$
-   * @description Sujeto que emite un valor booleano para indicar la destrucción del componente.
-   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
-   */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * @property {Solicitud230201State} derechoState
@@ -88,12 +81,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @property {string} primerOpcion - Texto que se muestra como la primera opción en el selector.
    * @property {Array<any>} catalogos - Lista de opciones disponibles en el catálogo.
    */
-  public bancoCatalogo: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
+  public bancoCatalogo: CatalogosSelect = DESTINATARIO_BANCO;
 
   /**
    * Constructor de la clase PagoDeDerechoComponent.
@@ -127,12 +115,12 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * 
    * @remarks
    * Este método utiliza el servicio `mediodetransporteService` para obtener los datos
-   * y se asegura de limpiar las suscripciones utilizando el operador `takeUntil` con `destroyed$`.
+   * y se asegura de limpiar las suscripciones utilizando el operador `takeUntil` con `destroyNotifier$`.
    */
   fetchBancoData(): void {
     this.mediodetransporteService
       .getMedioDeTransporte()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((request): void => {
         this.bancoCatalogo.catalogos = request?.data ;
       });
@@ -169,7 +157,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Este método se utiliza para validar la forma del transporte. - 220401
+   * Este método se utiliza para validar la forma del transporte. - 230201
    * @param form: Forma del transporte
    * @param field: campo del formulario
    * @returns Validaciones del formulario
@@ -210,19 +198,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @example
    * // Ejemplo de uso:
    * ngOnDestroy(): void {
-   *   this.destroyed$.next(true);
-   *   this.destroyed$.complete();
    *   this.destroyNotifier$.next();
    *   this.destroyNotifier$.complete();
    * }
    * 
    * @remarks
-   * Este método envía notificaciones a los observables `destroyed$` y `destroyNotifier$` 
+   * Este método envía notificaciones a los observables `destroyNotifier$` 
    * para indicar que el componente está siendo destruido, y luego completa ambos observables.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

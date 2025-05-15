@@ -101,15 +101,11 @@ describe('PagoDeDerechoComponent', () => {
   });
 
   it('should clean up observables on ngOnDestroy', () => {
-    const destroyedNextSpy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyedCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
     const destroyNotifierNextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroyedNextSpy).toHaveBeenCalledWith(true);
-    expect(destroyedCompleteSpy).toHaveBeenCalled();
     expect(destroyNotifierNextSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
