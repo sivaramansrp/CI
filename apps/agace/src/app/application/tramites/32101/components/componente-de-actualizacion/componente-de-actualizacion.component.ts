@@ -141,7 +141,6 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       valorEnPesos: [SELECTED_ROW?.valorEnPesos],
       formaAdquisicion: [SELECTED_ROW?.formaAdquisicion],
     });
-    console.log(this.modificarFormulario);
   }
 
   /**
@@ -243,7 +242,6 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       valorEnPesos: this.modificarFormulario.value.valorEnPesos,
       comprobanteDePago: 'N/A',
     };
-    console.log(UPDATED_ROW);
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, UPDATED_ROW];
     this.consultaAvisoAcreditacionService.setUpdatedRow([UPDATED_ROW]);
     this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);

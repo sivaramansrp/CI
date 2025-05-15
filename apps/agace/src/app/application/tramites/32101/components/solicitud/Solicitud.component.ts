@@ -471,7 +471,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       valorEnPesos: FORM_VALUES.valorEnPesos,
       comprobanteDePago: 'N/A',
     };
-    this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];;
+    this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
     this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
     this.abrirModal();
     this.registroForm.reset();
