@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MercanciasComponent } from './mercancias.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -47,8 +47,8 @@ describe('MercanciasComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: MOCK_STORE },
-        { provide: Tramite250102Query, useValue: MOCK_QUERY }
+        { provide: Tramite250103Store, useValue: MOCK_STORE },
+        { provide: Tramite250103Query, useValue: MOCK_QUERY }
       ],
       schemas: [NO_ERRORS_SCHEMA] // Para ignorar errores de componentes hijos
     }).compileComponents();
@@ -439,8 +439,8 @@ describe('MercanciasComponent', () => {
       imports: [MercanciasComponent, CommonModule, ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: MOCK_STORE },
-        { provide: Tramite250102Query, useValue: MOCK_WITH_PRODUCTS }
+        { provide: Tramite250103Store, useValue: MOCK_STORE },
+        { provide: Tramite250103Query, useValue: MOCK_WITH_PRODUCTS }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -481,8 +481,8 @@ describe('MercanciasComponent', () => {
       imports: [MercanciasComponent, CommonModule, ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: MOCK_STORE },
-        { provide: Tramite250102Query, useValue: MOCK_WITH_DETAILS }
+        { provide: Tramite250103Store, useValue: MOCK_STORE },
+        { provide: Tramite250103Query, useValue: MOCK_WITH_DETAILS }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
