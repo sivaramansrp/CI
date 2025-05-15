@@ -73,7 +73,7 @@
     "id": 11,
     "tramite": 11105,
     "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -93,8 +93,8 @@
   {
     "id": 14,
     "tramite": 11204,
-    "linkDashboard": "/aga/transferencia-contenedores/solicitud",
-    "linkDepartment": "/pago/transferencia-contenedores/solicitud",
+    "linkDashboard": "/aga/transferencia-contenedores/solicitante",
+    "linkDepartment": "/pago/transferencia-contenedores/solicitante",
     "department": "aga"
   },
   {
@@ -765,15 +765,15 @@
   {
     "id": 110,
     "tramite": 260911,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-de-dispositivos/permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-de-dispositivos/permiso-sanitario",
     "department": "cofepris"
   },
   {
     "id": 111,
     "tramite": 260912,
     "linkDashboard": "/cofepris/mod-permiso-importacion/permiso-sanitario",
-    "linkDepartment": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+    "linkDepartment": "/pago/mod-permiso-importacion/permiso-sanitario",
     "department": "cofepris"
   },
   {
@@ -899,7 +899,7 @@
     "id": 129,
     "tramite": 10302,
     "linkDashboard": "/aga/exencion-impuestos/solicitud",
-    "linkDepartment": "/aga/exencion-impuestos/solicitud",
+    "linkDepartment": "/pago/exencion-impuestos/solicitud",
     "department": "aga"
   },
   {
@@ -1171,8 +1171,8 @@
   {
     "id": 168,
     "tramite": 140111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-derechos-de-permisos/solicitante",
+    "linkDepartment": "/pago/renuncia-de-derechos-de-permisos/solicitante",
     "department": "sener"
   },
   {
@@ -1319,7 +1319,7 @@
     "id": 189,
     "tramite": 11106,
     "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "aga"
   },
   {
@@ -2025,8 +2025,8 @@
   {
     "id": 290,
     "tramite": 80314,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/immex-modificacion-cambio-de-sector/registro-modificacion",
+    "linkDepartment": "/pago/immex-modificacion-cambio-de-sector/registro-modificacion",
     "department": "se"
   },
   {
@@ -2067,15 +2067,15 @@
   {
     "id": 296,
     "tramite": 120702,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-frontera/solicitante",
+    "linkDepartment": "/pago/expedicion-certificados-frontera/solicitante",
     "department": "se"
   },
   {
     "id": 297,
     "tramite": 130302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/parmiso-importacion-petroleo/pantallas",
+    "linkDepartment": "/pago/parmiso-importacion-petroleo/pantallas",
     "department": "sener"
   },
   {
@@ -3425,8 +3425,8 @@
   {
     "id": 491,
     "tramite": 250102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/profepa/flora-fauna-silvestre/solictud/",
+    "linkDepartment": "/pago/flora-fauna-silvestre/solictud/",
     "department": "profepa"
   },
   {

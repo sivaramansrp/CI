@@ -448,6 +448,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
+  },
+  {
     path: 'catalogos',
     loadChildren: () =>
       import('./tramites/90303/catalogos.module').then(
@@ -575,6 +582,13 @@ const ROUTES: Routes = [
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
+  {   
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
+      ),
+  },
   {
     path: 'validar-certificado-inicialmente',
     loadChildren: () =>
@@ -582,7 +596,6 @@ const ROUTES: Routes = [
         (m) => m.ValidarInicialmenteCertificadoModule
       ),
   },
-
 ];
 
 @NgModule({
