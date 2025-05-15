@@ -13,34 +13,54 @@ import { DiscripccionDeLaMercanciaForm } from "../models/transportacion-maritima
  */
 export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<DiscripccionDeLaMercanciaForm>[] = [
     /**
-     * Columna que muestra el nombre de la mercancía.
-     * - Encabezado: "Nombre".
+     * Columna que muestra el consecutivo de la mercancía.
+     * - Encabezado: "Consecutivo".
      * - Clave: Obtiene el valor de `Consecutivo` de la fila.
      * - Orden: 1.
      */
     { encabezado: 'Consecutivo', clave: (fila) => fila.Consecutivo, orden: 1 },
 
     /**
-     * Columna que muestra el domicilio relacionado con la mercancía.
-     * - Encabezado: "Domicilio".
+     * Columna que muestra el estado relacionado con la mercancía.
+     * - Encabezado: "Estado".
      * - Clave: Obtiene el valor de `estado` de la fila.
      * - Orden: 2.
      */
     { encabezado: 'Estado', clave: (fila) => fila.estado, orden: 2 },
 
     /**
-     * Columna que muestra la descripción de la mercancía.
-     * - Encabezado: "Descripción".
+     * Columna que muestra la cantidad de la mercancía.
+     * - Encabezado: "Cantidad".
      * - Clave: Obtiene el valor de `Cantidad` de la fila.
      * - Orden: 3.
      */
     { encabezado: 'Cantidad', clave: (fila) => fila.Cantidad, orden: 3 },
 
     /**
-     * Columna que muestra el país relacionado con la mercancía.
-     * - Encabezado: "País".
+     * Columna que muestra si la mercancía forma parte del patrimonio.
+     * - Encabezado: "FormaParteDePatrimonio".
      * - Clave: Obtiene el valor de `FormaParteDePatrimonio` de la fila.
      * - Orden: 4.
      */
     { encabezado: 'FormaParteDePatrimonio', clave: (fila) => fila.FormaParteDePatrimonio, orden: 4 },
+];
+
+/**
+ * Lista de documentos seleccionados requeridos para la mercancía.
+ * 
+ * Cada elemento contiene:
+ * - id: Identificador único del documento.
+ * - descripcion: Descripción del documento requerido.
+ * 
+ * @type {{ id: number, descripcion: string }[]}
+ */
+export const DocumentosSeleccionados = [
+  {
+    id: 1,
+    descripcion: 'Documentos que ampare el valor de la mercancía',
+  },
+  {
+    id: 2,
+    descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
+  },
 ];

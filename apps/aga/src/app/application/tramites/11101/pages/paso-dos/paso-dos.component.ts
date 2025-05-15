@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { DocumentosSeleccionados } from '../../constants/mercancia.enum';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
 /**
@@ -57,16 +58,7 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+    this.documentosSeleccionados =DocumentosSeleccionados
   }
 
   /**

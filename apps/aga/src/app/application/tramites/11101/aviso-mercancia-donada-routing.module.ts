@@ -14,14 +14,14 @@ export const ROUTES_ATTENTION: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'solicitud',
+        redirectTo: 'aviso-mercancia-donada',
     },
     /**
      * Ruta para la página de solicitud.
      * @type {Route}
      */
     {
-        path: 'solicitud',
+        path: 'aviso-mercancia-donada',
         component: SolicitantePageComponent,
     },
 ];
@@ -43,4 +43,4 @@ export const ROUTES_ATTENTION: Routes = [
      */
     exports: [RouterModule],
 })
-export class DonacionFranjaFronterizaRoutingModule {}
+export class AvisoMercanciaDonadaRoutingModule { }

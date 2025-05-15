@@ -2116,8 +2116,8 @@
   {
     "id": 303,
     "tramite": 11101,
-    "linkDashboard": "/pago/fronteriza/solicitud",
-    "linkDepartment": "/pago/fronteriza/solicitud",
+    "linkDashboard": "/pago/fronteriza/aviso-mercancia-donada",
+    "linkDepartment": "/pago/fronteriza/aviso-mercancia-donada",
     "department": "aga"
   },
   {

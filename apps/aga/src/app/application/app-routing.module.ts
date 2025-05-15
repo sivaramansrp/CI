@@ -295,8 +295,8 @@ const ROUTES: Routes = [
   {
     path: 'fronteriza',
     loadChildren: () =>
-      import('./tramites/11101/donación-franja-fronteriza.module').then(
-        (m) => m.DonacionFranjaFronterizaModule),
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule),
   }
 ];
 

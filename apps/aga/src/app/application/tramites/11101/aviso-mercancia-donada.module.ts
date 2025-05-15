@@ -1,8 +1,9 @@
 import { AnexarDocumentosComponent, FirmaElectronicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AvisoMercanciaDonadaRoutingModule } from './aviso-mercancia-donada-routing.module';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
-import { DonacionFranjaFronterizaRoutingModule } from './donación-franja-fronteriza-routing.module';
+// import { DonacionFranjaFronterizaRoutingModule } from './donación-franja-fronteriza-routing.module';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -40,7 +41,7 @@ import { Tramite11101Store } from './estados/tramite11101.store';
         BtnContinuarComponent,
         SolicitanteComponent,
         CommonModule,
-        DonacionFranjaFronterizaRoutingModule,
+      AvisoMercanciaDonadaRoutingModule,
         WizardComponent,
         AnexarDocumentosComponent,
     ],
@@ -63,4 +64,4 @@ import { Tramite11101Store } from './estados/tramite11101.store';
      */
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class DonacionFranjaFronterizaModule {}
+export class AvisoMercanciaDonadaModule { }
