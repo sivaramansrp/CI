@@ -765,15 +765,15 @@
   {
     "id": 110,
     "tramite": 260911,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-de-dispositivos/permiso-sanitario",
+    "linkDepartment": "/pago/modificacion-de-dispositivos/permiso-sanitario",
     "department": "cofepris"
   },
   {
     "id": 111,
     "tramite": 260912,
     "linkDashboard": "/cofepris/mod-permiso-importacion/permiso-sanitario",
-    "linkDepartment": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+    "linkDepartment": "/pago/mod-permiso-importacion/permiso-sanitario",
     "department": "cofepris"
   },
   {
@@ -1171,8 +1171,8 @@
   {
     "id": 168,
     "tramite": 140111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-derechos-de-permisos/solicitante",
+    "linkDepartment": "/pago/renuncia-de-derechos-de-permisos/solicitante",
     "department": "sener"
   },
   {
@@ -2067,15 +2067,15 @@
   {
     "id": 296,
     "tramite": 120702,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/expedicion-certificados-frontera/solicitante",
+    "linkDepartment": "/pago/expedicion-certificados-frontera/solicitante",
     "department": "se"
   },
   {
     "id": 297,
     "tramite": 130302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/parmiso-importacion-petroleo/pantallas",
+    "linkDepartment": "/pago/parmiso-importacion-petroleo/pantallas",
     "department": "sener"
   },
   {
