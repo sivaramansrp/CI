@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import {
   CROSLISTA_DE_FORMAS_FARMACEUTICAS,
-  CROSLISTA_DE_PAISES
+  CROSLISTA_DE_PAISES,
 } from '../../../../shared/constantes/datos-solicitud.enum';
 import {
   Catalogo,
@@ -22,8 +22,8 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component,OnDestroy, OnInit,} from '@angular/core';
-import { Subject,first,takeUntil, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, first, takeUntil, tap } from 'rxjs';
 import {
   Tramite260302State,
   Tramite260302Store,
@@ -50,7 +50,9 @@ import { Tramite260302Query } from '../../estados/tramite260302Query.query';
   styleUrl: './exporticon-mercancia-estupefacientes.component.scss',
   providers: [DatosSolicitudService],
 })
-export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDestroy {
+export class ExporticonMercanciaEstupefacientesComponent
+  implements OnInit, OnDestroy
+{
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
@@ -61,7 +63,13 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    * @property {MercanciaForm} MercanciaFormEstupefacientes
    * Input que recibe el estado inicial del formulario de mercancía.
    */
-   public mercanciaFormState!: MercanciaFormEstupefacientes
+  public mercanciaFormState!: MercanciaFormEstupefacientes;
+
+  /**
+   * @property {MercanciaForm} MercanciaFormEstupefacientes
+   * Input que recibe el estado inicial del formulario de mercancía.
+   */
+  public datoSeleccionado!: TablaMercanciasDatos;
 
   /**
    * @property {Catalogo[]} clasificacionProductoDatos
@@ -160,7 +168,6 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    */
   public paisDeDestinoDatos: Catalogo[] = [];
 
-
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
@@ -233,16 +240,20 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    */
   ngOnInit(): void {
     this.tramite260302Query.selectTramiteState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      first(), 
-      tap((seccionState)=>{
-        this.tramiteState = seccionState;
-        this.mercanciaFormState=this.tramiteState.mercanciaForm;
-        this.crearMercanciaForm();
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        first(),
+        tap((seccionState) => {
+          this.tramiteState = seccionState;
+          if (seccionState.seleccionadoTablaMercanciasDatos[0]) {
+            this.datoSeleccionado =
+              seccionState.seleccionadoTablaMercanciasDatos[0];
+          }
+          this.mercanciaFormState = this.tramiteState.mercanciaForm;
+          this.crearMercanciaForm();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -250,70 +261,68 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    * @description Crea y configura el formulario reactivo para la gestión de mercancías estupefacientes.
    * Este formulario incluye validaciones requeridas para varios campos relacionados con la clasificación,
    * denominación, tipo, cantidad, origen y otros detalles específicos de la mercancía.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
-   * 
+   *
    */
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
-        this.mercanciaFormState.clasificacionProducto,
+        this.obtenerValor('clasificacionProducto'),
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.mercanciaFormState.especificarClasificacionProducto,
+        this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionCumonInternacional: [
-        this.mercanciaFormState.denominacionCumonInternacional,
+        this.obtenerValor('denominacionCumonInternacional'),
         Validators.required,
       ],
       marcaComercialDenominacion: [
-        this.mercanciaFormState.marcaComercialDenominacion,
+        this.obtenerValor('marcaComercialDenominacion'),
         Validators.required,
       ],
-      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
       formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica,
+        this.obtenerValor('formaFarmaceutica'),
         Validators.required,
       ],
-      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
       fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria,
+        this.obtenerValor('fraccionArancelaria'),
         Validators.required,
       ],
       descripcionFraccion: [
-        this.mercanciaFormState.descripcionFraccion,
+        this.obtenerValor('descripcionFraccion'),
         Validators.required,
       ],
       unidadMedidaTarifa: [
-        this.mercanciaFormState.cantidadUmtValor,
+        this.obtenerValor('unidadMedidaTarifa'),
         Validators.required,
       ],
-      cantidadUMT: [this.mercanciaFormState.cantidadUmt, Validators.required],
-      cantidadUMC: [
-        this.mercanciaFormState.cantidadUmcValor,
+      cantidadUMT: [this.obtenerValor('cantidadUMT'), Validators.required],
+      cantidadUMC: [this.obtenerValor('cantidadUMC'), Validators.required],
+      unidadMedidaComercializacion: [
+        this.obtenerValor('unidadMedidaComercializacion'),
         Validators.required,
       ],
-      unidadMedidaComercializacion: [this.mercanciaFormState.cantidadUmc, Validators.required],
 
-
-      numeroCAS: [this.mercanciaFormState.numeroCAS],
+      numeroCAS: [this.obtenerValor('numeroCAS')],
       cantidadDeLotes: [
-        this.mercanciaFormState.cantidadDeLotes,
+        this.obtenerValor('cantidadDeLotes'),
         Validators.required,
       ],
 
       paisDeDestino: ['101', Validators.required],
 
       paisDeProcedencia: [
-        this.mercanciaFormState.paisDeProcedencia,
+        this.obtenerValor('paisDeProcedencia'),
         Validators.required,
       ],
 
-    
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
-      usoEspecifico: [this.mercanciaFormState.usoEspecifico],
+      presentacion: [this.obtenerValor('presentacion'), Validators.required],
+      usoEspecifico: [this.obtenerValor('usoEspecifico')],
     });
   }
 
@@ -408,19 +417,16 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     this.ubicaccion.back();
   }
 
-
   /**
    * @method mercanciaSeleccionado
-   * @description Maneja la selección de una mercancía en la tabla de mercancías. 
+   * @description Maneja la selección de una mercancía en la tabla de mercancías.
    * Actualiza el estado de la mercancía seleccionada y la configuración de datos de la tabla.
-   * 
+   *
    * @param {TablaMercanciasDatos} event - Objeto que contiene los datos de la mercancía seleccionada.
-   * 
+   *
    * @returns {void}
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
-    
-
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
@@ -474,7 +480,19 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     }));
   }
 
-
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(
+    field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes
+  ): string | number | undefined | string[] {
+    return (
+      this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ??
+      this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes]
+    );
+  }
 
   /**
    * @method ngOnDestroy
