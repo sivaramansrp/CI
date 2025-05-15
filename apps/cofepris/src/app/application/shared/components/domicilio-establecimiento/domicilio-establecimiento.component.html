@@ -197,14 +197,7 @@
       [datos]="mercanciasTablaDatos"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button
-        class="btn btn-default me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias"
-      >
-        Modificar
-      </button>
-      <button class="btn btn-default me-2">Eliminar</button>
+     
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
@@ -312,9 +305,10 @@
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
+          <ng-titulo titulo="Datos mercancía"></ng-titulo>
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial:</label>
+            <label for="nombreComercial">Nombre comercial *:</label>
             <input
               type="text"
               id="nombreComercial"
@@ -330,7 +324,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="nombreComun">nombre común:</label>
+            <label for="nombreComun">Nombre común *:</label>
             <input
               type="text"
               id="nombreComun"
@@ -346,7 +340,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="nombreCientifico">nombre científico:</label>
+            <label for="nombreCientifico">Nombre químico o científico :</label>
             <input
               type="text"
               id="nombreCientifico"
@@ -363,7 +357,7 @@
           </div>
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start"
-              >uso específico:</label
+              >Uso específico *:</label
             >
             <textarea
               id="usoEspecifico"
@@ -379,7 +373,8 @@
             ></textarea>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria">Fracción arancelaria*<i
+              class="bi bi-question-circle-fill"></i>:</label>
             <input
               type="text"
               id="fraccionArancelaria"
@@ -395,7 +390,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">descripción de la fracción:</label>
+            <label for="descripcionFraccion">Descripción de la fracción arancelaria *:</label>
             <input
               type="text"
               id="descripcionFraccion"
@@ -411,7 +406,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="cantidadUMT">Cantidad UMT*:</label>
+            <label for="cantidadUMT">Cantidad UMT *:</label>
             <input
               type="text"
               id="cantidadUMT"
@@ -423,7 +418,8 @@
             />
           </div>
           <div class="form-group">
-            <label for="UMT">UMT*:</label>
+            <label for="UMT">UMT*:<i
+              class="bi bi-question-circle-fill"></i></label>
             <input
               type="text"
               id="UMT"
@@ -433,7 +429,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="cantidadUMC">Cantidad UMC*:</label>
+            <label for="cantidadUMC">Cantidad UMC *:</label>
             <input
               type="text"
               id="cantidadUMC"
@@ -451,12 +447,13 @@
               [label]="'UMC'"
               [required]="true"
               name="UMC"
+              [tooltipQuestionCircle]="true"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
             ></app-catalogo-select>
           </div>
           <div class="form-group">
             <label for="porcentajeConcentracion"
-              >porcentaje de concentración:</label
+              >Porcentaje de concentración *:</label
             >
             <input
               type="text"
@@ -472,22 +469,7 @@
               "
             />
           </div>
-          <div class="form-group">
-            <label for="numeroRegistro">Número de registro sanitario*:</label>
-            <input
-              type="text"
-              id="numeroRegistro"
-              formControlName="numeroRegistro"
-              class="form-control"
-              (change)="
-                setValoresStore(
-                  formMercancias,
-                  'numeroRegistro',
-                  'setNumeroRegistro'
-                )
-              "
-            />
-          </div>
+         
 
           @if (configuracionVisibilidad.paisOrigen) {
           <div class="form-group mt-5">
@@ -527,8 +509,8 @@
                   (click)="mostrar_colapsable()"
                   tabindex="0"
                 >
-                  <p class="panel-title">
-                    país donde se produce o fabrica el ingrediente activo
+                  <p class="panel-title fw-bold">
+                    País donde se produce o fabrica el ingrediente activo
                   </p>
                   <button
                     type="button"
@@ -558,7 +540,7 @@
                   (click)="mostrar_colapsableDuos()"
                   tabindex="0"
                 >
-                  <p class="panel-title">país donde se elabora el producto</p>
+                  <p class="panel-title fw-bold">País donde se elabora el producto</p>
                   <button
                     type="button"
                     class="collpase-button collapsed"
@@ -587,7 +569,7 @@
                   (click)="mostrar_colapsableTres()"
                   tabindex="0"
                 >
-                  <p class="panel-title">país proveedor</p>
+                  <p class="panel-title fw-bold">País proveedor</p>
                   <button
                     type="button"
                     class="collpase-button collapsed"
@@ -616,8 +598,8 @@
                   (click)="mostrar_colapsableTres()"
                   tabindex="0"
                 >
-                  <p class="panel-title">
-                    país de procedencia/país de último puerto de embarque
+                  <p class="panel-title fw-bold">
+                    País de procedencia/País del último puerto de embarque
                   </p>
                   <button
                     type="button"
