@@ -85,8 +85,6 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   showAceptarModal = false;
     /** Visibilidad del modal de agentes aduanales. */
   showAgenteModal = false;
-  /** Visibilidad del modal de selección de destinatarios. */
-  showDestinatarioSeleccionarModal = false;
   /** Filas seleccionadas de destinatarios. */
   public selectedDestinatarioRows: Destinatarios[] = [];
    /** Filas seleccionadas de agentes aduanales. */
@@ -299,15 +297,6 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showAgenteModal = !this.showAgenteModal;
   }
-
-  /**
-   * Alterna visibilidad del modal de selección de destinatarios.
-   */
-  cambiarDestinatarioSeleccionar(): void {
-    this.showTableDiv = !this.showTableDiv;
-    this.showDestinatarioSeleccionarModal = !this.showDestinatarioSeleccionarModal;
-  }
-
   
  /**
    * Abre el modal de confirmación.

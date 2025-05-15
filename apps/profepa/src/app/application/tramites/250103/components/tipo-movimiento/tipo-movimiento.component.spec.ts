@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TipoMovimientoComponent } from './tipo-movimiento.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
 import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/embalaje-de-madera.enum';
 import { of } from 'rxjs';
@@ -36,8 +36,8 @@ describe('TipoMovimientoComponent', () => {
       imports: [TipoMovimientoComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: mockStore },
-        { provide: Tramite250102Query, useValue: mockQuery },
+        { provide: Tramite250103Store, useValue: mockStore },
+        { provide: Tramite250103Query, useValue: mockQuery },
         { provide: TipoMovimientoService, useValue: mockService }
       ]
     }).compileComponents();

@@ -22,14 +22,6 @@
         </button>
         <button
           type="button"
-          class="btn btn-default ms-3"
-          id="agregarDestinatario"
-          (click)="cambiarDestinatarioSeleccionar()"
-        >
-          Seleccionar
-        </button>
-        <button
-          type="button"
           class="btn btn-primary ms-3"
           id="capturarDestinatario"
           (click)="cambiarDestinatario()"
@@ -419,26 +411,4 @@
   </div>
 </app-modal>
 
-<app-modal [active]="showDestinatarioSeleccionarModal">
-  <ng-titulo titulo="Selecciona el destinatario" />
 
-  <app-tabla-dinamica
-    [configuracionTabla]="tablaDestinatariosData"
-    [datos]="agregarDestinatariosTablaDatos"
-    [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-  >
-  </app-tabla-dinamica>
-  <div class="col-md-12 mt-5 d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-danger"
-      id="btnCancelarAgente"
-      (click)="cambiarDestinatarioSeleccionar()"
-    >
-      Cancelar
-    </button>
-    <button type="button" class="btn btn-primary ms-3" id="btnAgregarAgente">
-      Agregar
-    </button>
-  </div>
-</app-modal>
