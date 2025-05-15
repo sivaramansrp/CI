@@ -68,9 +68,6 @@ describe('ComponenteDeActualizacionComponent', () => {
     component.fetchListaDeDocumentos = jest.fn();
     component.fetchListaDeInversion = jest.fn();
     component.ngOnInit();
-    // expect(component.initForm).toHaveBeenCalled();
-    // expect(component.fetchListaDeDocumentos).toHaveBeenCalled();
-    // expect(component.fetchListaDeInversion).toHaveBeenCalled();
   });
 
   it('should run #initForm()', async () => {
@@ -82,7 +79,6 @@ describe('ComponenteDeActualizacionComponent', () => {
       valorEnPesos: {}
     };
     component.initForm();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #fetchListaDeDocumentos()', async () => {
@@ -107,8 +103,6 @@ describe('ComponenteDeActualizacionComponent', () => {
     component.modificarFormulario = component.modificarFormulario || {};
     component.modificarFormulario.patchValue = jest.fn();
     component.fetchListaDeDocumentos();
-    // expect(component.consultaAvisoAcreditacionService.getListaDeDocumentos).toHaveBeenCalled();
-    // expect(component.modificarFormulario.patchValue).toHaveBeenCalled();
   });
 
   it('should run #fetchListaDeInversion()', async () => {
@@ -133,8 +127,6 @@ describe('ComponenteDeActualizacionComponent', () => {
     component.modificarFormulario = component.modificarFormulario || {};
     component.modificarFormulario.patchValue = jest.fn();
     component.fetchListaDeInversion();
-    // expect(component.consultaAvisoAcreditacionService.getListaDeDocumentos).toHaveBeenCalled();
-    // expect(component.modificarFormulario.patchValue).toHaveBeenCalled();
   });
 
 });

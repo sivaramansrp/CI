@@ -168,3 +168,7 @@ It will show tasks that you can run with Nx.
     - npx nx build aga --configuration=development --base-href=/aga/
     - npx nx build aga --configuration=qa --base-href=/aga/
     - npx nx build aga --configuration=production --base-href=/aga/
+
+# Run the applicaiton@local - Department 
+    - npx nx serve aga --publicHost http://localhost --verbose
+    - npx nx serve dashboard --publicHost http://localhost 

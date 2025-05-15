@@ -121,22 +121,22 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Establece los valores en el store y actualiza el campo 'umt'.
    */
   onFraccionArancelariaChange(): void {
-    this.setValoresStore(this.datosDeLaMercanciaForm, 'fraccionArancelaria', 'setFraccionArancelaria');
+    this.setValoresStore(this.datosDeLaMercanciaForm, 'fraccionArancelaria');
     this.datosDeLaMercanciaForm.get('umt')?.setValue('Pieza');
-    this.setValoresStore(this.datosDeLaMercanciaForm, 'umt', 'setUmt');
+    this.setValoresStore(this.datosDeLaMercanciaForm, 'umt');
   }
-
+ 
   /**
    * Establece los valores en el store.
    * @param {FormGroup} form - El formulario del cual se obtienen los valores.
    * @param {string} campo - El nombre del campo del formulario.
    * @param {keyof Tramite130119Store} metodoNombre - El nombre del método del store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130119Store): void {
+  
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite130119Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite130119Store.establecerDatos({[campo]: VALOR});
   }
-
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
@@ -170,7 +170,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     this.datosDeLaMercanciaForm.patchValue({
       fechaExpedicionFactura: nuevo_valor,
     });
-  this.setValoresStore(this.datosDeLaMercanciaForm,'fechaExpedicionFactura','setFechaExpedicionFactura');
+  this.setValoresStore(this.datosDeLaMercanciaForm,'fechaExpedicionFactura');
   }
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
