@@ -47,7 +47,7 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118, 240123];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121, 240107,240311, 240407, 240123,240321];
+export const OCULTAR_BOTONES = [240121, 240107,240311, 240407, 240123,240321, 240118];
 
  /**
  * @const NO_VISIBILIDAD_UMC

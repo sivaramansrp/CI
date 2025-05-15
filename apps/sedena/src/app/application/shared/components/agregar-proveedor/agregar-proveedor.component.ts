@@ -113,7 +113,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location // eslint-disable-next-line no-empty-function
+    private ubicaccion: Location 
   ) {}
   /**
    * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
@@ -156,6 +156,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.crearFormaulario();
     this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
     this.campoObligatorioChange();
+        if (this.idProcedimiento === 240118) {
+      this.agregarProveedorForm.enable();
+    } else {
+      this.agregarProveedorForm.disable();
+    }
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
