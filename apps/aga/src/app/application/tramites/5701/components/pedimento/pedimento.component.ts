@@ -172,56 +172,74 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       const NUMERO_PEDIMENTO = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
         : 0;
-      if (NUMERO_PEDIMENTO !== 0) {
-        const BODY: BodyEstadoPedimento = {
-          aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
-          patente: 23424,
-          pedimento: parseInt(this.pedimentoForm.value, 10),
-        }
+      switch (NUMERO_PEDIMENTO) {
+        case 0:
 
-        this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
-          takeUntil(this.destroyNotifier$),
-          map((response) => {
-            if (response.codigo === '00') {
-              const PEDIMENTO = {
-                patente: response.datos.patente,
-                pedimento: response.datos.pedimento,
-                aduana: response.datos.aduana,
-                estadoPedimento: response.datos.estado_pedimento,
-                subEstadoPedimento: response.datos.sub_estado_pedimento,
-                idTipoPedimento: 0,
-                descTipoPedimento: 'Por evaluar',
-                numero: '',
-                comprobanteValor: '',
-                pedimentoValidado: response.datos.pedimento_valido,
-              };
-              this.pedimentos.push(PEDIMENTO);
-              this.pedimentoForm.reset();
-              this.datosTablaPedimento.emit(this.pedimentos);
-            } else {
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'alert',
-                categoria: 'danger',
-                modo: 'action',
-                titulo: 'Avisos',
-                mensaje: ERR_VALIDACION_PEDIMENTO,
-                cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
+          break;
+
+        default:
+          break;
+      }
+
+      switch (NUMERO_PEDIMENTO) {
+        case 0:
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Avisos',
+            mensaje: MSG_NRO_PEDIMENTO,
+            cerrar: false,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          }
+          break;
+
+        default: {
+          const BODY: BodyEstadoPedimento = {
+            aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
+            patente: 23424,
+            pedimento: parseInt(this.pedimentoForm.value, 10),
+          }
+
+          this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
+            takeUntil(this.destroyNotifier$),
+            map((response) => {
+              switch (response.codigo) {
+                case '00': {
+                  const PEDIMENTO = {
+                    patente: response.datos.patente,
+                    pedimento: response.datos.pedimento,
+                    aduana: response.datos.aduana,
+                    estadoPedimento: response.datos.estado_pedimento,
+                    subEstadoPedimento: response.datos.sub_estado_pedimento,
+                    idTipoPedimento: 0,
+                    descTipoPedimento: 'Por evaluar',
+                    numero: '',
+                    comprobanteValor: '',
+                    pedimentoValidado: response.datos.pedimento_valido,
+                  };
+                  this.pedimentos.push(PEDIMENTO);
+                  this.pedimentoForm.reset();
+                  this.datosTablaPedimento.emit(this.pedimentos);
+                }
+                  break;
+                default:
+                  this.nuevaNotificacion = {
+                    tipoNotificacion: 'alert',
+                    categoria: 'danger',
+                    modo: 'action',
+                    titulo: 'Avisos',
+                    mensaje: ERR_VALIDACION_PEDIMENTO,
+                    cerrar: false,
+                    txtBtnAceptar: 'Aceptar',
+                    txtBtnCancelar: '',
+                  }
+                  break;
               }
-            }
-          })
-        ).subscribe();
-      } else {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: 'Avisos',
-          mensaje: MSG_NRO_PEDIMENTO,
-          cerrar: false,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
+            })
+          ).subscribe();
+          break;
         }
       }
     }
