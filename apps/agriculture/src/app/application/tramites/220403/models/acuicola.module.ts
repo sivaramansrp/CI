@@ -31,6 +31,10 @@ export interface FormularioGrupo {
   combinacionRequerida: CombinacionRequerida,
   transporte: Transporte,
   pagoDerechos: PagoDerechos,
+  datosRealizarValidada: boolean,
+  combinacionRequeridaValidada: boolean,
+  transporteValidada: boolean,
+  pagoDerechosValidada: boolean,
 }
 
 export interface DatosRealizar {

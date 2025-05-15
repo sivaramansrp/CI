@@ -6,6 +6,9 @@ import {
   LabelValueDatos,
   MenuConfig,
   Props,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -45,7 +48,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           class: 'col-md-4',
         },
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.SELECT,
           props: DATOS_PAGO_DERECHOS[2] as unknown as Props,
           class: 'col-md-4',
         },
@@ -72,12 +75,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   evento = {};
   inputTypes = InputTypes;
 
+  /**
+   * Estado de la sección utilizado para manejar el estado actual de la sección.
+   */
+  private seccionState!: SeccionLibState;
+
+  /**
+   * Fecha de pago seleccionada.
+   * @type {string}
+   * @default '15/05/2025'
+   */
+  fechaPagoDate: string = '15/05/2025';
+
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
     private exportaccionAcuicolaServcios: ExportaccionAcuicolaService,
     private tramite220403Query: Tramite220403Query,
     private tramite220403store: Tramite220403Store,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
   ) {
     this.crearFormulario();
   }
@@ -96,6 +113,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
 
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    
     this.tramite220403Query.setPagoDerechos$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -104,6 +130,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    this.formulario.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+      .subscribe(
+        () => {
+    if( (this.formulario.get('pagoDerechos')?.valid) ){
+      this.tramite220403store.setPagoDerechos(this.formulario.get('pagoDerechos')?.value);
+      const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
+      this.tramite220403store.setPagoDerechosValidada(VALIDA);
+      this.exportaccionAcuicolaServcios.actualizarFormaValida();
+    }
+    else{
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([false]);
+    }
+  });
   }
 
   /**
@@ -121,7 +163,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
       const VALIDATORS = campo.props.validators
         ? PagoDeDerechosComponent.getValidators(campo.props.validators)
-        : [Validators.required];
+        : [];
       const CONTROL_NAME = campo.props.campo;
       GRUPO.addControl(
         CONTROL_NAME,
@@ -168,8 +210,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     indiceMenu: number,
     clave: string
   ): void {
-    this.catalogosServicios
-      .getCatalogo(clave)
+    this.exportaccionAcuicolaServcios
+      .obtenerMenuDesplegable(clave)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((resp) => {
@@ -208,8 +250,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param evento - El nuevo valor de la fecha como cadena.
    */
   fechaCambiado(evento: string): void {
-    // Manejar cambio de fecha
-    this.evento = evento;
+    this.formulario.get('pagoDerechos')?.patchValue({
+      fechaPago: evento,
+    });
+    this.fechaPagoDate = evento;
   }
 
   /**
@@ -234,10 +278,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue =
       evento;
-  }
-
-  onSubmit(): void {
-    this.tramite220403store.setDatosRealizar(this.formulario.value.datosRealizar);
   }
 
   ngOnDestroy(): void {

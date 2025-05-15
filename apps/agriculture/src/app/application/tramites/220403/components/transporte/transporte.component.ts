@@ -6,6 +6,9 @@ import {
   LabelValueDatos,
   MenuConfig,
   Props,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -54,17 +57,17 @@ configuracion: InputConfig[] = [
       },
       {
         inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        props: DATOS_TRANSPORTE[2] as unknown as Props,
         class: 'col-md-4',
       },
       {
         inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        props: DATOS_TRANSPORTE[3] as unknown as Props,
         class: 'col-md-4',
       },
       {
         inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        props: DATOS_TRANSPORTE[4] as unknown as Props,
         class: 'col-md-4',
       },
     ],
@@ -91,6 +94,18 @@ evento = {};
  */
 inputTypes = InputTypes;
 
+/**
+ * @private
+ * @property {SeccionLibState} seccionState - Estado de la sección utilizado para gestionar 
+ * la lógica interna del componente de transporte.
+ * 
+ * @remarks
+ * Esta propiedad almacena el estado relacionado con la sección actual y se utiliza 
+ * para coordinar las operaciones específicas del componente.
+ * 
+ * @see SeccionLibState
+ */
+private seccionState!: SeccionLibState;
 
   constructor(
     private fb: FormBuilder,
@@ -98,6 +113,8 @@ inputTypes = InputTypes;
     private exportaccionAcuicolaServcios: ExportaccionAcuicolaService,
     private tramite220403Query: Tramite220403Query,
     private tramite220403store: Tramite220403Store,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
   ) {
     this.crearFormulario();
   }
@@ -106,8 +123,16 @@ inputTypes = InputTypes;
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
   
-    this.tramite220403Query.setPagoDerechos$
+    this.tramite220403Query.setTransporte$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
@@ -115,6 +140,22 @@ inputTypes = InputTypes;
         })
       )
       .subscribe();
+
+      this.formulario.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+      .subscribe(
+        () => {
+    if (this.formulario.get('transporte')?.valid) {
+      this.tramite220403store.setTransporte(this.formulario.get('transporte')?.value);
+      const VALIDA = this.formulario.get('transporte')?.valid ? true : false;
+      this.tramite220403store.setTransporteValidada(VALIDA);
+      this.exportaccionAcuicolaServcios.actualizarFormaValida();
+    }
+    else{
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([false]);
+    }
+  });
   }
 
   /**
@@ -141,7 +182,7 @@ inputTypes = InputTypes;
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
       const VALIDATORS = campo.props.validators
         ? TransporteComponent.getValidators(campo.props.validators)
-        : [Validators.required];
+        : [];
       const CONTROL_NAME = campo.props.campo;
       GRUPO.addControl(
         CONTROL_NAME,
@@ -152,13 +193,6 @@ inputTypes = InputTypes;
       );
       if (campo.inputType === InputTypes.SELECT) {
         this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
-      }
-      if (campo.inputType === InputTypes.RADIO) {
-        this.getRadioData(campo.props.jsonDataFileName, (data) => {
-          this.configuracion[1].menu[0].props.radioOptions = data;
-          this.configuracion[1].menu[0].props.radioSelectedValue =
-            data[0].value;
-        });
       }
     });
   }
@@ -188,8 +222,8 @@ inputTypes = InputTypes;
     indiceMenu: number,
     clave: string
   ): void {
-    this.catalogosServicios
-      .getCatalogo(clave)
+    this.exportaccionAcuicolaServcios
+      .obtenerMenuDesplegable(clave)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((resp) => {
@@ -254,10 +288,6 @@ inputTypes = InputTypes;
   ): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue =
       evento;
-  }
-
-  onSubmit(): void {
-    this.tramite220403store.setTransporte(this.formulario.value.transporte);
   }
 
   ngOnDestroy(): void {

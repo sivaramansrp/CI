@@ -1,10 +1,10 @@
-import { DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
+import { CombinacionRequerida, DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 export const INITIAL_STATE: FormularioGrupo = {
   datosRealizar: {
-    certificadoTipo: '',
+    certificadoTipo: 'animal',
     aduanaEmbarque: '',
     numeroContenedor: '',
     parisOrigen: '',
@@ -32,6 +32,10 @@ export const INITIAL_STATE: FormularioGrupo = {
     fechaPago: '',
     importePago: '',
   },
+  datosRealizarValidada: false,
+  combinacionRequeridaValidada: false,
+  transporteValidada: false,
+  pagoDerechosValidada: false,
 };
 
 /**
@@ -63,6 +67,21 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * Establece la combinación requerida en el estado.
+   * 
+   * @param {CombinacionRequerida} combinacionRequerida - La combinación requerida que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setCombinacionRequerida(combinacionRequerida: CombinacionRequerida): void {
+    this.update((state) => ({
+      ...state,
+      combinacionRequerida,
+    }));
+  }
+
+
+  /**
    * Establece el Transporte en el almacén.
    * 
    * @param {Transporte} transporte - El Transporte que se va a establecer en el almacén.
@@ -87,6 +106,34 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
     this.update((state) => ({
       ...state,
       pagoDerechos,
+    }));
+  }
+
+  setDatosRealizarValidada(datosRealizarValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      datosRealizarValidada,
+    }));
+  }
+
+  setCombinacionRequeridaValidada(combinacionRequeridaValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      combinacionRequeridaValidada,
+    }));
+  }
+
+  setTransporteValidada(transporteValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      transporteValidada,
+    }));
+  }
+
+  setPagoDerechosValidada(pagoDerechosValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechosValidada,
     }));
   }
 
