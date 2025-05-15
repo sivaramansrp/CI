@@ -6,6 +6,7 @@ import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacio
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 import { Input } from '@angular/core';
 import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum';
+import { OCULTAR_BOTON_MODIFICAR_TERCEROS } from '../../constants/datos-solicitud.enum';
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { Router } from '@angular/router';
@@ -88,6 +89,13 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @type {EventEmitter<Proveedor>}
    */
   @Output() modificarProveedorDatos: EventEmitter<Proveedor> = new EventEmitter<Proveedor>(true);
+  
+  /**
+   * Indica si el botón de modificar está oculto o visible.
+   * @property {boolean} ocultarBotonModificar
+   */
+
+  ocultarBotonModificar:boolean=false;
 
   /**
    * Configuración de la tabla de destinatarios finales.
@@ -162,6 +170,9 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarDestinatario(): void {
     this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
+    this.router.navigate(['../agregar-destino-final'], { relativeTo: this.activatedRoute,queryParams: { destinario:this.destinarioTablaSeleccionada[0].codigoPostal } 
+    });
+  
   }
   
   /**
@@ -190,9 +201,12 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarProveedor(): void {
     this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
+    this.router.navigate(['../agregar-proveedor'], { relativeTo: this.activatedRoute,queryParams: {proveedor:this.proveedorTablaSeleccionada[0].rfc} 
+    });
   }
   ngOnInit(): void {
-    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
+    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento); 
     this.tercerosNacionalidad = TERCEROS_NACIONALIDAD.includes(this.idProcedimiento);
+    this.ocultarBotonModificar = OCULTAR_BOTON_MODIFICAR_TERCEROS.includes(this.idProcedimiento);
   }
 }

@@ -151,6 +151,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoOpcionSeguroGlobalModule),
   },
   {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule),
+  },
+  {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
@@ -164,7 +170,20 @@ const ROUTES: Routes = [
         (m) => m.ImportadorYOExportadorModule
       ),
   },
+  { 
+    path: 'retorno-seguro-vehiculos-extranjeros',
+    loadChildren: () =>
+      import('./tramites/32514/aviso-retorno.module').then(
+        (m) => m.AvisoRetornoModule)
+  },
   {
+    path: 'aviso-mercancia',
+    loadChildren: () =>
+      import('./tramites/32509/aviso-de-mercancia.module').then(
+        (m) => m.AvisoDeMercanciaModule
+      ),
+  },
+   {
     path: 'cancelacion-garantia',
     loadChildren: () =>
       import('./tramites/31401/cancelacion-garantia.module').then(

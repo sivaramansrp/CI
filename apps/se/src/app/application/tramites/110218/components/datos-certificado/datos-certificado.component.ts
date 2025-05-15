@@ -22,9 +22,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
-
-import { Observable } from 'rxjs';
+import { Solicitud110218State, Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -37,7 +35,6 @@ import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
  * Este componente permite a los usuarios interactuar con los datos del certificado,
  * incluyendo la visualización de datos en una tabla dinámica, la selección de filas
  * y la navegación a otras secciones de la aplicación.
- *
  */
 @Component({
   selector: 'app-datos-certificado',
@@ -49,69 +46,55 @@ import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Formulario para los datos del certificado.
-   * DatosCertificadoComponent
-   * 
+   * Contiene campos como lugar y observaciones.
    */
-  datosDelCertificado: FormGroup;
+  datosDelCertificado!: FormGroup;
+
+  /**
+   * Estado seleccionado del trámite 110218.
+   * Contiene los valores actuales almacenados en el estado global.
+   */
+  estadoSeleccionado!: Solicitud110218State;
+
   /**
    * Configuración para la tabla de datos del certificado.
-   * DatosCertificadoComponent
-   * 
+   * Define las columnas y propiedades de la tabla.
    */
   arregloConfiguracionTabla = CERTIFICADO_TABLA;
+
   /**
    * Tipo de selección de la tabla (radio).
-   * DatosCertificadoComponent
-   * 
+   * Define el tipo de selección que se puede realizar en la tabla.
    */
   radioDeMesa = TablaSeleccion.RADIO;
+
   /**
    * Datos para la tabla.
-   * DatosCertificadoComponent
-   * 
+   * Contiene un arreglo de objetos de tipo `CompliMentaria`.
    */
   datos: CompliMentaria[] = [];
-  /**
-   * Fila seleccionada en la tabla.
-   * DatosCertificadoComponent
-   *
-   */
-  filaSeleccionada: CompliMentaria | null = null;
+
   /**
    * Lista de filas seleccionadas en la tabla.
-   * DatosCertificadoComponent
-   *
+   * Contiene todas las filas seleccionadas por el usuario.
    */
-  filasSeleccionadas: CompliMentaria[] = [];
-  /**
-   * Observable para el lugar del certificado.
-   * DatosCertificadoComponent
-   * 
-   */
-  lugar$: Observable<string | null> = this.tramite110218Query.lugar$;
-  /**
-   * Observable para las observaciones del certificado.
-   * DatosCertificadoComponent
-   * 
-   */
-  observaciones$: Observable<string | null> = this.tramite110218Query.observaciones$;
+  filaSeleccionada!: CompliMentaria;
+
   /**
    * Catálogo para el tipo de factura.
-   * DatosCertificadoComponent
-   *
+   * Contiene un arreglo de objetos de tipo `Catalogo`.
    */
   tipodeFactura: Catalogo[] = [];
+
   /**
    * Catálogo para la unidad de medida de comercialización.
-   * DatosCertificadoComponent
-   * 
+   * Contiene un arreglo de objetos de tipo `Catalogo`.
    */
   unidaddeMedidadeComercializacion: Catalogo[] = [];
 
   /**
    * Subject para la destrucción del componente.
-   * DatosCertificadoComponent
-   *
+   * Utilizado para manejar la limpieza de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
 
@@ -126,138 +109,121 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   indice: number = 5;
 
   /**
- * Evento de salida que emite un valor booleano cuando se modifica el certificado.
- */
+   * Evento de salida que emite un valor booleano cuando se modifica el certificado.
+   */
   @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
- /**
- * Constructor del componente.
- * 
- * Instancia de FormBuilder para crear grupos de formularios.
- * Servicio para manejar operaciones relacionadas con certificados.
- * Almacén para gestionar el estado relacionado con el Trámite 110218.
- * Consulta para recuperar datos relacionados con el Trámite 110218.
- */
+
+  /**
+   * Constructor del componente.
+   *
+   * formBuilder - Constructor de formularios reactivos.
+   * service - Servicio para manejar operaciones relacionadas con certificados.
+   * tramite110218Store - Store para manejar el estado relacionado con el Trámite 110218.
+   * tramite110218Query - Query para recuperar datos relacionados con el Trámite 110218.
+   */
   constructor(
-    private fb: FormBuilder,
+    public formBuilder: FormBuilder,
     private service: CertificadoTecnicoJaponService,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query
-  ) {
-    this.datosDelCertificado = this.crearFormularioDatosDelCertificado();
-  }
-  
+  ) {}
+
   /**
-   * Crea y devuelve un FormGroup para los datos del certificado.
+   * Crea y configura el formulario para los datos del certificado.
    * Contiene los controles 'lugar' y 'observaciones' con sus respectivas validaciones.
-   * Retorna el formulario creado.
    */
-  private crearFormularioDatosDelCertificado(): FormGroup {
-    return this.fb.group({
+  inicializarFormulario(): void {
+    this.datosDelCertificado = this.formBuilder.group({
       /**
        * El lugar donde se emite el certificado.
        * Este campo es obligatorio.
        */
-      lugar: ['', Validators.required],
-  
+      lugar: [this.estadoSeleccionado?.lugar, Validators.required],
+
       /**
        * Observaciones o comentarios relacionados con el certificado.
        * Este campo es obligatorio.
        */
-      observaciones: ['', Validators.required]
+      observaciones: [this.estadoSeleccionado?.observaciones, Validators.required],
     });
   }
+
   /**
-   * Método de inicialización del componente.
-   * Obtiene los datos de la tabla y se suscribe a los cambios en el store.
-   * También inicializa los datos seleccionados previamente desde el store.
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Obtiene los datos de la tabla, se suscribe a los cambios en el store
+   * y configura el formulario.
    */
   ngOnInit(): void {
     this.obtenerDatosDeTabla();
-    this.suscribirseACambiosEnLaTienda();
-
-    this.tramite110218Query.tableDataDatos$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.tablaSeleccionadaDeLaTienda = data.length > 0 ? data[0] : null;
-    }
-    )
-
-
+    this.getValorStore();
+    this.inicializarFormulario();
   }
+
   /**
    * Obtiene los datos de la tabla desde el servicio.
    * Actualiza la propiedad `datos` con los datos obtenidos.
    */
   obtenerDatosDeTabla(): void {
-    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe((data: { [key: string]: string | number | boolean }) => {
-      this.datos = Array.isArray(data) ? data as CompliMentaria[] : [];
-    });
+    this.service
+      .getDatosCertificado()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: { [key: string]: string | number | boolean }) => {
+        this.datos = Array.isArray(data) ? (data as CompliMentaria[]) : [];
+      });
   }
+
   /**
    * Maneja la selección de una fila en la tabla.
    * Actualiza la propiedad `filaSeleccionada` con la fila seleccionada.
-   * filaSeleccionada es la fila seleccionada en la tabla.
+   *
+   * fila - Fila seleccionada en la tabla.
    */
   manejarFilaSeleccionada(fila: CompliMentaria): void {
-    this.filaSeleccionada = fila;
+    this.filaSeleccionada = fila; // Actualiza la fila seleccionada
   }
+
   /**
    * Navega a la sección de mercancías seleccionadas del formulario.
    * Almacena los valores de la fila seleccionada en el store y emite un evento para modificar el certificado.
    */
   enModificarFormulario(): void {
-    if (this.filaSeleccionada) {
-      this.tramite110218Store.almacenarValoresDeTabla(this.filaSeleccionada);
+    if (this.filaSeleccionada){
+      this.modificarEventCertificado.emit(false);
     }
-    this.modificarEventCertificado.emit(false);
+    
+  }
 
-  }
   /**
-   * Suscribe a los cambios en el store y actualiza los valores del formulario.
-   * Se suscribe a los observables `lugar$` y `observaciones$` para actualizar los controles correspondientes.
-   */
-  suscribirseACambiosEnLaTienda(): void {
-    const OBSERVABLES = {
-      lugar: this.lugar$,
-      observaciones: this.observaciones$,
-    };
-    Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
-      OBSERVABLES$.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
-        if (value) {
-          this.datosDelCertificado.get(controlName)?.setValue(value);
-        }
-      });
-    });
-  }
-  /**
-   * Método de destrucción del componente.
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Limpia las suscripciones activas para evitar fugas de memoria.
    */
-
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 
   /**
-      * Maneja los cambios en los controles del formulario y actualiza el store.
-      * Actualiza el valor correspondiente en el store según el control modificado.
-      * controlName es el nombre del control del formulario que cambió.
-      */
-  enCambioDeDatosDelCertificado(controlName: string): void {
-    const VALUE = this.datosDelCertificado.get(controlName)?.value;
-
-    switch (controlName) {
-      case 'lugar':
-        this.tramite110218Store.establecerLugar(VALUE);
-        break;
-      case 'observaciones':
-        this.tramite110218Store.establecerObservaciones(VALUE);
-        break;
-
-      default:
-        break;
-    }
-
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * FormGroup - Formulario reactivo.
+   * control - Nombre del control cuyo valor se actualizará en el store.
+   */
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite110218Store.setTramite110218State({
+      [control]: VALOR,
+    });
   }
 
-
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
+   */
+  getValorStore(): void {
+    this.tramite110218Query.selectTramite110218State$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+      });
+  }
 }
