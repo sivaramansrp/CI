@@ -153,13 +153,13 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    * @param event - Objeto que contiene el nombre del campo y el valor a actualizar.
    * Si el campo es 'tieneCertificacion', se muestra un modal al usuario.
    */
-  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+  establecerCambioDeValor(event: { campo: string; valor: object | string | boolean }): void {
     if (event) {
       // Actualiza el valor dinámico en el store.
       this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
 
       // Si el campo es 'tieneCertificacion', muestra un modal.
-      if (event.campo === 'tieneCertificacion') {
+      if (event.campo === 'tieneCertificacion' && event.valor=== true) {
         this.abrirEliminarConfirmationPopup();
       }
     }
