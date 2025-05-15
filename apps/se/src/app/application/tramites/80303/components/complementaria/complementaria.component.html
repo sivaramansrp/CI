@@ -1,0 +1,70 @@
+<div class="container">
+    
+    <ng-titulo titulo="Datos de los socios y/o accionistas"></ng-titulo>
+    <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionAccionistasTabla"
+          [datos]="accionistasTablaDatos"
+          (listaDeFilaSeleccionada)="accionistasTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+
+      <ng-titulo titulo="Datos de los federatarios"></ng-titulo>
+      <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionFederatariosTabla"
+          [datos]="federatariosTablaDatos"
+          (listaDeFilaSeleccionada)="federatariosTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+
+      <ng-titulo titulo="Datos de las plantas donde se realizarán las operaciones IMMEX"></ng-titulo>
+      <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionPlantasIMMEX"
+          [datos]="plantasIMMEXDatos"
+          (listaDeFilaSeleccionada)="plantasIMMEXSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+      
+      <ng-titulo titulo="Empresas submanufactureras"></ng-titulo>
+      <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionEmpresasSubmanufacturerasTabla"
+          [datos]="empresasSubmanufacturerasTablaDatos"
+          (listaDeFilaSeleccionada)="empresasSubmanufacturerasTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+
+      <ng-titulo titulo="Plantas manufactureras"></ng-titulo>
+      <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionPlantasManufacturerasTabla"
+          [datos]="plantasManufacturerasTablaDatos"
+          (listaDeFilaSeleccionada)="plantasManufacturerasTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+
+      <ng-titulo titulo="Servicios Immex"></ng-titulo>
+        <div class="row">
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionServiciosImmexTabla"
+                [datos]="serviciosImmexTablaDatos"
+                (listaDeFilaSeleccionada)="serviciosImmexTablaSeleccionada = $event"></app-tabla-dinamica>
+        </div>
+
+        <ng-titulo titulo="Datos de la certificación ante el SAT"></ng-titulo>
+        <div class="row">
+            <div class="col-md-5">
+                <label for="certificacionSAT" class="form-label">Certificado (SI/NO):</label>
+            </div>
+            <div class="col-md-5">
+                <input type="text" [value]="certificacionSAT$()" (input)="onInputChange($event)" class="form-control"
+                  disabled  id="certificacionSAT">
+            </div>
+        </div>
+</div>
