@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { DetallesFolioComponent } from '../detalles-folio/detalles-folio.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { NotificacionActoAdministrativoComponent } from '../notificacion-acto-administrativo/notificacion-acto-administrativo.component';
+import { Router } from '@angular/router';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -22,7 +23,12 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 })
 export class ConfirmarNotificacionComponent {
   indiceDePaso = 1;
-
+  constructor(private router: Router) {
+    const NV = this.router.getCurrentNavigation();
+    if (NV?.extras.state?.['isAcuseRecibo']) {
+      this.indiceDePaso = 3;
+    }
+  }
   alContinuar(): void {
     this.indiceDePaso = this.indiceDePaso + 1;
   }
