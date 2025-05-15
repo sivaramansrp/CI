@@ -100,6 +100,7 @@ export class LibBandejaComponent<T> implements OnInit {
       this.tramiteData[0].department,
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
+      ROW_OBJETO.estadoDeTramite,
       true,
       false,
       false
@@ -115,7 +116,12 @@ export class LibBandejaComponent<T> implements OnInit {
       this.router.navigate(['/confirmar-notificacion']);
     } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION') {
       this.router.navigate(['/confirmar-resolucion']);
-    } else if (ORIGIN === 'SUBSECUENTES') {
+    } else if ((ORIGIN === 'FLUJO_FUNCIONARIO_EVALUAR')) {
+      this.router.navigate([`/${this.tramiteData[0].department}/evaluar`]);
+    } else if ((ORIGIN === 'FLUJO_FUNCIONARIO_AUTORIZACION')) {
+      this.router.navigate([`/${this.tramiteData[0].department}/autorizar`]);
+    }
+    else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
     } else {
       this.router.navigate([

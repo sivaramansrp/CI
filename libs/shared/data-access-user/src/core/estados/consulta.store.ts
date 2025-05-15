@@ -1,18 +1,21 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { ConsultaioSolicitante } from '../models/consultaio-solicitante';
 import { Injectable } from '@angular/core';
 
 /**
  * Estado para la información de Consultaio obtenida del inicio de sesión
  */
 export interface ConsultaioState {
-    procedureId: string;
-    parameter: string;
-    department: string;
-    folioTramite:string;
-    tipoDeTramite:string;
-    readonly: boolean;
-    create: boolean;
-    update: boolean;
+  procedureId: string;
+  parameter: string;
+  department: string;
+  folioTramite: string;
+  tipoDeTramite: string;
+  estadoDeTramite: string;
+  readonly: boolean;
+  create: boolean;
+  update: boolean;
+  consultaioSolicitante: ConsultaioSolicitante | null;
 }
 
 /**
@@ -24,11 +27,13 @@ export function createConsultaInitialState(): ConsultaioState {
     procedureId: '',
     parameter: '',
     department: '',
-    folioTramite:'',
-    tipoDeTramite:'',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
     readonly: false,
     create: true,
     update: false,
+    consultaioSolicitante: null,
   };
 }
 
@@ -49,7 +54,7 @@ export class ConsultaioStore extends Store<ConsultaioState> {
    * @param nombre
    */
   public establecerConsultaio(procedureId: string, parameter: string,
-    department: string, folioTramite:string, tipoDeTramite:string, readonly: boolean, create: boolean, update: boolean): void {
+    department: string, folioTramite: string, tipoDeTramite: string, estadoDeTramite: string, readonly: boolean, create: boolean, update: boolean): void {
     this.update(state => ({
       ...state,
       procedureId,
@@ -57,9 +62,23 @@ export class ConsultaioStore extends Store<ConsultaioState> {
       department,
       folioTramite,
       tipoDeTramite,
+      estadoDeTramite,
       readonly,
       create,
       update,
+    }));
+  }
+  /**
+ * Actualiza la información del solicitante en el estado de Consultaio.
+ * 
+ * Este método guarda los datos del solicitante proporcionados en el estado de Consultaio.
+ * Se utiliza para mantener actualizada la información del solicitante en la sesión.
+ * 
+ * @param {ConsultaioSolicitante} consultaioSolicitante - Objeto que contiene la información del solicitante.
+ */
+  public solicitanteConsultaio(consultaioSolicitante: ConsultaioSolicitante): void {
+    this.update(state => ({
+      ...state, consultaioSolicitante
     }));
   }
 }

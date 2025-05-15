@@ -115,6 +115,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       this.guardarDatos?.department,
       this.guardarDatos?.folioTramite,
       this.guardarDatos?.tipoDeTramite,
+      this.guardarDatos?.estadoDeTramite,
       true,false,false);
   }
 
@@ -167,6 +168,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           true,false,false);
       } else {
         this.consultaioStore.establecerConsultaio(
@@ -175,6 +177,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           false,false,true);
       }
       if (e.accion === 'cont') {

@@ -1,0 +1,34 @@
+<form [formGroup]="dictamenForm">
+    <div class="row ">
+        <div class="col-md-12">
+            <h3 class="titulo-dictamen">Generar Dictamen</h3>
+        </div>
+        <div class="d-flex gap-3 justify-content-center">
+            <div class="border px-4 py-2 d-flex align-items-center radio-button">
+                <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="1"
+                    id="sentidoDictamenAceptado" formControlName="cumplimiento">
+                <label class="control-label" for="sentidoDictamenAceptado">Aceptado</label>
+            </div>
+            <div class="border px-4 py-2 d-flex align-items-center radio-button">
+                <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="2"
+                    id="sentidoDictamenRechazado" formControlName="cumplimiento">
+                <label class="control-label" for="sentidoDictamenRechazado">Rechazado</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <label for="justificacionDictamen" class="form-label">Sentido dictamen / justificación del
+                dictamen</label><span class="text-danger">*</span>
+            <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
+                placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-5 mb-5">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button type="button" class="btn btn-default me-3" (click)="cancelar()">{{botonDeCancelar}}</button>
+            <button type="button" class="btn btn-primary" (click)="guardarFirmar()">{{botonGuardar}}</button>
+        </div>
+    </div>
+</form>
