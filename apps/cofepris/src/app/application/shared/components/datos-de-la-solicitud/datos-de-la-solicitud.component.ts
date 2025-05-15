@@ -353,6 +353,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   mostrarNotificacion: boolean = false;
 
+  /** Indica si se debe mostrar la alerta del RFC. */
+  mostrarRfcAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public nuevaRfcNotificacion!: Notificacion;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -643,6 +649,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: 'GONZALEZ',
         apellidoMaterno: 'PINAL',
       });
+    } else {
+      this.abrirRfcModal();
     }
   }
 
@@ -895,6 +903,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         CONTROL?.disable()
       }
     });
+  }
+
+    /**
+     * Abre el modal de RFC y muestra una notificación de alerta.
+     */
+    abrirRfcModal(): void {
+      this.mostrarRfcAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          'Debe ingresar el RFC.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
   }
 
   /**
