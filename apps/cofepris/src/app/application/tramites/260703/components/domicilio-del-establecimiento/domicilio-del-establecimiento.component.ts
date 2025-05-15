@@ -53,16 +53,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   estado: Catalogo[] = [];
 
   /**
-   * Lista de aduanas disponibles.
-   */
-  aduana: Catalogo[] = [];
-
-  /**
-   * Lista de regímenes disponibles.
-   */
-  regimen: Catalogo[] = [];
-
-  /**
    * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
@@ -89,7 +79,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
-    private solicitudPermisoService: SolicitudPermisoService,
+    public solicitudPermisoService: SolicitudPermisoService,
     private tramite260703Store: Tramite260703Store,
     private tramite2606703Query: Tramite260703Query
   ) {}
@@ -104,7 +94,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       .subscribe((solicitudPermisoState: SolicitudPermisoState) => {
         this.solicitudPermisoState = solicitudPermisoState;
       });
-
+    this.solicitudPermisoService.obtenerDomicilioCatalogo();
     this.obtenerScianData();
     this.inicializarFormularioDomicilioDelEstablecimiento();
   }
@@ -183,27 +173,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     this.tramite260703Store.actualizarEstadoFormularioDomicilioDelEstablecimiento({
       [campo]: VALOR,
     });
-  }
-
-  /**
-   * Limpia la lista de estados seleccionados.
-   */
-  estadoSeleccion(): void {
-    this.estado = [];
-  }
-
-  /**
-   * Limpia la lista de regímenes seleccionados.
-   */
-  regimeSeleccion(): void {
-    this.regimen = [];
-  }
-
-  /**
-   * Limpia la lista de aduanas seleccionadas.
-   */
-  aduanaSeleccion(): void {
-    this.aduana = [];
   }
 
   /**

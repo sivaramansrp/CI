@@ -24,6 +24,19 @@ export class SolicitudPermisoService {
   banco!: Catalogo[];
 
   /**
+   * Arreglo que contiene los elementos del catálogo relacionados con el régimen.
+   * Este catálogo se utiliza para definir las opciones disponibles en el contexto
+   * de los trámites de solicitud de permiso.
+   */
+  regimen!: Catalogo[];
+
+  /**
+   * Representa un catálogo de aduanas utilizado en el sistema.
+   * Este atributo almacena una lista de objetos del tipo `Catalogo`.
+   */
+  aduana!: Catalogo[];
+
+  /**
    * Constructor del servicio.
    * Inicializa el cliente HTTP para realizar solicitudes.
    * http Cliente HTTP para realizar solicitudes.
@@ -82,6 +95,20 @@ export class SolicitudPermisoService {
    */
   obtenerScianData(): Observable<ScianData[]> {
     return this.http.get<ScianData[]>('assets/json/260703/scian.json');
+  }
+
+  /**
+   * Método que realiza la obtención de datos de catálogos relacionados con domicilio.
+   * Este método llama a `obtenerRespuestaPorUrl` para obtener los datos de los catálogos
+   * de aduana y régimen desde las rutas especificadas.
+   *
+   * 
+   * obtenerDomicilioCatalogo
+   * {void} Este método no retorna ningún valor.
+   */
+  obtenerDomicilioCatalogo(): void {
+    this.obtenerRespuestaPorUrl(this, 'aduana', '/260703/aduana.json');
+    this.obtenerRespuestaPorUrl(this, 'regimen', '/260703/regimen.json');
   }
 
   /**
