@@ -1,7 +1,6 @@
 import {Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ENVIRONMENT } from 'apps/aga/src/app/environments/environment';
 import { APPINJECT } from 'apps/aga/src/app/app.inject';
 
 /**

@@ -46,11 +46,11 @@ module.exports = {
      requiredVersion: 'auto'
     },
      "@ng-mf/data-access-user": {
-          singleton: false,
+          "singleton": false,
           strictVersion: false,
           requiredVersion: false,
           "import": "libs/shared/data-access-user/src/index.ts",
-       },
+      },
     ...sharedMappings.getDescriptors()
    })
   }),

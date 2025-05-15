@@ -33,7 +33,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   /**
    * Valores actuales del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formDatosCertificadoValues!: { [key: string]: unknown};
 
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar las suscripciones.
@@ -156,7 +156,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param e Los datos del formulario.
    */
   obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormDatosCertificado(e as { [key: string]: string | number | boolean | object | undefined });
+    this.store.setFormDatosCertificado(e as { [key: string]: unknown});
   }
 
   /**

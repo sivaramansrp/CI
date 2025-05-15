@@ -1,54 +1,96 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore } from '@libs/shared/data-access-user/src';
+import { of, throwError } from 'rxjs';
+import { ToastrModule } from 'ngx-toastr';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
+  let tramiteFolioServiceMock: Partial<TramiteFolioService>;
   let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
+  let tramiteStoreMock: Partial<TramiteStore>;
+  let routerMock: Partial<Router>;
 
   beforeEach(async () => {
-    catalogosServiceMock = {
-      getCatalogo: jest.fn(() => of([])),
+    tramiteFolioServiceMock = {
+      obtenerTramite: jest.fn().mockReturnValue(of({ data: { id: 123, name: 'Test Tramite' } })),
+    };
+
+    tramiteStoreMock = {
+      establecerTramite: jest.fn(),
+    };
+
+    routerMock = {
+      navigate: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
       providers: [
-        { provide: CatalogosService, useValue: catalogosServiceMock },
+        { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
+        { provide: TramiteStore, useValue: tramiteStoreMock },
+        { provide: Router, useValue: routerMock }        
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  /**
-   * Verifica que el componente se haya creado correctamente.
-   */
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+    component.ngOnDestroy();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Verifica que el método `getTiposDocumentos` maneje correctamente los errores al obtener los tipos de documentos.
-   */
-  it('should handle error when getting tipos de documentos', () => {
-    catalogosServiceMock.getCatalogo.mockReturnValue(
-      throwError(() => new Error('API Error'))
+  it('should call obtenerTramite and navigate on obtieneFirma when FIRMA is provided', () => {
+    const firma = 'valid-signature';
+
+    component.obtieneFirma(firma);
+
+    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
+      { id: 123, name: 'Test Tramite' }, 
+      firma
     );
-    component.getTiposDocumentos();
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
-      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
-    );
-    expect(component.catalogoDocumentos).toEqual([]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  });
+
+  it('should handle error in obtieneFirma if obtenerTramite fails', () => {
+    const firma = 'valid-signature';
+
+    (tramiteFolioServiceMock.obtenerTramite as jest.Mock).mockReturnValue(throwError(() => new Error('Test Error')));
+
+    component.obtieneFirma(firma);
+
+    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not call obtenerTramite if FIRMA is empty in obtieneFirma', () => {
+    component.obtieneFirma('');
+
+    expect(tramiteFolioServiceMock.obtenerTramite).not.toHaveBeenCalled();
+    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should unsubscribe destruirNotificador$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
+    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
   });
 });
