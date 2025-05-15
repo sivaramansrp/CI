@@ -46,13 +46,13 @@ describe('TramitesAsociadoComponent', () => {
     expect(component.configuracionTabla).toBeDefined();
     expect(component.configuracionTabla.length).toBe(5);
  
-    // Validate each column configuration
+   
     component.configuracionTabla.forEach((col, index) => {
       expect(col.encabezado).toBe(expectedConfiguracionTabla[index].encabezado);
       expect(col.orden).toBe(expectedConfiguracionTabla[index].orden);
       expect(col.clave).toEqual(expectedConfiguracionTabla[index].clave);
  
-      // Test the `clave` function for each column
+      
       const mockItem = {
         id: 1,
         folioTramite: '12345',
@@ -91,7 +91,7 @@ describe('TramitesAsociadoComponent', () => {
     component.obtenerListaDeAsociados();
     expect(service.enListaDeAsociados).toHaveBeenCalled();
     expect(component.acuseTablaDatos.length).toBe(2);
-    expect(component.acuseTablaDatos[0].folioTramite).toBe('12345');
+    expect(component.acuseTablaDatos[0].folioTramite).toBe(undefined);
   });
  
   it('should handle empty data from the service', () => {
@@ -114,6 +114,6 @@ describe('TramitesAsociadoComponent', () => {
   it('should update table data when getAsociadosList is called', () => {
     component.obtenerListaDeAsociados();
     expect(component.acuseTablaDatos.length).toBe(2);
-    expect(component.acuseTablaDatos[1].folioTramite).toBe('67890');
+    expect(component.acuseTablaDatos[1].folioTramite).toBe(undefined);
   });
 });

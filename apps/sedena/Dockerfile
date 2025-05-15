@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/sedena
 
 # Build the application
-RUN npx nx build sedena --configuration=production --skip-nx-cache --verbose
+RUN npx nx build sedena --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/sedena" && test -f "/app/dist/apps/sedena/index.html" || exit 1

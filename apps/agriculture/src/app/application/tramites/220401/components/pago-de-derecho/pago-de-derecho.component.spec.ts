@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder,FormsModule,ReactiveFormsModule} from '@angular/forms';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
 describe('PagoDeDerechoComponent', () => {

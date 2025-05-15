@@ -1,0 +1,32 @@
+[
+    {
+        "id":"1",
+        "folioTramite": "1502200200120221109000005",
+        "fechaInicioTramite": "05-07-2022",
+        "diasTrascurridos": "949",
+        "modalidad": "01",
+        "RFCSolicitante": "AAL0409235E6",
+        "solicitante":"INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV",
+        "estadoTramite":"En Dictamen"
+    },
+    {
+        "id":"2",
+        "folioTramite": "1502200200120221109000005",
+        "fechaInicioTramite": "05-07-2022",
+        "diasTrascurridos": "949",
+        "modalidad": "01",
+        "RFCSolicitante": "AAL0409235E6",
+        "solicitante":"INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV",
+        "estadoTramite":"En Dictamen"
+    },
+    {
+        "id":"3",
+        "folioTramite": "1502200200120221109000005",
+        "fechaInicioTramite": "05-07-2022",
+        "diasTrascurridos": "949",
+        "modalidad": "01",
+        "RFCSolicitante": "AAL0409235E6",
+        "solicitante":"INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV",
+        "estadoTramite":"En Dictamen"
+    }
+]

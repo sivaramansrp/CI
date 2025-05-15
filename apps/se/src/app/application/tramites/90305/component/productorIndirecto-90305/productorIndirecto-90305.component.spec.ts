@@ -28,8 +28,7 @@ describe('ProductorIndirecto90305Component', () => {
     } as ProsecModificacionServiceTsService;
 
     await TestBed.configureTestingModule({
-      declarations: [ProductorIndirecto90305Component],
-      imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+      imports: [ProductorIndirecto90305Component, CommonModule, TituloComponent, TablaDinamicaComponent],
       providers: [{ provide: ProsecModificacionServiceTsService, useValue: mockService }],
     }).compileComponents();
 

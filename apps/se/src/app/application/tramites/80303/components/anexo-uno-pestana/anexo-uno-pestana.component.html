@@ -1,0 +1,29 @@
+<div class="container">
+    
+    <ng-titulo titulo="Anexo I - Fracciones de exportación"></ng-titulo>
+    <div class="row">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionAnexoExportacionTabla"
+            [datos]="anexoExportacionTablaDatos"
+            (listaDeFilaSeleccionada)="anexoExportacionTablaSeleccionada = $event"></app-tabla-dinamica>
+    </div>
+
+    <ng-titulo titulo="Anexo I - Fracciones de importación"></ng-titulo>
+    <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionAnexoImportacionTabla"
+          [datos]="anexoImportacionTablaDatos"
+          (listaDeFilaSeleccionada)="anexoImportacionTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+
+      <ng-titulo titulo="Fracciones sensibles"></ng-titulo>
+      <div class="row">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionSensiblesTabla"
+          [datos]="sensiblesTablaDatos"
+          (listaDeFilaSeleccionada)="sensiblesTablaSeleccionada = $event"
+        ></app-tabla-dinamica>
+      </div>
+    </div>

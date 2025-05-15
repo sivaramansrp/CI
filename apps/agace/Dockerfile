@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/agace
 
 # Build the application
-RUN npx nx build agace --configuration=production --skip-nx-cache --verbose
+RUN npx nx build agace --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/agace" && test -f "/app/dist/apps/agace/index.html" || exit 1

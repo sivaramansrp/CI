@@ -33,8 +33,7 @@ describe('ListaDomicilios90305Component', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
-      declarations: [ListaDomicilios90305Component],
+      imports: [ListaDomicilios90305Component, CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
       providers: [{ provide: ProsecModificacionServiceTsService, useValue: mockService }],
     }).compileComponents();
 

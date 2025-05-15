@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -294,4 +295,145 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       : false;
   }
 
+  /**
+   * @description
+   * Crea los formularios secundarios para exportador, importador, remesa y diamantes.
+   */
+  crearFormulario(): void {
+    this.datosDelExportador = this.fb.group({
+      nombreExportador: [
+        {
+          value: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+          disabled: true,
+        },
+      ],
+      direccionExportador: ['', [Validators.required]],
+    });
+
+    this.datosDelImportador = this.fb.group({
+      nombreImportador: ['', [Validators.required]],
+      direccionImportador: ['', [Validators.required]],
+    });
+
+    this.datosDeLaRemesa = this.fb.group({
+      numeroEnLetraDeLosLotes: ['',
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroDeFactura: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+    });
+
+    this.datosDeLosDiamantes = this.fb.group({
+      cantidadEnQuilates: ['', [Validators.required]],
+      valorDeLosDiamantes: ['', [Validators.required]],
+    });
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.datosDeLaRemesa.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * @description
+   * Obtiene el nombre del exportador desde el formulario y lo guarda en el store.
+   */
+  getNombreExportador(): void {
+    const NOMBRE_EXPORTADOR =
+      this.datosDelExportador.get('nombreExportador')?.value;
+    this.tramite130203Store.setNombreExportador(NOMBRE_EXPORTADOR);
+  }
+
+  /**
+   * @description
+   * Obtiene la dirección del exportador desde el formulario y la guarda en el store.
+   */
+  getDireccionExportador(): void {
+    const DIRECCION_EXPORTADOR = this.datosDelExportador.get(
+      'direccionExportador'
+    )?.value;
+    this.tramite130203Store.setDireccionExportador(DIRECCION_EXPORTADOR);
+  }
+
+  /**
+   * @description
+   * Obtiene el nombre del importador desde el formulario y lo guarda en el store.
+   */
+  getNombreImportador(): void {
+    const NOMBRE_IMPORTADOR =
+      this.datosDelImportador.get('nombreImportador')?.value;
+    this.tramite130203Store.setNombreImportador(NOMBRE_IMPORTADOR);
+  }
+
+  /**
+   * @description
+   * Obtiene la dirección del importador desde el formulario y la guarda en el store.
+   */
+  getDireccionImportador(): void {
+    const DIRECCION_IMPORTADOR = this.datosDelImportador.get(
+      'direccionImportador'
+    )?.value;
+    this.tramite130203Store.setDireccionImportador(DIRECCION_IMPORTADOR);
+  }
+
+  /**
+   * @description
+   * Obtiene el número en letra de los lotes desde el formulario y lo guarda en el store.
+   */
+  getNumeroEnLetraDeLosLotes(): void {
+    const NUMERO_EN_LETRA_DE_LOS_LOTES = this.datosDeLaRemesa.get(
+      'numeroEnLetraDeLosLotes'
+    )?.value;
+    this.tramite130203Store.setNumeroEnLetraDeLosLotes(
+      NUMERO_EN_LETRA_DE_LOS_LOTES
+    );
+  }
+  /**
+   * @description
+   * Obtiene el número en letra de los lotes en inglés desde el formulario y lo guarda en el store.
+   */
+  getNumeroEnLetraDeLosLotesEnIngles(): void {
+    const NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES = this.datosDeLaRemesa.get(
+      'numeroEnLetraDeLosLotesEnIngles'
+    )?.value;
+    this.tramite130203Store.setNumeroEnLetraDeLosLotesEnIngles(
+      NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES
+    );
+  }
+  /**
+   * @description
+   * Obtiene el número de factura desde el formulario y lo guarda en el store.
+   */
+  getNumeroDeFactura(): void {
+    const NUMERO_DE_FACTURA =
+      this.datosDeLaRemesa.get('numeroDeFactura')?.value;
+    this.tramite130203Store.setNumeroDeFactura(NUMERO_DE_FACTURA);
+  }
+
+  /**
+   * @description
+   * Obtiene la cantidad en quilates desde el formulario y la guarda en el store.
+   */
+  getCantidadEnQuilates(): void {
+    const CANTIDAD_EN_QUILATES =
+      this.datosDeLosDiamantes.get('cantidadEnQuilates')?.value;
+    this.tramite130203Store.setCantidadEnQuilates(CANTIDAD_EN_QUILATES);
+  }
+
+  /**
+   * @description
+   * Obtiene el valor de los diamantes desde el formulario y lo guarda en el store.
+   */
+  getValorDeLosDiamantes(): void {
+    const VALOR_DE_LOS_DIAMANTES = this.datosDeLosDiamantes.get(
+      'valorDeLosDiamantes'
+    )?.value;
+    this.tramite130203Store.setValorDeLosDiamantes(VALOR_DE_LOS_DIAMANTES);
+  }
 }
