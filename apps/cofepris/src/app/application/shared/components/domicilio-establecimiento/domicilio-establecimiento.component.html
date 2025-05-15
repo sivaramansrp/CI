@@ -270,6 +270,7 @@
               formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'"
               [required]="false"
+              [isDisabled]="true"
               name="claveDescripcionModal"
               (change)="
                 setValoresStore(
@@ -409,6 +410,9 @@
               "
             />
           </div>
+          <div class="row">
+            <div class="col-md-5">
+          
           <div class="form-group">
             <label for="cantidadUMT">Cantidad UMT*:</label>
             <input
@@ -421,6 +425,8 @@
               "
             />
           </div>
+          </div>
+          <div class="col-md-5">
           <div class="form-group">
             <label for="UMT">UMT*:</label>
             <input
@@ -431,6 +437,8 @@
               (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')"
             />
           </div>
+          </div>
+          <div class="col-md-5">
           <div class="form-group">
             <label for="cantidadUMC">Cantidad UMC*:</label>
             <input
@@ -443,6 +451,8 @@
               "
             />
           </div>
+          </div>
+          <div class="col-md-5">
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
@@ -452,6 +462,8 @@
               name="UMC"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
             ></app-catalogo-select>
+          </div>
+          </div>
           </div>
           <div class="form-group">
             <label for="porcentajeConcentracion"
@@ -568,7 +580,7 @@
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPaisDuos"
-                      [label]="paisDeProcedenciaLabel"
+                      [label]="paisDondeSeElabora"
                       [botones]="paisDeProcedenciaBotonesDuos"
                     ></crosslist>
                   </div>
@@ -597,7 +609,7 @@
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPaisTres"
-                      [label]="paisDeProcedenciaLabel"
+                      [label]="paisDeOrigen"
                       [botones]="paisDeProcedenciaBotonesTres"
                     ></crosslist>
                   </div>
@@ -628,7 +640,7 @@
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPaisCuatro"
-                      [label]="paisDeProcedenciaLabel"
+                      [label]="paisDeProcedencia"
                       [botones]="paisDeProcedenciaBotonesCuatro"
                     ></crosslist>
                   </div>
@@ -671,7 +683,7 @@
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarMercancia()">
           Agregar
         </button>
       </div>

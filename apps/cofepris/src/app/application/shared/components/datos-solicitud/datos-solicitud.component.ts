@@ -70,6 +70,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
    */
   eliminarPedimento(borrar: boolean): void {
+    this.alternarControlesDeFormulario();
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
@@ -161,7 +162,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    this.alternarControlesDeFormulario();
 
     this.elementoParaEliminar = i;
   }

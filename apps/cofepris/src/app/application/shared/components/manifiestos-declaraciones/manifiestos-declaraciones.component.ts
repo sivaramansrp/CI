@@ -32,7 +32,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @description
    * Mensaje de alerta que se muestra en el componente.
    */
-  public mensaje: string = MENSAJE_DE_ALERTA;
+  public mensaje = MENSAJE_DE_ALERTA.message;
 
   /**
    * @description
