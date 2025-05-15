@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RequisitosComponent } from './requisitos.component';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -36,8 +36,8 @@ describe('RequisitosComponent', () => {
       imports: [ReactiveFormsModule, FormsModule, RequisitosComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Query, useValue: { selectSolicitud$: of(MOCK_STATE) } },
-        { provide: Tramite250102Store, useValue: storeMock },
+        { provide: Tramite250103Query, useValue: { selectSolicitud$: of(MOCK_STATE) } },
+        { provide: Tramite250103Store, useValue: storeMock },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Avoid errors for unknown elements
     }).compileComponents();

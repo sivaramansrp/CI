@@ -2,16 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { Tramite250102Store } from '../../estados/tramite250102.store';
-import { Tramite250102Query } from '../../estados/tramite250102.query';
+import { Tramite250103Store } from '../../estados/tramite250103.store';
+import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite250102State } from '../../estados/tramite250102.store';
+import { Tramite250103State } from '../../estados/tramite250103.store';
 
-jest.mock('@libs/shared/theme/assets/json/250102/banco.json', () => ({
+jest.mock('@libs/shared/theme/assets/json/250103/banco.json', () => ({
   banco: ['MockBank1', 'MockBank2'],
 }));
 
-jest.mock('@libs/shared/theme/assets/json/250102/pago-formdatos.json', () => ({
+jest.mock('@libs/shared/theme/assets/json/250103/pago-formdatos.json', () => ({
   formData: {
     clave: 'mockClave',
     dependencia: 'mockDependencia',
@@ -19,7 +19,7 @@ jest.mock('@libs/shared/theme/assets/json/250102/pago-formdatos.json', () => ({
   },
 }));
 
-const MOCK_SOLICITUD_STATE: Tramite250102State = {
+const MOCK_SOLICITUD_STATE: Tramite250103State = {
   clave: 'mockClave',
   dependencia: 'mockDependencia',
   banco: 'MockBank1',
@@ -67,9 +67,9 @@ const MOCK_SOLICITUD_STATE: Tramite250102State = {
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let tramite250102Store: Tramite250102Store;
+  let tramite250103Store: Tramite250103Store;
 
-  const TRAMITE250102_STORE_MOCK = {
+  const TRAMITE250103_STORE_MOCK = {
     setClave: jest.fn(),
     setDependencia: jest.fn(),
     setBanco: jest.fn(),
@@ -79,7 +79,7 @@ describe('PagoDeDerechosComponent', () => {
     setRevisados: jest.fn(),
   };
 
-  const TRAMITE250102_QUERY_MOCK = {
+  const TRAMITE250103_QUERY_MOCK = {
     selectSolicitud$: of(MOCK_SOLICITUD_STATE),
   };
 
@@ -94,8 +94,8 @@ describe('PagoDeDerechosComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Tramite250102Store, useValue: TRAMITE250102_STORE_MOCK },
-        { provide: Tramite250102Query, useValue: TRAMITE250102_QUERY_MOCK },
+        { provide: Tramite250103Store, useValue: TRAMITE250103_STORE_MOCK },
+        { provide: Tramite250103Query, useValue: TRAMITE250103_QUERY_MOCK },
       ],
     }).compileComponents();
   });
@@ -103,7 +103,7 @@ describe('PagoDeDerechosComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    tramite250102Store = TestBed.inject(Tramite250102Store);
+    tramite250103Store = TestBed.inject(Tramite250103Store);
     fixture.detectChanges();
   });
 
