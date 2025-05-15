@@ -34,6 +34,7 @@ export interface Requisito {
  * Representa la información básica de un producto relacionado al trámite.
  */
 export interface Producto {
+  /** Identificador único del producto. */
   id: number;
   /** Descripción general del producto (puede ser indefinida). */
   descripcion: string | undefined;
@@ -302,6 +303,9 @@ export const CONFIGURATION_TABLA_REQUISITOS = [
   },
 ];
 
+/**
+ * Configuración de las columnas para la tabla de certificados.
+ */
 export const CERTIFICADO_MODAL_TABLA = [
   {
     encabezado: 'Certificado',
@@ -347,18 +351,32 @@ export interface CertificadosTablaDatos {
  * Contiene un arreglo con los nombres de las columnas que se mostrarán en la tabla.
  */
 export interface Destinatarios {
+    /** Lista de nombres de las columnas para la tabla de destinatarios. */
     nombre: string;
+    /** Nombre del país del destinatario. */
     pais: string;
+    /** Ciudad del destinatario. */
     ciudad: string;
+    /** Entidad federativa del destinatario. */
     entidadfederativa: string;
+    /** Domicilio del destinatario. */
     domicilio: string;
+    /** Código postal o equivalente del destinatario. */
     codigopostal: string;
   }
+
+/**
+ * Representa los datos de las columnas de una tabla de destinatarios.
+ */
 export interface DestinatarioTablaDatos {
   /** Lista de nombres de las columnas para la tabla de destinatarios. */
   columns: string[];
 }
 
+/**
+ * Agregar miembro tabla
+ * Esta constante define la configuración de las columnas para una tabla que muestra información
+ */
 export const AGREGAR_MIEMBRO_TABLA = [
     {
         encabezado: 'Nombre/denominación razón social',
@@ -396,13 +414,23 @@ export const AGREGAR_MIEMBRO_TABLA = [
     },
 ]
 
+/**
+ * Representa los datos de un agente aduanal.
+ */
 export interface Adunal{
+    /** Nombre del agente aduanal. */
     nombre: string;
+    /** Primer apellido del agente aduanal. */
     primerapellido: string;
+    /** Segundo apellido del agente aduanal. */
     segundoapellido: string;
+    /** Patente del agente aduanal. */
     patente:string
   }
 
+/**
+ * Configuración de las columnas para la tabla de agentes aduanales.
+ */
 export const TABLA_AGENT_ADUNALDATA = [
     {
         encabezado: 'Nombre',
@@ -432,7 +460,9 @@ export const TABLA_AGENT_ADUNALDATA = [
  * Interfaz que define la estructura de los datos de certificados para el modal.
  */
 export interface CertificadoModal {
+  /** id - Identificador único del certificado. */
   id: number;
+  /** certificado - Certificado del lote. */
   certificado: string;
 }
 

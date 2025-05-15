@@ -21,7 +21,9 @@ import {
   Tramite250103Store,
 } from '../../estados/tramite250103.store';
 
-
+/**
+ * Componente encargado de gestionar el tipo de movimiento dentro del trámite 250103.
+ */
 @Component({
   selector: 'app-tipo-movimiento',
   standalone: true,
