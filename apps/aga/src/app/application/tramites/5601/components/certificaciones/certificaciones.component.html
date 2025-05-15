@@ -11,29 +11,8 @@
   </div>
 </form>
 
-
-<div class="modal fade" [ngClass]="{ show: modal === 'show' }" [style.display]="modal === 'show' ? 'block' : 'none'"
-  id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="modalErrorLabel">{{ tituloModal }}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <p>{{ mensajeModal }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="cerrarModal()">
-          Sí
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<lib-notificaciones 
+  *ngIf="confirmEliminarPopupAbierto"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="cerrarModal()">
+</lib-notificaciones>

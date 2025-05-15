@@ -1,3 +1,4 @@
+import { CategoriaMensaje,Notificacion,NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -13,7 +14,7 @@ import { Tramite5601Query } from '../../estados/queries/tramite5601.query';
 @Component({
   selector: 'app-certificaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent,NotificacionesComponent],
   templateUrl: './certificaciones.component.html',
   styleUrl: './certificaciones.component.scss',
 })
@@ -51,7 +52,20 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
  */
   private destroyed$: Subject<void> = new Subject();
 
+  /**
+   * Detalles del formulario de certificación de la empresa.
+   */
   public certificacionEmpresa = FORMULARIO_CERTIFICACION_DETALLES;
+
+  /**
+   * Controla si el popup de confirmación para eliminar está abierto.
+   */
+  confirmEliminarPopupAbierto: boolean = false;
+
+  /**
+   * Almacena la notificación que se mostrará en el modal.
+   */
+  nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -81,43 +95,28 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Muestra un modal si se cumple una condición específica.
-   * Establece el título y el mensaje del modal antes de abrirlo.
+   * Abre el popup de confirmación para eliminar, mostrando una notificación modal.
+   * Configura la notificación con los textos y tipo apropiados.
    */
-  mostrarModalSiSeleccionado(): void {
-    this.tituloModal = TITULO_MODAL; // Asigna el título del modal desde una constante.
-    this.mensajeModal = MENSAJE_MODAL; // Asigna el mensaje del modal desde una constante.
-    this.abrirModal(); // Llama al método para abrir el modal.
+  abrirEliminarConfirmationPopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: TITULO_MODAL,
+      mensaje: MENSAJE_MODAL,
+      cerrar: false,
+      txtBtnAceptar: 'Sí',
+      txtBtnCancelar: 'No',
+    };
+    this.confirmEliminarPopupAbierto = true;
   }
 
   /**
-   * Abre el modal estableciendo su estado en 'show'.
-   */
-  abrirModal(): void {
-    this.modal = 'show';
-  }
-
-  /**
-   * Cierra el modal y limpia los valores de título y mensaje.
+   * Cierra el modal de confirmación de eliminación.
    */
   cerrarModal(): void {
-    this.modal = '';
-    this.tituloModal = '';
-    this.mensajeModal = '';
-  }
-
-  /**
-   * Confirma la acción del modal y lo cierra.
-   */
-  confirmarAccion(): void {
-    this.cerrarModal();
-  }
-
-  /**
-   * Cancela la acción del modal y lo cierra.
-   */
-  cancelarAccion(): void {
-    this.cerrarModal();
+    this.confirmEliminarPopupAbierto = false;
   }
 
 
@@ -161,7 +160,7 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
 
       // Si el campo es 'tieneCertificacion', muestra un modal.
       if (event.campo === 'tieneCertificacion') {
-        this.mostrarModalSiSeleccionado();
+        this.abrirEliminarConfirmationPopup();
       }
     }
   }
