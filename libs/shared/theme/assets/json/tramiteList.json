@@ -1178,8 +1178,8 @@
   {
     "id": 169,
     "tramite": 140112,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/hidrocarburos-de-petroleo/permiso-de-retiro",
+    "linkDepartment": "/pago/hidrocarburos-de-petroleo/permiso-de-retiro",
     "department": "sener"
   },
   {
