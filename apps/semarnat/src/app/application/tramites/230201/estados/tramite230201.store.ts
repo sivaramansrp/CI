@@ -25,61 +25,168 @@ export interface Catalogo {
  * Interfaz que representa el estado inicial de la solicitud 230201.
  */
 export interface Solicitud230201State {
+  /**
+   * Lista de países de origen.
+   */
   paisDeProcedencia: Catalogo[] | null;
-  aduana: Catalogo[] | null;
-  fechasSeleccionadas: string[];
-  pais: Catalogo[] | null;
-  entidades: Catalogo[] | null;
-  descripcionProducto: Catalogo[] | null;
-  datosSolicitud: DatosSolicitud[];
-  datosDetalle: DatosDetalle[];
-  fraccionArancelaria: string;
-  descripcionFraccionArancelaria: string;
-  cantidad: string;
-  cantidadLetra: string;
-  genero: Catalogo[] | null;
-  especie: Catalogo[] | null;
-  nombreComun: Catalogo[] | null;
-  unidadDeMedida: Catalogo[] | null;
-  lungarDeEntrada: string;
-  destinoDeImportador: string;
-  medioDeTransporte: Catalogo[] | null;
-  numeroYDescripcion: string;
-  codigoPostal: string;
-  estado: Catalogo[] | null;
-  calle: string;
-  numeroExterior: string;
-  numeroInterior: string;
-  colonia: string;
-
 
   /**
-   * Lista de destinatarios configurados para el trámite.
+   * Lista de oficinas de aduanas.
+   */
+  aduana: Catalogo[] | null;
+
+  /**
+   * Fechas seleccionadas para la solicitud.
+   */
+  fechasSeleccionadas: string[];
+
+  /**
+   * Lista de países.
+   */
+  pais: Catalogo[] | null;
+
+  /**
+   * Lista de estados o entidades.
+   */
+  entidades: Catalogo[] | null;
+
+  /**
+   * Descripción del producto.
+   */
+  descripcionProducto: Catalogo[] | null;
+
+  /**
+   * Detalles de la solicitud.
+   */
+  datosSolicitud: DatosSolicitud[];
+
+  /**
+   * Información detallada de la solicitud.
+   */
+  datosDetalle: DatosDetalle[];
+
+  /**
+   * Fracción arancelaria asociada al producto.
+   */
+  fraccionArancelaria: string;
+
+  /**
+   * Descripción de la fracción arancelaria.
+   */
+  descripcionFraccionArancelaria: string;
+
+  /**
+   * Cantidad del producto.
+   */
+  cantidad: string;
+
+  /**
+   * Cantidad del producto en palabras.
+   */
+  cantidadLetra: string;
+
+  /**
+   * Lista de géneros asociados al producto.
+   */
+  genero: Catalogo[] | null;
+
+  /**
+   * Lista de especies asociadas al producto.
+   */
+  especie: Catalogo[] | null;
+
+  /**
+   * Lista de nombres comunes del producto.
+   */
+  nombreComun: Catalogo[] | null;
+
+  /**
+   * Lista de unidades de medida.
+   */
+  unidadDeMedida: Catalogo[] | null;
+
+  /**
+   * Lugar de entrada.
+   */
+  lungarDeEntrada: string;
+
+  /**
+   * Destino del importador.
+   */
+  destinoDeImportador: string;
+
+  /**
+   * Lista de medios de transporte.
+   */
+  medioDeTransporte: Catalogo[] | null;
+
+  /**
+   * Número y descripción del producto.
+   */
+  numeroYDescripcion: string;
+
+  /**
+   * Código postal de la dirección.
+   */
+  codigoPostal: string;
+
+  /**
+   * Lista de estados.
+   */
+  estado: Catalogo[] | null;
+
+  /**
+   * Dirección de la calle.
+   */
+  calle: string;
+
+  /**
+   * Número exterior de la dirección.
+   */
+  numeroExterior: string;
+
+  /**
+   * Número interior de la dirección.
+   */
+  numeroInterior: string;
+
+  /**
+   * Colonia o barrio de la dirección.
+   */
+  colonia: string;
+
+  /**
+   * Estado del popup para terceros.
+   */
+  tercerosPopupState: boolean;
+
+  /**
+   * Lista de destinatarios configurados para la solicitud.
    */
   destinatarios: DestinatarioConfiguracionItem[];
 
   /**
-   * Clave de referencia del trámite.
+   * Clave de referencia para la solicitud.
    */
   claveDeReferencia: string;
 
   /**
-   * Cadena de dependencia asociada al trámite.
+   * Cadena de dependencia asociada a la solicitud.
    */
   cadenaPagoDependencia: string;
 
   /**
-   * Banco relacionado con el trámite.
+   * Banco relacionado con la solicitud.
    */
   banco: string;
 
   /**
-   * Llave de pago del trámite.
+   * Llave de pago para la solicitud.
    */
   llaveDePago: string;
 
   /**
-   * Fecha de pago del trámite.
+   * Fecha de pago para la solicitud.
    */
   fecPago: string;
 
@@ -87,7 +194,6 @@ export interface Solicitud230201State {
    * Importe del pago realizado.
    */
   impPago: string;
-
 }
 
 /**
@@ -122,6 +228,7 @@ export function createInitialState(): Solicitud230201State {
     numeroExterior: '',
     numeroInterior: '',
     colonia: '',
+    tercerosPopupState: false,
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
     banco: '',
@@ -171,6 +278,13 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Establece las fechas seleccionadas en el estado de la tienda.
+   *
+   * @param fechasSeleccionadas - Un arreglo de cadenas que representa las fechas seleccionadas.
+   * 
+   * Este método actualiza el estado de la tienda con las fechas proporcionadas.
+   */
   public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({
       ...state,
@@ -178,6 +292,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Establece el catálogo de países en el estado de la tienda.
+   *
+   * @param pais - Una lista de objetos del tipo `Catalogo` que representa los países a establecer.
+   */
   public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -185,6 +304,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de entidades.
+   *
+   * @param entidades - Un arreglo de objetos `Catalogo` que se establecerá como el nuevo valor para entidades en el estado.
+   */
   public setEntidades(entidades: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -192,6 +316,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de descripciones de productos.
+   *
+   * @param descripcionProducto - Un arreglo de objetos `Catalogo` que representa las descripciones de productos a establecer.
+   */
   public setDescripcionProducto(descripcionProducto: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -206,6 +335,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
   
+  /**
+   * Actualiza el estado con una nueva lista de detalles de la solicitud.
+   *
+   * @param datosDetalle - Un arreglo de objetos `DatosDetalle` que representa los detalles de la solicitud a establecer.
+   */
   public setDatosDetalle(datosDetalle: DatosDetalle[]): void {
     this.update((state) => ({
       ...state,
@@ -213,6 +347,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva fracción arancelaria.
+   *
+   * @param fraccionArancelaria - Una cadena que representa la fracción arancelaria a establecer.
+   */
   public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
@@ -220,6 +359,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva descripción de la fracción arancelaria.
+   *
+   * @param descripcionFraccionArancelaria - Una cadena que representa la descripción de la fracción arancelaria a establecer.
+   */
   public setDescripcionFraccionArancelaria(
     descripcionFraccionArancelaria: string
   ): void {
@@ -229,6 +373,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva cantidad del producto.
+   *
+   * @param cantidad - Una cadena que representa la cantidad del producto a establecer.
+   */
   public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
@@ -236,6 +385,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con la cantidad del producto en palabras.
+   *
+   * @param cantidadLetra - Una cadena que representa la cantidad del producto en palabras a establecer.
+   */
   public setCantidadLetra(cantidadLetra: string): void {
     this.update((state) => ({
       ...state,
@@ -243,6 +397,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de géneros asociados al producto.
+   *
+   * @param genero - Un arreglo de objetos `Catalogo` que representa los géneros a establecer.
+   */
   public setGenero(genero: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -250,6 +409,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de especies asociadas al producto.
+   *
+   * @param especie - Un arreglo de objetos `Catalogo` que representa las especies a establecer.
+   */
   public setEspecie(especie: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -257,6 +421,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de nombres comunes del producto.
+   *
+   * @param nombreComun - Un arreglo de objetos `Catalogo` que representa los nombres comunes a establecer.
+   */
   public setNombreComun(nombreComun: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -264,6 +433,11 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de unidades de medida.
+   *
+   * @param unidadDeMedida - Un arreglo de objetos `Catalogo` que representa las unidades de medida a establecer.
+   */
   public setUnidadDeMedida(unidadDeMedida: Catalogo[]): void {
     this.update((state) => ({
       ...state,
@@ -271,73 +445,123 @@ export class Tramite230201Store extends Store<Solicitud230201State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo lugar de entrada.
+   *
+   * @param lungarDeEntrada - Una cadena que representa el lugar de entrada a establecer.
+   */
   public setLungarDeEntrada(lungarDeEntrada: string): void {
     this.update((state) => ({
       ...state,
-      lungarDeEntrada: lungarDeEntrada,
+      lungarDeEntrada,
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo destino del importador.
+   *
+   * @param destinoDeImportador - Una cadena que representa el destino del importador a establecer.
+   */
   public setDestinoDeImportador(destinoDeImportador: string): void {
     this.update((state) => ({
       ...state,
-      destinoDeImportador: destinoDeImportador,
+      destinoDeImportador,
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de medios de transporte.
+   *
+   * @param medioDeTransporte - Un arreglo de objetos `Catalogo` que representa los medios de transporte a establecer.
+   */
   public setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      medioDeTransporte: medioDeTransporte,
+      medioDeTransporte,
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo número y descripción del producto.
+   *
+   * @param numeroYDescripcion - Una cadena que representa el número y descripción del producto a establecer.
+   */
   public setNumeroYDescripcion(numeroYDescripcion: string): void {
     this.update((state) => ({
       ...state,
-      numeroYDescripcion: numeroYDescripcion,
+      numeroYDescripcion,
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo código postal.
+   *
+   * @param codigoPostal - Una cadena que representa el código postal a establecer.
+   */
   public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
-      codigoPostal: codigoPostal,
+      codigoPostal,
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva lista de estados.
+   *
+   * @param estado - Un arreglo de objetos `Catalogo` que representa los estados a establecer.
+   */
   public setEstado(estado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      estado: estado,
+      estado,
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva dirección de calle.
+   *
+   * @param calle - Una cadena que representa la dirección de la calle a establecer.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
-      calle: calle,
+      calle,
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo número exterior.
+   *
+   * @param numeroExterior - Una cadena que representa el número exterior a establecer.
+   */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
-      numeroExterior: numeroExterior,
+      numeroExterior,
     }));
   }
 
+  /**
+   * Actualiza el estado con un nuevo número interior.
+   *
+   * @param numeroInterior - Una cadena que representa el número interior a establecer.
+   */
   public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
-      numeroInterior: numeroInterior,
+      numeroInterior,
     }));
   }
 
+  /**
+   * Actualiza el estado con una nueva colonia o barrio.
+   *
+   * @param colonia - Una cadena que representa la colonia o barrio a establecer.
+   */
   public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
-      colonia: colonia,
+      colonia,
     }));
   }
 
