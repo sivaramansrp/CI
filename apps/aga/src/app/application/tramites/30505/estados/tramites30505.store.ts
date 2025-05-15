@@ -18,7 +18,19 @@ export interface Solicitud30505State {
   descClobGenerica: string;
   /** Fecha de inicio de vigencia de la solicitud. */
   fechaInicioVigencia: string;
-  
+  tipoSolicitudPexim: string;
+  capacidadAlmacenamiento: string;
+  tipoCaat: string;
+  tipoProgFomExp: string;
+  tipoTransito: string;
+  numeroEstablecimiento: string;
+  medioTransporte: string;
+  nombreBanco: string;
+  nomOficialAutorizado: string;
+  empresaControladora: string;
+  observaciones: string;
+  descripcionLugarEmbarque: string;
+  actividadProductiva: string;
 }
 
 /**
@@ -35,7 +47,20 @@ export function createInitialSolicitudState(): Solicitud30505State {
       avisoDenom: false,
       selectedCheckbox:[],
     descClobGenerica: '',
-    fechaInicioVigencia: ''
+    fechaInicioVigencia: '',
+    tipoSolicitudPexim: '',
+    capacidadAlmacenamiento: '',
+    tipoCaat: '',
+    tipoProgFomExp: '',
+    tipoTransito: '',
+    numeroEstablecimiento: '',
+    medioTransporte: '',
+    nombreBanco: '',
+    nomOficialAutorizado: '',
+    empresaControladora: '',
+    observaciones: '',
+    descripcionLugarEmbarque: '',
+    actividadProductiva: '',
   };
 }
 
@@ -88,4 +113,99 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
     }));
   }
 
+  /** aviso-calculo comenzar*/
+
+  public setTipoSolicitudPexim(tipoSolicitudPexim: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoSolicitudPexim,
+    }));
+  }
+
+  public setCapacidadAlmacenamiento(capacidadAlmacenamiento: string): void {
+    this.update((state) => ({ 
+      ...state,
+      capacidadAlmacenamiento,
+    }));
+  }
+
+  public setTipoCaat(tipoCaat: string): void {
+    this.update((state) => ({   
+      ...state,
+      tipoCaat,
+    }));
+  }
+
+public setTipoProgFomExp(tipoProgFomExp: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoProgFomExp,
+    }));
+  }
+
+public setTipoTransito(tipoTransito: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoTransito,
+    }));
+  }
+
+public setNumeroEstablecimiento(numeroEstablecimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroEstablecimiento,
+    }));
+  }
+
+public setMedioTransporte(medioTransporte: string): void {
+    this.update((state) => ({
+      ...state,
+      medioTransporte,
+    }));
+  }
+
+public setNombreBanco(nombreBanco: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreBanco,
+    }));
+  }
+
+public setNomOficialAutorizado(nomOficialAutorizado: string): void {
+    this.update((state) => ({
+      ...state,
+      nomOficialAutorizado,
+    }));
+  }
+
+public setEmpresaControladora(empresaControladora: string): void {
+    this.update((state) => ({
+      ...state,
+      empresaControladora,
+    }));
+  }
+
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({
+      ...state,
+      observaciones,
+    }));
+  }
+
+  public setDescripcionLugarEmbarque(descripcionLugarEmbarque: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionLugarEmbarque,
+    }));
+  }
+
+  public setActividadProductiva(actividadProductiva: string): void {
+    this.update((state) => ({
+      ...state,
+      actividadProductiva,
+    }));
+  }
+
+
+/** aviso-calculo fin*/
 }
