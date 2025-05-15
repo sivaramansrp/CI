@@ -774,7 +774,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       opcionSeleccionados: this.opcionLista,
       opcionesColapsableState: this.opcionesColapsable,
     });
-  }
+     this.irAAcciones('../mercancia-datos');
+      }
 
   /**
    * Muestra u oculta una sección colapsable basada en el orden proporcionado.
