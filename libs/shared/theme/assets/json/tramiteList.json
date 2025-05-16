@@ -1178,8 +1178,8 @@
   {
     "id": 169,
     "tramite": 140112,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/hidrocarburos-de-petroleo/permiso-de-retiro",
+    "linkDepartment": "/pago/hidrocarburos-de-petroleo/permiso-de-retiro",
     "department": "sener"
   },
   {
@@ -1423,8 +1423,8 @@
   {
     "id": 204,
     "tramite": 31616,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/solicitud-de-registro-invocar/solicitud",
+    "linkDepartment": "/pago/solicitud-de-registro-invocar/solicitud",
     "department": "agace"
   },
   {
@@ -1955,8 +1955,8 @@
   {
     "id": 280,
     "tramite": 5601,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/solicitud-despacho-exportacion/solicitud",
+    "linkDepartment": "/pago/solicitud-despacho-exportacion/solicitud",
     "department": "aga"
   },
   {
@@ -1969,8 +1969,8 @@
   {
     "id": 282,
     "tramite": 420103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/concluir-relacion/solicitud",
+    "linkDepartment": "/pago/concluir-relacion/solicitud",
     "department": "aga"
   },
   {
@@ -2214,8 +2214,8 @@
   {
     "id": 317,
     "tramite": 260104,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-sanitario-productos/solicitud",
+    "linkDepartment": "/pago/permiso-sanitario-productos/solicitud",
     "department": "cofepris"
   },
   {
