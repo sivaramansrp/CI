@@ -61,6 +61,13 @@ const ROUTES: Routes = [
       import('./tramites/130201/exportacion-petroliferos.module').then(
         (m) => m.ExportacionPetroliferosModule
       ),
+  },
+  {
+    path: 'parmiso-importacion-petroleo',
+    loadChildren: () =>
+      import('./tramites/130302/permiso-importacion-petroleo.module').then(
+        (m) => m.PermisoImportacionPetroleoModule
+      ),
   }
 ];
 

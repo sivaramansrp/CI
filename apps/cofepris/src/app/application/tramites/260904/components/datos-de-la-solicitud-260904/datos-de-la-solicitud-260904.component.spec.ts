@@ -1,95 +1,118 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitud260904Component } from './datos-de-la-solicitud-260904.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { Tramite260904Store, Tramite260904State} from '../../estados/tramite260904.store';
+import { Tramite260904Query } from '../../estados/tramite260904.query';
 import { of } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('DatosDeLaSolicitud260904Component', () => {
   let component: DatosDeLaSolicitud260904Component;
   let fixture: ComponentFixture<DatosDeLaSolicitud260904Component>;
-  let tramite260904Query: jest.Mocked<Tramite260904Query>;
-  let tramite260904Store: jest.Mocked<Partial<Tramite260904Store>>;
+  let storeMock: Partial<Tramite260904Store>;
+  let queryMock: Partial<Tramite260904Query>;
 
   beforeEach(async () => {
-    const queryMock = {
-      btonDeRadio$: of('option1'),
-      justificación$: of('justification'),
-      rfcDel$: of('RFC123'),
-      denominacion$: of('Denomination'),
-      correo$: of('test@example.com'),
-    } as jest.Mocked<Tramite260904Query>;
+    storeMock = {
+      setTramite260904State: jest.fn()
+    };
 
-    const storeMock = {
-      setBtonDeRadio: jest.fn(),
-      setJustificación: jest.fn(),
-      setRfcDel: jest.fn(),
-      setDenominacion: jest.fn(),
-      setCorreo: jest.fn(),
-    } as jest.Mocked<Partial<Tramite260904Store>>;
+    queryMock = {
+      selectTramite260904$: of({
+        btonDeRadio: '',
+        justificacion: '',
+        rfcDel: 'RFC123',
+        denominacion: 'Empresa S.A.',
+        correo: 'correo@test.com',
+        codigoPostal: '',
+        estado: null,
+        municipioOAlcaldia: '',
+        localidad: '',
+        colonias: '',
+        calle: '',
+        lada: '',
+        telefono: '',
+        avisoCheckbox: '',
+        regimen: null,
+        aduanasEntradas: null,
+        aifaCheckbox: '',
+        manifests: '',
+        acuerdoPublico: '',
+        rfc: '',
+        claveDeReferencia: '',
+        cadenaPagoDependencia: '',
+        clave: '',
+        llaveDePago: '',
+        fecPago: '',
+        impPago: '',
+       
+      } as Tramite260904State)
+    };
+    
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDeLaSolicitud260904Component],
+      declarations: [],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        DatosDeLaSolicitud260904Component,
+        AlertComponent,
+        InputRadioComponent,
+        TituloComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: Tramite260904Query, useValue: queryMock },
         { provide: Tramite260904Store, useValue: storeMock },
-      ],
+        { provide: Tramite260904Query, useValue: queryMock }
+      ]
     }).compileComponents();
 
-    tramite260904Query = TestBed.inject(
-      Tramite260904Query
-    ) as jest.Mocked<Tramite260904Query>;
-    tramite260904Store = TestBed.inject(
-      Tramite260904Store
-    ) as jest.Mocked<Partial<Tramite260904Store>>;
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLaSolicitud260904Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
-    component.ngOnInit();
+  it('should initialize forms on ngOnInit', () => {
     expect(component.form).toBeDefined();
     expect(component.datosDelEstablecimiento).toBeDefined();
   });
 
   it('should toggle colapsable state', () => {
-    const initialState = component.colapsable;
+    const initial = component.colapsable;
     component.mostrar_colapsable();
-    expect(component.colapsable).toBe(!initialState);
+    expect(component.colapsable).toBe(!initial);
   });
 
-  it('should set form values from observables', () => {
-    component.ngOnInit();
-    expect(component.form.get('btonDeRadio')?.value).toBe('option1');
-    expect(component.form.get('justificación')?.value).toBe('justification');
-    expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
-    expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Denomination');
-    expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('test@example.com');
+  it('should enable disabled form controls', () => {
+    component.datosDelEstablecimiento.get('rfcDel')?.disable();
+    component.datosDelEstablecimiento.get('correo')?.disable();
+    component.toggleFormControls();
+    expect(component.datosDelEstablecimiento.get('rfcDel')?.enabled).toBe(true);
+    expect(component.datosDelEstablecimiento.get('correo')?.enabled).toBe(true);
   });
 
-  it('should call store methods on get methods', () => {
-    component.getBtonDeRadio();
-    expect(tramite260904Store.setBtonDeRadio).toHaveBeenCalledWith('option1');
+  it('should call setTramite260904State on setValorStore()', () => {
+    component.datosDelEstablecimiento.patchValue({ rfcDel: 'NEW123' });
+    component.setValorStore(component.datosDelEstablecimiento, 'rfcDel');
+    expect(storeMock.setTramite260904State).toHaveBeenCalledWith({ rfcDel: 'NEW123' });
+  });
 
-    component.getJustificacion();
-    expect(tramite260904Store.setJustificación).toHaveBeenCalledWith('justification');
+  it('should set estadoSeleccionado from store', () => {
+    expect(Object.keys(component.estadoSeleccionado)).toEqual(
+      expect.arrayContaining(['rfcDel', 'denominacion', 'correo'])
+    );
+  });
 
-    component.getRfcDel();
-    expect(tramite260904Store.setRfcDel).toHaveBeenCalledWith('RFC123');
-
-    component.getDenominacion();
-    expect(tramite260904Store.setDenominacion).toHaveBeenCalledWith('Denomination');
-
-    component.getCorreo();
-    expect(tramite260904Store.setCorreo).toHaveBeenCalledWith('test@example.com');
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

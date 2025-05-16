@@ -1,7 +1,7 @@
+import { Observable, map } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
@@ -80,5 +80,10 @@ export class ExportacionDeDiamantesEnBrutoService {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
       'assets/json/130111/partidas-de-la.json'
     );
+  }
+  getNombreExporter(): Observable<string> {
+    return this.http
+    .get<{ nombreExportador: string }>('assets/json/130203/nombre-exporter.json')
+    .pipe(map((response) => response.nombreExportador));
   }
 }
