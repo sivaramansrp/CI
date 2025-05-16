@@ -1,0 +1,12 @@
+<form [formGroup]="forma">
+    <div class="row">
+      <formas-dinamicas
+        formularioTitulo="Bien final"
+        [forma]="ninoFormGroup"
+        [formularioDatos]="bienFinalFormData"
+        [estado]="solicitudDeRegistroState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>
+  
