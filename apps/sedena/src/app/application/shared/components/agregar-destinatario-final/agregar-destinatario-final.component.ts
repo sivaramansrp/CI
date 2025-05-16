@@ -396,6 +396,8 @@ export class AgregarDestinatarioFinalComponent
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
+    this.agregarDestinatarioFinal.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.disable();
   }
   /**
    * @method cancelar

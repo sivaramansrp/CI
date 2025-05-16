@@ -258,6 +258,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.disable();
   }
   /**
    * @method cancelar
