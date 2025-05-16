@@ -119,10 +119,12 @@
   </div>
   <div class="row">
     <app-tabla-dinamica
-      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
       [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"
-    ></app-tabla-dinamica>
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+      formControlName="scian">
+    </app-tabla-dinamica>
+
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2">Eliminar</button>
       <button
@@ -277,13 +279,17 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarScianForm()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          data-bs-dismiss="modal" 
+          (click)="guardarScian()" >
           Agregar
         </button>
       </div>
