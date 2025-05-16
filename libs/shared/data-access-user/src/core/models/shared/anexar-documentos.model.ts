@@ -54,12 +54,13 @@ export interface Documento {
 export interface TipoDocumentos {
   id_tipo_documento: number;
   tipo_documento: string;
-  fecha_captura: string;
-  fecha_fin_vigencia: string;
-  fecha_ini_vigencia: string;
-  activo: boolean;
+  fecha_captura?: string;
+  fecha_fin_vigencia?: string;
+  fecha_ini_vigencia?: string;
+  activo?: boolean;
   ide_rango_resolucion_imagen: string;
   tamanio_maximo: number;
+  adicionales?: TipoDocumentos[];
 }
 
 export interface TipoTramite {

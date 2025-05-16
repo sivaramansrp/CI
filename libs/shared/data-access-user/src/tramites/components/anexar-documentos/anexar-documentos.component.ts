@@ -133,13 +133,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   documentosOpcionalesSeleccionados: CatalogoDocumento[] = [];
 
   /**
-   * @description Arreglo para almacenar los documentos opcionales duplicados.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  listDocOpcionalesDuplicado: any[] = [];
-
-
-  /**
    * @description Variable para almacenar el estado de la carga de documentos.
    * @type {boolean}
    */
@@ -465,7 +458,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
             ...this.catalogoDocumentosOpcionales[INDICE_OPCIONAL]
           };
         }
-        this.listDocOpcionalesDuplicado = this.documentosOpcionalesSeleccionados.map(op => op.id);
       }
     });
 
@@ -511,7 +503,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       this.listadoArchivos.splice(INDICE_LISTADO, 1);
 
       this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
-      this.listDocOpcionalesDuplicado = this.documentosOpcionalesSeleccionados.map(op => op.id);
     }
     const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(id => id === item.id);
     if (INDICE_AGREGAR !== -1) {
