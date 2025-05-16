@@ -4,6 +4,14 @@ import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
 
+/* 
+  Componente bandeja-de-tareas-pendientes:
+  - selector: etiqueta HTML del componente.
+  - standalone: componente independiente.
+  - imports: módulos requeridos.
+  - templateUrl: HTML del componente.
+  - styleUrl: estilos del componente.
+*/
 @Component({
   selector: 'bandeja-de-tareas-pendientes',
   standalone: true,
@@ -11,9 +19,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './bandeja-de-tareas-pendientes.component.html',
   styleUrl: './bandeja-de-tareas-pendientes.component.scss',
 })
+/*
+ * Componente responsable de mostrar la bandeja de tareas pendientes.
+ * Implementa OnInit para cargar los datos de la bandeja al iniciar,
+ * e implementa OnDestroy para liberar recursos y cancelar suscripciones activas.
+ */
 export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
-
+/*
+ * Subject utilizado para emitir un valor y completar las suscripciones activas 
+ * cuando el componente se destruye, evitando fugas de memoria.
+ */
   private destroyNotifier$: Subject<void> = new Subject();
+    /*
+   * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
+   */
   public dePendientesConfiguracionTabla: ConfiguracionColumna<BandejaDeTareasPendientes>[] = [
       {
         encabezado: 'Folio trámite',
@@ -56,23 +75,41 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         orden: 8,
       }
     ];
+    /*
+   * Datos que se mostrarán en la tabla de tareas pendientes.
+   */
     public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
+     /*
+   * Estructura del formulario utilizado para la bandeja de tareas pendientes.
+   */
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;
-
+  /*
+   * Constructor del componente.
+   * Inyecta el servicio BandejaDeSolicitudeService para obtener los datos necesarios.
+   */
     constructor(private bandejaSvc: BandejaDeSolicitudeService) {
   
     }
-
+ /*
+   * Hook de inicialización del componente.
+   * Llama al método para obtener los datos de la tabla al cargar el componente.
+   */
     ngOnInit(): void {
       this.getBandejaDeTablaDatos();
     }
-
+/*
+   * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
+   * Se suscribe al observable y asigna los datos obtenidos a la propiedad correspondiente.
+   */
     public getBandejaDeTablaDatos(): void {
       this.bandejaSvc.getTareasPendientesTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         this.dePendientesTablaDatos = JSON.parse(JSON.stringify(response));
       });
     }
-
+/*
+   * Hook de destrucción del componente.
+   * Finaliza las suscripciones activas al destruir el componente para evitar fugas de memoria.
+   */
     ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
