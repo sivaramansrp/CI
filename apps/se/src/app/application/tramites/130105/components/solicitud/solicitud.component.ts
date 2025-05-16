@@ -340,7 +340,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130105Store.updateState({
+          this.tramite130105Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
           });
@@ -355,7 +355,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.tramite130105Store.updateState({
+          this.tramite130105Store.actualizarEstado({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
@@ -478,72 +478,11 @@ enCambioDeBloque(bloqueId: number): void {
    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
    */
-  // eslint-disable-next-line complexity
-  setValoresStore(event: { form: FormGroup;campo: string;metodoNombre: string;}): void {
-    const VALOR = event.form.get(event.campo)?.value;
-    switch (event.metodoNombre) {
-      case 'updateSolicitud':
-        this.tramite130105Store.updateSolicitud(VALOR);
-        break;
-      case 'setDescripcionPartidasDeLaMercancia':
-        this.tramite130105Store.setDescripcionPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setCantidadPartidasDeLaMercancia':
-        this.tramite130105Store.setCantidadPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setValorPartidaUSDPartidasDeLaMercancia':
-        this.tramite130105Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setregimen':
-        this.tramite130105Store.setregimen(VALOR);
-        break;
-      case 'setclasificacion':
-        this.tramite130105Store.setclasificacion(VALOR);
-        break;
-      case 'setProducto':
-        this.tramite130105Store.setProducto(VALOR);
-        break;
-      case 'setDescripcion':
-        this.tramite130105Store.setDescripcion(VALOR);
-        break;
-      case 'setCantidad':
-        this.tramite130105Store.setCantidad(VALOR);
-        break;
-      case 'setValorPartidaUSD':
-        this.tramite130105Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
-        break;
-      case 'setUnidadMedida':
-        this.tramite130105Store.setUnidadMedida(VALOR);
-        break;
-        case 'setBloque':
-        this.tramite130105Store.setBloque(VALOR);
-        break;
-      case 'setUsoEspecifico':
-        this.tramite130105Store.setUsoEspecifico(VALOR);
-        break;
-      case 'setJustificacionImportacionExportacion':
-        this.tramite130105Store.setJustificacionImportacionExportacion(VALOR);
-        break;
-      case 'setObservaciones':
-        this.tramite130105Store.setObservaciones(VALOR);
-        break;
-      case 'setEntidad':
-        this.tramite130105Store.setEntidad(VALOR);
-        break;
-      case 'setRepresentacion':
-        this.tramite130105Store.setRepresentacion(VALOR);
-        break;
-      case 'setFraccion':
-        this.tramite130105Store.setFraccion(VALOR);
-        this.tramite130105Store.setUnidadMedida("1");
-        break;
-      case 'setValorFacturaUSD':
-        this.tramite130105Store.setValorFacturaUSD(VALOR);
-        break;
-      default:
-        console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130105Store`
-        );
+  setValoresStore($event: { form: FormGroup; campo: string }): void {
+    const VALOR = $event.form.get($event.campo)?.value;
+    this.tramite130105Store.actualizarEstado({ [$event.campo]: VALOR });
+    if($event.campo === 'fraccion'){
+      this.tramite130105Store.actualizarEstado({'unidadMedida': '1'});
     }
   }
  
