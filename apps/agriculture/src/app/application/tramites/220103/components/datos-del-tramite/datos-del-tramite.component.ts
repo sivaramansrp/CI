@@ -19,7 +19,6 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { Mercancia } from '../../modelos/sanidad-acuicola-importacion.model';
 import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
 import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/tramites220103.store';
@@ -32,7 +31,7 @@ import { guid } from '@datorama/akita';
 @Component({
   selector: 'app-datos-del-tramite',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent, FormasDinamicasComponent, TablaDinamicaComponent],
+  imports: [CommonModule, AlertComponent, FormasDinamicasComponent, TablaDinamicaComponent],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
@@ -46,7 +45,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Referencia al modal de mercancías.
    */
-  @ViewChild('modalMercancia') elementoModal!: ElementRef;
+  @ViewChild('cerrarModal') cerrarModalRef!: ElementRef;
 
   /**
    * Instancia del modal de Bootstrap.
@@ -313,8 +312,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         MERCANCIA.id = guid();
         this.postMercancia(MERCANCIA.id);
       }
-      this.cerrarModal();
       this.formularioDatosMercancia.reset();
+       this.cerrarModal();
     } else if (this.formularioDatosMercancia.invalid) {
       this.formularioDatosMercancia.markAllAsTouched();
     }
@@ -324,11 +323,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Cierra el modal de mercancías.
    */
   cerrarModal(): void {
-    const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
-    if (INSTANCIA) {
-      this.instanciaModal = INSTANCIA;
+    if (this.cerrarModalRef) {
+      this.cerrarModalRef.nativeElement.click();
     }
-    this.instanciaModal.hide();
   }
 
   /**

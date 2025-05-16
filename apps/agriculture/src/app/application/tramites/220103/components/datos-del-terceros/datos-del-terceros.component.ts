@@ -16,7 +16,6 @@
  * @see AlertComponent
  */
 
-import { Modal } from "bootstrap";
 
 import { DatosDelTerceroDestinatario, Instalacion } from "../../modelos/sanidad-acuicola-importacion.model";
 import { Tramite220103Query } from "../../estados/queries/tramites220103.query";
@@ -27,7 +26,7 @@ import { Subject, takeUntil } from "rxjs";
 
 import { AlertComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from "@libs/shared/data-access-user/src";
 import { CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE, CAMPOS_FORMULARIO_MERCANCIAS, CONFIGURACION_CONTACTO, CONFIGURACION_TABLA_INSTALACION, IMPORTANTE } from "../../constantes/sanidad-acuicola-importacion.enum";
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-destinatario.component";
@@ -48,31 +47,6 @@ import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-de
   styleUrl: './datos-del-terceros.component.scss',
 })
 export class DatosDelTercerosComponent implements OnInit, OnDestroy {
-  /**
-   * Referencia al elemento DOM del modal de destinatarios.
-   * Utilizado para controlar la apertura y cierre del modal.
-   */
-  @ViewChild('modalDestinatario') elementoModal!: ElementRef;
-
-  /**
-   * Instancia del modal de destinatarios.
-   * Se utiliza para controlar programáticamente el comportamiento del modal.
-   * @private
-   */
-  private instanciaModal!: Modal;
-
-  /**
-   * Referencia al elemento DOM del modal de instalaciones.
-   * Utilizado para controlar la apertura y cierre del modal.
-   */
-  @ViewChild('modalInstalaci') elementoModalInstalaci!: ElementRef;
-
-  /**
-   * Instancia del modal de instalaciones.
-   * Se utiliza para controlar programáticamente el comportamiento del modal.
-   * @private
-   */
-  private instanciaModalInstalaci!: Modal;
 
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
@@ -186,32 +160,6 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    */
   obtenerInstalaciSeleccionadas(event: Instalacion[]): void {
     this.instalacionesSeleccionadas = event;
-  }
-
-  /**
-   * Cierra el modal de destinatarios.
-   * Obtiene la instancia del modal utilizando el elemento de referencia y lo oculta.
-   * Este método se ejecuta cuando el usuario cancela la operación o guarda un destinatario.
-   */
-  cerrarModal(): void {
-    const INSTANCIA = Modal.getInstance(this.elementoModal.nativeElement);
-    if (INSTANCIA) {
-      this.instanciaModal = INSTANCIA;
-    }
-    this.instanciaModal.hide();
-  }
-
-  /**
-   * Cierra el modal de instalaciones.
-   * Obtiene la instancia del modal utilizando el elemento de referencia y lo oculta.
-   * Este método se ejecuta cuando el usuario cancela la operación o guarda una instalación.
-   */
-  cerrarModalInstalacion(): void {
-    const INSTANCIA = Modal.getInstance(this.elementoModalInstalaci.nativeElement);
-    if (INSTANCIA) {
-      this.instanciaModalInstalaci = INSTANCIA;
-    }
-    this.instanciaModalInstalaci.hide();
   }
 
   /**

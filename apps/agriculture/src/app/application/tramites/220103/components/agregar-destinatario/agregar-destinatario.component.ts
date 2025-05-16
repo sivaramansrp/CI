@@ -5,8 +5,6 @@
  * Componente que gestiona la funcionalidad para agregar destinatarios o instalaciones en el trámite 220103.
  * Proporciona un formulario dinámico y maneja la interacción con el estado del trámite.
  *
- * @example
- * <app-agregar-destinatario [esModoInstalacion]="false" (closeModal)="onClose()"></app-agregar-destinatario>
  *
  * @see Tramite220103Store
  * @see SanidadAcuicolaImportacionService
@@ -25,7 +23,7 @@ import { SanidadAcuicolaImportacionService } from "../../services/sanidad-acuico
 import { Tramite220103Query } from "../../estados/queries/tramites220103.query";
 
 import { CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO, CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI, TIPO_PERSONA } from "../../constantes/sanidad-acuicola-importacion.enum";
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
 /**
@@ -45,11 +43,13 @@ import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tram
   styleUrl: './agregar-destinatario.component.scss',
 })
 export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
-  /**
-   * Evento que se emite para solicitar el cierre del modal que contiene este componente.
-   */
-  @Output() cerrarModal = new EventEmitter<void>();
 
+
+    /**
+     * Referencia al botón o elemento que cierra el modal de agregar destinatario o instalación.
+     * Se utiliza para cerrar el modal programáticamente desde el componente.
+     */
+    @ViewChild('cerrarModal') cerrarModalRef!: ElementRef;
   /**
    * Indica si el componente opera en modo instalación (`true`) o destinatario (`false`).
    * Afecta la configuración del formulario y la lógica de guardado.
@@ -263,7 +263,6 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
    * Valida el formulario correspondiente (`formularioAgregarInstalacion` o `formularioAgregarDestinatario`).
    * Si es válido:
    * 1. Llama al método de servicio apropiado (`getInstalacion` o `getDestinatario`) para actualizar la tabla correspondiente en el estado.
-   * 2. Emite el evento `closeModal` para cerrar el modal.
    * 3. Resetea el formulario correspondiente.
    * 4. Resetea el estado temporal en `Tramite220103Store` usado por este modal.
    * Si no es válido, marca todos los controles del formulario como 'touched' para mostrar errores de validación.
@@ -272,7 +271,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     if (this.esModoInstalacion) {
       if (this.formularioAgregarInstalacion.valid) {
         this.getInstalacion();
-        this.cerrarModal.emit();
+        this.cerrarModal();
         this.formularioAgregarInstalacion.reset();
       } else {
         this.formularioAgregarInstalacion.markAllAsTouched();
@@ -280,7 +279,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     } else {
       if (this.formularioAgregarDestinatario.valid) {
         this.getDestinatario();
-        this.cerrarModal.emit();
+        this.cerrarModal();
         this.formularioAgregarDestinatario.reset();
       } else {
         this.formularioAgregarDestinatario.markAllAsTouched();
@@ -322,6 +321,17 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
           valor
         );
       });
+  }
+
+  /**
+   * Cierra el modal de agregar destinatario o instalación.
+   * Utiliza la referencia al elemento del modal (`cerrarModalRef`) para simular un clic
+   * y cerrar el modal desde el código.
+   */
+  cerrarModal(): void {
+    if (this.cerrarModalRef) {
+      this.cerrarModalRef.nativeElement.click();
+    }
   }
 
   /**

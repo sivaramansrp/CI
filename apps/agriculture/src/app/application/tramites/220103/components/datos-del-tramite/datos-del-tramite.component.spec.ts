@@ -5,7 +5,6 @@ import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuico
 import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 import { of, throwError } from 'rxjs';
-import { Modal } from 'bootstrap';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
@@ -156,13 +155,9 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('debe cerrar el modal de mercancías', () => {
-    const MOCK_MODAL_INSTANCE = { hide: jest.fn() } as unknown as Modal;
-    component.elementoModal = { nativeElement: {} } as any;
-    jest.spyOn(Modal, 'getInstance').mockReturnValue(MOCK_MODAL_INSTANCE);
-
+    component.cerrarModalRef = { nativeElement: { click: jest.fn() } } as any;
     component.cerrarModal();
-
-    expect(MOCK_MODAL_INSTANCE.hide).toHaveBeenCalled();
+    expect(component.cerrarModalRef.nativeElement.click).toHaveBeenCalled();
   });
 
   it('debe limpiar las suscripciones al destruir el componente', () => {

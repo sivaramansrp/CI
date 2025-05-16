@@ -117,7 +117,6 @@ const ROUTES: Routes = [
       import('./tramites/220503/sanidad-acuicola.module').then(
         (m) => m.SanidadAcuicolaModule
       ),
-  }
   },
   {
     path:'sanidad-acuicola-importacion',

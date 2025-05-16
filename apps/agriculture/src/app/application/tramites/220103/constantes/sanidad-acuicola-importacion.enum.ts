@@ -74,7 +74,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row :1
@@ -95,7 +95,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     opciones: [],
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row: 1
@@ -121,7 +121,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row: 1
@@ -176,7 +176,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row: 2
@@ -196,7 +196,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row:2
@@ -223,7 +223,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row :3
@@ -243,7 +243,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row:3
@@ -420,7 +420,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     opciones: [],
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row:8
@@ -489,7 +489,7 @@ export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row:1
@@ -509,7 +509,7 @@ export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     mostrar: true,
     habilitado: true,
     row:2
@@ -618,7 +618,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row:1
   },
   /**
@@ -699,7 +699,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     opciones: [{ id: '1', descripcion: 'ALVARADO' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row: 3
   },
   /**
@@ -717,7 +717,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row: 3
   },
   /**
@@ -742,7 +742,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row: 3
   },
   /**
@@ -760,7 +760,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row: 4
   },
   /**
@@ -778,7 +778,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row: 4
   },
   /**
@@ -1015,7 +1015,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row:4
   },
   /**
@@ -1040,7 +1040,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row:4
   },
   /**
@@ -1065,7 +1065,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 4,
+    marginTop: 0,
     row:4
   },
 ];
