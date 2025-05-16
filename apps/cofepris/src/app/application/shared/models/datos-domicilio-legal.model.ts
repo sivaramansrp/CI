@@ -1,3 +1,5 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
 export interface NicoInfo {
   clave_Scian: string;
   descripcion_Scian: string;
@@ -48,7 +50,7 @@ export interface PermisoModel {
   calle: string;
 }
   
-  export const MERCANCIAS_DATA = [
+  export const MERCANCIAS_DATA:ConfiguracionColumna<MercanciasInfo>[] = [
     {
       encabezado: 'Nombre comercial',
       clave: (ele: MercanciasInfo) => ele.nombreComercial,
@@ -152,7 +154,7 @@ export interface PermisoModel {
   ];
 
 
-  export const DATOS_MERCANCIAS = [
+  export const DATOS_MERCANCIAS:ConfiguracionColumna<MercanciasInfo>[] = [
     {
       encabezado: 'Nombre comercial',
       clave: (ele: MercanciasInfo) => ele.nombreComercial,

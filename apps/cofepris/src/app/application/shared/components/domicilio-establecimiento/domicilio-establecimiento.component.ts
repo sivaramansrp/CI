@@ -299,7 +299,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Lista de mercancías agregadas por el usuario.
    */
-  listaMercancias: any[] = [];
+  listaMercancias: MercanciasInfo[] = [];
   /**
    * Etiqueta de la lista de fechas.
    * */
