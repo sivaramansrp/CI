@@ -145,7 +145,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
       nomOficialAutorizado: [this.solicitudState?.nomOficialAutorizado, Validators.required],
       observaciones: [this.solicitudState?.observaciones, Validators.required],
       empresaControladora: [this.solicitudState?.empresaControladora, Validators.required],
-      descripcionLugarEmbarque: [this.solicitudState?.descripcionLugarEmbarque] // Added missing form control without validators
+      descripcionLugarEmbarque: [this.solicitudState?.descripcionLugarEmbarque,Validators.required]
     });
 
     this.validaRadioCalculo();
