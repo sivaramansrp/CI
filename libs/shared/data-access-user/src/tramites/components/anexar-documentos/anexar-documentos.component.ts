@@ -102,11 +102,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly ESTATUS_CARGA_DOCUMENTO = ESTATUS_CARGA_DOCUMENTO;
 
-  /**
-   * @description Arreglo para almacenar los documentos cargados.
-   * @type {DocumentosCargados[]}
-   */
-  documentosCargados: DocumentosCargados[] = [];
 
   /**
    * @description Objeto para almacenar el documento seleccionado.
