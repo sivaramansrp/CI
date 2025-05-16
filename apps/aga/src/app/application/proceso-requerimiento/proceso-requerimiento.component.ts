@@ -1,5 +1,6 @@
 import {
   AccionBoton,
+  AcuseComponent,
   AnexarDocumentosComponent,
   AtenderRequerimientoService,
   BtnContinuarComponent,
@@ -15,6 +16,9 @@ import {
   ListaPasosWizard,
   PASOS_REQUERIMIENTOS,
   RequerimientoInformacionComponent,
+  TITULO_ACUSE,
+  TXT_ALERTA_ACUSE,
+  TramiteFolioQueries,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
@@ -41,6 +45,7 @@ import { Type } from '@angular/core';
     BtnContinuarComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
+    AcuseComponent,
     forwardRef(() => EncabezadoRequerimientoComponent),
     forwardRef(() => RequerimientoInformacionComponent),
   ],
@@ -61,6 +66,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   departamento!: string;
   esRequerimientoServiceLoaded: boolean = false;
 
+    txtAlerta!: string;
+    subtitulo = TITULO_ACUSE;
+      folio!: string;
+  url!: string;
+  esAcuse: boolean = false;
   /**
    * Variable que almacena el tipo de alerta.
    */
@@ -85,8 +95,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private consultaioStore: ConsultaioStore,
     private consultaioQuery: ConsultaioQuery,
     private catalogosServices: CatalogosService,
-    private requerimientoService: AtenderRequerimientoService
+    private requerimientoService: AtenderRequerimientoService,
+    private tramiteQueries: TramiteFolioQueries,
   ) {
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -115,6 +127,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       this.guardarDatos?.department,
       this.guardarDatos?.folioTramite,
       this.guardarDatos?.tipoDeTramite,
+      this.guardarDatos?.estadoDeTramite,
       true,false,false);
   }
 
@@ -126,6 +139,12 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     }
 
     this.getTiposDocumentos();
+
+    const URL_ACTUAL = this.router.url;
+        this.url = URL_ACTUAL.split('/')[1];
+     
+        this.folio = this.tramiteQueries.getTramite();
+        this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
 
   async loadComponent(li: ListaComponentes): Promise<void> {
@@ -167,6 +186,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           true,false,false);
       } else {
         this.consultaioStore.establecerConsultaio(
@@ -175,6 +195,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           false,false,true);
       }
       if (e.accion === 'cont') {
@@ -212,7 +233,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']); // Navegación a la página de acuse
+      this.esAcuse = true;
     }
   }
 

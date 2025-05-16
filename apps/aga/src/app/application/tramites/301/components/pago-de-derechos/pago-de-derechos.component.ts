@@ -155,7 +155,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
-    if (this.procedureState.readonly) {
+    if (this.esFormularioSoloLectura) {
       this.getProcedureDatos();
     }
   }
