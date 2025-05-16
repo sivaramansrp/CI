@@ -30,7 +30,9 @@ import { ModalComponent } from '../modal/modal.component';
 import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { Tramite250103Store } from '../../estados/tramite250103.store';
 
-
+/**
+ * Componente encargado de gestionar los destinatarios y agentes aduanales dentro del trámite 250103.
+ */
 @Component({
   selector: 'app-destinatario-agente-aduanal',
   standalone: true,

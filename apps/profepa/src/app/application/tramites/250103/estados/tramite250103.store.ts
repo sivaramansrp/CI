@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
  * mercancía, y aspectos administrativos.
  */
 export interface Tramite250103State {
+  /** Tipo de movimiento seleccionado. */
   tipoMovimiento : string;
   /** Tipo de aduana seleccionada. */
   tipoAduana: CatalogoResponse | null;
@@ -26,6 +27,7 @@ export interface Tramite250103State {
   destinatarioCodigoPostal: string;
   /** Domicilio completo del destinatario. */
   destinatarioDomicilio: string;
+  /** Ciudad del destinatario. */
   destinariociudad: string;
   /** Nombre del agente aduanal. */
   agenteAduanalNombre: string;
@@ -105,6 +107,7 @@ export interface Tramite250103State {
  */
 export function createInitialState(): Tramite250103State {
   return {
+    /** Valor inicial para tipo de movimiento (sin seleccionar). */
     tipoMovimiento  :'',
     /** Valor inicial para tipo de aduana (sin seleccionar). */
     tipoAduana: null,
@@ -122,7 +125,7 @@ export function createInitialState(): Tramite250103State {
     destinatarioCodigoPostal: '',
     /** Domicilio del destinatario (vacío). */
     destinatarioDomicilio: '',
-
+    /** Ciudad del destinatario (vacía). */
     destinariociudad: '',
     /** Nombre del agente aduanal (vacío). */
     agenteAduanalNombre: '',
@@ -191,6 +194,12 @@ export function createInitialState(): Tramite250103State {
   };
 }
 
+/**
+ * Store para gestionar el estado del trámite 250103.
+ *
+ * Este store utiliza Akita para manejar el estado de la aplicación,
+ * permitiendo la gestión eficiente de datos y su persistencia.
+ */
 @Injectable({
   providedIn: 'root',
 })

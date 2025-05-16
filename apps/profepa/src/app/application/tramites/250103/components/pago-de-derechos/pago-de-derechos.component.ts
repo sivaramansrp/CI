@@ -140,7 +140,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecha: [this.solicitudState.fecha, Validators.required],
       importe: [{value: this.solicitudState.importe, disabled: true }, [Validators.required, Validators.maxLength(16)]],
       revisados: [this.solicitudState.revisados]
-    });
+    }); 
     this.pagoDerechosForm.get('clave')?.setValue(pago.formData.clave);
     this.pagoDerechosForm.get('dependencia')?.setValue(pago.formData.dependencia);
     this.pagoDerechosForm.get('importe')?.setValue(pago.formData.importe);
