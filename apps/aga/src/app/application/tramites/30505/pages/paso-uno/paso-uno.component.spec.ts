@@ -1,47 +1,44 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
+import { of, Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let storeMock: any;
+  let queryMock: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [
-        PasoUnoComponent,
-      ],
-      imports: [
-        CommonModule,
-        HttpClientTestingModule
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    storeMock = {} as Solicitud30505Store;
+    queryMock = {
+      selectSolicitud$: of({ selectedCheckbox: ['a', 'b'] })
+    } as any;
+    component = new PasoUnoComponent(storeMock, queryMock);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice value as 2', () => {
-    expect(component.indice).toBe(2);
-  });
-
-  it('should update indice when seleccionaTab is called', () => {
-    component.indice = 1;
-    expect(component.indice).toBe(1);
-
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
-
+  it('should set indice on seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
+  });
 
-    component.seleccionaTab(4);
-    expect(component.indice).toBe(4);
+  it('should update selectedCheckboxes on toggleDataVisibility', () => {
+    component.toggleDataVisibility(['x', 'y']);
+    expect(component.selectedCheckboxes).toEqual(['x', 'y']);
+  });
+
+  it('should clean up on destroy', () => {
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should subscribe and set AvisoState and selectedCheckboxes on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.AvisoState).toBeDefined();
+    expect(component.selectedCheckboxes).toEqual(['a', 'b']);
   });
 });

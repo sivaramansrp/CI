@@ -30,10 +30,6 @@ describe('AvisoDeModificacionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should initialize pasos with RenovacionesPasos', () => {
-  //   expect(component.pasos).toEqual(RenovacionesPasos);
-  // });
-
   it('should initialize indice with 1', () => {
     expect(component.indice).toBe(1);
   });

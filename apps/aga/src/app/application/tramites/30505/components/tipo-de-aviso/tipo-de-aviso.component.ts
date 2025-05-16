@@ -6,9 +6,17 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO_MOD } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
-
 /**
- * Componente que representa el primer paso de un trámite.
+ * Componente encargado de gestionar el tipo de aviso dentro del trámite 30505.
+ * Permite la selección de diferentes tipos de avisos mediante checkboxes y emite los cambios al componente padre.
+ * Además, inicializa y mantiene el estado del formulario relacionado con los avisos.
+ *
+ * @remarks
+ * Utiliza un formulario reactivo para manejar los datos de los avisos y se suscribe al estado de la solicitud
+ * a través de un store y query específicos del trámite.
+ *
+ * @example
+ * <app-tipo-de-aviso (checkboxChange)="onCheckboxChange($event)"></app-tipo-de-aviso>
  */
 @Component({
   selector: 'app-tipo-de-aviso',
@@ -17,39 +25,95 @@ import { Solicitud30505Query } from '../../../../core/queries/tramites30505.quer
   standalone: true,
   imports: [CommonModule, AlertComponent, InputCheckComponent, ReactiveFormsModule]
 })
-/**
- * Componente que representa el primer paso de un trámite.
- */
+
 export class TipoDeAvisoComponent implements OnDestroy,OnInit {
+  
   /**
-   * Índice utilizado para identificar la posición actual en un proceso o lista.
-   * @type {number}
+   * Índice actual utilizado para rastrear la posición o el estado dentro del componente.
+   * @default 0
    */
   indice: number = 0;
 
+  /**
+   * Evento emitido cuando cambia el estado de los checkboxes.
+   * 
+   * @remarks
+   * Este evento emite un arreglo de cadenas que representa los valores seleccionados actualmente.
+   * 
+   * @eventProperty
+   */
   @Output() checkboxChange = new EventEmitter<string[]>();
 
+  /**
+   * Representa el formulario reactivo utilizado para capturar y validar los datos del aviso.
+   * 
+   * @type {FormGroup}
+   * @see https://angular.io/api/forms/FormGroup
+   */
   avisoForm!: FormGroup;
 
+  /**
+   * Contiene el texto del aviso, inicializado con el valor de la constante AVISO_MOD.
+   * 
+   * @remarks
+   * Esta propiedad se utiliza para mostrar o manipular el mensaje de aviso correspondiente
+   * al tipo de trámite seleccionado en el componente.
+   */
   TEXTO: string = AVISO_MOD;
 
+  /**
+   * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
+   * Se emite un valor cuando el componente es destruido, permitiendo que las suscripciones
+   * se cancelen de manera segura utilizando el operador `takeUntil`.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Representa el estado actual de la solicitud 30505 para el aviso.
+     * 
+     * @type {Solicitud30505State}
+     * @public
+     */
     public AvisoState!: Solicitud30505State;
 
-  selectedCheckboxes: string[] = []; // Array to store selected checkbox values
+  /**
+   * Arreglo que almacena los identificadores de los checkboxes seleccionados.
+   * Cada elemento del arreglo representa el valor de un checkbox que ha sido marcado por el usuario.
+   */
+  selectedCheckboxes: string[] = [];
 
+  /**
+   * Constructor de la clase TipoDeAvisoComponent.
+   * 
+   * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramiteStore - Instancia de Solicitud30505Store para la gestión del estado de los trámites.
+   * @param tramiteQuery - Instancia de Solicitud30505Query para consultar el estado de los trámites.
+   */
   constructor(
   public fb: FormBuilder,public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query
   ) {
-    // Si es necesario, se puede agregar aquí la lógica de inicialización
+   
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se llama a `inicializarFormulario()` para preparar el formulario al cargar el componente.
+   */
   ngOnInit(): void {
 
    this.inicializarFormulario();
   }
 
+  /**
+   * Inicializa el formulario de aviso y configura sus valores iniciales.
+   *
+   * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la sección y actualizar `AvisoState`.
+   * - Crea el formulario reactivo `avisoForm` con los valores obtenidos de `AvisoState`.
+   * - Deshabilita los campos `numeroDeOficio` y `fechaFinVigencia` en el formulario.
+   * - Asigna los checkboxes seleccionados a la propiedad `selectedCheckboxes`.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   inicializarFormulario():void{
 
       this.tramiteQuery.selectSolicitud$
@@ -61,8 +125,6 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
         )
         .subscribe()
 
-  
-  
     this.avisoForm = this.fb.group({
       numeroDeOficio: [
         { value: this.AvisoState?.numeroDeOficio, disabled: true },
@@ -79,17 +141,25 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
     this.selectedCheckboxes = this.AvisoState?.selectedCheckbox;
   }
 
+
   /**
-   * Selecciona una pestaña específica.
-   * @param i - El índice de la pestaña a seleccionar.
+   * Selecciona una pestaña específica estableciendo el índice actual.
+   *
+   * @param i - El índice de la pestaña que se desea seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
   /**
-   * Maneja los datos recibidos del componente hijo.
-   * @param data - Los datos recibidos del componente hijo.
+   * Maneja el evento de cambio de un checkbox para los avisos.
+   *
+   * @param event - Evento del checkbox que indica si fue marcado o desmarcado.
+   * @param controlName - Nombre del control asociado al checkbox.
+   *
+   * Al marcar o desmarcar un checkbox, actualiza el estado en el store,
+   * modifica la lista de checkboxes seleccionados, emite el cambio a través
+   * de un EventEmitter y actualiza los datos relacionados en el store.
    */
   onCambiarAviso(event: Event, controlName: string): void {
   
@@ -106,6 +176,11 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
     this.tramiteStore.setCheckboxDatos(this.selectedCheckboxes);
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Notifica a los suscriptores para limpiar recursos y completa el observable `destroyNotifier$`.
+   * Es útil para evitar fugas de memoria al cancelar suscripciones activas.
+   */
    ngOnDestroy(): void {
      this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
