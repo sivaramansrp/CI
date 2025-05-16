@@ -457,3 +457,5 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
+
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/

@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_IMPORTE_PAGO, REGEX_PATRON_DECIMAL_2, REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_PATRON_DECIMAL_2 } from '@ng-mf/data-access-user';
 import {
   Component,
   EventEmitter,
@@ -152,8 +152,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.pagoDerechoFormState?.llavePago || '',
         [
           Validators.required,
+           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
           Validators.maxLength(30),
-          Validators.pattern(REGEX_IMPORTE_PAGO),
+         
         ],
       ],
       fechaPago: [

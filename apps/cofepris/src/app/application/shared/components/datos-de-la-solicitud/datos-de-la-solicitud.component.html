@@ -40,11 +40,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"
           (click)="abrirModal()"
-
         >
           Seleccionar establecimiento
         </button>
@@ -734,21 +730,13 @@
   </form>
 </div>
 
-<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
-[ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
-<div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
-    <div class="modal-content">
-        <div class="modal-header" style="height: 50px;">
-        </div>
-        <div class="modal-body">
-            <p>{{ mensajeDeAlerta }}</p>
-        </div>
-        <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
-        </div>
-    </div>
-</div>
-</div>
+
+@if(mostrarAlerta){
+    <section>
+    <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+    </lib-notificaciones>
+  </section>
+}
 
 @if (nuevaNotificacion && mostrarNotificacion) {
   <section>
