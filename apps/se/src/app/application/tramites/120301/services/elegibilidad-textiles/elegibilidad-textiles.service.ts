@@ -32,5 +32,11 @@ export class ElegibilidadTextilesService {
   getFormData(): Observable<TextilesState> {
     return this.elegibilidadDeTextilesStore._select(state => state);
   }
+
+  obtenerListaPaises(): Observable<Catalogo[]> {
+    const JSONURL = 'assets/json/120301/ano-de-la-constancia.json';
+    return this.http
+      .get<Catalogo[]>(JSONURL);
+  }
  
 }

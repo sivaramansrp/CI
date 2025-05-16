@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -86,6 +87,14 @@ export interface TextilesState {
   metrosCuadradosEquivalentes: number;
   /** Cantidad total de facturas. */
   cantidadFacturasTotal: number;
+  /** Año de la constancia. */
+  anoDeLaConstancia: string;
+  /**Número de la constancia*/
+  numeroDeLaConstancia: string;
+  /**DATOS Tabla Constancia Del Registro*/
+  datosTablaConstanciaDelRegistro: ConstanciaTramiteConfiguracion[];
+  /**Guardar Bandera*/
+  guardarBandera: boolean;
 }
 
 /**
@@ -134,7 +143,11 @@ export function createInitialState(): TextilesState {
     PaisImportador: '',
     formaValida: [],
     metrosCuadradosEquivalentes: 53,
-    cantidadFacturasTotal: 5
+    cantidadFacturasTotal: 5,
+    numeroDeLaConstancia:'',
+    anoDeLaConstancia:'',
+    datosTablaConstanciaDelRegistro: [],
+    guardarBandera: false,
   };
 }
 
@@ -434,6 +447,21 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
         cantidadFacturasTotal,
     }));
   }
+
+  public setdatosTablaConstanciaDelRegistro(datosTablaConstanciaDelRegistro: Array<ConstanciaTramiteConfiguracion>): void {
+    this.update((state) => ({
+        ...state,
+        datosTablaConstanciaDelRegistro,
+    }));
+  }
+
+  public setguardarBandera(guardarBandera: boolean): void {
+    this.update((state) => ({
+        ...state,
+        guardarBandera,
+    }));
+  }
+
   
   // Similar TSDoc comments can be added for other setter methods.
 
