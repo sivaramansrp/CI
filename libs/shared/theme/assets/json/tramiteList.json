@@ -1542,8 +1542,8 @@
   {
     "id": 221,
     "tramite": 260510,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-pruebas-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-pruebas-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
