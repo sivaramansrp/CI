@@ -33,6 +33,8 @@ export interface Tramite240118State {
   datosDelTramite: DatosDelTramiteFormState;
   modificarDestinarioDatos?: DestinoFinal | null;
   modificarProveedorDatos?: Proveedor | null;
+  modificarMercanciasDatos?: MercanciaDetalle | null;
+  
 }
 
 /**
@@ -170,6 +172,20 @@ export class Tramite240118Store extends Store<Tramite240118State> {
     }));
   }
   
+    /**
+   * Actualiza los datos de un destinatario final específico.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {MercanciaDetalle} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
+    public actualizarMercancias(datos: MercanciaDetalle): void {
+      this.update((state) => ({
+        ...state,
+        modificarMercanciasDatos: datos,
+      }));
+    }
+
   /**
    * Actualiza los datos de un destinatario final específico.
    *

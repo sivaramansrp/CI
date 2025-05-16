@@ -1,8 +1,10 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { ID_PROCEDIMIENTO } from '../../../240118/constants/solicitud-permiso-extraordinario-exportacion';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
@@ -23,11 +25,13 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   
   /**
+   * @constant {number} ID_PROCEDIMIENTO
    * @property {number} idProcedimiento - Indica si el elemento está oculto o visible.
    * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
    * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-  public readonly idProcedimiento:number = 240118;
+  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
    * @property {MercanciaDetalle[]} datosMercanciaTabla
@@ -39,7 +43,6 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
-
 
   /** @private Sujeto para manejar la destrucción de suscripciones y evitar fugas de memoria. */ 
   private destroy$ = new Subject<void>();
@@ -54,7 +57,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240118Query,
-    private tramiteStore: Tramite240118Store
+    private tramiteStore: Tramite240118Store,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   )
   {
      // No hacer nada
@@ -80,6 +85,29 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
   }
+
+      /**
+     * Actualiza la lista de destinatarios finales en el store del trámite.
+     *
+     * @method modificarMercanciasDatos
+     * @param {MercanciaDetalle[]} event - Lista de destinatarios finales actualizada.
+     * @returns {void}
+     */
+      modificarMercanciasDatos(datos: MercanciaDetalle): void {
+        this.tramiteStore.actualizarMercancias(datos);
+        this.irAAcciones();
+      }
+    /**
+     * Navega a una ruta relativa dentro del flujo actual.
+     * @method irAAcciones
+     * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+     * @returns {void}
+     */
+    irAAcciones(): void {
+      this.router.navigate(['../agregar-destino-final'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
 
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
