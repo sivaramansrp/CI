@@ -4,6 +4,7 @@
             [formularioDatos]="partidasDeLaMercancia" [estado]="solicitudDeRegistroState"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
+
     <div class="row mt-5">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
@@ -17,15 +18,18 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <h6>Partidas:</h6>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="partidasTabla"
             [datos]="datospartidas"></app-tabla-dinamica>
     </div>
+
     <div class="row">
         <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLa" [estado]="solicitudDeRegistroState"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
+    
     <div class="row mt-5 text-end">
         <div>
             <button type="button" class="btn btn-danger me-2 btn-space">Eliminar partida</button>

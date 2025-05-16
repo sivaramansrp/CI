@@ -30,6 +30,7 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
+
 export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * @property destroy$
@@ -158,6 +159,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @param event Objeto que contiene el campo y el valor a actualizar.
    */
+  
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       const VALID_VALUE = typeof event.valor === 'object' ? JSON.stringify(event.valor) : event.valor;

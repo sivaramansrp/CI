@@ -3,7 +3,7 @@ import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.compo
 import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;

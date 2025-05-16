@@ -27,6 +27,7 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
+
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * @property destroy$
