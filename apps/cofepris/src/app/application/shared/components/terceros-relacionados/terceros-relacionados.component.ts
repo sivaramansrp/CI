@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -98,6 +98,13 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Tipo de selección que utiliza la tabla dinámica (por ejemplo, checkbox).
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * @property {Fabricante[]} selectedTable
+   * Almacena la fila seleccionada en la tabla de fabricantes.
+   */
+  seleccionTable: Fabricante[] = [];
+
   /**
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
@@ -121,6 +128,12 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Lista de elementos que son obligatorios en el formulario.
    */
   @Input() public elementosRequeridos!: string[];
+
+  /**
+   * @property {EventEmitter<Fabricante[]>} fabricanteSeleccionado
+   * Evento que emite la lista de fabricantes seleccionados en la tabla.
+   */
+  @Output() fabricanteSeleccionado: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
 
   /**
    * @constructor
@@ -193,5 +206,16 @@ export class TercerosRelacionadosComponent implements OnInit {
   esCampoRequerido(campo: string): boolean {
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
-  
+
+  /**
+   * @method onFilaSeleccionadaDestinatario
+   * @description Maneja la selección de una fila en la tabla de destinatarios finales.
+   *
+   * @param {Destinatario[]} event - Evento que contiene los datos del destinatario seleccionado.
+   */
+  onFilaSeleccionadaFabricante(event: Fabricante[]): void {
+    this.seleccionTable = event;
+    this.fabricanteSeleccionado.emit(this.seleccionTable);
+  }
+
 }
