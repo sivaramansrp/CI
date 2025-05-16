@@ -2165,8 +2165,8 @@
   {
     "id": 310,
     "tramite": 130107,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/importaciones-agropecuarias/permisos-de-importacia",
+    "linkDepartment": "/pago/importaciones-agropecuarias/permisos-de-importacia",
     "department": "se"
   },
   {
