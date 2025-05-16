@@ -343,6 +343,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/420102/concluir-relacion.module').then(
         (m) => m.ConcluirRelacionModule),
+  },
+  {
+    path: 'solicitud-despacho-exportacion',
+    loadChildren: () =>
+      import('./tramites/5601/solicitud-despacho-exportacion.module').then(
+        (m) => m.SolicitudDespachoExportacionModule)
   }
 ];
 

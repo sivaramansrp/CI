@@ -1955,8 +1955,8 @@
   {
     "id": 280,
     "tramite": 5601,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/solicitud-despacho-exportacion/solicitud",
+    "linkDepartment": "/pago/solicitud-despacho-exportacion/solicitud",
     "department": "aga"
   },
   {
