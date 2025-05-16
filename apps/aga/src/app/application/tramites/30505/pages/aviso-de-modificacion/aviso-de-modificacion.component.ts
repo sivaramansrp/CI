@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { ViewChild } from '@angular/core';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
+import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**

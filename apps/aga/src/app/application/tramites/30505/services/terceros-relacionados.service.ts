@@ -1,7 +1,7 @@
+import { FusionDatos, TercerosRelacionados } from '../../../core/models/30505/aviso-modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FusionDatos, TercerosRelacionados } from '../../../core/models/30505/aviso-modificacion.model';
 
 /**
  * Servicio para gestionar operaciones relacionadas con terceros en el trámite 30505.
