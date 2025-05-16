@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { map, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Subject, map , takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**
@@ -143,7 +143,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * Este método se utiliza para sincronizar el valor del folio de acuse ingresado por el usuario
    * con el estado global de la aplicación.
    */
-  validarFolioAcuse() {
+  validarFolioAcuse(): void {
     const FOLIO_ACUSE = this.avisoCambioRazonSocialForm.get('folioAcuse')?.value;
     this.tramiteStore.setFolioAcuse(FOLIO_ACUSE);
 

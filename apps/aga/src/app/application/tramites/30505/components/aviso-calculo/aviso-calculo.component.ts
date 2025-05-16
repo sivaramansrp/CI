@@ -1,10 +1,10 @@
+import { AVISO_CALCULO_OPCIONES, AVISO_PORCENTAJE_OPCIONES } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
-import { AVISO_CALCULO_OPCIONES, AVISO_PORCENTAJE_OPCIONES } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 /**
  * Componente encargado de gestionar el formulario y la lógica relacionada con el aviso de cálculo

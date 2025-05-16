@@ -1,4 +1,4 @@
-import { Catalogo,CATALOGOS_ID,CatalogosService,TEXTOS} from '@libs/shared/data-access-user/src';
+import { CATALOGOS_ID, Catalogo, CatalogosService,TEXTOS} from '@libs/shared/data-access-user/src';
 import { Component,OnInit } from '@angular/core';
 /**
  * Componente encargado del segundo paso en el trámite 30505.

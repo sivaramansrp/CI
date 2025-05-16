@@ -1,9 +1,9 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule,Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Solicitud30505AgregarAgenteState, Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule,Location } from '@angular/common';
 import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 
@@ -149,9 +149,9 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @param event Evento del cambio de selección, que contiene el valor seleccionado.
    */
-  public onSelectFigura(event: any): void {
-    const selectedValue = event.target.value;
-    if (selectedValue === '1' || selectedValue === '2') {
+  public onSelectFigura(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    if (SELECTED_VALUE === '1' || SELECTED_VALUE === '2') {
       this.mostrarAgencia = false;
       this.mostrarAgente = true;
     } else {

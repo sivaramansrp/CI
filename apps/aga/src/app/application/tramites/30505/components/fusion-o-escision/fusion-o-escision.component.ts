@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Router,ActivatedRoute } from '@angular/router';
-import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
 import { AVISO_RADIO, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { ActivatedRoute ,Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule , Validators } from '@angular/forms';
+import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Subject,map,takeUntil } from 'rxjs';
+import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
-
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 /**
  * Componente encargado de gestionar la sección de Fusión o Escisión en el trámite 30505.
  *
@@ -40,7 +39,7 @@ import { Solicitud30505Query } from '../../../../core/queries/tramites30505.quer
   imports: [CommonModule, ReactiveFormsModule,TablaDinamicaComponent,TituloComponent,InputRadioComponent],
 })
 
-export class FusionOEscisionComponent implements OnInit {
+export class FusionOEscisionComponent implements OnInit , OnDestroy{
 
   /**
    * Representa el formulario reactivo utilizado en el componente para gestionar los datos de fusión o escisión.
@@ -215,13 +214,13 @@ export class FusionOEscisionComponent implements OnInit {
       'fechaFinVigencia': [{ value: this.AvisoState?.fechafinVigencia2, disabled: true }, Validators.required]
     });
     
-    if(this.AvisoState?.numeroTotalCarros == "0" || this.AvisoState?.numeroTotalCarros == '1'){
+    if(this.AvisoState?.numeroTotalCarros === "0" || this.AvisoState?.numeroTotalCarros === '1'){
      this.divCompletoVisible = true; 
     }
-    if(this.AvisoState?.cantidadBienes == "0"){
+    if(this.AvisoState?.cantidadBienes === "0"){
     this.sinCertificacionPrincipalVisible = true;
     }
-    if(this.AvisoState?.cantidadBienes == "1"){
+    if(this.AvisoState?.cantidadBienes === "1"){
     this.conCertificacionPrincipalVisible = true;
     }
     this.gridFusionEscisionData = this.AvisoState?.fusionEscisionData;
@@ -313,7 +312,7 @@ export class FusionOEscisionComponent implements OnInit {
         takeUntil(this.destroyNotifier$)
       ).subscribe(
           (datos)=> {
-            console.log(datos,"datos");
+          
             this.formulario.patchValue({
               'razonSocial': datos.razonSocial,
               'numFolioTramite': datos.numFolioTramite,
@@ -325,9 +324,10 @@ export class FusionOEscisionComponent implements OnInit {
             this.tramiteStore.setAvisoDatos(datos.fechaInicioVigencia,'fechaInicioVigencia');
             this.tramiteStore.setAvisoDatos(datos.fechaFinVigencia,'fechaFinVigencia2');
           },
-          error => {
-            this.dvMessageVisible = true;
-          });
+          // error => {
+          //   this.dvMessageVisible = true;
+          // }
+           );
     } else {
       this.dvMessageVisible = true;
     }

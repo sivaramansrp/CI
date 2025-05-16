@@ -1,12 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AVISO_AGENTE_DE_TABLA, AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
-import { Router,ActivatedRoute } from '@angular/router';
-import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { AgregarAgenteComponent } from '../agregar-agente/agregar-agente.component';
-import { AVISO_AGENTE_DE_TABLA, AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 
 /**
  * Componente encargado de gestionar el aviso de agente dentro del trámite 30505.
@@ -102,7 +101,7 @@ export class AvisoAgenteComponent implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
-    this.cargarDatos();
+    //this.cargarDatos();
     this.formAgente = this.fb.group({
         nombres: ['', [Validators.required]],
         segundoApellido:['', [Validators.required]],
@@ -123,9 +122,9 @@ export class AvisoAgenteComponent implements OnInit {
    * 
    * @returns {void} No retorna ningún valor.
    */
-  cargarDatos(): void {
+  // cargarDatos(): void {
   
-  }
+  // }
 
   /**
    * Navega a la ruta relativa '../agregar-agente' para agregar un nuevo agente de transporte.
