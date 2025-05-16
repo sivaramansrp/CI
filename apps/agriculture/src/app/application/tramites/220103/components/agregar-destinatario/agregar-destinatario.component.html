@@ -1,5 +1,6 @@
-<div class="container">
+<form>
     <ng-titulo titulo="Agregar destinatario (destino final)"> </ng-titulo>
+    <div class="row">
     <div class="col-md-12">
         <div [formGroup]="esModoInstalacion ? formularioAgregarInstalacion : formularioAgregarDestinatario">
         <label for="tipoPersona" class="form-label">Tipo persona*:</label>
@@ -7,11 +8,12 @@
             [isBold]="true" (valueChange)="establecerCambioDeValor({campo:'tipoPersona', valor:$event})" formControlName="tipoPersona"></app-input-radio>
         </div>
     </div>
-    <ng-titulo titulo="Datos personales"> </ng-titulo>
-    <div class="row mt-5">
+    </div>
+</form>
         @if (!esModoInstalacion) {
             <formas-dinamicas 
                 [forma]="formularioAgregarDestinatario" 
+                [formularioTitulo]="'Datos personales'"
                 [formularioDatos]="configuracionFormularioDestinatario" 
                 [estado]="estadoSeleccionado.datosDelTerceroDestinatario || {}"
                 (emitirCambioDeValor)="establecerCambioDeValor($event,'datosDelTerceroDestinatario')">
@@ -19,12 +21,12 @@
         } @else {
             <formas-dinamicas 
                 [forma]="formularioAgregarInstalacion" 
+                [formularioTitulo]="'Datos personales'"
                 [formularioDatos]="configuracionFormularioInstalacion" 
                 [estado]="estadoSeleccionado.datosDelTerceroInstalacion || {}"
                 (emitirCambioDeValor)="establecerCambioDeValor($event,'datosDelTerceroInstalacion')">
             </formas-dinamicas>
         }
-    </div>
     <div class="row my-5">
         <div class="col-md-8">
             <p>* Campos obligatorios</p>
@@ -43,4 +45,3 @@
             </button>
         </div>
     </div>
-</div>

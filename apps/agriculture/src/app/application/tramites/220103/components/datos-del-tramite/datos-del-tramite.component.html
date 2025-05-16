@@ -1,11 +1,14 @@
-<div class="container">
-    <ng-titulo [titulo]="'Datos del trámite'"> </ng-titulo>
-    <formas-dinamicas [forma]="formularioDatosTramite" [formularioDatos]="configuracionFormularioDatos"
-        [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-    <div class="col-md-12 mt-4">
+
+    <formas-dinamicas [forma]="formularioDatosTramite" 
+    [formularioTitulo]="'Datos del trámite'"
+    [formularioDatos]="configuracionFormularioDatos || []"
+        [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)">
+</formas-dinamicas>
+
+    <div class="row mt-4">
         <ng-alert [CONTENIDO]="mensajeImportante"></ng-alert>
     </div>
-    <div class="col-md-12">
+    <div class="row">
         <label for="mercancias" class="form-label">Mercancías*:</label>
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
             [tipoSeleccionTabla]="seleccionTabla"
@@ -16,7 +19,8 @@
             </ul>
         </nav>
     </div>
-    <div class="col-md-12 mt-4">
+
+    <div class="row mt-4">
         <div class="col-12 d-flex justify-content-end">
             @if(datosTabla.length > 0) {
             <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
@@ -32,7 +36,6 @@
             </button>
         </div>
     </div>
-</div>
 
 <div #modalMercancia class="modal fade test-modal" id="modalMercancia" tabindex="-1" aria-labelledby="modalMercancia">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
@@ -47,8 +50,8 @@
                         </div>
                     </div>
                     <div class="row mt-5">
-                        <ng-titulo titulo="Datos mercancía"> </ng-titulo>
                         <formas-dinamicas [forma]="formularioDatosMercancia"
+                            [formularioTitulo]="'Datos mercancía'"
                             [formularioDatos]="configuracionFormularioMercancia" [estado]="estadoSeleccionadoMercancia"
                             (emitirCambioDeValor)="establecerCambioDeValor($event,'mercancia')"></formas-dinamicas>
                     </div>

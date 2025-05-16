@@ -77,6 +77,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row :1
   },
   /**
    * Campo para seleccionar el medio de transporte.
@@ -97,6 +98,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row: 1
   },
   /**
    * Campo para ingresar la identificación del transporte.
@@ -122,6 +124,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row: 1
   },
 ];
 
@@ -139,7 +142,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     id: 'descripcion',
     labelNombre: 'Descripción',
     campo: 'descripcion',
-    clase: 'col-md-9',
+    clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
@@ -156,6 +159,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row: 1
   },
   /**
    * Campo para la fracción arancelaria.
@@ -175,6 +179,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row: 2
   },
   /**
    * Campo para la descripción de la fracción.
@@ -194,6 +199,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row:2
   },
   /**
    * Campo para la cantidad en UMT (Unidad de Medida de Tarifa).
@@ -201,7 +207,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
    */
   {
     id: 'cantidadUMT',
-    labelNombre: 'Cantidad en UMT',
+    labelNombre: 'Cantidad UMT',
     campo: 'cantidadUMT',
     clase: 'col-md-4',
     tipoInput: 'number',
@@ -220,6 +226,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row :3
   },
   /**
    * Campo para la unidad de medida UMT.
@@ -227,7 +234,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
    */
   {
     id: 'umt',
-    labelNombre: 'Unidad de medida (UMT)',
+    labelNombre: 'UMT',
     campo: 'umt',
     clase: 'col-md-4',
     tipoInput: 'text',
@@ -239,22 +246,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row:3
   },
   /**
    * Campo para la cantidad en UMC (Unidad de Medida Comercial).
@@ -262,7 +254,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
    */
   {
     id: 'cantidadUMC',
-    labelNombre: 'Cantidad en UMC',
+    labelNombre: 'Cantidad UMC',
     campo: 'cantidadUMC',
     clase: 'col-md-4',
     tipoInput: 'number',
@@ -274,6 +266,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row :4
   },
   /**
    * Campo para seleccionar la unidad de medida UMC.
@@ -281,7 +274,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
    */
   {
     id: 'umc',
-    labelNombre: 'Unidad de medida (UMC)',
+    labelNombre: 'UMC',
     campo: 'umc',
     clase: 'col-md-4',
     tipoInput: 'select-catalogos',
@@ -294,22 +287,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row: 4
   },
   /**
    * Campo para el nombre común de la mercancía.
@@ -336,6 +314,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row:5
   },
   /**
    * Campo para el nombre científico de la mercancía.
@@ -362,22 +341,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row:5
   },
   /**
    * Campo para la fase de desarrollo de la mercancía.
@@ -397,22 +361,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-8',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row:6
   },
   /**
    * Campo para seleccionar el uso de la mercancía.
@@ -433,6 +382,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row:7
   },
   /**
    * Campo para especificar otro uso cuando no está en las opciones predefinidas.
@@ -452,6 +402,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: false,
     habilitado: true,
+    row:7
   },
   /**
    * Campo para seleccionar el origen de la mercancía.
@@ -472,23 +423,9 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row:8
   },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-8',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-  },
+
   /**
    * Campo para seleccionar el país de origen de la mercancía.
    * Es obligatorio y utiliza un catálogo de países.
@@ -507,6 +444,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row: 9
   },
   /**
    * Campo para seleccionar el país de procedencia de la mercancía.
@@ -526,6 +464,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     marginTop: 0,
     mostrar: true,
     habilitado: true,
+    row: 9
   },
 ];
 
@@ -553,6 +492,7 @@ export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row:1
   },
   /**
    * Campo para las coordenadas geográficas de la instalación.
@@ -572,6 +512,7 @@ export const CAMPOS_FORMULARIO_DATOS_DE_INSTALACION = [
     marginTop: 4,
     mostrar: true,
     habilitado: true,
+    row:2
   },
 ];
 
@@ -604,6 +545,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row:1
   },
   /**
    * Campo para el primer apellido del destinatario.
@@ -628,6 +570,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row:1
   },
   /**
    * Campo para el segundo apellido del destinatario.
@@ -651,6 +594,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row:1
   },
   /**
    * Campo para la razón social del destinatario.
@@ -675,22 +619,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row:1
   },
   /**
    * Campo para el país del destinatario.
@@ -709,6 +638,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '1',
     marginTop: 0,
+    row: 2
   },
   /**
    * Campo para el código postal del destinatario.
@@ -732,6 +662,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 2
   },
   /**
    * Campo para el estado del destinatario.
@@ -750,6 +681,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 2
   },
   /**
    * Campo para el municipio o alcaldía del destinatario.
@@ -768,6 +700,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row: 3
   },
   /**
    * Campo para la colonia del destinatario.
@@ -785,6 +718,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row: 3
   },
   /**
    * Campo para la calle del destinatario.
@@ -809,6 +743,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row: 3
   },
   /**
    * Campo para el número exterior del destinatario.
@@ -826,6 +761,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row: 4
   },
   /**
    * Campo para el número interior del destinatario.
@@ -843,22 +779,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row: 4
   },
   /**
    * Campo para la lada telefónica del destinatario.
@@ -876,6 +797,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 5
   },
   /**
    * Campo para el teléfono del destinatario.
@@ -900,6 +822,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 5
   },
   /**
    * Campo para el correo electrónico del destinatario.
@@ -923,6 +846,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_DESTINATARIO = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 5
   },
 ];
 
@@ -955,6 +879,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 1
   },
   /**
    * Campo para el primer apellido de la persona responsable de la instalación.
@@ -979,6 +904,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 1
   },
   /**
    * Campo para el segundo apellido de la persona responsable de la instalación.
@@ -1002,6 +928,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 1
   },
   /**
    * Campo para la razón social de la instalación.
@@ -1026,23 +953,9 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
+    row: 1
   },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-  },
+
   /**
    * Campo para el país de la instalación.
    * Es obligatorio y está preestablecido como México.
@@ -1060,22 +973,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '1',
     marginTop: 0,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-8 ',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row: 2
   },
   /**
    * Campo para el domicilio completo de la instalación.
@@ -1100,39 +998,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: 'Calle, No Ext, No Int, Ciudad, C.P.',
     valorPredeterminado: '',
     marginTop: 0,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   * Incluye un margen superior para separación visual.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 12,
-  },
-  /**
-   * Campo vacío para propósitos de formato/espaciado en la interfaz.
-   */
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-12',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+    row: 3
   },
   /**
    * Campo para la lada telefónica de la instalación.
@@ -1150,6 +1016,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row:4
   },
   /**
    * Campo para el teléfono de la instalación.
@@ -1174,6 +1041,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row:4
   },
   /**
    * Campo para el correo electrónico de la instalación.
@@ -1198,6 +1066,7 @@ export const CAMPOS_FORMULARIO_DATOS_PERSONALES_AGREGAR_INSTALACI = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 4,
+    row:4
   },
 ];
 
