@@ -299,7 +299,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Lista de mercancías agregadas por el usuario.
    */
-  listaMercancias: any[] = [];
+  listaMercancias: MercanciasInfo[] = [];
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -409,11 +409,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
 
     this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
-      const matched = this.fraccionesCatalogo.find(item =>
+      const MATCHED = this.fraccionesCatalogo.find(item =>
         item.fraccion.startsWith(valor)
       );
-      const descripcion = matched ? matched.descripcion : '';
-      this.formMercancias.get('descripcionFraccion')?.setValue(descripcion);
+      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
+      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
     });
   }
 
@@ -635,9 +635,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
      */
     agregarMercancia(): void {
     if (this.formMercancias.valid) {
-      const nuevaMercancia = { ...this.formMercancias.getRawValue() };
-      this.listaMercancias.push(nuevaMercancia);
-      console.log('Lista actualizada:', this.listaMercancias);
+      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+      this.listaMercancias.push(NUEVA_MERCANCIA);
       this.formMercancias.reset();
     } 
   }
