@@ -10,8 +10,8 @@ describe('CantidadSolicitadaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CantidadSolicitadaComponent],
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+      declarations: [],
+      imports: [CommonModule, TituloComponent, ReactiveFormsModule, CantidadSolicitadaComponent],
       providers: [FormBuilder]
     }).compileComponents();
 
@@ -30,7 +30,7 @@ describe('CantidadSolicitadaComponent', () => {
   });
 
   it('should have the default value of cantidadSolicitada as 100', () => {
-    expect(component.form.get('cantidadSolicitada')?.value).toBe('100');
+    expect(component.form.get('cantidadSolicitada')?.value).toEqual(100);
   });
 
   it('should mark the form as invalid when cantidadSolicitada is empty', () => {

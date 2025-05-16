@@ -5,12 +5,21 @@
         <div class="col-md-4">
           <app-catalogo-select 
             [catalogo]="entidad" 
-            [label]="'Entidad Federativa*'"
+            [label]="'Entidad Federativa'"
+            [required]="true"
             name="entidad" 
             formControlName="entidad"
             (change)="getEntidad()"
             >
           </app-catalogo-select>
+           <div *ngIf="esInvalido('entidad')" class="text-danger">
+            <small
+              *ngIf="
+                representacionForm.controls['entidad'].hasError('required')
+              "
+              >Este campo es obligatorio.</small
+            >
+          </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select 
@@ -22,6 +31,14 @@
             (change)="getRepresentacion()"
            >
           </app-catalogo-select>
+           <div *ngIf="esInvalido('representacion')" class="text-danger">
+            <small
+              *ngIf="
+                representacionForm.controls['representacion'].hasError('required')
+              "
+              >Este campo es obligatorio.</small
+            >
+          </div>
         </div>
       </div>
     </form>

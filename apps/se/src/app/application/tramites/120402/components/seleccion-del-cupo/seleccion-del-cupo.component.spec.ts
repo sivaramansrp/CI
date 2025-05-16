@@ -12,8 +12,8 @@ describe('SeleccionDelCupoComponent', () => {
  
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeleccionDelCupoComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [],
+      imports: [ReactiveFormsModule, SeleccionDelCupoComponent,HttpClientTestingModule],
       providers: [DescripcionDelCupoService]
     }).compileComponents();
   });

@@ -222,4 +222,16 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       this.representacionForm.get('representacion')?.value;
     this.tramite120402Store.setRepresentacion(SELECTED_REPRESENTACION);
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param nombreControl - Nombre del control a verificar.
+   * @returns True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.representacionForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
 }
