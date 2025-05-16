@@ -359,6 +359,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Nueva notificación relacionada con el RFC. */
   public nuevaRfcNotificacion!: Notificacion;
 
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -398,6 +401,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       'aduanaDatos',
       '/cofepris/aduanaDatos.json'
     );
+      this.seleccionarFilaNotificacion={
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:this.mensajeDeAlerta,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
   }
 
   /**
@@ -866,6 +880,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+
   /**
    * Método que se llama cuando se envía el formulario.
    * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
@@ -888,6 +904,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+
+  /**
+   * Método que verifica si un campo debe ser habilitado o deshabilitado
+   * según el procedimiento actual.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo debe ser habilitado, `false` en caso contrario.
+   */
   public controlYaDeshabilitado(campo: string): boolean {
     if (
       (campo === 'apellidoPaterno' ||
