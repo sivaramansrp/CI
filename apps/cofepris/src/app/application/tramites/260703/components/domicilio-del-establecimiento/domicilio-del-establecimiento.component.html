@@ -11,6 +11,7 @@
           class="form-control"
           formControlName="codigoPostal"
           placeholder="95270"
+          maxlength="12"
           (change)="setValoresStore('codigoPostal')"
           [class.is-invalid]="
             domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
