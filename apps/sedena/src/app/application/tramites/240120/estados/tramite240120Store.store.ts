@@ -24,6 +24,8 @@ export interface Tramite240120State {
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -160,4 +162,80 @@ export class Tramite240120Store extends Store<Tramite240120State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+
+  /**
+   * Actualiza los datos de un destinatario final específico.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  /**
+   * Actualiza los datos de un proveedor específico.
+   *
+   * @method actualizarDatosProveedor
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
+    }));
+  }
+
+  /**
+   * Elimina un destinatario de la tabla de destinatarios.
+   *
+   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+   * @returns void
+   */
+    eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele => 
+          Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
+        );
+    
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+    
+        return {
+          ...state,
+          destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+        };
+      });
+    }
+
+     /**
+   * Elimina un Proveedor de la tabla de Proveedor.
+   *
+   * @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+   * @returns void
+   */
+     eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele => 
+          Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
+        );
+    
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+    
+        return {
+          ...state,
+          proveedorTablaDatos: [...state.proveedorTablaDatos],
+        };
+      });
+    }
 }

@@ -141,7 +141,7 @@
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
-          [disabled]="mercanciaTablaSeleccionada.length !== 1"
+          [disabled]="mercanciaTablaSeleccionada.length === 0"
         >
           Modificar
         </button>

@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -52,7 +53,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   constructor(
     private tramiteStore: Tramite240120Store,
-    private tramiteQuery: Tramite240120Query
+    private tramiteQuery: Tramite240120Query,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -77,6 +80,40 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       });
   }
 
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones();
+  }
+
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAccionesProveedor();
+  }
+
+  irAAcciones(): void {
+    this.router.navigate(['../agregar-destino-final'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  irAAccionesProveedor(): void {
+      this.router.navigate(['../agregar-proveedor'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
+
+ eliminarDestinatarioFinal(datos: DestinoFinal): void {
+    if (datos) {
+      this.tramiteStore.eliminarDestinatarioFinal(datos);
+    }
+  }
+
+  eliminarProveedor(datos: Proveedor): void {
+    if (datos) {
+      this.tramiteStore.eliminareliminarProveedorFinal(datos);
+    }
+  }
+  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * 

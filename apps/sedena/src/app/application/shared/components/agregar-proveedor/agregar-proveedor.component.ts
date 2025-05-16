@@ -158,7 +158,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.campoObligatorioChange();
         if (this.idProcedimiento === 240118) {
       this.agregarProveedorForm.enable();
-    } else {
+    } 
+     if (this.idProcedimiento === 240120) {
+      this.agregarProveedorForm.enable();
+    }
+    else {
       this.agregarProveedorForm.disable();
     }
     this.cargarDatos();
