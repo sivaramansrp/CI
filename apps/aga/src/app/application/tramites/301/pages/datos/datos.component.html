@@ -33,11 +33,15 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       } @case (2) {
+        @if(esDatosRespuesta){
       <app-registro-para-la [procedureState]="tieneConsulta"></app-registro-para-la>
       <app-de-la-muestra [procedureState]="tieneConsulta"></app-de-la-muestra>
       <app-informacion-de-la [procedureState]="tieneConsulta"></app-informacion-de-la>
+      }
       } @case (3) {
+       @if(esDatosRespuesta){
       <app-pago-de-derechos [procedureState]="tieneConsulta"></app-pago-de-derechos>
+         }
       } }
     </ng-container>
   </div>

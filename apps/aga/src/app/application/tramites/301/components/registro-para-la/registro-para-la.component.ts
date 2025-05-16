@@ -138,12 +138,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
-  * Indica si el formulario está en modo de actualización (patch).
-  * Si es `true`, el formulario se utiliza para editar un registro existente.
-  */
-  public esFormularioActualizacion: boolean = false; 
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -167,16 +161,18 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       this.esFormularioActualizacion = [
-        'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
-        'FLUJO_FUNCIONARIO_AUTORIZACION',
-        'FLUJO_FUNCIONARIO_EVALUAR'
-      ].includes(seccionState.parameter);
       })
     )
     .subscribe()
@@ -212,13 +208,21 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     );
     this.getRegistro(); // Llama al método para obtener los datos de registro
 
+    /**
+     * Crea un formulario reactivo (`FormGroup`) con el campo `registro`,
+     * inicializado con el valor obtenido desde `solicitudState`.
+     * El campo es requerido.
+     */
     this.registroParaLaForm = this.fb.group({
       registro: [{value: this.solicitudState?.registro, disable: false}, Validators.required],
     });
 
-    if(this.procedureState.readonly) {
+    /**
+     * Si el procedimiento está en modo solo lectura (`readonly`),
+     * se desactiva el campo `registro` para evitar modificaciones por parte del usuario.
+     */
+    if(this.esFormularioSoloLectura) {
         this.registroParaLaForm.get('registro')?.disable();
-        //this.registroParaLaForm.get('registro')?.setValue(this.procedureDatos[0].registroPara.registro);
     }
   }
 

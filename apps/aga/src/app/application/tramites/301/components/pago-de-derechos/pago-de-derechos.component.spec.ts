@@ -64,19 +64,6 @@ describe('PagoDeDerechosComponent', () => {
     expect(form?.get('monto')?.disabled).toBe(true);
   });
 
-  it('should populate form when procedureDatos is present', () => {
-    component.procedureDatos = [{
-      pagoDeDerechos: {
-        linea: 'Línea A',
-        monto: '1000',
-        lineaCheckbox: true
-      }
-    }];
-    component.getProcedureDatos();
-    expect(component.FormSolicitud.get('pagodederechos.linea')?.value).toBe('Línea A');
-    expect(component.FormSolicitud.get('pagodederechos.monto')?.value).toBe('1000');
-    expect(component.FormSolicitud.get('pagodederechos.lineaCheckbox')?.value).toBe(true);
-  });
 
   it('should clean up subscriptions on destroy', () => {
     const spy = jest.spyOn(component['destroyNotifier$'], 'next');

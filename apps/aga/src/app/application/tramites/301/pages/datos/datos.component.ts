@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery, ConsultaioState, TieneConsultaio } from '@ng-mf/data-access-user';
+import { Subject, delay, map, takeUntil } from 'rxjs';
 import { Pantallas301Service } from '../../services/pantallas301.service';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { Solocitud301Service } from '../../services/service301.service';
@@ -24,12 +24,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-  
-   /**
-  * Indica si el formulario está en modo de actualización (patch).
-  * Si es `true`, el formulario se utiliza para editar un registro existente.
-  */
-   public esFormularioActualizacion: boolean = false; 
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -52,20 +46,9 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   constructor(
     public pantallasSvc: Pantallas301Service,
     private solocitud301Service: Solocitud301Service,
-    private consultaioQuery: ConsultaioQuery,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioActualizacion =
-            seccionState.parameter === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || seccionState.parameter === 'FLUJO_FUNCIONARIO_AUTORIZACION' || seccionState.parameter === 'FLUJO_FUNCIONARIO_EVALUAR' || seccionState.parameter === 'BANDEJA_SOLICITUDES'
-              ? true
-              : false;
-        })
-      )
-      .subscribe();
+// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   ngOnInit(): void {
@@ -74,8 +57,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
       })).subscribe();
     if(this.consultaState.readonly) {
       this.getBandejaSolicitudesDatos();
-    }
-    if(this.esFormularioActualizacion){
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -87,7 +68,10 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     this.tieneConsulta.create = this.consultaState.create;
     this.tieneConsulta.update = this.consultaState.update;
     this.pantallasSvc.getPantallaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      this.solocitud301Service.actualizarEstadoFormulario(response);
+      if(response) {
+        this.esDatosRespuesta = true;
+        this.solocitud301Service.actualizarEstadoFormulario(response);
+      }
     });
   }
 

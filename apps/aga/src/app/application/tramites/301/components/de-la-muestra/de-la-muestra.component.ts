@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -19,7 +20,6 @@ import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -71,12 +71,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
-  * Indica si el formulario está en modo de actualización (patch).
-  * Si es `true`, el formulario se utiliza para editar un registro existente.
-  */
-  public esFormularioActualizacion: boolean = false; 
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -100,16 +94,18 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.esFormularioActualizacion = [
-          'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
-          'FLUJO_FUNCIONARIO_AUTORIZACION',
-          'FLUJO_FUNCIONARIO_EVALUAR'
-        ].includes(seccionState.parameter);
         this.inicializarEstadoFormulario();
       })
     )
@@ -138,7 +134,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioActualizacion) {
+    if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -170,9 +166,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
-    if(this.esFormularioSoloLectura) {
-      this.getProcedureDatos();
-    }
   }
 
   /**
@@ -222,13 +215,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     } else {
       this.Informaciondela.get('datosImportadorExportador.folio')?.enable();
     }
-  }
-
-  public getProcedureDatos(): void {
-    this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
-    this.Informaciondela.get('datosImportadorExportador.mercancia')?.disable();
-    // this.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue(this.procedureDatos[0].registroPara.mercancia);
-    // this.Informaciondela.get('datosImportadorExportador.folio')?.setValue(this.procedureDatos[0].registroPara.folio);
   }
 
   /**

@@ -15,10 +15,6 @@ export class Solocitud301Service {
     // Lógica de inicialización si es necesario
   }
 
-  getSolicitudFormData(): Observable<Solicitud301State> {
-    return this.http.get<Solicitud301State>('assets/json/301/solicitude-form-data.json');
-  }
-
   actualizarEstadoFormulario(DATOS: Solicitud301State): void {
     this.tramite301Store.setRegistro(DATOS.registro);
     this.tramite301Store.setMercancia(DATOS.mercancia);
