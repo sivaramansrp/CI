@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { BENEFICIOS_SERVICIO } from '../../modelos/cafe-exportadores.model';
 import { BODEGAS_SERVICIO } from '../../modelos/cafe-exportadores.model';
 import { BeneficiosInfo } from '../../modelos/cafe-exportadores.model';
@@ -192,6 +193,33 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Datos seleccionados de la tabla de regiones.
+   * Contiene la información de las regiones seleccionadas por el usuario.
+   * @type {RegionesInfo[]}
+   */
+
+ regionesSeleccionadas: RegionesInfo[] = [];
+  /**
+   * Datos seleccionados de la tabla de beneficios.
+   * Contiene la información de los beneficios seleccionados por el usuario.
+   * @type {BeneficiosInfo[]}
+   */
+
+  cafeSeleccionado: CafeExporacionInfo[] = [];
+  /**
+   * Datos seleccionados de la tabla de bodegas.
+   * Contiene la información de las bodegas seleccionadas por el usuario.
+   * @type {BodegasInfo[]}
+   */
+  beneficiosSeleccionados: BeneficiosInfo[] = [];
+  /**
+   * Datos seleccionados de la tabla de café de exportación.
+   * Contiene la información de los cafés seleccionados por el usuario.
+   * @type {CafeExporacionInfo[]}
+   */
+  bodegasSeleccionadas: BodegasInfo[] = [];
+
 
   /**
    * Constructor de la clase.
@@ -207,6 +235,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private catalogosService: CatalogosService,
+    private activatedRoute: ActivatedRoute
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
    }
@@ -216,7 +245,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de bodegas.
    */
   redirigirBodegas(): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/bodegas']);
+    this.router.navigate(['../bodegas'],
+      {
+        relativeTo: this.activatedRoute,
+      });
   }
 
   /**
@@ -224,7 +256,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de café de exportadores.
    */
   redirigirCafeExportadores(): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/cafe-de-exportadores']);
+    this.router.navigate(['../cafe-de-exportadores'],
+      {
+        relativeTo: this.activatedRoute,
+      }
+    );
   }
 
   /**
@@ -232,7 +268,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de beneficios.
    */
   redirigirBeneficios(): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/beneficios']);
+    this.router.navigate(['../beneficios'],
+      {
+        relativeTo: this.activatedRoute,
+      }
+    );
   }
 
   /**
@@ -240,7 +280,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de regiones.
    */
   redirigirRegiones(): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/regiones']);
+    this.router.navigate(['../regiones'],
+      {
+        relativeTo: this.activatedRoute,
+      });
   }
 
   /**
@@ -261,6 +304,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const EXENTO_DE_PAGO_SUBSCRIPTION = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
       if (value === 'false') {
         this.datosSolicitudForma.get('claveDelPadron')?.disable();
+        this.datosSolicitudForma.patchValue({
+          claveDelPadron: '',
+        });
+
       } else {
         this.datosSolicitudForma.get('claveDelPadron')?.enable();
       }
@@ -350,6 +397,73 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.beneficiosTableDatos = response.beneficiosApiDatos;
             this.bodegasTableDatos = response.bodegasApiDatos;
             this.cafeExporacionTableDatos = response.cafeExportacionApiDatos;
+
+          
+            this.tramiteStoreQuery.selectSolicitudTramite$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState: TramiteState) => {
+                if (seccionState) {
+                  const REGIONES_DATOS= seccionState?.regionesTabla;
+                if (REGIONES_DATOS.length > 0) {
+                  this.regionesTableDatos = REGIONES_DATOS;
+                  
+                }
+                else {
+                  this.tramiteStore.setRegionesTabla(this.regionesTableDatos);
+                }
+              }
+              })
+            ).subscribe();
+            this.tramiteStoreQuery.selectSolicitudTramite$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState: TramiteState) => {
+                if (seccionState) {
+                  const BENEFICIOS_DATOS= seccionState?.beneficiosTabla;
+                if (BENEFICIOS_DATOS.length > 0) {
+                  this.beneficiosTableDatos = BENEFICIOS_DATOS;
+                  
+                }
+                else {
+                  this.tramiteStore.setBeneficiosTabla(this.beneficiosTableDatos);
+                }
+              }
+              })
+            ).subscribe();
+            this.tramiteStoreQuery.selectSolicitudTramite$
+            .pipe(  
+              takeUntil(this.destroyNotifier$),
+              map((seccionState: TramiteState) => {
+                if (seccionState) {
+                  const BODEGAS_DATOS= seccionState?.bodegasTabla;
+                if (BODEGAS_DATOS.length > 0) {
+                  this.bodegasTableDatos = BODEGAS_DATOS;
+                  
+                }
+                else {
+                  this.tramiteStore.setBodegasTabla(this.bodegasTableDatos);
+                }
+              }
+              })
+            ).subscribe();
+            this.tramiteStoreQuery.selectSolicitudTramite$
+
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState: TramiteState) => {
+                if (seccionState) {
+                  const CAFE_EXPORTACION_DATOS= seccionState?.cafeExportacionTabla;
+                if (CAFE_EXPORTACION_DATOS.length > 0) {
+                  this.cafeExporacionTableDatos = CAFE_EXPORTACION_DATOS;
+                  
+                }
+                else {
+                  this.tramiteStore.setCafeExportacionTabla(this.cafeExporacionTableDatos);
+                }
+              }
+              })
+            ).subscribe();
           } else {
             console.error("La respuesta de la API no tiene el formato esperado: ", response);
           }
@@ -359,10 +473,116 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         }
       });
   }
+  /**
+   * Método para borrar una región específica.
+   * Busca el índice de la región en la tabla de regiones y la elimina.
+   * Actualiza el estado de la tabla en el store.
+   * @returns {void}
+   */
+  
+  borrarRegiones(): void {
+    const INDICE = this.regionesTableDatos.findIndex((region) => region.TABLA_Columna_1 === this.regionesSeleccionadas[0].TABLA_Columna_1);
+    if (INDICE !== -1) {
+      this.regionesTableDatos.splice(INDICE, 1);
+      this.tramiteStore.updateRegionesTabla(this.regionesTableDatos);
+    }
+
+  }
+  /**
+   * Método para seleccionar una región específica.
+   * Recibe un objeto `regionesSeleccionadas` y lo asigna a la propiedad `regionesSeleccionadas`.
+   * @param {RegionesInfo} regionesSeleccionadas - Objeto que contiene la información de la región seleccionada.
+   * @returns {void}
+   */
+
+
+   seleccionarRegiones(regionesSeleccionadas: RegionesInfo): void {
+    this.regionesSeleccionadas = [{...regionesSeleccionadas}];
+   }
+  /**
+   * Método para borrar un beneficio específico.
+   * Busca el índice del beneficio en la tabla de beneficios y lo elimina.
+   * Actualiza el estado de la tabla en el store.
+   * @returns {void}
+   * /
+   * @param {BeneficiosInfo} beneficiosSeleccionados - Objeto que contiene la información del beneficio seleccionado.
+   * @returns {void}
+   */
+
+  borrarBeneficios(): void {
+    const INDICE = this.beneficiosTableDatos.findIndex((beneficio) => beneficio.TABLA_Columna_1 === this.beneficiosSeleccionados[0].TABLA_Columna_1);
+    if (INDICE !== -1) {
+      this.beneficiosTableDatos.splice(INDICE, 1);
+      this.tramiteStore.updateBeneficiosTabla(this.beneficiosTableDatos);
+    }
+  }
+  /**
+   * Método para seleccionar un beneficio específico.
+   * Recibe un objeto `beneficiosSeleccionados` y lo asigna a la propiedad `beneficiosSeleccionados`.
+   * @param {BeneficiosInfo} beneficiosSeleccionados - Objeto que contiene la información del beneficio seleccionado.
+   * @returns {void}
+   */
+  seleccionarBeneficios(beneficiosSeleccionados: BeneficiosInfo): void {
+    this.beneficiosSeleccionados = [{...beneficiosSeleccionados}];
+  }
+  /**
+   * Método para borrar una bodega específica.
+   * Busca el índice de la bodega en la tabla de bodegas y la elimina.
+   * Actualiza el estado de la tabla en el store.
+   * @returns {void}
+   */
+  borrarBodegas(): void {
+    const INDICE = this.bodegasTableDatos.findIndex((bodega) => bodega.TABLA_Columna_1 === this.bodegasSeleccionadas[0].TABLA_Columna_1);
+    if (INDICE !== -1) {
+      this.bodegasTableDatos.splice(INDICE, 1);
+      this.tramiteStore.updateBodegasTabla(this.bodegasTableDatos);
+    }
+  }
+ 
+  /**
+   * Método para seleccionar una bodega específica.
+   * Recibe un objeto `bodegaSeleccionada` y lo asigna a la propiedad `bodegasSeleccionadas`.
+   * @param {BodegasInfo} bodegaSeleccionada - Objeto que contiene la información de la bodega seleccionada.
+   * @returns {void}
+   */
+
+  seleccionarBodega(bodegaSeleccionada: BodegasInfo): void {
+    this.bodegasSeleccionadas = [{...bodegaSeleccionada}];
+  }
+
+/**
+ * @method borrarCafe
+ * @description Elimina un registro de la tabla de datos de exportación de café basado en el elemento seleccionado.
+ * Busca el índice del registro seleccionado en la tabla y, si existe, lo elimina y actualiza el estado correspondiente.
+ * 
+ * @returns {void}
+ */
+   borrarCafe(): void {
+    const INDICE = this.cafeExporacionTableDatos.findIndex((cafe) => cafe.TABLA_Columna_1 === this.cafeSeleccionado[0].TABLA_Columna_1);
+    if (INDICE !== -1) {
+      this.cafeExporacionTableDatos.splice(INDICE, 1);
+      this.tramiteStore.updateCafeExportacionTabla(this.cafeExporacionTableDatos);
+    }
+  }
+
 
   /**
-   * Método para limpiar las suscripciones al destruir el componente.
+   * Método para seleccionar un café específico.
+   * Recibe un objeto `cafeSeleccionado` y lo asigna a la propiedad `cafeSeleccionado`.
+   * @param {CafeExporacionInfo} cafeSeleccionado - Objeto que contiene la información del café seleccionado.
+   * @returns {void}
    */
+  seleccionarCafe(cafeSeleccionado: CafeExporacionInfo): void {
+    this.cafeSeleccionado = [{...cafeSeleccionado}];
+  }
+
+  /**
+ * @method ngOnDestroy
+ * @description Hook del ciclo de vida que se llama cuando el componente es destruido.
+ * Garantiza la limpieza adecuada emitiendo un valor al subject `destroyNotifier$` 
+ * y completándolo para liberar recursos y prevenir fugas de memoria.
+ */
+  
     ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
