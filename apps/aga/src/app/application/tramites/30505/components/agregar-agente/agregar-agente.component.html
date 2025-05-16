@@ -66,7 +66,7 @@
             <div class="form-check agente">
               <input type="checkbox" formControlName="obligFisc" id="checkObligFisc" value="1" class="form-check-input" (change)="setValoresStore(datosTramite,'obligFisc', 'setObligFisc')"/>
               <label class="form-check-label" for="checkObligFisc">
-                <span style="color: red;">*</span>
+                <span class="check-oblig">*</span>
                 Se encuentran al corriente en el cumplimiento de sus obligaciones fiscales
               </label>
               <div *ngIf="datosTramite.get('obligFisc')?.invalid && (datosTramite.get('obligFisc')?.dirty || datosTramite.get('obligFisc')?.touched)">
@@ -80,7 +80,7 @@
             <div class="form-check agente">
               <input type="checkbox" formControlName="autPantente" id="checkAutPantente" value="1" class="form-check-input" (change)="setValoresStore(datosTramite,'autPantente', 'setAutPantente')"/>
               <label class="form-check-label" for="checkAutPantente">
-                <span style="color: red;">*</span>
+                <span class="check-oblig">*</span>
                 La Patente/Autorización se encuentra activa
               </label>
               <div *ngIf="datosTramite.get('autPantente')?.invalid && (datosTramite.get('autPantente')?.dirty || datosTramite.get('autPantente')?.touched)">
