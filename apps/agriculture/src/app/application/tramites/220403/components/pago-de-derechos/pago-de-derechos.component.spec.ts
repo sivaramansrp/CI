@@ -142,10 +142,6 @@ describe('PagoDeDerechosComponent', () => {
       inputType: {}
     }
   ], {}, {});
-  // expect(component.formulario.get).toHaveBeenCalled();
-  // expect(component.fb.control).toHaveBeenCalled();
-  // expect(component.obtenerValoresCatalogo).toHaveBeenCalled();
-  // expect(component.getRadioData).toHaveBeenCalled();
 });
 
   it('should run #getRadioData()', async () => {
@@ -169,7 +165,6 @@ describe('PagoDeDerechosComponent', () => {
       }
     };
     component.obtenerValoresCatalogo({}, {}, {});
-    // expect(component.exportaccionAcuicolaServcios.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #fechaCambiado()', async () => {
@@ -178,7 +173,6 @@ describe('PagoDeDerechosComponent', () => {
       patchValue: function() {}
     });
     component.fechaCambiado({});
-    // expect(component.formulario.get).toHaveBeenCalled();
   });
 
   it('should run #seleccionCatalogo()', async () => {
@@ -187,7 +181,6 @@ describe('PagoDeDerechosComponent', () => {
       setValue: function() {}
     });
     component.seleccionCatalogo({}, {});
-    // expect(component.formulario.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -195,8 +188,6 @@ describe('PagoDeDerechosComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

@@ -95,22 +95,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.seccionStore.establecerSeccion = jest.fn();
     component.seccionStore.establecerFormaValida = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarFormGroup).toHaveBeenCalled();
-    // expect(component.formulario.get).toHaveBeenCalled();
-    // expect(component.tramite220403store.setDatosRealizar).toHaveBeenCalled();
-    // expect(component.tramite220403store.setCombinacionRequerida).toHaveBeenCalled();
-    // expect(component.tramite220403store.setDatosRealizarValidada).toHaveBeenCalled();
-    // expect(component.tramite220403store.setCombinacionRequeridaValidada).toHaveBeenCalled();
-    // expect(component.exportaccionAcuicolaServcios.actualizarFormaValida).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
   });
 
   it('should run #crearFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.crearFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormGroup()', async () => {
@@ -152,17 +142,12 @@ describe('DatosDeLaSolicitudComponent', () => {
       },
       value: {}
     }], {}, {});
-    // expect(component.formulario.get).toHaveBeenCalled();
-    // expect(component.fb.control).toHaveBeenCalled();
-    // expect(component.obtenerValoresCatalogo).toHaveBeenCalled();
-    // expect(component.getRadioData).toHaveBeenCalled();
   });
 
   it('should run #getRadioData()', async () => {
     component.exportaccionAcuicolaServcios = component.exportaccionAcuicolaServcios || {};
     component.exportaccionAcuicolaServcios.getDatos = jest.fn().mockReturnValue(observableOf({}));
     component.getRadioData({}, {});
-    // expect(component.exportaccionAcuicolaServcios.getDatos).toHaveBeenCalled();
   });
 
   it('should run #obtenerValoresCatalogo()', async () => {
@@ -183,7 +168,6 @@ describe('DatosDeLaSolicitudComponent', () => {
       };
     }
     component.obtenerValoresCatalogo({}, {}, {});
-    // expect(component.exportaccionAcuicolaServcios.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #fechaCambiado()', async () => {
@@ -198,7 +182,6 @@ describe('DatosDeLaSolicitudComponent', () => {
       setValue: function() {}
     });
     component.seleccionCatalogo({}, {});
-    // expect(component.formulario.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -206,8 +189,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
   it('should run #mostrar_colapsable()', async () => {
