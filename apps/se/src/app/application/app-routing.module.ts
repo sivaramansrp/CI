@@ -125,14 +125,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'certificado-tecnico-japon',
-<<<<<<< HEAD
-    loadChildren: () => import('./tramites/110218/certificado-tecnico-japon.module').then((m) => m.CertificadoTecnicoJaponModule)
-=======
     loadChildren: () =>
       import('./tramites/110218/certificado-tecnico-japon.module').then(
         (m) => m.CertificadoTecnicoJaponModule
       ),
->>>>>>> c543198068bb495efb9a89352570c5239ecea9a3
   },
   {
     path: 'desmantelar',
@@ -272,11 +268,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110219/certificado.module').then(
         (m) => m.CertificadoModule
-<<<<<<< HEAD
-      )
-=======
       ),
->>>>>>> c543198068bb495efb9a89352570c5239ecea9a3
   },
   {
     path: 'nuevo-programa-industrial',
@@ -289,12 +281,8 @@ const ROUTES: Routes = [
     path: 'certificado-validacion',
     loadChildren: () =>
       import('./tramites/110202/certificado-validacion.module').then(
-<<<<<<< HEAD
-        (m) => m.CertificadoValidacionModule),
-=======
         (m) => m.CertificadoValidacionModule
       ),
->>>>>>> c543198068bb495efb9a89352570c5239ecea9a3
   },
   {
     path: 'exportacion-minerales',
