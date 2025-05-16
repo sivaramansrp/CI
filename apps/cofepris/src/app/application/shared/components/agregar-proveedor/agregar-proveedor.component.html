@@ -39,18 +39,20 @@
 
     @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
-      <div class="form-group">
-        <label
-          class="form-label row mt-3 mover-izquierda fs-2"
-          for="denominacionRazon"
-          >Denominación/razón social*:</label
-        >
-        <input
-          class="form-control col-md-4"
-          id="denominacionRazon"
-          type="text"
-          formControlName="denominacionRazon"
-        />
+      <div class="col-md-8">
+        <div class="form-group">
+          <label
+            class="form-label mt-3 mover-izquierda fs-2"
+            for="denominacionRazon"
+            >Denominación/razón social*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionRazon"
+            type="text"
+            formControlName="denominacionRazon"
+          />
+        </div>
       </div>
     </div>
     }

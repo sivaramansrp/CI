@@ -86,6 +86,12 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
 
   /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
+
+  /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
    * @param {FormBuilder} fb - FormBuilder para construir el formulario reactivo.
@@ -107,8 +113,8 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.cargarDatos();
-    this.validarElementos();
     this.crearAgregarFormularioFacturador();
+    this.changeNacionalidad();
   }
 
   /**
@@ -117,7 +123,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   crearAgregarFormularioFacturador():void{
     this.agregarFacturadorForm = this.fb.group({
-      tipoPersona: ['Fisica', Validators.required],
+      tipoPersona: ['', Validators.required],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
@@ -149,24 +155,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     });
   }
 
-   /**
-   * Valida elementos según el `idProcedimiento` y establece
-   * las listas de elementos no válidos y añadidos.
-   * @returns {void} Lista de elementos no válidos.
-   */
-   validarElementos(): void {
-    switch (this.idProcedimiento) {
-      case 260201:
-        this.elementosDeshabilitados = [
-          'telefono',
-          'correoElectronico'
-        ];
-      
-        break;
-      default:
-        this.elementosDeshabilitados = [];
-    }
-  }
 
   /**
    * Carga los países desde el servicio y los almacena en `paisesDatos`.
@@ -241,6 +229,29 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el valor de `tipoPersona`.
+   * Si `tipoPersona` está vacío, deshabilita todos los campos excepto el propio `tipoPersona`.
+   * Si tiene valor, habilita todos los campos y activa el desplegable de nacionalidad.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (this.agregarFacturadorForm?.value?.tipoPersona === '') {
+      Object.keys(this.agregarFacturadorForm.controls).forEach(controlName => {
+        this.agregarFacturadorForm.get(controlName)?.disable();
+        if (controlName === 'tipoPersona') {
+          this.agregarFacturadorForm.get(controlName)?.enable();
+        }
+      });
+    } else {
+      Object.keys(this.agregarFacturadorForm.controls).forEach(controlName => {
+        this.agregarFacturadorForm.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
   }
 
   /**
