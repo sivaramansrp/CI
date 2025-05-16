@@ -1,10 +1,9 @@
 import { COLONIA_FIELD_FLAG, NUMERO_TRAMITE, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
+import { STR_NACIONAL,DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
-
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 import { CommonModule } from '@angular/common';
@@ -109,6 +108,20 @@ export class AgregarDestinatarioCustomComponent
    * @property {Destinatario[]} destinatarios
    */
   destinatarios: DestinoFinal[] = [];
+  /**
+   * @property destinatarioTituloModificar
+   * @description Título del destinatario en modo de modificación.
+   * @type {string}
+   */
+
+ destinatarioTituloModificar = DESTINATARIO_TITULO_CUSTOM;
+  /**
+   * @property isDestinatarioModificar
+   * @description Indica si el destinatario está en modo de modificación.
+   * @type {boolean}
+   */
+  isDestinatarioModificar: boolean = false;
+
 
   /**
    * @property idProcedimiento
@@ -150,6 +163,14 @@ export class AgregarDestinatarioCustomComponent
   @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<
     DestinoFinal[]
   >();
+  /**
+   * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
+   * @property {EventEmitter<Destinatario[]>} actualizaExistenteEnDestinatarioDatos
+   * @description Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
+   * @type {EventEmitter<Destinatario[]>}
+   */
+
+   @Output() actualizaExistenteEnDestinatarioDatos= new EventEmitter<DestinoFinal[]>();
 
   /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
@@ -163,6 +184,9 @@ export class AgregarDestinatarioCustomComponent
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+
+  @Input() destinatarioFinalTablaDatos: DestinoFinal[] = [];
 
   /*
    * Opciones de nacionalidad para el formulario.
@@ -224,7 +248,12 @@ export class AgregarDestinatarioCustomComponent
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
+    if(this.destinatarioFinalTablaDatos.length > 0) {
+      this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
+    }
+    else{
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
+    }
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
   }
@@ -235,11 +264,18 @@ export class AgregarDestinatarioCustomComponent
    */
   ngOnInit(): void {
     this.colonia_visibilidad = COLONIA_FIELD_FLAG.includes(this.idProcedimiento);
+    this.isDestinatarioModificar= DESTINATARIO_TITULO_CUSTOM.includes(this.idProcedimiento);
     this.crearFormaulario();
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
+    if(this.destinatarioFinalTablaDatos.length > 0) {
+      this.agregarDestinatarioFinal.patchValue(this.destinatarioFinalTablaDatos[0]);
+      this.tipoPersonaCambioDeValor('Fisica');
+    }
+
+   
   }
 
   /**

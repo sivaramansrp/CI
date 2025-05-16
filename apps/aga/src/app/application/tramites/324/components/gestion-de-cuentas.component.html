@@ -1,0 +1,64 @@
+<form [formGroup]="accesosForm">
+  <ng-titulo titulo="Accesos" />
+  <!-- Accesos tabla -->
+  <div class="table-container mt-5">
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers"
+      [datos]="accesosTablaDatos"></app-tabla-dinamica>
+  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination d-flex justify-content-center">
+      <li class="page-item"><a class="page-link">1</a></li>
+    </ul>
+  </nav>
+  <div class="col-md-12 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAccesos"
+      (click)="abrirAccesos()">Agregar</button>
+    <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+  </div>
+
+  <!-- Accesos tabla modal popup -->
+  <div class="modal fade modal-xl" id="modalAccesos" tabindex="-1" aria-labelledby="modalAccesosLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <label>R.F.C.*:</label>
+              <input type="text" class="form-control" formControlName="rfc" />
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="aduanaCatalogo.catalogos" [label]="'Aduana'" formControlName="aduana"
+                [required]="true"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="sistemaCatalogo.catalogos" [label]="'Sistema'" formControlName="sistema"
+                [required]="true"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="rolCatalogo.catalogos" [label]="'Rol'" formControlName="rol"
+                [required]="true"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="movimientoCatalogo.catalogos" [label]="'Tipo Movimiento'"
+                formControlName="tipoMovimiento" [required]="true"></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="row mt-5">
+            <div class="col-md-12 d-flex justify-content-end align-items-end">
+              <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+              <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" (click)="agregarAccesos()">Agregar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (nuevaNotificacion) { <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  </section> }
+</form>

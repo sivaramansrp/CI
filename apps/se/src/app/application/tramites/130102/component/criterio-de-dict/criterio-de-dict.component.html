@@ -11,18 +11,14 @@
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
         ></app-catalogo-select>
-        <div
-          *ngIf="
-            frmCriterioDictamen.controls['solicitudMercancia'].invalid &&
-            frmCriterioDictamen.controls['solicitudMercancia'].touched
-          "
-          class="text-danger"
-        >
-          <small
-            *ngIf="frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']"
-            >Debe seleccionar un valor.</small
-          >
-        </div>
+        @if (frmCriterioDictamen.controls['solicitudMercancia'].invalid && frmCriterioDictamen.controls['solicitudMercancia'].touched) {
+          <div class="text-danger">
+            @if (frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']) {
+              <small>Debe seleccionar un valor.</small>
+            }
+          </div>
+        }
+        
       </div>
     </div>
     <div class="row">

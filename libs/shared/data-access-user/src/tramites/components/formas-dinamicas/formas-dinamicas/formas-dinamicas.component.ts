@@ -25,7 +25,10 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
  *   CommonModule,
  *   ReactiveFormsModule,
  *   ValidadoresDeFormulariosComponent,
- *   CatalogoSelectComponent
+ *   CatalogoSelectComponent,
+  *  InputRadioComponent,
+      TituloComponent,
+      InputFechaComponent
  * ]
  * @templateUrl ./formas-dinamicas.component.html
  * @styleUrl ./formas-dinamicas.component.scss
@@ -141,9 +144,47 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   public anchoDePantalla!: number;
 
+  
+  /**
+   * compo doc
+ * @property onChange
+ * @description
+ * Función estática que actúa como un callback para manejar los cambios en los valores del formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Se registra mediante el método `registerOnChange` como parte de la implementación de la interfaz `ControlValueAccessor`.
+ * - Se ejecuta automáticamente cada vez que los valores del formulario cambian.
+ * - Inicialmente, es una función vacía que puede ser sobrescrita al registrar un callback.
+ * 
+ * @type {(value: Record<string, unknown>) => void}
+ * 
+ * @example
+ * FormasDinamicasComponent.onChange = (value) => {
+ *   console.log('Valores del formulario cambiaron:', value);
+ * };
+ */
   public static onChange: (value: Record<string, unknown>) => void = () => {
   // eslint-disable-next-line no-empty-function
   };
+  
+  /**
+   * compo doc
+ * @property onTouched
+ * @description
+ * Función estática que actúa como un callback para manejar el estado de "tocado" en el formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Se registra mediante el método `registerOnTouched` como parte de la implementación de la interfaz `ControlValueAccessor`.
+ * - Se ejecuta automáticamente cuando el control del formulario es marcado como "tocado".
+ * - Inicialmente, es una función vacía que puede ser sobrescrita al registrar un callback.
+ * 
+ * @type {() => void}
+ * 
+ * @example
+ * FormasDinamicasComponent.onTouched = () => {
+ *   console.log('El formulario ha sido marcado como tocado.');
+ * };
+ */
   public static onTouched: () => void = () => {
   // eslint-disable-next-line no-empty-function
   };
@@ -343,17 +384,26 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public eventoDeCambioDeValor(event: any, campo: string): void {
-    let VALOR;
-    if (event.target) {
-      VALOR = (event.target as HTMLInputElement).value;
+public eventoDeCambioDeValor(event: any, campo: string): void {
+  let VALOR;
+
+  if (event?.target) {
+    const INPUT = event.target as HTMLInputElement;
+
+    if (INPUT.type === 'checkbox') {
+      VALOR = INPUT.checked; // Booleano verdadero/falso
     } else {
-      VALOR = event;
+      VALOR = INPUT.value; // Texto, fecha, número, etc.
     }
-    if (campo && event) {
-      this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
-    }
+  } else {
+    VALOR = event; // Para componentes personalizados o valores directos
   }
+
+  if (campo) {
+    this.emitirCambioDeValor.emit({ campo, valor: VALOR });
+  }
+}
+
 
   /**
   * compo doc
@@ -384,6 +434,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   }
   
   /**
+   * compo doc
  * @method registerOnChange
  * @description
  * Este método registra una función de devolución de llamada que se ejecutará cada vez que
@@ -410,6 +461,7 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
 }
 
   /**
+   * compo doc
   * @method registerOnTouched
   * @description
   * Este método registra una función de devolución de llamada que se ejecutará cuando
@@ -433,6 +485,7 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   }
 
   /**
+   * compo doc
   * @method obtenerInformacionDeFecha
   * @description
   * Este método se utiliza para obtener la información de configuración de un campo de tipo fecha 
@@ -463,6 +516,54 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
       return DATOS;
     }
     return { labelNombre: '', required: false, habilitado: false };
+  }
+
+  /**
+   * compo doc
+  * @method obtenerFilas
+  * @description
+  * Este método obtiene un arreglo de números que representan las filas únicas definidas en los datos del formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Recorre los datos del formulario (`formularioDatos`) y extrae el valor de la propiedad `row` de cada control.
+  * - Si el valor de `row` no está definido, se asigna el valor predeterminado de `0`.
+  * - Utiliza un conjunto (`Set`) para garantizar que las filas sean únicas.
+  * - Convierte el conjunto en un arreglo y lo devuelve.
+  * 
+  * @returns {number[]} Un arreglo de números que representan las filas únicas en el formulario dinámico.
+  * 
+  * @example
+  * const filas = this.obtenerFilas();
+  * console.log(filas); // Salida: [0, 1, 2]
+  */
+  public obtenerFilas(): number[] {
+    const FILAS = new Set<number>();
+    this.formularioDatos.forEach(control => {
+      FILAS.add(control.row !== undefined ? control.row : 0);
+    });
+    return Array.from(FILAS);
+  }
+
+  /**
+   * compo doc
+  * @method obtenerControlsPorFilas
+  * @description
+  * Este método obtiene un arreglo de controles dinámicos que pertenecen a una fila específica en el formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Filtra los datos del formulario (`formularioDatos`) para encontrar los controles que coinciden con la fila especificada.
+  * - Si la propiedad `row` de un control no está definida, se asigna el valor predeterminado de `0`.
+  * - Devuelve un arreglo de controles que pertenecen a la fila especificada.
+  * 
+  * @param {number} row - Número de la fila para la cual se desean obtener los controles.
+  * @returns {ModeloDeFormaDinamica[]} Un arreglo de controles dinámicos que pertenecen a la fila especificada.
+  * 
+  * @example
+  * const controles = this.obtenerControlsPorFilas(1);
+  * console.log(controles); // Salida: [{ campo: 'nombre', row: 1 }, { campo: 'apellido', row: 1 }]
+  */
+  public obtenerControlsPorFilas(row: number): ModeloDeFormaDinamica[] {
+    return this.formularioDatos.filter(control => (control.row !== undefined ? control.row : 0) === row);
   }
   
 }

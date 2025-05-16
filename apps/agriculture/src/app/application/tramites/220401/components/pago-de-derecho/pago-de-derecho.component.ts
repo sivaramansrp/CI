@@ -123,6 +123,13 @@ this.agregarQuery.selectSolicitud$
       this.FormSolicitud.get('llaveDePago')?.disable();
     }
   }
+  /**
+ * Asigna al store el valor de un campo de formulario usando el método especificado.
+ *
+ * @param form Grupo de formulario que contiene el campo.
+ * @param campo Nombre del control dentro del formulario.
+ * @param metodoNombre Nombre del método del store (`Agregar220401Store`) que recibirá el valor.
+ */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     

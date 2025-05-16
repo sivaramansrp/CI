@@ -1,79 +1,101 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+
 import { TransporteComponent } from './transporte.component';
-import { FormBuilder } from '@angular/forms';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { of } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 
 describe('TransporteComponent', () => {
   let component: TransporteComponent;
   let fixture: ComponentFixture<TransporteComponent>;
-  let storeMock: Partial<Tramite110218Store>;
-  let queryMock: Partial<Tramite110218Query>;
+  let storeMock: jest.Mocked<Tramite110218Store>;
+  let queryMock: jest.Mocked<Tramite110218Query>;
+  let destroyed$: Subject<void>;
 
   beforeEach(async () => {
     storeMock = {
-      establecerPuertodeEmbarque: jest.fn(),
-      establecerPuertodeDesembarque: jest.fn(),
-      establecerNombredelaEmbarcacion: jest.fn(),
-      establecerNúmerodeVuelo: jest.fn(),
-      establecerPuertodeTránsito: jest.fn(),
-    };
+      setTramite110218State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite110218Store>;
 
     queryMock = {
-      puertodeEmbarque$: of('Tokio'),
-      puertodeDesembarque$: of('Osaka'),
-      puertodeTransito$: of('Nagoya'),
-      nombredelaEmbarcacion$: of('Nippon Maru'),
-      numerodeVuelo$: of('1234'),
-    };
+      selectTramite110218State$: of({
+        puertodeEmbarque: 'Puerto A',
+        puertodeDesembarque: 'Puerto B',
+        puertodeTransito: 'Puerto C',
+        nombredelaEmbarcacion: 'Embarcación 1',
+        numerodeVuelo: '12345',
+      }),
+    } as unknown as jest.Mocked<Tramite110218Query>;
+
+    destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule,TransporteComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule],
+      declarations: [TransporteComponent],
       providers: [
-        FormBuilder,
         { provide: Tramite110218Store, useValue: storeMock },
         { provide: Tramite110218Query, useValue: queryMock },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TransporteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    destroyed$.next();
+    destroyed$.complete();
+  });
+
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with default values from query observables', () => {
+  it('debería inicializar el formulario con valores predeterminados', () => {
+    component.inicializarFormulario();
     expect(component.detallestransporte.value).toEqual({
-      puertodeEmbarque: 'Tokio',
-      puertodeDesembarque: 'Osaka',
-      puertodeTransito: 'Nagoya',
-      nombredelaEmbarcación: 'Nippon Maru',
-      numerodeVuelo: '1234',
+      puertodeEmbarque: 'Puerto A',
+      puertodeDesembarque: 'Puerto B',
+      puertodeTransito: 'Puerto C',
+      nombredelaEmbarcacion: 'Embarcación 1',
+      numerodeVuelo: '12345',
     });
   });
 
-  it('should call store methods on form control changes', () => {
-    component.detallestransporte.get('puertodeEmbarque')?.setValue('Kobe');
-    component.enCambioDeDetallesDeTransporte('puertodeEmbarque');
-    expect(storeMock.establecerPuertodeEmbarque).toHaveBeenCalledWith('Kobe');
+  it('debería actualizar un valor en el store', () => {
+    component.detallestransporte = component.formBuilder.group({
+      puertodeEmbarque: ['Nuevo Puerto'],
+    });
 
-    component.detallestransporte.get('numerodeVuelo')?.setValue('5678');
-    component.enCambioDeDetallesDeTransporte('numerodeVuelo');
-    expect(storeMock.establecerNúmerodeVuelo).toHaveBeenCalledWith('5678');
+    component.setValorStore(component.detallestransporte, 'puertodeEmbarque');
+
+    expect(storeMock.setTramite110218State).toHaveBeenCalledWith({
+      puertodeEmbarque: 'Nuevo Puerto',
+    });
   });
 
-  it('should unsubscribe on destroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
+  it('debería obtener el estado actual del trámite desde el store', () => {
+    component.getValorStore();
+
+    expect(component.estadoSeleccionado).toEqual({
+      puertodeEmbarque: 'Puerto A',
+      puertodeDesembarque: 'Puerto B',
+      puertodeTransito: 'Puerto C',
+      nombredelaEmbarcacion: 'Embarcación 1',
+      numerodeVuelo: '12345',
+    });
+  });
+
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const destroyedSpy = jest.spyOn(destroyed$, 'next');
+    const completeSpy = jest.spyOn(destroyed$, 'complete');
+
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
