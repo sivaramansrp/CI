@@ -393,6 +393,8 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
