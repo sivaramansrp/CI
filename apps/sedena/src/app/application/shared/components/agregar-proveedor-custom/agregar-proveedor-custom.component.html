@@ -154,9 +154,7 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('municipio')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
     </div>
