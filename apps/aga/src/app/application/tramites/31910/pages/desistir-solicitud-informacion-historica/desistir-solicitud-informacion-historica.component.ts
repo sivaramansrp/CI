@@ -58,13 +58,10 @@ export class DesistirSolicitudInformacionHistoricaComponent {
    * Objeto que contiene la acción y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 4) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+  if (e.valor <= 0 || e.valor >= 4) {
+    return;
   }
+  this.indice = e.valor;
+  const VALOR_INDICE = e.accion === 'cont' ? this.wizardComponent.siguiente() : this.wizardComponent.atras();
+}
 }
