@@ -21,7 +21,7 @@ import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from '@ng-mf/data
   styleUrl: './subsecuentes.component.css',
 })
 export class SubsecuentesComponent {
-  procedureUrl = '/acuses-y-resoluciones-detalles';
+  procedureUrl = '/aga/subsecuentes';
 
   busquedaForm: FormGroup;
   constructor(private fb: FormBuilder) {

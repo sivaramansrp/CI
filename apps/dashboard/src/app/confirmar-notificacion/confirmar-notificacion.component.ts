@@ -35,4 +35,7 @@ export class ConfirmarNotificacionComponent {
   obtieneFirma(ev: string): void {
     this.indiceDePaso = 3;
   }
+  cerrar(): void {
+    this.router.navigate(['/bandeja-de-tareas-pendientes']);
+  }
 }
