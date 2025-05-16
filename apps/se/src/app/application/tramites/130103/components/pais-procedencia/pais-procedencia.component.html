@@ -5,9 +5,11 @@
     </div>
     <div class="row mt-5">
         <crosslist
+            [showSearchInput1]="true"
+            [showSearchInput2]="true"
             [fechas]="seleccionarOrigenDelPais"
             [label]="paisDeProcedenciaLabel"
-            [botones]="paisDeProcedenciaBotones"
+            [botonField]="paisDeProcedenciaBotones"
         ></crosslist>
     </div>
     <div class="row mt-5">
