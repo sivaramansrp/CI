@@ -133,18 +133,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.pagoDerechosForm = this.fb.group({
-      clave: [this.solicitudState.clave, [Validators.required, Validators.maxLength(14)]],
-      dependencia: [this.solicitudState.dependencia, [Validators.required, Validators.maxLength(20)]],
+      clave: [{ value: this.solicitudState.clave, disabled: true }, [Validators.required, Validators.maxLength(14)]],
+      dependencia:[{value: this.solicitudState.dependencia, disabled: true }, [Validators.required, Validators.maxLength(20)]],
       banco: [this.solicitudState.banco, Validators.required],
       llave: [this.solicitudState.llave, [Validators.required, Validators.maxLength(10)]],
       fecha: [this.solicitudState.fecha, Validators.required],
-      importe: [this.solicitudState.importe, [Validators.required, Validators.maxLength(16)]],
+      importe: [{value: this.solicitudState.importe, disabled: true }, [Validators.required, Validators.maxLength(16)]],
       revisados: [this.solicitudState.revisados]
     });
-
-    this.pagoDerechosForm.get('clave')?.disable();
-    this.pagoDerechosForm.get('dependencia')?.disable();
-    this.pagoDerechosForm.get('importe')?.disable();
     this.pagoDerechosForm.get('clave')?.setValue(pago.formData.clave);
     this.pagoDerechosForm.get('dependencia')?.setValue(pago.formData.dependencia);
     this.pagoDerechosForm.get('importe')?.setValue(pago.formData.importe);
