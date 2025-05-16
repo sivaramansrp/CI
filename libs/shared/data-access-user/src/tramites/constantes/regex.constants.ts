@@ -447,3 +447,34 @@ export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
  * - `abc` (no es un número)
  */
 export const REGEX_PATRON_DECIMAL_12_3 = /^\d{1,12}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.456"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12a45" (contiene caracteres no numéricos)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+

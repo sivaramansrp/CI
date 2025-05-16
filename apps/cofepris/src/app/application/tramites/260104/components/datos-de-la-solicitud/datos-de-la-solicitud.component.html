@@ -1,0 +1,640 @@
+<form [formGroup]="solicitudForm">
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos del establecimiento" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
+            <div class="btn-group">
+              <button class="btn btn-primary ms-2" type="button" (click)="habilitarCampos()">
+                Seleccionar establecimiento
+              </button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <label class="form-label" for="razonSocial"
+              >Denominación o razón social*:</label
+            >
+            <input
+              class="form-control"
+              id="razonSocial"
+              placeholder=""
+              type="text"
+              formControlName="razonSocial"
+              (change)="setValoresStore(solicitudForm,'razonSocial', 'setRazonSocial')"
+            />
+            @if(solicitudForm.controls['razonSocial'].invalid && solicitudForm.controls['razonSocial'].touched){
+                <div class="d-grid">
+                    @if(solicitudForm.controls['razonSocial'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            }
+
+          </div>
+      
+          <div class="col-md-4">
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico*:</label
+            ><span class="bi bi-question-circle-fill" title="Correo electrónico" data-bs-toggle="tooltip"></span>
+            <input
+              class="form-control"
+              id="correoElectronico"
+              placeholder=""
+              type="text"
+              formControlName="correoElectronico"
+              (change)="setValoresStore(solicitudForm,'correoElectronico', 'setCorreoElectronico')"
+            />
+            @if(solicitudForm.controls['correoElectronico'].invalid && solicitudForm.controls['correoElectronico'].touched){
+                <div class="d-grid">
+                    @if(solicitudForm.controls['correoElectronico'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            }
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Domicilio del establecimiento" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label" for="codigoPostal">Código postal*:</label>
+            <input
+              class="form-control"
+              id="codigoPostal"
+              placeholder=""
+              type="number"
+              formControlName="codigoPostal"
+              (change)="setValoresStore(solicitudForm,'codigoPostal', 'setCodigoPostal')"
+            />
+            @if(solicitudForm.controls['codigoPostal'].invalid && solicitudForm.controls['codigoPostal'].touched){
+                <div class="d-grid">
+                    @if(solicitudForm.controls['codigoPostal'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select
+              [id]="'estado'"
+              [catalogo]="estadoCatalogo.catalogos"
+              [label]="estadoCatalogo.labelNombre"
+              [placeholder]="estadoCatalogo.primerOpcion"
+              [required]="estadoCatalogo.required"
+              formControlName="estado"
+              (change)="setValoresStore(solicitudForm,'estado', 'setEstado')"
+            >
+            </app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="municipio">Municipio y alcaldía*:</label>
+            <input
+              class="form-control"
+              id="municipio"
+              placeholder=""
+              type="text"
+              formControlName="municipio"
+              (change)="setValoresStore(solicitudForm,'municipio', 'setMunicipio')"
+            />
+            @if(solicitudForm.controls['municipio'].invalid && solicitudForm.controls['municipio'].touched){
+                <div class="d-grid">
+                    @if(solicitudForm.controls['municipio'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label class="form-label" for="localidad">Localidad:</label>
+            <input
+              class="form-control"
+              id="Localidad"
+              placeholder=""
+              type="text"
+              formControlName="localidad"
+              (change)="setValoresStore(solicitudForm,'localidad', 'setLocalidad')"
+            />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="colonia">Colonia:</label>
+            <input
+              class="form-control"
+              id="colonia"
+              placeholder=""
+              type="text"
+              formControlName="colonia"
+              (change)="setValoresStore(solicitudForm,'colonia', 'setColonia')"
+            />
+            
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-8">
+            <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
+            <input
+              class="form-control"
+              id="calle"
+              placeholder=""
+              type="text"
+              formControlName="calle"
+              (change)="setValoresStore(solicitudForm,'calle', 'setCalle')"
+            />
+            @if(solicitudForm.controls['calle'].invalid && solicitudForm.controls['calle'].touched){
+                <div class="d-grid">
+                    @if(solicitudForm.controls['calle'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-1">
+          <label class="form-label" for="lada">Lada:</label>
+          <input
+            class="form-control"
+            id="lada"
+            placeholder=""
+            type="number"
+            formControlName="lada"
+            (change)="setValoresStore(solicitudForm,'lada', 'setLada')"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label" for="telefono">Teléfono*:</label>
+          <input
+            class="form-control"
+            id="telefono"
+            placeholder=""
+            type="number"
+            formControlName="telefono"
+            (change)="setValoresStore(solicitudForm,'telefono', 'setTelefono')"
+          />
+          @if(solicitudForm.controls['telefono'].invalid && solicitudForm.controls['telefono'].touched){
+            <div class="d-grid">
+                @if(solicitudForm.controls['telefono'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+            </div>
+        }
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>S.C.I.A.N.*:</h4>
+        </div>
+    </div>
+    <div class="row">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        <div class="container text-end mt-5">
+            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">Agregar</button>
+        </div>
+    </div>
+    <div class="row align-item-center">
+        <div class="col-md-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="setValoresStore(solicitudForm,'avisoCheckbox', 'setAvisoCheckbox')">
+                <label class="form-check-label" for="avisoCheckbox">
+                    <span>Aviso de funcionamiento:</span>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:</label>
+                <input
+                    class="form-control"
+                    id="licenciaSanitaria"
+                    placeholder=""
+                    type="text"
+                    formControlName="licenciaSanitaria"
+                    (change)="setValoresStore(solicitudForm,'licenciaSanitaria', 'setLicenciaSanitaria')"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <app-catalogo-select
+                [catalogo]="estado"
+                formControlName="regimen"
+                [label]="'Régimen al que se destinará la mercancía'"
+                [required]="true"
+                name="regimen"
+                (change)="setValoresStore(solicitudForm,'regimen', 'setRegimen')"
+            ></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select
+                [catalogo]="estado"
+                formControlName="aduana"
+                [label]="'Aduana'"
+                [required]="true"
+                name="aduana"
+                (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
+            ></app-catalogo-select>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>Mercancías*:</h4>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+        <div class="container text-end mt-5">
+            <button class="btn btn-default me-2">Modificar</button>
+            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Agregar</button>
+        </div>
+    </div>
+    <div class="row">
+        <ng-titulo titulo="Manifiestos y declaraciones" />
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+              <label class="fw">
+                <div class="col-md-1 mt-5">
+                  <input
+                    type="checkbox"
+                    class="mt-5"
+                    formControlName="manifesto"
+                    id="manifesto"
+                    (change)="setValoresStore(solicitudForm,'manifesto', 'setManifesto')"
+                  />
+                  <b> *</b>
+                </div>
+                <div class="col-md-11 mt-4">
+                  Cumplo con los requisitos y normatividad aplicable, sin que me
+                  eximan de que la autoridad sanitaria verifique su cumplimiento, esto
+                  sin perjuicio de las sanciones en que puedo incurrir por falsedad de
+                  declaraciones dadas a una autoridad. Asimismo acepto que la
+                  notificación de este trámite, sea a través de la Ventanilla Única de
+                  Comercio Exterior por los mecanismos de la misma.
+                </div>
+              </label>
+            </div>
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label for="hacerlosPublicos">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="hacerlosPublicos" (change)="setValoresStore(solicitudForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content overflow-auto">
+            <div class="modal-header">
+                <h4 class="modal-title">Clave S.C.I.A.N.</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formAgente">
+                    <div class="form-group">
+                        <app-catalogo-select
+                            [catalogo]="estado"
+                            formControlName="claveScianModal"
+                            [label]="'Clave S.C.I.A.N.'"
+                            [required]="true"
+                            name="claveScianModal"
+                            (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
+                        ></app-catalogo-select>
+                    </div>
+                    <div class="form-group">
+                        <app-catalogo-select
+                            [catalogo]="estado"
+                            formControlName="claveDescripcionModal"
+                            [label]="'Descripción del S.C.I.A.N.'"
+                            [required]="false"
+                            name="claveDescripcionModal"
+                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
+                        ></app-catalogo-select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" class="max-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Datos mercancía</h4>
+            </div>
+            <div class="modal-body modal-height">
+                <form [formGroup]="formMercancias">
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <app-catalogo-select
+                                [catalogo]="estado"
+                                formControlName="clasificacion"
+                                [label]="'Clasificación del producto'"
+                                [required]="true"
+                                name="clasificacion"
+                                (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
+                            ></app-catalogo-select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <app-catalogo-select
+                                [catalogo]="estado"
+                                formControlName="especificarClasificacionProducto"
+                                [label]="'Especificar clasificación del producto'"
+                                [required]="true"
+                                name="especificarClasificacionProducto"
+                                (change)="habilitarEspecifique(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"
+                            ></app-catalogo-select>
+                        </div>
+                    </div>
+                    @if(isHabilitarEspecifique){    
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <label for="especifique">Especifique*:</label>
+                                <input type="text" id="especifique" formControlName="especifique" class="form-control" (change)="habilitarEspecifique(formMercancias,'especifique', 'setEspecifique')">
+                                @if(formMercancias.controls['especifique'].invalid && formMercancias.controls['especifique'].touched){
+                                    <div class="d-grid">
+                                        @if(formMercancias.controls['especifique'].errors?.['required']) {
+                                            <span class="mensaje-error">Este campo es obligatorio</span>
+                                        }
+                                    </div>
+                                }
+                
+                            </div>
+                        </div>
+                    }
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <label for="denominacionEspecifica">Denominación específica del producto*:</label>
+                            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" class="form-control" (change)="setValoresStore(formMercancias,'denominacionEspecifica', 'setDenominacionEspecifica')">
+                            @if(formMercancias.controls['denominacionEspecifica'].invalid && formMercancias.controls['denominacionEspecifica'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['denominacionEspecifica'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+            
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <label for="marca">Marca*:</label>
+                            <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancias,'marca', 'setMarca')">
+                            @if(formMercancias.controls['marca'].invalid && formMercancias.controls['marca'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['marca'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <app-catalogo-select
+                                [catalogo]="estado"
+                                formControlName="tipoDeProducto"
+                                [label]="'Tipo de producto'"
+                                [required]="true"
+                                name="tipoDeProducto"
+                                (change)="habilitarEspecifiqueTipo(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
+                            ></app-catalogo-select>
+                        </div>
+                    </div>
+                    @if(isHabilitarEspecifiqueTipo){    
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <label for="especifiqueTipo">Especifique*:</label>
+                                <input type="text" id="especifiqueTipo" formControlName="especifiqueTipo" class="form-control" (change)="setValoresStore(formMercancias,'especifiqueTipo', 'setEspecifiqueTipo')">
+                                @if(formMercancias.controls['especifiqueTipo'].invalid && formMercancias.controls['especifiqueTipo'].touched){
+                                    <div class="d-grid">
+                                        @if(formMercancias.controls['especifiqueTipo'].errors?.['required']) {
+                                            <span class="mensaje-error">Este campo es obligatorio</span>
+                                        }
+                                    </div>
+                                }
+                
+                            </div>
+                        </div>
+                    }
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <label for="fraccionArancelaria">Fracción arancelaria*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
+                            @if(formMercancias.controls['fraccionArancelaria'].invalid && formMercancias.controls['fraccionArancelaria'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['fraccionArancelaria'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <label for="descripcionFraccion">Descripción de la fracción*:</label>
+                            <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
+                            @if(formMercancias.controls['descripcionFraccion'].invalid && formMercancias.controls['descripcionFraccion'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['descripcionFraccion'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="cantidadUMT">Cantidad UMT*:</label>
+                            <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')">
+                            @if(formMercancias.controls['cantidadUMT'].invalid && formMercancias.controls['cantidadUMT'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['cantidadUMT'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <label for="UMT">UMT*:</label><span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                            <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
+                            @if(formMercancias.controls['UMT'].invalid && formMercancias.controls['UMT'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['UMT'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="cantidadUMC">Cantidad UMC*:</label>
+                            <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')">
+                            @if(formMercancias.controls['cantidadUMC'].invalid && formMercancias.controls['cantidadUMC'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['cantidadUMC'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select
+                                [catalogo]="estado"
+                                formControlName="UMC"
+                                [label]="'UMC'"
+                                [required]="true"
+                                name="UMC"
+                                (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
+                            ></app-catalogo-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-5">
+                        <div class="panel-group ficha-collapse" id="accordion">
+                          <div class="panel panel-default">
+                            <div
+                              class="panel-heading"
+                              (click)="mostrar_colapsable()"
+                              tabindex="0"
+                            >
+                              <p class="panel-title">País de orígen</p>
+                              <button type="button" class="collpase-button collapsed"></button>
+                            </div>
+                            @if(colapsable){
+                            <div class="panel-collapse collapse in" id="panel-01">
+                              <div class="panel-body">
+                                <crosslist
+                                    [fechas]="seleccionarOrigenDelPais"
+                                    [label]="paisDeProcedenciaLabel"
+                                    [botones]="paisDeProcedenciaBotons"
+                                ></crosslist>
+                              </div>
+                            </div>
+                            }
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-5">
+                        <div class="panel-group ficha-collapse" id="accordion">
+                          <div class="panel panel-default">
+                            <div
+                              class="panel-heading"
+                              (click)="mostrar_colapsableDos()"
+                              tabindex="0"
+                            >
+                              <p class="panel-title">País de procedencia</p>
+                              <button type="button" class="collpase-button collapsed"></button>
+                            </div>
+                            @if(colapsableDos){
+                            <div class="panel-collapse collapse in" id="panel-01">
+                              <div class="panel-body">
+                                <crosslist
+                                    [fechas]="seleccionarOrigenDelPaisDos"
+                                    [label]="paisDeProcedenciaLabel"
+                                    [botones]="paisDeProcedenciaBotonsDos"
+                                ></crosslist>
+                              </div>
+                            </div>
+                            }
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="claveDeLosLotes">Clave de los lotes*:</label>
+                            <input type="text" id="claveDeLosLotes" formControlName="claveDeLosLotes" class="form-control" (change)="setValoresStore(formMercancias,'claveDeLosLotes', 'setClaveDeLosLotes')">
+                            @if(formMercancias.controls['claveDeLosLotes'].invalid && formMercancias.controls['claveDeLosLotes'].touched){
+                                <div class="d-grid">
+                                    @if(formMercancias.controls['claveDeLosLotes'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaFabricacion')?.value" (valorCambiado)="cambioFechaFabricacion($event)" (change)="setValoresStore(formMercancias,'fechaFabricacion', 'setFechaFabricacion')"></input-fecha>
+                        </div>
+                        <div class="col-md-4">
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)" (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')"></input-fecha>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h4>Lista Claves de los lotes*:</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+
+                            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+                            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+                        </div>
+                        <div class="container text-end mt-5">
+                            <button class="btn btn-default me-2">Eliminar</button>
+                            <button class="btn btn-primary me-2">Agregar</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-5">
+                        <div class="panel-group ficha-collapse" id="accordion">
+                          <div class="panel panel-default">
+                            <div
+                              class="panel-heading"
+                              (click)="mostrar_colapsableTres()"
+                              tabindex="0"
+                            >
+                              <p class="panel-title">Uso específico</p>
+                              <button type="button" class="collpase-button collapsed"></button>
+                            </div>
+                            @if(colapsableTres){
+                            <div class="panel-collapse collapse in" id="panel-01">
+                              <div class="panel-body">
+                                <crosslist
+                                    [fechas]="seleccionarOrigenDelPaisTres"
+                                    [label]="paisDeProcedenciaLabel"
+                                    [botones]="paisDeProcedenciaBotonsTres"
+                                ></crosslist>
+                              </div>
+                            </div>
+                            }
+                          </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>

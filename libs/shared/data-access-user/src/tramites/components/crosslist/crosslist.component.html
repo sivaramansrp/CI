@@ -14,19 +14,15 @@
     </select>
   </div>
   <div class="col-md-4">
-    <div class="btn-group" [ngClass]="{'mt-5': label}">
+    <div class="btn-group d-grid gap-2" [ngClass]="{'mt-5': label}">
       @if(showSearchInput1){
         @for (btn of botonField; track $index) {
-          <div class="d-flex justify-content-center">
-            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
-          </div>
+            <button type="button" class="btn w-100" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
         }
       }
       @else {
         @for (btn of botones; track $index) {
-          <div class="d-flex justify-content-center">
-            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
-          </div>
+            <button type="button" class="btn w-100" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
         }
       }
     </div>
