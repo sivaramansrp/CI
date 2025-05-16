@@ -151,6 +151,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       ],
       licencia: [
         this.solicitudPermisoState.domicilloDelEstablecimientoFormState?.licencia,
+        [Validators.required],
       ],
       regimen: [
         this.solicitudPermisoState.domicilloDelEstablecimientoFormState?.regimen,

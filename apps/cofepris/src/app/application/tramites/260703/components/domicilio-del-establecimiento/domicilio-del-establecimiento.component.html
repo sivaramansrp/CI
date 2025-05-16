@@ -227,8 +227,14 @@
         </label>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="licencia"
+        <label class="form-label" for="licencia" 
+        *ngIf='this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
           >No. de licencia sanitaria:
+        </label>
+        <label class="form-label" for="licencia"
+        *ngIf='!this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
+
+          >No. de licencia sanitaria*:
         </label>
         <input
           type="text"
