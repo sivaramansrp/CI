@@ -1,0 +1,108 @@
+<div class="container">
+	<ng-titulo titulo="Terceros relacionados"></ng-titulo>
+  
+	<div class="row mt-5">
+	  <ng-alert
+		[CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
+		[CUSTOMECLASS]="infoAlert"
+	  ></ng-alert>
+	</div>
+	<div class="row mt-5">
+	  <div class="col-md-3">
+		<h6> Destinatario (destino final)
+		  <span class="form-label" *ngIf="esCampoRequerido('destinoFinal')">*</span>
+		  <span class="form-label">:</span>
+		</h6>
+	  </div>
+	</div>
+	<div class="row mt-5">
+	  <app-tabla-dinamica
+		[configuracionTabla]="configuracionTablaDestinatarioFinal"
+		[datos]="destinatarioFinalTablaDatos"
+		[tipoSeleccionTabla]="tipoSeleccionTabla"
+    (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
+	  ></app-tabla-dinamica>
+	</div>
+  
+	<div class="row mt-5">
+	  <div class="col-md-12">
+		<div class="pull-right">
+		  @if (estaOcultoDes) {
+		  <button
+			type="button"
+			name="modificarMercancias"
+			class="btn btn-default"
+            (click)="modifySelectedDestinatarios()"
+		  >
+			Modificar
+		  </button>
+		  <button
+			type="button"
+			name="eliminarMercancias"
+			class="btn btn-danger ms-2"
+			(click)="eliminarSelectedDestinatario()"
+		  >
+			Eliminar
+		  </button>
+		  }
+		  <button
+			type="button"
+			name="agregarMercancias"
+			class="btn btn-primary ms-2"
+			(click)="irAAcciones('../agregar-destinatario-final')"
+		  >
+			Agregar
+		  </button>
+		</div>
+	  </div>
+	</div>
+  
+	<div class="row mt-5">
+	  <div class="col-md-3">
+		  <h6>Fabricante
+			<span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span>
+			<span class="form-label">:</span>
+		  </h6>
+	  </div>
+	</div>
+	<div class="row mt-5">
+	  <app-tabla-dinamica
+		[configuracionTabla]="configuracionTablaFabricante"
+		[datos]="fabricanteTablaDatos"
+		[tipoSeleccionTabla]="tipoSeleccionTabla"
+	  ></app-tabla-dinamica>
+	</div>
+  
+	<div class="row mt-5">
+	  <div class="col-md-12">
+		<div class="pull-right">
+		  @if (estaOcultoFab) {
+		  <button
+			type="button"
+			name="modificarMercancias"
+			class="btn btn-default"
+		  >
+			Modificar
+		  </button>
+		  <button
+			type="button"
+			name="eliminarMercancias"
+			class="btn btn-danger ms-2"
+			(click)="eliminarSelectedFabricante()"
+		  >
+			Eliminar
+		  </button>
+		  }
+		  <button
+			type="button"
+			name="agregarMercancias"
+			class="btn btn-primary ms-2"
+			(click)="irAAcciones('../agregar-fabricante')"
+		  >
+			Agregar
+		  </button>
+		</div>
+	  </div>
+	</div>
+</div>
+  
