@@ -1,0 +1,43 @@
+<div class="container form-container">
+ 
+  <div class="mt-5">
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
+      [datos]="tablaInsumos"></app-tabla-dinamica>
+  </div>
+
+  <div class="text-end mt-5">
+    <button type="button" class="btn btn-primary me-2">Eliminar</button>
+    <button type="button" class="btn btn-primary me-2">Modificar</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+      data-bs-target="#modalAddAgentMercancias">Agregar</button>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Información de la materia prima que determina la clasificación del bien final</h4>
+      </div>
+      <div class="modal-body modal-height">
+        <form [formGroup]="forma">
+          <div class="row">
+            <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="insumosFormData"
+              [estado]="solicitudDeRegistroState"
+              (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+          </div>
+        </form>
+      </div>
+
+      <div class="text-end mt-5">
+        <button type="button" class="btn btn-primary me-2" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary me-2" (click)="agregarInsumo()" data-bs-dismiss="modal">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

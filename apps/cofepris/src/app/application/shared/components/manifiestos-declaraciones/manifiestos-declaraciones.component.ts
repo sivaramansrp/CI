@@ -25,7 +25,7 @@ import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
     InputRadioComponent,
   ],
   templateUrl: './manifiestos-declaraciones.component.html',
-  styleUrl: './manifiestos-declaraciones.component.css',
+  styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
