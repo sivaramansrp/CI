@@ -1,33 +1,63 @@
+/**
+ * @fileoverview
+ * Store de estado para el trámite 110209 usando Akita.
+ * Define la interfaz de estado, el estado inicial y el store con métodos para actualizar el estado.
+ */
+
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../../constantes/certificado-sgp.enum';
 
 /**
  * Interfaz que define el estado del trámite 110209.
+ * @interface
  */
 export interface Tramite110209State {
+  /** Medio de transporte utilizado */
   medioDeTransporte: string;
+  /** Ruta completa del transporte */
   rutaCompleta: string;
+  /** Puerto de embarque */
   puertoDeEmbarque: string;
+  /** Puerto de desembarque */
   puertoDeDesembarque: string;
+  /** Observaciones adicionales */
   observaciones: string;
+  /** Mercancías seleccionadas */
   mercanciasSeleccionadas: Mercancias;
+  /** Descripción de la mercancía */
   descripcion: string;
+  /** Marca de la mercancía */
   marca: string;
+  /** Valor de la mercancía */
   valorMercancia: string;
+  /** Unidad de medida */
   unidadMedida: string;
+  /** Número de factura */
   numeroFactura: string;
+  /** Tipo de factura */
   tipoFactura: string;
+  /** Nombre del destinatario o exportador */
   nombre: string;
+  /** Primer apellido */
   primerApellido: string;
+  /** Segundo apellido */
   segundoApellido: string;
+  /** Número de registro fiscal */
   numeroDeRegistroFiscal: string;
+  /** Razón social */
   razonSocial: string;
+  /** Calle */
   calle: string;
+  /** Número o letra de domicilio */
   numeroLetra: string;
+  /** Ciudad */
   ciudad: string;
+  /** Correo electrónico */
   correoElectronico: string;
+  /** Fax */
   fax: number;
+  /** Teléfono */
   telefono: number;
 }
 
@@ -70,26 +100,31 @@ export function createInitialState(): Tramite110209State {
   };
 }
 
+/**
+ * Store de Akita para el trámite 110209.
+ * Permite gestionar y actualizar el estado de la información del trámite.
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite110209', resettable: true })
-/**
- * Clase que representa el store del trámite 110209.
- */
 export class Tramite110209Store extends Store<Tramite110209State> {
   /**
    * Constructor del store.
+   * Inicializa el estado con los valores por defecto.
    */
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * Actualiza el estado del store con los datos proporcionados.
+   * @param {Partial<Tramite110209State>} estado - Datos parciales para actualizar el estado.
+   */
   setTramite110209(estado: Partial<Tramite110209State>): void {
     this.update((state) => ({
       ...state,
       ...estado,
     }));
   }
-
 }
