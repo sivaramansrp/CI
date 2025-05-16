@@ -60,13 +60,13 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   /**
    * Se ejecuta al destruir el componente.
    */
-  ngOnDestroy(){
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
   /**
-     * Método para crear el formulario de la captura de requerimiento
-     */
+   * Método para crear el formulario de la captura de requerimiento
+   */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
       tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
@@ -80,7 +80,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
     * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    */
-  tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
+  tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {
     this.setValoresStore(form, campo, metodoNombre);
   }
   /**
