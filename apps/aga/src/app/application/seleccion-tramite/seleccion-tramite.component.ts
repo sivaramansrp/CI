@@ -1,13 +1,17 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import { APPINJECT } from '../../app.inject';
 
 @Component({
   selector: 'seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
 })
 export class SeleccionTramiteComponent implements OnInit, OnDestroy {
-
+  /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  private readonly appConfig = inject(APPINJECT);
   /**
    * Variable para asingar el endpoint de la ruta
    */

@@ -71,20 +71,20 @@ export class TercerosFabricanteService {
     );
   }
 
-  /**
-   * Obtiene los datos de un archivo JSON local.
-   *
-   * @returns Observable que emite un arreglo de objetos PermisoModel.
-   */
+ /**
+ * Recupera los datos desde un archivo JSON local.
+ *
+ * @returns Un `Observable` que emite un arreglo de objetos `PermisoModel`.
+ */
   getTable(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260501/terceros.json');
   }
 
   /**
-   * Recupera el estado actual de "Terceros Fabricante" desde el store.
-   *
-   * @returns Un `Observable` que emite el objeto `TercerosFabricanteState`.
-   */
+ * Obtiene el estado actual de "Terceros Fabricante" desde el store.
+ *
+ * @returns Un `Observable` que emite el objeto `TercerosFabricanteState`.
+ */
   getTercerosFabricanteState(): Observable<TercerosFabricanteState> {
        return this.query.selectSolicitud$;
      }

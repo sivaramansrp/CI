@@ -8,6 +8,13 @@
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Aviso</a>
       </li>
     </ul>
-    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante> } @case (2) { <app-aviso [tabIndex]="2"></app-aviso> } } </ng-container>
+    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label>ADACE:</label>
+        <input type="text" class="form-control gris-color" readonly required />
+      </div>
+    </div>
+    } @case (2) { <app-aviso [tabIndex]="2"></app-aviso> } } </ng-container>
   </div>
 </div>

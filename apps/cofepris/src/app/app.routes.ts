@@ -6,7 +6,7 @@ import { Route } from '@angular/router';
  * @export
  * @const {Route[]}
  */
-export const appRoutes: Route[] = [
+export const APP_ROUTES: Route[] = [
   /**
    * Ruta principal que carga las rutas remotas.
    * 

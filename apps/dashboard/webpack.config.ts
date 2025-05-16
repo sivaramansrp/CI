@@ -10,10 +10,12 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
 
 // Determinar dinámicamente la publicPath
 function getPublicPath() {
+  console.log('NODE_ENV: ', process.env.NODE_ENV);
   if (process.env.NODE_ENV === 'production') {
     return 'https://front.v30.ultrasist.net/';
   } else {
-    return 'http://localhost:4200/';
+    // return 'http://localhost:4200/';
+    return 'https://front.v30.ultrasist.net/';
   }
 }
 
@@ -49,6 +51,12 @@ module.exports = {
           singleton: true,
           strictVersion: true,
           requiredVersion: 'auto'
+        },
+        "@ng-mf/data-access-user": {
+            "singleton": false,
+            strictVersion: false,
+            requiredVersion: false,
+            "import": "libs/shared/data-access-user/src/index.ts",
         },
         ...sharedMappings.getDescriptors()
       })
