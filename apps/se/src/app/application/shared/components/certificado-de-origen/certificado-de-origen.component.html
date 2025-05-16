@@ -24,6 +24,57 @@
                 </div>
             }
         </div>
+
+        <div class="row" *ngIf="tramiteState?.si && mercanciasDisponibles">
+            <div class="row my-4">
+                <div class="col-md-4 form-group">
+                    <label class="form-label" for="nombres">Nombre(s)*:</label>
+                    <input type="text" id="nombres" class="form-control" formControlName="nombres"
+                        (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')" />
+                </div>
+            
+                <div class="col-md-4 form-group">
+                    <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                    <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido"
+                        (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" />
+                </div>
+            
+                <div class="col-md-4 form-group">
+                    <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                    <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
+                        (change)="setValoresStore('formCertificado','segundoApellido','setFormCertificadoGenric')" />
+                </div>
+            
+                <div class="col-md-4 form-group">
+                    <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
+                    <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
+                        (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" />
+                </div>
+            
+                <div class="col-md-8 form-group">
+                    <label class="form-label" for="razonSocial">Razón social*:</label>
+                    <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
+                        (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
+                </div>
+            </div>
+            <div class="my-4">
+                <ng-titulo titulo="Domicilio del tercer operador" />
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label class="form-label" for="calle">Calle*:</label>
+                        <input type="text" id="calle" class="form-control" formControlName="calle"
+                            (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+                    </div>
+                
+                    <div class="col-md-4 form-group">
+                        <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+                        <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+                            (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
             <div class="col-md-6">
@@ -85,25 +136,22 @@
             <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
-        
         <div class="col-md-4 form-field">
             <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
-        <div class="row w-100">
-            @if(mercanciasDisponibles){
-                <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                    <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
-                </div>
-            } @else {
-                <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                    <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
-                </div>
-            }
-        </div>
+        @if(mercanciasDisponibles){
+            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
+            </div>
+        } @else {
+            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+            </div>
+        }
 
-          @if (mercanciasDisponibles) {
+        @if (mercanciasDisponibles) {
             <div class="row">
                 <div class="col-md-12 my-3">
                     <label for="mercancíasDisponibles" class="form-label">Mercancías disponibles</label>
@@ -117,10 +165,10 @@
                 </div>
             </div>
           }
-  
+
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
-        
+
             @if (cargoDeMercancias) {
                 <div class="row">
                     <div class="col-md-12">
@@ -142,17 +190,17 @@
             @if(tablaSeleccionEvent){
 
                 @if (mercanciasDisponibles) {
-                <div class="row">
-                    <div class="col-md-12 my-3">
-                        <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
+                    <div class="row">
+                        <div class="col-md-12 my-3">
+                            <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
+                        </div>
                     </div>
-                </div>
                 }
 
                 @if (mercanciasDisponibles) {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"></app-tabla-dinamica>                     
+                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  ></app-tabla-dinamica>
                     </div>
                 } @else {
                     <div class="row">
@@ -160,10 +208,10 @@
                         [datos]="guardarClicado || []"  ></app-tabla-dinamica>
                     </div>
                 }
-
+           
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
-                    <button class="btn btn-default me-2"(click)="eliminarSeleccionados()">Eliminar</button>
+                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()">Eliminar</button>
                     <button class="btn btn-primary"  (click)="abrirModal(tableData[0])">Modificar</button>
                   </div>
               </div>
