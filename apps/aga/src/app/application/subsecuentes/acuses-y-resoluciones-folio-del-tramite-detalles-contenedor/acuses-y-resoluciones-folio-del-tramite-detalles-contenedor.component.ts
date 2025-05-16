@@ -24,7 +24,10 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { AcusesYResoluciones } from '../../core/models/shared/subsecuentes.model';
+import {
+  AcusesYResoluciones,
+  BotonDeAccion,
+} from '../../core/models/shared/subsecuentes.model';
 import { LISTA_TRIMITES } from '../../core/enums/atender-requerimientos.enums';
 import { SubsecuentesService } from '../../core/services/subsecuntes/subsecuentes.service';
 
@@ -65,6 +68,8 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   esRequerimientoServiceLoaded: boolean = false;
   folio!: string;
   url!: string;
+  botonesAcciones: BotonDeAccion[] = [];
+
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   private unsubscribe$ = new Subject<void>();
@@ -139,7 +144,6 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   }
 
   ngOnInit(): void {
-    console.log(this.tramite);
     if (this.tramite) {
       this.selectTramite(this.tramite);
     } else {
@@ -158,6 +162,12 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosDeFormulario = data;
+      });
+    this.subsecuentesService
+      .getButtonesAcciones()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.botonesAcciones = data;
       });
   }
   selectTramite(i: number): void {

@@ -10,7 +10,12 @@ export interface AcusesYResoluciones {
   estatusDeLaSolicitud: string;
   diasHabilesTranscurridos: string;
 }
-
+export interface BotonDeAccion {
+  etiqueta: string;
+  clase: string;
+  metodo: string;
+  urlAccion: string;
+}
 export const LISTA_TRIMITES: AccuseComponentes[] = [
   {
     tramite: 301,

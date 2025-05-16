@@ -5,6 +5,12 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
 
+export interface BotonDeAccion {
+  etiqueta: string;
+  clase: string;
+  metodo: string;
+  urlAccion: string;
+}
 /**
  * Configuración para el campo de fecha inicial.
  */
@@ -53,6 +59,8 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    * Configuración del campo de fecha final.
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+
+  @Input() public botonesAcciones: BotonDeAccion[] = [];
 
   /**
    * Datos del formulario que se recibirán como entrada.
@@ -162,5 +170,9 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    */
   public solicitarModificacion(): void {
     this.router.navigate([this.procedureRegresorUrl]);
+  }
+
+  public alHacerClickEnBoton(urlAccion: string): void {
+    this.router.navigate([urlAccion]);
   }
 }

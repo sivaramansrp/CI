@@ -1,4 +1,7 @@
-import { AcusesYResoluciones } from '../../models/shared/subsecuentes.model';
+import {
+  AcusesYResoluciones,
+  BotonDeAccion,
+} from '../../models/shared/subsecuentes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -12,6 +15,11 @@ export class SubsecuentesService {
   getAcusesYResolucionesDatos(): Observable<AcusesYResoluciones> {
     return this.http.get<AcusesYResoluciones>(
       '/assets/json/subsecuentes/acusesYResolucionesDatos.json'
+    );
+  }
+  getButtonesAcciones(): Observable<BotonDeAccion[]> {
+    return this.http.get<BotonDeAccion[]>(
+      '/assets/json/subsecuentes/BotonDeAccion.json'
     );
   }
 }
