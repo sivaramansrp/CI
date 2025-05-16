@@ -29,6 +29,7 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 })
 
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+  
   /**
    * @property destroy$
    * @description
