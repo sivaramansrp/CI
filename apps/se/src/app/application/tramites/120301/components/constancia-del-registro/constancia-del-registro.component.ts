@@ -157,6 +157,9 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     // Lógica del constructor si es necesario
   }
 
+    /**
+     * Configuración de las columnas de la tabla.
+     */
     configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
       {
         encabezado: 'Numero de constancia de registro',
