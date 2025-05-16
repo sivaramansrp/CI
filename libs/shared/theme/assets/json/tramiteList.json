@@ -2221,8 +2221,8 @@
   {
     "id": 318,
     "tramite": 140102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitudModule/pantallas",
+    "linkDepartment": "/pago/registro-solicitudModule/pantallas",
     "department": "se"
   },
   {
