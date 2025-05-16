@@ -29,7 +29,7 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 })
 
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
-  
+
   /**
    * @property destroy$
    * @description
@@ -79,6 +79,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * 
    * @type {ImportacionesAgropecuariasState}
    */
+  
   public solicitudDeRegistroState!: ImportacionesAgropecuariasState;
 
   /**
