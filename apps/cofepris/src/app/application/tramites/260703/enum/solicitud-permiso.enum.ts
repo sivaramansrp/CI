@@ -8,13 +8,17 @@ import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model
  */
 export const OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL = [
   {
-    label: 'Sí',
-    value: '1',
+    label: 'Prórroga',
+    value: 'Prórroga',
   },
   {
-    label: 'No',
-    value: '0',
+    label: 'Modificación',
+    value: 'Modificación',
   },
+  {
+    label:'Modificación y prórroga',
+    value: 'Modificación y prórroga',
+  }
 ];
 
 /**
