@@ -39,7 +39,27 @@ export const CONFIGURACION_MERCANCIA = [
   }
 ];
 
-
+/**
+ * @constant MERCANCIA_SELECCIONADAS
+ * 
+ * @description
+ * Arreglo que define las columnas y sus propiedades para la visualización de mercancías seleccionadas.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave (función para obtener el valor de la propiedad de la mercancía),
+ * y el orden en el que se mostrará la columna.
+ * 
+ * @property {string} encabezado - Título de la columna que se mostrará en la interfaz.
+ * @property {(ele: Mercancia) => string | undefined} clave - Función que recibe un objeto de tipo `Mercancia` y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - Orden en el que se mostrará la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * MERCANCIA_SELECCIONADAS.forEach(columna => {
+ *   console.log(`Encabezado: ${columna.encabezado}, Orden: ${columna.orden}`);
+ * });
+ * 
+ * @comando
+ * Utilice este arreglo para configurar las columnas de una tabla que muestre información de mercancías.
+ */
 export const MERCANCIA_SELECCIONADAS = [
   {
     encabezado: 'Fracción arancelaria', // Título de la columna
@@ -73,7 +93,7 @@ export const MERCANCIA_SELECCIONADAS = [
   }
 ];
 
-/**
+/**`
  * @constant {Array<Object>} CARGA_MERCANCIA_SELECCIONADAS
  * 
  * @description
@@ -137,6 +157,8 @@ export const CARGA_MERCANCIA_SELECCIONADAS = [
 ];
 
 
+
+
 /**
 * Clave para identificar la entidad federativa.
 * @type {string}
@@ -171,6 +193,12 @@ export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates';
 * @constant
 */
 export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
+
+/**
+ * @descripcion
+ * Identificador único del procedimiento.
+ */
+export const CAMPO_DE_DESTINATARIO = [110222]
 
 /**
  * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.
