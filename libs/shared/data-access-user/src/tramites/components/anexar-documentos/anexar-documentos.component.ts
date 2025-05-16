@@ -27,10 +27,7 @@ import { DocumentosState, DocumentosStore } from '../../../core/estados/document
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
-import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
-import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
-
-
+import { DocumentosParaCargar, TipoDocumentos } from '../../../core/models/shared/anexar-documentos.model';
 
 @Component({
   selector: 'anexar-documentos',
@@ -45,6 +42,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @type {CatalogoDocumento[]}
    */
   @Input() catalogoDocumentos: CatalogoDocumento[] = [];
+  
+  @Input() catalogoDocumentosObligatorios: TipoDocumentos[] = [];
 
   /**
    * @description Catalogo de documentos opcionales.
@@ -186,7 +185,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     private documentosStore: DocumentosStore,
     private subirDocumentoService: SubirDocumentoService,
     private cdr: ChangeDetectorRef,
-    private catalogoDocumentosService: CatalogoDocumentosService,
   ) { }
 
   ngOnInit(): void {
@@ -214,7 +212,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    this.getListaDocumentoObligatorios();
   }
 
   /**
@@ -600,20 +597,5 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  getListaDocumentoObligatorios(): void {
-    console.log('Peticion API documentos');
-    
-    const TRAMITE = '5701';
-    const PARAMETROS = {
-      especifico: false
-    }
-    this.catalogoDocumentosService.getDocumentosObligatorios(TRAMITE, PARAMETROS)
-      .pipe(
-        map((response) => {
-          console.log(response);
-
-        }))
-        .subscribe();
-  }
 
 }

@@ -38,7 +38,7 @@ export interface DocumentosLista {
   documento_certificacion: string;
 }
 export interface Documento {
-  tipo_Documento: TipoDocumento;
+  tipo_documento: TipoDocumentos;
   especifico: boolean;
   id_documento_solicitud?: number;
   tipo_tramite?: TipoTramite;
@@ -51,7 +51,7 @@ export interface Documento {
   ide_regla_anexado?: string;
 }
 
-export interface TipoDocumento {
+export interface TipoDocumentos {
   id_tipo_documento: number;
   tipo_documento: string;
   fecha_captura: string;
