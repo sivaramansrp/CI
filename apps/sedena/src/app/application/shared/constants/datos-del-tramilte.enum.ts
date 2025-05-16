@@ -131,6 +131,7 @@ export const FETCHA_SALIDA = [240123];
  */
 export const ES_CURP = [240107, 240114, 240118, 240117, 240121,240311];
 
+export const ES_NACIONAL = [240118];
 /**
  * Período del primer semestre.
  *
@@ -224,4 +225,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123];
+export const ADUANA_TEXTO = [240123, 240118];

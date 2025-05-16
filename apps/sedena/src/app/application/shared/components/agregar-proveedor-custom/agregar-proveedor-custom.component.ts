@@ -5,13 +5,13 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,PROVEEDOR_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, PROVEEDOR_TITULO_CUSTOM, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES,TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
+import { ES_NACIONAL } from '../../constants/datos-del-tramilte.enum';
 import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
 import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
-
 
 /**
  * @component AgregarProveedorComponent
@@ -187,6 +187,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   */
   public esCURP = false;
 
+    /**
+  * @property esNacional
+  * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+  * @type {boolean}
+  * @default false
+  */
+  public esNacional = false;
+
   /**
    * @property {boolean} esRFC
    * @description Indica si el valor actual corresponde a un RFC (Registro Federal de Contribuyentes).
@@ -277,6 +285,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.Formulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
+    this.esNacional = ES_NACIONAL.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
     this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
     this.isProveedorModificar= PROVEEDOR_TITULO_CUSTOM.includes(this.idProcedimiento);
@@ -430,6 +439,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240117:
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break
+      case NUMERO_TRAMITE.TRAMITE_240118:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240121:
