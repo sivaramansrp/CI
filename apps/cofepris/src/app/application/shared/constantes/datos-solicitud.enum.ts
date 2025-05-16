@@ -678,4 +678,4 @@ export const MENSAJE_SIN_FILA_SELECCIONADA="Seleciona un registro";
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219]
+export const MOSTRAR_NOTIFICACION = [260219, 260206]
