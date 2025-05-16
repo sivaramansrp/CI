@@ -33,6 +33,7 @@
               type="text"
               class="form-control"
               formControlName="cadenaPagoDependencia"
+              maxlength="14"
               (input)="
                 capitalizarYGuardar(
                   'cadenaPagoDependencia',
@@ -76,13 +77,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="llaveDePago"
-              >Llave de pago*:</label
+              >Llave de pago:</label
             >
             <input
               class="form-control"
               id="llaveDePago"
               type="text"
               formControlName="llaveDePago"
+              maxlength="30"
               (input)="
                 capitalizarYGuardar('llaveDePago', 'setLlaveDePago', $event)
               "
@@ -94,8 +96,7 @@
             [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
             [datos]="configuracionFechaFinal"
             (valorCambiado)="setValoresStore(formularioPagoDerechos, 'fecPago')"
-          >
-          </input-fecha>
+          />
         </div>
         <div class="col-md-4">
           <div class="form-group">
@@ -103,8 +104,9 @@
             <input
               class="form-control"
               id="impPago"
-              type="number"
+              type="text"
               formControlName="impPago"
+              maxlength="16"
               (change)="setValoresStore(formularioPagoDerechos, 'impPago')"
             />
           </div>
@@ -113,7 +115,13 @@
 
       <div class="row mt-3 justify-content-end">
         <div class="col-md-4 d-flex justify-content-end">
-          <button class="btn btn-danger">Borrar datos del pago</button>
+            <button 
+            class="btn btn-danger" 
+            (click)="formularioPagoDerechos.reset()"
+            type="button"
+            >
+            Borrar datos del pago
+            </button>
         </div>
       </div>
     </div>

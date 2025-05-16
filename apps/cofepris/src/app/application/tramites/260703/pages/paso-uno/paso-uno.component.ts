@@ -54,11 +54,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     CONFIGURACIONCOLUMNA;
 
   /**
-   * Lista de bancos disponibles para seleccionar.
-   */
-  banco!: Catalogo[];
-
-  /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
    * Esto ayuda a evitar fugas de memoria.
    */
@@ -70,7 +65,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
-    private solicitudPermisoService: SolicitudPermisoService,
+    public solicitudPermisoService: SolicitudPermisoService,
     private tramite260703Store: Tramite260703Store,
     private tramite260703Query: Tramite260703Query
   ) {
@@ -139,7 +134,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
-      this.banco = this.solicitudPermisoService.banco;
       this.crearformularioPagoDerechos();
     }
     this.indice = i;
