@@ -19,8 +19,8 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/se/src/assets/",
-            "output":"./assets/"
+            "input": "apps/semarnat/src/assets/",
+            "output": "./assets/"
           },
           { "glob": "favicon.ico", "input": "./", "output": "./" },
           {
@@ -30,16 +30,21 @@
           }
         ],
         "styles": [
-          "apps/semarnat/src/styles.scss",
-          "node_modules/bootstrap/scss/bootstrap.scss",
-          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-          "node_modules/ngx-toastr/toastr.css",
-          "libs/shared/theme/assets/styles/main.scss"
+             "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+             "libs/shared/theme/assets/styles/main.scss"
+            ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
         ],
-        "scripts": [],
         "customWebpackConfig": {
           "path": "apps/semarnat/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
@@ -56,9 +61,53 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/semarnat/webpack.prod.config.ts"
-          }
+            "path": "apps/semarnat/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/semarnat/src/app/environments/environment.ts",
+              "with": "apps/semarnat/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/semarnat/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/semarnat/src/app/environments/environment.ts",
+              "with": "apps/semarnat/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -69,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4206,
-        "publicHost": "http://localhost:4206"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -83,6 +132,9 @@
         },
         "development": {
           "buildTarget": "semarnat:build:development"
+        },
+        "qa": {
+          "buildTarget": "semarnat:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -105,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "semarnat:build",
         "port": 4206,

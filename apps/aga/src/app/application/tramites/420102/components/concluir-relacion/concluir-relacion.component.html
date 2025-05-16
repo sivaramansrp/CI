@@ -1,0 +1,79 @@
+<div class="container">
+  <ng-titulo titulo="Concluir relación con proveedor" />
+
+  <form [formGroup]="concluirFormulario" (ngSubmit)="concluirFormularioSubmit()">
+    <div>
+      <div class="row estilo-campo-personalizado">
+        <div class="col-md-4">
+          <label for="rfc" class="form-label">RFC:</label>
+          <input type="text" formControlName="rfc" class="form-control" />
+        </div>
+        <div class="col-md-4">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="buscarRFC()"
+              >
+                Buscar
+              </button>
+        </div>
+      </div>
+
+      <div class="row pt4-custom">
+          <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group datepicker-group disabled-input-fecha">
+                      <input-fecha
+                      [datos]="fechaInicioInput"
+                        (valorCambiado)="cambiarFechaInicio($event)"
+                      name="fechaPago"
+                      [setFecha]="fechaPagoDate"
+                    ></input-fecha>
+                    
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group datepicker-group disabled-input-fecha">
+                    <input-fecha
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="cambiarFechaFinal($event)"
+                    name="fechaPago"
+                    [setFecha]="fechaPagoDate"
+                    ></input-fecha>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+      <div class="row pt7-custom">
+        <div class="col-md-12" id="IdGridContenedoresITC">
+          <div class="table-responsive">
+              <div class="innercontainer">
+                  <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla"  [configuracionTabla]="encabezadoDeTabla"
+                  [datos]="datosTabla"></app-tabla-dinamica>
+              </div>
+          </div>
+
+          <div align="center" id="paginGridContenedoresITC">
+            <nav aria-label="Navegación de página ejemplo">
+                <ul class="pagination d-flex justify-content-center">
+                    <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
+                </ul>
+            </nav>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="row pt7-custom">
+        <div class="modal-footer custom-footer justify-content-end">
+          <button type="button" class="btn btn-default btn-space">Limpiar</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+</div>

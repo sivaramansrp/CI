@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/dashboard/Dockerfile
+      dockerfile: apps/dashboard/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-dashboard
@@ -36,7 +36,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-login-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/login/Dockerfile
+      dockerfile: apps/login/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-login-microfront
@@ -70,7 +70,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/aga/Dockerfile
+      dockerfile: apps/aga/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-aga-microfront
@@ -104,7 +104,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agriculture/Dockerfile
+      dockerfile: apps/agriculture/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-agriculture-microfront
@@ -136,7 +136,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-se-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/se/Dockerfile
+      dockerfile: apps/se/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-se-microfront
@@ -168,7 +168,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/semarnat/Dockerfile
+      dockerfile: apps/semarnat/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-semarnat-microfront
@@ -200,7 +200,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agace/Dockerfile
+      dockerfile: apps/agace/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-agace-microfront
@@ -232,7 +232,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-funcionario-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/funcionario/Dockerfile
+      dockerfile: apps/funcionario/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-funcionario-microfront
@@ -264,7 +264,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/cofepris/Dockerfile
+      dockerfile: apps/cofepris/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-cofepris-microfront
@@ -296,7 +296,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/amecafe/Dockerfile
+      dockerfile: apps/amecafe/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-amecafe-microfront
@@ -328,7 +328,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-inbal-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/inbal/Dockerfile
+      dockerfile: apps/inbal/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-inbal-microfront
@@ -355,13 +355,12 @@ services:
         max-size: "10m"
         max-file: "3"
 
-
 #----------------------------------------------------------------
   modulefederation-sedena-microfront:
     image: ghcr.io/vucem30/dockerized-modulefederation-sedena-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/sedena/Dockerfile
+      dockerfile: apps/sedena/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-sedena-microfront
@@ -387,6 +386,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
 #----------------------------------------------------------------
 networks:
   modulefederation-network:
