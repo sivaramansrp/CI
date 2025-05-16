@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud30505State, Solicitud30505Store } from '../../estados/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { AVISO_CALCULO_OPCIONES, AVISO_PORCENTAJE_OPCIONES } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { Solicitud30505Query } from '../../estados/tramites30505.query';
   templateUrl: './aviso-calculo.component.html',
   styleUrl: './aviso-calculo.component.scss',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,InputRadioComponent],
   // providers: [AvisoCalculoService] // Service provider commented out as per instructions
 })
 export class AvisoCalculoComponent implements OnInit, OnDestroy {
@@ -23,6 +25,8 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
 
   public solicitudState!: Solicitud30505State;
   private destroyNotifier$: Subject<void> = new Subject();
+  avisoCalculoOpciones = AVISO_CALCULO_OPCIONES;
+  porcentajeOpciones = AVISO_PORCENTAJE_OPCIONES;
 
   constructor(private fb: FormBuilder,
     private solicitud30505Store: Solicitud30505Store,

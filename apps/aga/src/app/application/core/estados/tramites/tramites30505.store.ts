@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { FusionEscision } from '../models/aviso-modificacion.model';
+import { FusionEscision } from '../../models/30505/aviso-modificacion.model';
 /**
  * Estado de la solicitud 30901.
  * Contiene los datos necesarios para gestionar la solicitud.

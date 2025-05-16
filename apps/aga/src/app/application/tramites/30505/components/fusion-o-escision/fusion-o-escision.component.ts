@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router,ActivatedRoute } from '@angular/router';
 import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../models/aviso-modificacion.model'
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { AVISO_RADIO, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../enums/aviso-de-modificacion.enum';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud30505Store,Solicitud30505State } from '../../estados/tramites30505.store';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
+import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
+import { AVISO_RADIO, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 // import { FusionOEscisionService } from 'path-to-service'; // Commented out as per instructions
 
 @Component({

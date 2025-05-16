@@ -1,6 +1,6 @@
-import { Solicitud30505State, Solicitud30505Store } from './tramites30505.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Solicitud30505State, Solicitud30505Store } from '../estados/tramites/tramites30505.store';
 
 /**
  * Servicio de consulta (Query) para la solicitud 30901.

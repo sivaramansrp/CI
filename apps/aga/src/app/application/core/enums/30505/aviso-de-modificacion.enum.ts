@@ -50,3 +50,29 @@ export const SI_NO_RADIO = [
         id:'idNoCertificacion'
     }
 ];
+
+export const AVISO_CALCULO_OPCIONES = [
+ {
+        label: 'Sí',
+        value: '1',
+        id:'idEjercicioSi'
+    },
+    {
+        label: 'No',
+        value: '0',
+        id:'idEjercicioNo'
+    }
+]
+
+export const AVISO_PORCENTAJE_OPCIONES = [
+ {
+        label: 'Sí',
+        value: '1',
+        id:'idPorcentajeSi'
+    },
+    {
+        label: 'No',
+        value: '0',
+        id:'idPorcentajeNo'
+    }
+]

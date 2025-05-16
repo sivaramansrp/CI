@@ -2,12 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
 import { map, Subject, takeUntil } from 'rxjs';
-import { SI_NO_RADIO } from '../../enums/aviso-de-modificacion.enum';
-import { Solicitud30505Store, Solicitud30505State } from '../../estados/tramites30505.store';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
+
+
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
-import { FusionEscision } from '../../models/aviso-modificacion.model';
+
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { FusionEscision } from '../../../../core/models/30505/aviso-modificacion.model';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 // import { ModalGridAgregarFusionEscisionService } from './modalGridAgregarFusionEscision.service'; // Service calls are commented out as per instructions
 
 @Component({

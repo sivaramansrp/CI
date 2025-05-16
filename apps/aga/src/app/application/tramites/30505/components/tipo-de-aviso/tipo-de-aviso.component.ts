@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AVISO_MOD } from '../../enums/aviso-de-modificacion.enum';
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud30505Store,Solicitud30505State } from '../../estados/tramites30505.store';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
 import { map, Subject, takeUntil } from 'rxjs';
+import { AVISO_MOD } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**
  * Componente que representa el primer paso de un trámite.

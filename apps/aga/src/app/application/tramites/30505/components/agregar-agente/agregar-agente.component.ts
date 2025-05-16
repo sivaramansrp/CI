@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud30505AgregarAgenteState, Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule,Location } from '@angular/common';
 import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 
@@ -22,19 +22,13 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
 
   public solicitudState!: Solicitud30505AgregarAgenteState;
   public destroyNotifier$: Subject<void> = new Subject();
-  public actionBean = {
-    agenteAduanalId: '',
-    agenteAduanalDescripcion: '',
-    apoderadoAduanalId: '',
-    apoderadoAduanalDescripcion: '',
-    agenciaAduanalId: '',
-    agenciaAduanaDescripcion: ''
-  };
+  
 
   constructor(
     private fb: FormBuilder,
     private tramite30505Store: Tramite30505AgregarAgenteStore,
     private tramite30505Query: Tramite30505AgregarAgenteQuery,
+    private ubicaccion : Location
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +48,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
       tipoFigura: [this.solicitudState?.tipoFigura, Validators.required],
       patenteModificada: ['', Validators.required],
       numPatenteModal: [this.solicitudState?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(13)]],
+      rfcModal: [{ value: ''}, [Validators.required, Validators.maxLength(13)]],
       obligFisc: [this.solicitudState?.obligFisc, Validators.requiredTrue],
       autPantente: [this.solicitudState?.autPantente, Validators.requiredTrue],
       nombre: [{ value: '', disabled: true }, Validators.required],
@@ -78,17 +72,9 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   }
 
   public cargarDatosPatente(): void {
-    // this.modalRegistroSociedadesSccService.cargarDatosPatente(this.form.value).subscribe(response => {
-    //   // Handle the response data
-    // });
-    console.log('cargarDatosPatente called');
   }
 
   public guardarDatosSociedadScc(): void {
-    // this.modalRegistroSociedadesSccService.guardarDatosSociedadScc(this.form.value).subscribe(response => {
-    //   // Handle the response data
-    // });
-    console.log('guardarDatosSociedadScc called');
   }
 
   public limpiarSociedadesScc(): void {
@@ -98,8 +84,8 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   }
 
   public cerrarDialogoSociedadesScc(): void {
-    // Implement dialog close functionality, possibly using a dialog service
-    console.log('cerrarDialogoSociedadesScc called');
+   this.datosTramite.reset();
+    this.ubicaccion.back();
   }
 
   public setValoresStore(

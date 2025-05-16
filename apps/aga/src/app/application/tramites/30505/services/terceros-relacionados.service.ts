@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FusionDatos, TercerosRelacionados } from '../models/aviso-modificacion.model';
+import { FusionDatos, TercerosRelacionados } from '../../../core/models/30505/aviso-modificacion.model';
 
 
 @Injectable({

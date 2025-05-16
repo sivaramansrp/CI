@@ -1,16 +1,5 @@
-<!-- <%@ include file="/WEB-INF/support/common/taglibs.jsp"%> -->
-
-<br>
 <form [formGroup]="avisoDeCalForm">
-  <!-- <div id="dvMessage" *ngIf="dvMessageVisible">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="alert alert-danger">Faltan campos por capturar.</div>
-      </div>
-    </div>
-  </div> -->
-
-  <div class="row">
+ <div class="row">
     <div class="col-md-12">
       <span id="tblErrorCalculo" name="tblErrorCalculo">{{ tblErrorCalculo }}</span>
     </div>
@@ -32,25 +21,11 @@
 
   <div class="row">
     <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3">
           <div class="form-check">
-            <input type="radio" class="form-check-input" id="idEjercicioSi" formControlName="capacidadAlmacenamiento"
-              value="1"
-              (change)="validaRadioCalculo(); setValoresStore(avisoDeCalForm,'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento')" />
-            <label class="form-check-label" for="idEjercicioSi">Si</label>
+            <app-input-radio [radioOptions]="avisoCalculoOpciones" [layout]="'horizontal'"
+          formControlName="capacidadAlmacenamiento" (change)="validaRadioCalculo(); setValoresStore(avisoDeCalForm,'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento')">
+          </app-input-radio>  
           </div>
-        </div>
-        <div class="col-md-3" id="divEscicion">
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="idEjercicioNo" formControlName="capacidadAlmacenamiento"
-              value="0"
-              (change)="validaRadioCalculo(); setValoresStore(avisoDeCalForm,'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento')" />
-            <label class="form-check-label" for="idEjercicioNo">No</label>
-          </div>
-        </div>
-      </div>
       <!-- Validation error for capacidadAlmacenamiento -->
       <div
         *ngIf="avisoDeCalForm.get('capacidadAlmacenamiento')?.errors?.['required'] && (avisoDeCalForm.get('capacidadAlmacenamiento')?.touched || avisoDeCalForm.get('capacidadAlmacenamiento')?.dirty)">
@@ -226,25 +201,11 @@
 
   <div class="row">
     <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3">
           <div class="form-check">
-            <input type="radio" class="form-check-input" id="idPorcentajeSi" formControlName="empresaControladora"
-              value="1"
-              (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'empresaControladora', 'setEmpresaControladora')" />
-            <label class="form-check-label" for="idPorcentajeSi">Si</label>
-          </div>
+            <app-input-radio [radioOptions]="porcentajeOpciones" [layout]="'horizontal'"
+            formControlName="empresaControladora" (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'empresaControladora', 'setEmpresaControladora')">
+            </app-input-radio>          
         </div>
-        <div class="col-md-3" id="divEscicion">
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="idPorcentajeNo" formControlName="empresaControladora"
-              value="0"
-              (change)="validaRadioCalculo();setValoresStore(avisoDeCalForm,'empresaControladora', 'setEmpresaControladora')" />
-            <label class="form-check-label" for="idPorcentajeNo">No</label>
-          </div>
-        </div>
-      </div>
       <!-- Validation error for empresaControladora -->
       <div
         *ngIf="avisoDeCalForm.get('empresaControladora')?.errors?.['required'] && (avisoDeCalForm.get('empresaControladora')?.touched || avisoDeCalForm.get('empresaControladora')?.dirty)">
