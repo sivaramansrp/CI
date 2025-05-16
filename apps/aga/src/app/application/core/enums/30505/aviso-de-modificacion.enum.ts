@@ -1,5 +1,3 @@
-
-
 /**
  * @description
  * Mensaje HTML que indica que se debe seleccionar al menos un tipo de aviso.
@@ -10,7 +8,6 @@
  * @module AvisoDeModificacion
  */
 export const AVISO_MOD = `<p>Debe seleccionar por lo menos un tipo de aviso</p>`
-
 
 /**
  * @description Opciones para un control de radio que permite seleccionar entre "Sí" y "No".
@@ -32,6 +29,7 @@ export const OPCIONES_RADIO = [
         value: '0',
     }
 ];
+
 /**
  * @description
  * Arreglo de opciones para un control de radio que permite seleccionar entre "Fusión" y "Escisión".
@@ -43,7 +41,6 @@ export const OPCIONES_RADIO = [
  *
  * @author Su Nombre
  */
-
 export const FUSION_ESCISION_RADIO = [
     {
         label: 'Fusión',
@@ -93,7 +90,6 @@ export const AVISO_RADIO = [
  * @author Equipo de desarrollo VUCEM
  * @since 1.0.0
  */
-
 export const SI_NO_RADIO = [
     {
         label: 'Sí',
@@ -106,8 +102,6 @@ export const SI_NO_RADIO = [
         id:'idNoCertificacion'
     }
 ];
-
-
 
 /**
  * @description
@@ -135,6 +129,7 @@ export const AVISO_CALCULO_OPCIONES = [
         id: 'idEjercicioNo'
     }
 ]
+
 /**
  * @description
  * Opciones disponibles para el aviso de porcentaje en el formulario de modificación.
