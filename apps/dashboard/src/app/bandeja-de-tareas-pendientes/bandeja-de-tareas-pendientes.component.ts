@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, LibBandejaComponent } from '@libs/shared/data-access-user/src';
-import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'bandeja-de-tareas-pendientes',
