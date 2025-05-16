@@ -136,9 +136,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('pais')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -147,9 +145,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('estado')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -158,9 +154,7 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('municipio')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -172,9 +166,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('localidad')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -183,9 +175,7 @@
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('codigoPostal')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -194,9 +184,7 @@
           formControlName="colonia"
           [label]="'Colonia'"
           [required]="true"
-          [isDisabled]="
-            agregarProveedorForm.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarProveedorForm.get('colonia')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
     </div>

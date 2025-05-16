@@ -206,7 +206,7 @@ export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120];
  * @const
  * @type {number[]}
  */
-export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
+export const COLONIA_FIELD_FLAG = [240117, 240114, 240122, 240118];
 
 /**
  * @constant

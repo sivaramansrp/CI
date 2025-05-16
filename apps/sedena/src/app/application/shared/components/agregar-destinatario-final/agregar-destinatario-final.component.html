@@ -133,9 +133,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('pais')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -144,9 +142,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('estado')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -155,9 +151,7 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('municipio')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -169,9 +163,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('localidad')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -180,9 +172,7 @@
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
           [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('codigoPostal')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
@@ -191,9 +181,7 @@
           formControlName="colonia"
           [label]="'Colonia'"
           [required]="!campoObligatorio"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
+          [isDisabled]="agregarDestinatarioFinal.get('colonia')?.disabled ?? false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -258,7 +246,7 @@
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
           >
-            Limpar
+            Limpiar
           </button>
           <button
             type="button"

@@ -16,6 +16,7 @@ import { NO_VISIBILIDAD_UMC } from '../../constants/datos-del-tramilte.enum';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -273,7 +274,7 @@ export class DatosMercanciaComponent implements OnInit {
         },
         Validators.required,
       ],
-      cantidadUMT: [null, Validators.required],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       umt: [{ value: null, disabled: true }, Validators.required],
       valorComercial: [null, Validators.required],
       umc: [null, Validators.required],
@@ -287,7 +288,11 @@ export class DatosMercanciaComponent implements OnInit {
       this.datosMercancia.get('umc')?.disable();
     }
   }
-
+    onCantidadUMTInput(event: Event): void {
+      const INPUT = event.target as HTMLInputElement;
+      INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+      this.datosMercancia.get('cantidadUMT')?.setValue(INPUT.value, { emitEvent: false });
+    }
     /**
      * @method campoObligatorioChange
      * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
