@@ -6,6 +6,7 @@ import { TablaAcciones } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { Documento } from '../models/confirmar-notificacion.model';
 
 @Component({
   selector: 'app-acuse-recibo',
@@ -22,12 +23,6 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   acciones: TablaAcciones[] = [TablaAcciones.VER, TablaAcciones.DESCARGAR];
 
   ngOnInit(): void {
-    // this.datosSolicitudService
-    //   .obtenerListaCodigosPostales()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.codigosPostalesDatos = data;
-    //   });
     this.confirmarNotificacionService
       .getAcuseReciboDatos()
       .pipe(takeUntil(this.unsubscribe$))
@@ -36,21 +31,8 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
       });
   }
 
-  acuseReciboTablaDatos = [];
-  // [
-  //   {
-  //     numero: '1',
-  //     documento: 'Documento 1',
-  //   },
-  //   {
-  //     numero: '2',
-  //     documento: 'Documento 2',
-  //   },
-  //   {
-  //     numero: '3',
-  //     documento: 'Documento 3',
-  //   },
-  // ];
+  acuseReciboTablaDatos: Documento[] = [];
+
   public acuseReciboTablaConfiguracion = {
     configuracionTabla: ACUSE_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA,
     acciones: this.acciones,

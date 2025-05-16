@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { InputFecha } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { InputFecha,  } from '@libs/shared/data-access-user/src';
-import {TituloComponent } from '../titulo/titulo.component';
+import { TituloComponent } from '../titulo/titulo.component';
 
 /**
  * Configuración para el campo de fecha inicial.
@@ -37,7 +37,7 @@ export const FECHA_FINAL: InputFecha = {
   ],
 })
 export class AcusesYResolucionesFolioDelTramiteDetallesComponent
-  implements OnInit
+  implements OnInit, OnChanges
 {
   /**
    * Formulario reactivo para gestionar los datos de acuses y resoluciones.
@@ -53,6 +53,11 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    * Configuración del campo de fecha final.
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+
+  /**
+   * Datos del formulario que se recibirán como entrada.
+   */
+  @Input() public datosDeFormulario = {};
 
   /**
    * URL del procedimiento para la navegación.
@@ -93,6 +98,11 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
       estatusDeLaSolicitud: [{ value: '', disabled: true }],
       diasHabilesTranscurridos: [{ value: '', disabled: true }],
     });
+  }
+  ngOnChanges(): void {
+    if (this.datosDeFormulario) {
+      this.acusesYResolucionesFormGroup.setValue(this.datosDeFormulario);
+    }
   }
 
   /**
