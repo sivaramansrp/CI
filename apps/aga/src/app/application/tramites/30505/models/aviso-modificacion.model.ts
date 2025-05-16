@@ -42,34 +42,32 @@ export interface ListaDeFechas {
 }
 
 export interface FusionEscision{
-  capacidadAlmacenamiento: string;
-  numeroTotalCarros: string;
-  cantidadBienes: string;
-  fechaInspeccion: string;
-  descripcionClobGenerica2: string;
-  rfc: string;
-  razonSocial: string;
-  numFolioTramite: string;
-  fechaInicioVigencia: string;
-  fechaFinVigencia: string;
+      certificacionModal:string,
+        rfcBusquedaModal: string,
+        razonSocialFusionante: string,
+        folioVucemFusionante: string,
+        fechaInicioVigenciaFusionante:string,
+        fechaFinVigenciaFusionante: string,
+        rfcBusquedaModalSC: string,
+        razonSocialFusionanteSC: string
 }
 
 export const FUSION_CONFIGURATION_TABLA: ConfiguracionColumna<FusionEscision>[] =
   [
     {
       encabezado: 'Registro Federal de Contribuyentes',
-      clave: (fila) => fila.rfc,
+      clave: (fila) => fila.certificacionModal == '1'? fila.rfcBusquedaModal: fila.rfcBusquedaModalSC,
       orden: 1,
     },
-    { encabezado: 'Denominación o Razón Social', clave: (fila) => fila.razonSocial, orden: 2},
-    { encabezado: 'Folio VUCEM de la Última certificación/renovación', clave: (fila) => fila.numFolioTramite, orden: 3 },
+    { encabezado: 'Denominación o Razón Social', clave: (fila) => fila.certificacionModal == '1' ? fila.razonSocialFusionante : fila.razonSocialFusionanteSC, orden: 2},
+    { encabezado: 'Folio VUCEM de la Última certificación/renovación', clave: (fila) => fila.folioVucemFusionante, orden: 3 },
     {
       encabezado: 'Fecha de fin de vigencia de la Última certificación/renovación',
-      clave: (fila) => fila.fechaInicioVigencia,
+      clave: (fila) => fila.fechaInicioVigenciaFusionante,
       orden: 4,
     },
     { encabezado: 'Fecha de inicio de vigencia de la Última certificación/renovación',
-       clave: (fila) => fila.fechaFinVigencia,
+       clave: (fila) => fila.fechaFinVigenciaFusionante,
         orden: 5 
       },
   ];
@@ -126,3 +124,5 @@ export const AVISO_AGENTE_DE_TABLA: ConfiguracionColumna<AvisoAgente>[] =
           fechaInicioVigencia:string,
           fechaFinVigencia: string
   }
+
+ 

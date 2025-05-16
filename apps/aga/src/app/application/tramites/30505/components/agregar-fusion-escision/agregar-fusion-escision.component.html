@@ -8,33 +8,10 @@
 
   <div class="row">
     <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-4">
           <div class="form-check">
-            <input
-              type="radio"
-              id="idSiCertificacionModal"
-              formControlName="certificacionModal"
-              value="1"
-              class="form-check-input"
-              (change)="mostrarCertificacion()"
-            />
-            <label class="form-check-label" for="idSiCertificacionModal">Sí</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <input
-              type="radio"
-              id="idNoCertificacionModal"
-              formControlName="certificacionModal"
-              value="0"
-              class="form-check-input"
-              (change)="mostrarCertificacion()"
-            />
-            <label class="form-check-label" for="idNoCertificacionModal">No</label>
-          </div>
-        </div>
+            <app-input-radio [radioOptions]="fusionadaOpciones" [layout]="'horizontal'"
+          formControlName="certificacionModal" (change)="mostrarCertificacion()">
+          </app-input-radio>      
       </div>
     </div>
   </div>
@@ -57,6 +34,7 @@
           id="idRfcBusquedaModal"
           class="form-control"
           size="30"
+          (change)="cambioRFC()"
         />
         <div
           *ngIf="
@@ -213,6 +191,7 @@
           id="idRfcBusquedaModalSC"
           class="form-control"
           size="30"
+          (change)="cambioRfcSC()"
         />
         <div
           *ngIf="
@@ -232,6 +211,7 @@
           id="idRazonSocialFusionanteSC"
           class="form-control"
           size="30"
+          (change)="cambioRazonSocialSC()"
         />
         <div
           *ngIf="

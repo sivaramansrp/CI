@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { FusionEscision } from '../models/aviso-modificacion.model';
 /**
  * Estado de la solicitud 30901.
  * Contiene los datos necesarios para gestionar la solicitud.
@@ -45,6 +46,16 @@ export interface Solicitud30505State {
   observaciones: string;
   descripcionLugarEmbarque: string;
   actividadProductiva: string;
+
+       certificacionModal: string,
+        rfcBusquedaModal: string,
+        razonSocialFusionante: string,
+        folioVucemFusionante: string,
+        fechaInicioVigenciaFusionante:string,
+        fechaFinVigenciaFusionante: string,
+        rfcBusquedaModalSC: string,
+        razonSocialFusionanteSC: string,
+        fusionEscisionData: FusionEscision[]
 }
 
 /**
@@ -89,6 +100,15 @@ export function createInitialSolicitudState(): Solicitud30505State {
     observaciones: '',
     descripcionLugarEmbarque: '',
     actividadProductiva: '',
+    certificacionModal: '',
+        rfcBusquedaModal: '',
+        razonSocialFusionante: '',
+        folioVucemFusionante: '',
+        fechaInicioVigenciaFusionante:'',
+        fechaFinVigenciaFusionante: '',
+        rfcBusquedaModalSC: '',
+        razonSocialFusionanteSC: '',
+        fusionEscisionData: []
   };
 }
 
@@ -246,5 +266,26 @@ public setEmpresaControladora(empresaControladora: string): void {
       actividadProductiva,
     }));
   }
+
+   public removeDestinatarioDato(fusionToRemove: FusionEscision): void {
+    this.update((state) => ({
+      ...state,
+      fusionEscisionData: state.fusionEscisionData.filter(
+        (fusionDatos) => fusionDatos.rfcBusquedaModal !== fusionToRemove.rfcBusquedaModal
+      ),
+    }));
+  }
+
+  /**
+   * Agrega un nuevo destinatario al estado.
+   * @param newDestinatario - Objeto que representa el nuevo destinatario.
+   */
+  public updateFusionDatos(newFusion: FusionEscision[]): void {
+    this.update((state) => ({
+      ...state,
+      fusionEscisionData: [...state.fusionEscisionData,...newFusion],
+    }));
+  }
+
 
 }

@@ -82,6 +82,17 @@ export class FusionOEscisionComponent implements OnInit {
       'fechaInicioVigencia': [{ value: this.AvisoState?.fechaInicioVigencia, disabled: true }, Validators.required],
       'fechaFinVigencia': [{ value: this.AvisoState?.fechafinVigencia2, disabled: true }, Validators.required]
     });
+    
+    if(this.AvisoState?.numeroTotalCarros == "0" || this.AvisoState?.numeroTotalCarros == '1'){
+     this.divCompletoVisible = true; 
+    }
+    if(this.AvisoState?.cantidadBienes == "0"){
+    this.sinCertificacionPrincipalVisible = true;
+    }
+    if(this.AvisoState?.cantidadBienes == "1"){
+    this.conCertificacionPrincipalVisible = true;
+    }
+    this.gridFusionEscisionData = this.AvisoState?.fusionEscisionData;
   }
 
   // Method to hide 'Escision' related sections
