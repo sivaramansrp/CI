@@ -124,6 +124,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-de-registro-invocar',
+    loadChildren: () =>
+      import('./tramites/31616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule
+      ),
+    },
+  {
     path: 'aviso-de-ampliacion',
     loadChildren: () =>
       import('./tramites/32102/Aviso-De-Ampliacion.module').then(
