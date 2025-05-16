@@ -95,6 +95,8 @@
               isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''
             "
           />
+             <div class="mensaje-error" *ngIf="datosSolicitudForm.get('denominacionRazon')?.errors?.['required'] && datosSolicitudForm.get('denominacionRazon')?.touched">
+            Este campo es obligatorio.</div>
         </div>
       </div>
 
@@ -184,6 +186,11 @@
               isValid(datosSolicitudForm, 'localidad') ? 'required' : ''
             "
           />
+          <div class="mensaje-error" 
+            *ngIf="datosSolicitudForm.get('localidad')?.errors?.['required'] 
+              && datosSolicitudForm.get('localidad')?.touched">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -198,6 +205,11 @@
             formControlName="colonia"
             [ngClass]="isValid(datosSolicitudForm, 'colonia') ? 'required' : ''"
           />
+           <div class="mensaje-error" 
+            *ngIf="datosSolicitudForm.get('colonia')?.errors?.['required'] 
+              && datosSolicitudForm.get('colonia')?.touched">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
 
@@ -223,6 +235,11 @@
               isValid(datosSolicitudForm, 'calleYNumero') ? 'required' : ''
             "
           />
+           <div class="mensaje-error" 
+            *ngIf="datosSolicitudForm.get('calleYNumero')?.errors?.['required'] 
+              && datosSolicitudForm.get('calleYNumero')?.touched">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -277,6 +294,11 @@
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
             "
           />
+            <div class="mensaje-error" 
+          *ngIf="datosSolicitudForm.get('correoElectronico')?.errors?.['required'] 
+            && datosSolicitudForm.get('correoElectronico')?.touched">
+          Este campo es obligatorio.
+        </div>
         </div>
       </div>
       <div
@@ -390,7 +412,7 @@
         >
         <span
           class="bi bi-question-circle-fill"
-          title="Aeropuerto Internacional Ciudad de México"
+          title="No. de licencia sanitaria"
           data-bs-toggle="tooltip"
         ></span>
         <input
@@ -712,21 +734,13 @@
   </form>
 </div>
 
-<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
-[ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
-<div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
-    <div class="modal-content">
-        <div class="modal-header" style="height: 50px;">
-        </div>
-        <div class="modal-body">
-            <p>{{ mensajeDeAlerta }}</p>
-        </div>
-        <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
-        </div>
-    </div>
-</div>
-</div>
+
+@if(mostrarAlerta){
+    <section>
+    <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+    </lib-notificaciones>
+  </section>
+}
 
 @if (nuevaNotificacion && mostrarNotificacion) {
   <section>

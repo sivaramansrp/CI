@@ -65,7 +65,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     AlertComponent,
     ReactiveFormsModule,
     FormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -324,9 +324,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta que se muestra al usuario.
    * @property {string} mensajeDeAlerta
    */
-  public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA
-   
-  /** 
+  public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
+
+  /**
    * @description
    * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
    * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
@@ -347,7 +347,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   pedimentos: Array<Pedimento> = [];
 
-  /** 
+  /**
    * @description
    * Indica si se debe mostrar la notificación.
    */
@@ -358,6 +358,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Nueva notificación relacionada con el RFC. */
   public nuevaRfcNotificacion!: Notificacion;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
 
   /**
    * @constructor
@@ -398,6 +401,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       'aduanaDatos',
       '/cofepris/aduanaDatos.json'
     );
+      this.seleccionarFilaNotificacion={
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:this.mensajeDeAlerta,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
   }
 
   /**
@@ -406,7 +420,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(this.idProcedimiento)? true : false;
+    this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
+      this.idProcedimiento
+    )
+      ? true
+      : false;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.mostrarCorreoElectronico =
@@ -480,10 +498,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
-        [
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.minLength(2), Validators.maxLength(150)],
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
@@ -491,10 +506,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.minLength(2), Validators.maxLength(150)],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -534,12 +546,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada,],
+      lada: [this.datosSolicitudFormState.lada],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
       aviso: [this.datosSolicitudFormState.aviso],
-      licenciaSanitaria: [
-        this.datosSolicitudFormState.licenciaSanitaria,
-      ],
+      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas,
@@ -585,12 +595,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
     });
 
-    if(this.mostrarNotificacion) {
-      
+    if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
-      .filter(([key]) => key !== 'publico')
-      .every(([, value]) => !value);
-      if(EMPTY) {
+        .filter(([key]) => key !== 'publico')
+        .every(([, value]) => !value);
+      if (EMPTY) {
         this.alternarControlesDeFormulario(false);
       }
     }
@@ -603,7 +612,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  
  */
   actualizarDatosFormularioSolicitud(): void {
-
     this.elementosRequeridos?.forEach((campo) => {
       const CONTROL = this.datosSolicitudForm.get(campo);
       if (CONTROL) {
@@ -611,7 +619,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         CONTROL.updateValueAndValidity();
       }
     });
-
   }
 
   /**
@@ -665,7 +672,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarScian(): void {
     if (!this.scianLista.length) {
-      this.mostrarAlerta=true;
+      this.mostrarAlerta = true;
       return;
     }
     this.scianConfig.datos = this.scianConfig.datos.filter(
@@ -680,12 +687,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Cierra el modal de alerta.
    * @method cerrarModal
    * @returns {void}
    */
-   aceptar(): void {
+  aceptar(): void {
     this.mostrarAlerta = false;
   }
 
@@ -701,7 +708,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
-      this.mostrarAlerta=true;
+      this.mostrarAlerta = true;
       return;
     }
     this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
@@ -776,14 +783,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
+    if (!this.tablaMercanciasLista.length) {
+      this.mostrarAlerta = true;
+      return;
+    }
     this.datosDeTablaSeleccionados.emit({
       scianSeleccionados: this.scianLista,
       mercanciasSeleccionados: this.tablaMercanciasLista,
       opcionSeleccionados: this.opcionLista,
       opcionesColapsableState: this.opcionesColapsable,
     });
-     this.irAAcciones('../mercancia-datos');
-      }
+    this.irAAcciones('../mercancia-datos');
+  }
 
   /**
    * Muestra u oculta una sección colapsable basada en el orden proporcionado.
@@ -869,26 +880,56 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+
   /**
    * Método que se llama cuando se envía el formulario.
    * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
    */
-    abrirModal(i: number = 0): void {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:
-          'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-        cerrar: true,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      this.alternarControlesDeFormulario(true);
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.alternarControlesDeFormulario(true);
 
-      this.elementoParaEliminar = i;
+    this.elementoParaEliminar = i;
+  }
+
+
+  /**
+   * Método que verifica si un campo debe ser habilitado o deshabilitado
+   * según el procedimiento actual.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo debe ser habilitado, `false` en caso contrario.
+   */
+  public controlYaDeshabilitado(campo: string): boolean {
+    if (
+      (campo === 'apellidoPaterno' ||
+        campo === 'apellidoMaterno' ||
+        campo === 'representanteNombre') &&
+      (PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO.includes(
+        this.idProcedimiento
+      ) ||
+        PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL.includes(
+          this.idProcedimiento
+        ) ||
+        PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO.includes(
+          this.idProcedimiento
+        ))
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -897,32 +938,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   alternarControlesDeFormulario(enable: boolean): void {
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
-      if (enable) {
+      if (enable && this.controlYaDeshabilitado(controlName)) {
         CONTROL?.enable();
       } else {
-        CONTROL?.disable()
+        CONTROL?.disable();
       }
     });
   }
 
-    /**
-     * Abre el modal de RFC y muestra una notificación de alerta.
-     */
-    abrirRfcModal(): void {
-      this.mostrarRfcAlerta = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje:
-          'Debe ingresar el RFC.',
-        cerrar: true,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-
+  /**
+   * Abre el modal de RFC y muestra una notificación de alerta.
+   */
+  abrirRfcModal(): void {
+    this.mostrarRfcAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar el RFC.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
