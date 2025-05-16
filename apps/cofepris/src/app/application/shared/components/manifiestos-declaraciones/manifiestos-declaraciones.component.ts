@@ -22,7 +22,6 @@ import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamient
   imports: [
     CommonModule,
     TituloComponent,
-    AlertComponent,
     ReactiveFormsModule,
     InputRadioComponent,
   ],
