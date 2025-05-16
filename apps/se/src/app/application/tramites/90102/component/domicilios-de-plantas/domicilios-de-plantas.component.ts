@@ -307,13 +307,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   recuperarDatos(): void {
     this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
-      next: (response: { plantasDatos: FilaPlantas[] }) => {
-        if (response && Array.isArray(response.plantasDatos)) {
+      next: (response) => {
+        if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
           this.plantasDatos = response.plantasDatos;
+        } else {
+          this.plantasDatos = [];
         }
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: (_error: HttpErrorResponse) => {
+        this.plantasDatos = [];
       },
     });
   }
