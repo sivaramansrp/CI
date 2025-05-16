@@ -603,6 +603,13 @@ const ROUTES: Routes = [
       import('./tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module').then(
         (m) => m.ImportacionesAgropecuariasModule
       ),
+  },
+  {
+   path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
   }
 ];
 
