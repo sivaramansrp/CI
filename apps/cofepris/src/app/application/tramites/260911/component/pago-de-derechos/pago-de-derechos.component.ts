@@ -1,5 +1,9 @@
 /**
- * Importa módulos y utilidades de Angular necesarios para formularios reactivos, validación y observables
+ * Componente para gestionar el formulario de pago de derechos.
+ * Este componente permite al usuario ingresar y validar información relacionada con el pago de derechos,
+ * incluyendo validaciones específicas como fechas no futuras y valores sin comas.
+ * También interactúa con el estado global y servicios para obtener datos dinámicos como la lista de bancos.
+ * 
  * @packageDocumentation
  * @module PagoDeDerechosComponent
  */
@@ -8,13 +12,13 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { BancoList } from '../../models/pago-de-derechos.model';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
+
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/datos-de-la-solicitud/pago-de-derechos.service';
 
-import { Tramite260911Query } from '../../estados/queries/tramite260911.query'
-import { Tramite260911Store } from '../../estados/store/tramite260911.store';
+import { Tramite260911Query } from '../../estados/tramite260911.query';
 
 /**
  * Selector del componente
@@ -45,6 +49,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public destroyed$ = new Subject<void>();
 
   /**
+   * Estado seleccionado del trámite 260911.
+   */
+  estadoSeleccionado!: Tramite260911State;
+
+  /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
   public bancoList!: Catalogo[];
@@ -61,16 +70,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite260911Store: Tramite260911Store,
     private tramite260911Query: Tramite260911Query,
     private Servicio: PagoDeDerechosService
-  ) {
-    // No se necesita lógica de inicialización adicional.
-  }
+  ) {}
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
     this.crearForm();
-    this.enPatchStoredFormData();
+    this.getValorStore();
     this.obtenerBancoList();
   }
 
@@ -86,34 +93,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
       impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
-
   }
 
-     /**
- * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
- * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
- * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
- *
- * @param {string} compo - El nombre del campo de formulario que se validará.
- */
+  /**
+   * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
+   * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
+   * 
+   * @param {string} fecPago - El nombre del campo de formulario que se validará.
+   */
+  public validarFechaFutura(fecPago: string): void {
+    this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
+  }
 
-     public validarFechaFutura(fecPago: string): void {
-      this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
-    }
-  
-    
-    /**
+  /**
    * Método para validar que el campo de un formulario no contenga comas.
    * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
    *
    * @param {string} impPago - El nombre del campo de formulario que se validará.
    */
-    public validarSinComas(impPago:string): void {
-      this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
-    }
+  public validarSinComas(impPago: string): void {
+    this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
+  }
 
   /**
    * Validador para asegurar que la fecha seleccionada no sea en el futuro.
+   * 
+   * @returns {ValidatorFn} - Función de validación personalizada.
    */
   public static fechaLimValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: unknown } | null => {
@@ -132,6 +137,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Validador para asegurar que la entrada no contenga comas.
+   * 
+   * @returns {ValidatorFn} - Función de validación personalizada.
    */
   public static noComaValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: unknown } | null => {
@@ -144,8 +151,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-    * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
-    */
+   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+   */
   obtenerBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
@@ -153,43 +160,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.bancoList = data;
       });
   }
+
   /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
+   * 
+   * @param FormGroup - El formulario reactivo.
+   * @param control - El nombre del campo en el formulario.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260911Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite260911Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  public setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite260911Store.setTramite260911State({
+      [control]: VALOR
+    });
   }
-
-  /**
-   * Actualiza el formulario con datos obtenidos desde la tienda.
-   */
-  public enPatchStoredFormData(): void {
-    this.tramite260911Query.selectTramite260911$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
-  }
-
-
- 
 
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
+   * 
    * @param {string} nombreControl - Nombre del control a verificar.
    * @returns {boolean} - True si el control es inválido, de lo contrario false.
    */
@@ -201,8 +188,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-  */
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite260911Query.selectTramite260911$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y evita fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

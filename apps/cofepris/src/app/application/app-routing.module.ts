@@ -496,6 +496,13 @@ const ROUTES: Routes = [
     import(
       './tramites/260302/exportacion-materias-primas-estupefacientes.module'
     ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+  },
+{   
+  path: 'permiso-sanitario-productos',
+  loadChildren: () =>
+    import('./tramites/260104/permiso-sanitario-productos.module').then(
+      (m) => m.PermisoSanitarioProductosModule
+    ),
 },
 {
   path: 'modificacion-permiso-lab',
@@ -526,12 +533,27 @@ const ROUTES: Routes = [
         ).then((m) => m.ImportacionMateriasPrimasModule),
 },
 {
+  path: 'importacion-plafest',
+  loadChildren: () =>
+    import('./tramites/260507/importacion-plafest.module').then(
+      (m) => m.ImportacionPlafestModule
+    ),
+},
+{
       path: 'medicamentos-donacion',
       loadChildren: () =>
         import('./tramites/260909/medicamentos-donacion.module').then(
           (m) => m.MedicamentosDonacionModule
         )
-    }
+    },
+    
+{
+  path: 'importar-de-remedios-herbals',
+  loadChildren: () =>
+    import('./tramites/260919/importar-de-remedios-herbals.module').then(
+      (m) => m.ImportarDeRemediosHerbalsModule
+    ),
+},
 ];
 
 @NgModule({

@@ -1,19 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../modelos/aviso-importacion-maquinas.model';
 import { PASOS } from '../../constants/aviso-importacion-maquinas.enum';
-
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 describe('DatosComponent', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent],
+      declarations: [DatosComponent,PasoUnoComponent],
+      imports: [WizardComponent,BtnContinuarComponent,SolicitanteComponent,HttpClientModule],
       providers: [
         { provide: WizardComponent, useValue: { siguiente: jest.fn(), atras: jest.fn() } }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
@@ -23,19 +27,19 @@ describe('DatosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos with PASOS', () => {
+  it('Debería inicializar pantallasPasos con PASOS', () => {
     expect(component.pantallasPasos).toEqual(PASOS);
   });
 
-  it('should initialize indice with default value 1', () => {
+  it('debe inicializar el índice con el valor predeterminado 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should initialize datosPasos with correct values', () => {
+  it('Debería inicializar datosPasos con valores correctos', () => {
     expect(component.datosPasos).toEqual({
       nroPasos: PASOS.length,
       indice: 1,
@@ -44,7 +48,7 @@ describe('DatosComponent', () => {
     });
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente cuando se llama a getValorIndice con la acción "cont"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
@@ -55,7 +59,7 @@ describe('DatosComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras cuando se llama a getValorIndice con la acción "atras"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
@@ -66,7 +70,7 @@ describe('DatosComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
+  it('no se debe actualizar el índice ni llamar a los métodos wizardComponent cuando se llama a getValorIndice con un valor no válido', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
