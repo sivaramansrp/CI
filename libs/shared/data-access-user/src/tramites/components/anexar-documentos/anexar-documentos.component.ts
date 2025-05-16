@@ -27,9 +27,7 @@ import { DocumentosState, DocumentosStore } from '../../../core/estados/document
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
-import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
-
-
+import { DocumentosParaCargar, TipoDocumentos } from '../../../core/models/shared/anexar-documentos.model';
 
 @Component({
   selector: 'anexar-documentos',
@@ -44,6 +42,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @type {CatalogoDocumento[]}
    */
   @Input() catalogoDocumentos: CatalogoDocumento[] = [];
+  
+  @Input() catalogoDocumentosObligatorios: TipoDocumentos[] = [];
 
   /**
    * @description Catalogo de documentos opcionales.
@@ -183,9 +183,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
-    private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -213,6 +211,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
+
   }
 
   /**
@@ -597,5 +596,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       tamanioModal: ''
     }
   }
+
 
 }
