@@ -448,6 +448,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
+  },
+  {
     path: 'catalogos',
     loadChildren: () =>
       import('./tramites/90303/catalogos.module').then(
@@ -575,7 +582,34 @@ const ROUTES: Routes = [
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
-
+  {   
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
+      ),
+  },
+  {
+    path: 'validar-certificado-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
+  {
+    path: 'solicitud-de-registro-tpl',
+    loadChildren: () =>
+      import('./tramites/120101/solicitud-de-registro-tpl.module').then(
+        (m) => m.SolicitudDeRegistroTplModule
+      ),
+  },
+  {
+   path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  }
 ];
 
 @NgModule({

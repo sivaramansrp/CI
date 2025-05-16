@@ -15,12 +15,12 @@ import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-
-import { Observable } from 'rxjs';
+import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
+
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 /**
@@ -28,7 +28,6 @@ import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
  *
  * Este componente permite a los usuarios introducir y visualizar los datos del representante legal,
  * incluyendo información personal y de contacto.
- *
  */
 @Component({
   selector: 'app-representante-legal',
@@ -40,158 +39,143 @@ import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 export class RepresentanteLegalComponent implements OnDestroy, OnInit {
   /**
    * Formulario para los datos del exportador.
-   * RepresentanteLegalComponent
-   * 
+   * Contiene los campos relacionados con el representante legal, como nombre, cargo, teléfono, etc.
    */
-  datosdelexportador: FormGroup;
-  /**
-   * Observable para el nombre del representante legal.
-   * RepresentanteLegalComponent
-   */
-  nombredelRepresentante$: Observable<string | null> = this.tramite110218Query.nombredelRepresentante$;
-  /**
-   * Observable para el cargo del representante legal.
-   * RepresentanteLegalComponent
-   */
-  cargo$: Observable<string | null> = this.tramite110218Query.cargo$;
-  /**
-   * Observable para los telefonos del representante legal.
-   * RepresentanteLegalComponent
-   */
-  telefonos$: Observable<string | null> = this.tramite110218Query.telefonos$;
-  /**
-   * Observable para los fax del representante legal.
-   * RepresentanteLegalComponent
-   */
-  faxs$: Observable<string | null> = this.tramite110218Query.faxs$;
-  /**
-   * Observable para los correos electrónicos del representante legal.
-   * RepresentanteLegalComponent
-   */
-  correoElectronicos$: Observable<string | null> = this.tramite110218Query.correoElectronicos$;
+  datosdelexportador!: FormGroup;
 
   /**
-   * Subject para la destrucción del componente.
-   * RepresentanteLegalComponent
+   * Estado seleccionado del trámite 110218.
+   * Contiene los valores actuales almacenados en el estado global.
+   */
+  estadoSeleccionado!: Solicitud110218State;
+
+  /**
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente.
    *
-   * Constructor de formularios.
-   * Store para el trámite 110218.
-   * Query para el trámite 110218.
-   * Servicio para obtener datos del representante legal.
+   * @param formBuilder - Constructor de formularios reactivos.
+   * @param tramite110218Store - Store para manejar el estado del trámite 110218.
+   * @param tramite110218Query - Query para consultar el estado del trámite 110218.
+   * @param service - Servicio para obtener datos del representante legal.
    */
   constructor(
-    private fb: FormBuilder,
+    public formBuilder: FormBuilder,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query,
     private service: CertificadoTecnicoJaponService
-  ) {
-    this.datosdelexportador = this.crearFormularioDatosDelExportador();
-  }
+  ) {}
 
-  private crearFormularioDatosDelExportador(): FormGroup {
-    return this.fb.group({
-      nombredelRepresentante: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      empresa: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación necesaria
-      cargo: ['', Validators.required], // Campo obligatorio
-      telefonos: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
-      faxs: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
-      correoElectronicos: ['', [Validators.required, Validators.email]] // Campo obligatorio, debe ser un correo válido
+  /**
+   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   * Los campos incluyen nombre, cargo, teléfono, fax y correo electrónico.
+   */
+  inicializarFormulario(): void {
+    this.datosdelexportador = this.formBuilder.group({
+      /**
+       * Nombre del representante legal.
+       * Campo obligatorio, solo permite letras y espacios.
+       */
+      nombredelRepresentante: [
+        this.estadoSeleccionado?.nombredelRepresentante,
+        [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)],
+      ],
+      /**
+       * Empresa del representante legal.
+       * Campo de solo lectura, sin validación necesaria.
+       */
+      empresa: [{ value: '', disabled: true }],
+      /**
+       * Cargo del representante legal.
+       * Campo obligatorio.
+       */
+      cargo: [this.estadoSeleccionado?.cargo, Validators.required],
+      /**
+       * Teléfono del representante legal.
+       * Campo obligatorio, solo permite números.
+       */
+      telefonos: [
+        this.estadoSeleccionado?.telefonos,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
+      /**
+       * Fax del representante legal.
+       * Campo obligatorio, solo permite números.
+       */
+      faxs: [
+        this.estadoSeleccionado?.faxs,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
+      /**
+       * Correo electrónico del representante legal.
+       * Campo obligatorio, debe ser un correo válido.
+       */
+      correoElectronicos: [
+        this.estadoSeleccionado?.correoElectronicos,
+        [Validators.required, Validators.email],
+      ],
     });
   }
 
   /**
-   * Método de inicialización del componente.
-   * RepresentanteLegalComponent
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Obtiene los datos del representante legal y configura el formulario.
    */
   ngOnInit(): void {
-    this.suscribirseACambiosDeTienda();
     this.obtenerDatosDeTabla();
+    this.getValorStore();
+    this.inicializarFormulario();
   }
 
   /**
    * Obtiene los datos del representante legal desde el servicio.
-   * RepresentanteLegalComponent
+   * Actualiza el campo "empresa" en el formulario con los datos obtenidos.
    */
   obtenerDatosDeTabla(): void {
-    this.service.getrepresentante().pipe(takeUntil(this.destroyed$)).subscribe((data: { empresa: string }) => {
-      this.datosdelexportador.patchValue({
-        empresa: data.empresa,
+    this.service
+      .getrepresentante()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: { empresa: string }) => {
+        this.datosdelexportador.patchValue({
+          empresa: data.empresa,
+        });
       });
-    });
   }
 
   /**
-   * Suscribe a los cambios en el store y actualiza el formulario.
-   * RepresentanteLegalComponent
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
    */
-  suscribirseACambiosDeTienda(): void {
-    const OBSERVABLES = {
-      nombredelRepresentante: this.nombredelRepresentante$,
-      cargo: this.cargo$,
-      telefonos: this.telefonos$,
-      faxs: this.faxs$,
-      correoElectronicos: this.correoElectronicos$,
-    };
-
-    Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
-      OBSERVABLES$.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
-        if (value) {
-          this.datosdelexportador.get(controlName)?.setValue(value);
-        }
-      });
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite110218Store.setTramite110218State({
+      [control]: VALOR,
     });
   }
 
   /**
-   * Método de destrucción del componente.
-   * RepresentanteLegalComponent
+   * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
+   */
+  getValorStore(): void {
+    this.tramite110218Query.selectTramite110218State$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+      });
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-
-  /**
-   * Maneja los cambios en los controles del formulario y actualiza el store.
-   * RepresentanteLegalComponent
-   * Nombre del control del formulario.
-   */
-  onDatosdelexportadorChange(controlName: string): void {
-    const VALUE = this.datosdelexportador.get(controlName)?.value;
-
-    switch (controlName) {
-      case 'nombredelRepresentante':
-        this.tramite110218Store.establecerNombredelRepresentante(VALUE);
-        break;
-      case 'cargo':
-        this.tramite110218Store.establecerCargo(VALUE);
-        break;
-      case 'telefonos':
-        this.tramite110218Store.establecerTeléfonos(VALUE);
-        break;
-      case 'faxs':
-        this.tramite110218Store.establecerFaxs(VALUE);
-        break;
-      case 'correoElectronicos':
-        this.tramite110218Store.establecerCorreoElectrónicos(VALUE);
-        break;
-      default:
-        break;
-    }
-  }
 }
-
-
-
-
-
-
-
-
-
-

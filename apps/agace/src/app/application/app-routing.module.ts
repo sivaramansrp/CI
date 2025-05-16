@@ -124,6 +124,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-de-registro-invocar',
+    loadChildren: () =>
+      import('./tramites/31616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule
+      ),
+    },
+  {
     path: 'aviso-de-ampliacion',
     loadChildren: () =>
       import('./tramites/32102/Aviso-De-Ampliacion.module').then(
@@ -151,6 +158,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoOpcionSeguroGlobalModule),
   },
   {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule),
+  },
+  {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
@@ -169,7 +182,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32514/aviso-retorno.module').then(
         (m) => m.AvisoRetornoModule)
-  }
+  },
+  {
+    path: 'aviso-mercancia',
+    loadChildren: () =>
+      import('./tramites/32509/aviso-de-mercancia.module').then(
+        (m) => m.AvisoDeMercanciaModule
+      ),
+  },
 ];
 
 @NgModule({
