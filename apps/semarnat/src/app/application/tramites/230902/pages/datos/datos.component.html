@@ -19,9 +19,11 @@
         <app-paso-tres></app-paso-tres>
       }
     }
+   
+    </div> 
+    <div class="container-fluid px-2">
+     <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+     <ng-alert [CONTENIDO]="alert_message" [CUSTOMECLASS]="'alert-info'"></ng-alert>
     </div>
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
-
-    <ng-alert [CONTENIDO]="alert_message" [CUSTOMECLASS]="'alert-info'"></ng-alert>
 </div>
 
