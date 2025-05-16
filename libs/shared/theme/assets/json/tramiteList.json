@@ -1367,8 +1367,8 @@
   {
     "id": 196,
     "tramite": 630303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/retorno-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/retorno-importacion-temporal/solicitud",
     "department": "aga"
   },
   {

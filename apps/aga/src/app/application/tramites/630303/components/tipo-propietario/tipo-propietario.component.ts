@@ -14,7 +14,7 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 
 import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
+import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
@@ -66,12 +66,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Formulario dinámico para gestionar los datos del tipo de propietario.
    */
   formularioDatosPropietarioDireccion: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_DIRECCION;
-
-  /**
-   * Formulario dinámico para gestionar los datos del nombre del propietario.
-   */ 
-  formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_NOMBRE;
-
+  
   /**
    * Formulario reactivo para gestionar los datos del tipo de propietario.
    */
@@ -121,10 +116,10 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   cambiarTipoPropietario(): void {
     const TIPO_PROPIETARIO_VALOR = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
-    const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
-    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
-    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
-    const RAZON_SOCIAL_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'razonSocial');
+    const NOMBRE_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'nombre');
+    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'apellidoPaterno');
+    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'apellidoMaterno');
+    const RAZON_SOCIAL_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'razonSocial');
 
     if (NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO && RAZON_SOCIAL_CAMPO) {
       NOMBRE_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';

@@ -55,7 +55,8 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 4,
+        row: 1
     },
     {
         id: 'motivo',
@@ -71,7 +72,8 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 4,
+        row: 2
     },
     {
         id: 'listaMercancia',
@@ -87,7 +89,8 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 4,
+        row: 3
     }
 ];
 
@@ -111,7 +114,8 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 1
     },
     {
         id: 'cveSeccionAduanera',
@@ -124,20 +128,8 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         validadores: [],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: '',
-        labelNombre: '',
-        campo: '',
-        clase: 'col-md-4',
-        tipoInput: '',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 1
     },
     {
         id: 'fechaLimiteRetorno',
@@ -153,7 +145,8 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 0,
-        habilitado: true
+        habilitado: true,
+        row: 2
     },
     {
         id: 'cuentaProrroga',
@@ -168,7 +161,8 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 2
     }
 ];
 
@@ -180,6 +174,74 @@ export const FORMULARIO_DATOS_SOLICITUD = [
  */
 
 export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
+
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        row :1
+    },
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Apellido paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido paterno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2 ,
+        row:1
+    },
+    {
+        id: 'apellidoMaterno',
+        labelNombre: 'Apellido materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido materno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        row:1
+    },
+    {
+        id: 'razonSocial',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        row:1
+    },
 
     {
         id: 'calle',
@@ -195,7 +257,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row:2
     },
     {
         id: 'numeroExterior',
@@ -210,7 +273,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row:2
     },
     {
         id: 'numeroInterior',
@@ -223,7 +287,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         validadores: [],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 2
     },
     {
         id: 'pais',
@@ -238,7 +303,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 0,
+        row: 3
     },
     {
         id: 'estadoLocalidad',
@@ -254,20 +320,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
-    },
-    {
-        id: '',
-        labelNombre: '',
-        campo: '',
-        clase: 'col-md-4',
-        tipoInput: '',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 3
     },
     {
         id: 'correoElectronico',
@@ -283,7 +337,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 0,
+        row: 4
     },
     {
         id: 'telefono',
@@ -299,7 +354,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 0,
+        row: 4
     },
     {
         id: 'codigoPostal',
@@ -315,7 +371,8 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 0,
+        row: 4
     }
 ];
 
@@ -340,7 +397,8 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row :1
     },
     {
         id: 'aduanaDeIngreso',
@@ -355,7 +413,8 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row:1
     },
     {
         id: 'seccionAduanera',
@@ -370,7 +429,8 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 4
+        marginTop: 4,
+        row:2
     },
     {
         id: 'fechaIngreso',
@@ -386,7 +446,8 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
-        habilitado: true
+        habilitado: true,
+        row:2
     },
     {
         id: 'fechaVencimiento',
@@ -402,7 +463,8 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
-        habilitado: true
+        habilitado: true,
+        row:2
     }
 ];
 
@@ -427,20 +489,8 @@ export const FORMULARIO_DATOS_PRORROGA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: '',
-        labelNombre: '',
-        campo: '',
-        clase: 'col-md-4',
-        tipoInput: '',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 0,
+        row: 1
     },
     {
         id: 'fechaInicioProrroga',
@@ -455,8 +505,9 @@ export const FORMULARIO_DATOS_PRORROGA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0,
-        habilitado: true
+        marginTop: 4,
+        habilitado: true,
+        row: 2
     },
     {
         id: 'fechaVencimientoProrroga',
@@ -471,78 +522,8 @@ export const FORMULARIO_DATOS_PRORROGA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0,
-        habilitado: true
-    }
-];
-
-/**
- * FORMULARIO_DATOS_PROPIETARIO_NOMBRE
- * Define los campos del formulario para el nombre del propietario.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- */
-export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
-    {
-        id: 'nombre',
-        labelNombre: 'Nombre(s)',
-        campo: 'nombre',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'apellidoPaterno',
-        labelNombre: 'Apellido paterno',
-        campo: 'apellidoPaterno',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido paterno.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'apellidoMaterno',
-        labelNombre: 'Apellido materno',
-        campo: 'apellidoMaterno',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido materno.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'razonSocial',
-        labelNombre: 'Denominación o razón social',
-        campo: 'razonSocial',
-        clase: 'col-md-8',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
+        marginTop: 4,
+        habilitado: true,
+        row: 2
     }
 ];

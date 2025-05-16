@@ -456,27 +456,3 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  * - "12a45" (contiene caracteres no numéricos)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
-
-
-
-/**
- * Expresión regular para validar nombres.
- * 
- * Esta expresión regular asegura que un nombre:
- * - No comience ni termine con un espacio.
- * - Contenga caracteres alfanuméricos, incluyendo caracteres especiales como Ñ, ñ, Ä, Ë, Ï, Ö, Ü, Ç, ç, y otros.
- * - Permita caracteres como &, /, -, ., ', y paréntesis.
- * - Admite caracteres griegos como α y β.
- * 
- * Ejemplos válidos:
- * - "Juan Pérez"
- * - "María-José"
- * - "O'Connor"
- * - "Αλέξανδρος"
- * 
- * Ejemplos no válidos:
- * - " Juan" (comienza con un espacio)
- * - "Pérez " (termina con un espacio)
- * - "Juan@Pérez" (contiene un carácter no permitido)
- */
-export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;

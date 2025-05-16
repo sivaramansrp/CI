@@ -349,7 +349,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule)
-        (m) => m.CodigoTransportistaModule)
+       
   },
   {
   path: 'retorno-importacion-temporal',

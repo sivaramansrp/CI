@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 import { Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
-import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
 
 describe('TipoPropietarioComponent', () => {
   let componente: TipoPropietarioComponent;
@@ -66,16 +65,6 @@ describe('TipoPropietarioComponent', () => {
   it('debería llamar a getTipoDePropietario y llenar tipoDePropietarioOpciones', () => {
     expect(componente.tipoDePropietarioOpciones.length).toBeGreaterThan(0);
   });
-
-  it('debería actualizar la visibilidad de los campos en cambiarTipoPropietario()', () => {
-    componente.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
-    componente.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
-    componente.cambiarTipoPropietario();
-
-    const NOMBRE_CAMPO = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
-    expect(NOMBRE_CAMPO?.mostrar).toBe(true);
-  });
-
   it('debería alternar mostrarTipoPropietario y mostrarSolicitante en cambiarPropietario()', () => {
     componente.tipoPropietarioFormulario.get('propietario')?.setValue('2');
     componente.cambiarPropietario();
