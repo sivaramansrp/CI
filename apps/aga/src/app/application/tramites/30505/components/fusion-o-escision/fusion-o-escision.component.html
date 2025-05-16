@@ -325,7 +325,7 @@
         size="30"
         id="idFolioFusion"
         class="form-control"
-        (change)="cambioFolio()"
+        (change)="cambioDescClob()"
       />
       <span
         *ngIf="formulario.get('descripcionClobGenerica2')?.touched && formulario.get('descripcionClobGenerica2')?.hasError('required')"
@@ -363,16 +363,14 @@
         <button
           type="button"
           id="btnAgregarPersona"
-          class="btn btn-primary me-2"
-          (click)="abrirModalFusionEscision()"
+          class="btn btn-primary"
         >
           Agregar
         </button>
         <button
           type="button"
           id="btnEliminarPersona"
-          class="btn btn-danger me-2"
-          (click)="eliminarPersona()"
+          class="btn btn-danger"
         >
           Eliminar
         </button>
@@ -380,7 +378,6 @@
           type="button"
           id="btnModificarPersona"
           class="btn btn-secondary"
-          (click)="abrirModalModificarFusionEscision()"
         >
           Modificar
         </button>
