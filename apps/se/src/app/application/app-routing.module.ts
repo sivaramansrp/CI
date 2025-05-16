@@ -603,6 +603,13 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDeRegistroTplModule
       ),
   },
+  {
+   path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  }
 ];
 
 @NgModule({

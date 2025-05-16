@@ -12,7 +12,6 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
@@ -42,13 +41,6 @@ import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 
 /**
- * Texto de alerta para los terceros relacionados.
- * Indica que las tablas con asterisco son obligatorias.
- */
-const TERCEROS_TEXTO_DE_ALERTA =
-  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
-
-/**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
@@ -61,7 +53,6 @@ const TERCEROS_TEXTO_DE_ALERTA =
     CommonModule,
     TituloComponent,
     TableComponent,
-    AlertComponent,
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,
@@ -133,7 +124,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de fabricante.
    */
   showFabricanteButtons = false;
-
+  
+  onFabricanteSeleccionCambio(isChecked: boolean): void {
+    this.showFabricanteButtons = isChecked;
+  }
   /**
    * Indicador de visibilidad para los botones del formulario de formulador.
    * Inicialmente no visible (`false`).
@@ -141,7 +135,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de formulador.
    */
   showFormuladorButtons = false;
-
+  onFormuladorSeleccionCambio(isChecked: boolean): void {
+    this.showFormuladorButtons = isChecked;
+  }
   /**
    * Indicador de visibilidad para los botones del formulario de proveedor.
    * Inicialmente no visible (`false`).
@@ -149,7 +145,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de proveedor.
    */
   showProveedorButtons = false;
-
+  onProveedorSeleccionCambio(isChecked: boolean): void {
+    this.showProveedorButtons = isChecked;
+  }
   /**
    * Selección del tipo de persona.
    */
@@ -854,12 +852,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Texto de alerta para los terceros relacionados.
-   * Indica que las tablas con asterisco son obligatorias.
-   */
-  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
-
-  /**
    * Envía el formulario de Fabricante y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
@@ -1372,6 +1364,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
+  }
+
+  /**
+  * @method limpiar
+  * @description
+  * Método que limpia los valores de un formulario reactivo.
+  */
+  // eslint-disable-next-line class-methods-use-this
+  public limpiar(forma: FormGroup): void {
+    forma.reset();
   }
 
   /**
