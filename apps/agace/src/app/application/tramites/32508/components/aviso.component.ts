@@ -26,7 +26,7 @@ import { Tramite32508Query } from '../state/Tramite32508.query';
   ],
   providers: [AdaceService],
   templateUrl: './aviso.component.html',
-  styleUrl: './aviso.component.css',
+  styleUrl: './aviso.component.scss',
 })
 export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
