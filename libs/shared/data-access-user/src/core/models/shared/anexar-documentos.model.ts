@@ -61,6 +61,7 @@ export interface TipoDocumentos {
   ide_rango_resolucion_imagen: string;
   tamanio_maximo: number;
   adicionales?: TipoDocumentos[];
+  cargado?: boolean;
 }
 
 export interface TipoTramite {

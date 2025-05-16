@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, DestroyRef, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { Documento, DocumentosParaCargar, TipoDocumentos } from '../../../core/models/shared/anexar-documentos.model';
-import { ESTATUS_CARGA_DOCUMENTO, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
+import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { CommonModule } from '@angular/common';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
@@ -154,56 +154,56 @@ export class CargaDocumentoComponent implements OnChanges {
         const ARCHIVO = event.target as HTMLInputElement;
         const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
 
-        // if (INFORMACION_ARCHIVO) {
-        //     const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
-        //     if (EXTENSION_ARCHIVO !== UNIDADES_DOCUMENTOS.PDF.toLowerCase()) {
-        //         this.nuevaNotificacion = {
-        //             tipoNotificacion: 'toastr',
-        //             categoria: 'danger',
-        //             modo: '',
-        //             titulo: '',
-        //             mensaje: MENSAJES_DOCUMENTOS.ONL_YPDF,
-        //             cerrar: false,
-        //             txtBtnAceptar: '',
-        //             txtBtnCancelar: '',
-        //         }
-        //         fileInput.value = '';
-        //         return;
-        //     }
+        if (INFORMACION_ARCHIVO) {
+            const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
+            if (EXTENSION_ARCHIVO !== UNIDADES_DOCUMENTOS.PDF.toLowerCase()) {
+                this.nuevaNotificacion = {
+                    tipoNotificacion: 'toastr',
+                    categoria: 'danger',
+                    modo: '',
+                    titulo: '',
+                    mensaje: MENSAJES_DOCUMENTOS.ONL_YPDF,
+                    cerrar: false,
+                    txtBtnAceptar: '',
+                    txtBtnCancelar: '',
+                }
+                fileInput.value = '';
+                return;
+            }
 
-        //     this.documentoSeleccionado = this.catalogoDocumentos.find(doc => doc.id === id) as CatalogoDocumento;
-        //     const TAMANIO_REQUERIDO: number = AnexarDocumentosComponent.convertirKbaBytes(this.documentoSeleccionado.tam);
-        //     const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
+            this.documentoSeleccionado = this.catalogoDocumentosObligatorios.find(doc => doc.id_tipo_documento === id) as TipoDocumentos;
+            const TAMANIO_REQUERIDO: number = CargaDocumentoComponent.convertirKbaBytes(this.documentoSeleccionado.tamanio_maximo);
+            const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
 
-        //     if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
-        //         this.nuevaNotificacion = {
-        //             tipoNotificacion: 'toastr',
-        //             categoria: 'danger',
-        //             modo: '',
-        //             titulo: '',
-        //             mensaje: MENSAJES_DOCUMENTOS.MAX_SIZE,
-        //             cerrar: false,
-        //             txtBtnAceptar: '',
-        //             txtBtnCancelar: '',
-        //         }
-        //         fileInput.value = '';
-        //         return;
-        //     }
-        //     this.listadoArchivos.push({
-        //         name: INFORMACION_ARCHIVO.name,
-        //         id,
-        //         archivo: INFORMACION_ARCHIVO,
-        //         ruta: URL.createObjectURL(INFORMACION_ARCHIVO),
-        //         cargado: false,
-        //         tipo,
-        //         mensaje: '',
-        //         estatus: 'Pendiente'
-        //     });
+            if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
+                this.nuevaNotificacion = {
+                    tipoNotificacion: 'toastr',
+                    categoria: 'danger',
+                    modo: '',
+                    titulo: '',
+                    mensaje: MENSAJES_DOCUMENTOS.MAX_SIZE,
+                    cerrar: false,
+                    txtBtnAceptar: '',
+                    txtBtnCancelar: '',
+                }
+                fileInput.value = '';
+                return;
+            }
+            this.listadoArchivos.push({
+                name: INFORMACION_ARCHIVO.name,
+                id,
+                archivo: INFORMACION_ARCHIVO,
+                ruta: URL.createObjectURL(INFORMACION_ARCHIVO),
+                cargado: false,
+                tipo,
+                mensaje: '',
+                estatus: 'Pendiente'
+            });
 
-        //     const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+            const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
 
-        //     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
-        // }
+            // this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+        }
     }
 
     /**
@@ -213,6 +213,8 @@ export class CargaDocumentoComponent implements OnChanges {
      * @returns {void}
      */
     agregarParte(item: TipoDocumentos, origen: string): void {
+        console.log(item, origen);
+        
         if (origen === 'obligatorios') {
             const INDICE: number = this.catalogoDocumentosObligatorios.findIndex(doc => doc.id_tipo_documento === item.id_tipo_documento);
             if (INDICE !== -1) {
@@ -353,6 +355,69 @@ export class CargaDocumentoComponent implements OnChanges {
 
         // this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
         // this.listDocOpcionalesAgregar = [];
+    }
+
+    /**
+     * Elimina un nuevo documento de la lista de documentos.
+     * @param {any} item - El documento a eliminar.
+     * @param {boolean} adicional - Indica si el documento es adicional.
+     * @returns {void}
+     */
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+    eliminarNuevo(item: any, adicional = false): void {
+        if (adicional) {
+            const INDICE_ADICIONAL = item.item.adicionales.findIndex((adicional: TipoDocumentos) => adicional.id_tipo_documento === item.adicional.id_tipo_documento);
+            item.item.adicionales.splice(INDICE_ADICIONAL, 1);
+            const INDICE: number = this.listadoArchivos.findIndex(f => f.id === item.id_tipo_documento);
+            this.listadoArchivos.splice(INDICE, 1);
+
+            const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+            // this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+        }
+    }
+
+    /**
+     * Elimina un documento opcional de la lista de documentos opcionales.
+     * @param {CatalogoDocumento} item - El documento a eliminar.
+     * @returns {void}
+     */
+    eliminarOpcional(item: TipoDocumentos): void {
+        const INDICE: number = this.documentosOpcionalesSeleccionados.findIndex(f => f.id_tipo_documento === item.id_tipo_documento);
+        if (INDICE !== -1) {
+            if (this.documentosOpcionalesSeleccionados[INDICE] &&
+                this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
+                /*         if (this.documentosOpcionalesSeleccionados[INDICE].adicionales.length > 0) {
+                 */
+                this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: TipoDocumentos) => {
+                    const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id_tipo_documento);
+                    this.listadoArchivos.splice(INDICE_LISTADO, 1);
+                });
+                // }
+            }
+
+            const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === item.id_tipo_documento);
+            this.listadoArchivos.splice(INDICE_LISTADO, 1);
+
+            this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
+        }
+        const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(id => id === item.id_tipo_documento);
+        if (INDICE_AGREGAR !== -1) {
+            this.listDocOpcionalesAgregar.splice(INDICE_AGREGAR, 1);
+            this.listDocOpcionalesAgregar = [...this.listDocOpcionalesAgregar];
+        }
+        this.cdr.detectChanges();
+
+        // const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+        // this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    }
+
+    static convertirKbaBytes(size: number | undefined): number {
+        if (size === undefined) {
+            return 0;
+        }
+        return size * 1000;
     }
 
 
