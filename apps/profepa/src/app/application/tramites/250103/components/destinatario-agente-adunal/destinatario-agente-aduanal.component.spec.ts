@@ -82,17 +82,6 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       expect(component.formDestinatariosModal.get('destinatarioRadio')?.value).toBe('1');
     });
 
-    it('debería actualizar esNacional y esExtranjero según el valor de destinatarioRadio', () => {
-      component.ngOnInit();
-
-      component.formDestinatariosModal.get('destinatarioRadio')?.setValue('1');
-      expect(component.esNacional).toBe(true);
-      expect(component.esExtranjero).toBe(false);
-
-      component.formDestinatariosModal.get('destinatarioRadio')?.setValue('2');
-      expect(component.esNacional).toBe(false);
-      expect(component.esExtranjero).toBe(true);
-    });
   });
 
   describe('establecerFormDestinatariosModal', () => {

@@ -8,12 +8,16 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CategoriaMensaje,
   ConfiguracionColumna,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
-} from '@libs/shared/data-access-user/src';
+ } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -44,6 +48,7 @@ import { Tramite250103Store } from '../../estados/tramite250103.store';
     CatalogoSelectComponent,
     ModalComponent,
     ReactiveFormsModule,
+    NotificacionesComponent,
   ],
   templateUrl: './destinatario-agente-aduanal.component.html',
   styleUrl: './destinatario-agente-aduanal.component.scss',
@@ -58,7 +63,10 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   /** Configuración de la tabla de agentes aduanales. */
   public tablaAgenteAduanalData: ConfiguracionColumna<Adunal>[] =
     TABLA_AGENT_ADUNALDATA;
-    
+  /** Indica si el destinatario es nacional. */
+    esNacional: boolean = true;
+  /**Indica si el destinatario es extranjero.*/
+    esExtranjero: boolean = false; 
   /** Datos de destinatarios en la tabla. */
   public agregarDestinatariosTablaDatos: Destinatarios[] = [];
    /** Datos de agentes aduanales en la tabla. */
@@ -91,11 +99,10 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   public selectedDestinatarioRows: Destinatarios[] = [];
    /** Filas seleccionadas de agentes aduanales. */
   public selectedAgenteAduanalRows: Adunal[] = [];
-   /** Indica si el destinatario es nacional. */
-  public esNacional = true;
-   /** Indica si el destinatario es extranjero. */
-  public esExtranjero = false;
-
+    /**
+   * Notificación que se muestra al usuario.
+   */
+    public nuevaNotificacion!: Notificacion;
    /**
    * Constructor.
    * @param fb Construye formularios reactivos.
@@ -145,15 +152,18 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
     });
     this.establecerFormDestinatariosModal();
     this.establecerFormAgenteAduanal();
-    this.formDestinatariosModal.get('destinatarioRadio')?.setValue('1'); 
-    this.formDestinatariosModal.get('destinatarioRadio')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(value => {
-        this.esNacional = value === '1';
-        this.esExtranjero = value === '2';
-      });
   }
- 
+
+/**
+ * Maneja el evento de cambio de selección del botón de radio para el destinatario.
+ * Actualiza las propiedades `esNacional` y `esExtranjero` según el valor seleccionado.
+*/
+  onDestinatarioRadioChange(event: string | number): void {
+    const VALUE = Number(event); 
+    this.esNacional = VALUE === 1;
+    this.esExtranjero = VALUE === 2;
+  }
+
     /**
    * Configura el formulario de destinatarios con validaciones.
    */
@@ -306,6 +316,17 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   openAceptarModal(): void {
     this.showDestinatarioModal = !this.showDestinatarioModal;
     this.showAceptarModal = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje:"Agregado correctamente.",
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
   }
 
    /**
