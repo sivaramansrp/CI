@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
@@ -200,11 +200,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      curp: ['', Validators.required],
+      curp: ['', this.estaOculto ? [] : Validators.required],
       nombres: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       primerApellido: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       segundoApellido: ['', [Validators.pattern(REGEX_NOMBRE)]],
-      razonSocial: ['', [Validators.pattern(REGEX_NOMBRE)]],
+      razonSocial: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
@@ -264,9 +264,8 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
             : '',
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
-      adunasDeEntradas: ['', Validators.required],
       coloniaOEquivalente: [{ value: '', disabled: true }],
     });
   }
@@ -288,12 +287,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       case 260201:
         this.elementosDeshabilitados = [
           'pais',
-          'estado',
-          'municipio',
-          'telefono',
-          'correoElectronico',
         ];
-        this.elementosNoRequeridos = ['localidad', 'colonia'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -306,18 +300,21 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
+    if (this.agregarFabricanteForm.status === 'INVALID') {
+      this.agregarFabricanteForm.markAllAsTouched();
+      return;
+    }
+
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
     let nombreRazonSocial: string;
 
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+      nombreRazonSocial = VALOR_FORMULARIO.razonSocial; // <-- yahan sahi karo
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
-      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+      nombreRazonSocial = '';
     }
     const NUEVO_FABRICANTE: Fabricante = {
       nombreRazonSocial: nombreRazonSocial,
@@ -338,15 +335,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       coloniaEquivalente: VALOR_FORMULARIO.correoElectronico,
     };
 
-    // Agregar el nuevo fabricante al arreglo
     this.fabricantes.push(NUEVO_FABRICANTE);
-
     this.updateFabricanteTablaDatos.emit(this.fabricantes);
-
-    // Regresar a la vista anterior
     this.ubicaccion.back();
   }
-
+  
   /**
    * Carga datos de catálogos (códigos postales, países, estados, municipios, etc.)
    * utilizando el servicio `DatosSolicitudService`.

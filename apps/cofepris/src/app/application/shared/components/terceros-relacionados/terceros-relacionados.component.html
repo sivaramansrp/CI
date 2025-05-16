@@ -20,6 +20,7 @@
       [configuracionTabla]="configuracionTablaFabricante"
       [datos]="fabricanteTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="onFilaSeleccionadaFabricante($event)"
     ></app-tabla-dinamica>
   </div>
 
@@ -28,7 +29,8 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (fabricanteTablaDatos.length > 0) {
-        <button
+          @if (seleccionTable.length > 0) {
+         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
@@ -42,6 +44,7 @@
         >
           Eliminar
         </button>
+          }
         }
         <button
           type="button"
@@ -118,7 +121,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) {
+        @if (proveedorTablaDatos.length > 0) {
         <button
           type="button"
           name="modificarMercancias"
@@ -160,7 +163,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) {
+        @if (facturadorTablaDatos.length > 0) {
         <button
           type="button"
           name="modificarMercancias"
