@@ -70,16 +70,6 @@
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
-    "folioTramite": "0863804153536145596022808",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Subsecuente",
-    "fechaDeAsignacion": "2023-10-08",
-    "estadoDeTramite": "Pendiente",
-    "departamento": "Compras",
-    "numeroDeProcedimiento": "301",
-    "origin": "SUBSECUENTES"
-  },
-  {
     "folioTramite": "099226136147361192499352",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
