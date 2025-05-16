@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {AvisoAgente,AVISO_AGENTE_DE_TABLA } from '../../models/aviso-modificacion.model';
 import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { Router,ActivatedRoute } from '@angular/router';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { AgregarAgenteComponent } from '../agregar-agente/agregar-agente.component';
+import { AVISO_AGENTE_DE_TABLA, AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 
 @Component({
   selector: 'app-aviso-agente',

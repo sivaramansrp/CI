@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Solicitud30505Store, Solicitud30505State } from '../../estados/tramites30505.store';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 // import { CambioDenominacionRazonSocialService } from '../services/cambioDenominacionRazonSocial.service'; // Comentado según instrucciones
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Solicitud30505Query } from '../../estados/tramites30505.query';
-import { Solicitud30505State,Solicitud30505Store } from '../../estados/tramites30505.store';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 /**
  * Componente que representa el primer paso de un trámite.
  */
