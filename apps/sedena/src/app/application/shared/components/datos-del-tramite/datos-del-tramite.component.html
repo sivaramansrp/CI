@@ -1,86 +1,209 @@
 <div class="container">
+  @if(esJustificacion){
+  <div class="row mt-5">
+    <form [formGroup]="formDeJustificacion" class="container">
+      <div class="mb-3">
+        <label for="justificacion" class="form-label"> *Justificación </label>
+        <textarea
+          id="justificacion"
+          class="form-control"
+          rows="3"
+          formControlName="justificacion"
+          style="height: 90px"
+        ></textarea>
+      </div>
+    </form>
+  </div>
+  } @if(!estaOculto){
   <div class="row mt-5">
     <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
   </div>
-
-  <div class="row mt-5">
+  } @if(!esAduna){
+  <div class="row">
     <ng-titulo
       titulo="Aduana de entrada
-    "
+      "
     ></ng-titulo>
+  </div>} @if(esAdunaTexto){
+    <div class="row mt-5 titulo">
+      Aduana
+    </div>
+  }
 
-    <div class="row">
-      <crosslist
-        [fechas]="seleccionarAduanasDisponibles"
-        [label]="aduanasDisponiblesLabel"
-        [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
-        (fechasSeleccionadasChange)="
-          aduanasDisponiblesSeleccionadasChange($event)
-        "
-      ></crosslist>
-    </div>
-    <div class="row mt-5">
-      <form [formGroup]="form" class="container">
-        <div class="row mb-3">
-          <div class="col-md-4">
-            <label for="permisoGeneral" class="form-label"
-              >Permiso general*</label
-            >
-            <input
-              type="text"
-              id="permisoGeneral"
-              class="form-control"
-              formControlName="permisoGeneral"
-            />
-          </div>
-          <div class="col-md-8">
-            <label for="paisDestino" class="form-label">País destino:</label>
-            <input
-              type="text"
-              id="paisDestino"
-              class="form-control"
-              formControlName="paisDestino"
-              readonly
-            />
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="usoFinal" class="form-label">
-            Uso final de la mercancía*
-            <i class="bi bi-info-circle" title="Información adicional"></i>
-          </label>
-          <textarea
-            id="usoFinal"
-            class="form-control"
-            rows="3"
-            formControlName="usoFinal"
-            style="height: 90px"
-          ></textarea>
-        </div>
-      </form>
-    </div>
-    <div class="row mt-5">
-      <h5>Mercancías*</h5>
-      <app-tabla-dinamica
-        [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
-        [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
-        [datos]="datosMercanciaTabla"
-      ></app-tabla-dinamica>
-    </div>
-    <div class="row mt-3">
-      <div class="col-md-12">
-        <div class="pull-right ml-2">
-          <button
-            type="button"
-            name="agregarClave"
-            class="btn btn-primary ms-2"
-            (click)="irAAcciones('../agregar-datos-mercancia')"
+  <div class="row mt-3">
+    <crosslist
+      [fechas]="seleccionarAduanasDisponibles"
+      [label]="aduanasDisponiblesLabel"
+      [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
+      [botones]="aduanasBotones"
+      (fechasSeleccionadasChange)="
+        aduanasDisponiblesSeleccionadasChange($event)
+      "
+    ></crosslist>
+  </div>
+  <div class="row mt-5">
+    <form [formGroup]="form" class="container">
+      <div class="row mb-3">
+        @if(!ocultarPermisoGeneral){
+        <div class="col-md-4">
+          <label for="permisoGeneral" class="form-label"
+            >Permiso general*</label
           >
-            Agregar
-          </button>
+          <input
+            type="text"
+            id="permisoGeneral"
+            class="form-control"
+            formControlName="permisoGeneral"
+          />
         </div>
+        }
+        <div class="col-md-8">
+          <label for="paisDestino" class="form-label"
+            >{{
+              paisEtiqueta.get(idProcedimiento)
+                ? paisEtiqueta.get(idProcedimiento)
+                : 'País de'
+            }}:</label
+          >
+          <input
+            type="text"
+            id="paisDestino"
+            class="form-control"
+            formControlName="paisDestino"
+            readonly
+          />
+        </div>
+      </div>
+      @if(fetchaPago){
+      <div class="row mb-3">
+        <!-- Fecha única de pago -->
+        <div class="col-md-4">
+          <input-fecha
+            [datos]="fechaInicioInput"
+            name="fechaPago"
+            (valorCambiado)="onFechaCambiada($event)"
+            [setFecha]="form.get('fechaPago')?.value"
+          ></input-fecha>
+        </div>
+      </div>
+      }
+      @if(fetchaSalida){
+        <div class="row mb-3">
+          <!-- Fecha única de salida de la mercancía -->
+      <div class="col-md-5">
+          <input-fecha
+            [datos]="fechaSalidaInput"
+            name="fechaSalida"
+            (valorCambiado)="onFechaSalidaCambiada($event)"
+            [setFecha]="form.get('fechaSalida')?.value"
+          ></input-fecha>
+         </div>
+        </div>
+        }
+      <div class="mb-3">
+        <label for="usoFinal" class="form-label">
+          Uso final de la mercancía*
+          <i class="bi bi-info-circle" title="Información adicional"></i>
+        </label>
+        <textarea
+          id="usoFinal"
+          class="form-control"
+          rows="3"
+          formControlName="usoFinal"
+          style="height: 90px"
+        ></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="row mt-5">
+    <h5>Mercancías*</h5>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
+      [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
+      [datos]="datosMercanciaTabla"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <div class="pull-right ml-2">
+        <button
+          type="button"
+          name="agregarClave"
+          class="btn btn-primary ms-2"
+          (click)="irAAcciones('../agregar-datos-mercancia')"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   </div>
+
+  @if(periodoHabilitado){
+
+  <div class="row mt-5">
+    <ng-titulo titulo="Periodo"></ng-titulo>
+  </div>
+  <h4>Periodo*:</h4>
+  <form [formGroup]="form" class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <app-input-radio
+          [radioOptions]="periodoUnoSemestreOpciones"
+          [isRequired]="true"
+          [layout]="'vertical'"
+          formControlName="unoSemestre"
+          (valueChange)="actualizarUnoSemestre($event)"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-4">
+        <app-input-radio
+          [radioOptions]="periodoUnoSemestreRadioOpciones"
+          [isRequired]="true"
+          [layout]="'vertical'"
+          formControlName="dosSemestre"
+          (valueChange)="actualizarDosSemestre($event)"
+        ></app-input-radio>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <lib-input-check
+          [id]="'anoEnCurso'"
+          [label]="'Año en curso'"
+          [required]="false"
+          formControlName="anoEnCurso"
+        ></lib-input-check>
+      </div>
+    </div>
+  </form>
+  } @if(manifiestosDeclaraciones){
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
+      <div class="alert alert-info">
+        <form [formGroup]="form" class="container">
+          <div class="form-check text-left d-flex align-items-center">
+            <div class="input_box">
+              <input
+                type="checkbox"
+                class="form-check-input pull-left"
+                formControlName="informacionConfidencial"
+                id="informacionConfidencial"
+                [required]="true"
+              />
+              <span>*</span>
+            </div>
+            <label
+              class="form-check-label"
+              for="informacionConfidencial"
+              style="font-weight: normal; padding: 41px"
+              >{{ manifiestosTexto }}</label
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  }
 </div>

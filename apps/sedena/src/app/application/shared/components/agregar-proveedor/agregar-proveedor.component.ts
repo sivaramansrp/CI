@@ -1,24 +1,17 @@
+import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { CommonModule, Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { Proveedor } from '../../models/terceros-relacionados.model';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+
 /**
  * @component AgregarProveedorComponent
  * @description Componente responsable de manejar el formulario para agregar proveedores.
@@ -36,7 +29,7 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent,
   ],
   templateUrl: './agregar-proveedor.component.html',
-  styleUrl: './agregar-proveedor.component.css',
+  styleUrl: './agregar-proveedor.component.scss',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit {
   /**
@@ -72,6 +65,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+   * @property idProcedimiento
+   * @description Identificador del procedimiento asociado a este componente.
+   * @type {number}
+   */
+  @Input() idProcedimiento!: number;
+
+  /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
    * Se utiliza para sincronizar los datos de la tabla o disparar acciones relacionadas.
@@ -79,10 +79,26 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
 
+    /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+
   /**
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+  /**
+   * @property campoObligatorio
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
+  public campoObligatorio = false;
 
   /**
    * @constructor
@@ -100,7 +116,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     private ubicaccion: Location // eslint-disable-next-line no-empty-function
   ) {}
   /**
-   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
    *
    */
@@ -138,7 +154,50 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.crearFormaulario();
+    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorioChange();
     this.cargarDatos();
+    if(this.formaDatos) {
+      this.agregarProveedorForm.patchValue(this.formaDatos);
+    }
+  }
+
+  /**
+   * @method campoObligatorioChange
+   * @description Método que actualiza las validaciones de los campos del formulario
+   * dependiendo de si son obligatorios o no, basado en la propiedad `campoObligatorio`.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  campoObligatorioChange(): void {
+    const NOMBRES = this.agregarProveedorForm.get('nombres');
+    const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido');
+    const ESTADO = this.agregarProveedorForm.get('estado');
+    const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+    const CALLE = this.agregarProveedorForm.get('calle');
+    const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
+    if(this.campoObligatorio){
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMERAPELLIDO?.setValidators([Validators.required]);
+      ESTADO?.setValidators([Validators.required]);
+      CODIGOPOSTAL?.setValidators([Validators.required]);
+      CALLE?.setValidators([Validators.required]);
+      NUMEROEXTERIOR?.setValidators([Validators.required]);
+    }
+    else{
+      NOMBRES?.clearValidators();
+      PRIMERAPELLIDO?.clearValidators();
+      ESTADO?.clearValidators();
+      CODIGOPOSTAL?.clearValidators();
+      CALLE?.clearValidators();
+      NUMEROEXTERIOR?.clearValidators();
+    }
+    NOMBRES?.updateValueAndValidity();
+    PRIMERAPELLIDO?.updateValueAndValidity();
+    ESTADO?.updateValueAndValidity();
+    CODIGOPOSTAL?.updateValueAndValidity();
+    CALLE?.updateValueAndValidity();
+    NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
   /**

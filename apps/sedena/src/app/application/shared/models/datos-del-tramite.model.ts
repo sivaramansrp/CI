@@ -12,6 +12,21 @@ export interface DatosDelTramiteFormState {
   usoFinal: string;
   aduanasSeleccionadas: string[];
   paisDestino: string;
+  anoEnCurso?: boolean;
+  dosSemestre?: string;
+  unoSemestre?: string;
+  informacionConfidencial?: boolean;
+  fechaPago?: string;
+  fechaSalida?: string;
+}
+
+/**
+ * Interfaz que representa el estado del formulario de justificación del trámite.
+ *
+ * @property {string} justificacion - Justificación proporcionada por el usuario para el trámite.
+ */
+export interface JustificacionTramiteFormState {
+  justificacion: string;
 }
 
 /**
@@ -31,12 +46,12 @@ export interface MercanciaDetalle {
   fraccionArancelaria: string;
   descripcionFraccion: string;
   unidadMedidaTarifa: string;
-  umc: string;
+  umc?: string;
   cantidadUMT: number;
   valorComercial: number;
   tipoMoneda: string;
   descripcion: string;
-  paisOrigen: string;
+  paisOrigen?: string;
 }
 
 /**
@@ -93,3 +108,39 @@ export const MERCANCIA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<MercanciaDetall
       orden: 9,
     },
   ];
+
+  /**
+ * Declaración de manifiestos para cumplir con normatividad.
+ */
+export const MANIFIESTOS_DECLARACION = {
+  MANIFIESTOS:
+    'Manifiesto bajo protesta de decir verdad, que los materiales o artículos motivo de importación o exportación, no serán destinados o utilizados para la fabricación, elaboración, ensamble, reparación o acondicionamiento de armas, municiones, explosivos, artificios para voladuras o demoliciones y/o artificios pirotécnicos',
+};
+
+/**
+ * Constante que define la configuración para el campo de Fecha única de pago.
+ *
+ * @constant
+ * @property {string} labelNombre - Etiqueta del campo mostrada al usuario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado para edición.
+ */
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha única de entrada',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Constante que define la configuración para el campo de Fecha única de salida de la mercancía.
+ *
+ * @constant
+ * @property {string} labelNombre - Etiqueta del campo mostrada al usuario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado para edición.
+ */
+export const FECHA_DE_SALIDA = {
+  labelNombre: 'Fecha única de salida de la mercancía',
+  required: true,
+  habilitado: true,
+};

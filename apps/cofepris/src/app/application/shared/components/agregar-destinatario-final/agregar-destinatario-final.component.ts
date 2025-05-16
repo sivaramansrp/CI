@@ -148,6 +148,13 @@ export class AgregarDestinatarioFinalComponent
   public elementosNoRequeridos:string[]=[]
 
   /**
+   * Arreglo que almacena los elementos requeridos.
+   * @type {string[]}
+   */
+  public elementosRequeridos: string[] = [];
+
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -179,26 +186,37 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    }
     const NUEVO_DESTINATARIO: Destinatario = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
-        this.agregarDestinatarioFinal.value.primerApellido
-      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
-      rfc: this.agregarDestinatarioFinal.value.rfc,
+      nombreRazonSocial:nombreRazonSocial,
+      rfc: VALOR_FORMULARIO.rfc,
       curp: '',
       telefono:
-        `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
-      correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
-      calle: this.agregarDestinatarioFinal.value.calle,
-      numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
-      numeroInterior: this.agregarDestinatarioFinal.value.numeroInterior || '',
-      pais: this.agregarDestinatarioFinal.value.pais,
-      colonia: this.agregarDestinatarioFinal.value.colonia,
-      municipioAlcaldia: this.agregarDestinatarioFinal.value.municipio,
-      localidad: this.agregarDestinatarioFinal.value.localidad,
+        `${VALOR_FORMULARIO.lada} ${VALOR_FORMULARIO.telefono}`.trim(),
+      correoElectronico: VALOR_FORMULARIO.correoElectronico,
+      calle: VALOR_FORMULARIO.calle,
+      numeroExterior: VALOR_FORMULARIO.numeroExterior,
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais,
+      colonia: VALOR_FORMULARIO.colonia,
+      municipioAlcaldia: VALOR_FORMULARIO.municipio,
+      localidad: VALOR_FORMULARIO.localidad,
       entidadFederativa: '',
-      estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
-      codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
-      coloniaEquivalente: this.agregarDestinatarioFinal.value.codigoPostal,
+      estadoLocalidad: VALOR_FORMULARIO.estado,
+      codigoPostal: VALOR_FORMULARIO.codigoPostal,
+      coloniaEquivalente: VALOR_FORMULARIO.codigoPostal,
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -332,8 +350,18 @@ export class AgregarDestinatarioFinalComponent
           ? [Validators.required]
           : [],
       ],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
+      calle: [
+        '',
+        this.elementosRequeridos.includes('calle')
+          ? [Validators.required]
+          : [],
+      ],
+      numeroExterior: [
+        '',
+        this.elementosRequeridos.includes('numeroExterior')
+          ? [Validators.required]
+          : [],
+      ],
       numeroInterior: [''],
       lada: ['', Validators.required],
       telefono: [
@@ -382,9 +410,15 @@ export class AgregarDestinatarioFinalComponent
         ];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
         break;
+        case 260219:
+          this.elementosRequeridos = ['calle', 'numeroExterior'];
+          this.elementosDeshabilitados = ['pais'];
+          this.elementosNoRequeridos = ['colonia'];
+        break;
       default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
+        this.elementosRequeridos = [];
     }
   }
 

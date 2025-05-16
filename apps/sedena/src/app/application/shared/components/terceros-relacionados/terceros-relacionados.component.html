@@ -1,4 +1,5 @@
 <div class="container">
+  <ng-titulo titulo="Terceros relacionados"></ng-titulo>
   <div class="row mt-5">
     <ng-alert [CONTENIDO]="tercerorTextoDeAlerta"></ng-alert>
   </div>
@@ -10,15 +11,19 @@
       [tipoSeleccionTabla]="destinoFinalTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
+      (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
+      
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
+        @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!=0)){
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          (click)="modificarDestinatario()"
         >
           Modificar
         </button>
@@ -26,16 +31,15 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarDestinatarioFinal()"
         >
           Eliminar
         </button>
-
+      }
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-destino-final')"
         >
           Agregar
@@ -51,15 +55,19 @@
       [tipoSeleccionTabla]="dproveedorTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
+      (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
+       @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!=0)){
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          [disabled]="proveedorTablaSeleccionada.length > 1"
+          (click)="modificarProveedor()"
         >
           Modificar
         </button>
@@ -67,20 +75,21 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarProveedorFinal()"
         >
           Eliminar
         </button>
-
+      }
+      @if(!tercerosNacionalidad){
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-proveedor')"
         >
           Agregar
         </button>
+      }
       </div>
     </div>
   </div>

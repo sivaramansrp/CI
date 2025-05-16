@@ -20,6 +20,7 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       getSciandata: jest.fn(),
       getEstadodata: jest.fn(),
       getJustificationData: jest.fn(),
+      getInformacionConfidencialRadioOptions: jest.fn(),
     } as unknown as jest.Mocked<EstablecimientoService>;
 
     mockStateStore = {
@@ -63,7 +64,10 @@ describe('DatosDelSolicitudModificacionComponent', () => {
     jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState as DatosDelSolicituteSeccionState));
     mockEstablecimientoService.getSciandata.mockReturnValue(of([]));
     mockEstablecimientoService.getEstadodata.mockReturnValue(of([]));
+    // Mock the getInformacionConfidencialRadioOptions method
+    jest.spyOn(mockEstablecimientoService, 'getInformacionConfidencialRadioOptions').mockReturnValue(of(['Option 1', 'Option 2']));
   
+    // Mock any additional observables used in ngOnInit or ngAfterViewInit
     // Mock any additional observables used in ngOnInit or ngAfterViewInit
     jest.spyOn(mockEstablecimientoService, 'getJustificationData').mockReturnValue(of([]));
   
@@ -124,6 +128,7 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       lada: '123',
       telefono: '4567890',
       scian: 'Test SCIAN',
+      descripcionScian: 'Test SCIAN Description', // Added this property
       establishomentoColonias: 'Test Colony',
       noLicenciaSanitaria: '12345',
       avisoCheckbox: 'true',
@@ -132,7 +137,6 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       aduanasEntradas: 'Test Customs',
       aifaCheckbox: 'false',
     };
-
     jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState));
     component.ngOnInit();
 

@@ -204,6 +204,10 @@ export interface DatosDelSolicituteSeccionState {
    * Checkbox de AIFA.
    */
   aifaCheckbox: string;
+/**
+ * * Descripción del SCIAN.
+ */
+  descripcionScian: string;
 }
 
 /**
@@ -232,6 +236,8 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     informacionConfidencialRadio: '',
     propietarioData: [],
     establecimientoData: [],
+     scian: '',
+          descripcionScian: '',
      ideGenerica1: '',
           observaciones: '',
           establecimientoRFCResponsableSanitario: '',
@@ -244,7 +250,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
           calle: '',
           lada: '',
           telefono:'',
-          scian :'' ,
+       
           noLicenciaSanitaria: '',
           avisoCheckbox: '',
           licenciaSanitaria: '',

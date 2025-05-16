@@ -1,3 +1,4 @@
+
 import { Component,OnDestroy, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
@@ -8,9 +9,12 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-
-
-
+/**
+ * Interfaz que representa una acción asociada a un botón.
+ * 
+ * @property {string} accion - Nombre o descripción de la acción que realiza el botón.
+ * @property {number} valor - Valor asociado a la acción, que puede ser utilizado para identificar o parametrizar la acción.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -85,6 +89,16 @@ export class RegistroPageComponent implements OnDestroy {
       this.seccion.establecerFormaValida([res]);
     })
   }
+  /**
+   * Maneja el cambio de índice basado en el valor y la acción proporcionados.
+   * 
+   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción a realizar.
+   *   - `valor`: Número que representa el índice. Debe estar entre 1 y 4 (exclusivo).
+   *   - `accion`: Cadena que indica la acción a realizar ('cont' para avanzar, cualquier otro valor para retroceder).
+   * 
+   * Si el valor está dentro del rango permitido, actualiza el índice y realiza la acción correspondiente
+   * en el componente del asistente (`wizardComponent`).
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
@@ -124,6 +138,12 @@ export class RegistroPageComponent implements OnDestroy {
         break;
     }
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
+   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
