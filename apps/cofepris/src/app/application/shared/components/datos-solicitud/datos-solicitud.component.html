@@ -29,6 +29,9 @@
             formControlName="rfcDel"
             (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
           />
+          <div *ngIf="forma.get('rfcDel')?.touched && forma.get('rfcDel')?.errors?.['pattern']" class="mensaje-error">
+            El RFC no tiene un formato valido.
+          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -44,6 +47,9 @@
             formControlName="denominacion"
             (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
           />
+           <div *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.errors?.['required']" class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -60,6 +66,12 @@
             formControlName="correo"
             (change)="setValoresStore(forma, 'correo', 'setCorreo')"
           />
+           <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['required']" class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
+            <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['pattern']" class="mensaje-error">
+            El valor Ingresado no es una dirección válida de correo electrónico.
+          </div>
         </div>
       </div>
     </div>
@@ -68,7 +80,8 @@
     [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
     [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
     [configuracionVisibilidad]="configuracionVisibilidad"
-    [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible">
+    [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible"
+    [esPaginacionVisible]="esPaginacionVisible">
   </app-domicillo>
   <app-manifiestos></app-manifiestos>
   <app-representante-legal-rfc></app-representante-legal-rfc>

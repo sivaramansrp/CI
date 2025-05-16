@@ -3,21 +3,19 @@
     <!-- Título en español -->
     <ng-titulo titulo="Terceros relacionados" />
 
-    <!-- cuadro de alerta -->
-    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-
     <!-- Renderizar Tablas Dinámicamente Basadas en una Orden -->
     <div *ngFor="let tabla of getSortedTablas()">
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
         <h5>Fabricante*:</h5>
+        <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
+          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFabricanteButtons">
-            <button class="btn btn-danger" type="button">Eliminar</button>
-            <button class="btn btn-default" type="button">Modificar</button>
+            <button class="btn btn-danger me-2" type="button">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" >Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
             Agregar
@@ -28,13 +26,13 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData"></ng-table>
+          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFormuladorButtons">
-            <button class="btn btn-danger" type="button">Eliminar</button>
-            <button class="btn btn-default" type="button">Modificar</button>
+            <button class="btn btn-danger me-2" type="button">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" >Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivFormulador()">
             Agregar
@@ -45,13 +43,13 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"></ng-table>
+          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showProveedorButtons">
-            <button class="btn btn-danger" type="button">Eliminar</button>
-            <button class="btn btn-default" type="button">Modificar</button>
+            <button class="btn btn-danger me-2" type="button">Eliminar</button>
+            <button class="btn btn-default me-2" type="button">Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
             Agregar
@@ -135,13 +133,22 @@
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
+            @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -403,7 +410,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFabricanteFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
                 Guardar
               </button>
@@ -754,7 +761,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFormulador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFormuladorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFormuladorForm()">
                 Guardar
               </button>
@@ -1104,7 +1111,7 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarProveedorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
                 Guardar
               </button>

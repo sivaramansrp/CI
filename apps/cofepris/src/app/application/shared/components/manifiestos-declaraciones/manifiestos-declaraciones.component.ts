@@ -27,7 +27,7 @@ import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamient
     InputRadioComponent,
   ],
   templateUrl: './manifiestos-declaraciones.component.html',
-  styleUrl: './manifiestos-declaraciones.component.css',
+  styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
