@@ -136,7 +136,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     this.formMercancias = this.fb.group({
       descripcion: [this.solicitudState?.descripcion || '', Validators.required],
       fraccion: [this.solicitudState?.fraccion || '', Validators.required],
-      arancelaria: [this.solicitudState?.arancelaria || '', Validators.required],
+      arancelaria: [{value:this.solicitudState?.arancelaria || '', disabled: true }, Validators.required],
       cantidad: [this.solicitudState?.cantidad || '', Validators.required],
       medida: [this.solicitudState?.medida || '', Validators.required],
       genero: [this.solicitudState?.genero || '', Validators.required],
@@ -145,9 +145,6 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       origen: [this.solicitudState?.origen || '', Validators.required],
       procedencia: [this.solicitudState?.procedencia || '', Validators.required]
     });
-
-    // Deshabilita el campo 'arancelaria' en el formulario
-    this.formMercancias.get('arancelaria')?.disable();
   }
 
   /**
