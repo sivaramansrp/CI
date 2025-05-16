@@ -4,10 +4,9 @@
   </div>
   <div class="row mt-5">
     <form [formGroup]="datosMercancia">
-      <!-- Descripción as a textarea -->
       <div class="row mb-3">
         <div class="col-12">
-          <label for="descripcion" class="form-label">Descripción * :</label>
+          <label for="descripcion" class="form-label">Descripción: * </label>
           <textarea
             id="descripcion"
             class="form-control"
@@ -34,7 +33,7 @@
           <app-catalogo-select
             formControlName="fraccionArancelaria"
             [catalogo]="fraccionesCatalogo"
-            [label]="'Fracción arancelaria'"
+            [label]="'Fracción arancelaria:'"
             [required]="true"
           ></app-catalogo-select>
           <div
@@ -50,7 +49,8 @@
 
         <div class="col-md-6">
           <label for="descFraccion" class="form-label">
-            Descripción de la fracción arancelaria * : </label>
+            Descripción de la fracción arancelaria: *
+          </label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
           title="Descripción de la fracción arancelaria"
@@ -80,7 +80,7 @@
       <!-- Cantidad en UMT, UMT, Valor comercial -->
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="cantidadUMT" class="form-label">Cantidad en UMT * : </label>
+          <label for="cantidadUMT" class="form-label">Cantidad en UMT: *</label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
           title="Cantidad en UMT"
@@ -92,6 +92,7 @@
             type="text"
             class="form-control"
             formControlName="cantidadUMT"
+            (input)="onCantidadUMTInput($event)"
           />
           <div
             *ngIf="
@@ -105,7 +106,7 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label">UMT * :</label>
+          <label for="umt" class="form-label">UMT: *</label>
           <input
             id="umt"
             type="text"
@@ -127,7 +128,7 @@
 
         <div class="col-md-4">
           <label for="valorComercial" class="form-label">
-            Valor comercial * :
+            Valor comercial: *
           </label>
           <input
             id="valorComercial"
