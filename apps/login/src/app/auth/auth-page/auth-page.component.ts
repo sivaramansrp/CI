@@ -51,7 +51,7 @@ export class AuthPageComponent {
       }
       this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      window.location.href = '/seleccion-tramite';
+      window.location.href = '/bandeja-de-tareas-pendientes';
     }
   }
 }
