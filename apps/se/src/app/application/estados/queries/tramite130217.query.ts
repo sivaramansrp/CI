@@ -4,39 +4,19 @@ import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite130217Query extends Query<Tramite130217State> {
+  /**
+   * Observable para seleccionar el estado completo del trámite.
+   * Estado completo del trámite.
+   */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
-  mostrarTabla$ = this.select((state) => state.mostrarTabla);
-  filaSeleccionada$ = this.select(state => state.filaSeleccionada);
-  solicitud$ = this.select(state => state.solicitud);
-  fraccion$ = this.select(state => state.fraccion);
-  producto$ = this.select(state => state.producto);
-  descripcionPartidasDeLaMercancia$ = this.select(state => state.descripcionPartidasDeLaMercancia);
-  cantidadPartidasDeLaMercancia$ = this.select(state => state. cantidadPartidasDeLaMercancia);
-  valorPartidaUSDPartidasDeLaMercancia$ = this.select(state => state.valorPartidaUSDPartidasDeLaMercancia);
-  unidadMedida$ = this.select(state => state.unidadMedida);
-  defaultSelect$ = this.select(state => state.defaultSelect);
-  defaultProducto$ = this.select(state => state.defaultProducto);
-  clasificacion$ =this.select(state =>state.clasificacion)
-  regimen$=this.select(state=>state.regimen)
-  bloque$=this.select(state=>state.bloque)
-  usoEspecifico$=this.select(state=>state.usoEspecifico)
-  justificacionImportacionExportacion$=this.select(state=>state.justificacionImportacionExportacion)
-  observaciones$=this.select(state=>state.observaciones)
-  entidad$=this.select(state=>state.entidad)
-  representacion$=this.select(state=>state.representacion)
-  
-  mercanciaState$ = this.select(state => ({
-    producto: state.producto,
-    descripcion: state.descripcion,
-    fraccion: state.fraccion,
-    cantidad: state.cantidad,
-    valorPartidaUSD: state.valorPartidaUSD,
-    unidadMedida: state.unidadMedida,
-    defaultProducto: state.defaultProducto,
-  }));
 
+  /**
+   * Observable para seleccionar el valor de `mostrarTabla` del estado.
+   * Valor booleano de `mostrarTabla`.
+   */
+  mostrarTabla$ = this.select((state) => state.mostrarTabla);
   constructor(protected override store: Tramite130217Store) {
     super(store);
   }
