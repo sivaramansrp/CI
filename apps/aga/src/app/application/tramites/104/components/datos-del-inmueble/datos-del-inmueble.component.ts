@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -84,6 +84,13 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
   /**
+   * **Catálogo de folios de autorización**
+   * 
+   * Almacena las opciones disponibles para el campo de folio de autorización en el formulario.
+   */
+  catalogoFolioAutorizacion: Catalogo[] = [];
+
+  /**
    * **Constructor del componente**  
    * 
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
@@ -115,6 +122,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         this.mostrarAlerta = true; // Muestra la alerta si el valor es '1'.
         this.mensajeDeAlerta = MENSAJEDE_ALERTA.ADJUNTAR; // Asigna el mensaje de alerta correspondiente.
       }
+      this.catalogoFolioAutorizacion=dropDown?.folioAutorizacion;
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
     this.escucharCambiosFormulario();
