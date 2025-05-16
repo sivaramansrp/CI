@@ -38,6 +38,16 @@ import { Tabulaciones } from '@libs/shared/data-access-user/src/core/models/list
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 
+/**
+ * @component AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+ * @description
+ * Componente contenedor encargado de gestionar la visualización y el flujo de detalles
+ * de acuses y resoluciones de un trámite subsecuente.
+ * Maneja la carga dinámica de componentes, obtiene datos de formularios, botones de acción y catálogo de documentos.
+ *
+ * @example
+ * <ng-mf-acuses-y-resoluciones-folio-del-tramite-detalles-contenedor></ng-mf-acuses-y-resoluciones-folio-del-tramite-detalles-contenedor>
+ */
 @Component({
   selector: 'ng-mf-acuses-y-resoluciones-folio-del-tramite-detalles-contenedor',
   standalone: true,
@@ -54,26 +64,70 @@ import { Router } from '@angular/router';
 export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   implements OnDestroy, OnInit
 {
+  /** Texto de alerta personalizado para el folio del trámite. */
   txtAlerta!: string;
+
+  /** Catálogo de tipos de documentos. */
   catalogoDocumentos: Catalogo[] = [];
+
+  /** Trámite seleccionado con sus componentes. */
   slectTramite!: AccuseComponentes | undefined;
+
+  /** Referencia al componente cargado dinámicamente. */
   viewChild!: Type<unknown>;
+
+  /** ID del trámite actual. */
   tramite: number = 301;
+
+  /** URL para regresar al procedimiento subsecuente. */
   procedureRegresorUrl = '/subsecuentes';
+
+  /** URL del procedimiento de datos de la solicitud. */
   procedureUrl = '/aga/importante/datosdelasolicitud';
+
+  /** Datos de la consulta guardados en el store. */
   guardarDatos!: ConsultaioState;
+
+  /** Departamento asociado al trámite. */
   departamento!: string;
+
+  /** Fecha del requerimiento. */
   fechaRequerimiento!: string;
+
+  /** Justificación del requerimiento. */
   justificacionRequerimiento!: string;
+
+  /** Indica si la información del requerimiento fue cargada. */
   esRequerimientoServiceLoaded: boolean = false;
+
+  /** Folio actual del trámite. */
   folio!: string;
+
+  /** URL actual del navegador. */
   url!: string;
+
+  /** Botones de acción configurados. */
   botonesAcciones: BotonDeAccion[] = [];
 
+  /** Referencia al componente del asistente (wizard). */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /** Subject utilizado para liberar recursos y desuscribirse. */
   private unsubscribe$ = new Subject<void>();
+
+  /** Índice actual de la pestaña activa. */
   indice: number = 1;
+
+  /**
+   * @constructor
+   * @param router Servicio de Angular Router.
+   * @param subsecuentesService Servicio para obtener datos de subsecuentes.
+   * @param consultaioStore Store de estado de consulta.
+   * @param consultaioQuery Query de estado de consulta.
+   * @param requerimientoService Servicio para atender requerimientos.
+   * @param catalogosServices Servicio para obtener catálogos.
+   * @param tramiteQueries Query de trámites.
+   */
   constructor(
     private router: Router,
     private subsecuentesService: SubsecuentesService,
@@ -117,6 +171,11 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       false
     );
   }
+
+  /**
+   * Cambia el componente dinámico según la pestaña seleccionada.
+   * @param id Identificador de la pestaña.
+   */
   viewChildcambioDePestana(id: Tabulaciones): void {
     const LI = this.slectTramite?.listaComponentes.find(
       (v: ListaComponentes) => v.id === id.id
@@ -125,8 +184,9 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       this.loadComponent(LI);
     }
   }
+
   /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   * Obtiene el catálogo de tipos de documentos disponibles.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
@@ -138,11 +198,14 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
           }
         },
         error: (_error): void => {
-          // Manejo de errores si es necesario
+          // Manejo de errores si es necesario.
         },
       });
   }
 
+  /**
+   * Hook de inicialización del componente.
+   */
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
@@ -170,10 +233,20 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
         this.botonesAcciones = data;
       });
   }
+
+  /**
+   * Selecciona el trámite y carga sus componentes.
+   * @param i Identificador del trámite.
+   */
   selectTramite(i: number): void {
     this.tramite = i;
     this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
   }
+
+  /**
+   * Carga dinámicamente un componente.
+   * @param li Componente a cargar.
+   */
   async loadComponent(li: ListaComponentes): Promise<void> {
     if (!li.componentPath) {
       console.error('Component not found in registry:');
@@ -182,13 +255,21 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
     this.viewChild = (await li.componentPath()) as Type<unknown>;
   }
 
+  /** Datos del formulario de acuses y resoluciones. */
   datosDeFormulario!: AcusesYResoluciones;
 
+  /**
+   * Hook de destrucción del componente.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
+  /**
+   * Maneja el cambio de índice en el flujo.
+   * @param e Acción del botón seleccionada.
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
