@@ -44,6 +44,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { Modal } from 'bootstrap';
+
 
 export interface RespuestaTabla {
   code: number;
@@ -271,6 +273,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   colapsableDuos: boolean = false;
 
+  personaparas: NicoInfo[] = [];
+
   /**
    * Indica si la sección es colapsableTres.
    * @property {boolean} colapsableTres
@@ -296,7 +300,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
-
+modalInstance!: Modal;
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -305,6 +309,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     derecha: 'País(es) seleccionados',
   };
 
+  public mostrarModeloClave(): void {
+    this.modalInstance.show();
+  }
+
+ 
   /**
    * Objeto que representa la configuración de etiquetas para la selección de país de origen.
    * 
@@ -328,7 +337,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    
+    // this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
@@ -351,8 +361,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     });
 
     this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
+      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
     this.formMercancias = this.fb.group({
       nombreComercial: ['', Validators.required],
@@ -371,6 +381,33 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       objetoImportacion: ['', Validators.required],
     });
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
+    
+  }
+
+  cerrarModalScian(): void {
+    this.modalInstance.hide();
+  }
+
+  limpiarScianForm(): void {
+    this.formAgente.reset();
+  }
+
+  guardarScian(): void {
+    if (this.formAgente.valid) {
+      const NUEVO_DATO: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value,
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+      };
+
+      // Add the new data to the table
+      this.nicoTablaDatos.push(NUEVO_DATO);
+
+      // Clear the form
+      this.formAgente.reset();
+
+      // Close the modal
+      this.cerrarModalScian();
+    }
   }
 
   /**
@@ -508,15 +545,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
-  obtenerTablaDatos(): void {
-    this.service
-      .getObtenerTablaDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
-  }
-
+ 
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
