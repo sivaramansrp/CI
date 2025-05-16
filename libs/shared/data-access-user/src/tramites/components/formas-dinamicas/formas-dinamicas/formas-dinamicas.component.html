@@ -138,9 +138,10 @@
                           [required]="seRequiere(item.campo)"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
-                        <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        <label class="form-label" [for]="item.id" style="margin-left: 10px;" *ngIf="item.labelNombre">
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}:
+                        </label>
+
                       </div>
                     </div>
                     }
