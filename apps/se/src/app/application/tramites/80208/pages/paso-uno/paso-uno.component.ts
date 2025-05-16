@@ -1,9 +1,10 @@
-
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SECCIONES_TRAMITE_80208 } from '../../constantes/solicitud-modalidad.enums';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
+ * @component PasoUnoComponent
+ * @description
  * Componente para el asistente de solicitud.
  * Este componente gestiona la navegación entre los pasos del formulario de solicitud.
  * @component PasoUnoComponent
@@ -19,13 +20,17 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 export class PasoUnoComponent implements OnInit {
 
   /**
-   * Índice de la pestaña seleccionada.
-   * @property {number} indice - Índice de la pestaña actualmente seleccionada.
+   * @property {number} indice
+   * @description Índice de la pestaña actualmente seleccionada.
    * @default 1
    */
   indice: number = 1;
 
-  // eslint-disable-next-line no-empty-function
+  /**
+   * @constructor
+   * @description Constructor que inicializa el store de la sección.
+   * @param {SeccionLibStore} seccionStore - Servicio para manejar el estado de las secciones.
+   */
   constructor(private seccionStore: SeccionLibStore) {
 
   }
@@ -35,9 +40,8 @@ export class PasoUnoComponent implements OnInit {
   }
 
   /**
-   * Lista de secciones del formulario.
    * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * - Lista de pasos dentro del formulario con sus respectivos componentes.
+   * @description Lista de pasos dentro del formulario con sus respectivos componentes.
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
@@ -45,15 +49,15 @@ export class PasoUnoComponent implements OnInit {
   ];
 
   /**
-   * Evento emitido al cambiar de pestaña.
    * @event tabChanged
+   * @description Evento emitido al cambiar de pestaña.
    * @type {EventEmitter<number>}
    */
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * Cambia el índice de la pestaña seleccionada.
    * @method seleccionaTab
+   * @description Cambia el índice de la pestaña seleccionada y emite el evento `tabChanged`.
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
@@ -61,6 +65,10 @@ export class PasoUnoComponent implements OnInit {
     this.tabChanged.emit(i);
   }
 
+  /**
+   * @method asignarSecciones
+   * @description Método privado que asigna las secciones del formulario y establece su estado inicial.
+   */
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
     const FORMA_VALIDA: boolean[] = [];

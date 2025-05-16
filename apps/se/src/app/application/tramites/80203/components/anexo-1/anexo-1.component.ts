@@ -6,7 +6,7 @@
 /**
  * @component Anexo1Component
  * @description Componente responsable de manejar el formulario de registro IMMEX.
- * Contiene la lógica para la obtención de datos y la gestión de formularios.
+ * Contiene la lógica para la obtención de datos, la gestión de formularios y la interacción con tablas dinámicas.
  */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -39,13 +39,11 @@ import { NICO_TABLA } from '../../modelos/immex-registro-de-solicitud-modality.m
 import { NicoService } from '../../servicios/nico/nico.service';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 
-import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 
 import { delay, map, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -59,73 +57,78 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-
   ]
 })
 export class Anexo1Component implements OnInit, OnDestroy {
-    /**
-   * Formulario principal del registro IMMEX.
-   * @type {FormGroup}
+  /**
+   * @property {FormGroup} immexRegistroform
+   * @description Formulario principal del registro IMMEX.
    */
   immexRegistroform!: FormGroup;
-    /**
-   * Estado del formulario de registro IMMEX.
-   * @type {immexRegistroform}
+
+  /**
+   * @property {immexRegistroform} immexRegitroAnexoState
+   * @description Estado del formulario de registro IMMEX.
    */
   immexRegitroAnexoState!: immexRegistroform;
 
   /**
-   * Tipo de selección de la tabla.
-   * @type {TablaSeleccion}
+   * @property {TablaSeleccion} tablaSeleccionRadio
+   * @description Tipo de selección de la tabla (Radio).
    */
   tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
+
+  /**
+   * @property {TablaSeleccion} tablaSeleccionCheckbox
+   * @description Tipo de selección de la tabla (Checkbox).
+   */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Configuración de las columnas de la tabla para servicios IMMEX.
-   * @type {ConfiguracionColumna<immexInfo>[]}
+   * @property {ConfiguracionColumna<immexInfo>[]} permisoImmexTabla
+   * @description Configuración de las columnas de la tabla para servicios IMMEX.
    */
   permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
+
   /**
-   * Datos de los servicios IMMEX.
-   * @type {immexInfo[]}
+   * @property {immexInfo[]} immexTableDatos
+   * @description Datos de los servicios IMMEX.
    */
   immexTableDatos: immexInfo[] = [];
 
-  // Mesa FRACCION EXPORTACION
   /**
-   * Configuración de las columnas de la tabla.
-   * @type {ConfiguracionColumna<fraccionInfo>[]}
+   * @property {ConfiguracionColumna<fraccionInfo>[]} fraccionExportacionTabla
+   * @description Configuración de las columnas de la tabla para fracciones de exportación.
    */
-
   fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
+
   /**
-   * Datos de las fracciones arancelarias.
-   * @type {fraccionInfo[]}
+   * @property {fraccionInfo[]} fraccionTablaDatos
+   * @description Datos de las fracciones arancelarias.
    */
   fraccionTablaDatos: fraccionInfo[] = [];
+
   /**
-   * Configuración de las columnas de la tabla para NICO.
-   * @type {ConfiguracionColumna<nicoInfo>[]}
+   * @property {ConfiguracionColumna<nicoInfo>[]} nicoTabla
+   * @description Configuración de las columnas de la tabla para NICO.
    */
   nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
 
   /**
-   * Datos de NICO.
-   * @type {nicoInfo[]}
+   * @property {nicoInfo[]} nicoTablaDatos
+   * @description Datos de NICO.
    */
   nicoTablaDatos: nicoInfo[] = [];
 
-
   /**
-   * Variable de estado para IMMEX Registro.
-   * @type {string}
+   * @property {string} immexRegistro
+   * @description Variable de estado para IMMEX Registro.
    */
   immexRegistro!: string;
 
   /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
+   * @property {Subject<void>} unsubscribe$
+   * @description Subject para manejar la desuscripción de observables.
    */
   private unsubscribe$ = new Subject<void>();
 
@@ -180,24 +183,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
     private immexRegistroStore: ImmexRegistroStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-
-  ) { }
-    /**
-   * @method ngOnDestroy
-   * @description Maneja la limpieza de recursos antes de destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+  ) {}
 
   /**
    * @method ngOnInit
    * @description Inicializa el componente y obtiene los datos necesarios.
    */
-
   ngOnInit(): void {
     this.immexRegistroQuery.selectImmexRegistro$.pipe(
       takeUntil(this.destroyNotifier$),
@@ -290,6 +281,18 @@ export class Anexo1Component implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+   * @method ngOnDestroy
+   * @description Maneja la limpieza de recursos antes de destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
   /**
    * @method fetchData
    * @description Obtiene los datos de los fabricantes desde el servicio.
@@ -442,13 +445,4 @@ export class Anexo1Component implements OnInit, OnDestroy {
     this.immexRegistroform.get('importacionForm.commodityDescImportacion')?.disable();
     this.immexRegistroform.get('importacionForm.commodityNicoDescImportacion')?.disable();
   }
-  /**
-   * @method ngOnDestroy
-   * @description Guarda el estado del formulario antes de destruir el componente.
-   */
-
-}
-
-function subscribe(arg0: { next: (response: any) => void; error: (error: any) => void; }) {
-  throw new Error('Function not implemented.');
 }

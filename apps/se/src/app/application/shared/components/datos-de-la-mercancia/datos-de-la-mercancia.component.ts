@@ -49,7 +49,7 @@ export class DatosDeLaMercanciaComponent {
   @Output() setValoresStoreEvent = new EventEmitter<{
     form: FormGroup;
     campo: string;
-    metodoNombre: string;
+   
   }>();
 
   /**
@@ -70,7 +70,7 @@ export class DatosDeLaMercanciaComponent {
    * @param campo El nombre del campo que se está actualizando.
    * @param metodoNombre El nombre del método asociado con la acción.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo});
   }
 }

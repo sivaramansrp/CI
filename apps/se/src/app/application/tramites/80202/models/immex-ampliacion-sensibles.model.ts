@@ -26,11 +26,29 @@ export interface ImmexAmplicationSensibleDatosDelFormulario {
   anexouno: [];
 }
 
+/**
+ * Representa un anexo con un identificador único y una descripción.
+ *
+ * @interface Anexo
+ * @property {number} id - Identificador único del anexo.
+ * @property {string} description - Descripción detallada del anexo.
+ */
 export interface Anexo {
   id: number;
   description: string;
 }
 
+/**
+ * Interfaz que representa una tabla de fracciones arancelarias.
+ * 
+ * @property {string} no - Número identificador de la fracción arancelaria.
+ * @property {string} fraccionArancelaria - Código de la fracción arancelaria.
+ * @property {string} descripcion - Descripción de la fracción arancelaria.
+ * @property {string} CantidadAnual - Cantidad anual asociada a la fracción arancelaria.
+ * @property {string} CapacidadInstaladaPorPeriodo - Capacidad instalada por periodo para la fracción.
+ * @property {string} umt - Unidad de medida de trabajo (UMT) asociada.
+ * @property {string} encabezado - Encabezado relacionado con la fracción arancelaria.
+ */
 export interface TablaFraccionArancelaria {
   no: string;
   fraccionArancelaria: string;
@@ -40,6 +58,16 @@ export interface TablaFraccionArancelaria {
   umt: string;
   encabezado: string;
 }
+/**
+ * Representa una tabla que contiene información sobre fracciones de importación.
+ * 
+ * @property no - Número identificador de la fracción.
+ * @property fracciondeImportacion - Código de la fracción de importación.
+ * @property fracciondeExportacion - Código de la fracción de exportación asociada.
+ * @property umt - Unidad de medida utilizada para la fracción.
+ * @property descripcionComercial - Descripción comercial de la fracción.
+ * @property descripcion - Descripción detallada de la fracción.
+ */
 export interface TablaFraccionDeImportacion {
   no: string;
   fracciondeImportacion: string;

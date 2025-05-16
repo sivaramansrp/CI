@@ -59,6 +59,14 @@ export class BtnContinuarComponent implements OnInit {
    * @default false
    */
   @Input() btnGuardar: boolean = false;
+  /**
+ * @Input dePadre
+ * @description
+ * Indica si el componente `BtnContinuarComponent` está siendo controlado por un componente padre.
+ * @type {boolean}
+ * @default false
+ */
+  @Input() public dePadre: boolean = false;
 
   /**
    * @property vistaEmergente
@@ -179,19 +187,24 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   continuar(): void {
+    const PUEDE_CONTINUAR = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    let valor = this.datos.indice;
+    if (!PUEDE_CONTINUAR) {
+      return;
+    }
     if(this.vistaEmergente.abierto && this.datos.indice === this.vistaEmergente.indice){
       this.moduloEmergente=true;
     }
-    const CONDICION =
-      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
+    if (!this.dePadre) {
+      this.wizardService.cambio_indice(valor);
+      valor += 1;
+      this.datos.indice = valor;
     }
+    const DATOS_CONTINUAR: AccionBoton = {
+      accion: 'cont',
+      valor,
+    };
+    this.continuarEvento.emit(DATOS_CONTINUAR);
   }
 
   /**
@@ -200,16 +213,20 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   anterior(): void {
-    const CONDICION =
-      this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
-    if (CONDICION) {
-      const DATOS_ANTERIOR: AccionBoton = {
-        accion: 'ant',
-        valor: (this.datos.indice -= 1),
-      };
-
-      this.continuarEvento.emit(DATOS_ANTERIOR);
+    const PUEDE_RETROCEDER = this.datos.indice > 1 && this.datos.indice <= this.datos.nroPasos;
+    let valor = this.datos.indice;
+    if (!PUEDE_RETROCEDER) {
+      return
     }
+    if (!this.dePadre) {
+      valor -= 1;
+      this.datos.indice = valor;
+    }
+    const DATOS_ANTERIOR: AccionBoton = {
+      accion: 'ant',
+      valor,
+    };
+    this.continuarEvento.emit(DATOS_ANTERIOR);
   }
 
   /**
