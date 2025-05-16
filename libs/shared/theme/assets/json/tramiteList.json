@@ -1423,8 +1423,8 @@
   {
     "id": 204,
     "tramite": 31616,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/solicitud-de-registro-invocar/solicitud",
+    "linkDepartment": "/pago/solicitud-de-registro-invocar/solicitud",
     "department": "agace"
   },
   {
