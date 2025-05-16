@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 /**
  * Componente que representa el primer paso de un trámite.
@@ -13,7 +13,7 @@ import { Solicitud30505Query } from '../../../../core/queries/tramites30505.quer
 /**
  * Componente que representa el primer paso de un trámite.
  */
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit {
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
@@ -53,7 +53,6 @@ export class PasoUnoComponent {
   }
 
   toggleDataVisibility(datos: string[]): void {
-    console.log(datos,"data");
     this.selectedCheckboxes = datos;
   }
 }

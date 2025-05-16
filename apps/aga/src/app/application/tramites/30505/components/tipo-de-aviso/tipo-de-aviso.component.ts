@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { AVISO_MOD } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AVISO_MOD } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { CommonModule } from '@angular/common';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**
@@ -92,9 +92,7 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
    * @param data - Los datos recibidos del componente hijo.
    */
   onCambiarAviso(event: Event, controlName: string): void {
-    console.log('Checkbox value:', controlName);
-    console.log('Checkbox event:', event);
-
+  
     const CHECKED = (event.target as HTMLInputElement).checked;
     this.tramiteStore.setAviso(CHECKED, controlName); // Set the aviso in the store
 
@@ -104,7 +102,6 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
       this.selectedCheckboxes = this.selectedCheckboxes.filter(item => item !== controlName); // Remove value if unchecked
     }
 
-    console.log('Checkbox:', this.selectedCheckboxes);
     this.checkboxChange.emit(this.selectedCheckboxes); // Emit the updated array
     this.tramiteStore.setCheckboxDatos(this.selectedCheckboxes);
   }

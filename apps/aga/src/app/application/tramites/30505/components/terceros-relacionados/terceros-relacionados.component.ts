@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { TERCEROS_ENCABEZADO_DE_TABLA, TercerosRelacionados } from '../../../../core/models/30505/aviso-modificacion.model';
+import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
-import { TERCEROS_ENCABEZADO_DE_TABLA, TercerosRelacionados } from '../../../../core/models/30505/aviso-modificacion.model';
 
 @Component({
   selector: 'app-terceros-relacionados',

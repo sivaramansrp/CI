@@ -61,20 +61,20 @@ export class PasoDosComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.obtenerDatosIniciales();
+  //  this.obtenerDatosIniciales();
     this.getTiposDocumentos();
   }
 
   /**
    * @description Obtiene los datos iniciales para el componente, incluyendo las opciones desplegables.
    */
-  obtenerDatosIniciales(): void {
+  // obtenerDatosIniciales(): void {
     // this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
     //   next: (res: ImportanteCatalogoSeleccion) => {
     //     this.tableData = res.requisitosObligatoriosTabla;
     //   },
     // });
-  }
+  // }
 
   /**
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
