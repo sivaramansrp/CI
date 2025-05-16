@@ -6,40 +6,141 @@ import {
   Output,
   inject,
 } from '@angular/core';
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
+import { VistaEmergente } from '../../../core/models/shared/datos-generales.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
+
+/**
+ * @interface AccionBoton
+ * @description Define la estructura de un objeto que representa una acción de botón en el asistente.
+ * 
+ * @property {string} accion - Acción a realizar ('cont' para continuar, 'ant' para retroceder).
+ * @property {number} valor - Índice del paso al que se debe mover.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
 }
 
+/**
+ * @component
+ * @name BtnContinuarComponent
+ * @description Componente que gestiona los botones de navegación (Continuar, Anterior, Guardar) en un asistente.
+ * Permite avanzar o retroceder entre los pasos del asistente y emite eventos para manejar estas acciones.
+ * 
+ * @selector btn-continuar
+ * @template ./btn-continuar.component.html
+ * @style ./btn-continuar.component.scss
+ */
 @Component({
   selector: 'btn-continuar',
   standalone: true,
-  imports: [],
+  imports: [NotificacionesComponent],
   templateUrl: './btn-continuar.component.html',
   styleUrl: './btn-continuar.component.scss',
   host: {},
 })
 export class BtnContinuarComponent implements OnInit {
+  /**
+   * @property datos
+   * @description Datos relacionados con los pasos del asistente, incluyendo el índice actual y el número total de pasos.
+   * @type {DatosPasos}
+   */
   @Input({ required: true }) datos!: DatosPasos;
+
+  /**
+   * @property btnGuardar
+   * @description Indica si el botón de guardar debe estar habilitado.
+   * @type {boolean}
+   * @default false
+   */
   @Input() btnGuardar: boolean = false;
 
+  /**
+   * @property vistaEmergente
+   * @description Configuración para manejar vistas emergentes en el asistente.
+   * @type {VistaEmergente}
+   */
+  @Input() vistaEmergente: VistaEmergente = {
+    abierto: false,
+    indice: 1
+  };
+
+  /**
+   * @property notificacion
+   * @description Configuración de la notificación que se mostrará en el componente.
+   * @type {Notificacion}
+   */
+  @Input() notificacion!:Notificacion;
+
+  /**
+   * @property continuarEvento
+   * @description Evento emitido al hacer clic en el botón Continuar.
+   * @type {EventEmitter<AccionBoton>}
+   */
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
+
+  /**
+   * @property btnGuardarClicked
+   * @description Evento emitido al hacer clic en el botón Guardar.
+   * @type {EventEmitter<void>}
+   */
   @Output() btnGuardarClicked = new EventEmitter<void>();
 
+  /**
+   * @property wizardService
+   * @description Servicio utilizado para manejar la lógica del asistente.
+   * @type {WizardService}
+   */
   wizardService = inject(WizardService);
+
+  /**
+   * @property seccion
+   * @description Estado actual de la sección del asistente.
+   * @type {SeccionLibState}
+   */
   public seccion!: SeccionLibState;
+
+  /**
+   * @property destroyNotifier$
+   * @description Notificador utilizado para cancelar suscripciones activas al destruir el componente.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property habilitarBoton
+   * @description Indica si el botón Continuar debe estar habilitado.
+   * @type {boolean}
+   * @default false
+   */
   public habilitarBoton: boolean = false;
 
-  constructor(private seccionQuery: SeccionLibQuery) {
-    // Lógica de inicialización si es necesario
-   }
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public moduloEmergente: boolean = false;
 
+  /**
+   * @constructor
+   * @description Inicializa el componente e inyecta las dependencias necesarias.
+   * @param {SeccionLibQuery} seccionQuery Servicio para consultar el estado de la sección.
+   */
+  constructor(private seccionQuery: SeccionLibQuery) {}
+
+  /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la sección y actualiza la propiedad `habilitarBoton`.
+   * @returns {void}
+   */
   ngOnInit():void {
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -55,7 +156,8 @@ export class BtnContinuarComponent implements OnInit {
   }
 
   /**
-   * Determina la visibilidad del botón "Anterior".
+   * @method btnAntVisible
+   * @description Determina la visibilidad del botón "Anterior".
    * @returns {string} 'hidden' si el índice es 1, de lo contrario 'visible'.
    */
   get btnAntVisible(): string {
@@ -63,8 +165,8 @@ export class BtnContinuarComponent implements OnInit {
   }
 
   /**
-   * Determina si el botón "Continuar" debe ser visible.
-   *
+   * @method btnContVisible
+   * @description Determina si el botón "Continuar" debe ser visible.
    * @returns {boolean} `true` si el índice actual no es igual al número de pasos, de lo contrario `false`.
    */
   get btnContVisible(): boolean {
@@ -72,27 +174,30 @@ export class BtnContinuarComponent implements OnInit {
   }
 
   /**
-   * Avanza al siguiente paso del asistente si la condición se cumple.
-   * 
-   * @returns {void} No retorna ningún valor.
+   * @method continuar
+   * @description Avanza al siguiente paso del asistente si la condición se cumple.
+   * @returns {void}
    */
   continuar(): void {
+    if(this.vistaEmergente.abierto && this.datos.indice === this.vistaEmergente.indice){
+      this.moduloEmergente=true;
+    } else {
     const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
+      if (CONDICION) {
+        this.wizardService.cambio_indice(this.datos.indice);
+        const DATOS_CONTINUAR: AccionBoton = {
+          accion: 'cont',
+          valor: (this.datos.indice += 1),
+        };
+        this.continuarEvento.emit(DATOS_CONTINUAR);
+      }
     }
   }
-
   /**
-   * Retrocede al paso anterior si el índice actual está dentro del rango permitido.
-   * 
-   * @returns {void} No retorna ningún valor.
+   * @method anterior
+   * @description Retrocede al paso anterior si el índice actual está dentro del rango permitido.
+   * @returns {void}
    */
   anterior(): void {
     const CONDICION =
@@ -108,8 +213,32 @@ export class BtnContinuarComponent implements OnInit {
   }
 
   /**
-   * Emite un evento al hacer clic en el botón guardar.
-   * @returns {void} No retorna ningún valor.
+   * @method eliminarPedimento
+   * @description Elimina un pedimento y avanza al siguiente paso si la condición se cumple.
+   * @param {boolean} borrar Indica si se debe eliminar el pedimento.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    this.moduloEmergente=false;
+    if(borrar){
+      const CONDICION =
+      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    if (CONDICION) {
+      this.wizardService.cambio_indice(this.datos.indice);
+      const DATOS_CONTINUAR: AccionBoton = {
+        accion: 'cont',
+        valor: (this.datos.indice += 1),
+      };
+      this.continuarEvento.emit(DATOS_CONTINUAR);
+    }
+    this.moduloEmergente=false;
+    }
+  }
+
+  /**
+   * @method guardar
+   * @description Emite un evento al hacer clic en el botón guardar.
+   * @returns {void}
    */
   guardar(): void {
     this.btnGuardarClicked.emit();

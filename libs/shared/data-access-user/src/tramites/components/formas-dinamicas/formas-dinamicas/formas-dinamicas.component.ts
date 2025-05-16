@@ -384,17 +384,26 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public eventoDeCambioDeValor(event: any, campo: string): void {
-    let VALOR;
-    if (event.target) {
-      VALOR = (event.target as HTMLInputElement).value;
+public eventoDeCambioDeValor(event: any, campo: string): void {
+  let VALOR;
+
+  if (event?.target) {
+    const INPUT = event.target as HTMLInputElement;
+
+    if (INPUT.type === 'checkbox') {
+      VALOR = INPUT.checked; // Booleano verdadero/falso
     } else {
-      VALOR = event;
+      VALOR = INPUT.value; // Texto, fecha, número, etc.
     }
-    if (campo && event) {
-      this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
-    }
+  } else {
+    VALOR = event; // Para componentes personalizados o valores directos
   }
+
+  if (campo) {
+    this.emitirCambioDeValor.emit({ campo, valor: VALOR });
+  }
+}
+
 
   /**
   * compo doc

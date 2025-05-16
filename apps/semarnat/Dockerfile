@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/semarnat
 
 # Build the application
-RUN npx nx build semarnat --configuration=production --skip-nx-cache --verbose
+RUN npx nx build semarnat --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/semarnat" && test -f "/app/dist/apps/semarnat/index.html" || exit 1

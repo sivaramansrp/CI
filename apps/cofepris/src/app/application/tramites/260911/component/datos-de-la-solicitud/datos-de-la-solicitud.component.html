@@ -1,16 +1,19 @@
-<div class="container">
+<div class="container>">
+<div class="col-md-12 datos-de-la-solicitud">
   <div class="row mt-5">
-    <div class="col-md-12">
+    <div class="col-md-12 accordion-bar">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
             <p class="panel-title espacio-extra">
               Opciones de pre-llenado de Solicitud
             </p>
-            <button type="button" class="collpase-button collapsed"></button>
+            <button type="button" class="collpase-button collapsed"
+            [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" >
+          </button>
           </div>
           @if(colapsable){
-          <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-collapse collapse in" [ngClass]="{ 'in': colapsable, 'collapse': !colapsable}" id="panel-01">
             <div class="panel-body">
               <ng-alert [CONTENIDO]="TEXTOS.ALERTA"></ng-alert>
               <div class="row mt-5 mb-5">
@@ -39,8 +42,11 @@
           [radioOptions]="btonDeRadio"
           [layout]="'horizontal'"
           formControlName="btonDeRadio"
-          (change) = "getBtonDeRadio()"
+          (change)="setValorStore(form,'btonDeRadio')"
         ></app-input-radio>
+        <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
+          Por favor seleccione una opción.
+        </div>
       </div>
 
       <div class="row">
@@ -50,9 +56,13 @@
             <textarea
               class="form-control"
               rows="3"
-              formControlName="justificación"
-              (change) = "getJustificacion()"
+              required = "true"
+              formControlName="justificacion"
+              (change)="setValorStore(form,'justificacion')"
             ></textarea>
+            <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
+              Por favor, corrija el motivo o justificación de la importación temporal.
+            </div>
           </div>
         </div>
       </div>
@@ -67,7 +77,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click) = "toggleFormControls()"
+            (click)="toggleFormControls()"
           >
             Seleccionar establecimiento
           </button>
@@ -85,7 +95,7 @@
               placeholder=""
               type="text"
               formControlName="rfcDel"
-              (change) = "getRfcDel()"
+              (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
           </div>
         </div>
@@ -100,8 +110,13 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
-              (change) = "getDenominacion()"
+              (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
             />
+            <div
+            *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
+            class="text-danger">
+            La denominación es obligatoria.
+          </div>
           </div>
         </div>
       </div>
@@ -122,11 +137,20 @@
               placeholder=""
               type="text"
               formControlName="correo"
-              (change) = "getCorreo()"
+              (change)="setValorStore(datosDelEstablecimiento,'correo')"
             />
+            <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
+              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+                El correo electrónico es obligatorio.
+              </span>
+              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+                El formato del correo electrónico no es válido.
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </form>
   </div>
+</div>
 </div>

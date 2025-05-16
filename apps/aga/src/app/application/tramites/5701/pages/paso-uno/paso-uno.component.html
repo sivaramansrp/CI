@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row">
+<div class="row">
+  <div class="col-md-12">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
@@ -14,8 +14,12 @@
           (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Terceros relacionados</a>
       </li>
     </ul>
+  </div>
+</div>
 
-    <ng-container>
+<ng-container>
+  <div class="row">
+    <div class="col-md-12">
       @switch (indice) {
       @case (1) {
       <solicitante [tabindex]="1"></solicitante>
@@ -27,6 +31,6 @@
       <lib-terceros [tabindex]="3"></lib-terceros>
       }
       }
-    </ng-container>
+    </div>
   </div>
-</div>
+</ng-container>

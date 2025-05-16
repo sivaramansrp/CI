@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent]
+      declarations: [PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA] 
     }).compileComponents();
   });
 
@@ -17,15 +18,15 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice with default value 1', () => {
+  it('debe inicializar el índice con el valor predeterminado 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debe actualizar el índice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
