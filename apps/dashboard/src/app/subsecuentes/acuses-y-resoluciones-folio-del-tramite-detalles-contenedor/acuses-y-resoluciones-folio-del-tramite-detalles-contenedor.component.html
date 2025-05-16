@@ -3,3 +3,8 @@
   [procedureRegresorUrl]="procedureRegresorUrl"
   [datosDeFormulario]="datosDeFormulario"
 ></acuses-y-resoluciones-folio-del-tramite-detalles>
+<app-reviewers-tabs
+  [viewChild]="viewChild"
+  [tramite]="tramite"
+  (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+></app-reviewers-tabs>
