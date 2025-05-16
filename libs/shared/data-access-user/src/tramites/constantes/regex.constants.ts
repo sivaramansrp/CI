@@ -427,3 +427,5 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
