@@ -1,0 +1,661 @@
+<div class="container">
+    <form [formGroup]="avisoForm" >
+        <div class="col-md-12">
+            <ng-titulo titulo="Tipo de aviso" />
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <app-input-radio
+            [radioOptions]="avisoOpciones"
+            [isRequired]="true"
+            [layout]="'vertical'"
+            formControlName="tipoDeAviso"
+            [selectedValue]="avisoValor"
+            (valueChange)="avisoValorRadio('tipoDeAviso', $event.toString())"
+            (change)="
+                setValoresStore(
+                avisoForm,
+                'tipoDeAviso',
+                'setTipoDeAviso'
+                )"
+            ></app-input-radio>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos del almacén general del depósito" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre, denominación o razón social*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="nombre"
+                    formControlName="nombre"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'nombre',
+                    'setNombre'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="rfc">R F C*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="rfc"
+                    formControlName="rfc" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'rfc',
+                    'setRfc'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ng-titulo titulo="Domicilio del almacén general del depósito" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="entidadFederativa">Entidad federativa*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="entidadFederativa"
+                    formControlName="entidadFederativa" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'entidadFederativa',
+                    'setEntidadFederativa'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="alcaldiaMunicipo">Alcaldía o Municipio*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="alcaldiaMunicipo"
+                    formControlName="alcaldiaMunicipo"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'alcaldiaMunicipo',
+                    'setAlcaldiaMunicipo'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="colonia">Colonia*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="colonia"
+                    formControlName="colonia"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'colonia',
+                    'setColonia'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label" for="calle">Calle*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="calle"
+                    formControlName="calle" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'calle',
+                    'setCalle'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="numeroExterior">Número exterior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="numeroExterior"
+                    formControlName="numeroExterior" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'numeroExterior',
+                    'setNumeroExterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="numeroInterior">Número interior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="numeroInterior"
+                    formControlName="numeroInterior" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'numeroInterior',
+                    'setNumeroInterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="codigoPostal">Código postal*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="codigoPostal"
+                    formControlName="codigoPostal" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'codigoPostal',
+                    'setCodigoPostal'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label" for="cartaCupo">Folio de la carta cupo*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="cartaCupo"
+                    formControlName="cartaCupo" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'cartaCupo',
+                    'setCartaCupo'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <label style="margin-left: 7px" class="form-label" for="numeraDeAcuse">Número de acuse electrónico emitido por el Sistema Automatizado Aduanero Integral*:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="numeraDeAcuse"
+                    formControlName="numeraDeAcuse" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'numeraDeAcuse',
+                    'setNumeraDeAcuse'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ng-titulo titulo="Causas que motivan la destrucción" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <label style="margin-left: 7px" class="form-label" for="destruccionMercancia">Describa las causas que motivan la destrucción de la mercancía*:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionMercancia"
+                    formControlName="destruccionMercancia" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruccionMercancia',
+                    'setDestruccionMercancia'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ng-titulo titulo="Lugar donde se encuentra la mercancía y cantidad de mercancía" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaEntidadFederativa">Entidad federativa*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaEntidadFederativa"
+                    formControlName="merccanciaEntidadFederativa" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaEntidadFederativa',
+                    'setMerccanciaEntidadFederativa'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaAlcaldiaMunicipo">Alcaldía o Municipio*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaAlcaldiaMunicipo"
+                    formControlName="merccanciaAlcaldiaMunicipo" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaAlcaldiaMunicipo',
+                    'setMerccanciaAlcaldiaMunicipo'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaColonia">Colonia*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaColonia"
+                    formControlName="merccanciaColonia" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaColonia',
+                    'setMerccanciaColonia'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaCalle">Calle*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaCalle"
+                    formControlName="merccanciaCalle" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaCalle',
+                    'setMerccanciaCalle'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaNumeroExterior">Número exterior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaNumeroExterior"
+                    formControlName="merccanciaNumeroExterior"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaNumeroExterior',
+                    'setMerccanciaNumeroExterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaNumeroInterior">Número interior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaNumeroInterior"
+                    formControlName="merccanciaNumeroInterior" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaNumeroInterior',
+                    'setMerccanciaNumeroInterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="merccanciaCodigoPostal">Código postal*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="merccanciaCodigoPostal"
+                    formControlName="merccanciaCodigoPostal" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'merccanciaCodigoPostal',
+                    'setMerccanciaCodigoPostal'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruir">Cantidad de mercancías a destruir*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruir"
+                    formControlName="destruir" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruir',
+                    'setDestruir'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="tarifa">Unidad de medida (Tarifa)*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="tarifa"
+                    formControlName="tarifa" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'tarifa',
+                    'setTarifa'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+        @if(avisoValor === 'deposito_fiscal'){
+        <div class="col-md-12">
+            <ng-titulo titulo="Lugar donde se llevará a cabo la destrucción de la mercancía" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionEntidadFederativa">Entidad federativa*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionEntidadFederativa"
+                    formControlName="destruccionEntidadFederativa" 
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionAlcaldiaMunicipo">Alcaldía o Municipio*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionAlcaldiaMunicipo"
+                    formControlName="destruccionAlcaldiaMunicipo" 
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionColonia">Colonia*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionColonia"
+                    formControlName="destruccionColonia" 
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionCalle">Calle*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionCalle"
+                    formControlName="destruccionCalle" 
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionNumeroExterior">Número exterior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionNumeroExterior"
+                    formControlName="destruccionNumeroExterior" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruccionNumeroExterior',
+                    'setDestruccionNumeroExterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionNumeroInterior">Número interior*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionNumeroInterior"
+                    formControlName="destruccionNumeroInterior"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruccionNumeroInterior',
+                    'setDestruccionNumeroInterior'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="destruccionCodigoPostal">Código postal*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionCodigoPostal"
+                    formControlName="destruccionCodigoPostal"
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruccionCodigoPostal',
+                    'setDestruccionCodigoPostal'
+                    )"
+                    >
+                </div>
+            </div>
+        </div>
+            <div class="row mt-5">
+                <ng-alert [CONTENIDO]="MENSAJE"></ng-alert>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <input-fecha [datos]="desrtuccionFecha" (valorCambiado)="cambioFecha($event)"
+                    [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" ></input-fecha>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="destruccionHora">Hora en la que se llevará a cabo la destrucción*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="destruccionHora"
+                    formControlName="destruccionHora" 
+                    (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'destruccionHora',
+                    'setDestruccionHora'
+                    )"
+                    >
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="form-label" for="desturccionProceso">¿Cómo se llevó a cabo el proceso destructivo?*:</label>
+                        <input type="text" 
+                        value=""
+                        class="form-control" 
+                        id="desturccionProceso"
+                        formControlName="desturccionProceso"
+                        (change)="
+                        setValoresStore(
+                        avisoForm,
+                        'desturccionProceso',
+                        'setDesturccionProceso'
+                        )"
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <label style="margin-left: 7px" class="form-label" for="destruccionMercancia">¿La destrucción de las mercancías fue a raíz de un accidente o caso fortuito?</label>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                  <app-input-radio
+                  [radioOptions]="casoFortuitoOpcion"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  formControlName="casofortuito"
+                  (change)="
+                    setValoresStore(
+                    avisoForm,
+                    'casofortuito',
+                    'setCasofortuito'
+                    )"
+                  ></app-input-radio>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <ng-titulo titulo="Datos de las mercancías" />
+            </div>
+            <div class="row mt-5">
+                <p>Descargar plantilla: Aquí</p>
+                <p>Adjuntar archivo:</p>
+                <div class="col-md-8">
+                    <button type="button" for="archivoMedicamentos" class="file-upload"
+                        (click)="activarSeleccionArchivo()">
+                        Seleccionar archivo
+                    </button>
+                    <span class="ml-2">{{ etiquetaDeArchivo }}</span>
+                    <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)"
+                        class="file-upload" style="display: none;">
+                </div>
+
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary mr-5px">Cargar
+                        archivo</button>
+                </div>
+            </div>
+        }
+        @else{
+            <div class="row mt-5">
+                <ng-alert [CONTENIDO]="TEXTO"></ng-alert>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="form-label" for="donoMercancia">¿Cómo se desarrolló el proceso para la mercancía que se donó al Fisco Federal?*:</label>
+                        <input type="text" 
+                        value=""
+                        class="form-control" 
+                        id="donoMercancia"
+                        formControlName="donoMercancia" 
+                        (change)="
+                            setValoresStore(
+                            avisoForm,
+                            'donoMercancia',
+                            'setDonoMercancia'
+                            )"
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="form-label" for="condicionesMateriales">Describa las condiciones materiales en las cuales se encuentra la mercancía que se pretende donar*:</label>
+                        <input type="text" 
+                        value=""
+                        class="form-control" 
+                        id="condicionesMateriales"
+                        formControlName="condicionesMateriales" 
+                        (change)="
+                            setValoresStore(
+                            avisoForm,
+                            'condicionesMateriales',
+                            'setCondicionesMateriales'
+                            )"
+                        >
+                    </div>
+                </div>
+            </div>
+        }
+        
+    </form>
+</div>

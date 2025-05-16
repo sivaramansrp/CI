@@ -1,6 +1,6 @@
 import { ANO_CATALOGO, AprovechamientoTextos, FECHA_INICIAL, FECHA_PAGO, MES_CATALOGO, RADIO_OPCIONS, RADIO_PARCIAL, RADIO_TOTAL } from '../constantes/adace32508.enum';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32508State, Tramite32508Store } from '../state/Tramite32508.store';
@@ -28,7 +28,7 @@ import { Tramite32508Query } from '../state/Tramite32508.query';
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.css',
 })
-export class AvisoComponent implements OnInit, OnDestroy {
+export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Observable para gestionar la destrucción del componente.
    */
@@ -112,12 +112,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en los radios.
    */
-  valorSeleccionado: string = '';
+  valorSeleccionado: string | number = 'disminucion';
 
   /**
    * Nombre del archivo seleccionado.
    */
   nombreArchivo: string = '';
+  monstrarDisminucion: boolean = false;
+  mostrarCompensacion: boolean = false;
+  mostrarDisminucionYCompensacion: boolean = false;
 
   /**
    * Constructor del componente.
@@ -133,7 +136,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
     private store: Tramite32508Store,
     private query: Tramite32508Query,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ) { }
+  ngAfterViewInit(): void {
+    this.avisoForm.get('tipoDictamen')?.value === '' ? 'disminucion' : this.avisoForm.get('tipoDictamen')?.value ;
+      this.setValoresStore( this.avisoForm, 'radioParcial', 'setRadioPartial' )
+
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -151,7 +159,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
     this.obtenerDatosAnoPeriodo();
     this.obtenerDatosMesPeriodo();
+  this.setValoresStore( this.avisoForm, 'radioParcial', 'setRadioPartial' )
+
   }
+
+  
 
   /**
    * Obtiene los datos del catálogo de años.
@@ -277,12 +289,30 @@ export class AvisoComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite32508Store
+    metodoNombre: keyof Tramite32508Store,
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
 
+
+    const AVISO_RADIO = this.avisoForm.get('tipoDictamen')?.value === '' ? 'disminucion' : this.avisoForm.get('tipoDictamen')?.value ;
+
+    if (AVISO_RADIO === 'disminucion') {
+      this.monstrarDisminucion = true;
+      this.mostrarCompensacion = false;
+      this.mostrarDisminucionYCompensacion = false;
+    } else if (AVISO_RADIO === 'compensacion') {
+      this.monstrarDisminucion = false;
+      this.mostrarCompensacion = true;
+      this.mostrarDisminucionYCompensacion = false;
+    } else if (AVISO_RADIO === 'disminucionYCompensacion') {
+      this.monstrarDisminucion = false;
+      this.mostrarCompensacion = false;
+      this.mostrarDisminucionYCompensacion = true;
+    }
+
+
+  }
   /**
    * Configura el formulario con los valores iniciales del estado.
    */
@@ -305,7 +335,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
       fechaElaboracion: [this.solicitudState?.fechaElaboracion, [Validators.required]],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
       archivo: [null, [Validators.required]],
+      compensacionAplicada: [this.solicitudState?.compensacionAplicada, [Validators.required]],
+      saldoPendienteCompensar: [this.solicitudState?.saldoPendienteCompensar, [Validators.required]],
     });
+
   }
 
   /**
