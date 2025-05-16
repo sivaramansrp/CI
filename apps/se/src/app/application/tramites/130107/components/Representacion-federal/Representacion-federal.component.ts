@@ -27,6 +27,7 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   templateUrl: './representacion-federal.component.html',
   styleUrl: './representacion-federal.component.scss',
 })
+
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**
    * @property destroy$

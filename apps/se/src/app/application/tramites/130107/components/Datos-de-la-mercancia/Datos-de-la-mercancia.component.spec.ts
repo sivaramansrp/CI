@@ -13,6 +13,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   let importacionesQueryMock: jest.Mocked<ImportacionesAgropecuariasQuery>;
   let formularioServiceMock: jest.Mocked<ServicioDeFormularioService>;
 
+  
   beforeEach(() => {
     importacionesServiceMock = {
       datosDeLaSolicitud: jest.fn(),
