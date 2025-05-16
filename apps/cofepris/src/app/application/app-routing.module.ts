@@ -47,7 +47,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'aviso-exportacion',
-    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)
+    loadChildren: () =>
+      import('./tramites/260604/aviso-exportacion.module').then(
+        (m) => m.AvisoExportacionModule
+      ),
   },
   {
     path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
@@ -63,7 +66,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260206/maquila-materias-primas.module').then(
         (m) => m.MaquilaMateriasPrimasModule
-      )
+      ),
   },
   {
     path: 'mod-permiso-importacion',
@@ -232,7 +235,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260911/modificacion-de-dispositivos.module').then(
         (m) => m.ModificacionDeDispositivosModule
-      )
+      ),
   },
   {
     path: 'retiros-cofepris',
@@ -259,9 +262,9 @@ const ROUTES: Routes = [
   {
     path: 'modificacion-del-permiso',
     loadChildren: () =>
-      import(
-        './tramites/260913/modificacion-del-permiso.module'
-      ).then((m) => m.ModificacionDelPermisoModule),
+      import('./tramites/260913/modificacion-del-permiso.module').then(
+        (m) => m.ModificacionDelPermisoModule
+      ),
   },
   {
     path: 'importacion-materias-primas-estupefacientes',
@@ -280,9 +283,9 @@ const ROUTES: Routes = [
   {
     path: 'medicamentos-destinados-uso',
     loadChildren: () =>
-      import('./tramites/260208/importacion-medicamentos-destinados-uso.module').then(
-        (m) => m.ImportacionMedicamentosDestinadosUsoModule
-      ),
+      import(
+        './tramites/260208/importacion-medicamentos-destinados-uso.module'
+      ).then((m) => m.ImportacionMedicamentosDestinadosUsoModule),
   },
 
   {
@@ -319,7 +322,8 @@ const ROUTES: Routes = [
     path: 'Permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
-        (m) => m.PermisoDeImportacionModule)
+        (m) => m.PermisoDeImportacionModule
+      ),
   },
 
   {
@@ -328,26 +332,27 @@ const ROUTES: Routes = [
       import(
         './tramites/260901/modificacion-permiso-sanitario-la-salud.module'
       ).then((m) => m.ModificacionPermisoSanitarioLaSaludModule),
-      
   },
   {
     path: 'muestras-de-toxicos',
     loadChildren: () =>
       import('./tramites/260513/muestras-de-toxicos.module').then(
-        (m) => m.MuestrasDeToxicosModule)
+        (m) => m.MuestrasDeToxicosModule
+      ),
   },
   {
     path: 'permiso-sujetos',
     loadChildren: () =>
-      import(
-        './tramites/260504/permiso-sujetos.module'
-      ).then((m) => m.PermisoSujetosModule),
+      import('./tramites/260504/permiso-sujetos.module').then(
+        (m) => m.PermisoSujetosModule
+      ),
   },
   {
     path: 'permiso-importacion-calidad',
     loadChildren: () =>
       import('./tramites/260514/parmiso-importacion-calidad.module').then(
-        (m) => m.ParmisoImportacionCalidadModule)
+        (m) => m.ParmisoImportacionCalidadModule
+      ),
   },
 
   {
@@ -360,23 +365,25 @@ const ROUTES: Routes = [
   {
     path: 'importacion-tratamientos-especiales',
     loadChildren: () =>
-      import('./tramites/260207/importacion-tratamientos-especiales.module').then(
-        (m) => m.ImportacionTratamientosEspecialesModule
-      ),
+      import(
+        './tramites/260207/importacion-tratamientos-especiales.module'
+      ).then((m) => m.ImportacionTratamientosEspecialesModule),
   },
   {
     path: 'importacion-psicotropicos-poretorno',
     loadChildren: () =>
-      import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
-        (m) => m.ImportacionPsicotropicosPoretornoModule),
-},
+      import(
+        './tramites/260201/importacion-psicotropicos-poretorno.module'
+      ).then((m) => m.ImportacionPsicotropicosPoretornoModule),
+  },
 
-{
-  path: 'importacion-remedios-herbolarios',
-  loadChildren: () =>
-  import('./tramites/260219/importacion-destinados-donacio.module').then(
-    (m) => m.ImportacionRemediosHerbolariosModule),
-},
+  {
+    path: 'importacion-remedios-herbolarios',
+    loadChildren: () =>
+      import('./tramites/260219/importacion-destinados-donacio.module').then(
+        (m) => m.ImportacionRemediosHerbolariosModule
+      ),
+  },
 
 {
   path: 'permiso-transformacion-maquila',
@@ -419,24 +426,25 @@ const ROUTES: Routes = [
       ),
   },
   {
-      path: 'solicitud-modificacion',
-      loadChildren: () =>
-        import('./tramites/261101/datos-solicitude.module').then(
-          (m) => m.DatosSolicitudeModule
-        ),
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/261101/datos-solicitude.module').then(
+        (m) => m.DatosSolicitudeModule
+      ),
   },
   {
-        path: 'importar-suministros-medicos',
-        loadChildren: () =>
-          import('./tramites/260916/importar-suministros-medicos.module').then(
-            (m) => m.ImportarSuministrosMedicosModule
-          )
+    path: 'importar-suministros-medicos',
+    loadChildren: () =>
+      import('./tramites/260916/importar-suministros-medicos.module').then(
+        (m) => m.ImportarSuministrosMedicosModule
+      ),
   },
   {
     path: 'correccion-interna-de-la-cofepris',
     loadChildren: () =>
       import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
-        (m) => m.CorreccionInternaDeLaCofeprisModule)
+        (m) => m.CorreccionInternaDeLaCofeprisModule
+      ),
   },
 
   {
@@ -462,13 +470,13 @@ const ROUTES: Routes = [
   },
 
 
-{
-  path: 'exportacion-medicamentos-contengan',
-  loadChildren: () =>
-    import('./tramites/260304/exportacion-medicamentos-contengan.module').then(
-      (m) => m.ExportacionMedicamentosContenganModule
-    ),
-},
+  {
+    path: 'exportacion-medicamentos-contengan',
+    loadChildren: () =>
+      import(
+        './tramites/260304/exportacion-medicamentos-contengan.module'
+      ).then((m) => m.ExportacionMedicamentosContenganModule),
+  },
 
 {
   path: 'permiso-importacion-module',
@@ -554,10 +562,17 @@ const ROUTES: Routes = [
       (m) => m.ImportarDeRemediosHerbalsModule
     ),
 },
+{
+  path: 'permiso-vegetales-nutrientes',
+  loadChildren: () =>
+    import('./tramites/260509/permiso-vegetales-nutrientes.module').then(
+      (m) => m.PermisoVegetalesNutrientesModule
+    ),
+},
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
