@@ -293,10 +293,14 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
       {
         tipo: 'required',
         mensaje: ''
+      },
+      {
+        tipo:'maxlength',
+         valor:250
       }
     ],
     marcadorDePosicion: '',
-    marginTop: 0
+    marginTop: 5
   },
   {
     id: 'valor_partida_usd',
@@ -310,7 +314,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
       { tipo: 'required' }
     ],
     marcadorDePosicion: '',
-    marginTop: 0
+    marginTop: 5
   }
 ];
 
