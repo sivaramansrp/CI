@@ -449,6 +449,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
+  },
+  {
     path: 'catalogos',
     loadChildren: () =>
       import('./tramites/90303/catalogos.module').then(
