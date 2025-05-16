@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -341,6 +341,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.descripcion,
         [
           Validators.required,
+          Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS),
         ],
       ],
 
