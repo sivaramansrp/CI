@@ -124,14 +124,16 @@ const ROUTES: Routes = [
   {
     path: 'registro-caat-naviero',
     loadChildren: () =>
-      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
+      import('./tramites/40301/registro-caat-naviero.module').then(
+        (m) => m.RegistroCaatNavieroModule
+      ),
   },
-{
-  path: 'transferencia-contenedores',
-  loadChildren: () =>
-    import('./tramites/11204/temporal-contenedores.module').then(
-      (m) => m.TemporalContenedoresModule
-    ),
+  {
+    path: 'transferencia-contenedores',
+    loadChildren: () =>
+      import('./tramites/11204/temporal-contenedores.module').then(
+        (m) => m.TemporalContenedoresModule
+      ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -155,32 +157,37 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'invocar-modulo',
+    path: 'registro-empresas',
     loadChildren: () =>
-      import('./tramites/105/invocar.module').then(
-        (m) => m.InvocarModule
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
       ),
   },
   {
-    path: 'attention-Of-Renewal',
+    path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
+      import('./tramites/105/invocar.module').then((m) => m.InvocarModule),
+  },
+  {
+    path: 'atencion-de-renovacion',
+    loadChildren: () =>
+      import('./tramites/40403/atencion-de-renovacion.module').then(
+        (m) => m.AtencionDeRenovacionModule
       ),
   },
   {
     path: 'retirada-de-la-autorizacion-de-donaciones',
     loadChildren: () =>
-      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
-        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
-      )
+      import(
+        './tramites/11105/retirada-de-la-autorizacion-de-donaciones.module'
+      ).then((m) => m.RetiradaDeLaAutorizacionDeDonacioneModule),
   },
   {
     path: 'deposito-fiscal',
     loadChildren: () =>
-      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
-        (m) => m.DepositoFiscalManufacturaVehiculosModule
-      )
+      import(
+        './tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module'
+      ).then((m) => m.DepositoFiscalManufacturaVehiculosModule),
   },
   {
     path: 'transportacion-maritima',
@@ -194,21 +201,28 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/6101/junta-tecnica.module').then(
         (m) => m.JuntaTecnicaModule
-      )
+      ),
+  },
+  {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
+      ),
   },
   {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
-      import('./tramites/40202/modificacion-transportacion-maritima.module').then(
-        (m) => m.ModificacionTransportacionMaritimaModule
-      ),
+      import(
+        './tramites/40202/modificacion-transportacion-maritima.module'
+      ).then((m) => m.ModificacionTransportacionMaritimaModule),
   },
   {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
-      )
+      ),
   },
   {
     path: 'cancelacion-donaciones',
@@ -217,7 +231,15 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  { 
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      ),
+  },
+
+  {
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -232,29 +254,101 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path:'registro-solicitud',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/570102/registro-solicitud-desistimiento.module').then(
         (m) => m.RegistroSolicitudDesistimientoModule
       ),
-    },
-    {
+  },
+  {
     path: 'registro-del-codigo',
-      loadChildren: () =>
-        import('./tramites/40401/tramite40401.module').then(
-          (m) => m.Tramite40401Module),
+    loadChildren: () =>
+      import('./tramites/40401/tramite40401.module').then(
+        (m) => m.Tramite40401Module
+      ),
   },
   {
     path: 'codigo-transportista',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./tramites/40402/codigo-transportista.module').then(
-        (m) => m.CodigoTransportistaModule)
+        (m) => m.CodigoTransportistaModule
+      ),
   },
   {
     path: 'registro-transportista',
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule),
+        (m) => m.RegistroTransportistaModule
+      ),
+  },
+  {
+    path: 'concluir-relacion',
+    loadChildren: () =>
+      import('./tramites/420103/concluir-relacion.module').then(
+        (m) => m.ConcluirRelacionModule
+      ),
+  },
+  {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
+  },
+  {
+    path: 'operaciones-de-comercio',
+    loadChildren: () =>
+      import('./tramites/319/operaciones-de-comercio-exterior.module').then(
+        (m) => m.OperacionesDeComercioExteriorModule)
+  },
+  {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
+      ),
+  },
+  {
+    path: 'registrar-proveedores',
+    loadChildren: () =>
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
+  },
+  {
+    path: 'concluir-relacion',
+    loadChildren: () =>
+      import('./tramites/420102/concluir-relacion.module').then(
+        (m) => m.ConcluirRelacionModule),
+  },
+  {
+    path: 'solicitud-despacho-exportacion',
+    loadChildren: () =>
+      import('./tramites/5601/solicitud-despacho-exportacion.module').then(
+        (m) => m.SolicitudDespachoExportacionModule)
   }
 ];
 
@@ -262,4 +356,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

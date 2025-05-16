@@ -1,17 +1,21 @@
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { JSONResponse } from '@ng-mf/data-access-user';
-import { enviroment } from '../../../../enviroments/enviroment';
+import { APPINJECT } from 'apps/aga/src/app/app.inject';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiciosExtraordinariosService {
   /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  private readonly appConfig = inject(APPINJECT);
+  /**
    * URL del servidor para acceder a los catálogos auxiliares definidos en el entorno.
    */
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) { }
 

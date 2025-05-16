@@ -1,18 +1,21 @@
 import { ALERT, AlertComponent } from '@libs/shared/data-access-user/src';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudState, DatosSolicitudStore } from '../../estados/stores/datos-de-la-solicitud-modificacion.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MANIFIESTOS_DECLARACION, MERCANCIAS_DATA } from '../../constantes/aviso-de-funcionamiento.enum';
 import { MercanciasInfo, PropietarioTipoPersona, ScianModel } from '../../models/datos-de-la-solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ALERT_INSUMOS } from '../../constantes/datos-domicilio-legal.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosSolicitudQuery } from '../../estados/queries/datos-de-la-solicitud-modificacion.query';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
+import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
 import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 import { ScianData } from '../../models/datos-modificacion.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -36,11 +39,19 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
     InputCheckComponent,
     AlertComponent,
+    DatosDelEstablecimientoRFCComponent,
+    RepresentanteLegalRfcComponent
   ],
   templateUrl: './datos-de-la-solicitud-modificacion.component.html',
   styleUrl: './datos-de-la-solicitud-modificacion.component.scss',
 })
 export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * @Input
+   * Indica si los insumos están habilitados o no.
+   */
+  @Input() insumos: boolean = false;
+ 
   /**
    * @description
    * Formulario principal para capturar los datos de la solicitud.
@@ -89,6 +100,11 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
+  /**
+   * @description
+   * Mensaje de alerta para insumos.
+   */
+  TEXTOS_INSUMOS = ALERT_INSUMOS;
 
   /**
    * @description

@@ -6,7 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 interface FormValues {
-  [key: string]: string | number | boolean | object | undefined;
+   [key: string]: unknown;
 }
 /**
  * @descripcion
