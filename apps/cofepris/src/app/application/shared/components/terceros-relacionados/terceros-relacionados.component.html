@@ -23,10 +23,11 @@
     ></app-tabla-dinamica>
   </div>
 
+
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) {
+        @if (fabricanteTablaDatos.length > 0) {
         <button
           type="button"
           name="modificarMercancias"
@@ -74,7 +75,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) {
+        @if (destinatarioFinalTablaDatos.length > 0) {
         <button
           type="button"
           name="modificarMercancias"

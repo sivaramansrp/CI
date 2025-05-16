@@ -1,6 +1,8 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  MENSAJE_SIN_FILA_SELECCIONADA,
+  MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
@@ -17,6 +19,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_SOLO_NUMEROS,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -60,6 +65,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     AlertComponent,
     ReactiveFormsModule,
     FormsModule,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -309,6 +315,54 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public etiquetaMunicipio: string = 'Municipio o alcaldía';
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
+   * Mensaje de alerta que se muestra al usuario.
+   * @property {string} mensajeDeAlerta
+   */
+  public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
+
+  /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * @description
+   * Indica si se debe mostrar la notificación.
+   */
+  mostrarNotificacion: boolean = false;
+
+  /** Indica si se debe mostrar la alerta del RFC. */
+  mostrarRfcAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public nuevaRfcNotificacion!: Notificacion;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -347,6 +401,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       'aduanaDatos',
       '/cofepris/aduanaDatos.json'
     );
+      this.seleccionarFilaNotificacion={
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:this.mensajeDeAlerta,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
   }
 
   /**
@@ -355,6 +420,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
+      this.idProcedimiento
+    )
+      ? true
+      : false;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.mostrarCorreoElectronico =
@@ -428,11 +498,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.minLength(2), Validators.maxLength(150)],
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
@@ -440,11 +506,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.minLength(2), Validators.maxLength(150)],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -484,13 +546,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada, [Validators.required]],
+      lada: [this.datosSolicitudFormState.lada],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
       aviso: [this.datosSolicitudFormState.aviso],
-      licenciaSanitaria: [
-        this.datosSolicitudFormState.licenciaSanitaria,
-        [Validators.required],
-      ],
+      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas,
@@ -531,11 +590,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.idProcedimiento
           ),
         },
-        [Validators.required],
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
     });
+
+    if (this.mostrarNotificacion) {
+      const EMPTY = Object.entries(this.datosSolicitudFormState)
+        .filter(([key]) => key !== 'publico')
+        .every(([, value]) => !value);
+      if (EMPTY) {
+        this.alternarControlesDeFormulario(false);
+      }
+    }
   }
 
   /**
@@ -545,7 +612,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  
  */
   actualizarDatosFormularioSolicitud(): void {
-
     this.elementosRequeridos?.forEach((campo) => {
       const CONTROL = this.datosSolicitudForm.get(campo);
       if (CONTROL) {
@@ -553,7 +619,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         CONTROL.updateValueAndValidity();
       }
     });
-
   }
 
   /**
@@ -591,6 +656,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: 'GONZALEZ',
         apellidoMaterno: 'PINAL',
       });
+    } else {
+      this.abrirRfcModal();
     }
   }
 
@@ -605,6 +672,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarScian(): void {
     if (!this.scianLista.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.scianConfig.datos = this.scianConfig.datos.filter(
@@ -620,6 +688,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Cierra el modal de alerta.
+   * @method cerrarModal
+   * @returns {void}
+   */
+  aceptar(): void {
+    this.mostrarAlerta = false;
+  }
+
+  /**
    * Elimina las mercancías seleccionadas de la lista de datos de la tabla.
    *
    * Este método filtra los datos de la tabla de mercancías (`tablaMercanciasConfig.datos`)
@@ -631,6 +708,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
@@ -705,12 +783,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
+    if (!this.tablaMercanciasLista.length) {
+      this.mostrarAlerta = true;
+      return;
+    }
     this.datosDeTablaSeleccionados.emit({
       scianSeleccionados: this.scianLista,
       mercanciasSeleccionados: this.tablaMercanciasLista,
       opcionSeleccionados: this.opcionLista,
       opcionesColapsableState: this.opcionesColapsable,
     });
+    this.irAAcciones('../mercancia-datos');
   }
 
   /**
@@ -796,6 +879,102 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.datosSolicitudForm.get('colonia')?.setValue('CENTRO');
     }
   }
+
+  
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.alternarControlesDeFormulario(true);
+
+    this.elementoParaEliminar = i;
+  }
+
+
+  /**
+   * Método que verifica si un campo debe ser habilitado o deshabilitado
+   * según el procedimiento actual.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo debe ser habilitado, `false` en caso contrario.
+   */
+  public controlYaDeshabilitado(campo: string): boolean {
+    if (
+      (campo === 'apellidoPaterno' ||
+        campo === 'apellidoMaterno' ||
+        campo === 'representanteNombre') &&
+      (PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO.includes(
+        this.idProcedimiento
+      ) ||
+        PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL.includes(
+          this.idProcedimiento
+        ) ||
+        PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO.includes(
+          this.idProcedimiento
+        ))
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   */
+  alternarControlesDeFormulario(enable: boolean): void {
+    Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+      const CONTROL = this.datosSolicitudForm.get(controlName);
+      if (enable && this.controlYaDeshabilitado(controlName)) {
+        CONTROL?.enable();
+      } else {
+        CONTROL?.disable();
+      }
+    });
+  }
+
+  /**
+   * Abre el modal de RFC y muestra una notificación de alerta.
+   */
+  abrirRfcModal(): void {
+    this.mostrarRfcAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar el RFC.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Método que se llama cuando se elimina un pedimento.
+   * @param {boolean} borrar - Indica si se debe eliminar el pedimento.
+   * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
   /**
    * Emite un evento con los datos seleccionados de la tabla.
    *
