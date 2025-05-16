@@ -2,7 +2,7 @@ import { CROSLISTA_DE_PAISES, PAIS_PROCEDENCIA } from '../../constantes/importac
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -130,7 +130,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
     justificacion: new FormControl(''),
-    observaciones: new FormControl('')
+    observaciones: new FormControl('', [Validators.maxLength(512)])
   });
 
   /**

@@ -1,3 +1,5 @@
+import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+
 /**
   * @constant DATOS_DEL_TRAMITE_REALIZAR
   * @description
@@ -238,11 +240,12 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     labelNombre: 'Cantidad',
     campo: 'cantidad',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
     validadores: [
-      { tipo: 'required' }
+      { tipo: 'required' },
+      { tipo: 'pattern', valor: REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido' }
     ],
     marcadorDePosicion: '',
     marginTop: 0
@@ -252,11 +255,12 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     labelNombre: 'Fracción Arancelaria TIGIE',
     campo: 'fraccion_arancelaria_tigie',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
     validadores: [
-      { tipo: 'required' }
+      { tipo: 'required' },
+      { tipo: 'pattern', valor: REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido' }
     ],
     marcadorDePosicion: '',
     marginTop: 0
@@ -303,11 +307,12 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     labelNombre: 'Valor partida USD',
     campo: 'valor_partida_usd',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
     validadores: [
-      { tipo: 'required' }
+      { tipo: 'required' },
+      { tipo: 'pattern', valor: REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido' }
     ],
     marcadorDePosicion: '',
     marginTop: 0
