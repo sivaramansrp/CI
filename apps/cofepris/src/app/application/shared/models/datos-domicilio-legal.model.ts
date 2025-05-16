@@ -51,18 +51,15 @@ export interface PermisoModel {
   export const MERCANCIAS_DATA = [
     {
       encabezado: 'Nombre comercial',
-      encabezado: 'Nombre comercial',
       clave: (ele: MercanciasInfo) => ele.nombreComercial,
       orden: 1,
     },
     {
       encabezado: 'Nombre común',
-      encabezado: 'Nombre común',
       clave: (ele: MercanciasInfo) => ele.nombreComun,
       orden: 2,
     },
     {
-      encabezado: 'Nombre científico',
       encabezado: 'Nombre científico',
       clave: (ele: MercanciasInfo) => ele.nombreCientifico,
       orden: 3,
