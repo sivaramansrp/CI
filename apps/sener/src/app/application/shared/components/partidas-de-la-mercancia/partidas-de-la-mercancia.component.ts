@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -31,6 +32,16 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent {
+
+/**
+ * Referencia al elemento del modal de modificación de partida.
+ * Se utiliza para controlar la apertura y cierre del modal mediante la API de Bootstrap.
+ * 
+ * @type {ElementRef}
+ * @memberof PartidasDeLaMercanciaComponent
+ */
+   @ViewChild('modalModificarPartidaRef', { static: false }) modalModificarPartidaRef!: ElementRef;
+
   /**
    * @property {FormGroup} partidasDelaMercanciaForm
    * @description Formulario reactivo principal para capturar los datos de las partidas.
@@ -137,6 +148,9 @@ export class PartidasDeLaMercanciaComponent {
    */
   navegarParaModificarPartida(): void {
     this.navegarParaModificarPartidaEvent.emit();
+    const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
+    const MODALINSTANCE = new Modal(MODALELEMENT);
+    MODALINSTANCE.show();
   }
 
   /**
@@ -148,5 +162,39 @@ export class PartidasDeLaMercanciaComponent {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+ * @method onModificarPartida
+ * @description
+ * Método encargado de validar el formulario de modificación de partida y, si es válido,
+ * ejecutar la lógica de guardado/actualización y cerrar el modal correspondiente utilizando la API de Bootstrap.
+ * Además, elimina manualmente el backdrop y limpia los estilos del body para evitar que la pantalla quede oscura.
+ * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+ 
+ * - Valida el formulario reactivo de la partida.
+ * - Ejecuta la lógica de guardado/actualización (debe implementarse según la necesidad).
+ * - Cierra el modal de modificación de partida usando la instancia de Bootstrap Modal.
+ * - Elimina manualmente cualquier backdrop restante y limpia las clases/estilos del body.
+ * - Si el formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+ *
+ * @returns {void}
+ */
+
+  onModificarPartida() {
+    if (this.partidasDelaMercanciaForm.valid) {
+      const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
+      const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);
+      MODALINSTANCE.hide();
+
+      setTimeout(() => {
+      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }, 500);
+    } else {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    }
   }
 }

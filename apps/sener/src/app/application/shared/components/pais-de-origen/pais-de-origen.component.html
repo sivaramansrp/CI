@@ -25,7 +25,6 @@
     [fechas]="selectRangoDias"
     [showSearchInput1]="true"
     [showSearchInput2]="true"
-    [required]="true"
     [botonField]="campoDeBotones"
     ></crosslist>
   </div>
@@ -52,7 +51,7 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
-          >La descripción es obligatoria.</small
+          >Este campo es obligatorio.</small
         >
         </div>
       </div>
@@ -80,7 +79,7 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
-          >La justificación es obligatoria.</small
+          >Este campo es obligatorio.</small
         >
         </div>
       </div>

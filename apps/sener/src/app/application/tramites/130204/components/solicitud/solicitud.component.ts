@@ -341,7 +341,6 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.maxLength(500),
         ],
       ],
 
@@ -359,7 +358,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.cantidad,
         [
           Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
           Validators.min(1),
         ],
       ],
@@ -372,7 +371,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.valorFacturaUSD?.toString() ?? '',
         [
           Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
           Validators.min(0.01),
         ],
       ],

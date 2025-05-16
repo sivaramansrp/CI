@@ -27,7 +27,6 @@ export class CrosslistComponent implements OnInit, OnChanges {
   @Input() label: CrossListLable | undefined;
   @Input() showSearchInput1: boolean = false;
   @Input() showSearchInput2: boolean = false;
-  @Input() required: boolean = false;
 
   @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
 

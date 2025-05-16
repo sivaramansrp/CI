@@ -1,7 +1,8 @@
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
-  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/ // Hasta 12 enteros y 2 decimales
 };
 
 // Expresión regular para verificar si la entrada comienza con espacios

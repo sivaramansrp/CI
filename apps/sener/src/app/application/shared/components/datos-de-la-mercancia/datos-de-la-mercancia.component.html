@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
         <textarea id="descripcion" class="form-control descripcion-text-box"
-          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion"
+          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" [maxlength]="1000"
           (change)="setValoresStore(form, 'descripcion')"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
@@ -21,9 +21,6 @@
           </small>
           <small *ngIf="form.controls['descripcion'].errors?.['minlength']">
             Debe tener al menos 10 caracteres.
-          </small>
-          <small *ngIf="form.controls['descripcion'].errors?.['maxlength']">
-            No puede exceder 500 caracteres.
           </small>
         </div>
       </div>
@@ -72,7 +69,7 @@
             Este campo es obligatorio.
           </small>
           <small *ngIf="form.controls['cantidad'].errors?.['pattern']">
-            Solo se permiten números.
+            Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['cantidad'].errors?.['min']">
             Debe ser mayor que 0.
@@ -88,7 +85,7 @@
             Este campo es obligatorio.
           </small>
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern']">
-            Ingrese un valor numérico válido (ej. 100.50).
+            Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']">
             Debe ser mayor que 0.
