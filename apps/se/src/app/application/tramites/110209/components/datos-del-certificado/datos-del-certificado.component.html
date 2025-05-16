@@ -1,13 +1,12 @@
-<div class="container">
+<form [formGroup]="datosDelCertificadoForm">
     <ng-titulo [titulo]="'Datos del certificado'"></ng-titulo>
-    <form [formGroup]="datosDelCertificadoForm">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="observaciones" class="form-label">Observaciones :</label>
                     <textarea class="form-control" id="observaciones" formControlName="observaciones"
                         placeholder="pruebas"
-                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones','setObservaciones')"></textarea>
+                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones')"></textarea>
                         <div *ngIf="datosDelCertificadoForm.get('observaciones')?.touched && datosDelCertificadoForm.get('observaciones')?.invalid">
                             <small *ngIf="datosDelCertificadoForm.get('observaciones')?.errors?.['pattern']" class="text-danger">Por favor, corrija la observaciones.</small>
                           </div>
@@ -15,6 +14,7 @@
             </div>
         </div>
     </form>
+    <div class="form">
     <div class="row mt-4">
         <div class="col-md-12">
             <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
