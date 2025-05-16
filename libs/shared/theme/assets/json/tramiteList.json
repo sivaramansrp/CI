@@ -826,10 +826,10 @@
     "department": "se"
   },
   {
-    "id": 119,
+    "id": 121,
     "tramite": 120101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/solicitud-de-registro-tpl/pantallas",
+    "linkDepartment": "/pago/solicitud-de-registro-tpl/pantallas",
     "department": "se"
   },
   {
