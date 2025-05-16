@@ -1,5 +1,5 @@
 import { CROSLISTA_DE_PAISES, PAIS_PROCEDENCIA } from '../../constantes/importacion-definitiva.enum';
-import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { Catalogo, ModeloDeFormaDinamica, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -129,7 +129,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
    */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
-    justificacion: new FormControl(''),
+    justificacion: new FormControl('', [Validators.required]),
     observaciones: new FormControl('', [Validators.maxLength(512)])
   });
 
@@ -175,7 +175,8 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   */
   constructor(
     private tramite130103Store: Tramite130103Store,
-    private tramite130103Query: Tramite130103Query
+    private tramite130103Query: Tramite130103Query,
+    private formValidator: ValidacionesFormularioService
   // eslint-disable-next-line no-empty-function
   ) {}
 
@@ -322,6 +323,15 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
     } else if (event) {
       this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
     }
+  }
+
+  /**
+   * Metodo para saber si el campo del formulario es valido.
+   * @param field El nombre del campo del formulario que se va a validar.
+   * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
+   */
+  isValid(field: string): boolean | null {
+    return this.formValidator.isValid(this.forma, field);
   }
 
   /**

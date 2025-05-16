@@ -13,16 +13,21 @@
     <div class="row mt-5">
         <div class="col-md-8">
             <div class="form-group">
-                <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene: </label>
+                <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene*: </label>
                 <textarea 
                 class="form-control min-height" 
                 id="justificacion" 
                 name="justificacion"
                 formControlName="justificacion"
                 rows="5"
+                [ngClass]="isValid('justificacion') ? 'required' : ''"
                 (change)="eventoDeCambioDeValor($event, 'justificacion')"
-            ></textarea>
-
+                ></textarea>
+                @if (forma.controls['justificacion'].invalid && forma.controls['justificacion'].touched) {
+                    <div class="mensaje-error">
+                        Este campo es obligatorio.
+                    </div>
+                }
             </div>
         </div>
 

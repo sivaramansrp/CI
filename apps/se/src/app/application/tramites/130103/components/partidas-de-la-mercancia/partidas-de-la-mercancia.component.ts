@@ -1,10 +1,11 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { Modal } from 'bootstrap';
 import { PARTIDAS_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 import { Partidas } from '../../models/importacion-definitiva.model';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
@@ -47,7 +48,16 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
+export class PartidasDeLaMercanciaComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Referencia al modal de confirmación
+   */
+  @ViewChild('cargarArchivoModal', { static: false }) cargarArchivoModal!: ElementRef;
+
+   /**
+   * Instancia del modal de confirmación
+   */
+  private cargarArchivoInstance!: Modal;
   /**
   * compo doc
   * @property partidasDeLaMercanciaFormData
@@ -102,7 +112,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @type {FormGroup}
-   * @memberof RepresentanteLegalComponent
+   * @memberof PartidasDeLaMercanciaComponent
    * @description
    * Este es un formulario reactivo de Angular representado por un FormGroup.
    * Se utiliza para manejar y validar los datos del formulario en el componente.
@@ -112,6 +122,18 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     valor_total: new FormControl({ value: '100', disabled: true }),
     ninoFormGroup: new FormGroup({})
   });
+
+  /**
+   * compo doc
+   * @type {FormGroup}
+   * @memberof PartidasDeLaMercanciaComponent
+   * @description
+   * Este es un formulario reactivo de Angular representado por un FormGroup.
+   * Se utiliza para manejar y validar los datos del formulario en el componente.
+   */
+  public archivoFormGroup: FormGroup = new FormGroup({
+    archivo: new FormControl('')
+  })
 
    /**
   * compo doc
@@ -291,6 +313,61 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
       this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
     } else if (event) {
       this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
+  /**
+  * compo doc
+  * @method eventoDeCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los eventos de cambio en los campos del formulario dinámico. 
+  * Extrae el valor del campo modificado y lo envuelve en un objeto que incluye el nombre del campo 
+  * y su nuevo valor. Luego, llama al método `establecerCambioDeValor` para actualizar el estado dinámico. 
+  * @param {Event} event - Evento de cambio generado por el campo del formulario.
+  * @param {string} campo - Nombre del campo modificado.
+  */
+  public eventoDeCambioDeValor(event: Event, campo: string): void {
+    if (event.target) {
+      const VALOR = (event.target as HTMLInputElement).value;
+      const DATO = { campo: campo, valor: VALOR };
+      this.establecerCambioDeValor(DATO);
+    }
+  }
+
+  /**
+  *  compo doc
+  * @method cerrar
+  * @description
+   * Cierra el modal de cargar archivo
+   */
+  cerrar(): void {
+    if (this.cargarArchivoInstance) {
+      this.cargarArchivoInstance.hide();
+    }
+  }
+
+  /**
+  * compo doc
+  * @method ngAfterViewInit
+  * @description
+   * Método que se ejecuta después de que la vista ha sido inicializada
+   */
+  ngAfterViewInit(): void {
+    // Inicializa los modales
+    if (this.cargarArchivoModal) {
+      this.cargarArchivoInstance = new Modal(this.cargarArchivoModal.nativeElement);
+    }
+  }
+
+  /**
+  *  compo doc
+  * @method cargarArchivo
+  * @description
+   * Abre el modal de cargar archivo
+   */
+  cargarArchivo(): void {
+    if (this.cargarArchivoInstance) {
+      this.cargarArchivoInstance.show();
     }
   }
 
