@@ -18,6 +18,7 @@ export interface TercerosRelacionados{
   apellidoMaterno: string,
   domicilio: string
 }
+
 /**
  * @description
  * Crea y retorna el estado inicial para la solicitud 30505.
@@ -78,6 +79,7 @@ export interface FusionEscision{
   rfcBusquedaModalSC: string,
   razonSocialFusionanteSC: string
 }
+
 /**
  * @description
  * Configuración de columnas para la tabla de Fusión/Escisión.
@@ -136,6 +138,7 @@ export interface AvisoAgente{
   patentAutorizacion: string,
   estatus: string
 }
+
 /**
  * @description
  * Configuración de las columnas para la tabla de Aviso de Agente.
@@ -185,9 +188,7 @@ export const AVISO_AGENTE_DE_TABLA: ConfiguracionColumna<AvisoAgente>[] =
       orden: 7,
     }
   ];
-
   
- 
   /**
    * @desc Identificador único de la tabla utilizada para mostrar los datos de fusión o escisión en la interfaz de usuario.
    * @type {string}
