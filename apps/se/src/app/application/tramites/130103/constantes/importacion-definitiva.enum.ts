@@ -297,10 +297,14 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
       {
         tipo: 'required',
         mensaje: ''
+      },
+      {
+        tipo:'maxlength',
+         valor:250
       }
     ],
     marcadorDePosicion: '',
-    marginTop: 0
+    marginTop: 5
   },
   {
     id: 'valor_partida_usd',
@@ -315,7 +319,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
       { tipo: 'pattern', valor: REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido' }
     ],
     marcadorDePosicion: '',
-    marginTop: 0
+    marginTop: 5
   }
 ];
 

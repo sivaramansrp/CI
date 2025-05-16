@@ -61,8 +61,8 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas.
    * */
    public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País disponible:',
+    derecha: 'País seleccionado:*',
   };
 
   /**
