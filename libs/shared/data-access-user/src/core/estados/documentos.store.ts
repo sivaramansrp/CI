@@ -1,28 +1,14 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
+import { TipoDocumentos } from "../models/shared/anexar-documentos.model";
 
 /**
  * Modelo para almacenar la información del estado de los documentos requeridos y opcionales
  */
 
 export interface DocumentosState {
-    catalogoDocumentosRequeridos: DocumentoState[];
-    catalogoDocumentosOpcionales: DocumentoState[];
-}
-
-/**
- * Modelo para el estado de cada documento
- */
-export interface DocumentoState {
-    id: number;
-    descripcion: string;
-    clave?: string;
-    tam?: string;
-    dpi?: string;
-    nuevo?: boolean;
-    uniqueId?: string;
-    adicionales?: DocumentoState[];
-    cargado?: boolean;
+    catalogoDocumentosRequeridos: TipoDocumentos[];
+    catalogoDocumentosOpcionales: TipoDocumentos[];
 }
 
 /**

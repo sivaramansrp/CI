@@ -43,8 +43,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() catalogoDocumentos: CatalogoDocumento[] = [];
   
-  @Input() catalogoDocumentosObligatorios: TipoDocumentos[] = [];
-
   /**
    * @description Catalogo de documentos opcionales.
    * @type {CatalogoDocumento[]}
