@@ -7,13 +7,20 @@ import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  Notificacion,
+  NotificacionesComponent,
+} from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
+import {
+  MENSAJE_SIN_FILA_SELECCIONADA,
+  OCULTAR_FACTURADOR,
+} from '../../constantes/datos-solicitud.enum';
 import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
 
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
@@ -40,6 +47,7 @@ import { Proveedor } from '../../models/terceros-relacionados.model';
     TituloComponent,
     TablaDinamicaComponent,
     AlertComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
@@ -166,15 +174,48 @@ export class TercerosRelacionadosComponent implements OnInit {
   @Output() facturadorEventoModificar: EventEmitter<Facturador[]> =
     new EventEmitter<Facturador[]>();
 
-  @Output() fabricanteEliminar: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
 
+  /**
+   * @property {EventEmitter<Fabricante[]>} fabricanteEliminar
+   * Evento que emite la lista actualizada de fabricantes después de realizar una eliminación.
+   * Se utiliza para notificar al componente padre que la tabla de fabricantes ha cambiado tras eliminar uno o varios elementos.
+   *
+   * @decorator @Output
+   */
+  @Output() fabricanteEliminar: EventEmitter<Fabricante[]> = new EventEmitter<
+    Fabricante[]
+  >();
+
+  /**
+   * @property {EventEmitter<Destinatario[]>} destinatarioEliminar
+   * Evento que emite la lista actualizada de destinatarios finales después de realizar una eliminación.
+   * Se utiliza para notificar al componente padre que la tabla de destinatarios ha cambiado tras eliminar uno o varios elementos.
+   *
+   * @decorator @Output
+   */
   @Output() destinatarioEliminar: EventEmitter<Destinatario[]> =
     new EventEmitter<Destinatario[]>();
 
+  /**
+   * @property {EventEmitter<Proveedor[]>} proveedorEliminar
+   * Evento que emite la lista actualizada de proveedores después de realizar una eliminación.
+   * Se utiliza para notificar al componente padre que la tabla de proveedores ha cambiado tras eliminar uno o varios elementos.
+   *
+   * @decorator @Output
+   */
   @Output() proveedorEliminar: EventEmitter<Proveedor[]> = new EventEmitter<
     Proveedor[]
   >();
 
+  /**
+   * @property {EventEmitter<Facturador[]>} facturadorEliminar
+   * Evento que emite la lista actualizada de facturadores después de realizar una eliminación.
+   * Se utiliza para notificar al componente padre que la tabla de facturadores ha cambiado tras eliminar uno o varios elementos.
+   *
+   * @decorator @Output
+   */
   @Output() facturadorEliminar: EventEmitter<Facturador[]> = new EventEmitter<
     Facturador[]
   >();
@@ -189,7 +230,17 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    // No se necesita lógica de inicialización adicional.
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: MENSAJE_SIN_FILA_SELECCIONADA,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -244,6 +295,12 @@ export class TercerosRelacionadosComponent implements OnInit {
   public facturadorSeleccionadoDatos: Facturador[] = [];
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
    * @method irAAcciones
    * @description Navega a la ruta relativa proporcionada desde el contexto actual.
    *
@@ -287,6 +344,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   public modificarFabricante(): void {
     if (!this.fabricanteSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
@@ -302,6 +360,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   modificarDestinatario(): void {
     if (!this.destinatarioSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
@@ -317,6 +376,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   modificarProveedor(): void {
     if (!this.proveedorSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.proveedorEventoModificar.emit(this.proveedorSeleccionadoDatos);
@@ -332,21 +392,23 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   modificarFacturador(): void {
     if (!this.facturadorSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.facturadorEventoModificar.emit(this.facturadorSeleccionadoDatos);
     this.irAAcciones('../agregar-facturador');
   }
 
-/**
- * @method eliminarFabricante
- * @description Elimina los fabricantes seleccionados de la tabla de fabricantes y emite el evento con la nueva lista.
- * Si no hay datos en la tabla de fabricantes, no realiza ninguna acción.
- *
- * @returns {void}
- */
+  /**
+   * @method eliminarFabricante
+   * @description Elimina los fabricantes seleccionados de la tabla de fabricantes y emite el evento con la nueva lista.
+   * Si no hay datos en la tabla de fabricantes, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
   public eliminarFabricante(): void {
-    if (!this.fabricanteTablaDatos.length) {
+    if (!this.fabricanteSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
@@ -360,16 +422,16 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
   }
 
-
   /**
- * @method eliminarDestinatario
- * @description Elimina los destinatarios seleccionados de la tabla de destinatarios finales y emite el evento con la nueva lista.
- * Si no hay destinatarios seleccionados, no realiza ninguna acción.
- *
- * @returns {void}
- */
+   * @method eliminarDestinatario
+   * @description Elimina los destinatarios seleccionados de la tabla de destinatarios finales y emite el evento con la nueva lista.
+   * Si no hay destinatarios seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
   public eliminarDestinatario(): void {
     if (!this.destinatarioSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
@@ -383,28 +445,26 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
   }
 
-
   /**
- * @method eliminarProveedor
- * @description Elimina los proveedores seleccionados de la tabla de proveedores y emite el evento con la nueva lista.
- * Si no hay proveedores seleccionados, no realiza ninguna acción.
- *
- * @returns {void}
- */
+   * @method eliminarProveedor
+   * @description Elimina los proveedores seleccionados de la tabla de proveedores y emite el evento con la nueva lista.
+   * Si no hay proveedores seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
   public eliminarProveedor(): void {
     if (!this.proveedorSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
       (proveedor: Proveedor) => {
-        return !this.proveedorSeleccionadoDatos.some(
-          (idx2: Proveedor) => {
-             if(idx2.nombreRazonSocial!==''){
-              return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
-            }
-            return idx2.razonSocial === proveedor.razonSocial;
+        return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
+          if (idx2.nombreRazonSocial !== '') {
+            return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
           }
-        );
+          return idx2.razonSocial === proveedor.razonSocial;
+        });
       }
     );
 
@@ -412,26 +472,25 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
- * @method eliminarFacturador
- * @description Elimina los facturadores seleccionados de la tabla de facturadores y emite el evento con la nueva lista.
- * Si no hay facturadores seleccionados, no realiza ninguna acción.
- *
- * @returns {void}
- */
+   * @method eliminarFacturador
+   * @description Elimina los facturadores seleccionados de la tabla de facturadores y emite el evento con la nueva lista.
+   * Si no hay facturadores seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
   public eliminarFacturador(): void {
     if (!this.facturadorSeleccionadoDatos.length) {
+      this.mostrarAlerta = true;
       return;
     }
     this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
       (facturador: Facturador) => {
-        return !this.facturadorSeleccionadoDatos.some(
-          (idx2: Facturador) => {
-            if(idx2.nombreRazonSocial!==''){
-              return idx2.nombreRazonSocial === facturador.nombreRazonSocial;
-            }
-            return idx2.razonSocial === facturador.razonSocial;
+        return !this.facturadorSeleccionadoDatos.some((idx2: Facturador) => {
+          if (idx2.nombreRazonSocial !== '') {
+            return idx2.nombreRazonSocial === facturador.nombreRazonSocial;
           }
-        );
+          return idx2.razonSocial === facturador.razonSocial;
+        });
       }
     );
 

@@ -204,3 +204,9 @@
   }
   <div class="row mt-5"></div>
 </div>
+@if(mostrarAlerta){
+<section>
+  <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+  </lib-notificaciones>
+</section>
+}
