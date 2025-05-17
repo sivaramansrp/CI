@@ -280,7 +280,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (doc) => doc.id_tipo_documento === id
       ) as TipoDocumentos;
       const TAMANIO_REQUERIDO: number =
-        CargaDocumentoComponent.convertirKbaBytes(
+        CargaDocumentoComponent.convertirMbaBytes(
           this.documentoSeleccionado.tamanio_maximo
         );
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
@@ -414,7 +414,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
+      (item) => item.archivo !== undefined && item.archivo !== null
+    );
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
@@ -464,8 +466,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.archivosCargando.opcionales = this.listadoArchivos.filter(
         (f) => f.tipo === 'opcional'
       );
-    //   this.cargarArchivos(this.archivosCargando.obligatorios);
-    //   this.cargarArchivos(this.archivosCargando.opcionales);
+      //   this.cargarArchivos(this.archivosCargando.obligatorios);
+      //   this.cargarArchivos(this.archivosCargando.opcionales);
       this.cargaRealizada.emit(this.cargarDocumentos);
     }
   }
@@ -497,7 +499,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       }
     });
 
-    this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
+    this.documentosStore.establecerCatalogoDocumentos(
+      this.documentosOpcionalesSeleccionados
+    );
     this.listDocOpcionalesAgregar = [];
   }
 
@@ -542,7 +546,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         this.documentosOpcionalesSeleccionados[INDICE] &&
         this.documentosOpcionalesSeleccionados[INDICE].adicionales
       ) {
-
         this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach(
           (adicional: TipoDocumentos) => {
             const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
@@ -569,7 +572,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     }
     this.cdr.detectChanges();
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
+      (item) => item.archivo !== undefined && item.archivo !== null
+    );
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
@@ -579,6 +584,13 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       return 0;
     }
     return size * 1000;
+  }
+
+  static convertirMbaBytes(size: number | undefined): number {
+    if (size === undefined) {
+      return 0;
+    }
+    return size * 1024 * 1024;
   }
 
   /**

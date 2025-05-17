@@ -27,7 +27,7 @@ import { DocumentosState, DocumentosStore } from '../../../core/estados/document
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
-import { DocumentosParaCargar, TipoDocumentos } from '../../../core/models/shared/anexar-documentos.model';
+import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
 
 @Component({
   selector: 'anexar-documentos',
@@ -183,7 +183,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    this.documentosOpcionalesSeleccionados = (this.documentosState.catalogoDocumentosRequeridos.length > 0) ? this.documentosState.catalogoDocumentosRequeridos : [];
+    // this.documentosOpcionalesSeleccionados = (this.documentosState.catalogoDocumentosRequeridos.length > 0) ? this.documentosState.catalogoDocumentosRequeridos : [];
 
 
     this.cargaArchivosEvento
@@ -459,7 +459,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
 
-    this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
+    // this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
     this.listDocOpcionalesAgregar = [];
   }
 

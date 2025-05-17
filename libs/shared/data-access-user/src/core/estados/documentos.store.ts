@@ -36,7 +36,7 @@ export class DocumentosStore extends Store<DocumentosState> {
      *
      * @param catalogoDocumentos
      */
-    public establecerCatalogoDocumentos(catalogoDocumentos: DocumentoState[]): void {
+    public establecerCatalogoDocumentos(catalogoDocumentos: TipoDocumentos[]): void {
         this.update((state) => ({
             ...state,
             catalogoDocumentos,
