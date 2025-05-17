@@ -133,7 +133,51 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @property {EventEmitter<Fabricante[]>} fabricanteSeleccionado
    * Evento que emite la lista de fabricantes seleccionados en la tabla.
    */
-  @Output() fabricanteSeleccionado: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+  @Output() fabricanteEventoModificar: EventEmitter<Fabricante[]> =
+    new EventEmitter<Fabricante[]>();
+
+  /**
+   * @property {EventEmitter<Destinatario[]>} destinatarioEventoModificar
+   * Evento que emite la lista de destinatarios seleccionados en la tabla de destinatarios finales.
+   * Se utiliza para notificar al componente padre cuando cambia la selección de destinatarios.
+   *
+   * @decorator @Output
+   */
+  @Output() destinatarioEventoModificar: EventEmitter<Destinatario[]> =
+    new EventEmitter<Destinatario[]>();
+
+  /**
+   * @property {EventEmitter<Proveedor[]>} proveedorEventoModificar
+   * Evento que emite la lista de proveedores seleccionados en la tabla de proveedores.
+   * Se utiliza para notificar al componente padre cuando cambia la selección de proveedores.
+   *
+   * @decorator @Output
+   */
+  @Output() proveedorEventoModificar: EventEmitter<Proveedor[]> =
+    new EventEmitter<Proveedor[]>();
+
+  /**
+   * @property {EventEmitter<Facturador[]>} facturadorEventoModificar
+   * Evento que emite la lista de facturadores seleccionados en la tabla de facturadores.
+   * Se utiliza para notificar al componente padre cuando cambia la selección de facturadores.
+   *
+   * @decorator @Output
+   */
+  @Output() facturadorEventoModificar: EventEmitter<Facturador[]> =
+    new EventEmitter<Facturador[]>();
+
+  @Output() fabricanteEliminar: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+
+  @Output() destinatarioEliminar: EventEmitter<Destinatario[]> =
+    new EventEmitter<Destinatario[]>();
+
+  @Output() proveedorEliminar: EventEmitter<Proveedor[]> = new EventEmitter<
+    Proveedor[]
+  >();
+
+  @Output() facturadorEliminar: EventEmitter<Facturador[]> = new EventEmitter<
+    Facturador[]
+  >();
 
   /**
    * @constructor
@@ -146,7 +190,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     // No se necesita lógica de inicialización adicional.
-   }
+  }
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
@@ -171,6 +215,33 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Datos de la tabla de facturadores.
    */
   @Input() facturadorTablaDatos: Facturador[] = [];
+
+  /**
+   * @property {string} rutaAcciones
+   * Ruta relativa hacia la sección de acciones.
+   */
+  public fabricanteSeleccionadoDatos: Fabricante[] = [];
+
+  /**
+   * @property {Destinatario[]} destinatarioSeleccionadoDatos
+   * Almacena los destinatarios seleccionados en la tabla de destinatarios finales.
+   * Se utiliza para gestionar la selección y posterior procesamiento de los destinatarios.
+   */
+  public destinatarioSeleccionadoDatos: Destinatario[] = [];
+
+  /**
+   * @property {Proveedor[]} proveedorSeleccionadoDatos
+   * Almacena los proveedores seleccionados en la tabla de proveedores.
+   * Permite gestionar la selección y acciones relacionadas con los proveedores.
+   */
+  public proveedorSeleccionadoDatos: Proveedor[] = [];
+
+  /**
+   * @property {Facturador[]} facturadorSeleccionadoDatos
+   * Almacena los facturadores seleccionados en la tabla de facturadores.
+   * Facilita la gestión y el procesamiento de los facturadores seleccionados.
+   */
+  public facturadorSeleccionadoDatos: Facturador[] = [];
 
   /**
    * @method irAAcciones
@@ -198,24 +269,172 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-    * Verifica si un campo es requerido según la configuración de campos requeridos.
-    *
-    * @param {string} campo - Nombre del campo a verificar.
-    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
-    */
+   * Verifica si un campo es requerido según la configuración de campos requeridos.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+   */
   esCampoRequerido(campo: string): boolean {
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
 
   /**
-   * @method onFilaSeleccionadaDestinatario
-   * @description Maneja la selección de una fila en la tabla de destinatarios finales.
+   * @method modificarFabricante
+   * @description Emite el evento con la lista de fabricantes seleccionados y navega a la pantalla de edición/agregado de fabricante.
+   * Si no hay fabricantes seleccionados, no realiza ninguna acción.
    *
-   * @param {Destinatario[]} event - Evento que contiene los datos del destinatario seleccionado.
+   * @returns {void}
    */
-  onFilaSeleccionadaFabricante(event: Fabricante[]): void {
-    this.seleccionTable = event;
-    this.fabricanteSeleccionado.emit(this.seleccionTable);
+  public modificarFabricante(): void {
+    if (!this.fabricanteSeleccionadoDatos.length) {
+      return;
+    }
+    this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
+    this.irAAcciones('../agregar-fabricante');
   }
 
+  /**
+   * @method modificarDestinatario
+   * @description Emite el evento con la lista de destinatarios seleccionados y navega a la pantalla de edición/agregado de destinatario.
+   * Si no hay destinatarios seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
+  modificarDestinatario(): void {
+    if (!this.destinatarioSeleccionadoDatos.length) {
+      return;
+    }
+    this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
+    this.irAAcciones('../agregar-destinatario-final');
+  }
+
+  /**
+   * @method modificarProveedor
+   * @description Emite el evento con la lista de proveedores seleccionados y navega a la pantalla de edición/agregado de proveedor.
+   * Si no hay proveedores seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
+  modificarProveedor(): void {
+    if (!this.proveedorSeleccionadoDatos.length) {
+      return;
+    }
+    this.proveedorEventoModificar.emit(this.proveedorSeleccionadoDatos);
+    this.irAAcciones('../agregar-proveedor');
+  }
+
+  /**
+   * @method modificarFacturador
+   * @description Emite el evento con la lista de facturadores seleccionados y navega a la pantalla de edición/agregado de facturador.
+   * Si no hay facturadores seleccionados, no realiza ninguna acción.
+   *
+   * @returns {void}
+   */
+  modificarFacturador(): void {
+    if (!this.facturadorSeleccionadoDatos.length) {
+      return;
+    }
+    this.facturadorEventoModificar.emit(this.facturadorSeleccionadoDatos);
+    this.irAAcciones('../agregar-facturador');
+  }
+
+/**
+ * @method eliminarFabricante
+ * @description Elimina los fabricantes seleccionados de la tabla de fabricantes y emite el evento con la nueva lista.
+ * Si no hay datos en la tabla de fabricantes, no realiza ninguna acción.
+ *
+ * @returns {void}
+ */
+  public eliminarFabricante(): void {
+    if (!this.fabricanteTablaDatos.length) {
+      return;
+    }
+    this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
+      (fabricante: Fabricante) => {
+        return !this.fabricanteSeleccionadoDatos.some(
+          (idx2: Fabricante) => idx2.rfc === fabricante.rfc
+        );
+      }
+    );
+
+    this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
+  }
+
+
+  /**
+ * @method eliminarDestinatario
+ * @description Elimina los destinatarios seleccionados de la tabla de destinatarios finales y emite el evento con la nueva lista.
+ * Si no hay destinatarios seleccionados, no realiza ninguna acción.
+ *
+ * @returns {void}
+ */
+  public eliminarDestinatario(): void {
+    if (!this.destinatarioSeleccionadoDatos.length) {
+      return;
+    }
+    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
+      (destinatario: Destinatario) => {
+        return !this.destinatarioSeleccionadoDatos.some(
+          (idx2: Destinatario) => idx2.rfc === destinatario.rfc
+        );
+      }
+    );
+
+    this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
+  }
+
+
+  /**
+ * @method eliminarProveedor
+ * @description Elimina los proveedores seleccionados de la tabla de proveedores y emite el evento con la nueva lista.
+ * Si no hay proveedores seleccionados, no realiza ninguna acción.
+ *
+ * @returns {void}
+ */
+  public eliminarProveedor(): void {
+    if (!this.proveedorSeleccionadoDatos.length) {
+      return;
+    }
+    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
+      (proveedor: Proveedor) => {
+        return !this.proveedorSeleccionadoDatos.some(
+          (idx2: Proveedor) => {
+             if(idx2.nombreRazonSocial!==''){
+              return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
+            }
+            return idx2.razonSocial === proveedor.razonSocial;
+          }
+        );
+      }
+    );
+
+    this.proveedorEliminar.emit(this.proveedorTablaDatos);
+  }
+
+  /**
+ * @method eliminarFacturador
+ * @description Elimina los facturadores seleccionados de la tabla de facturadores y emite el evento con la nueva lista.
+ * Si no hay facturadores seleccionados, no realiza ninguna acción.
+ *
+ * @returns {void}
+ */
+  public eliminarFacturador(): void {
+    if (!this.facturadorSeleccionadoDatos.length) {
+      return;
+    }
+    this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
+      (facturador: Facturador) => {
+        return !this.facturadorSeleccionadoDatos.some(
+          (idx2: Facturador) => {
+            if(idx2.nombreRazonSocial!==''){
+              return idx2.nombreRazonSocial === facturador.nombreRazonSocial;
+            }
+            return idx2.razonSocial === facturador.razonSocial;
+          }
+        );
+      }
+    );
+
+    this.facturadorEliminar.emit(this.facturadorTablaDatos);
+  }
 }
