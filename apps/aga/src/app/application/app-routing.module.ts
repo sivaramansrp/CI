@@ -275,6 +275,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'desistir-solicitud-informacion-historica',
+    loadChildren: () => 
+      import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
+        (m) => m.DesistirSolicitudInformacionHistoricaModule)
+  },
+  {
     path: 'registro-transportista',
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(

@@ -826,7 +826,7 @@
     "department": "se"
   },
   {
-    "id": 121,
+    "id": 119,
     "tramite": 120101,
     "linkDashboard": "/se/solicitud-de-registro-tpl/pantallas",
     "linkDepartment": "/pago/solicitud-de-registro-tpl/pantallas",
@@ -1542,8 +1542,8 @@
   {
     "id": 221,
     "tramite": 260510,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-pruebas-nutrientes/plaguicidas",
+    "linkDepartment": "/pago/permiso-pruebas-nutrientes/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1962,8 +1962,8 @@
   {
     "id": 281,
     "tramite": 31910,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+    "linkDepartment": "/pago/desistir-solicitud-informacion-historica/desistir-informacion-historica",
     "department": "aga"
   },
   {
@@ -2046,8 +2046,8 @@
   {
     "id": 293,
     "tramite": 90202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/ampliacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/ampliacion-prosec-productor/prosec",
     "department": "se"
   },
   {
@@ -2165,8 +2165,8 @@
   {
     "id": 310,
     "tramite": 130107,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/importaciones-agropecuarias/permisos-de-importacia",
+    "linkDepartment": "/pago/importaciones-agropecuarias/permisos-de-importacia",
     "department": "se"
   },
   {
