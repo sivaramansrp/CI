@@ -22,6 +22,8 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_RFC,
+  REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -401,17 +403,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       'aduanaDatos',
       '/cofepris/aduanaDatos.json'
     );
-      this.seleccionarFilaNotificacion={
+    this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:this.mensajeDeAlerta,
+      mensaje: this.mensajeDeAlerta,
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-  }
+    }
   }
 
   /**
@@ -498,22 +500,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
-        [Validators.minLength(2), Validators.maxLength(150)],
+        [Validators.minLength(2), Validators.maxLength(120), Validators.pattern(REGEX_RFC)],
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [Validators.minLength(2), Validators.maxLength(150)],
+        [Validators.minLength(2), Validators.maxLength(120)],
       ],
-      correoElectronico: [
+    correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(150)],
+        [Validators.minLength(2), Validators.maxLength(120)],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
+          Validators.maxLength(12),
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
@@ -522,7 +524,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
         ],
       ],
       municipioAlcaldia: [
@@ -536,7 +537,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
+          Validators.maxLength(120),
         ],
       ],
       localidad: [this.datosSolicitudFormState.localidad],
@@ -546,8 +547,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada],
-      telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
+      lada: [this.datosSolicitudFormState.lada, [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: [this.datosSolicitudFormState.telefono, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       aviso: [this.datosSolicitudFormState.aviso],
       licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
@@ -880,7 +881,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
 
   /**
    * Método que se llama cuando se envía el formulario.
