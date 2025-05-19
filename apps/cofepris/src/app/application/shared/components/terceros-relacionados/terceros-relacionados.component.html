@@ -20,7 +20,7 @@
       [configuracionTabla]="configuracionTablaFabricante"
       [datos]="fabricanteTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
-      (listaDeFilaSeleccionada)="onFilaSeleccionadaFabricante($event)"
+      (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -29,11 +29,11 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (fabricanteTablaDatos.length > 0) {
-          @if (seleccionTable.length > 0) {
          <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+         (click)="modificarFabricante()"
         >
           Modificar
         </button>
@@ -41,10 +41,10 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarFabricante()"
         >
           Eliminar
         </button>
-          }
         }
         <button
           type="button"
@@ -72,6 +72,7 @@
       [configuracionTabla]="configuracionTablaDestinatarioFinal"
       [datos]="destinatarioFinalTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+       (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -83,6 +84,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          (click)="modificarDestinatario()"
         >
           Modificar
         </button>
@@ -90,6 +92,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarDestinatario()"
         >
           Eliminar
         </button>
@@ -115,6 +118,7 @@
       [configuracionTabla]="configuracionTablaProveedor"
       [datos]="proveedorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+       (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -126,6 +130,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+           (click)="modificarProveedor()"
         >
           Modificar
         </button>
@@ -133,6 +138,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarProveedor()"
         >
           Eliminar
         </button>
@@ -157,6 +163,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="facturadorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+       (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -168,6 +175,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+             (click)="modificarFacturador()"
         >
           Modificar
         </button>
@@ -175,6 +183,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarFacturador()"
         >
           Eliminar
         </button>
@@ -195,3 +204,9 @@
   }
   <div class="row mt-5"></div>
 </div>
+@if(mostrarAlerta){
+<section>
+  <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+  </lib-notificaciones>
+</section>
+}
