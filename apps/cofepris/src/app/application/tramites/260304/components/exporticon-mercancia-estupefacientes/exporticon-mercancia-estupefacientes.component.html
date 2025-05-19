@@ -108,6 +108,7 @@
                 <crosslist
                   [fechas]="seleccionarOrigenFormaFormaceutica"
                   [label]="formaFaramaceuticaLabel"
+                  [botones]="aduanasEntradaBotons"
                   [fechasSeleccionadas]="seleccionadasFormaFormaceuticaDatos"
                   (fechasSeleccionadasChange)="
                     formaFarmaceuticaSeleccionadasChange($event)
@@ -274,6 +275,7 @@
                 <crosslist
                   [fechas]="usoEspesificoDatos"
                   [label]="usoEspesificoLabel"
+                   [botones]="aduanasEntradaBotons"
                   [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
                   (fechasSeleccionadasChange)="
                     usoEspesificoSeleccionadasChange($event)

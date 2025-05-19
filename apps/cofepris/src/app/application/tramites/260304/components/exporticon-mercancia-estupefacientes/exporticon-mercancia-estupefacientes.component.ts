@@ -23,7 +23,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subject, first, takeUntil, tap } from 'rxjs';
 import {
   Tramite260304State,
@@ -61,6 +61,11 @@ export class ExporticonMercanciaEstupefacientesComponent
    * Formulario reactivo principal para capturar los datos de la mercancía.
    */
   public mercanciaForm!: FormGroup;
+    /**
+     * Referencia a los componentes de la lista de fechas.
+     */
+    @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  
 
   /**
    * @property {MercanciaForm} MercanciaFormEstupefacientes
@@ -199,6 +204,46 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public detalleMercanciaDatos: DetalleMercancíaProductoTerminado[] = [];
 
+  /**
+   * @property {Array<Object>} aduanasEntradaBotons
+   * 
+   * Arreglo de objetos que representa los botones de acción para la gestión de mercancía en la interfaz.
+   * Cada objeto contiene:
+   * - `btnNombre`: El nombre que se muestra en el botón.
+   * - `class`: La clase CSS que se aplica al botón para su estilo.
+   * - `funcion`: Función que se ejecuta al hacer clic en el botón, la cual interactúa con la lista `crossList`.
+   * 
+   * Los botones disponibles son:
+   * - "Agregar todos": Agrega todos los elementos.
+   * - "Agregar selección": Agrega solo los elementos seleccionados.
+   * - "Restar selección": Quita solo los elementos seleccionados.
+   * - "Restar todos": Quita todos los elementos.
+   * 
+   * @remarks
+   * Este arreglo se utiliza para renderizar dinámicamente los botones de acción en la interfaz de usuario y asociarles su funcionalidad correspondiente.
+   */
+   aduanasEntradaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
   /**
    * Constante que representa la configuración o estructura de la tabla de detalles
    * de mercancía de productos terminados. Puede ser utilizada para construir

@@ -286,15 +286,15 @@ export const DETALLE_MERCANCIA_PRODUCTO_TERMINADO = [
     orden: 1,
   },
   {
-    encabezado: 'Registro Sanitario',
-    clave: (ele: DetalleMercancíaProductoTerminado): string => ele.registroSanitario,
-    orden: 2,
-  }, 
-  {
     encabezado: 'Presentación',
     clave: (ele: DetalleMercancíaProductoTerminado): string => ele.presentacion,
-    orden: 3,
+    orden: 2,
   },
+    {
+    encabezado: 'Registro Sanitario',
+    clave: (ele: DetalleMercancíaProductoTerminado): string => ele.registroSanitario,
+    orden: 3,
+  }, 
 ];
 
 /**
