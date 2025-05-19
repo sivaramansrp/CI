@@ -12,6 +12,7 @@
             class="form-check-input"
             formControlName="nacionalidad"
             [value]="nacionalStr"
+            (change)="changeNacionalidad()"
           />
           Nacional
         </div>
@@ -21,6 +22,7 @@
             class="form-check-input"
             formControlName="nacionalidad"
             value="Extranjero"
+            (change)="changeNacionalidad()"
           />
           Extranjero
         </div>
@@ -33,6 +35,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.FISICA"
+            (change)="changeNacionalidad()"
           />
           Física
           <span
@@ -47,6 +50,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.MORAL"
+            (change)="changeNacionalidad()"
           />
           Moral
           <span
@@ -58,7 +62,8 @@
       </div>
     </div>
 
-    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
+    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr || 
+        agregarFabricanteForm.get('nacionalidad')?.untouched){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.*:</label>
@@ -191,7 +196,8 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="elementosDeshabilitados.includes('pais')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -200,7 +206,8 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
-          [isDisabled]="this.elementosDeshabilitados.includes('estado')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -209,7 +216,8 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [isDisabled]="this.elementosDeshabilitados.includes('municipio')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
     </div>
@@ -220,7 +228,9 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('localidad')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -228,7 +238,9 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -236,7 +248,9 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('colonia')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
     </div>
@@ -325,12 +339,12 @@
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
-          * Campos obligatorios
+    <div class="row my-5">
+      <div class="col-md-6">
+          <p>* Campos obligatorios</p>
       </div>
-        <div class="pull-right">
+      <div class="col-md-6">
+        <div class="pull-right mb-5">
           <button
             type="button"
             name="modificarMercancias"

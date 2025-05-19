@@ -2,7 +2,7 @@ import {
   Catalogo,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
-  REGEX_TELEFONO_DIGITOS,
+  TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -171,6 +171,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   public elementosNoRequeridos: string[] = [];
 
   /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -195,6 +201,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
+    this.changeNacionalidad();
     this.mostarColoniaOEquivalente =
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
@@ -209,7 +216,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   crearAgregarFormularioFabricante(): void {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: [this.nacionalStr, Validators.required],
+      nacionalidad: ['', Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
@@ -292,7 +299,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
           value: this.obtenerValor('telefono') ? '3461235' : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
@@ -471,6 +478,35 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   public obtenerValor(field: keyof Fabricante): string | number | undefined {
     return this.datoSeleccionado?.[0]?.[field as keyof Fabricante] ?? '';
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el estado de los campos
+   * 'nacionalidad' y 'tipoPersona'. Si ambos están vacíos o indefinidos, deshabilita
+   * todos los controles excepto estos dos. Si alguno tiene valor, habilita todos los controles.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (
+      (this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
+        this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined) &&
+      (this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
+        this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined)
+    ) {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+    }
+    else {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
   }
 
   /**
