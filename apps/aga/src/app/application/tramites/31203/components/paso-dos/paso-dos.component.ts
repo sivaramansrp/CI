@@ -26,7 +26,6 @@ export class PasoDosComponent {
    * facilitando su mantenimiento y reutilización.
    * @type {any}
     * @description  
-   * Textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
 }
