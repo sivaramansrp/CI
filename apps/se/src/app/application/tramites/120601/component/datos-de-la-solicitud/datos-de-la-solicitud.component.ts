@@ -1,14 +1,11 @@
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
-
-import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
-import { DatosEmpresaService } from '../../services/datos-empresa.service';
-
-
 
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
@@ -18,8 +15,7 @@ import { DatosEmpresaService } from '../../services/datos-empresa.service';
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
-    SelectCatalogosComponent,
+    TituloComponent,    
     CatalogoSelectComponent,
     ReactiveFormsModule
   ],
@@ -89,12 +85,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Maneja la selección de un documento.
    * @param _e El objeto del evento.
    */
-  // eslint-disable-next-line class-methods-use-this
+  
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
     this.store.setTipoDeEmpresa(this.solicitudForm.get('tipoDeEmpresa')?.value);
   }
-
+/**
+   * @method crearFormCombinacion
+   * @description Método para crear el formulario formCombinacion.
+   */ 
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

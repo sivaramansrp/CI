@@ -1,0 +1,122 @@
+{
+    "concepto": {
+        "labelNombre": "Concepto",
+        "required": false,
+        "primerOpcion": "Seleccione un valor",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Reparación, re-trabajo o mantenimiento de"
+            },
+            {
+                "id": 2,
+                "descripcion": "Reparación, re-trabajo o mantenimiento de - 1"
+            }
+        ]
+    },
+    "tipoDeInversion": {
+        "labelNombre": "Tipo de inversión",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Test"
+            },
+            {
+                "id": 2,
+                "descripcion": "Test - 1"
+            }
+        ]
+    },
+    "enSuCaracterDe": {
+        "labelNombre": "En su caracter de",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Accionista"
+            },
+            {
+                "id": 2,
+                "descripcion": "Accionista - 1"
+            }
+        ]
+    },
+    "nacionalidad": {
+        "labelNombre": "Nacionalidad",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)"
+            },
+            {
+                "id": 2,
+                "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1"
+            }
+        ]
+    },
+    "tipoDePersona": {
+        "labelNombre": "Tipo de Persona",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Física"
+            },
+            {
+                "id": 2,
+                "descripcion": "Moral"
+            }
+        ]
+    },
+    "modalidadDelProgramaIMMEX": {
+        "labelNombre": "Seleccione el numero y modalidad del programa I M M E X",
+        "required": false,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Domicilios registrados"
+            },
+            {
+                "id": 2,
+                "descripcion": "192022 - Autorización Programa Nuevo Industrial"
+            }
+        ]
+    },
+    "tipoDeInstalacion": {
+        "labelNombre": "Tipo de instalación",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo de instalación",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Planta Productiva"
+            },
+            {
+                "id": 2,
+                "descripcion": "Planta Productiva -1"
+            }
+        ]
+    },
+    "entidadFederativa": {
+        "labelNombre": "",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "AGUASCALIENTES"
+            },
+            {
+                "id": 2,
+                "descripcion": "AGUASCALIENTES -1"
+            }
+        ]
+    }
+}

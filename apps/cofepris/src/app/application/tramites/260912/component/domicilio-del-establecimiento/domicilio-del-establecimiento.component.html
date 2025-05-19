@@ -13,8 +13,11 @@
               formControlName="codigoPostal"
               appUppercase
               aria-labelledby="codigoPostal"
-              (change)="getCodigoPostal()"
+              (change)="setValorStore(form, 'codigoPostal')"
             />
+            <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
+              Por favor, corrija la codigoPostal.
+            </div>
           </div>
         </div>
 
@@ -24,10 +27,14 @@
               [catalogo]="estado"
               [label]="'Estado*'"
               name="estado"
+              [required]="true"
               formControlName="estado"
-              (change)="getEstado()"
+              (change)="setValorStore(form, 'estado')"
             >
             </app-catalogo-select>
+            <div *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')" class="text-danger">
+              Por favor, corrija la estadoLocalidad.
+            </div>
           </div>
         </div>
 
@@ -43,8 +50,11 @@
               formControlName="municipioOAlcaldia"
               appUppercase
               aria-labelledby="municipioOAlcaldia"
-              (change)="getMunicipioOAlcaldia()"
+              (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
+            <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
+              Por favor, corrija el municipio.
+            </div>
           </div>
         </div>
       </div>
@@ -67,8 +77,11 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
-              (change)="getLocalidad()"
+              (change)="setValorStore(form, 'localidad')"
             />
+            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
+              Por favor, corrija el localidad.
+            </div>
           </div>
         </div>
 
@@ -82,8 +95,11 @@
               formControlName="colonias"
               appUppercase
               aria-labelledby="colonias"
-              (change)="getColonias()"
+              (change)="setValorStore(form, 'colonias')"
             />
+            <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
+              Por favor, corrija la colonias.
+            </div>
           </div>
         </div>
       </div>
@@ -99,8 +115,11 @@
               formControlName="calle"
               appUppercase
               aria-labelledby="calle"
-              (change)="getCalle()"
+              (change)="setValorStore(form, 'calle')"
             />
+            <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
+              Por favor, corrija la calle.
+            </div>
           </div>
         </div>
       </div>
@@ -116,13 +135,16 @@
               formControlName="lada"
               appUppercase
               aria-labelledby="lada"
-              (change)="getLada()"
+              (change)="setValorStore(form, 'lada')"
             />
+            <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
+              Por favor, corrija la lada.
+            </div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label class="form-label" for="telefono">Teléfono:</label>
+            <label class="form-label" for="telefono">Teléfono*:</label>
             <input
               class="form-control"
               type="text"
@@ -130,9 +152,19 @@
               formControlName="telefono"
               appUppercase
               aria-labelledby="telefono"
-              (change)="getTelefono()"
+              (change)="setValorStore(form, 'telefono')"
             />
+          
+            <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
+              <div *ngIf="form.get('telefono')?.errors?.['required']">
+                El teléfono es obligatorio.
+              </div>
+              <div *ngIf="form.get('telefono')?.errors?.['pattern']">
+                El teléfono debe contener exactamente 10 dígitos numéricos.
+              </div>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -166,7 +198,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
-          (change)="getAvisoCheckbox()"
+          (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
       </div>
@@ -200,8 +232,11 @@
           [required]="true"
           name="regimen"
           [tooltipQuestionCircle]="true"
-          (change)="getRegimen()"
+          (change)="setValorStore(domicilio, 'regimen')"
         ></app-catalogo-select>
+        <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
       </div>
       <div class="col-md-8">
         <app-catalogo-select
@@ -210,8 +245,11 @@
           [label]="'Aduanas de entradas'"
           [required]="true"
           name="aduanasEntradas"
-          (change)="getAduanasEntradas()"
+          (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
+        <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
       </div>
     </div>
     <div class="row mt-5">
@@ -224,7 +262,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
-          (change)="getAifaCheckbox()"
+          (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
     </div>
@@ -265,7 +303,7 @@
           [label]="''"
           [required]="true"
           formControlName="manifests"
-          (change)="getManifests()"
+          (change)="setValorStore(domicilio, 'manifests')"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
@@ -285,7 +323,7 @@
           [radioOptions]="opcionDeBotonDeRadio"
           [layout]="'horizontal'"
           formControlName="acuerdoPublico"
-          (change)="getAcuerdoPublico()"
+          (change)="setValorStore(representanteLegal, 'acuerdoPublico')"
         ></app-input-radio>
       </div>
       <ng-titulo titulo="Representante legal"></ng-titulo>
@@ -300,8 +338,11 @@
               formControlName="rfc"
               appUppercase
               aria-labelledby="rfc"
-              (change)="getRfc()"
+              (change)="setValorStore(representanteLegal, 'rfc')"
             />
+            <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
+              El RFC es obligatorio.
+            </div>
           </div>
         </div>
         <div class="col-md-3 mt-5">

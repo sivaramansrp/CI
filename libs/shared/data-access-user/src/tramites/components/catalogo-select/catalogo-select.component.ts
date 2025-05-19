@@ -113,7 +113,7 @@ export class CatalogoSelectComponent
   writeValue(value: string): void {
     if (value === null || value === undefined) {
       // Limpia el valor en el formulario interno del componente
-      this.formSelect.get('selectControl')?.reset();
+      this.formSelect.get('selectControl')?.reset('');
     } else {
       // Establece el valor si no está vacío
       if (this.formSelect.get('selectControl')?.value !== value) {

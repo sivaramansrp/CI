@@ -499,33 +499,6 @@
   </form>
 </div>
 
-<!-- Modal error -->
-<div class="modal fade modal" #modalAviso tabindex="-1" aria-labelledby="modalAviso" aria-hidden="true"
-  data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{ tituloModal }}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <p>{{ mensajeModal }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="cerrarModal('aviso', true)">
-          Sí
-        </button>
-        <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 @if(nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmacionModal($event)">

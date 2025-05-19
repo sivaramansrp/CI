@@ -21,14 +21,38 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    */
     private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Arreglo que almacena las plantas seleccionadas del subfabricante.
+     * 
+     * @type {PlantasSubfabricante[]}
+     * @remarks
+     * Este arreglo se utiliza para gestionar las plantas seleccionadas en el componente
+     * y puede ser modificado dinámicamente según las interacciones del usuario.
+     */
     plantasSeleccionadas:PlantasSubfabricante[]=[]
     
+  /**
+   * Constructor de la clase ContenedorComplementarPlantasComponent.
+   * 
+   * @param query - Servicio de consulta específico para Tramite80101.
+   * @param router - Servicio de enrutamiento para la navegación entre rutas.
+   * @param activatedRoute - Servicio para acceder a información sobre la ruta activa.
+   */
   constructor(private query: Tramite80101Query,
     private router: Router,
     private activatedRoute: ActivatedRoute
   // eslint-disable-next-line no-empty-function
   ) { }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * Este método suscribe al observable `plantasPorCompletar$` para obtener una lista
+   * de plantas pendientes de completar. Si la lista contiene elementos, se asigna
+   * a la propiedad `plantasSeleccionadas`. La suscripción se gestiona utilizando
+   * el operador `takeUntil` para garantizar que se cancele cuando el componente
+   * se destruya, evitando posibles fugas de memoria.
+   */
   ngOnInit(): void {
     this.query.plantasPorCompletar$
       .pipe(takeUntil(this.destroyNotifier$))

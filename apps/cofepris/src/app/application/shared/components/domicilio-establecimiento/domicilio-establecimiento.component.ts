@@ -10,6 +10,10 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
+  REGEX_SOLO_DIGITOS,
+  REGEX_CODIGO_POSTAL,
+  REGEX_POSTAL,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -44,7 +48,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -70,18 +74,23 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    TablePaginationComponent
   ],
   templateUrl: './domicilio-establecimiento.component.html',
-  styleUrls: ['./domicilio-establecimiento.component.css'],
+  styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+/**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
@@ -109,6 +118,39 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
+/**
+   * Indica si el campo esPaginacionVisible es visible.
+   */
+  @Input() esPaginacionVisible: boolean = false;
+
+ /**
+   * Número total de elementos en la tabla.
+   */
+  totalElementos: number = 0;
+
+  /**
+   * Página actual de la paginación.
+   */
+  paginaActual: number = 1;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+   */
+  elementosPorPagina: number = 5;
+ /**
+   * Encabezados de la tabla de establecimientos.
+   */
+  public establecimientoHeaderData: string[] = [];
+
+  /**
+   * Contiene los datos del cuerpo de la tabla de establecimientos.
+   */
+  public establecimientoBodyData = [];
+
+  /**
+   * Datos completos de los establecimientos.
+   */
+  public fullEstablecimientoBodyData = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -167,7 +209,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public aduanasEntradaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas',
+    derecha: 'Aduanas de entrada seleccionadas*',
   };
 
   /**
@@ -175,15 +217,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
+
   /**
-   * Maneja el cambio de selección de países de origen.
-   * @param events Lista de países seleccionados.
+   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
+   *
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(this.domicilio, 'paisDeOriginDatos', 'setPaisDeOriginDatos');
   }
 
   /**
@@ -323,43 +369,80 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [this.solicitudState?.estado, Validators.required],
       muncipio: [this.solicitudState?.muncipio, Validators.required],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
+      calle: [this.solicitudState?.calle,Validators.required],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox,Validators.required],
       licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false },Validators.required
       ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
+      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
+      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
     this.formAgente = this.fb.group({
       claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
+      claveDescripcionModal: [{ value: '', disabled: true }],
     });
     this.formMercancias = this.fb.group({
-      nombreComercial: ['', Validators.required],
-      nombreComun: ['', Validators.required],
-      nombreCientifico: ['', Validators.required],
-      usoEspecifico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+       nombreComercial: [
+    '',
+    [Validators.required, Validators.maxLength(1000)], 
+  ],
+    nombreComun: ['', [Validators.required, Validators.maxLength(250)]],
+      nombreCientifico: ['', [Validators.maxLength(250)]],
+      usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
+    fraccionArancelaria: [
+    '',
+    [
+      Validators.required,
+     Validators.pattern(REGEX_SOLO_DIGITOS)],
+      Validators.minLength(8), 
+    ],
+  
+      descripcionFraccion: [{ value: '', disabled: true }],
+      cantidadUMT: [
+    '',
+    [
+      Validators.required, 
+      Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES), 
+    ],
+  ],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+    cantidadUMC: [
+    '',
+    [
+      Validators.required, 
+      Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES),
+    ],
+  ],
       UMC: ['', Validators.required],
-      porcentajeConcentracion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
+     porcentajeConcentracion: [
+    '',
+    [
+      Validators.required, 
+      Validators.maxLength(100), 
+    ],
+  ],
+      numeroRegistro: [
+    '',
+    [
+      Validators.required, 
+      Validators.maxLength(50), 
+    ],
+  ],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+    this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
   }
 
   /**
@@ -493,7 +576,21 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.estado = data?.data;
       });
   }
+ /**
+   * @method onClaveScianChange
+   * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
+   * @param {Event} event - Evento de cambio del dropdown.
+   */
+  onClaveScianChange(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
 
+    if (SELECTED_OPTION) {
+      this.formAgente.patchValue({
+        claveDescripcionModal: SELECTED_OPTION.descripcion,
+      });
+    }
+  }
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
@@ -571,6 +668,59 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+  }
+
+ /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  actualizarPaginacion(): void {
+    const INDICE_INICIAL = (this.paginaActual - 1) * this.elementosPorPagina;
+    this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(
+      INDICE_INICIAL,
+      INDICE_INICIAL + this.elementosPorPagina
+    );
+  }
+
+/**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} pagina - Número de la página seleccionada.
+   */
+  onCambioDePagina(pagina: number): void {
+    this.paginaActual = pagina;
+    this.actualizarPaginacion();
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} elementosPorPagina - Número de elementos a mostrar por página.
+   */
+  onCambioElementosPorPagina(elementosPorPagina: number): void {
+    this.elementosPorPagina = elementosPorPagina;
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
+  }
+
+
+  /**
+  * @method limpiar
+  * @description
+  * Método que limpia el formulario del agente aduanal.
+  * @param {forma}
+  */
+  // eslint-disable-next-line class-methods-use-this
+  public limpiar(forma: FormGroup): void {
+    if (forma) {
+      forma.reset();
+    }
   }
 
   /**

@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/inbal
 
 # Build the application
-RUN npx nx build inbal --configuration=production --skip-nx-cache --verbose
+RUN npx nx build inbal --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/inbal" && test -f "/app/dist/apps/inbal/index.html" || exit 1

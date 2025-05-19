@@ -46,6 +46,11 @@ on:
         required: false
         type: boolean
         default: false
+      deployToK8s:
+        description: 'Desplegar en Kubernetes después de construir'
+        required: false
+        type: boolean
+        default: true
   push:
     branches:
       - develop
@@ -55,6 +60,7 @@ on:
       - 'apps/**'
       - 'libs/**'
       - 'docker/**'
+      - 'k8s/**'
       - 'package.json'
       - 'nx.json'
       - '.github/workflows/**'
@@ -79,11 +85,12 @@ jobs:
       env: ${{ steps.set-env.outputs.env }}
       apps_to_deploy: ${{ steps.determine-apps.outputs.apps_to_deploy }}
       deployment_matrix: ${{ steps.create-matrix.outputs.matrix }}
+      k8s_deploy: ${{ steps.check-k8s-deploy.outputs.deploy_to_k8s }}
     # Solo ejecutar cuando es push a develop, staging o production, o cuando se ejecuta manualmente
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Needed for git diff
 
@@ -129,8 +136,25 @@ jobs:
             echo "changed_files=" >> $GITHUB_OUTPUT
           fi
 
+      - name: Check for K8s deployment
+        id: check-k8s-deploy
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            DEPLOY_TO_K8S="${{ github.event.inputs.deployToK8s }}"
+          else
+            # Si es una integración automática (push), verificar si hay cambios en k8s/
+            if grep -q "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
+              DEPLOY_TO_K8S="true"
+            else
+              DEPLOY_TO_K8S="true"  # Por defecto, siempre desplegar en k8s
+            fi
+          fi
+          
+          echo "deploy_to_k8s=$DEPLOY_TO_K8S" >> $GITHUB_OUTPUT
+          echo "Deployment to Kubernetes: $DEPLOY_TO_K8S"
+
       - name: Setup Node.js for detection
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -323,6 +347,48 @@ jobs:
           echo "Matrix configuration:"
           echo "{\"app\":$JSON_ARRAY}"
 
+      - name: Prepare K8s manifests
+        if: steps.check-k8s-deploy.outputs.deploy_to_k8s == 'true'
+        run: |
+          echo "Preparing Kubernetes manifests for deployment..."
+          
+          # Crear directorio para manifiestos procesados
+          mkdir -p k8s-deploy
+          
+          # Copiar manifiestos individuales o usar el template principal
+          if [ -f "k8s/vucem-microfrontends.yaml" ]; then
+            echo "Encontrado template principal, preparando para despliegue..."
+            cp -v k8s/vucem-microfrontends.yaml k8s-deploy/
+          else
+            echo "No se encontró template principal, verificando manifiestos individuales..."
+            # Verificar que existan los directorios para cada microservicio
+            APPS_TO_DEPLOY="${{ steps.determine-apps.outputs.apps_to_deploy }}"
+            IFS=',' read -ra APP_ARRAY <<< "$APPS_TO_DEPLOY"
+            
+            for app in "${APP_ARRAY[@]}"; do
+              if [ -d "k8s/${app}-microfront" ] || [ -d "k8s/${app}" ]; then
+                APP_DIR="k8s/${app}-microfront"
+                [ ! -d "$APP_DIR" ] && APP_DIR="k8s/${app}"
+                
+                if [ -d "$APP_DIR" ]; then
+                  echo "Copiando manifiestos para $app desde $APP_DIR"
+                  mkdir -p k8s-deploy/${app}
+                  cp -v $APP_DIR/*-${{ steps.set-env.outputs.env }}.yaml k8s-deploy/${app}/ 2>/dev/null || echo "No se encontraron manifiestos para $app con sufijo -${{ steps.set-env.outputs.env }}.yaml"
+                fi
+              else
+                echo "No se encontró directorio k8s para $app"
+              fi
+            done
+          fi
+          
+          # Verificar que tengamos algún manifiesto
+          if [ ! "$(ls -A k8s-deploy)" ]; then
+            echo "ADVERTENCIA: No se encontraron manifiestos para desplegar"
+          else
+            echo "Manifiestos preparados para despliegue:"
+            find k8s-deploy -type f -name "*.yaml" | sort
+          fi
+
   build:
     needs: setup
     if: needs.setup.outputs.apps_to_deploy != ''
@@ -334,7 +400,7 @@ jobs:
       DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
@@ -342,7 +408,7 @@ jobs:
           sudo apt-get install -y build-essential libpng-dev
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -430,25 +496,19 @@ jobs:
             ENV=${{ env.DEPLOYMENT_ENV }}
             APP_NAME=${{ matrix.app }}
 
-  deploy:
+  prepare-k8s:
     needs: [setup, build]
+    if: needs.setup.outputs.k8s_deploy == 'true'
     runs-on: ubuntu-latest
     env:
       DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
       APPS_TO_DEPLOY: ${{ needs.setup.outputs.apps_to_deploy }}
+    outputs:
+      manifests_ready: ${{ steps.check-manifests.outputs.manifests_ready }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
-      - name: Verify K8s templates exist
-        run: |
-          # Verificar que el template exista
-          if [ ! -f "k8s/vucem-microfrontends.yaml" ]; then
-            echo "::error::El archivo k8s/vucem-microfrontends.yaml no existe"
-            exit 1
-          fi
-          echo "Template k8s/vucem-microfrontends.yaml encontrado"
-          
       - name: Create Kubernetes manifests
         run: |
           # Make directory for env-specific manifests
@@ -498,6 +558,10 @@ jobs:
           # Asegurar que el imagePullSecret correcto esté en el manifiesto
           sed -i "s/name: github-container-registry/name: vucem30registrykey/g" k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
           
+          # Eliminar la anotación conflictiva del Ingress
+          # Elimina kubernetes.io/ingress.class cuando ingressClassName está definido
+          sed -i '/kubernetes.io\/ingress.class/d' k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
+          
           # Asegurar que los microservicios adicionales estén incluidos en el manifiesto
           echo "Verificando que todos los microservicios listados en AVAILABLE_APPS estén en el manifiesto..."
           
@@ -529,39 +593,159 @@ jobs:
           
           # Store deployment command
           echo "script=$DEPLOY_CMD" >> $GITHUB_OUTPUT
-
-      # Preparar archivos para transferencia directa (sin compresión)
-      - name: Prepare deployment files
-        run: |
-          # Mostrar los archivos que vamos a transferir
-          echo "Preparando archivos de despliegue..."
-          echo "Directorio actual: $(pwd)"
-          echo "Archivos en directorio de trabajo:"
-          ls -la
-          
-          # Verificar que el archivo de manifiesto exista
-          if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
-            echo "::error::No se encuentra el archivo de manifiesto en k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml"
-            exit 1
-          fi
-          
-          # Verificar que el script de despliegue exista
-          if [ ! -f "deploy_commands.sh" ]; then
-            echo "::error::No se encuentra el script deploy_commands.sh"
-            exit 1
-          fi
-          
-          echo "Archivos confirmados y listos para transferencia"
       
-      # Transferir el script de despliegue
-      - name: Transfer deployment script
+      # Crear script de parche
+      - name: Create script patch
+        run: |
+          cat << 'EOF' > script_patch.sh
+          #!/bin/bash
+
+          # Este script actualiza el archivo deploy_commands.sh original con los parches necesarios
+          # para solucionar los problemas de despliegue
+
+          if [ ! -f "deploy_commands.sh" ]; then
+            echo "ERROR: No se encontró el archivo deploy_commands.sh"
+            exit 1
+          fi
+
+          # Crea una copia de seguridad
+          cp deploy_commands.sh deploy_commands.sh.bak
+
+          # Modificación 1: Añadir soporte para la creación del secreto con GITHUB_TOKEN
+          # Buscar la sección que verifica el secreto y reemplazarla
+          sed -i '/echo "Verificando secreto para pull de imágenes..."/,/fi/c\
+          echo "Verificando secreto para pull de imágenes..."\
+          microk8s kubectl get secret vucem30registrykey -n default >/dev/null 2>\&1\
+          if [ $? -ne 0 ]; then\
+            echo "Creando secreto vucem30registrykey en el namespace default..."\
+            \
+            # Si GITHUB_TOKEN está disponible, usarlo para crear el secreto\
+            if [ -n "${GITHUB_TOKEN}" ]; then\
+              microk8s kubectl create secret docker-registry vucem30registrykey \\\
+                --docker-server=ghcr.io \\\
+                --docker-username=vucem30-dev \\\
+                --docker-password=${GITHUB_TOKEN} \\\
+                --docker-email=admin@vucem.com \\\
+                -n default\
+              \
+              if [ $? -ne 0 ]; then\
+                echo "ADVERTENCIA: No se pudo crear el secreto automáticamente."\
+                echo "El despliegue podría fallar. Cree el secreto con:"\
+                echo "kubectl create secret docker-registry vucem30registrykey \\\\"\
+                echo "  --docker-server=ghcr.io \\\\"\
+                echo "  --docker-username=USUARIO \\\\"\
+                echo "  --docker-password=TOKEN \\\\"\
+                echo "  --docker-email=EMAIL \\\\"\
+                echo "  -n default"\
+              else\
+                echo "Secreto creado correctamente."\
+              fi\
+            else\
+              echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace default."\
+              echo "El despliegue podría fallar. Cree el secreto con:"\
+              echo "kubectl create secret docker-registry vucem30registrykey \\\\"\
+                echo "  --docker-server=ghcr.io \\\\"\
+                echo "  --docker-username=USUARIO \\\\"\
+                echo "  --docker-password=TOKEN \\\\"\
+                echo "  --docker-email=EMAIL \\\\"\
+                echo "  -n default"\
+            fi\
+          fi' deploy_commands.sh
+
+          # Modificación 2: Añadir el procesamiento del manifiesto eliminando la anotación conflictiva
+          # Buscar la sección antes de aplicar el manifiesto
+          grep -n "Aplicar manifiesto" deploy_commands.sh
+          if [ $? -eq 0 ]; then
+            line_num=$(grep -n "Aplicar manifiesto" deploy_commands.sh | head -1 | cut -d':' -f1)
+            echo "Insertando código para procesar el manifiesto en la línea: $line_num"
+            sed -i "${line_num}i\\
+          # Crear una copia temporal del manifiesto para procesarlo\\
+          TMP_MANIFEST=\"\$K8S_TEMP_DIR/tmp-manifest-\$DEPLOYMENT_ENV.yaml\"\\
+          cp \"\$MANIFEST_FILE\" \"\$TMP_MANIFEST\"\\
+          \\
+          # Eliminar la anotación conflictiva del Ingress\\
+          sed -i '/kubernetes.io\\/ingress.class/d' \"\$TMP_MANIFEST\"\\
+          " deploy_commands.sh
+          else
+            echo "No se encontró la sección 'Aplicar manifiesto' en el script"
+          fi
+
+          # Modificación 3: Usar el archivo temporal para el despliegue
+          sed -i 's/microk8s kubectl apply -f "\$MANIFEST_FILE"/microk8s kubectl apply -f "\$TMP_MANIFEST"/g' deploy_commands.sh
+          sed -i 's/microk8s kubectl apply --validate=true --dry-run=client -f "\$MANIFEST_FILE"/microk8s kubectl apply --validate=true --dry-run=client -f "\$TMP_MANIFEST"/g' deploy_commands.sh
+          
+          # Modificación 4: Ya no es necesaria porque se reemplazó la sección de rollout con una nueva implementación
+
+          echo "Script deploy_commands.sh actualizado con éxito."
+          echo "Se ha creado una copia de seguridad en deploy_commands.sh.bak"
+          EOF
+          chmod +x script_patch.sh
+          cat script_patch.sh
+
+      - name: Check manifests
+        id: check-manifests
+        run: |
+          # Verificar si tenemos manifiestos disponibles
+          if [ -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
+            echo "manifests_ready=true" >> $GITHUB_OUTPUT
+            echo "Manifiestos preparados para despliegue"
+          else
+            echo "manifests_ready=false" >> $GITHUB_OUTPUT
+            echo "No se encontraron manifiestos preparados para despliegue"
+            echo "Fallo en la preparación de manifiestos, saltando el paso de despliegue"
+          fi
+
+      - name: Upload kubernetes manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: k8s-manifests
+          path: |
+            k8s-${{ env.DEPLOYMENT_ENV }}/
+            script_patch.sh
+            deploy_commands.sh
+          retention-days: 1
+
+  deploy-to-k8s:
+    needs: [setup, build, prepare-k8s]
+    if: needs.setup.outputs.k8s_deploy == 'true' && needs.prepare-k8s.outputs.manifests_ready == 'true'
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: k8s-manifests
+
+      - name: Setup SSH for deployment
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+
+      - name: Verify downloaded files
+        run: |
+          echo "Verificando archivos descargados:"
+          find . -type f | sort
+          
+          # Verificar permisos
+          chmod +x script_patch.sh
+          chmod +x deploy_commands.sh
+          
+          # Verificar estructura de directorios
+          if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
+            echo "Error: No se encontró el manifiesto principal"
+            exit 1
+          fi
+
+      # Transferir el script de despliegue y el script de parche
+      - name: Transfer deployment script and patch
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
-          source: "deploy_commands.sh"
+          source: "deploy_commands.sh,script_patch.sh"
           target: "/home/ubuntu/v30/k8s-temp"
           # Evitar borrar otros archivos
           rm: false
@@ -591,6 +775,7 @@ jobs:
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
+          envs: GITHUB_TOKEN
           script_stop: true
           script: |
             cd /home/ubuntu/v30/k8s-temp
@@ -609,8 +794,18 @@ jobs:
               exit 1
             fi
             
-            # Asegurarse que el script tiene permisos de ejecución
+            if [ ! -f "script_patch.sh" ]; then
+              echo "ERROR: No se encuentra el archivo script_patch.sh"
+              exit 1
+            fi
+            
+            # Asegurarse que los scripts tienen permisos de ejecución
             chmod +x deploy_commands.sh
+            chmod +x script_patch.sh
+            
+            # Aplicar el parche al script de despliegue
+            echo "Aplicando parches al script de despliegue..."
+            ./script_patch.sh
             
             # Crear directorio para logs si no existe
             mkdir -p /home/ubuntu/v30/deployment-logs
@@ -622,18 +817,35 @@ jobs:
             
             # Verificación final (opcional, ya que el script ya incluye verificaciones)
             echo "=== Resumen final del despliegue ===" | tee -a $LOG_FILE
-            microk8s kubectl get pods -n vucem-${{ env.DEPLOYMENT_ENV }} | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
+            microk8s kubectl get pods -n default | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
             
             # Verificar estado de los servicios
             echo "" | tee -a $LOG_FILE
             echo "=== Estado de los servicios ===" | tee -a $LOG_FILE
-            microk8s kubectl get services -n vucem-${{ env.DEPLOYMENT_ENV }} | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
+            microk8s kubectl get services -n default | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
             
             # Verificar ingress
             echo "" | tee -a $LOG_FILE
             echo "=== Estado del ingress ===" | tee -a $LOG_FILE
-            microk8s kubectl get ingress -n vucem-${{ env.DEPLOYMENT_ENV }} | tee -a $LOG_FILE || echo "No se encontraron ingress"
+            microk8s kubectl get ingress -n default | tee -a $LOG_FILE || echo "No se encontraron ingress"
+            
+            # Reinicio explícito de los deployments de microservicios (dashboard y login son prioritarios)
+            echo "" | tee -a $LOG_FILE
+            echo "=== Reiniciando explícitamente los deployments ===" | tee -a $LOG_FILE
+            
+            # Reiniciar dashboard y login primero
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
+            
+            # Verificar estado de los principales
+            sleep 10
+            microk8s kubectl get deployments -n default | grep modulefederation | grep -E 'dashboard|login' | tee -a $LOG_FILE
             
             # Mostrar ubicación del log
             echo "" | tee -a $LOG_FILE
             echo "Logs de despliegue guardados en: $LOG_FILE"
+            
+            # Verificar estado del cluster
+            echo "" | tee -a $LOG_FILE
+            echo "=== Estado de los nodos del cluster ===" | tee -a $LOG_FILE
+            microk8s kubectl get nodes | tee -a $LOG_FILE
