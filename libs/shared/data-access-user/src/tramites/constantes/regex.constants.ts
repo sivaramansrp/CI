@@ -337,6 +337,11 @@ export const REGEX_SIN_DIGITOS = /\D/g;
 export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
 
 /**
+ * Expresión regular para validar un número de teléfono de 10 dígitos.
+ */
+export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+
+/**
  * Expresión regular para validar un código postal de 5 dígitos.
  */
 export const REGEX_POSTAL = '/^\d{5}$/';
