@@ -142,7 +142,7 @@
               [required]="true"
               formControlName="pais"
               (change)="paisSeleccion()"
-              name="pais"
+              name="pais" [isDisabled]="true"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -331,7 +331,7 @@
                   [required]="true"
                   formControlName="condicionMercancia"
                   (change)="condicionMercanciaSeleccion()"
-                  name="condicionMercancia"
+                  name="condicionMercancia" [isDisabled]="true"
                 ></app-catalogo-select>
               </div>
             </div>
