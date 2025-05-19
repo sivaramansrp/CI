@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -117,6 +117,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public elementosDeshabilitados: string[] = [];
 
+  /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
+
 
 
   constructor(
@@ -135,6 +141,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioProveedor();
+    this.changeNacionalidad();
   }
 
    /**
@@ -156,15 +163,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
-      nombres: [this.obtenerValor('nombres'), Validators.required],
-      primerApellido: [this.obtenerValor('primerApellido'), Validators.required],
-      segundoApellido: [this.obtenerValor('segundoApellido')],
+      nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      primerApellido: [this.obtenerValor('primerApellido'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
         this.obtenerValor('estadoLocalidad'),
@@ -185,6 +188,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
@@ -193,7 +197,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
             : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
@@ -205,12 +209,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
     validarElementos(): void {
       switch (this.idProcedimiento) {
-        case 260201:
-          this.elementosDeshabilitados = [
-            'telefono',
-            'correoElectronico'
-          ];
-          break;
+          case 260201:
           case 260219:
             this.elementosRequeridos = ['estado'];
           break;
@@ -239,6 +238,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.status === 'INVALID') {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }
     const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
 
     let nombreRazonSocial: string;
@@ -299,6 +302,34 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarProveedorForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  changeNacionalidad(): void {
+    if (this.agregarProveedorForm?.value?.tipoPersona === '') {
+      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+        this.agregarProveedorForm.get(controlName)?.disable();
+        if (controlName === 'tipoPersona') {
+          this.agregarProveedorForm.get(controlName)?.enable();
+        }
+      });
+    } else {
+      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+        this.agregarProveedorForm.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
   }
 
   /**
