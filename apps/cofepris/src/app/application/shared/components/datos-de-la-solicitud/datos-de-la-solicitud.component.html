@@ -194,10 +194,9 @@
           <input class="form-control" id="correoElectronico" type="text" formControlName="correoElectronico" [ngClass]="
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
             " />
-          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('correoElectronico')?.errors?.['required'] 
-            && datosSolicitudForm.get('correoElectronico')?.touched">
-            Este campo es obligatorio.
-          </div>
+         <small class="mensaje-error" *ngIf="esCampoRequerido('correoElectronico')">
+  Este campo es obligatorio.
+</small>
         </div>
       </div>
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('rfcSanitario')">
