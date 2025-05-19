@@ -1,6 +1,7 @@
 import {
   CatalogoSelectComponent,
   InputRadioComponent,
+  REG_X,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -84,6 +85,22 @@ export class DatosDeLaMercanciaComponent {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+/**
+ * @method esCantidadSoloNumeros
+ * @description
+ * Verifica si el valor del campo 'cantidad' del formulario contiene solo números enteros o decimales.
+ * Utiliza la expresión regular REG_X.NUMERO_DECIMAL_OPCIONAL para validar.
+ * @returns {boolean} Verdadero si el valor es un número válido, falso en caso contrario.
+ *
+ * @example
+ * // Devuelve true para "123", "123.45", "0.5", "123."
+ * this.esCantidadSoloNumeros();
+ */
+  esCantidadSoloNumeros(): boolean {
+  const VALUE = this.form?.controls['cantidad']?.value;
+  return typeof VALUE === 'string' && REG_X.NUMERO_DECIMAL_OPCIONAL.test(VALUE);
+}
 
   /**
    * @method setValoresStore

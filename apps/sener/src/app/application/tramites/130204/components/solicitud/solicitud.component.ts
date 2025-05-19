@@ -360,6 +360,7 @@ tituloParte = TITULO_DESTINO;
         [
           Validators.required,
           Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(1),
         ],
       ],

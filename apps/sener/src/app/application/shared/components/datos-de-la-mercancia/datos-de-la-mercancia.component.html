@@ -71,7 +71,10 @@
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="form.controls['cantidad'].errors?.['pattern']">
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && !esCantidadSoloNumeros()">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && esCantidadSoloNumeros()">
             Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['cantidad'].errors?.['min']">
