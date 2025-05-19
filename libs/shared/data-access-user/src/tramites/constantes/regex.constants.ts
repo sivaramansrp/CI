@@ -286,6 +286,13 @@ export const REGEX_CURP =
  */
 export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
 
+/**
+ * Regular expression to validate numeric values with up to 15 digits before the decimal point
+ * and up to 4 digits after the decimal point. Decimal part is optional.
+ * Examples of valid values: 123, 123456789012345, 123.4567
+ */
+export const REGEX_VALORES_NUMERICOS_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
+
 export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
 /** 
  * Expresión regular para validar números en formato USD. 
