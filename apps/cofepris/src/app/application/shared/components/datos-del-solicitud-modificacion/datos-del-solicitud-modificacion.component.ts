@@ -315,8 +315,8 @@ eliminarPedimento(borrar: boolean): void {
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: ' País de orígen',
+    derecha: 'País(es) seleccionado(s)',
   };
   /**
    * Lista de países para la selección de origen.
@@ -560,7 +560,7 @@ eliminarPedimento(borrar: boolean): void {
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       estadoFormaFarmaceutica: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(8)]],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
       UMT: [{ value: '', disabled: true }, Validators.required],
