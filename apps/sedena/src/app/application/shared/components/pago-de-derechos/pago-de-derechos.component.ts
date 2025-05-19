@@ -15,7 +15,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
-import { REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
+import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -153,7 +153,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)],
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });

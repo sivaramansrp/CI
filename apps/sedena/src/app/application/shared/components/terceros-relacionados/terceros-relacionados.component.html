@@ -18,12 +18,13 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!=0)){
+        @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
+          [disabled]="destinarioTablaSeleccionada.length !== 1"
         >
           Modificar
         </button>
@@ -32,6 +33,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatarioFinal()"
+          [disabled]="destinarioTablaSeleccionada.length === 0"
         >
           Eliminar
         </button>
@@ -61,12 +63,12 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-       @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!=0)){
+       @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          [disabled]="proveedorTablaSeleccionada.length > 1"
+          [disabled]="proveedorTablaSeleccionada.length !== 1"
           (click)="modificarProveedor()"
         >
           Modificar
@@ -76,6 +78,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedorFinal()"
+          [disabled]="proveedorTablaSeleccionada.length === 0"
         >
           Eliminar
         </button>

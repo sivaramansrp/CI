@@ -255,27 +255,42 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
           Validators.maxLength(150),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
       estado: ['', Validators.required],
       codigoPostal: ['', Validators.required],
-      colonia: [''],
+      colonia: ['', Validators.required],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      nacionalidad: [''],
-      rfc: [''],
-      curp: [''],
-      municipio: [''],
-      localidad: [''],
+      numeroInterior: ['', Validators.required],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      nacionalidad: ['', Validators.required],
+      rfc: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      curp: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      municipio: ['', Validators.required],
+      localidad: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
+    this.agregarProveedorForm.get('nacionalidad')?.enable();
   }
   /**
    * @method ngOnInit
@@ -395,6 +410,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.agregarProveedorForm.reset();
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
+    this.agregarProveedorForm.get('nacionalidad')?.enable();
   }
   /**
    * @method cancelar

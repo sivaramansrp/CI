@@ -14,7 +14,13 @@
           id="claveReferencia"
           class="form-control"
           formControlName="claveReferencia"
+          maxlength="50"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('claveReferencia')?.touched && pagoDerechosForm.get('claveReferencia')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small>
+        </div>
       </div>
     </div>
     <div class="row g-3">
@@ -28,7 +34,16 @@
           id="cadenaDependencia"
           class="form-control"
           formControlName="cadenaDependencia"
+          maxlength="50"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('cadenaDependencia')?.touched && pagoDerechosForm.get('cadenaDependencia')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('cadenaDependencia')?.touched && pagoDerechosForm.get('cadenaDependencia')?.hasError('pattern')" class="text-danger">
+            El formato de la cadena de la dependencia es incorrecto.
+          </small>
+        </div>       
       </div>
 
       <!-- Estado (using <app-catalogo-select>) -->
@@ -39,6 +54,11 @@
           [label]="'Banco'"
           [required]="true"
         ></app-catalogo-select>
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('banco')?.touched && pagoDerechosForm.get('banco')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small>
+        </div>       
       </div>
     </div>
 
@@ -51,7 +71,16 @@
           id="llavePago"
           class="form-control"
           formControlName="llavePago"
+          maxlength="30"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('llavePago')?.touched && pagoDerechosForm.get('llavePago')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('llavePago')?.touched && pagoDerechosForm.get('llavePago')?.hasError('pattern')" class="text-danger">
+            El formato de la llave de pago es incorrecto.
+          </small>
+        </div>      
       </div>
 
       <!-- Fecha de pago -->
@@ -62,6 +91,14 @@
           (valorCambiado)="onFechaCambiada($event)"
           [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
         ></input-fecha>
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched && pagoDerechosForm.get('fechaPago')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched && pagoDerechosForm.get('fechaPago')?.hasError('pattern')" class="text-danger">
+            El formato de fecha es incorrecto.
+          </small>
+        </div>       
       </div>
 
       <!-- Importe de pago -->
@@ -72,7 +109,13 @@
           id="importePago"
           class="form-control"
           formControlName="importePago"
+          maxlength="16"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('importePago')?.touched && pagoDerechosForm.get('importePago')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+        </div>       
       </div>
     </div>
 
