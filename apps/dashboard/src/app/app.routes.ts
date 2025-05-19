@@ -8,7 +8,6 @@ import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirm
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 import { SubsecuentesComponent } from './subsecuentes/subsecuentes.component';
-import { AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent } from './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component';
 
 export const appRoutes: Route[] = [
   {
@@ -184,9 +183,5 @@ export const appRoutes: Route[] = [
   {
     path: 'subsecuentes',
     component: SubsecuentesComponent,
-  },
-  {
-    path: 'acuses-y-resoluciones-detalles',
-    component: AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent,
   },
 ];

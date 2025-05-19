@@ -15,10 +15,9 @@ import {
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Solocitud301Service } from '../../services/service301.service';
+import { TieneConsultaio } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
-import { TieneConsultaio } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente `PagoDeDerechosComponent`
@@ -60,12 +59,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
-   * Indica si el formulario está en modo de actualización (patch).
-   * Si es `true`, el formulario se utiliza para editar un registro existente.
-   */
-  public esFormularioActualizacion: boolean = false;
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -89,16 +82,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioActualizacion = [
-            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
-            'FLUJO_FUNCIONARIO_AUTORIZACION',
-            'FLUJO_FUNCIONARIO_EVALUAR'
-          ].includes(seccionState.parameter);
           this.inicializarEstadoFormulario();
         })
       )
@@ -117,14 +112,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioActualizacion) {
+    if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
     } else {
       this.inicializarFormulario();
     }
   }
-
-  
 
   /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
@@ -155,9 +148,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
-    if (this.procedureState.readonly) {
-      this.getProcedureDatos();
-    }
   }
 
   /**
@@ -170,9 +160,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+    if (this.esFormularioSoloLectura) {
       this.FormSolicitud.disable();
-    } else if (!this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+    } else if (!this.esFormularioSoloLectura) {
       this.FormSolicitud.enable();
     } else {
       // No se requiere ninguna acción en el formulario
@@ -209,15 +199,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
-  }
-
-  public getProcedureDatos(): void {
-    this.FormSolicitud.get('pagodederechos.linea')?.disable();
-    this.FormSolicitud.get('pagodederechos.monto')?.disable();
-    this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.disable();
-    // this.FormSolicitud.get('pagodederechos.linea')?.setValue(this.procedureDatos[0].pagoDeDerechos.linea);
-    // this.FormSolicitud.get('pagodederechos.monto')?.setValue(this.procedureDatos[0].pagoDeDerechos.monto);
-    // this.FormSolicitud.get('pagodederechos.lineaCheckbox')?.setValue(this.procedureDatos[0].pagoDeDerechos.lineaCheckbox);
   }
 
   /**

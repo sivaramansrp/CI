@@ -9,10 +9,8 @@
   }@else if(indiceDePaso ===1) {
   <app-notificacion-acto-administrativo></app-notificacion-acto-administrativo>
   } @if(indiceDePaso === 2) {
-  <div class="row mt-5">
+  <div class="row mt-5 mb-5">
     <ng-titulo [titulo]="'Firmar solicitud'"></ng-titulo>
-  </div>
-  <div class="row mt-5">
     <firma-electronica
       [tipo]="''"
       (firma)="obtieneFirma($event)"
@@ -49,6 +47,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="cerrar()"
         >
           Cerrar
         </button>

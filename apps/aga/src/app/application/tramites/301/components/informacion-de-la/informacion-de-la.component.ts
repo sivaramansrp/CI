@@ -6,6 +6,7 @@
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
 */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -22,7 +23,6 @@ import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
@@ -89,12 +89,6 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud301State;
 
   /**
-   * Indica si el formulario está en modo de actualización (patch).
-   * Si es `true`, el formulario se utiliza para editar un registro existente.
-   */
-  public esFormularioActualizacion: boolean = false;
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -115,16 +109,18 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioActualizacion = [
-            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO',
-            'FLUJO_FUNCIONARIO_AUTORIZACION',
-            'FLUJO_FUNCIONARIO_EVALUAR'
-          ].includes(seccionState.parameter);
           this.inicializarEstadoFormulario();
         })
       )
@@ -144,7 +140,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioActualizacion) {
+    if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -196,9 +192,6 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     });
     this.valorSeleccionadoFraccion(); // enable descripcionFraccion if fraccionArancelaria has value
     this.valorSeleccionadoNico(); // enable descripcionNico if nico has value
-    if(this.procedureState.readonly) {
-      this.getProcedureDatos();
-    }
   }
 
   /**
@@ -207,9 +200,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+    if (this.esFormularioSoloLectura) {
       this.informacionDeLaform.disable();
-    } else if (!this.esFormularioSoloLectura && this.esFormularioActualizacion) {
+    } else if (!this.esFormularioSoloLectura) {
       this.informacionDeLaform.enable();
     } else {
       // No se requiere ninguna acción en el formulario
@@ -256,28 +249,6 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
-  }
-
-  public getProcedureDatos(): void {
-    this.informacionDeLaform.get('fraccionArancelaria')?.disable();
-      this.informacionDeLaform.get('descripcionFraccion')?.disable();
-      this.informacionDeLaform.get('nico')?.disable();
-      this.informacionDeLaform.get('descripcionNico')?.disable();
-      this.informacionDeLaform.get('nombreQuimico')?.disable();
-      this.informacionDeLaform.get('nombreComercial')?.disable();
-      this.informacionDeLaform.get('numeroCAS')?.disable();
-      this.informacionDeLaform.get('estadoFisico')?.disable();
-      this.informacionDeLaform.get('acondicionamiento')?.disable();
-    // this.informacionDeLaform.get('fraccionArancelaria')?.setValue(this.procedureDatos[0].registroPara.fraccionArancelaria);
-    // this.informacionDeLaform.get('descripcionFraccion')?.setValue(this.procedureDatos[0].registroPara.descripcionFraccion);
-    // this.informacionDeLaform.get('nico')?.setValue(this.procedureDatos[0].registroPara.nico);
-    // this.informacionDeLaform.get('descripcionNico')?.setValue(this.procedureDatos[0].registroPara.descripcionNico);
-    // this.informacionDeLaform.get('nombreQuimico')?.setValue(this.procedureDatos[0].registroPara.nombreQuimico);
-    // this.informacionDeLaform.get('nombreComercial')?.setValue(this.procedureDatos[0].registroPara.nombreComercial);
-    // this.informacionDeLaform.get('numeroCAS')?.setValue(this.procedureDatos[0].registroPara.numeroCAS);
-    // this.informacionDeLaform.get('estadoFisico')?.setValue(this.procedureDatos[0].registroPara.estadoFisico);
-    // this.informacionDeLaform.get('acondicionamiento')?.setValue(this.procedureDatos[0].registroPara.acondicionamiento);
-
   }
 
   /**

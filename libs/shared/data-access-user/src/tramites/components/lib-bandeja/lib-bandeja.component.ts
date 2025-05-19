@@ -12,6 +12,11 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 // import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
+/*
+ * Componente LibBandejaComponent
+ * Este componente es reutilizable para mostrar una bandeja dinámica con tabla, paginación y formularios.
+ * Permite navegar a diferentes rutas dependiendo del origen del trámite y mostrar configuraciones dinámicas.
+ */
 @Component({
   selector: 'lib-bandeja',
   standalone: true,
@@ -27,47 +32,77 @@ import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
   styleUrl: './lib-bandeja.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
+/*
+ * Clase genérica LibBandejaComponent<T>
+ * Este componente representa una bandeja reutilizable con tabla dinámica, formularios y navegación basada en datos.
+ * Se puede utilizar con cualquier tipo de datos que se especifique mediante el tipo genérico <T>.
+ * Implementa la interfaz OnInit para inicializar la lógica al montar el componente.
+ */
 export class LibBandejaComponent<T> implements OnInit {
+   /* Título mostrado en el encabezado de la bandeja */
   @Input() public titulo!: string;
+   /* Indica si la bandeja debe mostrar el formulario dinámico */
   @Input() public tieneBandeja: boolean = false;
+   /* Título de la tabla dentro de la bandeja */
   @Input() public tablaTitulo!: string;
+  /* Configuración de columnas para la tabla */
   @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
+  /* Datos que se muestran en la tabla */
   @Input() configuracionTablaDatos: any[] = [];
+   /* Datos que se usan en el formulario de la bandeja */
   @Input() public bandejaSolicitudeDatos: any[] = [];
+  /* URL a la que se navega al seleccionar un trámite */
   public procedureUrl!: string;
+  /* Indica si el formulario es válido */
   public hasValidForm: boolean = false;
-
+ /* Formulario reactivo principal que contiene otro formGroup */
   public dinamicasBandejaForma: FormGroup = new FormGroup({
     bandejaSolicitudeFormGroup: new FormGroup({}),
   });
-
+/* Acciones disponibles en la tabla (editar, etc.) */
   public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
+  /* Copia original de la configuración de la tabla */
   public originalConfiguracionTabla: any[] = [];
+   /* Lista de detalles de trámite desde JSON */
   public tramiteData: TramiteDetails[] = [];
+  /* Controla si la sección de país de origen está colapsada o no */
   public paisDeOriginColapsable = false;
+  /* Total de elementos en la tabla */
   public totalItems: number = 0;
+   /* Página actual en la paginación */
   public currentPage: number = 1;
+  /* Cantidad de elementos por página */
   public itemsPerPage: number = 5;
+  /* Datos del cuerpo para miembros de la empresa paginados */
   public miembroDeLaEmpresaBodyData: unknown[] = [];
-
+ /*
+   * Constructor que inyecta Router y ConsultaioStore
+   */
   constructor(
     public router: Router,
     private consultaioStore: ConsultaioStore
   ) {}
-
+/*
+   * Método del ciclo de vida OnInit
+   * Valida si la bandeja contiene formulario y aplica filtro a columnas
+   */
   ngOnInit(): void {
     if (this.tieneBandeja) {
       this.hasValidForm = true;
     }
     this.filterConfiguracionTabla();
   }
-
+/*
+   * Getter que retorna el formGroup interno
+   */
   get bandejaSolicitudeFormGroup(): FormGroup {
     return this.dinamicasBandejaForma.get(
       'bandejaSolicitudeFormGroup'
     ) as FormGroup;
   }
-
+    /*
+   * Filtra la configuración de columnas para ocultar ciertas columnas no necesarias
+   */
   public filterConfiguracionTabla(): void {
     this.configuracionTabla = this.configuracionTabla.filter(
       (item) =>
@@ -76,14 +111,19 @@ export class LibBandejaComponent<T> implements OnInit {
         item.encabezado !== 'Origin'
     );
   }
-
+  /*
+   * Envía los datos del formulario. Marca el formulario como válido si no hay errores
+   */
   public enviarDatos(): void {
     this.hasValidForm = true;
     if (this.dinamicasBandejaForma.valid) {
       this.hasValidForm = true;
     }
   }
-
+ /*
+   * Maneja el clic sobre una fila de la tabla.
+   * Navega a la ruta correspondiente dependiendo del origen del trámite
+   */
   public onFilaClic(event: any): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
@@ -123,23 +163,31 @@ export class LibBandejaComponent<T> implements OnInit {
     }
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
-    } else {
+    } 
+    else {
       this.router.navigate([
         this.procedureUrl + '/' + ROW_OBJETO.numeroDeProcedimiento,
       ]);
     }
   }
+   /*
+   * Alterna la visibilidad del contenido colapsable basado en el orden
+   */
   public mostrarColapsable(orden: number): void {
     if (orden === 1) {
       this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
     }
   }
-
+/*
+   * Cambia la página actual en la tabla
+   */
   public onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePagination();
   }
-
+  /*
+   * Actualiza los datos visibles de la tabla según la paginación
+   */
   public updatePagination(): void {
     const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
@@ -147,7 +195,9 @@ export class LibBandejaComponent<T> implements OnInit {
       START_INDEX + this.itemsPerPage
     );
   }
-
+ /*
+   * Cambia el número de elementos por página y reinicia la página actual
+   */
   public onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;

@@ -6,7 +6,7 @@
     </div>
     <div class="row mt-2">
         <div [ngClass]="{'col-md-5': tieneBandeja, 'col-md-8': !tieneBandeja}">
-            <div class="d-flex">
+            <div class="d-flex align-items-baseline">
                 @if(tieneBandeja) {
                     <label class="form-label" for="solicitante">Funcionario:</label>
                     <span class="mt-3 ms-2">Establecimiento vsg</span>
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div [ngClass]="{'col-md-7': tieneBandeja, 'col-md-4': !tieneBandeja}">
-            <div class="d-flex">
+            <div class="d-flex align-items-baseline">
                 <label class="form-label" for="rfc">RFC:</label>
                 <span class="mt-3 ms-2">1242143432322</span>
             </div>
