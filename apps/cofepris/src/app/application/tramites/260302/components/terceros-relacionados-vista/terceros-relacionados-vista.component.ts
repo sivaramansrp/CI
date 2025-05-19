@@ -19,6 +19,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
+import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
@@ -116,7 +117,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
+  /**
+   * @property {Destinatario[]} seleccionadaOtros
+   * Almacena la fila seleccionada de la tabla de Otros.
+   */
   public seleccionadaDestinatario!: Destinatario[];
+  
+  /**
+   * @property {Otros[]} seleccionadaOtros
+   * Almacena la fila seleccionada de la tabla de Otros.
+   */
+  public seleccionadaOtros!: Otros[];
+
 
   /**
    * @constructor
@@ -168,7 +180,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
 
   modificarDestinatario(): void {
+    this.tramiteStore.updateSeleccionadoDestinatarioDatos(this.seleccionadaDestinatario);
     this.navigate(TIPO_TABLA_DATOS.DESTINATARIO);
+  }
+
+  eliminarDestinatario():void{
+      this.tramiteStore.updateDestinatarioTablaDatos(this.seleccionadaDestinatario, TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**
@@ -180,6 +197,23 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   onFilaDestinatarioSeleccionada(filaSeleccionada: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioTablaDatos(filaSeleccionada);
   }
+
+  /**
+   * Método que se ejecuta cuando se selecciona una fila en la tabla de otros.
+   * Actualiza el estado del store con la fila seleccionada.
+   *
+   * @param filaSeleccionada - Array de objetos Otros seleccionados.
+   */
+  modificarOtros(): void {
+    this.tramiteStore.updateSeleccionadoOtrosDatos(this.seleccionadaOtros);
+    this.navigateOtros();
+  }
+
+  eliminarOtros():void{
+    this.tramiteStore.updateOtrosTablaDatos(this.seleccionadaOtros, TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

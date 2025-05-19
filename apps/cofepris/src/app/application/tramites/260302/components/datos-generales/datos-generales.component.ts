@@ -71,7 +71,12 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  
+  /**
+   * @property {Destinatario} datoSeleccionado
+   * Almacena el destinatario seleccionado.
+   * Se inicializa como un objeto vacío de tipo `Destinatario`.
+   */
   public datoSeleccionado!: Destinatario
 
   constructor(
@@ -84,7 +89,6 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
     private tramiteQuery: Tramite260302Query
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
-    this.crearFormulario();
     this.cargarDatos();
   }
 
@@ -94,15 +98,19 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
      * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
      */
     ngOnInit(): void {
+
       this.tramiteQuery.getDestinatarioSeleccionado$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.datoSeleccionado = seccionState?.[0] ?? {} as Destinatario;
+            this.crearFormulario();
           })
         )
         .subscribe();
+      
     }
+
 
   /**
    * Crea y inicializa el formulario con los campos y validaciones necesarios.
@@ -113,7 +121,7 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
       nombreRazonSocial: [
-        '',
+        this.obtenerValor('nombreRazonSocial'),
         [
           Validators.required,
           Validators.minLength(2),
@@ -127,7 +135,7 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [this.obtenerValor('numeroExterior')],
       numeroInterior: [this.obtenerValor('numeroInterior')],
-      lada: [''],
+      lada: [this.obtenerValor('lada')],
       telefono: [this.obtenerValor('telefono')],
       correoElectronico: [this.obtenerValor('correoElectronico'), [Validators.required, Validators.email]],
     });

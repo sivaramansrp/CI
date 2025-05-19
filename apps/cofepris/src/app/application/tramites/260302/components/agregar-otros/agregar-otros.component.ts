@@ -10,7 +10,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   TERCEROS_NACIONALIDAD_RADIO_OPCIONS,
   TERCEROS_PERSONA_RADIO_OPCIONS,
@@ -22,6 +22,7 @@ import { Facturador } from '../../../../shared/models/terceros-relacionados.mode
 import { Location } from '@angular/common';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 @Component({
@@ -82,6 +83,13 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
   /**
+   * @property {Otros} datoSeleccionado
+   * Almacena el destinatario seleccionado.
+   * Se inicializa como un objeto vacío de tipo `Otros`.
+   */
+  public datoSeleccionado!: Otros;
+
+  /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
    *
@@ -96,7 +104,8 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260302Store,
-    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService
+    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService,
+    private tramiteQuery: Tramite260302Query
   ) {
     this.crearFormulario();
     this.changeNacionalidad();
@@ -110,27 +119,36 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
-      curp: [''],
-      rfc: [''],
-      nombreDescripcion: [''],
+      curp: [this.obtenerValor('curp')],
+      rfc: [this.obtenerValor('rfc')],
+      nombreDescripcion: [this.obtenerValor('nombreDescripcion')],
       nacionalidad: ['true'],
       tipoPersona: ['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      localidad: [''],
-      municipio: [''],
-      denominacionRazon: [''],
+      nombres: [this.obtenerValor('nombres'), Validators.required],
+      primerApellido: [
+        this.obtenerValor('primerApellido'),
+        Validators.required,
+      ],
+      segundoApellido: [this.obtenerValor('segundoApellido')],
+      pais: [this.obtenerValor('pais'), Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
+      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
+      colonia: [this.obtenerValor('colonia')],
+      calle: [this.obtenerValor('calle'), Validators.required],
+      numeroExterior: [
+        this.obtenerValor('numeroExterior'),
+        Validators.required,
+      ],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada')],
+      telefono: [this.obtenerValor('telefono')],
+      correoElectronico: [
+        this.obtenerValor('correoElectronico'),
+        [Validators.required, Validators.email],
+      ],
+      localidad: [this.obtenerValor('localidad')],
+      municipioAlcaldia: [this.obtenerValor('municipioAlcaldia')],
+      razonSocial: [this.obtenerValor('razonSocial')],
     });
   }
 
@@ -140,6 +158,27 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.cargarDatos();
+    this.tramiteQuery.getOtrosSeleccionado$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.datoSeleccionado = seccionState?.[0] ?? ({} as Otros);
+          this.crearFormulario();
+          this.changeNacionalidad();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(
+    field: keyof Otros
+  ): string | number | undefined | string[] {
+    return this.datoSeleccionado?.[field as keyof Otros] ?? '';
   }
 
   /**
@@ -190,7 +229,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     }
 
     // 👇 Replace only nombreRazonSocial, keeping rest of the object the same
-     const NUEVO_VALOR_FORMULARIO = {
+    const NUEVO_VALOR_FORMULARIO = {
       ...VALOR_FORMULARIO,
       nombreRazonSocial: nombreRazonSocial,
     };

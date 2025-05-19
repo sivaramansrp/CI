@@ -15,7 +15,7 @@
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
-      (listaDeFilaSeleccionada)="onFilaDestinatarioSeleccionada($event)"
+      (listaDeFilaSeleccionada)="seleccionadaDestinatario=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -34,6 +34,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+            (click)="eliminarDestinatario()"
         >
           Eliminar
         </button>
@@ -56,6 +57,7 @@
       [configuracionTabla]="configuracionTablaOtros"
       [datos]="(otrasTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="seleccionadaOtros=$event"
     ></app-tabla-dinamica>
   </div>
 
@@ -66,6 +68,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          (click)="modificarOtros()"
         >
           Modificar
         </button>
@@ -73,6 +76,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarOtros()"
         >
           Eliminar
         </button>
