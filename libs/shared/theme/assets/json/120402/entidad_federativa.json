@@ -1,18 +1,5 @@
 [
-  {
-    "id": "1",
-    "nombreData": "Ciudad de México",
-    "representaciones": [
-      { "id": "1-1", "nombre": "Representación CDMX 1" },
-      { "id": "1-2", "nombre": "Representación CDMX 2" }
-    ]
-  },
-  {
-    "id": "2",
-    "nombreData": "Jalisco",
-    "representaciones": [
-      { "id": "2-1", "nombre": "Representación Jalisco 1" },
-      { "id": "2-2", "nombre": "Representación Jalisco 2" }
-    ]
-  }
+  { "id": 1, "descripcion": "CDMX" },
+  { "id": 2, "descripcion": "Jalisco" },
+  { "id": 3, "descripcion": "Nuevo León" }
 ]

@@ -9,6 +9,7 @@
           name="regimen"
           formControlName="regimen"
           (change)="getRegimen()"
+          [required]="true"
         >
         </app-catalogo-select>
       </div>
@@ -48,26 +49,39 @@
       <div class="col-md-8"></div>
       <div class="col-md-4 text-end">
         <div class="btn-group">
-          <button class="btn btn-primary me-2" type="button">Buscar</button>
+          <button
+            class="btn btn-primary me-2"
+            type="button"
+            (click)="manejarBuscar()"
+          >
+            Buscar
+          </button>
         </div>
       </div>
     </div>
   </form>
 
   <div>
-    <div class="table-responsive table-wrapper">
-      <table class="table table-striped centered-table">
-        <tbody>
-          <tr *ngIf="seleccionDelCupo">
-            <td class="column-25 start-td">{{ seleccionDelCupo.description }}</td>
-            <td>{{ seleccionDelCupo.assignmentType }}</td>
-            <td class="column-25">
-              {{ seleccionDelCupo.codes }}
-            </td>
-            <td class="end-td">{{ seleccionDelCupo.quota }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <ng-alert [CONTENIDO]="tituloAlerta" [CUSTOMECLASS]="infoAlerta"></ng-alert>
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionColumnasCupo"
+      [datos]="datosTablaCupo"
+      [acciones]="[accionesEnum.EDITAR]"
+      (alternarValor)="onAccionCupo($event)"
+    ></app-tabla-dinamica>
   </div>
+  <div>
+    <lib-notificaciones
+      *ngIf="modalAbierto"
+      [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarModal()"
+    >
+    </lib-notificaciones>
+  </div>
+  <app-descripcion-del-cupo
+    *ngIf="mostrarDescripcionCupo"
+  ></app-descripcion-del-cupo>
+  <app-cantidad-solicitada
+    *ngIf="mostrarDescripcionCupo"
+  ></app-cantidad-solicitada>
 </div>

@@ -3,43 +3,28 @@
       <div class="row mb-3">
         <ng-titulo titulo="Representación federal"></ng-titulo>
         <div class="col-md-4">
-          <app-catalogo-select 
-            [catalogo]="entidad" 
+          <app-catalogo-select
+            [catalogo]="entidad"
             [label]="'Entidad Federativa'"
             [required]="true"
-            name="entidad" 
+            name="entidad"
             formControlName="entidad"
-            (change)="getEntidad()"
+            (selectionChange)="getEntidad($event)"
             >
           </app-catalogo-select>
-           <div *ngIf="esInvalido('entidad')" class="text-danger">
-            <small
-              *ngIf="
-                representacionForm.controls['entidad'].hasError('required')
-              "
-              >Este campo es obligatorio.</small
-            >
-          </div>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select 
-            [catalogo]="representacion" 
-            [label]="'Representación federal'" 
+          <app-catalogo-select
+            [catalogo]="representacion"
+            [label]="'Representación federal'"
             [required]="true"
-            name="representacion" 
+            name="representacion"
             formControlName="representacion"
-            (change)="getRepresentacion()"
+           (selectionChange)="getRepresentacion($event)"
            >
           </app-catalogo-select>
-           <div *ngIf="esInvalido('representacion')" class="text-danger">
-            <small
-              *ngIf="
-                representacionForm.controls['representacion'].hasError('required')
-              "
-              >Este campo es obligatorio.</small
-            >
-          </div>
         </div>
       </div>
     </form>
   </div>
+ 

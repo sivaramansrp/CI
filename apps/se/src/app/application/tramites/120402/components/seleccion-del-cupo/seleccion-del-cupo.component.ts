@@ -12,6 +12,13 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CategoriaMensaje,
+  ConfiguracionColumna,
+  ConfiguracionTabla,
+  Notificacion,
+  NotificacionesComponent,
+  TablaAcciones,
+  TipoNotificacionEnum,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
@@ -22,6 +29,18 @@ import { takeUntil } from 'rxjs';
 
 import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
 import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import {
+  AlertComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import {
+  CLASE_TEXTO_CENTRADO,
+  configuracionColumnasCupoConst,
+  NOTA,
+} from '../../constantes/definiciones.enum';
+import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
+import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
 
 /**
  * Componente para la selección del cupo en el sistema.
@@ -36,6 +55,11 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
     CatalogoSelectComponent,
     TituloComponent,
     NgIf,
+    TablaDinamicaComponent,
+    AlertComponent,
+    NotificacionesComponent,
+    DescripcionDelCupoComponent,
+    CantidadSolicitadaComponent,
   ],
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
@@ -46,6 +70,63 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
  * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
  */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
+  /**
+   * Enum de acciones disponibles en la tabla dinámica.
+   */
+  accionesEnum = TablaAcciones;
+
+  /**
+   * Indica si se debe mostrar el componente de descripción del cupo.
+   * @type {boolean}
+   * @default false
+   */
+  mostrarDescripcionCupo : boolean= false;
+
+  /**
+   * Define si el diálogo exitoso está habilitado.
+   * @property modalAbierto
+   * @type {boolean}
+   * @default false
+   */
+  modalAbierto: boolean = false;
+
+  /**
+   * Mensaje de confirmación para campos obligatorios no seleccionados.
+   * @type {string}
+   */
+  MENSAJE_CONFIRMACION :string = NOTA.CAMPO_OBLIGATORIO_NO_ENCONTRADO;
+
+  /**
+   * Configuración de columnas para la tabla dinámica de cupo.
+   * @type {ConfiguracionColumna<any>[]}
+   */
+  configuracionColumnasCupo: ConfiguracionColumna<any>[] =
+    configuracionColumnasCupoConst;
+
+  /**
+   * Título de la alerta informativa.
+   * @type {string}
+   */
+  tituloAlerta : string = NOTA.TITULO_ALERTA;
+
+  /**
+   * Clase CSS para centrar el texto de la alerta.
+   * @type {string}
+   */
+  infoAlerta: string = CLASE_TEXTO_CENTRADO;
+
+  /**
+   * Datos que se mostrarán en la tabla dinámica de cupo.
+   * @type {any[]}
+   */
+  datosTablaCupo: any[] = [];
+
+  /**
+   * Notificación a mostrar en el modal.
+   * @type {Notificacion}
+   */
+  nuevaNotificacion!: Notificacion;
+
   /**
    * Formulario reactivo para la selección del cupo.
    */
@@ -108,7 +189,6 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.initializeForm();
-    this.loadSeleccionDelCupo();
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
@@ -215,9 +295,66 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.service
       .getSeleccionDelCupo()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.seleccionDelCupo = data;
+      .subscribe((datos) => {
+        const mapearFila = (fila: any) => ({
+          descripcion: fila.description,
+          tipoAsignacion: fila.assignmentType,
+          fracciones: Array.isArray(fila.codes) ? fila.codes.map((c: string) => c.trim()) : fila.codes,
+          tipoCupo: fila.quota,
+        });
+
+        if (Array.isArray(datos)) {
+          this.datosTablaCupo = datos.map(mapearFila);
+        } else {
+          this.datosTablaCupo = [mapearFila(datos)];
+        }
+        this.seleccionDelCupo = datos;
       });
+  }
+
+  /**
+   * Cierra el modal de notificación.
+   */
+  cerrarModal(): void {
+    this.modalAbierto = false;
+  }
+
+  /**
+   * Maneja la acción realizada sobre una fila de la tabla dinámica.
+   * Guarda la fila seleccionada en el store y muestra el componente de descripción del cupo.
+   * @param evento - Objeto que contiene la fila y la columna de la acción.
+   */
+  onAccionCupo(evento: { row: any; column: string }) {
+    this.tramite120402Store.setCupoSeleccionado(evento.row); // Guardar para uso entre componentes
+    this.mostrarDescripcionCupo = true;
+  }
+
+  /**
+   * Maneja la lógica al hacer clic en el botón Buscar.
+   * Verifica que los campos obligatorios estén seleccionados y muestra una notificación si falta alguno.
+   * Si todos los campos están completos, carga los datos de la tabla.
+   */
+  manejarBuscar() {
+    const valorRegimen = this.seleccionForm.get('regimen')?.value;
+    const valorEntidad = this.tramite120402Query.getValue().entidad;
+    const valorRepresentacion =
+      this.tramite120402Query.getValue().representacion;
+    if (!valorRegimen || !valorEntidad || !valorRepresentacion) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: this.MENSAJE_CONFIRMACION,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.modalAbierto = true;
+      return;
+    } else {
+      this.loadSeleccionDelCupo();
+    }
   }
 
   /**
