@@ -867,6 +867,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Habilita o deshabilita el control de formulario 'aviso' según el valor del campo de entrada.
+   *
+   * @param {Event} event - Evento de entrada proveniente de un elemento HTML.
+   */
+  cambioLicenciaSanitaria(event: Event): void {
+    const VAL = (event.target as HTMLInputElement).value;
+    if (VAL) {
+      this.datosSolicitudForm.get('aviso')?.disable();
+    } else {
+      this.datosSolicitudForm.get('aviso')?.enable();
+    }
+  }
+
   cambireCorreoElectronico(): void {
     if (
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103 &&
