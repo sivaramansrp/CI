@@ -86,6 +86,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
  */
   public elementosRequeridos: string[] = [];
 
+   /**
+   * @property {Proveedor | undefined} datoSeleccionado
+   * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
+   */
+  @Input() datoSeleccionado: Proveedor[] | undefined;
+
   /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
@@ -131,6 +137,16 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.crearAgregarFormularioProveedor();
   }
 
+   /**
+     * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+     * @param {keyof Proveedor } field - Nombre del campo a obtener.
+     * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+     */
+    public obtenerValor(field: keyof Proveedor): string | number | undefined {
+      return this.datoSeleccionado?.[0]?.[field as keyof Proveedor] ?? '';
+    }
+  
+
   /**
    * @method crearAgregarFormularioProveedor
    * @description Crea el formulario reactivo `agregarProveedorForm` con sus respectivos controles y validaciones.
@@ -139,34 +155,34 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
-        '',
+        this.obtenerValor('razonSocial'),
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
+      nombres: [this.obtenerValor('nombres'), Validators.required],
+      primerApellido: [this.obtenerValor('primerApellido'), Validators.required],
+      segundoApellido: [this.obtenerValor('segundoApellido')],
+      pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
-        '',
+        this.obtenerValor('estadoLocalidad'),
         this.elementosRequeridos.includes('estado')
           ? [Validators.required]
           : [],
       ],
-      codigoPostal: [''],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
+      codigoPostal: [this.obtenerValor('codigoPostal')],
+      colonia: [this.obtenerValor('colonia')],
+      calle: [this.obtenerValor('calle'), Validators.required],
+      numeroExterior: [this.obtenerValor('numeroExterior'), Validators.required],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada')],
       telefono: [
         {
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
-            : '',
+            : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
       ],
@@ -174,7 +190,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         {
           value: this.elementosDeshabilitados.includes('correoElectronico')
             ? 'abc@njk.com'
-            : '',
+            : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
         [Validators.email],
@@ -251,9 +267,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       municipioAlcaldia: '',
       localidad: '',
       entidadFederativa:  VALOR_FORMULARIO.estado || '',
-      estadoLocalidad: '',
+      estadoLocalidad: VALOR_FORMULARIO.estadoLocalidad || '',
       codigoPostal:  VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
+        nombres: VALOR_FORMULARIO.nombres,
+      primerApellido: VALOR_FORMULARIO.primerApellido,
+      segundoApellido: VALOR_FORMULARIO.segundoApellido,
+      razonSocial: VALOR_FORMULARIO.razonSocial,
+      lada: VALOR_FORMULARIO.lada,
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
