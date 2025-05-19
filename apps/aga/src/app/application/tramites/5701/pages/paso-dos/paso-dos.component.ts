@@ -1,18 +1,8 @@
-import { CATALOGOS_ID, CatalogoDocumento, Documento, Notificacion, TipoDocumentos } from '@ng-mf/data-access-user';
-import { catchError, map } from 'rxjs';
-
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { CatalogoDocumentosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogo-documentos.service';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
-
+import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import documentosOpcionales from 'libs/shared/theme/assets/json/shared/documentosOpcionales.json';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import documentosObligatorios from 'libs/shared/theme/assets/json/shared/documentosObligatorios.json';
-
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -70,22 +60,6 @@ export class PasoDosComponent implements OnInit {
    */
   TEXTOS = TEXTOS;
 
-
-  /**
-   * Catalogo de documentos obligatorios.
-   * @type {CatalogoDocumento[]}
-   */
-  catalogoDocumentos: CatalogoDocumento[] = documentosObligatorios.documentosObligatorios;
-
-  documentosObligatorios: TipoDocumentos[] = [];
-
-  documentosOpcionales: TipoDocumentos[] = [];
-  /**
-   * Catalogo de documentos opcionales.
-   * @type {CatalogoDocumento[]}
-   */
-  catalogoDocumentosOpcionales: CatalogoDocumento[] = documentosOpcionales.documentosOpcionales
-
   /**
    * Indica si la carga de documentos se realizó correctamente.
    * @type {boolean}
@@ -107,15 +81,7 @@ export class PasoDosComponent implements OnInit {
     txtBtnCancelar: '',
   }
 
-  constructor(
-    private catalogosServices: CatalogosService,
-    private catalogoDocumentosService: CatalogoDocumentosService,
-  ) { }
-
   ngOnInit(): void {
-    this.getListaDocumentoObligatorios();
-    this.getListaDocumentoOpcionales();
-
     this.cargaArchivosEvento.pipe(
       takeUntilDestroyed(this.destroyRef),
       map(() => {
@@ -129,60 +95,6 @@ export class PasoDosComponent implements OnInit {
         this.reenviarRegresarSeccion.emit();
       })
     ).subscribe();
-  }
-
-  /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
-   */
-
-  getListaDocumentoObligatorios(): void {
-    const TRAMITE = '5701';
-    this.catalogoDocumentosService.getDocumentosObligatorios(TRAMITE, { especifico: false })
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((response) => {
-          response.datos.documento_tramite.forEach((documento: Documento) => {
-            return documento.tipo_documento ? this.documentosObligatorios.push(documento.tipo_documento) : null;
-          });
-          console.log(this.documentosObligatorios);
-          
-        }))
-      .subscribe();
-  }
-
-    getListaDocumentoOpcionales(): void {
-    const TRAMITE = '5701';
-    this.catalogoDocumentosService.getDocumentosObligatorios(TRAMITE, { especifico: true })
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((response) => {
-          response.datos.documento_tramite.forEach((documento: Documento) => {
-            return documento.tipo_documento ? this.documentosOpcionales.push(documento.tipo_documento) : null;
-          });
-          console.log(this.documentosOpcionales);
-          
-
-        }))
-      .subscribe();
-  }
-
-
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((resp: CatalogoDocumento[]) => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        }),
-        catchError(_error => {
-          return [] as CatalogoDocumento[];
-        }
-        )
-      )
-      .subscribe();
   }
 
   /**

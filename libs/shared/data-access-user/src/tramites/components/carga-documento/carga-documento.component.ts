@@ -48,7 +48,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './carga-documento.component.scss',
 })
 export class CargaDocumentoComponent implements OnInit, OnChanges {
+  /**
+   * @description ID del tipo de trámite.
+   * @type {string}
+   */
   @Input() idTipoTRamite: string = '';
+
+  /**
+   * @description ID de la solicitud.
+   * @type {string}
+   */
   @Input() idSolicitud: string = '';
 
   /**
@@ -155,6 +164,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    */
   private documentosState!: DocumentosState;
 
+  /**
+   * @description Referencia a la notificación.
+   * @type {Notificacion}
+   */
   public nuevaNotificacion!: Notificacion;
 
   constructor(
@@ -201,6 +214,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Obtiene la lista de documentos obligatorios para el trámite.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener la lista de documentos obligatorios
+   * @returns {void} No retorna nada.
+   */
   getListaDocumentoObligatorios(): void {
     this.catalogoDocumentosService
       .getDocumentosObligatorios(this.idTipoTRamite, { especifico: false })
@@ -212,6 +230,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
               this.catalogoDocumentosObligatorios.push({
                 ...documento.tipo_documento,
                 adicionales: [],
+                cargado: false,
               });
             }
           });
@@ -220,6 +239,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       .subscribe();
   }
 
+  /**
+   * Obtiene la lista de documentos opcionales para el trámite.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener la lista de documentos opcionales
+   * @return {void} No retorna nada.
+   */
   getListaDocumentoOpcionales(): void {
     const TRAMITE = '5701';
     this.catalogoDocumentosService
@@ -232,6 +256,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
               this.catalogoDocumentosOpcionales.push({
                 ...documento.tipo_documento,
                 adicionales: [],
+                cargado: false,
               });
             }
           });
@@ -466,8 +491,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.archivosCargando.opcionales = this.listadoArchivos.filter(
         (f) => f.tipo === 'opcional'
       );
-      //   this.cargarArchivos(this.archivosCargando.obligatorios);
-      //   this.cargarArchivos(this.archivosCargando.opcionales);
+      this.cargarArchivos(this.archivosCargando.obligatorios);
+      this.cargarArchivos(this.archivosCargando.opcionales);
       this.cargaRealizada.emit(this.cargarDocumentos);
     }
   }
@@ -622,5 +647,19 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     this.cargaRealizada.emit(false);
+  }
+
+  /**
+   * Carga los archivos seleccionados.
+   * @param {any[]} archivosCargando - Lista de archivos a cargar.
+   * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  async cargarArchivos(archivosCargando: any[]): Promise<void> {
+    for (const ARCHIVO of archivosCargando) {
+      // const DATA = await this.uploadFiles(ARCHIVO.archivo);  TODO: Descomentar cuando funcione el API de cargar documento
+      ARCHIVO.cargado = true;
+      ARCHIVO.estatus = 'cargado';
+    }
   }
 }
