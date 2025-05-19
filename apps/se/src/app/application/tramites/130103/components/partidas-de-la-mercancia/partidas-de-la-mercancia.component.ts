@@ -246,13 +246,13 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   public agregar(): void {
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
-        id: 1,
+        id: this.datosTabla?.length + 1,
         cantidad: this.ninoFormGroup.get('cantidad')?.value,
-        unidad_de_medida: 'Caja',
-        fraccion_arancelaria_tigie: this.ninoFormGroup.get('fraccion_arancelaria_tigie')?.value,
+        unidadDeMedida: this.importacionstate['unidad_de_medida'],
+        fraccionArancelariaTigie:  this.importacionstate['seleccion_fraccion'],
         descripcion: this.ninoFormGroup.get('descripcion')?.value,
-        precio_unitario: '1.000',
-        total_usd: this.ninoFormGroup.get('valor_partida_usd')?.value
+        precioUnitario: '1.000',
+        totalUsd: this.ninoFormGroup.get('valor_partida_usd')?.value
       };
       this.datosTabla?.push(PRODUCTOS);
       this.tramite130103Store.setDynamicFieldValue('producto', PRODUCTOS);
