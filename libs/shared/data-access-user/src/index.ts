@@ -132,3 +132,5 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 export * from './tramites/components/carga-documento/carga-documento.component';
+export * from './core/estados/consulta.store';
+export * from './core/queries/consulta.query';
