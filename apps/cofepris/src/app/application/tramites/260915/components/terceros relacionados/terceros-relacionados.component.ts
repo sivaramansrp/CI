@@ -109,8 +109,8 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
-   * @param solicitud260702Store Almacén de estado para el trámite 260702.
-   * @param solicitud260702Query Consulta de estado para el trámite 260702.
+   * @param solicitud260915Store Almacén de estado para el trámite 260915.
+   * @param solicitud260915Query Consulta de estado para el trámite 260915.
    */
   constructor(
     private fb: FormBuilder,
@@ -195,7 +195,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
-      this.eliminarMercancias(); // Call the deletion logic
+      this.eliminarMercancias(); // Llamar a la lógica de eliminación
       this.abrirModal(0, true);
     }
   }

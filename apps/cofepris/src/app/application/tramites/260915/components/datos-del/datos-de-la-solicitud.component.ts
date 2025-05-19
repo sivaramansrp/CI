@@ -179,8 +179,12 @@ mercanciasData: MercanciasInfo[] = [];
   /** Configuración para el campo de selección del tipo de producto */
   public tipoProductoData = TIPO_PRODUCTO_DATA;
 
-  public estadoFisicoData = ESTADO_FISICO_DATA;
+/** 
+ * Datos de configuración para el estado físico de la mercancía.
+ */
+public estadoFisicoData = ESTADO_FISICO_DATA;
 
+  /** Constructor del componente */
   constructor(private fb: FormBuilder, 
     private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
      private cdr: ChangeDetectorRef,
@@ -306,13 +310,13 @@ closeModal(): void {
  */
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
-    // Filter out the selected rows
+    // Filtrar las filas seleccionadas
     this.tableData = this.tableData.filter((row) => {
       const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
       return !this.filasSeleccionadas.has(Number(ROW_ID));
     });
 
-    // Clear the selection and notification
+    // Borrar la selección y la notificación
     this.filasSeleccionadas.clear();
     this.nuevaNotificacion = null;
   }
@@ -633,7 +637,7 @@ onModificar(): void {
   this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
   const SELECTED_ROW = this.mercanciasData[SELECTED_ROW_INDEX];
 
-  // Patch form values with correct mapping for catalog fields
+  // Parche los valores del formulario con la asignación correcta para los campos del catálogo
   this.dataDeLaSolicitudForm.patchValue({
     descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccion,
     cantidadUMT: SELECTED_ROW.cantidadUMT,
@@ -659,14 +663,18 @@ onModificar(): void {
     fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
   });
 
-  // Show the modal
+  // mostrar el modal
   const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
     MODAL_INSTANCE.show();
   } 
 }
-
+/**
+ * Maneja el evento de cambio en el tipo de operación.
+ * Si el tipo de operación es "modificación", habilita el campo de justificación.
+ * En caso contrario, deshabilita el campo de justificación y lo limpia.
+ */
 changeEvent(): void{
   const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
   const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
@@ -679,7 +687,11 @@ changeEvent(): void{
       }
     
 }
-
+/**
+ * Obtiene los datos de las mercancías desde el servicio.
+ * Realiza una solicitud al servicio `PermisoSanitarioDispositivosMedicosService`
+ * y actualiza la propiedad `mercanciasData` con los datos obtenidos.
+ */
 getMercanciasDatosData(): void {
   this.permisosanitariodisposivos.getMercanciasDatosData()
         .pipe(takeUntil(this.destroyed$))
