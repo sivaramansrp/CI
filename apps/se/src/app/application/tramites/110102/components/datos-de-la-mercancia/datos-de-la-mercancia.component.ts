@@ -1,14 +1,17 @@
 /**
  * Este componente maneja los datos de la mercancía.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { REG_X, TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
+
+import { Modal } from 'bootstrap';
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -21,6 +24,16 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia al modal de confirmación.
+   * @type {ElementRef}
+   */
+  @ViewChild ('confirmarModal') confirmarModal!: ElementRef;
+  /**
+   * Instancia del modal de confirmación.
+   * @type {Modal}
+   */
+  private modalInstance!: Modal;
 
   /**
    * Formulario para el registro de la mercancía del comercializador.
@@ -36,6 +49,12 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
+   * Contenido del modal.
+   * @type {string}
+   */
+  contenidoModal = '';
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
@@ -43,7 +62,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
     this.datosDeLamercanciaFrom = this.fb.group({
-      cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
+      cveRegistroProductor: ['', [Validators.required,Validators.pattern(REG_X.SOLO_NUMEROS)]],
       solicitud: this.fb.group({
         idSolicitud: [null],
         idSolicitudProductor: [''],
@@ -103,11 +122,32 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   actualizaGridComercializadoresProductos(): void {
     const IDSOLICITUD = this.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value;
+    const REGISTRO_PRODUCTOR = this.datosDeLamercanciaFrom.get('cveRegistroProductor');
     if (IDSOLICITUD === null) {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
+      REGISTRO_PRODUCTOR?.enable();
     } else {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
+      REGISTRO_PRODUCTOR?.disable();
     }
+
+    if ( REGISTRO_PRODUCTOR?.value!== '') {
+      if(REGISTRO_PRODUCTOR?.hasError('pattern')===true){
+      this.contenidoModal='Debe introducir la clave de registro';
+      this.abrirModal();
+      }
+       else if (REGISTRO_PRODUCTOR?.value!== '254023028961') {
+      this.contenidoModal='El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.';
+      this.abrirModal();
+    }
+    }
+  }
+  /**
+   * Abre el modal de confirmación.
+   */
+  abrirModal(): void {
+    if (!this.modalInstance) {
+      this.modalInstance = new Modal(this.confirmarModal.nativeElement);
+    }
+    this.modalInstance.show();
   }
 
   /**

@@ -1,14 +1,13 @@
 <div class="container">
     <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
         <form [formGroup]="datosDeLamercanciaFrom">
-                <div class="row d-flex align-items-center">
+                <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="certificadoOrigenProductoNumRegistro" class="form-label text-start">Número de Registro de Productos Elegibles *:</label>
                         <input type="text" id="cveRegistroProductor" formControlName="cveRegistroProductor" 
-                            class="form-control" size="30" [placeholder]="'254023028961'" (change)="setValoresStore(datosDeLamercanciaFrom,'cveRegistroProductor','setCveRegistroProductor')"/>
+                            class="form-control" (change)="setValoresStore(datosDeLamercanciaFrom,'cveRegistroProductor','setCveRegistroProductor')"/>
                             <div *ngIf="esInvalido('cveRegistroProductor')" class="text-danger">
                                 <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('required')">Este campo es obligatorio.</small>
-                                <small *ngIf="datosDeLamercanciaFrom.controls['cveRegistroProductor'].hasError('maxlength')">Máximo 12 caracteres.</small>
                             </div> 
                     </div>
                     <div class="col-md-2 mt-4">
@@ -21,3 +20,18 @@
             </form>
 </div>
   
+
+<div id="confirmarModal" aria-labelledby="confirmarModalLabel" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" #confirmarModal>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header py-5"></div>
+      <div class="modal-body">
+        <p>{{ contenidoModal }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" >Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
