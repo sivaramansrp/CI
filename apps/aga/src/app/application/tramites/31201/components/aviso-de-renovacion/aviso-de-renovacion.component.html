@@ -1,0 +1,166 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AvisoDeRenovacionComponent } from './aviso-de-renovacion.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { AvisoUnicoService } from '../../services/aviso-unico.service';
+import { UnicoStore } from '../../estados/renovacion.store';
+import { UnicoQuery } from '../../estados/queries/unico.query';
+import { of } from 'rxjs';
+import { InputFechaComponent, CatalogoSelectComponent, InputRadioComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { PreOperativo, Catalogo, AvisoValor } from '../../models/aviso.model';
+import { FECHA_DE_PAGO } from '../../models/aviso.model';
+
+describe('AvisoDeRenovacionComponent', () => {
+  let component: AvisoDeRenovacionComponent;
+  let fixture: ComponentFixture<AvisoDeRenovacionComponent>;
+  let servicio: AvisoUnicoService;
+  let unicoStore: UnicoStore;
+  let unicoQuery: UnicoQuery;
+  
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        CommonModule,
+        TituloComponent,
+        InputFechaComponent,
+        CatalogoSelectComponent,
+        InputRadioComponent,
+        InputCheckComponent,
+      ],
+      declarations: [AvisoDeRenovacionComponent],
+      providers: [
+        FormBuilder,
+        {
+          provide: AvisoUnicoService,
+          useValue: {
+            obtenerDatosLocalidad: jest.fn(),
+            getSolicitante: jest.fn(),
+            obtenerRadio: jest.fn(),
+          },
+        },
+        {
+          provide: UnicoStore,
+          useValue: {
+            setfechaPago: jest.fn(),
+            setmapTipoTramite: jest.fn(),
+            setmapDeclaracionSolicitud: jest.fn(),
+            setenvioAviso: jest.fn(),
+            setnumeroAviso: jest.fn(),
+            setclaveReferencia: jest.fn(),
+            setnumeroOperacion: jest.fn(),
+            setcadenaDependencia: jest.fn(),
+            setbanco: jest.fn(),
+            setllavePago: jest.fn(),
+            setimportePago: jest.fn(),
+          },
+        },
+        {
+          provide: UnicoQuery,
+          useValue: {
+            selectSolicitud$: of({}),
+          },
+        },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AvisoDeRenovacionComponent);
+    component = fixture.componentInstance;
+    servicio = TestBed.inject(AvisoUnicoService);
+    unicoStore = TestBed.inject(UnicoStore);
+    unicoQuery = TestBed.inject(UnicoQuery);
+    fixture.detectChanges();
+  });
+
+  it('debe crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('debe inicializar el formulario correctamente', () => {
+    component.ngOnInit();
+    expect(component.avisoForm).toBeTruthy();
+    expect(component.avisoForm.contains('mapTipoTramite')).toBe(true);
+    expect(component.avisoForm.contains('mapDeclaracionSolicitud')).toBe(true);
+    expect(component.avisoForm.contains('envioAviso')).toBe(true);
+    expect(component.avisoForm.contains('numeroAviso')).toBe(true);
+  });
+
+  it('debe cargar los datos iniciales del estado de la solicitud', () => {
+    component.ngOnInit();
+    expect(component.solicitudState).toBeDefined();
+  });
+
+  it('debe actualizar los valores en el store cuando se cambia el valor del formulario', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    
+    component.avisoForm.controls['mapTipoTramite'].setValue('nuevo valor');
+    fixture.detectChanges();
+    
+    component.setValoresStore(component.avisoForm, 'mapTipoTramite', 'setmapTipoTramite');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.avisoForm, 'mapTipoTramite', 'setmapTipoTramite');
+  });
+
+  it('debe actualizar la fecha de pago correctamente', () => {
+    const nuevoValor = '2025-05-19';
+    component.onFechaCambiada(nuevoValor);
+    expect(component.avisoForm.get('fechaPago')?.value).toBe(nuevoValor);
+  });
+
+  it('debe cargar los datos de localidad correctamente', () => {
+    const mockLocalidad: Catalogo[] = [{ id: 1, descripcion: 'Localidad 1' }];
+    servicio.obtenerDatosLocalidad.mockReturnValue(of(mockLocalidad));
+    
+    component.loadLocalidad();
+    expect(component.localidadList).toEqual(mockLocalidad);
+  });
+
+  it('debe cargar los datos de asignación correctamente', () => {
+    const mockAsignacion: AvisoValor = {
+      claveReferencia: '1234',
+      cadenaDependencia: 'cadena-1',
+      importePago: '1000',
+    };
+    servicio.getSolicitante.mockReturnValue(of(mockAsignacion));
+    
+    component.loadAsignacionData();
+    expect(component.avisoForm.get('claveReferencia')?.value).toBe(mockAsignacion.claveReferencia);
+    expect(component.avisoForm.get('cadenaDependencia')?.value).toBe(mockAsignacion.cadenaDependencia);
+    expect(component.avisoForm.get('importePago')?.value).toBe(mockAsignacion.importePago);
+  });
+
+  it('debe cargar las opciones de tipo de persona correctamente', () => {
+    const mockTipoPersona: PreOperativo[] = [{ id: '1', nombre: 'Persona 1' }];
+    servicio.obtenerRadio.mockReturnValue(of(mockTipoPersona));
+    
+    component.cargarRadio();
+    expect(component.tipoPersonaOptions).toEqual(mockTipoPersona);
+  });
+
+  it('debe resetear los datos del pago cuando se llama a resetPagoDatos()', () => {
+    component.avisoForm.patchValue({
+      numeroOperacion: '123',
+      banco: 'Banco 1',
+      llavePago: 'llave-1',
+      fechaPago: '2025-05-19',
+    });
+    
+    component.resetPagoDatos();
+    
+    expect(component.avisoForm.get('numeroOperacion')?.value).toBe('');
+    expect(component.avisoForm.get('banco')?.value).toBe('');
+    expect(component.avisoForm.get('llavePago')?.value).toBe('');
+    expect(component.avisoForm.get('fechaPago')?.value).toBe('');
+  });
+
+  it('debe limpiar los recursos correctamente cuando se destruye el componente', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    
+    component.ngOnDestroy();
+    
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+});
