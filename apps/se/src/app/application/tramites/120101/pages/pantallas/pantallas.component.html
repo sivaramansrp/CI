@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>
+        Registro TPL Solicitud de inscipción en el Registro de bienes textiles y
+        prendas de vestir no originarios elegibles para recibir trato de
+        preferencia arancelaria conforme al Tratado entre los Estados Unidos
+        Mexicanos, los Estados Unidos de América y Canadá
+      </h3>
+    </div>
+    @if (mostrarAplicacionRegistradaAlerta) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="applicacionRegistradaAlerta" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
+    }
+    @if (!esFormaValido && esFormaValido !== undefined && !mostrarAplicacionRegistradaAlerta) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+    }
+    <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+  </div>
+  <div class="row">
+    @switch (indice) { @case (1) {
+    <paso-uno [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
+    } @case (2) {
+    <paso-dos></paso-dos>
+    } }
+  </div>
+  <btn-continuar
+    [datos]="datosPasos"
+    [dePadre]="true"
+    (continuarEvento)="getValorIndice($event)"
+  >
+  </btn-continuar>
+  @if (indice === 1) {
+  <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  }
+</div>
