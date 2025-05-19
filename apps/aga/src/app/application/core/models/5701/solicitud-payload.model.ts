@@ -3,6 +3,7 @@ import { TransporteAereo, TransporteCarretero, TransporteFerroviario, Transporte
 export interface SolicitudPayload {
     id_solicitud: number | null;
     id_tipo_tramite: number;
+    cve_unidad_administrativa: string; // TODO: Este campo se va a eliminar.
     costo_total: string;
     rfc: string;
     representante_legal: RepresentanteLegal;

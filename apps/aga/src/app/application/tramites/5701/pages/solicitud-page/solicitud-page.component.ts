@@ -16,8 +16,8 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud5701State, Tercero5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Pedimento } from '../../../../core/models/5701/solicitud-payload.model';
+import { CVE_UNIDAD_ADMIN, TIPO_TRAMITE } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { TIPO_TRAMITE } from '../../../../core/enums/5701/tramite5701.enum';
 
 interface AccionBoton {
   accion: string;
@@ -174,6 +174,7 @@ export class SolicitudPageComponent implements OnInit {
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
       id_solicitud: this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
+      cve_unidad_administrativa: CVE_UNIDAD_ADMIN, //TODO: Este campo se va a eliminar
       costo_total: '',
       rfc: '', //Este viene del store con los datos del inicio de sesión
       representante_legal: {
