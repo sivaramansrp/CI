@@ -2046,8 +2046,8 @@
   {
     "id": 293,
     "tramite": 90202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/ampliacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/ampliacion-prosec-productor/prosec",
     "department": "se"
   },
   {
@@ -2165,8 +2165,8 @@
   {
     "id": 310,
     "tramite": 130107,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/importaciones-agropecuarias/permisos-de-importacia",
+    "linkDepartment": "/pago/importaciones-agropecuarias/permisos-de-importacia",
     "department": "se"
   },
   {
