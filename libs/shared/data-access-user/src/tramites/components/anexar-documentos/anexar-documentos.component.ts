@@ -174,18 +174,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.documentosQuery.selectDocumentoState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((documentosState) => {
-          this.documentosState = documentosState;
-        })
-      )
-      .subscribe();
-
-    // this.documentosOpcionalesSeleccionados = (this.documentosState.catalogoDocumentosRequeridos.length > 0) ? this.documentosState.catalogoDocumentosRequeridos : [];
-
-
+  
     this.cargaArchivosEvento
       .pipe(takeUntil(this.destroyNotifier$),
         map(() => this.confirmUpload())
@@ -459,7 +448,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
 
-    // this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
     this.listDocOpcionalesAgregar = [];
   }
 
@@ -488,13 +476,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INDICE !== -1) {
       if (this.documentosOpcionalesSeleccionados[INDICE] &&
         this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
-        /*         if (this.documentosOpcionalesSeleccionados[INDICE].adicionales.length > 0) {
-         */
         this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: CatalogoDocumento) => {
           const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
           this.listadoArchivos.splice(INDICE_LISTADO, 1);
         });
-        // }
       }
 
       const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === item.id);
