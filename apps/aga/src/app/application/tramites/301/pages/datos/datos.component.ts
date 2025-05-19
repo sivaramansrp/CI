@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TieneConsultaio } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, delay, map, takeUntil } from 'rxjs';
 import { Pantallas301Service } from '../../services/pantallas301.service';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
@@ -28,11 +28,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   public consultaState!:ConsultaioState;
-  public tieneConsulta:TieneConsultaio = {
-    readonly: false,
-    create: false,
-    update: false,
-  }
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
@@ -55,24 +50,11 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
-    if(this.consultaState.readonly) {
-      this.getBandejaSolicitudesDatos();
+    if(this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
-  }
-
-  public getBandejaSolicitudesDatos(): void {
-    this.tieneConsulta.readonly = this.consultaState.readonly;
-    this.tieneConsulta.create = this.consultaState.create;
-    this.tieneConsulta.update = this.consultaState.update;
-    this.pantallasSvc.getPantallaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      if(response) {
-        this.esDatosRespuesta = true;
-        this.solocitud301Service.actualizarEstadoFormulario(response);
-      }
-    });
   }
 
   /**
