@@ -8,70 +8,76 @@ import { Injectable } from '@angular/core';
  * Representa el estado de la solicitud en el sistema. Contiene todos los campos necesarios para gestionar los datos relacionados con la solicitud.
  */
 export interface UnicoState {
-  modalidad(modalidad: unknown): unknown;
   /**
-   * @property {string} mapTipoTramite
-   * @description Modalidad de la solicitud.
+   * Función para manejar la modalidad.
+   * @param modalidad Modalidad a manejar.
+   * @returns {unknown} Retorna un valor desconocido.
+   */
+  modalidad(modalidad: unknown): unknown;
+
+  /**
+   * Modalidad de la solicitud.
+   * @type {string}
    */
   mapTipoTramite: string;
 
   /**
-   * @property {string} mapDeclaracionSolicitud
-   * @description Declaración de protesta de verdad.
+   * Declaración de protesta de verdad.
+   * @type {string}
    */
   mapDeclaracionSolicitud: string;
 
   /**
-   * @property {string} envioAviso
-   * @description Estado del envío del aviso.
+   * Estado del envío del aviso.
+   * @type {string}
    */
   envioAviso: string;
 
   /**
-   * @property {string} numeroAviso
-   * @description Número del aviso.
+   * Número del aviso.
+   * @type {string}
    */
   numeroAviso: string;
 
   /**
-   * @property {string} claveReferencia
-   * @description Referencia de la solicitud.
+   * Referencia de la solicitud.
+   * @type {string}
    */
   claveReferencia: string;
 
   /**
-   * @property {string} numeroOperacion
-   * @description Número de operación asociado a la solicitud.
+   * Número de operación asociado a la solicitud.
+   * @type {string}
    */
   numeroOperacion: string;
 
   /**
-   * @property {string} cadenaDependencia
-   * @description Cadena de dependencia asociada a la solicitud.
+   * Cadena de dependencia asociada a la solicitud.
+   * @type {string}
    */
   cadenaDependencia: string;
 
   /**
-   * @property {string} banco
-   * @description Información del banco relacionado.
+   * Información del banco relacionado.
+   * @type {string}
    */
   banco: string;
 
   /**
-   * @property {string} llavePago
-   * @description Llave única de pago asociada a la solicitud.
+   * Llave única de pago asociada a la solicitud.
+   * @type {string}
    */
   llavePago: string;
 
   /**
-   * @property {string} fechaPago
-   * @description Fecha de pago asociada a la solicitud.
+   * Fecha de pago asociada a la solicitud.
+   * @type {string}
    */
   fechaPago: string;
 
   /**
-   * @property {string} importePago
-   * @description Importe del pago relacionado con la solicitud.
+   * Importe del pago relacionado con la solicitud.
+   * @type {string}
    */
   importePago: string;
 }
@@ -81,9 +87,9 @@ export interface UnicoState {
  * @name createInitialState
  * @description
  * Crea el estado inicial de la solicitud. Esta función devuelve un objeto con todos los campos inicializados como cadenas vacías.
- * 
  * @returns {UnicoState} El estado inicial de la solicitud.
  */
+
 export function createInitialState(): UnicoState {
   return {
     /**
@@ -162,6 +168,7 @@ export function createInitialState(): UnicoState {
     },
   }
 }
+
 /**
  * @class
  * @name UnicoStore
@@ -184,6 +191,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `mapTipoTramite` en el estado.
    * @param mapTipoTramite Nueva modalidad de la solicitud.
+   * @returns {void} No retorna valor.
    */
   public setmapTipoTramite(mapTipoTramite: string): void {
     this.update((state) => ({
@@ -195,6 +203,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `mapDeclaracionSolicitud` en el estado.
    * @param mapDeclaracionSolicitud Nueva declaración de protesta de verdad.
+   * @returns {void} No retorna valor.
    */
   public setmapDeclaracionSolicitud(mapDeclaracionSolicitud: string): void {
     this.update((state) => ({
@@ -206,6 +215,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `envioAviso` en el estado.
    * @param envioAviso Nuevo estado de envío del aviso.
+   * @returns {void} No retorna valor.
    */
   public setenvioAviso(envioAviso: string): void {
     this.update((state) => ({
@@ -217,6 +227,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `numeroAviso` en el estado.
    * @param numeroAviso Nuevo número de aviso.
+   * @returns {void} No retorna valor.
    */
   public setnumeroAviso(numeroAviso: string): void {
     this.update((state) => ({
@@ -228,6 +239,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `claveReferencia` en el estado.
    * @param claveReferencia Nueva clave de referencia.
+   * @returns {void} No retorna valor.
    */
   public setclaveReferencia(claveReferencia: string): void {
     this.update((state) => ({
@@ -239,6 +251,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `numeroOperacion` en el estado.
    * @param numeroOperacion Nuevo número de operación.
+   * @returns {void} No retorna valor.
    */
   public setnumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({
@@ -250,6 +263,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `cadenaDependencia` en el estado.
    * @param cadenaDependencia Nueva cadena de dependencia.
+   * @returns {void} No retorna valor.
    */
   public setcadenaDependencia(cadenaDependencia: string): void {
     this.update((state) => ({
@@ -261,6 +275,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `banco` en el estado.
    * @param banco Nuevo banco.
+   * @returns {void} No retorna valor.
    */
   public setbanco(banco: string): void {
     this.update((state) => ({
@@ -272,6 +287,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `llavePago` en el estado.
    * @param llavePago Nueva llave de pago.
+   * @returns {void} No retorna valor.
    */
   public setllavePago(llavePago: string): void {
     this.update((state) => ({
@@ -283,6 +299,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `fechaPago` en el estado.
    * @param fechaPago Nueva fecha de pago.
+   * @returns {void} No retorna valor.
    */
   public setfechaPago(fechaPago: string): void {
     this.update((state) => ({
@@ -294,6 +311,7 @@ export class UnicoStore extends Store<UnicoState> {
   /**
    * Actualiza el campo `importePago` en el estado.
    * @param importePago Nuevo importe de pago.
+   * @returns {void} No retorna valor.
    */
   public setimportePago(importePago: string): void {
     this.update((state) => ({

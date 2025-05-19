@@ -3,20 +3,17 @@
  * @name AccionBoton
  * @description
  * Representa una acción asociada a un botón en la interfaz de usuario.
- *
- * @property {string} accion - Nombre de la acción asociada al botón.
- * @property {number} valor - Valor numérico asociado a la acción del botón.
  */
 export interface AccionBoton {
   /**
-   * @property {string} accion
-   * @description Nombre de la acción asociada al botón.
+   * Nombre de la acción asociada al botón.
+   * @type {string}
    */
   accion: string;
 
   /**
-   * @property {number} valor
-   * @description Valor numérico asociado a la acción del botón.
+   * Valor numérico asociado a la acción del botón.
+   * @type {number}
    */
   valor: number;
 }
@@ -26,10 +23,6 @@ export interface AccionBoton {
  * @name FECHA_DE_PAGO
  * @description
  * Configuración predeterminada para el campo de fecha de pago.
- *
- * @property {string} labelNombre - Etiqueta que describe el campo de fecha de pago.
- * @property {boolean} required - Indica si el campo de fecha de pago es obligatorio.
- * @property {boolean} habilitado - Indica si el campo de fecha de pago está habilitado.
  */
 export const FECHA_DE_PAGO = {
   /**
@@ -50,39 +43,27 @@ export const FECHA_DE_PAGO = {
    */
   habilitado: true,
 };
+
 /**
  * @interface
  * @name PreOperativo
  * @description
  * Representa una opción preoperativa con una etiqueta y un valor asociado.
- *
- * @property {string} label - Etiqueta que describe la opción preoperativa.
- * @property {string} value - Valor asociado a la opción preoperativa.
  */
 export interface PreOperativo {
   /**
-   * @property {string} label
-   * @description Etiqueta que describe la opción preoperativa.
+   * Etiqueta que describe la opción preoperativa.
+   * @type {string}
    */
   label: string;
 
   /**
-   * @property {string} value
-   * @description Valor asociado a la opción preoperativa.
+   * Valor asociado a la opción preoperativa.
+   * @type {string}
    */
   value: string;
 }
 
-/**
- * @interface
- * @name AvisoValor
- * @description
- * Representa los valores asociados a un aviso, incluyendo clave de referencia, cadena de dependencia e importe de pago.
- *
- * @property {string} claveReferencia - claveReferencia del valor en español.
- * @property {string} cadenaDependencia - cadenaDependencia asociada al valor.
- * @property {string} importePago - Importe de pago asociado al valor.
- */
 /**
  * @interface
  * @name AvisoValor

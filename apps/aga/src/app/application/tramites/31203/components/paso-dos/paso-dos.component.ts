@@ -1,20 +1,13 @@
-
 /**
- * compo doc
  * @component PasoDosComponent
  * @description
-*/
+ * Componente que representa el segundo paso de un proceso.
+ * Este componente es independiente (standalone) y utiliza varios componentes compartidos.
+ */
 import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-
-
-/**
- * @nombre PasoDosComponent
- * @descripcion Componente que representa el segundo paso de un proceso.
- * Este componente es independiente (standalone) y utiliza varios componentes compartidos.
- */
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
@@ -28,7 +21,12 @@ import { Component } from '@angular/core';
 })
 export class PasoDosComponent {
   /**
-   * @prop {any} TEXTOS - Contiene constantes de texto utilizadas en la UI.
+   * Contiene las constantes de texto utilizadas en la interfaz de usuario del componente.
+   * Este objeto centraliza y proporciona los textos que se muestran en la UI para los distintos elementos del paso dos,
+   * facilitando su mantenimiento y reutilización.
+   * @type {any}
+    * @description  
+   * Textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
 }
