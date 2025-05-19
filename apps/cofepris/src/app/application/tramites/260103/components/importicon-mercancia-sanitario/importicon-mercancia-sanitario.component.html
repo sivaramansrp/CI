@@ -46,6 +46,15 @@
                 : ''
             "
           />
+            <small
+    *ngIf="
+      mercanciaForm.get('denominacionEspecificaProducto')?.touched &&
+      mercanciaForm.get('denominacionEspecificaProducto')?.hasError('required')
+    "
+    class="text-danger"
+  >
+    Este campo es obligatorio.
+  </small>
         </div>
       </div>
     </div>
@@ -98,6 +107,15 @@
               isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''
             "
           />
+            <small
+    *ngIf="
+      mercanciaForm.get('fraccionArancelaria')?.touched &&
+      mercanciaForm.get('fraccionArancelaria')?.hasError('required')
+    "
+    class="text-danger"
+  >
+    Este campo es obligatorio.
+  </small>
         </div>
       </div>
     </div>
@@ -114,6 +132,15 @@
             type="text"
             formControlName="descripcionFraccion"
           />
+              <small
+    *ngIf="
+      mercanciaForm.get('descripcionFraccion')?.touched &&
+      mercanciaForm.get('descripcionFraccion')?.hasError('required')
+    "
+    class="text-danger"
+  >
+    Este campo es obligatorio.
+  </small>
         </div>
       </div>
     </div>
@@ -129,6 +156,15 @@
             formControlName="cantidadUMT"
             [ngClass]="isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''"
           />
+              <small
+    *ngIf="
+      mercanciaForm.get('cantidadUMT')?.touched &&
+      mercanciaForm.get('cantidadUMT')?.hasError('required')
+    "
+    class="text-danger"
+  >
+    Este campo es obligatorio.
+  </small>
         </div>
       </div>
       <div class="col-md-5">
@@ -148,6 +184,15 @@
               isValid(mercanciaForm, 'cantidadUmtValor') ? 'required' : ''
             "
           />
+             <small
+    *ngIf="
+      mercanciaForm.get('cantidadUmtValor')?.touched &&
+      mercanciaForm.get('cantidadUmtValor')?.hasError('required')
+    "
+    class="text-danger"
+  >
+    Este campo es obligatorio.
+  </small>
         </div>
       </div>
     </div>

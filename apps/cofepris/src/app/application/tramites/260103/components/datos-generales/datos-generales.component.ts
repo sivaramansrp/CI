@@ -214,7 +214,11 @@ export class DatosGeneralesComponent implements OnDestroy {
   ],
   telefono: [
     '',
+    [
     Validators.maxLength(24),
+    Validators.pattern(/^[0-9]*$/)
+  ]
+  
   ],
   correoElectronico: [
     '',
@@ -224,9 +228,7 @@ export class DatosGeneralesComponent implements OnDestroy {
       Validators.maxLength(320),
     ],
   ],
-  tipoPersona: ['', Validators.required,
-    Validators.pattern('^[0-9]*$')
-  ],
+  tipoPersona: ['', Validators.required ]
 });
 
   }
