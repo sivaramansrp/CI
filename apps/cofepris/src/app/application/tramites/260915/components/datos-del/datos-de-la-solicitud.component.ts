@@ -623,7 +623,6 @@ onSave(): void {
  */
 onModificar(): void {
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size > 1) {
-    console.warn('Please select exactly one row to modify.');
     return;
   }
 
