@@ -18,14 +18,19 @@
 <ng-titulo titulo="Datos de la planta para realizar los procesos de ensamble y fabricación" />
 
 <div class="row mb-3">
-    <div class="col-md-12">
-        <ng-table [commonTableHeader]="establecimientoHeaderData"
-            [commonTableBody]="establecimientoBodyData"></ng-table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination d-flex justify-content-center">
-                <li class="page-item"><a class="page-link">1</a></li>
-            </ul>
-        </nav>
+    <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
+                <label for="plantas">Plantas</label>
+                <button type="button" class="collapse-arrow" [class.collapsed-arrow]="colapsable" (keydown)="mostrarColapsable()"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+                <ng-table [commonTableHeader]="establecimientoHeaderData"
+                    [commonTableBody]="establecimientoBodyData"></ng-table>
+            </div>
+            }
+        </div>
     </div>
 </div>
 

@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -16,7 +16,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   imports: [CommonModule, TituloComponent,
     TableComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule],
+    ReactiveFormsModule,TablaDinamicaComponent],
   templateUrl: './datos-del-inmueble.component.html',
   styleUrl: './datos-del-inmueble.component.css',
 })
@@ -89,6 +89,12 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Almacena las opciones disponibles para el campo de folio de autorización en el formulario.
    */
   catalogoFolioAutorizacion: Catalogo[] = [];
+
+  
+  //  Controla la visibilidad del panel plegable.
+  //  El valor predeterminado está establecido en verdadero (panel ampliado).
+   
+  public colapsable = true;
 
   /**
    * **Constructor del componente**  
@@ -274,6 +280,15 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         this.datosDelInmueble104Store.setDireccion(formData);
       });
   }
+
+  /**
+ * Muestra u oculta el panel plegable.
+ * Cambia el estado de la propiedad `colapsable`.
+ */
+  mostrarColapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
 
   /**
    * **Limpia las suscripciones al destruir el componente**  
