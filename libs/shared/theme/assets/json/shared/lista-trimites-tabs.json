@@ -2,43 +2,41 @@
     {
         "titulo": "Solicitud",
         "id": "solicitud",
-        "disabled": false,
-        "tramite": 301
+        "disabled": false
     },
     {
         "titulo": "Documentos",
         "id": "documentos",
-        "disabled": false,
-        "tramite": 301
+        "disabled": false
     },
     {
-        "titulo": "Dictamen",
+        "titulo": "Dictámen",
         "id": "dictamen",
-        "disabled": true,
-        "tramite": 301
+        "disabled": false
     },
     {
         "titulo": "Requerimientos",
         "id": "requerimientos",
-        "disabled": false,
-        "tramite": 301
+        "disabled": false
     },
     {
-        "titulo": "Solicitud",
-        "id": "solicitud",
-        "disabled": false,
-        "tramite": 301
+        "titulo": "Opiniones",
+        "id": "opiniones",
+        "disabled": false
     },
     {
-        "titulo": "Documentos",
-        "id": "documentos",
-        "disabled": false,
-        "tramite": 301
+        "titulo": "Acuses y resoluciones",
+        "id": "resoluciones",
+        "disabled": false
     },
     {
-        "titulo": "Dictamen",
-        "id": "dictamen",
-        "disabled": false,
-        "tramite": 301
+        "titulo": "Tareas",
+        "id": "tareas",
+        "disabled": false
+    },
+    {
+        "titulo": "Envío digital",
+        "id": "enviodigital",
+        "disabled": false
     }
 ]

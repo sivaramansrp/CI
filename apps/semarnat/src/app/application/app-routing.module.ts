@@ -47,7 +47,19 @@ const ROUTES: Routes = [
     path: 'aviso-de-reciclaje',
     loadChildren: () =>
       import('./tramites/231003/aviso-de-reciclaje.module').then((m) => m.AvisoDeReciclajeModule),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

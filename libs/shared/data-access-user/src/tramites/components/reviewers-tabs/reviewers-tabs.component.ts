@@ -33,7 +33,7 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @property {Tabulaciones[]} listaDeTabulaciones
    * @description Lista de objetos que representan las pestañas disponibles para navegación.
    */
-  listaDeTabulaciones: Tabulaciones[] = [];
+  listaDeTabulaciones: Tabulaciones[] = tramiteDetailsData;
   /**
    * @property {number} tramite
    * @description Identificador del trámite asociado a las pestañas.
@@ -63,7 +63,6 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.listaDeTabulaciones = tramiteDetailsData?.filter((v) => v.tramite === this.tramite);
     if (this.listaDeTabulaciones) {
       this.seleccionaTab(0, this.listaDeTabulaciones[0]);
     }

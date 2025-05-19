@@ -132,7 +132,19 @@ const ROUTES: Routes = [
       import(
       './tramites/240122/permiso-extraordinario-exportacion-explosivo.module'
       ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

@@ -39,13 +39,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/317/aviso-unico-renovacion.module').then(
         (m) => m.AvisoUnicoRenovacionModule)
-      },
-      {
+  },
+  {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule),
-   },
+  },
   {
     path: 'autoridad',
     loadChildren: () =>
@@ -115,10 +115,22 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

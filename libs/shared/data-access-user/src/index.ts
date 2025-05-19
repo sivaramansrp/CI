@@ -170,3 +170,4 @@ export { enviroment } from './enviroments/enviroment';
 export * from './core/estados/consulta.store';
 export * from './core/queries/consulta.query';
 export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
+export * from './core/enums/evaluar.trimites.enums';

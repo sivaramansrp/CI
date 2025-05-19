@@ -21,7 +21,19 @@ const ROUTES: Routes = [
       import('./tramites/270101/exportar-ilustraciones.module').then(
         (m) => m.ExportarIlustracionesModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({
