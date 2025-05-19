@@ -6,10 +6,6 @@ const ROUTES: Routes = [
   {
     path: 'datosdelasolicitud',
     component: PantallasComponent,
-  },
-  {
-    path: 'datosdelasolicitud/:procedureId',
-    component: PantallasComponent,
   }
 ];
 
