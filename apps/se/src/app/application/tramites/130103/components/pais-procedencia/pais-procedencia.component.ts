@@ -177,7 +177,6 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query,
     private formValidator: ValidacionesFormularioService
-  // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
