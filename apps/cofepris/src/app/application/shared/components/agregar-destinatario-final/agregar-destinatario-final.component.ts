@@ -159,6 +159,13 @@ export class AgregarDestinatarioFinalComponent
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
+
+    /**
+   * @property {Destinatario | undefined} datoSeleccionado
+   * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
+   */
+  @Input() datoSeleccionado: Destinatario[] | undefined;
+
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -221,7 +228,12 @@ export class AgregarDestinatarioFinalComponent
       entidadFederativa: '',
       estadoLocalidad: VALOR_FORMULARIO.estado,
       codigoPostal: VALOR_FORMULARIO.codigoPostal,
-      coloniaEquivalente: VALOR_FORMULARIO.codigoPostal,
+      coloniaEquivalente: VALOR_FORMULARIO.coloniaEquivalente,
+      nombres: VALOR_FORMULARIO.nombres,
+      primerApellido: VALOR_FORMULARIO.primerApellido,
+      segundoApellido: VALOR_FORMULARIO.segundoApellido,
+      razonSocial: VALOR_FORMULARIO.razonSocial,
+      lada: VALOR_FORMULARIO.lada,
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -305,7 +317,7 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
-        '',
+         this.obtenerValor('rfc'),
         [
           Validators.required,
           Validators.pattern(REGEX_NOMBRE)
@@ -315,17 +327,17 @@ export class AgregarDestinatarioFinalComponent
         {
           value: this.elementosDeshabilitados.includes('nombres')
             ? 'EUROFOODZDEMEXICO'
-            : '',
+            : this.obtenerValor('nombres'),
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
         [Validators.required, Validators.pattern(REGEX_NOMBRE)]
       ],
-      denominacionRazon: ['', Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      denominacionRazon: [this.obtenerValor('razonSocial'), Validators.required, Validators.pattern(REGEX_NOMBRE)],
       primerApellido: [
         {
           value: this.elementosDeshabilitados.includes('pais')
             ? 'GONZALES'
-            : '',
+            : this.obtenerValor('primerApellido'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
@@ -334,47 +346,47 @@ export class AgregarDestinatarioFinalComponent
         {
           value: this.elementosDeshabilitados.includes('segundoApellido')
             ? 'PINAL'
-            : '',
+            : this.obtenerValor('segundoApellido'),
           disabled: this.elementosDeshabilitados.includes('segundoApellido'),
         },
         [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [
         {
-          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
         Validators.required,
       ],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
+      municipio: [this.obtenerValor('municipioAlcaldia'), Validators.required],
+      localidad: [this.obtenerValor('localidad'), Validators.required],
+      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
       colonia: [
-        '',
+        this.obtenerValor('colonia'),
         !this.elementosNoRequeridos.includes('colonia')
           ? [Validators.required]
           : [],
       ],
       calle: [
-        '',
+         this.obtenerValor('calle'),
         this.elementosRequeridos.includes('calle')
           ? [Validators.required]
           : [],
       ],
       numeroExterior: [
-        '',
+         this.obtenerValor('numeroExterior'),
         this.elementosRequeridos.includes('numeroExterior')
           ? [Validators.required]
           : [],
       ],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada'), Validators.required],
       telefono: [
         {
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
-            : '',
+            : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
         [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
@@ -383,13 +395,23 @@ export class AgregarDestinatarioFinalComponent
         {
           value: this.elementosDeshabilitados.includes('correoElectronico')
             ? 'abc@njk.com'
-            : '',
+            : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
         [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
+
+  
+       /**
+       * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+       * @param {keyof Destinatario } field - Nombre del campo a obtener.
+       * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+       */
+      public obtenerValor(field: keyof Destinatario): string | number | undefined {
+        return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
+      }
 
   /**
    * Valida elementos según el `idProcedimiento` y establece

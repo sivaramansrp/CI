@@ -5,7 +5,7 @@
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-12 offset-md-6">
-        <label class="form-label">Tipo persona:</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="d-flex flex-column">
           <div class="form-check">
             <input
@@ -14,6 +14,7 @@
               formControlName="tipoPersona"
               [value]="tipoPersona.FISICA"
               id="personaFisica"
+              (change)="changeNacionalidad()"
             />
             <label class="form-check-label" for="personaFisica"
               >Física
@@ -31,6 +32,7 @@
               formControlName="tipoPersona"
               [value]="tipoPersona.MORAL"
               id="personaMoral"
+              (change)="changeNacionalidad()"
             />
             <label class="form-check-label" for="personaMoral"
               >Moral
@@ -47,18 +49,20 @@
 
     @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
-      <div class="form-group">
-        <label
-          class="form-label row mt-3 mover-izquierda fs-2"
-          for="denominacionRazon"
-          >Denominación/razón social*:</label
-        >
-        <input
-          class="form-control col-md-4"
-          id="denominacionRazon"
-          type="text"
-          formControlName="denominacionRazon"
-        />
+      <div class="col-md-8">
+        <div class="form-group">
+          <label
+            class="form-label mt-3 mover-izquierda fs-2"
+            for="denominacionRazon"
+            >Denominación/razón social*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionRazon"
+            type="text"
+            formControlName="denominacionRazon"
+          />
+        </div>
       </div>
     </div>
     }
@@ -100,6 +104,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">

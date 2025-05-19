@@ -78,9 +78,14 @@
         </div>
       </div>
       @if (!estaOculto) {
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
+        <div *ngIf="esInvalido('curp')" class="text-danger">
+          <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       }
     </div>
