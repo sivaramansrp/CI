@@ -1,166 +1,62 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AvisoDeRenovacionComponent } from './aviso-de-renovacion.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { AvisoUnicoService } from '../../services/aviso-unico.service';
-import { UnicoStore } from '../../estados/renovacion.store';
-import { UnicoQuery } from '../../estados/queries/unico.query';
-import { of } from 'rxjs';
-import { InputFechaComponent, CatalogoSelectComponent, InputRadioComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { PreOperativo, Catalogo, AvisoValor } from '../../models/aviso.model';
-import { FECHA_DE_PAGO } from '../../models/aviso.model';
-
-describe('AvisoDeRenovacionComponent', () => {
-  let component: AvisoDeRenovacionComponent;
-  let fixture: ComponentFixture<AvisoDeRenovacionComponent>;
-  let servicio: AvisoUnicoService;
-  let unicoStore: UnicoStore;
-  let unicoQuery: UnicoQuery;
-  
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        CommonModule,
-        TituloComponent,
-        InputFechaComponent,
-        CatalogoSelectComponent,
-        InputRadioComponent,
-        InputCheckComponent,
-      ],
-      declarations: [AvisoDeRenovacionComponent],
-      providers: [
-        FormBuilder,
-        {
-          provide: AvisoUnicoService,
-          useValue: {
-            obtenerDatosLocalidad: jest.fn(),
-            getSolicitante: jest.fn(),
-            obtenerRadio: jest.fn(),
-          },
-        },
-        {
-          provide: UnicoStore,
-          useValue: {
-            setfechaPago: jest.fn(),
-            setmapTipoTramite: jest.fn(),
-            setmapDeclaracionSolicitud: jest.fn(),
-            setenvioAviso: jest.fn(),
-            setnumeroAviso: jest.fn(),
-            setclaveReferencia: jest.fn(),
-            setnumeroOperacion: jest.fn(),
-            setcadenaDependencia: jest.fn(),
-            setbanco: jest.fn(),
-            setllavePago: jest.fn(),
-            setimportePago: jest.fn(),
-          },
-        },
-        {
-          provide: UnicoQuery,
-          useValue: {
-            selectSolicitud$: of({}),
-          },
-        },
-      ],
-    }).compileComponents();
-  });
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AvisoDeRenovacionComponent);
-    component = fixture.componentInstance;
-    servicio = TestBed.inject(AvisoUnicoService);
-    unicoStore = TestBed.inject(UnicoStore);
-    unicoQuery = TestBed.inject(UnicoQuery);
-    fixture.detectChanges();
-  });
-
-  it('debe crear el componente', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('debe inicializar el formulario correctamente', () => {
-    component.ngOnInit();
-    expect(component.avisoForm).toBeTruthy();
-    expect(component.avisoForm.contains('mapTipoTramite')).toBe(true);
-    expect(component.avisoForm.contains('mapDeclaracionSolicitud')).toBe(true);
-    expect(component.avisoForm.contains('envioAviso')).toBe(true);
-    expect(component.avisoForm.contains('numeroAviso')).toBe(true);
-  });
-
-  it('debe cargar los datos iniciales del estado de la solicitud', () => {
-    component.ngOnInit();
-    expect(component.solicitudState).toBeDefined();
-  });
-
-  it('debe actualizar los valores en el store cuando se cambia el valor del formulario', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    
-    component.avisoForm.controls['mapTipoTramite'].setValue('nuevo valor');
-    fixture.detectChanges();
-    
-    component.setValoresStore(component.avisoForm, 'mapTipoTramite', 'setmapTipoTramite');
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.avisoForm, 'mapTipoTramite', 'setmapTipoTramite');
-  });
-
-  it('debe actualizar la fecha de pago correctamente', () => {
-    const nuevoValor = '2025-05-19';
-    component.onFechaCambiada(nuevoValor);
-    expect(component.avisoForm.get('fechaPago')?.value).toBe(nuevoValor);
-  });
-
-  it('debe cargar los datos de localidad correctamente', () => {
-    const mockLocalidad: Catalogo[] = [{ id: 1, descripcion: 'Localidad 1' }];
-    servicio.obtenerDatosLocalidad.mockReturnValue(of(mockLocalidad));
-    
-    component.loadLocalidad();
-    expect(component.localidadList).toEqual(mockLocalidad);
-  });
-
-  it('debe cargar los datos de asignación correctamente', () => {
-    const mockAsignacion: AvisoValor = {
-      claveReferencia: '1234',
-      cadenaDependencia: 'cadena-1',
-      importePago: '1000',
-    };
-    servicio.getSolicitante.mockReturnValue(of(mockAsignacion));
-    
-    component.loadAsignacionData();
-    expect(component.avisoForm.get('claveReferencia')?.value).toBe(mockAsignacion.claveReferencia);
-    expect(component.avisoForm.get('cadenaDependencia')?.value).toBe(mockAsignacion.cadenaDependencia);
-    expect(component.avisoForm.get('importePago')?.value).toBe(mockAsignacion.importePago);
-  });
-
-  it('debe cargar las opciones de tipo de persona correctamente', () => {
-    const mockTipoPersona: PreOperativo[] = [{ id: '1', nombre: 'Persona 1' }];
-    servicio.obtenerRadio.mockReturnValue(of(mockTipoPersona));
-    
-    component.cargarRadio();
-    expect(component.tipoPersonaOptions).toEqual(mockTipoPersona);
-  });
-
-  it('debe resetear los datos del pago cuando se llama a resetPagoDatos()', () => {
-    component.avisoForm.patchValue({
-      numeroOperacion: '123',
-      banco: 'Banco 1',
-      llavePago: 'llave-1',
-      fechaPago: '2025-05-19',
-    });
-    
-    component.resetPagoDatos();
-    
-    expect(component.avisoForm.get('numeroOperacion')?.value).toBe('');
-    expect(component.avisoForm.get('banco')?.value).toBe('');
-    expect(component.avisoForm.get('llavePago')?.value).toBe('');
-    expect(component.avisoForm.get('fechaPago')?.value).toBe('');
-  });
-
-  it('debe limpiar los recursos correctamente cuando se destruye el componente', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    
-    component.ngOnDestroy();
-    
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-});
+<form [formGroup]="avisoForm">
+  <div class="container mt-3">
+    <h4>*Renovación Modalidad IVA e IEPS</h4>
+    <p> Únicamente se podrá renovar en la misma modalidad de origen, en caso de seleccionar de manera incorrecta la modalidad, se entenderá que se renueva en la modalidad con la que cuenta al momento de presentar el aviso. </p>
+    <div>
+      <label>
+        <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="mapTipoTramite" [layout]="'vertical'" (change)="setValoresStore(avisoForm,'mapTipoTramite', 'setmapTipoTramite')"></app-input-radio>
+      </label>
+    </div>
+    <div class="mt-3">
+      <lib-input-check [label]="'* Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas.'" [id]="'acepto3061'" [required]="true" formControlName="mapDeclaracionSolicitud" (change)="setValoresStore(avisoForm,'mapDeclaracionSolicitud', 'setmapDeclaracionSolicitud')"></lib-input-check>
+    </div>
+    <div class="mt-3">
+      <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los plazos legales señalados en la normatividad vigente, se tendrá por no presentado sin que medie declaración, notificación o requerimiento por parte de la autoridad..'" [id]="'envioAviso'" [required]="true" formControlName="envioAviso" (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')"></lib-input-check>
+    </div>
+    <div class="mt-3">
+      <lib-input-check [label]="' * Que las circunstancias por la cual se me otorgó el registro en el Esquema Integral de Certificación, en el rubro que ostento, no han variado y se continúan cumpliendo con los requisitos inherentes de la misma.'" [id]="'numeroAviso'" [required]="true" formControlName="numeroAviso" (change)="setValoresStore(avisoForm,'numeroAviso', 'setnumeroAviso')"></lib-input-check>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <ng-titulo titulo="Pago de derechos" />
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label for="claveReferencia">Clave de referencia:</label>
+        <input id="claveReferencia" type="text" class="form-control" formControlName="claveReferencia" (change)="setValoresStore(avisoForm,'claveReferencia', 'setclaveReferencia')" />
+      </div>
+      <div class="col-md-6">
+        <label for="numeroOperacion">Número de operación:</label>
+        <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion" (change)="setValoresStore(avisoForm,'numeroOperacion', 'setnumeroOperacion')" />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label for="cadenaDependencia">Cadena de la dependencia:</label>
+        <input id="cadenaDependencia" type="text" class="form-control" formControlName="cadenaDependencia" (change)="setValoresStore(avisoForm,'cadenaDependencia', 'setcadenaDependencia')" />
+      </div>
+      <div class="col-md-6 custom-banco">
+        <app-catalogo-select [catalogo]="localidadList" formControlName="banco" [label]="'Banco'" [required]="false" (change)="setValoresStore(avisoForm,'banco', 'setbanco')"></app-catalogo-select>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label for="llavePago">Llave de pago:</label>
+        <input id="llavePago" type="text" class="form-control" formControlName="llavePago" (change)="setValoresStore(avisoForm,'llavePago', 'setllavePago')" />
+      </div>
+      <div class="col-md-4 custom-fetchapago">
+        <input-fecha [datos]="fechaInicioInput" formControlName="fechaPago" (valorCambiado)="onFechaCambiada($event)" [setFecha]="avisoForm.get('fechaPago')?.value"></input-fecha>
+      </div>
+      <div class="col-md-4">
+        <label for="importePago">Importe de pago:</label>
+        <input id="importePago" type="text" class="form-control" formControlName="importePago" (change)="setValoresStore(avisoForm,'importePago', 'setimportePago')" />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12 ">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary" (click)="resetPagoDatos()">Borrar datos del pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
