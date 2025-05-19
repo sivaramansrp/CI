@@ -318,6 +318,12 @@ export class AgregarTransporteComponent implements OnChanges {
    */
   limpiarFormulario(): void {
     this.carreteroForma.reset();
+    this.ferroviarioForma.reset();
+    this.peatonalForma.reset();
+    this.otroForma.reset();
+    this.aereoForma.reset();
+    this.maritimoForma.reset();
+    this.observaciones.setValue('');
   }
 
 
