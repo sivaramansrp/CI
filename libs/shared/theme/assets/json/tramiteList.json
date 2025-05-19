@@ -1346,8 +1346,8 @@
   {
     "id": 193,
     "tramite": 31203,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aaa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aaa",
     "department": "aga"
   },
   {
