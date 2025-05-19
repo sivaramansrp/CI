@@ -1,4 +1,4 @@
-import { Validators } from '@angular/forms';
+
 import {
   REGEX_DIGITOS,
   REGEX_PERMITE_11_2_DIGITS,
@@ -549,4 +549,70 @@ export const REPRESENTACION_FEDERAL = [
     marcadorDePosicion: 'Selecciona una opcion',
     marginTop: 0,
   },
+];
+/*
+* @constant MODIFICAR_PARTIDAS_FORM
+*/
+export const MODIFICAR_PARTIDAS_FORM = [
+  {
+    id: 'cantidad_partidas',
+    labelNombre: 'Cantidad',
+    campo: 'cantidad_partidas',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+   {
+    id: 'descripcion_partidas',
+    labelNombre: 'Descripción',
+    campo: 'descripcion_partidas',
+    clase: 'col-md-8',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+        tipo: 'required',
+        mensaje: '',
+      },
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'valor_partidas_usd',
+    labelNombre: 'Valor partida USD',
+    campo: 'valor_partidas_usd',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'fraccion_partidas',
+    labelNombre: 'Fracción arancelaria TIGIE',
+    campo: 'fraccion_partidas',
+    clase: 'col-md-8',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: '' }],
+    marcadorDePosicion: 'Selecciona una fracción',
+    opciones: [
+      {
+        id: 1,
+        descripcion: '87033302 Usados.',
+      },
+    ],
+    marginTop: 0,
+  },
+ 
+ 
 ];

@@ -5,10 +5,13 @@ import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../.
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { PARTIDAS_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
+
+import { MODIFICAR_PARTIDAS_FORM, PARTIDAS_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 import { Partidas } from '../../models/importacion-definitiva.model';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
+
+import { Modal } from 'bootstrap';
 /**
   * compo doc
   * @component
@@ -49,6 +52,23 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 })
 export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
+ * compo doc
+ * @property partidasSeleccionadas
+ * @type {Partidas[]}
+ * @description
+ * Esta propiedad almacena la lista de partidas seleccionadas en la tabla dinámica.
+ * Se utiliza para identificar qué partidas han sido seleccionadas por el usuario,
+ * permitiendo así realizar operaciones como edición o eliminación sobre dichas partidas.
+ * 
+ * Por ejemplo, al seleccionar una o varias filas en la tabla, estas se guardan en esta propiedad
+ * y pueden ser utilizadas posteriormente en métodos como `abrirModalEditar` o `guardarEdicion`.
+ * 
+ * @example
+ * console.log(this.partidasSeleccionadas);
+ * // Muestra el arreglo de partidas actualmente seleccionadas en la tabla.
+ */
+   public partidasSeleccionadas: Partidas[] = [];
+  /**
   * compo doc
   * @property partidasDeLaMercanciaFormData
   * @description
@@ -66,6 +86,11 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   * console.log(campo.label_nombre); // Muestra: "Régimen al que se destinará la mercancía"
   */
   public partidasDeLaMercanciaFormData = PARTIDAS_DE_LA_MERCANCIA;
+/*
+  * compo doc
+  * @property modificarPartidasFormData
+*/
+  public modificarPartidasFormData = MODIFICAR_PARTIDAS_FORM;
 
   /**
   * compo doc
@@ -110,7 +135,14 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   public forma: FormGroup = new FormGroup({
     cantidad_total: new FormControl({ value: '100', disabled: true }),
     valor_total: new FormControl({ value: '100', disabled: true }),
-    ninoFormGroup: new FormGroup({})
+    ninoFormGroup: new FormGroup({}),
+    
+    modificarPartidaForm: new FormGroup({
+    cantidad_partidas: new FormControl(''),
+    descripcion_partidas: new FormControl(''),
+    valor_partidas_usd: new FormControl(''),
+   fraccion_partidas: new FormControl(''),
+  }),
   });
 
    /**
@@ -129,6 +161,9 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
+  }
+ get modificarPartidaForm(): FormGroup {
+    return this.forma.get('modificarPartidaForm') as FormGroup;
   }
 
   /**
@@ -200,6 +235,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   * 
   */
   ngOnInit(): void {
+   
     this.tramite130103Query.selectImportacion$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -223,6 +259,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+
   /**
   * compo doc
   * @method agregar
@@ -244,6 +281,8 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   * // Agrega una nueva partida de mercancía a la tabla dinámica y actualiza el estado del trámite.
   */
   public agregar(): void {
+
+
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
         id: 1,
@@ -316,4 +355,68 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+ 
+  
+
+onPartidasSeleccion(lista: Partidas[]): void {
+
+  this.partidasSeleccionadas = lista;
+  if (!this.partidasSeleccionadas.length) {
+    return;
+  }
+  // Tomar la primera fila seleccionada (puedes adaptar para selección múltiple si lo necesitas)
+  const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
+  if (FILA_SELECCIONADA) {
+    this.modificarPartidaForm.patchValue({
+      cantidad_partidas: FILA_SELECCIONADA.cantidad,
+     descripcion_partidas: FILA_SELECCIONADA.descripcion,
+       valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
+     fraccion_partidas: FILA_SELECCIONADA.fraccionArancelariaTigie,
+
+   
+      // Agrega aquí más campos si tu modelo los tiene
+    });
+  }
+}
+/*
+* @method onPartidasSeleccion
+*/
+abrirModalEditar(): void {
+
+  const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
+    MODAL_INSTANCE.show();
+  }
+}
+/*
+*
+* @method abrirModalEditar
+*/
+guardarEdicion(): void {
+  if (!this.partidasSeleccionadas.length) {
+    return;
+  }
+  const INDEX = this.datosTabla.findIndex(
+    item => item === this.partidasSeleccionadas[0]
+  );
+  if (INDEX !== -1) {
+   
+    this.datosTabla[INDEX] = {
+      ...this.datosTabla[INDEX],
+      cantidad: this.modificarPartidaForm.get('cantidad_partidas')?.value,
+
+      descripcion: this.modificarPartidaForm.get('descripcion_partidas')?.value,
+      totalUsd: this.modificarPartidaForm.get('valor_partidas_usd')?.value,
+      fraccionArancelariaTigie: this.modificarPartidaForm.get('fraccion_partidas')?.value,
+ 
+    };
+  }
+const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide(); // <-- Cierra el modal
+  }
+  // Si usas *ngIf para mostrar el modal, pon aquí: this.mostrarModalEditar = false;
+}
 }
