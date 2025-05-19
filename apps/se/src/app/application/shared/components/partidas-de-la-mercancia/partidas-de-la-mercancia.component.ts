@@ -83,7 +83,7 @@ export class PartidasDeLaMercanciaComponent {
    * Nombre del campo que se está actualizando.
    * Nombre del método que realiza la actualización.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string }>();
 
     /**
    * Tipo de selección de la tabla dinámica.
@@ -152,7 +152,7 @@ export class PartidasDeLaMercanciaComponent {
   /**
    * Emite un evento para almacenar valores en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }

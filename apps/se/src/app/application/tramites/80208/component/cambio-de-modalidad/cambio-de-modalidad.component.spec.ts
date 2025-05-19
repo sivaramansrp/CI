@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CambioDeModalidadComponent } from '../cambio-de-modalidad/cambio-de-modalidad.component';

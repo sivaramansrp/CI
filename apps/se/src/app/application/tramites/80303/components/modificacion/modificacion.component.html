@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="row mt-5">
+    <form [formGroup]="modificacionForm" class="container mt-4">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="rfc" class="form-label"
+            >Registro Federal de Contribuyentes:</label
+          >
+          <input
+            id="rfc"
+            type="text"
+            formControlName="rfc"
+            class="form-control"
+            readonly
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="representacionFederal" class="form-label"
+            >Representación federal:</label
+          >
+          <input
+            id="representacionFederal"
+            type="text"
+            formControlName="representacionFederal"
+            class="form-control"
+            readonly
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label for="tipoModificacion" class="form-label"
+            >Tipo de modificación:</label
+          >
+          <input
+            id="tipoModificacion"
+            type="text"
+            formControlName="tipoModificacion"
+            class="form-control"
+            readonly
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="modificacionPrograma" class="form-label"
+            >Modificación de programa:</label
+          >
+          <input
+            id="modificacionPrograma"
+            type="text"
+            formControlName="modificacionPrograma"
+            class="form-control"
+            readonly
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row mt-5">
+    <ng-titulo titulo="Empresas submanufactureras"></ng-titulo>
+  </div>
+  <div class="row">
+    <app-tabla-dinamica
+      [configuracionTabla]="
+        submanufacturerasTablaConfiguracion.configuracionTabla
+      "
+      [tipoSeleccionTabla]="
+        submanufacturerasTablaConfiguracion.tipoSeleccionTabla
+      "
+      [datos]="submanufacturerasTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+</div>

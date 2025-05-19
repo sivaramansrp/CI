@@ -1,5 +1,18 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
-<ng-alert [CONTENIDO]="mensaje"></ng-alert>
+<!-- <ng-alert [CONTENIDO]="mensaje"></ng-alert> -->
+   <div class="form-check bg-light p-0">
+        <div class="alert alert-info content-with-checkbox py-6">
+          <input
+          
+            type="checkbox"
+            id="manifiesto"
+          />
+          <span class="fw-bold align-middle"> *</span>
+          <div>{{ mensaje }} </div>
+        
+          
+        </div>
+      </div>
 <form [formGroup]="manifiestos">
     <div class="form mt-5">
         <div class="row">

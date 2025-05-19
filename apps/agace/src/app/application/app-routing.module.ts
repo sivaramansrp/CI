@@ -91,6 +91,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-destruccion',
+    loadChildren: () =>
+      import('./tramites/32506/aviso-destruccion.module').then(
+        (m) => m.AvisoDestruccionModule
+      ),
+  },
+  {
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
@@ -116,6 +123,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'solicitud-de-registro-invocar',
+    loadChildren: () =>
+      import('./tramites/31616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule
+      ),
+    },
   {
     path: 'aviso-de-ampliacion',
     loadChildren: () =>
@@ -144,10 +158,36 @@ const ROUTES: Routes = [
         (m) => m.AvisoOpcionSeguroGlobalModule),
   },
   {
+    path: 'acta-de-hechos',
+    loadChildren: () =>
+      import('./tramites/32516/acta-de-hechos.module').then(
+        (m) => m.ActaDeHechosModule),
+  },
+  {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
         (m) => m.EntregaActaModule
+      ),
+  },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
+  { 
+    path: 'retorno-seguro-vehiculos-extranjeros',
+    loadChildren: () =>
+      import('./tramites/32514/aviso-retorno.module').then(
+        (m) => m.AvisoRetornoModule)
+  },
+  {
+    path: 'aviso-mercancia',
+    loadChildren: () =>
+      import('./tramites/32509/aviso-de-mercancia.module').then(
+        (m) => m.AvisoDeMercanciaModule
       ),
   },
 ];
