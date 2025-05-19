@@ -217,7 +217,7 @@
           </div>
         </div>
       </div>
-     <div class="col-md-1">
+      <div class="col-md-1">
         <div class="form-group">
           <label class="form-label" for="lada">Lada:</label>
           <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" />
@@ -238,7 +238,7 @@
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('telefono')?.errors?.['required'] && datosSolicitudForm.get('telefono')?.touched">
             Este campo es obligatorio.</div>
-              <div *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']" class="mensaje-error">
+          <div *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']" class="mensaje-error">
             El teléfono debe contener solo números.
           </div>
         </div>
@@ -279,14 +279,28 @@
         <div class="form-check mt-4">
           <input class="form-check-input" type="checkbox" (change)="cambioAviso($event)" id="aviso"
             formControlName="aviso" />
-          <label class="form-check-label" for="aviso">Aviso de funcionamiento:
+          <label class="form-check-label" for="aviso">Aviso de funcionamiento <span
+              *ngIf="!datosSolicitudForm.value.aviso">*</span>
           </label>
+
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label mx-1" for="licenciaSanitaria">No. de licencia sanitaria:</label>
+        <label class="form-label mx-1" for="licenciaSanitaria">No. de licencia sanitaria <span
+            *ngIf="!datosSolicitudForm.value.aviso">*</span> :</label>
         <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria" data-bs-toggle="tooltip"></span>
-        <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" (change)="cambioLicenciaSanitaria($event)" />
+        <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria"
+          (change)="cambioLicenciaSanitaria($event)" [ngClass]="{
+      'required':
+        datosSolicitudForm.get('licenciaSanitaria')?.touched &&
+        datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
+    }" />
+        <small class="text-danger" *ngIf="
+      datosSolicitudForm.get('licenciaSanitaria')?.touched &&
+      datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
+    ">
+          Este campo es obligatorio.
+        </small>
       </div>
     </div>
 
@@ -466,9 +480,9 @@
           (change)="cambireCorreoElectronico()" [ngClass]="
             (isValid(datosSolicitudForm, 'correoElectronico') && esCampoRequerido('correoElectronico')) ? 'required' : ''
           " />
-        <div class="mensaje-error"
+        <small class="mensaje-error"
           *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required']">
-          Este campo es obligatorio.</div>
+          Este campo es obligatorio.</small>
       </div>
     </ng-template>
   </form>
