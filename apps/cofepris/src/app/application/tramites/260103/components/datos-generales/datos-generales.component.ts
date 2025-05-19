@@ -178,7 +178,7 @@ export class DatosGeneralesComponent implements OnDestroy {
       estado: [''],
       colonia: [''],
       calle: ['', Validators.required],
-      numeroExterior: [''],
+      numeroExterior: ['',Validators.required],
       numeroInterior: [''],
       lada: [''],
       telefono: [''],

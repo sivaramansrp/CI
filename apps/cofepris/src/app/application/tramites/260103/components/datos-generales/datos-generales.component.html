@@ -22,13 +22,16 @@
 
     <div class="row mt-5">
       <div class="col-md-6">
-        <label class="form-label">R.F.C*:</label>
-        <span
-          class="bi bi-question-circle-fill"
-          title="R.F.C"
-          data-bs-toggle="tooltip"
-        ></span>
-        <input type="text" class="form-control" formControlName="rfc" />
+      <label class="form-label">R.F.C*:</label>
+      <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
+      <input type="text" class="form-control" formControlName="rfc" />
+      <small *ngIf="agregarDatosForm.get('rfc')?.touched && agregarDatosForm.get('rfc')?.hasError('required')" class="text-danger">
+        El campo R.F.C es obligatorio.
+      </small>
       </div>
     </div>
 
@@ -39,6 +42,9 @@
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
+           <small *ngIf="agregarDatosForm.get('nombres')?.touched && agregarDatosForm.get('nombres')?.hasError('required')" class="text-danger">
+        El campo Nombre(s) es obligatorio.
+      </small>
       </div>
       <div class="col-md-4">
         <label class="form-label">Primer apellido*:</label>
@@ -47,6 +53,9 @@
           class="form-control"
           formControlName="primerApellido"
         />
+         <small *ngIf="agregarDatosForm.get('primerApellido')?.touched && agregarDatosForm.get('primerApellido')?.hasError('required')" class="text-danger">
+        El campo Primer apellido es obligatorio.
+      </small>
       </div>
       <div class="col-md-4">
         <label class="form-label">Segundo apellido:</label>
@@ -71,6 +80,9 @@
           type="text"
           formControlName="denominacionRazon"
         />
+         <small *ngIf="agregarDatosForm.get('denominacionRazon')?.touched && agregarDatosForm.get('denominacionRazon')?.hasError('required')" class="text-danger">
+        El campo Denominación/razón social es obligatorio.
+      </small>
       </div>
     </div>
     }
@@ -142,6 +154,9 @@
           data-bs-toggle="tooltip"
         ></span>
         <input type="text" class="form-control" formControlName="calle" />
+         <small *ngIf="agregarDatosForm.get('calle')?.touched && agregarDatosForm.get('calle')?.hasError('required')" class="text-danger">
+        El campo Calle es obligatorio.
+      </small>
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior*:</label>
@@ -150,6 +165,9 @@
           class="form-control"
           formControlName="numeroExterior"
         />
+        <small *ngIf="agregarDatosForm.get('numeroExterior')?.touched && agregarDatosForm.get('numeroExterior')?.hasError('required')" class="text-danger">
+        El campo Número exterior es obligatorio.
+      </small>
       </div>
     </div>
 
