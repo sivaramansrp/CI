@@ -286,7 +286,7 @@
       <div class="col-md-4">
         <label class="form-label mx-1" for="licenciaSanitaria">No. de licencia sanitaria:</label>
         <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria" data-bs-toggle="tooltip"></span>
-        <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" />
+        <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" (change)="cambioLicenciaSanitaria($event)" />
       </div>
     </div>
 
