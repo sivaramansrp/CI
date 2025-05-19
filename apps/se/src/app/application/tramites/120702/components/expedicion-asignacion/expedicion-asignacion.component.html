@@ -1,0 +1,158 @@
+<div class="container">
+    <form [formGroup]="asignacionForm" class="form-container">
+        <!-- 1.Numero-de-oficio -->
+        <div class="numero-oficio mt-5">
+            <ng-titulo titulo="Número de oficio de asignación" />
+            <div class="col-md-4 dropdown-field">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
+                        [required]="true" placeholder="Selecciona un año" formControlName="anoDelOficio"
+                        for="anoDelOficio" id="anoDelOficio" aria-label="Año del oficio de asignación"
+                        (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')"></app-catalogo-select>
+                </div>
+            </div>
+            <div class="col-md-4 dropdown-field">
+                <div class="form-group">
+                    <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
+                    <input type="number" class="form-control" id="numeroOficio" formControlName="numeroOficio"
+                        name="numeroOficio" [required]="true" aria-label="Número de oficio de asignación"
+                        (change)="setValoresStore(asignacionForm,'numeroOficio', 'setNumeroOficio')">
+                    @if(asignacionForm.controls['numeroOficio'].invalid &&
+                    asignacionForm.controls['numeroOficio'].touched){
+                    <div class="d-grid">
+                        @if(asignacionForm.controls['numeroOficio'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-8 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+
+        <!-- 2.Representación-federal -->
+        <div class="representacion-federal mt-5">
+            <ng-titulo titulo="Representación federal" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="estado">Estado:</label>
+                    <input type="text" class="form-control" id="estado" formControlName="estado" name="estado" aria-label="Estado">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="representacionFederal">Representación federal:</label>
+                    <input type="text" class="form-control" id="representacionFederal"
+                        formControlName="representacionFederal" name="representacionFederal" aria-label="Representación federal">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3.Control-de-montos -->
+        <div class="control-motos mt-5">
+            <ng-titulo titulo="Control de montos de la asignación" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoAsignado">Monto asignado:</label>
+                    <input type="number" class="form-control" id="montoAsignado" formControlName="montoAsignado"
+                        name="montoAsignado" aria-label="Monto asignado">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoExpedido">Monto expedido:</label>
+                    <input type="number" class="form-control" id="montoExpedido" formControlName="montoExpedido"
+                        name="montoExpedido" aria-label="Monto expedido">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoDisponible">Monto disponible:</label>
+                    <input type="number" class="form-control" id="montoDisponible" formControlName="montoDisponible"
+                        name="montoDisponible" aria-label="Monto disponible">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4.Datos-de-la-asignacion -->
+        <div class="datos-asignacion mt-5">
+            <ng-titulo titulo="Datos de la asignación" />
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
+                    <input type="number" class="form-control" id="datosNumeroOficio" formControlName="datosNumeroOficio"
+                        name="datosNumeroOficio" aria-label="Número de oficio">
+                </div>
+            </div>
+        </div>
+
+        <!-- 5.Vigencia-de-la-asignacion -->
+        <div>
+            <div class="datos-asignacion mt-5">
+                <ng-titulo titulo="Vigencia de la asignación" />
+                <div class="col-md-4">
+                    <input-fecha [datos]="fechaIncicioAsignacion"
+                        [setFecha]="asignacionForm.get('fechaInicioVigencia')?.value" id="fechaInicioVigencia" aria-label="Fecha inicio vigencia"
+                        (valorCambiado)="cambioFechaInicio($event)" />
+                </div>
+                <div class="col-md-4">
+                    <input-fecha [datos]="fechaFinAsignacion" [setFecha]="asignacionForm.get('fechaFinVigencia')?.value"
+                        id="fechaFinVigencia" aria-label="Fecha fin vigencia" (valorCambiado)="cambioFechaFin($event)" />
+                </div>
+            </div>
+        </div>
+
+        <!-- 6.Descripción-del-cupo -->
+        <app-descripcion-cupo></app-descripcion-cupo>
+
+        <!-- 7.Distribución-de-saldo -->
+        <div class="distribucion-saldo mt-5">
+            <ng-titulo titulo="Distribución de saldo" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoADisponible">Monto disponible:</label>
+                    <input type="number" class="form-control" id="montoADisponible" formControlName="montoADisponible"
+                        name="montoADisponible" aria-label="Monto disponible">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
+                    <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
+                        name="montoAExpedir" [required]="true" aria-label="Monto a expedir"
+                        (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
+                    @if(asignacionForm.controls['montoAExpedir'].invalid &&
+                    asignacionForm.controls['montoAExpedir'].touched){
+                    <div class="d-grid">
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" (click)="enviarMontoFormulario()">Agregar</button>
+            </div>
+        </div>
+
+        <div class="col-md-12 datos-table">
+            <div class="mt-5">
+                <ng-table [commonTableHeader]="montoTablaDatos" [commonTableBody]="montoTablaFilaDatos"></ng-table>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-danger">Eliminar seleccionado</button>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="totalAExpedir">Total a expedir:</label>
+                <input type="number" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
+                    name="totalAExpedir" aria-label="Total a expedir">
+            </div>
+        </div>
+    </form>
+</div>

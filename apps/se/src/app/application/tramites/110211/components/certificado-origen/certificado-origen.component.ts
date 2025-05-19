@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, of, map, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -72,7 +72,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Valores actuales del formulario de certificado.
    */
-  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  formCertificadoValues!: { [key: string]: unknown};
 
   /**
    * @descripcion
