@@ -175,3 +175,5 @@ export const CATALOGOS = [
 ];
 
 export const VALIDO = 'TodoValido'
+
+export const REPRESENTACION_FEDERAL_NOTA = 'El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional';
