@@ -44,6 +44,10 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    */
   formularioDireccion!: FormGroup;
 
+  /**
+   * Subject utilizado para limpiar las suscripciones al destruir el componente.
+   * Se emite un valor y se completa en ngOnDestroy para evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
 
   /**
