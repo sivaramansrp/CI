@@ -26,8 +26,12 @@
             </div>
             @if(colapsable){
             <div class="panel-collapse collapse in" id="panel-01">
-                <ng-table [commonTableHeader]="establecimientoHeaderData"
-                    [commonTableBody]="establecimientoBodyData"></ng-table>
+                <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
+                <div class="d-flex justify-content-center">
+                    <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
+                        (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
+                    </app-table-pagination>
+                </div>
             </div>
             }
         </div>

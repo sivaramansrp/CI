@@ -1,12 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
+import { TableData, TableRow } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
 import { MENSAJEDE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
-import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
 import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
 
@@ -16,7 +16,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   imports: [CommonModule, TituloComponent,
     TableComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,TablaDinamicaComponent],
+    ReactiveFormsModule,TablePaginationComponent],
   templateUrl: './datos-del-inmueble.component.html',
   styleUrl: './datos-del-inmueble.component.css',
 })
@@ -74,7 +74,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Contiene la información detallada de los establecimientos.  
    * Se usa `unknown` hasta definir su estructura específica.
    */
-  public establecimientoBodyData: unknown = [];
+  public establecimientoBodyData: TableRow[] = [];
 
   /**
    * **Datos de la tabla de destinatarios**  
@@ -95,6 +95,23 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
   //  El valor predeterminado está establecido en verdadero (panel ampliado).
    
   public colapsable = true;
+
+
+    /**
+   * Número total de elementos en la tabla.
+   */
+  totalItems: number = 0;
+
+  /**
+   * Página actual de la paginación.
+   */
+  currentPage: number = 1;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+   */
+  itemsPerPage: number = 5;
+
 
   /**
    * **Constructor del componente**  
@@ -287,6 +304,40 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
  */
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
+  }
+
+
+
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  updatePagination():void{
+    const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.establecimientoBodyData = this.establecimientoBodyData.slice(
+      STARTINDEX,
+      STARTINDEX + this.itemsPerPage
+    );
+  }
+
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number):void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number):void{
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
 

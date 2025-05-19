@@ -9,7 +9,7 @@ export interface TableData {
 
 
 
- interface TableRow {
+ export interface TableRow {
     /** Datos de la fila, organizados como un array de strings. */
     tbodyData: string[];
   }
