@@ -168,6 +168,15 @@ eliminarPedimento(borrar: boolean): void {
    * Indica si se debe mostrar el checkbox de AIFA.
    */
   @Input() showAifaCheckbox: boolean = true; 
+
+/**
+ * Indica si se debe mostrar el botón para copiar datos en la interfaz.
+ * 
+ * Cuando es `true`, el botón "Copiar Datos" será visible para el usuario.
+ * Cuando es `false`, el botón no se mostrará.
+ */
+@Input() mostrarBotonCopiarDatos: boolean = true; 
+
   /**
    * Referencia al modal del establecimiento.
    */
@@ -525,7 +534,7 @@ eliminarPedimento(borrar: boolean): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_FISICA)],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
