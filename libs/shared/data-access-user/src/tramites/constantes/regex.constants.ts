@@ -305,7 +305,7 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
  * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
  * @constant
  */
-export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para validar una llave de pago.
