@@ -357,7 +357,7 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDespachoExportacionModule)
   },
   {
-    path:'renovacion-iva-ieps',
+    path:'renovacion-iva-ieps/mod-aaa',
     loadChildren:()=>
       import('./tramites/31203/renewal-vatIeps-mod-aaa.module').then(
         (m) => m.RenewalVatIepsModAAAModule)

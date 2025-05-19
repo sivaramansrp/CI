@@ -15,7 +15,7 @@ const ROUTES: Routes = [
    * @component PantallasComponent
    */
   {
-    path: 'mod-aaa',
+    path: '',
     component: PantallasComponent,
   },
   /**
@@ -26,7 +26,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'mod-aaa',
+    redirectTo: 'renovacion-iva-ieps/mod-aaa',
   },
 ];
 
