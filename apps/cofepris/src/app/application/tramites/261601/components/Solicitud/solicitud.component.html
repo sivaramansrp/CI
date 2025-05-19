@@ -2,8 +2,8 @@
 <form [formGroup]="solicitudForm">
 <div class="row">
     <div class="col-md-8">
-        <div class="form-group">
-        <label class="form-label" for="foliodeltramite">Folio de trámite*:</label>
+        <div class="form-group mb-3">
+        <label class="form-label" for="foliodeltramite">Folio de trámite:</label>
             <input class="form-control" 
             id="foliodeltramite" 
             type="text"
@@ -15,7 +15,7 @@
 </div> 
 <div class="row">
     <div class="col-md-8">
-        <div class="form-group">
+        <div class="form-group mb-3">
         <label class="form-label" for="tipodesolicitud">Tipo de solicitud:</label>
         <textarea class="form-control" id="tipodesolicitud" rows="2" height="50"
         placeholder="" style="height: 100px" [value]="tipodesolicitud"  [disabled]="true"
@@ -25,7 +25,7 @@
 </div> 
 <div class="row">
     <div class="col-md-12">
-        <div class="form-group">
+        <div class="form-group mb-3">
         <label class="form-label" for="detalledelaSolicitud">Detalle de la solicitud de corrección al dictmen*:</label>
         <textarea class="form-control" id="detalledelaSolicitud" rows="2" height="50"
         placeholder="" style="height: 100px" formControlName="detalledelaSolicitud" 
