@@ -4,19 +4,20 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule,Location} from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { TIPO_TABLA_DATOS } from '../../constants/exporticon-estupefacientes.enum';
+import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 @Component({
@@ -31,7 +32,7 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
-export class DatosGeneralesComponent {
+export class DatosGeneralesComponent implements OnDestroy, OnInit {
   /**
    * Variable que almacena el tipo de dato, que se inicializa más tarde.
    * Se usa el operador `!` para indicar que la variable no es nula ni indefinida en el momento de su uso.
@@ -64,18 +65,44 @@ export class DatosGeneralesComponent {
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
+    /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  public datoSeleccionado!: Destinatario
+
   constructor(
     private route: ActivatedRoute,
     private datosSolicitudService: DatosSolicitudService,
     private fb: FormBuilder,
     private tramiteStore: Tramite260302Store,
     private router: Router,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private tramiteQuery: Tramite260302Query
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
     this.crearFormulario();
     this.cargarDatos();
   }
+
+   /**
+     * @method ngOnInit
+     * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
+     * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
+     */
+    ngOnInit(): void {
+      this.tramiteQuery.getDestinatarioSeleccionado$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.datoSeleccionado = seccionState?.[0] ?? {} as Destinatario;
+          })
+        )
+        .subscribe();
+    }
 
   /**
    * Crea y inicializa el formulario con los campos y validaciones necesarios.
@@ -93,16 +120,16 @@ export class DatosGeneralesComponent {
           Validators.maxLength(150),
         ],
       ],
-      pais: ['', Validators.required],
-      estado: [''],
-      codigoPostal: [''],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: [''],
-      numeroInterior: [''],
+      pais: [this.obtenerValor('pais'), Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad')],
+      codigoPostal: [this.obtenerValor('codigoPostal')],
+      colonia: [this.obtenerValor('colonia')],
+      calle: [this.obtenerValor('calle'), Validators.required],
+      numeroExterior: [this.obtenerValor('numeroExterior')],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      telefono: [this.obtenerValor('telefono')],
+      correoElectronico: [this.obtenerValor('correoElectronico'), [Validators.required, Validators.email]],
     });
   }
 
@@ -174,5 +201,26 @@ export class DatosGeneralesComponent {
     this.tramiteStore.updateOtrosTablaDatos(datos);
   }
 
+   /**
+     * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+     * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+     * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+     */
+    public obtenerValor(field: keyof Destinatario): string | number | undefined | string[] {
+      return this.datoSeleccionado?.[field as keyof Destinatario] ?? '';
+    }
+
+      /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
   
 }

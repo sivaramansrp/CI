@@ -14,19 +14,19 @@ import {
 } from '../../constants/exporticon-estupefacientes.enum';
 import {
   Destinatario,
-  Facturador,
   MENSAJE_TABLA_OBLIGATORIA,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
+import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
- * (fabricantes, destinatarios finales, proveedores y facturadores).
+ * (fabricantes, destinatarios finales, proveedores y Destinatarioes).
  * Consume observables del store para renderizar los datos en la vista mediante el componente
  */
 @Component({
@@ -62,14 +62,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
 
   /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
-   * Configuración de columnas para la tabla de facturadores.
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
+   * Configuración de columnas para la tabla de Destinatarioes.
    */
-  configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatario: ConfiguracionColumna<Destinatario>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
 
     /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
-   * Configuración de columnas para la tabla de facturadores.
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
+   * Configuración de columnas para la tabla de Destinatarioes.
    */
     configuracionTablaOtros: ConfiguracionColumna<Otros>[] =OTROS_ENCABEZADO_DE_TABLA;
 
@@ -86,10 +86,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   public habilitarProveedor = true;
 
   /**
-   * Indica si el formulario del facturador debe estar habilitado.
-   * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
+   * Indica si el formulario del Destinatario debe estar habilitado.
+   * @input habilitarDestinatario - Valor booleano que habilita o deshabilita la sección del Destinatario.
    */
-  public habilitarFacturador = true;
+  public habilitarDestinatario = true;
   /**
    * @property {Destinatario[]}destinatarioTablaDatos
    * Datos de la tabla de fabricantes.
@@ -98,7 +98,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
 
   /**
-   * @property {Facturador[]} facturadorTablaDatos
+   * @property {Destinatario[]} DestinatarioTablaDatos
    * Datos de la tabla de Otros.
    */
   otrasTablaDatos$!: Observable<Otros[]>;
@@ -116,6 +116,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
+  public seleccionadaDestinatario!: Destinatario[];
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
@@ -126,7 +128,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite260302Query,
     private router: Router,
-    private activatedROute: ActivatedRoute
+    private activatedROute: ActivatedRoute,
+    private tramiteStore: Tramite260302Store,
   ) {
     //
   }
@@ -161,6 +164,21 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.router.navigate(['..', 'agregar-otros'], {
       relativeTo: this.activatedROute,
     });
+  }
+
+
+  modificarDestinatario(): void {
+    this.navigate(TIPO_TABLA_DATOS.DESTINATARIO);
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona una fila en la tabla de destinatarios.
+   * Actualiza el estado del store con la fila seleccionada.
+   *
+   * @param filaSeleccionada - Array de objetos Destinatario seleccionados.
+   */
+  onFilaDestinatarioSeleccionada(filaSeleccionada: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioTablaDatos(filaSeleccionada);
   }
 
   /**

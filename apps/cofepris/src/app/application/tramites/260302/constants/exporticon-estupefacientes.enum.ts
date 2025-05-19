@@ -180,7 +180,7 @@ export const OTROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Otros>[] =
  * Se utiliza para identificar el tipo de tabla que se está utilizando.
  */
 export enum TIPO_TABLA_DATOS {
-  DESTINATARIO = 'Destinatario(Destino final)',
+  DESTINATARIO = 'Destinatario (Destino final)',
   OTROS = 'Otros',
 }
 export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [

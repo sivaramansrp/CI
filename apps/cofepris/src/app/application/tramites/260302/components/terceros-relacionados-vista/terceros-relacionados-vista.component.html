@@ -8,13 +8,14 @@
     ></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Destinatario(Destino final)*:</h6>
+    <h6>Destinatario (destino final)*:</h6>
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="onFilaDestinatarioSeleccionada($event)"
     ></app-tabla-dinamica>
   </div>
 
@@ -25,6 +26,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          (click)="modificarDestinatario()"
         >
           Modificar
         </button>

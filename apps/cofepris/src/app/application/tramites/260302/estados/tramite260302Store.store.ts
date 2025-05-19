@@ -49,6 +49,8 @@ export interface Tramite260302State {
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
   tabSeleccionado?: number;
+  seleccionadoDestinatarioDatos?: Destinatario[]
+  seleccionadoOtrosDatos?: Otros[] 
 }
 
 /**
@@ -121,6 +123,8 @@ export function createInitialState(): Tramite260302State {
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
     opcionesColapsableState: false,
+    seleccionadoDestinatarioDatos: [],
+    seleccionadoOtrosDatos: [],
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
@@ -249,6 +253,28 @@ export class Tramite260302Store extends Store<Tramite260302State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method updateSeleccionadoDestinatarioDatos
+   * @description Actualiza los datos del destinatario seleccionado.
+   */
+  public updateSeleccionadoDestinatarioDatos(): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoDestinatarioDatos: state.destinatarioTableDatos,
+    }));
+  }
+
+  /**
+   * @method updateSeleccionadoOtrosDatos
+   * @description Actualiza los datos de otros seleccionados.
+   */
+  public updateSeleccionadoOtrosDatos(): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoOtrosDatos: state.otrosTablaDatos,
     }));
   }
 }
