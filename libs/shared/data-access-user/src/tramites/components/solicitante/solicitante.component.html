@@ -7,9 +7,22 @@
       @for (item of persona; track $index) {
       <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
         <div class="form-group">
-          <label class="form-label" [for]="item.campo">{{ item.labelNombre }}:</label>
-          <input class="form-control" [type]="item.tipo_input" title="{{item.labelNombre}}" [id]="item.campo"
-            [placeholder]="item.placeholder" [formControlName]="item.campo" libUppercase>
+          <label class="form-label" [for]="item.campo"
+            >{{ item.labelNombre }}: @if(item.tooltip) {
+              <span tooltip="{{item.tooltip}}" tooltipPlacement="top">
+                <i class="bi bi-question-circle-fill"></i>
+              </span>
+            }</label
+          >
+          <input
+            class="form-control"
+            [type]="item.tipo_input"
+            title="{{ item.labelNombre }}"
+            [id]="item.campo"
+            [placeholder]="item.placeholder"
+            [formControlName]="item.campo"
+            libUppercase
+          />
         </div>
       </div>
       }
@@ -22,9 +35,18 @@
       @for (item of domicilioFiscal; track $index) {
       <div [ngClass]="item.class">
         <div class="form-group">
-          <label class="form-label" [for]="item.campo">{{ item.labelNombre }}:</label>
-          <input class="form-control" [type]="item.tipo_input" [id]="item.campo" title="{{ item.labelNombre }}"
-            [placeholder]="item.placeholder" [formControlName]="item.campo" libUppercase>
+          <label class="form-label" [for]="item.campo"
+            >{{ item.labelNombre }}:</label
+          >
+          <input
+            class="form-control"
+            [type]="item.tipo_input"
+            [id]="item.campo"
+            title="{{ item.labelNombre }}"
+            [placeholder]="item.placeholder"
+            [formControlName]="item.campo"
+            libUppercase
+          />
         </div>
       </div>
       }
