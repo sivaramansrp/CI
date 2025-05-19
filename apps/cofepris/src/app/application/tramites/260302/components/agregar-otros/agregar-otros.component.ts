@@ -1,6 +1,7 @@
 import {
   Catalogo,
   InputRadioComponent,
+  REGEX_NOMBRE,
   TipoPersona,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -120,16 +121,16 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
       curp: [this.obtenerValor('curp')],
-      rfc: [this.obtenerValor('rfc')],
-      nombreDescripcion: [this.obtenerValor('nombreDescripcion')],
+      rfc: [this.obtenerValor('rfc'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      nombreDescripcion: [this.obtenerValor('nombreDescripcion'),[Validators.required]],
       nacionalidad: ['true'],
       tipoPersona: ['', Validators.required],
-      nombres: [this.obtenerValor('nombres'), Validators.required],
+      nombres: [this.obtenerValor('nombres'), [Validators.required,Validators.pattern(REGEX_NOMBRE)]],
       primerApellido: [
         this.obtenerValor('primerApellido'),
-        Validators.required,
+        [Validators.required,Validators.pattern(REGEX_NOMBRE)]
       ],
-      segundoApellido: [this.obtenerValor('segundoApellido')],
+      segundoApellido: [this.obtenerValor('segundoApellido'),[Validators.required,Validators.pattern(REGEX_NOMBRE)]],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
       codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
@@ -148,7 +149,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       ],
       localidad: [this.obtenerValor('localidad')],
       municipioAlcaldia: [this.obtenerValor('municipioAlcaldia')],
-      razonSocial: [this.obtenerValor('razonSocial')],
+      razonSocial: [this.obtenerValor('razonSocial'),[Validators.required, Validators.pattern(REGEX_NOMBRE)],],
     });
   }
 
@@ -256,6 +257,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   changeNacionalidad(): void {
     if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
       this.agregarDatosForm.enable();
+      this.alternarOpcionNoContribuyente(false)
     } else {
       this.agregarDatosForm.disable();
       this.agregarDatosForm.get('nacionalidad')?.enable();
@@ -263,7 +265,6 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       this.agregarDatosForm.get('nombreDescripcion')?.enable();
       this.agregarDatosForm.get('rfc')?.enable();
       this.agregarDatosForm.get('curp')?.enable();
-
       if (
         this.agregarDatosForm.value.tipoPersona !==
         this.tipoPersona.NO_CONTRIBUYENTE
@@ -273,8 +274,38 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
         this.agregarDatosForm.get('curp')?.enable();
         this.agregarDatosForm.get('rfc')?.disable();
       }
+    this.alternarOpcionNoContribuyente(true);
     }
   }
+
+
+  /**
+   * @method alternarOpcionNoContribuyente
+   * @description
+   * Agrega o elimina la opción "No Contribuyente" en el arreglo de opciones de tipo de persona
+   * según el valor del parámetro `debeAgregar`.
+   *
+   * @param {boolean} debeAgregar - Indica si se debe agregar (`true`) o eliminar (`false`)
+   * la opción "No Contribuyente" en el grupo de opciones de tipo de persona.
+   *
+   * @returns {void}
+   */
+  alternarOpcionNoContribuyente(debeAgregar: boolean): void {
+  const NO_CONTRIBUYENTE = {
+    label: 'No Contribuyente',
+    value: TipoPersona.NO_CONTRIBUYENTE
+  };
+
+  const INDICE = this.tipoPersonaRadioOpcions.findIndex(
+    opcion => opcion.value === TipoPersona.NO_CONTRIBUYENTE
+  );
+
+  if (debeAgregar && INDICE === -1) {
+    this.tipoPersonaRadioOpcions.push(NO_CONTRIBUYENTE);
+  } else if (!debeAgregar && INDICE !== -1) {
+    this.tipoPersonaRadioOpcions.splice(INDICE, 1);
+  }
+}
 
   /**
    * Realiza una búsqueda para obtener datos de importación y los asigna al formulario.
@@ -286,7 +317,25 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.agregarDatosForm.patchValue(data);
+        if(this.agregarDatosForm.get('curp')?.value !== null && this.agregarDatosForm.get('rfc')?.disabled){
+          this.agregarDatosForm.get('rfc')?.setValue('RFC78900')
+        }
+         if(this.agregarDatosForm.get('rfc')?.value !== null && this.agregarDatosForm.get('curp')?.disabled){
+          this.agregarDatosForm.get('curp')?.setValue('CURP8888')
+        }
       });
+  }
+
+   /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarDatosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
