@@ -37,6 +37,8 @@ export interface Solicitud32508State {
   aprovechamiento: string;
   /** Disminución aplicada. */
   disminucionAplicada: string;
+  /** Compensación aplicada. */
+  compensacionAplicada: string;
   /** Saldo pendiente por disminuir. */
   saldoPendienteDisminuir: string;
   /** Cantidad pagada. */
@@ -49,6 +51,8 @@ export interface Solicitud32508State {
   fechaPago: string;
   /** Fecha de elaboración. */
   fechaElaboracion: string;
+  /** Saldo pendiente por compensar. */
+  saldoPendienteCompensar: string;
 }
 
 /**
@@ -68,12 +72,14 @@ export function createInitialState(): Solicitud32508State {
     saldoPendiente: '',
     aprovechamiento: '',
     disminucionAplicada: '',
+    compensacionAplicada: '',
     saldoPendienteDisminuir: '',
     cantidad: '',
     llaveDePago: '',
     archivo: [],
     fechaPago: '',
     fechaElaboracion: '',
+    saldoPendienteCompensar: '',
   };
 }
 
@@ -180,6 +186,20 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    */
   public setDisminucionAplicada(disminucionAplicada: string) {
     this.update((state) => ({ ...state, disminucionAplicada }));
+  }
+  /**
+   * Actualiza la compensación aplicada.
+   * @param compensacionAplicada Nueva compensación aplicada.
+   */
+  public setCompensacionAplicada(compensacionAplicada: string) {
+    this.update((state) => ({ ...state, compensacionAplicada }));
+  }
+  /**
+   * Actualiza el saldo pendiente por compensar.
+   * @param saldoPendienteCompensar Nuevo saldo pendiente por compensar.
+   */
+  public setSaldoPendienteCompensar(saldoPendienteCompensar: string) {
+    this.update((state) => ({ ...state, saldoPendienteCompensar }));
   }
 
   /**
