@@ -550,7 +550,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       lada: [this.datosSolicitudFormState.lada, [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       aviso: [this.datosSolicitudFormState.aviso],
-      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria],
+      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria,[Validators.required]],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas,
@@ -836,9 +836,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} campo - Nombre del campo a verificar.
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
-  esCampoRequerido(campo: string): boolean {
-    return this.elementosRequeridos?.includes(campo) ?? false;
-  }
+esCampoRequerido(campo: string): boolean {
+  const CONTROL = this.datosSolicitudForm.get(campo);
+  return (
+    this.elementosRequeridos?.includes(campo) &&
+    (CONTROL?.touched || CONTROL?.dirty) &&
+    CONTROL?.hasError('required') 
+  ) || false;
+}
 
   /**
    * Verifica si un campo adicional debe mostrarse según la configuración de procedimientos.
@@ -860,10 +865,29 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    **/
   cambioAviso(event: Event): void {
     const CHECKED = (event.target as HTMLInputElement).checked;
-    if (CHECKED) {
-      this.datosSolicitudForm.get('licenciaSanitaria')?.disable();
+const LICENCIA_SANITARIA_CONTROL = this.datosSolicitudForm.get('licenciaSanitaria');
+if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
+  LICENCIA_SANITARIA_CONTROL?.clearValidators();
+  LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+  LICENCIA_SANITARIA_CONTROL?.disable();
+} else {
+  LICENCIA_SANITARIA_CONTROL?.enable();
+  LICENCIA_SANITARIA_CONTROL?.setValidators([Validators.required]);
+  LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+}
+  }
+
+  /**
+   * Habilita o deshabilita el control de formulario 'aviso' según el valor del campo de entrada.
+   *
+   * @param {Event} event - Evento de entrada proveniente de un elemento HTML.
+   */
+  cambioLicenciaSanitaria(event: Event): void {
+    const VAL = (event.target as HTMLInputElement).value;
+    if (VAL) {
+      this.datosSolicitudForm.get('aviso')?.disable();
     } else {
-      this.datosSolicitudForm.get('licenciaSanitaria')?.enable();
+      this.datosSolicitudForm.get('aviso')?.enable();
     }
   }
 

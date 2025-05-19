@@ -18,7 +18,7 @@
           Física
           <span
           class="bi bi-question-circle-fill"
-          title="Física"
+          title="Una persona física es entendida como toda persona con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
@@ -33,7 +33,7 @@
           Moral
           <span
           class="bi bi-question-circle-fill"
-          title="Física"
+          title="Una persona moral es entendida como una empresa con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
@@ -56,7 +56,7 @@
         <label class="form-label">R.F.C*:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="R.F.C"
+        title="Registro Federal de Contribuyente"
         data-bs-toggle="tooltip"
       ></span>
         <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" />
@@ -99,8 +99,8 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===  tipoPersona.FISICA ||
+        agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
@@ -184,6 +184,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
@@ -193,6 +194,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -202,6 +204,7 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -214,6 +217,7 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -223,6 +227,7 @@
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -231,6 +236,7 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
+          [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [required]="!elementosNoRequeridos.includes('colonia')"
         ></app-catalogo-select>
@@ -245,7 +251,7 @@
         <span class="form-label">:</span>
         <span
         class="bi bi-question-circle-fill"
-        title="Física"
+        title="Domicilio, calle, número interior, número exterior, lote"
         data-bs-toggle="tooltip"
       ></span>
         <input type="text" class="form-control" [maxlength]="100" formControlName="calle" />
@@ -298,7 +304,7 @@
         <label class="form-label">Correo electrónico:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="Física"
+        title="ejemplo@dominio.com"
         data-bs-toggle="tooltip"
       ></span>
         <input
@@ -315,9 +321,12 @@
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <div class="pull-right">
+    <div class="row my-5">
+      <div class="col-md-6">
+          <p>* Campos obligatorios</p>
+      </div>
+      <div class="col-md-6">
+        <div class="pull-right mb-5">
           <button
             type="button"
             name="modificarMercancias"

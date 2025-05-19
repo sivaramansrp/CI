@@ -1,5 +1,5 @@
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
 import { Component, Input } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -132,15 +132,15 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   crearAgregarFormularioFacturador(): void {
     this.agregarFacturadorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
-      nombres: [this.obtenerValor('nombres'), Validators.required],
+      nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       primerApellido: [
         this.obtenerValor('primerApellido'),
-        Validators.required,
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
       ],
-      segundoApellido: [this.obtenerValor('segundoApellido')],
+      segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.pattern(REGEX_NOMBRE)]],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
-      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
+      codigoPostal: [this.obtenerValor('codigoPostal')],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
@@ -148,14 +148,16 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
-      lada: [this.obtenerValor('lada'), Validators.required],
+      lada: [this.obtenerValor('lada')],
+      denominacionRazon: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       telefono: [
-        {
+        { 
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
@@ -164,7 +166,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
             : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
@@ -196,6 +198,11 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
+    if (this.agregarFacturadorForm.status === 'INVALID') {
+      this.agregarFacturadorForm.markAllAsTouched();
+      return;
+    }
+
     const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
 
     let nombreRazonSocial: string;
@@ -255,6 +262,18 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarFacturadorForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
