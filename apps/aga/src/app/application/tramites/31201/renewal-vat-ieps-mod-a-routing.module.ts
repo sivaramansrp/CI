@@ -10,6 +10,15 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
  */
 const ROUTES: Routes = [
   /**
+   * Ruta para el componente de pantallas.
+   * @path ''
+   * @component PantallasComponent
+   */
+  {
+    path: '',
+    component: PantallasComponent
+  },
+  /**
    * Ruta predeterminada que redirige al componente de aviso de renovación.
    * @path ''
    * @redirectTo 'aviso-de-renovacion'
@@ -18,15 +27,6 @@ const ROUTES: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: 'aviso-de-renovacion'
-  },
-  /**
-   * Ruta para el componente de pantallas.
-   * @path 'pantallas'
-   * @component PantallasComponent
-   */
-  {
-    path: 'pantallas',
-    component: PantallasComponent
   }
 ];
 
