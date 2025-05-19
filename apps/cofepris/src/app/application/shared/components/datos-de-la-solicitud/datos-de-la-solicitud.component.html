@@ -190,7 +190,7 @@
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('correoElectronico')">
         <div class="form-group">
           <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
-          <span class="bi bi-question-circle-fill" title="Correo electrónico" data-bs-toggle="tooltip"></span>
+          <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
           <input class="form-control" id="correoElectronico" type="text" formControlName="correoElectronico" [ngClass]="
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
             " />
@@ -287,7 +287,7 @@
       <div class="col-md-4">
         <label class="form-label mx-1" for="licenciaSanitaria">No. de licencia sanitaria <span
             *ngIf="!datosSolicitudForm.value.aviso">*</span> :</label>
-        <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria" data-bs-toggle="tooltip"></span>
+        <span class="bi bi-question-circle-fill" title="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
         <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria"
           (change)="cambioLicenciaSanitaria($event)" [ngClass]="{
       'required':
@@ -307,7 +307,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Selecciona un valor'" [tooltipQuestionCircle]="true" [required]="true"
+            [placeholder]="'Selecciona un valor'" [tooltipQuestionCircle]="true" [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [required]="true"
             name="regimen"></app-catalogo-select>
         </div>
       </div>
@@ -474,7 +474,7 @@
         <label class="form-label" for="correoElectronico">Correo electrónico</label>
         <span class="form-label" *ngIf="esCampoRequerido('correoElectronico')">&nbsp;*</span>
         <span class="form-label mx-1">:</span>
-        <span class="bi bi-question-circle-fill" title="Correo electrónico" data-bs-toggle="tooltip"></span>
+        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
         <input class="form-control" id="correoElectronico" type="text" formControlName="correoElectronico"
           (change)="cambireCorreoElectronico()" [ngClass]="
             (isValid(datosSolicitudForm, 'correoElectronico') && esCampoRequerido('correoElectronico')) ? 'required' : ''
