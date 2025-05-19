@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
@@ -198,6 +198,10 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    if (this.agregarDestinatarioFinal.status === 'INVALID') {
+      this.agregarDestinatarioFinal.markAllAsTouched();
+      return;
+    }
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
 
     let nombreRazonSocial: string;
@@ -336,7 +340,7 @@ export class AgregarDestinatarioFinalComponent
       primerApellido: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? 'GONZALES'
+            ? ''
             : this.obtenerValor('primerApellido'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
@@ -389,7 +393,7 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
