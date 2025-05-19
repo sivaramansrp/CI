@@ -6,13 +6,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="claveDeReferencia"
-              >Clave de referencia</label
+              >Clave de referencia:</label
             >
             <input
               id="claveDeReferencia"
               type="text"
               class="form-control"
               formControlName="claveDeReferencia"
+              maxlength="9"
               (input)="
                 capitalizarYGuardar(
                   'claveDeReferencia',
@@ -26,7 +27,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="cadenaPagoDependencia"
-              >Cadena de la dependencia</label
+              >Cadena de la dependencia:</label
             >
             <input
               id="cadenaPagoDependencia"
@@ -100,7 +101,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="impPago">Importe de pago</label>
+            <label class="control-label" for="impPago">Importe de pago:</label>
             <input
               class="form-control"
               id="impPago"
