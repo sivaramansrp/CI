@@ -49,7 +49,7 @@ import { Tramite10302Query } from '../estados/tramite10302.query';
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
-    InputCheckComponent
+    InputCheckComponent,
   ],
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
@@ -262,7 +262,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           this.solicitudState?.usoEspecifico,
           [Validators.required, Validators.maxLength(512)],
         ],
-        pais: [this.solicitudState?.pais, Validators.required],
+        pais: [{ value: '', disabled: true }, this.solicitudState?.pais, Validators.required],
         rfc: [this.solicitudState?.rfc, Validators.required],
         numeroProgramaImmex: [
           this.solicitudState?.numeroProgramaImmex,
