@@ -32,7 +32,7 @@
           }
         ],
         "sort-imports": ["error", {
-          "ignoreCase": true,
+          "ignoreCase": false,
           "ignoreDeclarationSort": false,
           "ignoreMemberSort": false,
           "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
@@ -134,7 +134,7 @@
               "selector": "interface",
               "format": ["PascalCase"],
               "custom": {
-                "regex": "/I[A-Z]",
+                "regex": "^I[A-Z]",
                 "match": false
               }
             },
