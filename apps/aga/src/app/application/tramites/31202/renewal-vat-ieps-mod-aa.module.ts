@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { RenewalVatIepsModAAModuleRoutingModule } from './renewal-vat-ieps-mod-aa-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { RenewalVatIepsModAAModuleRoutingModule } from './renewal-vat-ieps-mod-aa-routing.module';
 
 import { AvisoDeRenovacionComponent } from './components/aviso-de-renovacion/aviso-de-renovacion.component';
 
