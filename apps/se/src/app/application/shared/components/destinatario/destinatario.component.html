@@ -2,6 +2,58 @@
   <form [formGroup]="formDestinatario">
     <div class="row mt-5">
       <ng-titulo titulo="Domicilio del destinatario" />
+
+      <div *ngIf="campoDestinatario; else defaultTemplate">
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="Calle">Calle*:</label>
+            <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+          </div>
+  
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8 form-group">
+            <label class="form-label" for="ciudad"
+              >Ciudad (población, estado o provincia)*:</label
+            >
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"  (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+          </div>
+          <div class="col-md-4 form-group">
+            <app-catalogo-select
+              [catalogo]="paisDestin || []"
+              [label]="'País Destino'"
+              [required]="true"
+              name="estado"
+              formControlName="paisDestin"
+              (selectionChange)="paisDestionSeleccion($event)"
+              (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"
+              [isDisabled]="true"
+            ></app-catalogo-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico*:</label
+            >
+            <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+          </div>
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+          </div>
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="fax">Fax:</label>
+            <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+          </div>
+        </div>
+      </div>
+
+      <ng-template #defaultTemplate>
       <div class="col-md-8 form-group">
         <label class="form-label" for="ciudad"
           >Ciudad (población, estado o provincia)*:</label
@@ -60,6 +112,7 @@
         </div>
         }
       </div>
+      </ng-template>
     </div>
   </form>
 </div>
