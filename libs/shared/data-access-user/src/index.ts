@@ -1,15 +1,10 @@
-
-
-
-
-
-
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
 export { enviroment } from './enviroments/enviroment';
 export { InputConfig, LabelValueDatos, ListaPasosWizard, MenuConfig, Props } from './core/models/forma-render.model';
+export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
@@ -29,7 +24,6 @@ export { ValidacionesFormularioService } from './core/services/shared/validacion
 export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
 export {TramiteDetails} from './core/models/tramiteDetails'
 export {TramiteStore} from './core/estados/tramite.store';
-export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
 export * from './core/ambientes';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/forma-render.enum';
@@ -41,11 +35,11 @@ export * from './core/estados/seccion.store';
 export * from './core/estados/terceros.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
-export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/31602/comercio-exterior.model';
 export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/models/shared/anexar-documentos.model';
 export * from './core/models/shared/catalogos.model';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/configuracion-columna.model';
@@ -94,6 +88,7 @@ export * from './tramites/components/anexar-documentos/anexar-documentos.compone
 export * from './tramites/components/breadcrumb/breadcrumb.component';
 export * from './tramites/components/btn-continuar/btn-continuar.component';
 export * from './tramites/components/catalogo-select/catalogo-select.component';
+export * from './tramites/components/consulta-generica/bandeja/bandeja.component';
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
@@ -108,6 +103,7 @@ export * from './tramites/components/nav/nav.component';
 export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/representante-fiscal/representante-fiscal.component';
+export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './tramites/components/select-paises/select-paises.component';
@@ -124,20 +120,6 @@ export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 export * from './tramites/constantes/120602/datos-empresa.enum';
 export * from './tramites/constantes/aviso-privacidad.enum';
-
-export * from './core/services/120602/empresa-frontera-solicitud.enum';
-
-export * from './core/estados/seccion.store';
-export * from './tramites/pages/firma-page/firma-page.component';
-export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
-export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
-export * from './tramites/components/acuse/acuse.component';
-export * from './tramites/components/consulta-generica/bandeja/bandeja.component';
-
-export * from './core/models/shared/configuracion-columna.model';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './core/enums/tabla-seleccion.enum';
-export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/constantes/constantes';
 export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
@@ -149,4 +131,7 @@ export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
+export * from './tramites/components/carga-documento/carga-documento.component';
+export * from './core/estados/consulta.store';
+export * from './core/queries/consulta.query';
 export * from './tramites/constantes/120501/participantes.enum'
