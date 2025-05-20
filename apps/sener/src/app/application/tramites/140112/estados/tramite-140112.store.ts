@@ -48,7 +48,7 @@ export class Tramite140112Store extends Store<Tramites140112State> {
    * Updates the desistimiento property in the state.
    * @param {string} desistimiento - The new value for desistimiento.
    */
-  public setDesistimiento(desistimiento: string) {
+  public setDesistimiento(desistimiento: string):void {
     this.update((state) => ({
       ...state,
       permisoCancelar: {

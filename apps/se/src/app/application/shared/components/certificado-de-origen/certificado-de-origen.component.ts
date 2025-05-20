@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
@@ -87,6 +88,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   @Input() mercanciasDisponibles!: boolean;
 
   /**
+   * Propiedad de entrada que representa el estado del formulario histórico.
+   * @type {FormularioSi}
+   */
+  @Input() tramiteState: FormularioSi = {};
+
+  /**
    * Propiedad de entrada que recibe los datos de los tratados/acuerdos.
    * @type {Catalogo[]}
    */
@@ -141,6 +148,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   @Output() filaClics = new EventEmitter<Mercancia>();
 
   /**
+  * Este evento emite un arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+  * @type {EventEmitter<Mercancia[]>}
+  */
+  @Output() guardarClicadoEvent: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
+  
+  /**
+   * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
+   * @type {Mercancia[]}
+   */
+  public seleccionadaguardarClicado: Mercancia[] = [];
+
+  /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
    * @type {FormGroup}
    */
@@ -183,6 +202,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
+
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Mercancia[]}
@@ -208,6 +228,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   @Input() datosForm!: { [key: string]: unknown };
 
   /**
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos que son obligatorios en el formulario.
+   */
+  @Input() public elementosRequeridos!: string[];
+
+
+  /**
    * Datos de la mercancia seleccionada de la bitácora.
    * @type {Mercancia}
    */
@@ -226,18 +253,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   false
 );  
 
-  /**
-  * Este evento emite un arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
-  * @type {EventEmitter<Mercancia[]>}
-  */
-  @Output() guardarClicadoEvent: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
-  
-  /**
-   * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
-   * 
-   * @type {Mercancia[]}
-   */
-  public seleccionadaguardarClicado: Mercancia[] = [];
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
@@ -254,6 +269,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
       nombreComercialForm: [''],
       fechaInicioInput: ['', [Validators.required]],
       fechaFinalInput: ['', [Validators.required]],
+      nombres: ['' ],
+      primerApellido: [''],
+      segundoApellido: [''],
+      numeroDeRegistroFiscal: [''],
+      razonSocial: [''],
+      calle: [''],
+      numeroLetra: [''],
     });
 
     // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
@@ -263,8 +285,25 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
         this.formCertificado.patchValue(this.datosForm);
       }
     }, 100);
+
+    this.actualizarDatosFormularioSolicitud();
   }
-  
+
+  /**
+   * Actualiza los validadores requeridos en los campos del formulario especificados
+   * en la lista `elementosRequeridos`.
+   * 
+   * @returns {void}
+   */
+  actualizarDatosFormularioSolicitud(): void {
+    this.elementosRequeridos?.forEach((campo) => {
+        const CONTROL = this.formCertificado.get(campo);
+        if (CONTROL) {
+            CONTROL.setValidators(Validators.required);
+            CONTROL.updateValueAndValidity();
+        }
+    });
+  }
 
   /**
    * Establece el estado seleccionado en el store.
@@ -351,23 +390,22 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
     this.filaClics.emit(tableData);
   }
 
-  /**
+    /**
    * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
    * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
    */
-  obtenerSeleccionadoMercancia(evento: Mercancia): void {
-    this.seleccionadaguardarClicado = [evento];
-  }
-
-  /**
-  * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
-  * @remarks
-  * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
-  */
-  eliminarSeleccionados(): void {
-    if (this.seleccionadaguardarClicado.length > 0) {
-        this.guardarClicado = [];
+    obtenerSeleccionadoMercancia(evento: Mercancia): void {
+      this.seleccionadaguardarClicado = [evento];
     }
-  }
-
+  
+    /**
+    * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
+    * @remarks
+    * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
+    */
+    eliminarSeleccionados(): void {
+      if (this.seleccionadaguardarClicado.length > 0) {
+          this.guardarClicado = [];
+      }
+    }
 }
