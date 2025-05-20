@@ -1,15 +1,3 @@
-/**
- * @component DomiciliosDePlantasComponent
- * @description Este componente es responsable de manejar los domicilios de plantas.
- * Incluye la lógica para obtener y gestionar los datos de las plantas, así como los catálogos relacionados.
- *
- * @import { Component } from '@angular/core';
- * @import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
- * @import { TEXTO } from '../../../../shared/constantes/prosec/prosec.module';
- * @import { Catalogo } from '../../../../core/models/shared/catalogos.model';
- * @import { ProsecService } from '../../../../core/services/90102/prosec.module';
- * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
- */
 import {
   AlertComponent,
   Catalogo,
@@ -37,13 +25,9 @@ import { ProsecService } from '../../services/prosec.service';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
