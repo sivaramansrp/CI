@@ -544,7 +544,7 @@ eliminarPedimento(borrar: boolean): void {
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
-      noLicenciaSanitaria: [''],
+      noLicenciaSanitaria:['',[Validators.maxLength(20)]],
       avisoCheckbox: [false],
        licenciaSanitaria: [{ value: '', disabled: true }],
        regimen: ['', Validators.required],
