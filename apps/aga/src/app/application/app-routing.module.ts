@@ -47,6 +47,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-iva-ieps',
+    loadChildren: () =>
+      import('./tramites/31202/renewal-vat-ieps-mod-aa.module').then(
+        (m) => m.RenewalVatIepsModAAModule)
+      },
+  {
     path: 'retorno-contenedores',
     loadChildren: () =>
       import('./tramites/11202/retorno-contenedores.module').then(
