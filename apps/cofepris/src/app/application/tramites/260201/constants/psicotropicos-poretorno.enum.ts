@@ -31,5 +31,8 @@ export const ID_PROCEDIMIENTO = 260201;
  */
 export const ELEMENTOS_REQUERIDOS = [
   'fabricante',
-  'destinoFinal'
+  'destinoFinal',
+  'correoElectronico',
+  'denominacionRazon',
+  'scian'
 ];
