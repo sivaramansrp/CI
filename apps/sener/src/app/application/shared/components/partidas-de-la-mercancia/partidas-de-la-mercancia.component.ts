@@ -73,6 +73,17 @@ export class PartidasDeLaMercanciaComponent {
   @Input() mostrarTabla = false;
 
   /**
+ * Indica si el formulario ha sido enviado.
+ * Esta bandera se utiliza para mostrar mensajes de validación o controlar el flujo
+ * después de que el usuario intenta enviar el formulario.
+ *
+ * @type {boolean}
+ * @default false
+ */
+  @Input() formularioEnviado = false;
+
+
+  /**
    * @event filaSeleccionadaChange
    * @description Evento que emite las filas seleccionadas en la tabla dinámica.
    */
@@ -83,6 +94,14 @@ export class PartidasDeLaMercanciaComponent {
    * @description Evento que se emite cuando se valida y envía el formulario.
    */
   @Output() validarYEnviarFormularioEvent = new EventEmitter<void>();
+
+  /**
+ * @event eliminarTablaEvent
+ * @description
+ * Evento que se emite cuando el usuario solicita eliminar todos los datos de la tabla dinámica.
+ * Permite que el componente padre realice la acción correspondiente de limpieza o eliminación.
+ */
+  @Output() eliminarTablaEvent = new EventEmitter<void>();
 
   /**
    * @event navegarParaModificarPartidaEvent
@@ -140,6 +159,18 @@ export class PartidasDeLaMercanciaComponent {
    */
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
+  }
+
+  /**
+ * @method onclickEliminar
+ * @description
+ * Método que emite el evento `eliminarTablaEvent` cuando el usuario solicita eliminar todos los datos de la tabla dinámica.
+ * Permite que el componente padre realice la acción correspondiente de limpieza o eliminación.
+ *
+ * @returns {void}
+ */
+  onclickEliminar(): void {
+    this.eliminarTablaEvent.emit();
   }
 
   /**

@@ -99,6 +99,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   mostrarTabla = false;
 
+  
+  /**
+ * Indica si el formulario ha sido enviado.
+ * Esta bandera se utiliza para mostrar mensajes de validación o controlar el flujo
+ * después de que el usuario intenta enviar el formulario.
+ * 
+ * @type {boolean}
+ * @default false
+ */
+  formularioEnviado = false;
+
   /**
    * Checkbox de selección de la tabla.
    * @type {TablaSeleccion} Enum que especifica el tipo de selección de la tabla.
@@ -289,7 +300,6 @@ tituloParte = TITULO_DESTINO;
     this.inicializarFormularios();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -374,10 +384,11 @@ tituloParte = TITULO_DESTINO;
         [
           Validators.required,
           Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(0.01),
         ],
       ],
-
+      
       /**
        * Campo que captura la unidad de medida de la mercancía.
        * Es un campo obligatorio.
@@ -425,7 +436,7 @@ tituloParte = TITULO_DESTINO;
        */
       descripcionModificar: [
         this.seccionState?.descripcionModificar,
-        [Validators.required, Validators.maxLength(255)],
+        [Validators.required, Validators.maxLength(1000)],
       ],
 
       /**
@@ -651,6 +662,19 @@ tituloParte = TITULO_DESTINO;
       });
     });
   }
+
+  /**
+ * Elimina todos los datos del cuerpo de la tabla dinámica.
+ * Este método se ejecuta cuando el usuario hace clic en el botón de eliminar,
+ * limpiando el arreglo `tableBodyData` y, por lo tanto, eliminando todas las filas mostradas en la tabla.
+ *
+ * @example
+ * this.alClicEnEliminar();
+ */
+  alClicEnEliminar(): void {
+  this.tableBodyData = [];
+  }
+
   /**
    * @description
    * Método encargado de manejar las actualizaciones del store basadas en eventos del formulario.
@@ -727,6 +751,15 @@ tituloParte = TITULO_DESTINO;
  * @returns {void}
  */
   validarYEnviarFormulario(): void {
+        /**
+ * Marca el formulario como enviado.
+ * Esta bandera se utiliza para activar la visualización de mensajes de validación
+ * o controlar el flujo después de que el usuario intenta enviar el formulario.
+ *
+ * @example
+ * this.formularioEnviado = true;
+ */
+  this.formularioEnviado = true;
     /**
      * @description
      * Verifica si el formulario es inválido. En caso de serlo, marca todos los campos como tocados 
@@ -754,6 +787,16 @@ tituloParte = TITULO_DESTINO;
        * @default true
        */
       this.mostrarTabla = true;
+      
+      /**
+ * Llama al método encargado de obtener los datos de la tabla dinámica.
+ * Este método actualiza la propiedad `tableBodyData` y los totales en el formulario correspondiente
+ * con los datos obtenidos del servicio de exportación de petrolíferos.
+ *
+ * @example
+ * this.obtenerTablaDatos();
+ */
+      this.obtenerTablaDatos();
     }
   }
 

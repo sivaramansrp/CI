@@ -71,10 +71,10 @@
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && !esCantidadSoloNumeros()">
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && !esValorNumerico('cantidad')">
             Por favor, escribe un número entero válido
           </small>
-          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && esCantidadSoloNumeros()">
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && esValorNumerico('cantidad')">
             Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['cantidad'].errors?.['min']">
@@ -90,7 +90,10 @@
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern']">
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern'] && !esValorNumerico('valorFacturaUSD')">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern'] && esValorNumerico('valorFacturaUSD')">
             Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']">

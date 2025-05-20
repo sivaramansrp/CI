@@ -87,18 +87,13 @@ export class DatosDeLaMercanciaComponent {
   }
 
 /**
- * @method esCantidadSoloNumeros
- * @description
- * Verifica si el valor del campo 'cantidad' del formulario contiene solo números enteros o decimales.
- * Utiliza la expresión regular REG_X.NUMERO_DECIMAL_OPCIONAL para validar.
- * @returns {boolean} Verdadero si el valor es un número válido, falso en caso contrario.
- *
- * @example
- * // Devuelve true para "123", "123.45", "0.5", "123."
- * this.esCantidadSoloNumeros();
+ * Checks if the value of the specified control is a valid integer or decimal number.
+ * Uses REG_X.NUMERO_DECIMAL_OPCIONAL for validation.
+ * @param controlName The name of the control to validate.
+ * @returns {boolean} True if the value is a valid number, false otherwise.
  */
-  esCantidadSoloNumeros(): boolean {
-  const VALUE = this.form?.controls['cantidad']?.value;
+esValorNumerico(controlName: string): boolean {
+  const VALUE = this.form?.controls[controlName]?.value;
   return typeof VALUE === 'string' && REG_X.NUMERO_DECIMAL_OPCIONAL.test(VALUE);
 }
 
