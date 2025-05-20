@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { ConsultaioSolicitante } from '../models/consultaio-solicitante';
+import { ConsultaioSolicitante } from '../models/consultaio-solicitante.model';
 import { Injectable } from '@angular/core';
 
 /**

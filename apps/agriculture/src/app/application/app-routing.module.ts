@@ -105,7 +105,31 @@ const ROUTES: Routes = [
       import('./tramites/221602/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       ),
-  }
+  },
+  { path: 'zoosanitario',
+    loadChildren: () =>
+      import('./tramites/221601/zoosanitario-para-importacion.module').then(
+        (m) => m.ZoosanitarioParaImportacionModule
+      ),
+  },
+  { path: 'sanidadacuicola',
+    loadChildren: () =>
+      import('./tramites/220503/sanidad-acuicola.module').then(
+        (m) => m.SanidadAcuicolaModule
+      ),
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

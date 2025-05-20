@@ -16,12 +16,31 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-importacion-plastica',
+    loadChildren: () =>
+      import('./tramites/270301/aviso-importacion-plastica.module').then(
+        (m) => m.AvisoImportacionPlasticaModule
+      ),
+  },
+  {
     path: 'informacion-arte-exportar',
     loadChildren: () =>
       import('./tramites/270101/exportar-ilustraciones.module').then(
         (m) => m.ExportarIlustracionesModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

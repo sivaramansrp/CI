@@ -29,7 +29,7 @@ export class NotificacionActoAdministrativoComponent implements OnInit {
       this.notificacionForm.patchValue({
         nombre: data.nombreDenominacionORazonSocial,
         rfc: data.rfc,
-        fechaHora: data.fechaHora,
+        fechaHora: data.fechaYHoraDeLaNotificacion,
       });
     });
   }

@@ -51,6 +51,37 @@
           "budgets": [
             {
               "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/inah/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/inah/src/app/environments/environment.ts",
+              "with": "apps/inah/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
               "maximumWarning": "500kb",
               "maximumError": "1mb"
             },
@@ -61,9 +92,22 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/inah/webpack.prod.config.ts"
-          }
+            "path": "apps/inah/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/inah/src/app/environments/environment.ts",
+              "with": "apps/inah/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -74,13 +118,13 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4221,
-        "publicHost": "http://localhost:4221"
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
@@ -88,6 +132,9 @@
         },
         "development": {
           "buildTarget": "inah:build:development"
+        },
+        "qa": {
+          "buildTarget": "inah:build:qa"
         }
       },
       "defaultConfiguration": "development"
@@ -110,7 +157,7 @@
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "development",
       "options": {
         "buildTarget": "inah:build",
         "port": 4221,

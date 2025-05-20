@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/dashboard
 
 # Build the application
-RUN npx nx build dashboard --configuration=production --skip-nx-cache --verbose
+RUN npx nx build dashboard --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/dashboard" && test -f "/app/dist/apps/dashboard/index.html" || exit 1

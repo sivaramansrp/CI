@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/amecafe
 
 # Build the application
-RUN npx nx build amecafe --configuration=production --skip-nx-cache --verbose
+RUN npx nx build amecafe --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/amecafe" && test -f "/app/dist/apps/amecafe/index.html" || exit 1

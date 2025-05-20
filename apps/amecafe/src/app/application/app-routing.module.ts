@@ -21,6 +21,25 @@ const ROUTES: Routes = [
       (m) => m.RegistrarSolicitudModule
     )
   },
+  {
+    path: 'nacional-registro-del-cafe-exportadores',
+    loadChildren: () =>
+      import('./tramites/290301/nacional-registro-del-cafe-exportadores.module').then(
+        (m) => m.NacionalRegistroDelCafeExportadoresModule
+      )
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 
 ];
 

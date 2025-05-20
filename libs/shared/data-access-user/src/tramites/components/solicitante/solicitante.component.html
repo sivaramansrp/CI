@@ -1,7 +1,6 @@
-<div class="container">
-  <!-- Formulario dinamico de tipo de personas -->
-  <form [formGroup]="form">
-    @if (guardarDatos.consultaioSolicitante) {
+<!-- Formulario dinamico de tipo de personas -->
+<form [formGroup]="form">
+  @if (guardarDatos.consultaioSolicitante) {
     <div class="form mt-5" formGroupName="datosTramite">
       <div class="row">
         @for (item of datosTramite; track $index) {
@@ -16,35 +15,34 @@
       </div>
     </div>
     }
-    <div class="form" formGroupName="datosGenerales">
-      <ng-titulo titulo="Datos generales del solicitante" />
+  <div class="form" formGroupName="datosGenerales">
+    <ng-titulo titulo="Datos generales del solicitante" />
 
-      <div class="row">
-        @for (item of persona; track $index) {
-        <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
-          <div class="form-group">
-            <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
-            <input class="form-control" [type]="item.tipo_input" title="{{item.labelNombre}}" [id]="item.campo" [placeholder]="item.placeholder"
-              [formControlName]="item.campo" libUppercase>
-          </div>
+    <div class="row">
+      @for (item of persona; track $index) {
+      <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
+        <div class="form-group">
+          <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
+          <input class="form-control" [type]="item.tipo_input" title="{{item.labelNombre}}" [id]="item.campo"
+            [placeholder]="item.placeholder" [formControlName]="item.campo" libUppercase>
         </div>
-        }
       </div>
+      }
     </div>
+  </div>
 
-    <div class="form" formGroupName="domicilioFiscal">
-      <ng-titulo titulo="Domicilio fiscal del solicitante" />
-      <div class="row">
-        @for (item of domicilioFiscal; track $index) {
-        <div [ngClass]="item.class">
-          <div class="form-group">
-            <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
-            <input class="form-control" [type]="item.tipo_input" [id]="item.campo" title="{{ item.labelNombre }}" [placeholder]="item.placeholder"
-              [formControlName]="item.campo" libUppercase>
-          </div>
+  <div class="form" formGroupName="domicilioFiscal">
+    <ng-titulo titulo="Domicilio fiscal del solicitante" />
+    <div class="row">
+      @for (item of domicilioFiscal; track $index) {
+      <div [ngClass]="item.class">
+        <div class="form-group">
+          <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
+          <input class="form-control" [type]="item.tipo_input" [id]="item.campo" title="{{ item.labelNombre }}"
+            [placeholder]="item.placeholder" [formControlName]="item.campo" libUppercase>
         </div>
-        }
       </div>
+      }
     </div>
-  </form>
-</div>
+  </div>
+</form>

@@ -4,9 +4,9 @@
  * Componente que gestiona la visualización y manipulación de certificados.
  * Proporciona funcionalidad para mostrar tablas y modales relacionados con certificados fitosanitarios y autorizaciones.
  */
+import { CertificadosFilaTableDatos, CertificadosFitoFilaTableDatos, CertificadosTablaDatos, PermisosCertificadosFitoFilaTableDatos, TablaDatos } from '../../models/flora-fauna.models';// Importa la interfaz de datos para la tabla de certificados
 import { Component, OnDestroy, OnInit } from '@angular/core';// Importa decoradores y ciclos de vida de Angular
 import { CertificadosService } from '../../services/certificados.service';// Servicio para obtener datos relacionados con los certificados.
-import { CertificadosTablaDatos } from '../../models/flora-fauna.models';// Importa la interfaz de datos para la tabla de certificados
 import { CommonModule } from '@angular/common';// Importa directivas comunes de Angular como ngIf y ngFor
 import { ModalComponent } from '../modal/modal.component'; // Componente para mostrar modales.
 import { Subject } from 'rxjs'; // Utilidad de RxJS para manejar observables y suscripciones.
@@ -75,6 +75,27 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    */
   tablaPermisoCertificadosData: string[] = [];
 
+ /**
+   * @property tablaCertificadosFilaDatos
+   * @description
+   * Datos relacionados con la tabla de permisos de certificados fila.
+   */
+  tablaCertificadosFilaDatos: TablaDatos[]=[];
+  /**
+   * @property   tablaFitosanitoriosFilaDatos
+
+   * @description
+   * Datos relacionados con la tabla de permisos de certificados fito sanitorios fila.
+   */
+  tablaFitosanitoriosFilaDatos: TablaDatos[]=[];
+    /**
+   * @property   tablaPermisoCertificadosFilaDatos
+
+   * @description
+   * Datos relacionados con la tabla de permisos de certificados fito permiso certificados fila.
+   */
+  tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
+
   /**
    * @constructor
    * @description
@@ -108,6 +129,24 @@ export class CertificadosComponent implements OnInit, OnDestroy {
       .getCertificadosDeTabla()
       .subscribe((data: CertificadosTablaDatos) => {
         this.tablaCertificadosData = data.columns; // Asigna los datos de la tabla de certificados.
+      });
+
+      this.certificadosService
+      .getCertificadosFilaDeTabla()
+      .subscribe((data: CertificadosFilaTableDatos) => {
+        this.tablaCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fila.
+      });
+
+      this.certificadosService
+      .getCertificadosFitoFilaDeTabla()
+      .subscribe((data: CertificadosFitoFilaTableDatos) => {
+        this.tablaFitosanitoriosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fito fila.
+      });
+
+      this.certificadosService
+      .getPermisoCertificadosFilaDeTabla()
+      .subscribe((data: PermisosCertificadosFitoFilaTableDatos) => {
+        this.tablaPermisoCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de permiso certificados fila.
       });
   }
 

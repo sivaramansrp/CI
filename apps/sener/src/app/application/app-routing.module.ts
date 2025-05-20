@@ -61,7 +61,26 @@ const ROUTES: Routes = [
       import('./tramites/130201/exportacion-petroliferos.module').then(
         (m) => m.ExportacionPetroliferosModule
       ),
-  }
+  },
+  {
+    path: 'parmiso-importacion-petroleo',
+    loadChildren: () =>
+      import('./tramites/130302/permiso-importacion-petroleo.module').then(
+        (m) => m.PermisoImportacionPetroleoModule
+      ),
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

@@ -6,7 +6,7 @@
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
 */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -44,7 +44,6 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 })
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
 
-  @Input() public procedureState!: TieneConsultaio;
   /**
    * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
