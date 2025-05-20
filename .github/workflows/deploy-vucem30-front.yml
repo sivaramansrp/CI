@@ -43,10 +43,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --force
-      # 4. Construye el proyecto Angular con Nx (build del dashboard).
-      - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-dashboard.yml build
-     
+    
       - name: Listar archivos
         run: ls -la
         
@@ -62,7 +59,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN}}
 
       - name: Push Docker image to GHCR
-        run: docker compose -f ./docker/modulefederation-dashboard.yml push
+        run: |
+          docker compose -f ./docker/modulefederation-dashboard.yml build && docker compose -f ./docker/modulefederation-dashboard.yml push
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
