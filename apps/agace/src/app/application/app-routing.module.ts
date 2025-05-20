@@ -145,6 +145,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31603/registros-de-comercio-exterior/registros-de-comercio-exterior.module').then(
+        (m) => m.RegistrosDeComercioExteriorModule
+      ),
+  },
+  {
     path: 'garantia',
     loadChildren: () =>
       import('./tramites/31101/garantia.module').then(
