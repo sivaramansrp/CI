@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/317/aviso-unico.enum';
+import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/31203/aviso-unico.enum';
 
 import { AccionBoton } from '../../models/aviso.model';
 

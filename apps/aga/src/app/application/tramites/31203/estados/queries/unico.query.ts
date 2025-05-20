@@ -4,7 +4,7 @@ import { Query } from '@datorama/akita';
 import { UnicoState, UnicoStore } from '../renovacion.store';
 
 /**
- * Service to query the state of Solicitud260211.
+ * Service to query the state of Solicitud31203.
  */
 @Injectable({ providedIn: 'root' })
 export class UnicoQuery extends Query<UnicoState> {
