@@ -49,10 +49,20 @@ const ROUTES: Routes = [
       import('./tramites/231003/aviso-de-reciclaje.module').then((m) => m.AvisoDeReciclajeModule),
   },
   {
+    path: 'phytosanitary-rexportation',
+    loadChildren: () =>
+      import('./tramites/230202/phytosanitary-rexportation.module').then((m) => m.PhytosanitaryRexportationModule),
+   },
+   {
     path: 'aviso-retorno',
     loadChildren: () =>
       import('./tramites/231002/aviso-retorno.module').then((m) => m.AvisoRetornoModule),
-  }
+   },
+   {
+    path: 'phytosanitary-export',
+    loadChildren: () =>
+      import('./tramites/230201/phytosanitary-export.module').then((m) => m.PhytosanitaryExportModule),
+   }
 ];
 
 @NgModule({

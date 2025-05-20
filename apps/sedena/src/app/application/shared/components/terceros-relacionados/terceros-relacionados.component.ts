@@ -6,10 +6,12 @@ import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacio
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 import { Input } from '@angular/core';
 import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum';
+import { OCULTAR_BOTON_MODIFICAR_TERCEROS } from '../../constants/datos-solicitud.enum';
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { Router } from '@angular/router';
 import { TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
+import { TERCEROS_NACIONALIDAD } from '../../constants/datos-solicitud.enum';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -87,6 +89,13 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @type {EventEmitter<Proveedor>}
    */
   @Output() modificarProveedorDatos: EventEmitter<Proveedor> = new EventEmitter<Proveedor>(true);
+  
+  /**
+   * Indica si el botón de modificar está oculto o visible.
+   * @property {boolean} ocultarBotonModificar
+   */
+
+  ocultarBotonModificar:boolean=false;
 
   /**
    * Configuración de la tabla de destinatarios finales.
@@ -141,8 +150,17 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @param {ActivatedRoute} activatedRoute - Ruta activa para navegación relativa.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+
+   /**
+ * @property
+ * @name tercerosNacionalidad
+ * @type {boolean}
+ * @description Indica si la nacionalidad de terceros está habilitada o no. 
+ * Este valor se utiliza para determinar la visibilidad o funcionalidad relacionada con la nacionalidad de terceros en el formulario.
+ * @default false
+ */
+   public tercerosNacionalidad: boolean = false;
 
   /**
    * Emite el primer destinatario seleccionado para su modificación.
@@ -152,6 +170,9 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarDestinatario(): void {
     this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
+    this.router.navigate(['../agregar-destino-final'], { relativeTo: this.activatedRoute,queryParams: { destinario:this.destinarioTablaSeleccionada[0].codigoPostal } 
+    });
+  
   }
   
   /**
@@ -180,8 +201,12 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarProveedor(): void {
     this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
+    this.router.navigate(['../agregar-proveedor'], { relativeTo: this.activatedRoute,queryParams: {proveedor:this.proveedorTablaSeleccionada[0].rfc} 
+    });
   }
   ngOnInit(): void {
-    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
+    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento); 
+    this.tercerosNacionalidad = TERCEROS_NACIONALIDAD.includes(this.idProcedimiento);
+    this.ocultarBotonModificar = OCULTAR_BOTON_MODIFICAR_TERCEROS.includes(this.idProcedimiento);
   }
 }

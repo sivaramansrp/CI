@@ -8,12 +8,12 @@
           >Certificado emitidos aprobados:</label
         >
         <input
-          type="number"
+          type="text"
           class="form-control"
           id="especifique"
           formControlName="especifique"
           readonly
-          [disabled]="true"
+          
         />
       </div>
     </div>
@@ -30,7 +30,7 @@
           id="numero"
           formControlName="numero"
           [ngClass]="{ 'is-invalid': isInvalid('numero') }"
-          (change)="setValoresStore(formularioEmpresa, 'numero', 'setNumero')"
+          (change)="setValoresStore(formularioEmpresa, 'numero')"
         />
         <div *ngIf="isInvalid('numero')" class="invalid-feedback">
           Este campo es obligatorio.
@@ -45,7 +45,7 @@
           [label]="'País emisor del certificado Kimberley:'"
           [required]="true"
           formControlName="tipoEmpresa"
-          (change)="onTipoEmpresaChange($event)"
+          (change)="setValoresStore(formularioEmpresa, 'tipoEmpresa')"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
           Debe seleccionar un tipo de empresa.
@@ -64,7 +64,7 @@
           id="nombre"
           formControlName="nombre"
           [ngClass]="{ 'is-invalid': isInvalid('nombre') }"
-          (change)="setValoresStore(formularioEmpresa, 'nombre', 'setNombre')"
+          (change)="setValoresStore(formularioEmpresa, 'nombre')"
 
         />
         <div *ngIf="isInvalid('nombre')" class="invalid-feedback">
@@ -83,7 +83,7 @@
             id="lineaCheckbox"
             formControlName="lineaCheckbox"
             [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox') }"
-            (change)="onLineaCheckboxChange($event)"            />
+            (change)="setValoresStore(formularioEmpresa, 'lineaCheckbox')"            />
           <label class="form-check-label" for="lineaCheckbox">
             <span>Mixed</span>
           </label>
@@ -100,9 +100,7 @@
           [label]="'País de origen:'"
           [required]="true"
           formControlName="paisOrigen"
-          (change)="
-            setValoresStore(formularioEmpresa, 'paisOrigen', 'setPaisOrigen')
-          "
+          (change)="setValoresStore(formularioEmpresa, 'paisOrigen') "
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen')" class="invalid-feedback">
           Debe seleccionar un país de origen.
@@ -127,7 +125,6 @@
               formControlName="nombreExportador"
               libUppercase
               aria-labelledby="nombreExportador"
-              (change) = "getNombreExportador()"
             />
           </div>
         </div>
@@ -147,7 +144,7 @@
               placeholder="PRUEBAS QA CDMX"
               libUppercase
               aria-labelledby="direccionExportador"
-              (change) = "getDireccionExportador()"
+              (change) = "setValoresStore(datosDelExportador, 'direccionExportador')"
             />
           </div>
         </div>
@@ -171,7 +168,7 @@
               formControlName="nombreImportador"
               libUppercase
               aria-labelledby="nombreImportador"
-              (change) = "getNombreImportador()"
+              (change) = "setValoresStore(datosDelImportador, 'nombreImportador')"
             />
           </div>
         </div>
@@ -191,7 +188,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="direccionImportador"
-              (change) = "getDireccionImportador()"
+              (change) = "setValoresStore(datosDelImportador, 'direccionImportador')"
             />
           </div>
         </div>
@@ -215,8 +212,16 @@
               formControlName="numeroEnLetraDeLosLotes"
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotes"
-              (change) = "getNumeroEnLetraDeLosLotes()"
+              (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotes')"
             />
+            <div *ngIf="esInvalido('numeroEnLetraDeLosLotes')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -235,8 +240,16 @@
               placeholder=""
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
-              (change) = "getNumeroEnLetraDeLosLotesEnIngles()"
+              (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotesEnIngles')"
             />
+            <div *ngIf="esInvalido('numeroEnLetraDeLosLotesEnIngles')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -255,8 +268,16 @@
               placeholder=""
               libUppercase
               aria-labelledby="numeroDeFactura"
-              (change) = "getNumeroDeFactura()"
+              (change) = "setValoresStore(datosDeLaRemesa, 'numeroDeFactura')"
             />
+            <div *ngIf="esInvalido('numeroDeFactura')" class="text-danger">
+              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['pattern']">
+                Solo se permiten números.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -279,7 +300,7 @@
               formControlName="cantidadEnQuilates"
               libUppercase
               aria-labelledby="cantidadEnQuilates"
-              (change) = "getCantidadEnQuilates()"
+              (change) = "setValoresStore(datosDeLosDiamantes, 'cantidadEnQuilates')"
             />
           </div>
         </div>
@@ -297,7 +318,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
-              (change) = "getValorDeLosDiamantes()"
+              (change) = "setValoresStore(datosDeLosDiamantes, 'valorDeLosDiamantes')"
             />
           </div>
         </div>
