@@ -626,8 +626,15 @@ const ROUTES: Routes = [
         (m) => m.ImportacionesAgropecuariasModule
       ),
   },
+  {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/80316/modificaciones-immex-prosec.module').then(
+        (m) => m.ModificacionesImmexProsecModule
+      ),
+  }
 ];
-
+ 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],

@@ -786,8 +786,8 @@
   {
     "id": 113,
     "tramite": 32301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso/aviso-modificacion",
+    "linkDepartment": "/pago/aviso/aviso-modificacion",
     "department": "agace"
   },
   {
@@ -1206,8 +1206,8 @@
   {
     "id": 173,
     "tramite": 31201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-a",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-a",
     "department": "aga"
   },
   {
@@ -1339,8 +1339,8 @@
   {
     "id": 192,
     "tramite": 31202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aa",
     "department": "aga"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
     "department": "se"
   },
   {
