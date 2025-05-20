@@ -19,7 +19,6 @@ import { Solicitud30505Query } from '../../../../core/queries/tramites30505.quer
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrls: ['./paso-uno.component.scss'],
 })
 
 export class PasoUnoComponent implements OnDestroy,OnInit{

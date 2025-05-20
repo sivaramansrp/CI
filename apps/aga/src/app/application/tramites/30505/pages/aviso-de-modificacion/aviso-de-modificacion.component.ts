@@ -27,7 +27,6 @@ interface AccionBoton {
  * @component
  * @selector app-aviso-modificacion
  * @templateUrl ./aviso-de-modificacion.component.html
- * @styleUrl ./aviso-de-modificacion.component.scss
  * 
  * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
  * @property {number} indice - Índice actual del paso en el wizard.
@@ -40,7 +39,6 @@ interface AccionBoton {
 @Component({
   selector: 'app-aviso-modificacion',
   templateUrl: './aviso-de-modificacion.component.html',
-  styleUrl: './aviso-de-modificacion.component.scss',
 })
 export class AvisoDeModificacionComponent {
 
