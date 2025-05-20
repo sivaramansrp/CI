@@ -32,11 +32,11 @@
       <app-datos-del-solicitud-modificacion></app-datos-del-solicitud-modificacion>
         }
         @case (3) {
-      <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
+      <app-terceros-relacionados-fabricante [programTitle]="true"></app-terceros-relacionados-fabricante>
          
         } 
         @case (4) {
-          <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>
+          <app-pago-de-derechos-entrada [idProcedimiento]="260902"></app-pago-de-derechos-entrada>
         }
         @case (5) {
           <app-tramites-asociados-seccion></app-tramites-asociados-seccion>
@@ -44,4 +44,3 @@
       </ng-container>
     </div>
   </div>
-  

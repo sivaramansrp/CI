@@ -1,8 +1,7 @@
-
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +16,8 @@ import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importac
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO } from '../../constantes/permiso-importacion-biologica.enum';
+import { FECHA_PAGO, PAGO , MAXLENGTH } from '../../constantes/permiso-importacion-biologica.enum';
+import { REQUIRED_BANCO } from '../../constantes/datos-solicitud.enum';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -96,11 +96,21 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   dropdownData: CatalogoResponse[] = [];
 
   /**
+  * Identificador del procedimiento recibido como entrada desde un componente padre.
+  * @type {number}
+  */
+  @Input() public idProcedimiento!: number;
+
+  public requiredLabel:boolean = true;
+
+  public maxLength!: { [key: string]: number };
+
+  /**
    * @observable fechaFinalInput
    * @description Representa un objeto de tipo InputFecha que contiene la fecha final
    * utilizada en el contexto del trámite 260402.
    */
-  fechaFinalInput: InputFecha = FECHA_PAGO;
+  fechaFinalInput!: InputFecha;
 
   /**
  * Constructor del componente.
@@ -124,19 +134,14 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Cada campo es obligatorio.
    */
  public pagoDerechos: FormGroup = this.fb.group({
+  claveDeReferncia: [''],
+  cadenaDeLaDependencia: [''],
+  banco: [''],
+  llaveDePago: [''],
+  fechaDePago: [''],
+  importeDePago:['']
 
-    claveDeReferncia: ['', [Validators.required]],
-
-    cadenaDeLaDependencia: ['', [Validators.required]],
-
-    banco: ['', [Validators.required]],
-
-    llaveDePago: ['', [Validators.required]],
-
-    fechaDePago: ['', [Validators.required]],
-
-    importeDePago: ['', [Validators.required]],
-  });
+ });
 
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
@@ -180,6 +185,13 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
         this.pagoDerechos.get('importeDePago')?.setValue(importeDePago);
       }
     });
+
+    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? false : true;
+
+    this.fechaFinalInput = REQUIRED_BANCO.includes(this.idProcedimiento) ? PAGO : FECHA_PAGO;
+
+    this.maxLength = REQUIRED_BANCO.includes(this.idProcedimiento) ? MAXLENGTH : {
+    };
 
   }
 
@@ -268,6 +280,14 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       fechaDePago: nuevo_valor,
     });
     this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+  }
+
+   /**
+   * @method onReset
+   * @description Limpia todos los campos del formulario de pago de derechos.
+   */
+  onReset(): void {
+    this.pagoDerechos.reset();
   }
 
   /*
