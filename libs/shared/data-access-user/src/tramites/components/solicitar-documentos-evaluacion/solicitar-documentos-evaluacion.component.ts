@@ -1,11 +1,11 @@
 import { Catalogo, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
 import { Component, OnInit } from '@angular/core';
-import { DocumentosStates, SolicitudDocumentosState } from '../../../core/estados/documentos.store';
+import { DocumentosStates, SolicitudDocumentosState } from '../../../core/estados/solicitud-documentos.store';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { SolicitudDocumentosQuery } from '../../../core/queries/documentos.query';
+import { SolicitudDocumentosQuery } from '../../../core/queries/solicitud-documentos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
 import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 
