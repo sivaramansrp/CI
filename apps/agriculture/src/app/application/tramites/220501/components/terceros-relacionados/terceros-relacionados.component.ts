@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Row, Rows } from '../../models/pago-de-derechos.model';
 import { ITEMS, PERSONA, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/constantes';
 
 /**

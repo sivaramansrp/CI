@@ -22,6 +22,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { RevisionDocumentalComponent } from './components/revision-documental/revision-documental.component';
+import { RevisionService } from './services/revision.service';
 import { SagarpaRoutingModule } from './sagarpa-routing.module';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
@@ -33,8 +34,6 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { RevisionService } from './services/revision.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     SolicitudPageComponent,
@@ -74,7 +73,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
-    HttpClientModule,
     ToastrModule.forRoot()
   ],
   exports: [SolicitudPageComponent],

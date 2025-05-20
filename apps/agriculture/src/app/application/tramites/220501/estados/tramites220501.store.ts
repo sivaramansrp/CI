@@ -150,6 +150,12 @@ export interface Solicitud220501State {
    * Saldo a capturar.
    */
   saldoACapturar: string;
+
+  /**
+   * Datos de la mercancía capturados en la tabla.
+   * @type {string[]}
+   */
+  mercanciaTablaDatos: string[];
 }
 
 /**
@@ -195,6 +201,8 @@ export function crearEstadoInicial(): Solicitud220501State {
     cantidadTotalUMT: '',
     saldoPendiente: '',
     saldoACapturar: '',
+
+    mercanciaTablaDatos: []
   };
 }
 
@@ -577,5 +585,17 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
    */
   public limpiarSeccion(): void {
     this.reset();
+  }
+
+  /**
+   * Establece la mercancía en el estado.
+   * @param mercanciaTablaDatos Datos de la mercancía.
+   * @returns void
+   */
+  public setMercanciaTablaDatos(mercanciaTablaDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTablaDatos,
+    }));
   }
 }

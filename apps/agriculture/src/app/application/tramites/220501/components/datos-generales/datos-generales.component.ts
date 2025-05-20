@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ROWS } from '../../constantes/constantes';
 import { RevisionService } from '../../services/revision.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
@@ -16,48 +17,6 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { ROWS } from '../../constantes/constantes';
-
-/**
- * Interfaz para definir la estructura de las filas.
- */
-interface Row {
-  /**
-   * Partida de la mercancía.
-   * @type {string}
-   */
-  Partida: string;
-  /**
-   * Tipo de requisito.
-   * @type {string}
-   */
-  Tiporequisito: string;
-  /**
-   * Requisito de la mercancía.
-   * @type {string}
-   */
-  Requisito: string;
-  /**
-   * Número de certificado.
-   * @type {number}
-   */
-  Certificado: number;
-  /**
-   * Fracción arancelaria.
-   * @type {string}
-   */
-  Fraccion: string;
-  /**
-   * Descripción de la mercancía.
-   * @type {string}
-   */
-  Descripcion: string;
-  /**
-   * Número de identificación de la mercancía.
-   * @type {string}
-   */
-  Nico: string;
-}
 
 /**
  * Componente para gestionar los datos generales.

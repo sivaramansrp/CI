@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220501State, Solicitud220501Store } from '../../estados/tramites220501.store';
 import { CommonModule } from '@angular/common';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -37,6 +38,12 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
      */
     tbodyData: [] as string[]
   }];
+
+  /**
+   * Evento emitido cuando se actualiza la mercancía.
+   * @type {EventEmitter<MercanciaTabla>}
+   */
+  @Output() actualizarMercancia = new EventEmitter<MercanciaTabla>();
 
   /**
    * Evento emitido cuando se cancela la acción.
@@ -142,12 +149,24 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   /**
-   * Método para cancelar la acción y emitir el evento correspondiente.
+   * Método para aceptar la acción de agregar mercancía.
+   * Valida el formulario y emite el evento con los datos del formulario.
+   * @returns {void}
+   */
+  aceptar(): void {
+    if (this.agregarMercanciaForm.valid) {
+      this.actualizarMercancia.emit(this.agregarMercanciaForm.getRawValue());
+    }
+  }
+
+  /**
+   * Método para cancelar la acción de agregar mercancía.
+   * Emite el evento de cancelación.
+   * @param estaConfirmado Indica si la acción fue confirmada o no.
+   * @returns {void}
    */
   cerrarModal(estaConfirmado: boolean): void {
-    if (estaConfirmado) {
-      this.cancelarEvento.emit(false);
-    }
+    this.cancelarEvento.emit(estaConfirmado);
   }
 
   /**

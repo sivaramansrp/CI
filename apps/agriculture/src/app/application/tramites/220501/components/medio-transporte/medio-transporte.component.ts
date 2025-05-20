@@ -15,6 +15,7 @@ import { merge } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
@@ -31,8 +32,8 @@ import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-tabl
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, TituloComponent,CommonModule, CatalogoSelectComponent,
-    InputRadioComponent,AlertComponent,TableComponent,AgregarMercanciaComponent
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule, CatalogoSelectComponent,
+    InputRadioComponent, AlertComponent, TableComponent, AgregarMercanciaComponent
   ],
 })
 /**
@@ -157,6 +158,11 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
             esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
             totalGuias: this.solicitud220501State.totalGuias,
           });
+          this.mercanciaBodyData = [
+            {
+              tbodyData: this.solicitud220501State.mercanciaTablaDatos,
+            }
+          ]
           if (this.solicitud220501State.esSolicitudFerros === '1') {
             this.esSolicitudFerrosValor = '1';
             this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
@@ -205,7 +211,30 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+    if (this.solicitud220501State.mercanciaTablaDatos.length <= 0) {
+      this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+    }
+    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
+  }
+
+  /**
+   * Método para actualizar los datos de la mercancía en la tabla.
+   * 
+   * @param datos Datos de la mercancía a actualizar.
+   */
+  actualizarMercanciaEnTabla(datos: MercanciaTabla): void {
+    this.mercanciaBodyData[0].tbodyData = [
+      datos.fraccionArancelaria,
+      datos.descripcionFraccion,
+      datos.nico,
+      datos.descripcion,
+      datos.saldoACapturar,
+      datos.unidaddeMedidaDeUMT,
+      datos.cantidadTotalUMT,
+      datos.saldoPendiente
+    ];
+    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
+    this.mostrarAgregarMercancia = false;
   }
 
   /**
