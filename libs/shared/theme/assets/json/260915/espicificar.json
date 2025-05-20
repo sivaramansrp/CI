@@ -1,4 +1,6 @@
 [
-    { "id": 1, "descripcion": "Pastas, granos y semillas"}
+    { "id": 1, "descripcion": "Pastas, granos y semillas"},
+    { "id": 2, "descripcion": "No aplica"}
+
   
   ]
