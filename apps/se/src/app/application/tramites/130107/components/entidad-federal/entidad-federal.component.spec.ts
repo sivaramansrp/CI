@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { RepresentacionFederalComponent } from './representacion-federal.component';
+import { RepresentacionFederalComponent } from './entidad-federal.component';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
