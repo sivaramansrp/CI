@@ -206,6 +206,10 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   guardar(): void {
+      if (this.datosMercancia.invalid) {
+        this.datosMercancia.markAllAsTouched();
+        return;
+      }
     const DATOS_MERCANCIA: MercanciaDetalle = {
       fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')
         ?.value,
@@ -266,8 +270,9 @@ export class DatosMercanciaComponent implements OnInit {
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
-      fraccionArancelaria: [Validators.required],
+      fraccionArancelaria: ['', Validators.required],
       descFraccion: [
+        '',
         {
           value: null, 
           disabled: true, 
@@ -282,7 +287,6 @@ export class DatosMercanciaComponent implements OnInit {
       paisDeOriginDatos: [null],
     });
     this.cargarDatos();
-
 
     if (this.idProcedimiento === 240122) {
       this.datosMercancia.get('umc')?.disable();

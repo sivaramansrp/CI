@@ -368,6 +368,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }    
     const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim() : `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido

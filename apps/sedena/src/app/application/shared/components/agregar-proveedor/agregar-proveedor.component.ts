@@ -218,6 +218,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
         this.agregarProveedorForm.value.primerApellido
