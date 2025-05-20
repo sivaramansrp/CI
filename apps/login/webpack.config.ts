@@ -15,6 +15,7 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
 ]);
 
 module.exports = {
+<<<<<<< HEAD
   output: {
     uniqueName: 'login',
     publicPath: 'auto',
@@ -56,6 +57,50 @@ module.exports = {
     sharedMappings.getPlugin()
   ],
   watchOptions: {
+=======
+ output: {
+  uniqueName: 'login',
+  publicPath: 'auto',
+  scriptType: 'text/javascript'
+ },
+ optimization: {
+  runtimeChunk: false
+ },
+ resolve: {
+  alias: {
+   ...sharedMappings.getAliases()
+  }
+ },
+ plugins: [
+  new ModuleFederationPlugin({
+   name: 'login',
+   filename: 'remoteAppEntry.js',
+   exposes: {
+    './Module': 'apps/login/src/app/remote-entry/entry.module.ts',
+   },
+   shared: share({
+    '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular-architects/module-federation': {
+     singleton: true,
+     strictVersion: true,
+     requiredVersion: 'auto'
+    },
+    "@ng-mf/data-access-user": {
+        "singleton": false,
+        strictVersion: false,
+        requiredVersion: false,
+        "import": "libs/shared/data-access-user/src/index.ts",
+    },
+    ...sharedMappings.getDescriptors()
+   })
+  }),
+  sharedMappings.getPlugin()
+ ],
+ watchOptions: {
+>>>>>>> c22e440252bed5f43905974db695187ff46e1e1e
     ignored: 'node_modules'
   }
 };
