@@ -1,14 +1,8 @@
-import { CATALOGOS_ID, CatalogoDocumento, CatalogosService, Notificacion, TEXTOS } from '@ng-mf/data-access-user';
-import { catchError, map } from 'rxjs';
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-
+import { map } from 'rxjs';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import documentosOpcionales from 'libs/shared/theme/assets/json/shared/documentosOpcionales.json';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import documentosObligatorios from 'libs/shared/theme/assets/json/shared/documentosObligatorios.json';
-
+import { TEXTOS } from '@ng-mf/data-access-user';
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -66,19 +60,6 @@ export class PasoDosComponent implements OnInit {
    */
   TEXTOS = TEXTOS;
 
-
-  /**
-   * Catalogo de documentos obligatorios.
-   * @type {CatalogoDocumento[]}
-   */
-  catalogoDocumentos: CatalogoDocumento[] = documentosObligatorios.documentosObligatorios;
-
-  /**
-   * Catalogo de documentos opcionales.
-   * @type {CatalogoDocumento[]}
-   */
-  catalogoDocumentosOpcionales: CatalogoDocumento[] = documentosOpcionales.documentosOpcionales
-
   /**
    * Indica si la carga de documentos se realizó correctamente.
    * @type {boolean}
@@ -100,9 +81,6 @@ export class PasoDosComponent implements OnInit {
     txtBtnCancelar: '',
   }
 
-  constructor(
-    private catalogosServices: CatalogosService,) { }
-
   ngOnInit(): void {
     this.cargaArchivosEvento.pipe(
       takeUntilDestroyed(this.destroyRef),
@@ -117,27 +95,6 @@ export class PasoDosComponent implements OnInit {
         this.reenviarRegresarSeccion.emit();
       })
     ).subscribe();
-  }
-
-  /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
-   */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((resp: CatalogoDocumento[]) => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        }),
-        catchError(_error => {
-          return [] as CatalogoDocumento[];
-        }
-        )
-      )
-      .subscribe();
   }
 
   /**

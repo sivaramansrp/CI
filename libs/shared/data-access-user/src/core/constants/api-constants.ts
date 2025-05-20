@@ -88,3 +88,14 @@ export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
  */
 export const API_POST_SOLICITUD = 'sat-t5701/guardar';
+/**
+ * Indica el número de trámite a consultar.
+ */
+export const TRAMITE = '{numeroTramite}';
+
+/** 
+ * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
+ * @param TRAMITE el trámite seleccionado por el usuario.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
+*/
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos` 
