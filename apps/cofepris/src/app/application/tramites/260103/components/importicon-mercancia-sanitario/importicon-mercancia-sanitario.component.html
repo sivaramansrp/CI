@@ -345,6 +345,7 @@
           [configuracionTabla]="claveConfig.configuracionTabla"
           [datos]="claveConfig.datos"
           (listaDeFilaSeleccionada)="claveListaFn($event)"
+          [acciones]="claveConfig.acciones"
         ></app-tabla-dinamica>
       </div>
     </div>
@@ -362,7 +363,7 @@
           <button
             type="button"
             name="modificarClave"
-            class="btn btn-danger ms-2"
+            class="  btn btn-default ms-2"
             (click)="modificarClave()"
           >
             Modificar

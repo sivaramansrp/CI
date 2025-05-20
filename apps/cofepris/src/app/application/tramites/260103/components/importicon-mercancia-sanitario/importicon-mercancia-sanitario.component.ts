@@ -20,6 +20,7 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  TablaAcciones,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -215,7 +216,10 @@ public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
       tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
       configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
       datos: [] as TablaMercanciaClaveConfig[],
-    };
+      acciones: [
+TablaAcciones.UNDEFINED
+      ]
+       };
     /**
      * @property {TablaMercanciaClaveConfig[]} scianLista
      * Lista de registros Clave seleccionados.
