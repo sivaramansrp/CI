@@ -83,6 +83,7 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+  @Input() mostrarAlerta: boolean = true; // o false, según lo que necesites
   /**
    * Referencia al componente `ManifiestosRepresentanteSeccionComponent`.
    */
@@ -534,8 +535,8 @@ eliminarPedimento(borrar: boolean): void {
       establishomentoColonias:[''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      establecimientoDomicilioCodigoPostal :['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],Validators.maxLength(30)],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]],
       scian: this.fb.array([]),
     });
     this.scianForm = this.fb.group({
