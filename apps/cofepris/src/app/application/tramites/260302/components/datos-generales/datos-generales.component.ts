@@ -1,6 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CatalogoSelectComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_NOMBRE,
+  REGEX_SOLO_DIGITOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule,Location} from '@angular/common';
@@ -124,20 +127,21 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
         this.obtenerValor('nombreRazonSocial'),
         [
           Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(150),
+        Validators.pattern(REGEX_NOMBRE)
         ],
       ],
       pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [this.obtenerValor('estadoLocalidad')],
-      codigoPostal: [this.obtenerValor('codigoPostal')],
+      estado: [this.obtenerValor('estadoLocalidad'), [
+        Validators.pattern(REGEX_NOMBRE)
+        ]],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NOMBRE)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [this.obtenerValor('numeroExterior')],
       numeroInterior: [this.obtenerValor('numeroInterior')],
-      lada: [this.obtenerValor('lada')],
+      lada: [this.obtenerValor('lada'), [Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: [this.obtenerValor('telefono')],
-      correoElectronico: [this.obtenerValor('correoElectronico'), [Validators.required, Validators.email]],
+      correoElectronico: [this.obtenerValor('correoElectronico'), [Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
     });
   }
 
@@ -217,6 +221,18 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
     public obtenerValor(field: keyof Destinatario): string | number | undefined | string[] {
       return this.datoSeleccionado?.[field as keyof Destinatario] ?? '';
     }
+
+       /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarDatosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
 
       /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
