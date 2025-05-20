@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
@@ -377,27 +379,6 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
 
-/**
- * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
- * - Dígitos (0-9)
- * - Espacios en blanco
- * - Guiones (-)
- *
- * Desglose de la expresión regular:
- * - `^`: Aserta el inicio de la cadena.
- * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
- * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
- *
- * Ejemplos de coincidencias:
- * - "123-456" (coincide con "123-")
- * - "  -789" (coincide con "  -")
- * - "42" (coincide con "42")
- *
- * Ejemplos de no coincidencias:
- * - "abc123" (no comienza con un dígito, espacio o guión)
- * - "!@#" (no comienza con un carácter válido)
- */
-export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
 
 /**
  * Expresión regular para validar nombres.
