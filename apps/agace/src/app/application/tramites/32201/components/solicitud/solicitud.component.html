@@ -5,7 +5,7 @@
       <div class="form-check">
         <lib-input-check
               [id]="'regimen_0'"
-              [label]="'Importación temporal para la elaboración, transformación o reparación
+              [label]="'Importación temporal para la elaboración, transformación o preparación
               en programas de maquila o de exportación (IMMEX)'"
               [required]="true"
               formControlName="regimen_0"
@@ -55,10 +55,15 @@
         <a [href]="" target="_blank" class="text-primary fw-bold">aquí</a>.
       </label>
       <div class="row mt-4 mb-4">
-        <div class="col-md-4">
-          <input class="form-control" type="file" name="cargarProveedores" id="cargarProveedores" required />
+        <div class="col-md-8">
+          <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()">
+            Elgir archivo
+          </button>
+          <span class="ml-2">{{ elgirDeArchivo }}</span>
+          <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)" class="file-upload"
+            style="display: none" />
         </div>
-        <div class="col-md-8 d-flex justify-content-end">
+        <div class="col-md-4 d-flex justify-content-end">
           <button type="button" class="btn btn-default" (click)="cargarProveedores()">
             Cargar Proveedores
           </button>

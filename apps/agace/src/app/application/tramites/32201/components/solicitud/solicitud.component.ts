@@ -57,6 +57,23 @@ export class SolicitudComponent implements OnInit {
   TEXTOS = SOLICITUD_32201_ENUM;
 
   /**
+   * Etiqueta del archivo seleccionado.
+   */
+  elgirDeArchivo: string = this.TEXTOS.ELGIR_DE_ARCHIVO;
+
+  /**
+   * Elemento de entrada de archivo HTML.
+   * 
+   * @type {HTMLInputElement}
+   */
+  elgirArchivo!: HTMLInputElement;
+
+  /**
+   * Archivo de medicamentos seleccionado.
+   */
+  archivoMedicamentos: File | null = null;
+
+  /**
    * Una cadena que representa la clase CSS para una alerta de información.
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
@@ -172,6 +189,35 @@ export class SolicitudComponent implements OnInit {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Activa la selección del archivo de medicamentos.
+   * @returns {void}
+   */
+  activarSeleccionArchivo(): void {
+    this.elgirArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    if (this.elgirArchivo) {
+      this.elgirArchivo.click();
+    }
+  }
+
+  /**
+   * Maneja el cambio de archivo en el input de archivo.
+   * 
+   * @param event Evento de cambio de archivo.
+   * 
+   * @returns {void}
+   */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
+      this.elgirDeArchivo = this.archivoMedicamentos.name;
+    } else {
+      this.elgirDeArchivo = this.elgirArchivo?.value;
     }
   }
 
