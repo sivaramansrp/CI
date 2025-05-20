@@ -17,7 +17,7 @@ import { provideRouter } from '@angular/router';
     RemoteEntryComponent
   ],
   providers: [
-    provideRouter(appRoutes),
+    provideRouter(APP_ROUTES),
   ],
   bootstrap: []
 })
