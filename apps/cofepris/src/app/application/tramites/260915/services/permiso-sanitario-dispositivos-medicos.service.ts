@@ -140,5 +140,11 @@ export class PermisoSanitarioDispositivosMedicosService {
   getEstadoFisicoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260915/estadofisico.json');
   }
-
+/**
+ * Obtiene los datos de las mercancías desde un archivo JSON.
+ * @returns Observable con la lista de datos de mercancías.
+ */
+getMercanciasDatosData(): Observable<FilaData2[]> {
+  return this.http.get<FilaData2[]>('./assets/json/260915/mercanciasDatos.json');
+}
 }
