@@ -58,6 +58,18 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/231002/aviso-retorno.module').then((m) => m.AvisoRetornoModule),
    },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

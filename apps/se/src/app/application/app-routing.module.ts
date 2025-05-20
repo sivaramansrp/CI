@@ -632,7 +632,19 @@ const ROUTES: Routes = [
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
  
 @NgModule({

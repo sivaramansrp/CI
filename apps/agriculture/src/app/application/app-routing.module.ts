@@ -117,7 +117,19 @@ const ROUTES: Routes = [
       import('./tramites/220503/sanidad-acuicola.module').then(
         (m) => m.SanidadAcuicolaModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({

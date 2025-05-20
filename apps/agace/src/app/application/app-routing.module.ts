@@ -197,6 +197,18 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeMercanciaModule
       ),
   },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
 ];
 
 @NgModule({
