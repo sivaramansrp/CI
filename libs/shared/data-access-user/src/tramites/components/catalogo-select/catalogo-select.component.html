@@ -4,7 +4,7 @@
     class="form-label text-left"
     [ngClass]="{ 'col-sm-3': isInline }"
     *ngIf="label"
-    >{{ label }}@if(required){*}: @if(tooltipQuestionCircle){
+    >{{ label }} @if (required) {*}: @if(tooltipQuestionCircle){
     <span
       class="bi bi-question-circle-fill"
       title="{{ label }}"
@@ -21,7 +21,7 @@
     (change)="handleChange($event)"
     [ngClass]="{ required: isInvalid(), 'col-sm-9': isInline }"
   >
-    <option value="" disabled selected>
+    <option value="-1" disabled>
       {{ placeholder ? placeholder : 'Seleccione una opción' }}
     </option>
     <option *ngFor="let option of catalogo" [value]="option.id">
