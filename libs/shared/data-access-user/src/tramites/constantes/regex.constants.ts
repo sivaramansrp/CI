@@ -446,3 +446,25 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
+/**
+ * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Guiones (-)
+ *
+ * Desglose de la expresión regular:
+ * - `^`: Aserta el inicio de la cadena.
+ * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
+ * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
+ *
+ * Ejemplos de coincidencias:
+ * - "123-456" (coincide con "123-")
+ * - "  -789" (coincide con "  -")
+ * - "42" (coincide con "42")
+ *
+ * Ejemplos de no coincidencias:
+ * - "abc123" (no comienza con un dígito, espacio o guión)
+ * - "!@#" (no comienza con un carácter válido)
+ */
+export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
+
