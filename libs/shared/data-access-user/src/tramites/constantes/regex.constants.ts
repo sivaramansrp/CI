@@ -432,6 +432,19 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+
+/**
+ * Expresión regular que valida una llave de pago de derecho.
+ * 
+ * Esta expresión regular asegura que el valor ingresado contenga 
+ * únicamente caracteres alfanuméricos (letras mayúsculas, minúsculas y números).
+ * 
+ * Ejemplo de uso:
+ * - Válido: "abc123", "ABCDEF", "123456"
+ * - Inválido: "abc-123", "abc_123", "abc 123"
+ */
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
+
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  * 
@@ -462,5 +475,3 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
-
-export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
