@@ -103,7 +103,25 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+
+  /**
+ * @input mostrarScianBotones
+ * @description
+ * Indica si se deben mostrar los botones relacionados con la gestión de la tabla SCIAN en el componente.
+ * @type {boolean}
+ * @default true
+ */
+  @Input() mostrarScianBotones: boolean = true;
+  
+  /**
+ * @input mostrarNumeroYFecha
+ * @description
+ * Indica si se deben mostrar los campos de número de registro y fecha de caducidad en el formulario de mercancías.
+ * @type {boolean}
+ * @default true
+ */
   @Input() mostrarNumeroYFecha: boolean = true;
+
   /**
    * Referencia al componente `ManifiestosRepresentanteSeccionComponent`.
    */
@@ -511,6 +529,23 @@ export class DatosDelSolicitudModificacionComponent
     } else {
       this.eliminarNumeroYFechaControls();
     }
+    this.obtenerScianTablaDatos();
+  }
+
+  /**
+  * @method obtenerScianTablaDatos
+  * @description
+  * Método que obtiene los datos de la tabla SCIAN desde el servicio `EstablecimientoService` y los agrega al arreglo `personaparas`.
+  */
+  obtenerScianTablaDatos(): void {
+    this.establecimientoService
+      .getScianTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: ScianModel[]) => {
+        response?.forEach((resp: ScianModel) => {
+          this.personaparas.push(resp)
+        })
+      });
   }
 
   /**
