@@ -9,7 +9,7 @@
         (change)="onSelectionChange(option.value)"
         formControlName="seleccion"
       />
-      <span class="radio-label">{{ option.label }}</span>
+      <span class="radio-label" [ngClass]="{'bold': isBold}">{{ option.label }}</span>
       <span
         *ngIf="showTooltip && option.hint"
         class="bi bi-question-circle-fill fs-4 m-1"
