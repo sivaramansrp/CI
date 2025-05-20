@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   AlertComponent,
@@ -57,6 +57,12 @@ export class SolicitudPageComponent {
      * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
      */
   TEXTO_DE_ALERTA = SOLICITUD_32201_ENUM.TEXTO_DE_ALERTA;
+
+  /**
+   * Evento de salida que emite un valor de tipo cadena.
+   * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
 
   /**
    * Lista de pasos del asistente.
@@ -127,5 +133,12 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras(); // Navega al paso anterior.
       }
     }
+  }
+
+  /**
+   * Emite el evento continuar.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
   }
 }

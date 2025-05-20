@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
@@ -72,6 +72,11 @@ export class SolicitudComponent implements OnInit {
    * Archivo de medicamentos seleccionado.
    */
   archivoMedicamentos: File | null = null;
+
+  /**
+   * Evento de salida que emite cuando se hace clic en el botón continuar.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
 
   /**
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -219,6 +224,21 @@ export class SolicitudComponent implements OnInit {
     } else {
       this.elgirDeArchivo = this.elgirArchivo?.value;
     }
+  }
+
+  /**
+   * Emite el evento continuar.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
+  }
+
+  guardar(): void {
+    // updateOtrosTablaDatos([this.agregarDatosForm.value]);
+    // this.tramite32201Store.setSolicitud(this.solicitudForm.value);
+    // this.tramite32201Store.setMedicamentos(this.archivoMedicamentos);
+    // this.tramite32201Store.setManifiesto(this.solicitudForm.value.manifiesto);
+      
   }
 
   /**
