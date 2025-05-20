@@ -91,22 +91,18 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disabled).toBe(true);
   });
 
-  it('debe mostrar el modal con el mensaje correcto si cveRegistroProductor tiene un error de patrón', () => {
-    const MODAL_SPY = jest.spyOn(component, 'abrirModal');
+  it('debe mostrar la notificación correcta si cveRegistroProductor tiene un error de patrón', () => {
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('invalid');
     component.actualizaGridComercializadoresProductos();
-    expect(component.contenidoModal).toBe('Debe introducir la clave de registro');
-    expect(MODAL_SPY).toHaveBeenCalled();
+    expect(component.nuevaAlertaNotificacion.mensaje).toBe('Debe introducir la clave de registro.');
   });
 
-  it('debe mostrar el modal con el mensaje correcto si cveRegistroProductor no coincide con el valor esperado', () => {
-    const MODAL_SPY = jest.spyOn(component, 'abrirModal');
+  it('debe mostrar la notificación correcta si cveRegistroProductor no coincide con el valor esperado', () => {
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('999999');
     component.actualizaGridComercializadoresProductos();
-    expect(component.contenidoModal).toBe(
+    expect(component.nuevaAlertaNotificacion.mensaje).toBe(
       'El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.'
     );
-    expect(MODAL_SPY).toHaveBeenCalled();
   });
 
   it('debe completar el subject destroyed$ al destruir el componente', () => {

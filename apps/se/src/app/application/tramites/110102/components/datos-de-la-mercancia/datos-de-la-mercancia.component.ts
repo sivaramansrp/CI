@@ -1,17 +1,15 @@
 /**
  * Este componente maneja los datos de la mercancía.
  */
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { REG_X, TituloComponent } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, REG_X,TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
-
-import { Modal } from 'bootstrap';
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -19,22 +17,11 @@ import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-datos-de-la-mercancia',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
-  /**
-   * Referencia al modal de confirmación.
-   * @type {ElementRef}
-   */
-  @ViewChild ('confirmarModal') confirmarModal!: ElementRef;
-  /**
-   * Instancia del modal de confirmación.
-   * @type {Modal}
-   */
-  private modalInstance!: Modal;
-
   /**
    * Formulario para el registro de la mercancía del comercializador.
    * @type {FormGroup}
@@ -48,11 +35,12 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+
   /**
-   * Contenido del modal.
-   * @type {string}
+   * Notificación para mostrar alertas al usuario.
+   * @type {Notificacion}
    */
-  contenidoModal = '';
+  nuevaAlertaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -129,27 +117,35 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       REGISTRO_PRODUCTOR?.disable();
     }
 
-    if ( REGISTRO_PRODUCTOR?.value!== '') {
-      if(REGISTRO_PRODUCTOR?.hasError('pattern')===true){
-      this.contenidoModal='Debe introducir la clave de registro';
-      this.abrirModal();
+    if (REGISTRO_PRODUCTOR?.value !== '') {
+      if (REGISTRO_PRODUCTOR?.hasError('pattern') === true) {
+        this.nuevaAlertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe introducir la clave de registro.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
       }
-       else if (REGISTRO_PRODUCTOR?.value!== '254023028961') {
-      this.contenidoModal='El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.';
-      this.abrirModal();
-    }
+      else if (REGISTRO_PRODUCTOR?.value !== '254023028961') {
+        this.nuevaAlertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
+      }
     }
   }
-  /**
-   * Abre el modal de confirmación.
-   */
-  abrirModal(): void {
-    if (!this.modalInstance) {
-      this.modalInstance = new Modal(this.confirmarModal.nativeElement);
-    }
-    this.modalInstance.show();
-  }
-
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.
