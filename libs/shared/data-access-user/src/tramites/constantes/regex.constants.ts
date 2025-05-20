@@ -433,16 +433,15 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
 
-
 /**
  * Expresión regular que valida una llave de pago de derecho.
  * 
- * Esta expresión regular asegura que la cadena solo contenga caracteres alfanuméricos
- * (letras mayúsculas, minúsculas y números) sin espacios ni caracteres especiales.
+ * Esta expresión regular asegura que el valor ingresado contenga 
+ * únicamente caracteres alfanuméricos (letras mayúsculas, minúsculas y números).
  * 
  * Ejemplo de uso:
  * - Válido: "abc123", "ABCDEF", "123456"
- * - Inválido: "abc 123", "abc@123", "abc-123"
+ * - Inválido: "abc-123", "abc_123", "abc 123"
  */
 export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
 

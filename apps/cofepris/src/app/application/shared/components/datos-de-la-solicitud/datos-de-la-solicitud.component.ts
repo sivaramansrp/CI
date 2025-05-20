@@ -837,12 +837,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
 esCampoRequerido(campo: string): boolean {
-  const CONTROL = this.datosSolicitudForm.get(campo);
-  return (
-    this.elementosRequeridos?.includes(campo) &&
-    (CONTROL?.touched || CONTROL?.dirty) &&
-    CONTROL?.hasError('required') 
-  ) || false;
+ return this.elementosRequeridos?.includes(campo) ?? false;
 }
 
   /**
