@@ -89,6 +89,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       numeroEmpleados: ['', [Validators.required]],
       empleadosPropios: ['', [Validators.required, Validators.maxLength(8)]],
       archivoNacionales: ['', [Validators.required]],
+      comboBimestresTres: [''],
     });
   }
 
