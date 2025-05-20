@@ -380,7 +380,7 @@ ngOnInit(): void {
   });
 
   // Inicialización de datos y eventos
-  this.cambiarPestañaActiva();
+  this.cambiarPestanaActiva();
   this.getRadioJsonTipoPersona();
   this.getRadioJsonNacionalidad();
   this.obtenerEstado();
@@ -559,10 +559,10 @@ eliminarAccionistasExtrenjeros(): void {
 
 /**
  * compodoc
- * @method cambiarPestañaActiva
+ * @method cambiarPestanaActiva
  * Cambia la pestaña activa basada en la selección de nacionalidad y tipo de persona.
  */
-cambiarPestañaActiva(): void {
+cambiarPestanaActiva(): void {
   const NACIONALIDAD = this.formaAccionistas.get(
     'nacionalidadMexicana'
   )?.value;
