@@ -6,8 +6,19 @@ import { Injectable } from '@angular/core';
  * @returns SolicitudSectoresYMercancias
  */
 export interface SolicitudSectoresYMercanciasState {
+  /**
+   * Fracción de la solicitud
+   */
   fraccion: string;
+  
+  /**
+   * Sector de la solicitud
+   */
   sector: string;
+
+  /**
+   * RFC de la solicitud
+   */
   rfc: string;
 }
 
@@ -17,8 +28,19 @@ export interface SolicitudSectoresYMercanciasState {
  */
 export function createInitialState(): SolicitudSectoresYMercanciasState {
   return {
+    /**
+     * Fracción de la solicitud
+     */
     fraccion: '',
+
+    /**
+     * Sector de la solicitud
+     */
     sector: '',
+
+    /**
+     * RFC de la solicitud
+     */
     rfc: '',
   };
 }
@@ -36,7 +58,7 @@ export class TramiteSectoresYMercanciasStore extends Store<SolicitudSectoresYMer
    * Actualiza la fracción de la solicitud
    * @param fraccion
    */
-  public setFraccion(fraccion: string) {
+  public setFraccion(fraccion: string): void {
     this.update((state) => ({
       ...state,
       fraccion,
@@ -47,7 +69,7 @@ export class TramiteSectoresYMercanciasStore extends Store<SolicitudSectoresYMer
    * Actualiza el sector de la solicitud
    * @param sector
    */
-  public setSector(sector: string) {
+  public setSector(sector: string): void {
     this.update((state) => ({
       ...state,
       sector,
@@ -58,7 +80,7 @@ export class TramiteSectoresYMercanciasStore extends Store<SolicitudSectoresYMer
    * Actualiza el RFC de la solicitud
    * @param rfc
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
@@ -68,7 +90,7 @@ export class TramiteSectoresYMercanciasStore extends Store<SolicitudSectoresYMer
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

@@ -8,6 +8,8 @@
             [radioOptions]="opcionDeBotonDeRadio"
             [isRequired]="true"
             [layout]="'horizontal'"
+            formControlName="tipoOperacion"
+            (change)="changeEvent()"
           ></app-input-radio> 
      <div class="row">
         <div class="col-md-8">
@@ -405,9 +407,9 @@
    </div>
       
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar" (click)="onDeleted()">Eliminar</button>
-  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar" (click)="onModificar()">Modificar</button>
-  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()">Agregar</button>
+  <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar">Eliminar</button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" >Modificar</button>
+  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div class="alert alert-info">
