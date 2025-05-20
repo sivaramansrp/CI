@@ -1,3 +1,5 @@
+import exp from "constants";
+
 /**
  * @constant
  * @name CROSLISTA_DE_PAISES
@@ -170,10 +172,22 @@ export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111];
  *              relacionados con el destinatario proveedor.
  * @type {number[]}
  */
-export const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR = [240117];
 
+/**
+ * @const MOSTRAR_ASTERISCO
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const MOSTRAR_ASTERISCO = [240118];
 
-
+/**
+ * @const MOSTRAR_INFORMACION
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const MOSTRAR_INFORMACION = [240118];
 
 /**
  * Constante que representa los campos obligatorios para el proveedor.
