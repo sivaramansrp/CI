@@ -503,17 +503,26 @@
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="clasificacion"
-              [label]="'Clasificación del producto'" [required]="true" name="clasificacion"></app-catalogo-select>
+          <div class="form-group pt-3">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="clasificacion"
+              [label]="'Clasificación del producto'"
+              [required]="true"
+              name="clasificacion"
+            ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('clasificacion')">
               {{ getErrorMessage('clasificacion') }}
             </div>
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="especificarClasificacionProducto"
-              [label]="'Especificar clasificación del producto'" [required]="true"
-              name="especificarClasificacionProducto"></app-catalogo-select>
+          <div class="form-group pt-1">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="especificarClasificacionProducto"
+              [label]="'Especificar clasificación del producto'"
+              [required]="true"
+              name="especificarClasificacionProducto"
+            ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('especificarClasificacionProducto')">
               {{ getErrorMessage('especificarClasificacionProducto') }}
             </div>
@@ -535,15 +544,32 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="denominacionComun">Denominación o nombre científico*:</label>
-            <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" />
+            <label for="denominacionComun">
+              Denominación o nombre científico*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
+            <input
+              type="text"
+              id="denominacionComun"
+              formControlName="denominacionComun"
+              class="form-control"
+            />
             <div class="text-danger" *ngIf="getErrorMessage('denominacionComun')">
               {{ getErrorMessage('denominacionComun') }}
             </div>
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto" [label]="'Tipo de producto'"
-              [required]="true" name="tipoDeProducto"></app-catalogo-select>
+          <div class="form-group pt-1">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="tipoDeProducto"
+              [label]="'Tipo de producto'"
+              [required]="true"
+              name="tipoDeProducto"
+            ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('tipoDeProducto')">
               {{ getErrorMessage('tipoDeProducto') }}
             </div>
@@ -555,23 +581,46 @@
               {{ getErrorMessage('estadoFormaFarmaceutica') }}
             </div>
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="estadoFisico" [label]="'Estado físico'"
-              [required]="true" name="estadoFisico"></app-catalogo-select>
+          <div class="form-group pt-1">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="estadoFisico"
+              [label]="'Estado físico'"
+              [required]="true"
+              name="estadoFisico"
+            ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('estadoFisico')">
               {{ getErrorMessage('estadoFisico') }}
             </div>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" />
+            <label for="fraccionArancelaria">Fracción arancelaria*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
+            <input
+              type="text"
+              id="fraccionArancelaria"
+              formControlName="fraccionArancelaria"
+              class="form-control"
+            />
             <div class="text-danger" *ngIf="getErrorMessage('fraccionArancelaria')">
               {{ getErrorMessage('fraccionArancelaria') }}
             </div>
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">Descripción de la fracción*:</label>
-            <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" />
+            <label for="descripcionFraccion"
+              >Descripción de la fracción arancelaria*:</label
+            >
+            <input
+              type="text"
+              id="descripcionFraccion"
+              formControlName="descripcionFraccion"
+              class="form-control"
+            />
             <div class="text-danger" *ngIf="getErrorMessage('descripcionFraccion')">
               {{ getErrorMessage('descripcionFraccion') }}
             </div>
@@ -588,8 +637,19 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="UMT">UMT*:</label>
-                <input type="text" id="UMT" formControlName="UMT" class="form-control" />
+                <label for="UMT">UMT*:
+                  <span
+                   class="bi bi-question-circle-fill"
+                   title="UMT"
+                  data-bs-toggle="tooltip"
+                  ></span>
+                </label>
+                <input
+                  type="text"
+                  id="UMT"
+                  formControlName="UMT"
+                  class="form-control"
+                />
                 <div class="text-danger" *ngIf="getErrorMessage('UMT')">
                   {{ getErrorMessage('UMT') }}
                 </div>
