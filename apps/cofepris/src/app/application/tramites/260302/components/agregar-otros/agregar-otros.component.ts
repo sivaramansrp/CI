@@ -1,5 +1,6 @@
 import {
   Catalogo,
+  CatalogoSelectComponent,
   InputRadioComponent,
   REGEX_NOMBRE,
   TipoPersona,
@@ -34,6 +35,7 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
     ReactiveFormsModule,
     TituloComponent,
     InputRadioComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './agregar-otros.component.html',
   styleUrl: './agregar-otros.component.scss',
@@ -89,6 +91,8 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * Se inicializa como un objeto vacío de tipo `Otros`.
    */
   public datoSeleccionado!: Otros;
+
+
 
   /**
    * @constructor
