@@ -12,6 +12,7 @@
             class="form-check-input"
             formControlName="nacionalidad"
             [value]="nacionalStr"
+            (change)="changeNacionalidad()"
           />
           Nacional
         </div>
@@ -21,6 +22,7 @@
             class="form-check-input"
             formControlName="nacionalidad"
             value="Extranjero"
+            (change)="changeNacionalidad()"
           />
           Extranjero
         </div>
@@ -33,11 +35,12 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.FISICA"
+            (change)="changeNacionalidad()"
           />
           Física
           <span
           class="bi bi-question-circle-fill"
-          title="Física"
+          title="Una persona física es entendida como toda persona con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
@@ -47,24 +50,26 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.MORAL"
+            (change)="changeNacionalidad()"
           />
           Moral
           <span
           class="bi bi-question-circle-fill"
-          title="Moral"
+          title="Una persona moral es entendida como una empresa con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
       </div>
     </div>
 
-    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
+    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr || 
+        agregarFabricanteForm.get('nacionalidad')?.untouched){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.*:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="R.F.C"
+        title="Registro Federal de Contribuyente"
         data-bs-toggle="tooltip"
       ></span>
         <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" />
@@ -78,9 +83,14 @@
         </div>
       </div>
       @if (!estaOculto) {
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
+        <div *ngIf="esInvalido('curp')" class="text-danger">
+          <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       }
     </div>
@@ -186,7 +196,8 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="elementosDeshabilitados.includes('pais')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -195,7 +206,8 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
-          [isDisabled]="this.elementosDeshabilitados.includes('estado')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -204,7 +216,8 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [isDisabled]="this.elementosDeshabilitados.includes('municipio')"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
     </div>
@@ -215,7 +228,9 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('localidad')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -223,7 +238,9 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -231,7 +248,9 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
+          [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('colonia')"
+          [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
     </div>
@@ -251,7 +270,7 @@
         <label class="form-label">Calle*:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="Calle"
+        title="Domicilio, calle, número interior, número exterior, lote"
         data-bs-toggle="tooltip"
       ></span>
         <input type="text" [maxlength]="100" class="form-control" formControlName="calle" />
@@ -303,7 +322,7 @@
         <label class="form-label mx-1">Correo electrónico</label>
         <span
           class="bi bi-question-circle-fill"
-          title="Correo electrónico"
+          title="ejemplo@dominio.com"
           data-bs-toggle="tooltip"
         ></span>
         <input
@@ -320,9 +339,12 @@
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <div class="pull-right">
+    <div class="row my-5">
+      <div class="col-md-6">
+          <p>* Campos obligatorios</p>
+      </div>
+      <div class="col-md-6">
+        <div class="pull-right mb-5">
           <button
             type="button"
             name="modificarMercancias"

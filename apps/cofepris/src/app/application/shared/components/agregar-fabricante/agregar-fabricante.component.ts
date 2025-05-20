@@ -1,4 +1,10 @@
-import { Catalogo, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_NOMBRE,
+  TELEFONO_DIGITOS,
+  TipoPersona,
+} from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
@@ -138,6 +144,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   @Input() estaOculto!: boolean;
 
   /**
+   * @property {Fabricante | undefined} datoSeleccionado
+   * Dato seleccionado que se pasará al componente hijo `AgregarFabricanteComponent`.
+   */
+  @Input() datoSeleccionado: Fabricante[] | undefined;
+
+  /**
    * Indica si se debe mostrar la colonia o equivalente.
    * @type {boolean}
    * @input
@@ -157,6 +169,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * los elementos que deben ser obligatorios en el formulario.
    */
   public elementosNoRequeridos: string[] = [];
+
+  /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -183,6 +201,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
+    this.changeNacionalidad();
     this.mostarColoniaOEquivalente =
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
@@ -197,77 +216,103 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   crearAgregarFormularioFabricante(): void {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: [this.nacionalStr, Validators.required],
+      nacionalidad: ['', Validators.required],
       tipoPersona: ['', Validators.required],
-      rfc: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      curp: ['', Validators.required],
-      nombres: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      primerApellido: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      segundoApellido: ['', [Validators.pattern(REGEX_NOMBRE)]],
-      razonSocial: ['', [Validators.pattern(REGEX_NOMBRE)]],
+      rfc: [
+        this.obtenerValor('rfc'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
+      curp: [
+        this.obtenerValor('curp'),
+        this.estaOculto ? [] : Validators.required,
+      ],
+      nombres: [
+        this.obtenerValor('nombres'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
+      primerApellido: [
+        this.obtenerValor('primerApellido'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
+      segundoApellido: [
+        this.obtenerValor('segundoApellido'),
+        [Validators.pattern(REGEX_NOMBRE)],
+      ],
+      razonSocial: [
+        this.obtenerValor('razonSocial'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
       pais: [
         {
-          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          value: this.elementosDeshabilitados.includes('pais')
+            ? '1'
+            : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
         Validators.required,
       ],
       estado: [
         {
-          value: this.elementosDeshabilitados.includes('estado') ? '1' : '',
+          value: this.elementosDeshabilitados.includes('estado')
+            ? '1'
+            : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
         },
         Validators.required,
       ],
       municipio: [
         {
-          value: this.elementosDeshabilitados.includes('municipio') ? '1' : '',
+          value: this.elementosDeshabilitados.includes('municipio')
+            ? '1'
+            : this.obtenerValor('municipioAlcaldia'),
           disabled: this.elementosDeshabilitados.includes('municipio'),
         },
         Validators.required,
       ],
       localidad: [
-        '',
+        this.obtenerValor('localidad'),
         !this.elementosNoRequeridos.includes('localidad')
           ? [Validators.required]
           : [],
       ],
       codigoPostal: [
-        '',
+        this.obtenerValor('codigoPostal'),
         !this.elementosNoRequeridos.includes('codigoPostal')
           ? [Validators.required]
           : [],
       ],
       colonia: [
-        '',
+        this.obtenerValor('colonia'),
         !this.elementosNoRequeridos.includes('colonia')
           ? [Validators.required]
           : [],
       ],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
+      calle: [this.obtenerValor('calle'), Validators.required],
+      numeroExterior: [
+        this.obtenerValor('numeroExterior'),
+        Validators.required,
+      ],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada')],
       telefono: [
         {
-          value: this.elementosDeshabilitados.includes('telefono')
-            ? '3461235'
-            : '',
+          value: this.obtenerValor('telefono') ? '3461235' : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
           value: this.elementosDeshabilitados.includes('correoElectronico')
             ? 'abc@njk.com'
-            : '',
+            : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
-      adunasDeEntradas: ['', Validators.required],
-      coloniaOEquivalente: [{ value: '', disabled: true }],
+      coloniaOEquivalente: [
+        { value: this.obtenerValor('coloniaEquivalente'), disabled: true },
+      ],
     });
   }
 
@@ -286,14 +331,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
         this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
         break;
       case 260201:
-        this.elementosDeshabilitados = [
-          'pais',
-          'estado',
-          'municipio',
-          'telefono',
-          'correoElectronico',
-        ];
-        this.elementosNoRequeridos = ['localidad', 'colonia'];
+        this.elementosDeshabilitados = ['pais'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -306,18 +344,23 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
+    if (this.agregarFabricanteForm.status === 'INVALID') {
+      this.agregarFabricanteForm.markAllAsTouched();
+      return;
+    }
+
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
     let nombreRazonSocial: string;
 
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+      nombreRazonSocial = VALOR_FORMULARIO.razonSocial; // <-- yahan sahi karo
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
       nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
         VALOR_FORMULARIO.primerApellido
       } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
-      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+      nombreRazonSocial = '';
     }
     const NUEVO_FABRICANTE: Fabricante = {
       nombreRazonSocial: nombreRazonSocial,
@@ -335,15 +378,16 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       entidadFederativa: VALOR_FORMULARIO.estado,
       estadoLocalidad: VALOR_FORMULARIO.estado,
       codigoPostal: VALOR_FORMULARIO.codigoPostal,
-      coloniaEquivalente: VALOR_FORMULARIO.correoElectronico,
+      coloniaEquivalente: VALOR_FORMULARIO.coloniaOEquivalente,
+      nombres: VALOR_FORMULARIO.nombres,
+      primerApellido: VALOR_FORMULARIO.primerApellido,
+      segundoApellido: VALOR_FORMULARIO.segundoApellido,
+      razonSocial: VALOR_FORMULARIO.razonSocial,
+      lada: VALOR_FORMULARIO.lada,
     };
 
-    // Agregar el nuevo fabricante al arreglo
     this.fabricantes.push(NUEVO_FABRICANTE);
-
     this.updateFabricanteTablaDatos.emit(this.fabricantes);
-
-    // Regresar a la vista anterior
     this.ubicaccion.back();
   }
 
@@ -420,12 +464,50 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @param {string} nombreControl - Nombre del control a verificar.
    * @returns {boolean} - True si el control es inválido, de lo contrario false.
    */
-    public esInvalido(nombreControl: string): boolean {
-      const CONTROL = this.agregarFabricanteForm.get(nombreControl);
-      return CONTROL
-        ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-        : false;
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarFabricanteForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof Fabricante} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(field: keyof Fabricante): string | number | undefined {
+    return this.datoSeleccionado?.[0]?.[field as keyof Fabricante] ?? '';
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el estado de los campos
+   * 'nacionalidad' y 'tipoPersona'. Si ambos están vacíos o indefinidos, deshabilita
+   * todos los controles excepto estos dos. Si alguno tiene valor, habilita todos los controles.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (
+      (this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
+        this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined) &&
+      (this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
+        this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined)
+    ) {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
     }
+    else {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
+  }
 
   /**
    * Hook que se ejecuta al destruir el componente.

@@ -1,5 +1,5 @@
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
 import { Component, Input } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -34,20 +34,20 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-facturador.component.css',
 })
 export class AgregarFacturadorComponent implements OnInit, OnDestroy {
-   /**
-     * Identificador del procedimiento actual.
-     * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
-     *
-     * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
-     */
-   @Input()
-   idProcedimiento!: number;
-   /**
+  /**
+   * Identificador del procedimiento actual.
+   * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+   *
+   * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+   */
+  @Input()
+  idProcedimiento!: number;
+  /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben estar deshabilitados en el formulario.
    */
-   public elementosDeshabilitados: string[] = [];
+  public elementosDeshabilitados: string[] = [];
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -79,11 +79,25 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   facturadores: Facturador[] = [];
 
+   /**
+   * @property {Facturador | undefined} datoSeleccionado
+   * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
+   */
+  @Input() datoSeleccionado: Facturador[] | undefined;
+
   /**
    * Evento de salida que emite la lista de facturadores actualizada.
    * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
    */
   @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
+
+
+
+  /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
 
   /**
    * Constructor que inicializa el formulario y servicios necesarios.
@@ -99,7 +113,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location
   ) {
-   // Constructor vacío, se inyectan las dependencias para su uso en el componente.
+    // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
 
   /**
@@ -107,65 +121,63 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.cargarDatos();
-    this.validarElementos();
     this.crearAgregarFormularioFacturador();
+    this.changeNacionalidad();
   }
 
   /**
    * Método que inicializa el formulario reactivo y valida los elementos según el procedimiento.
    * @returns {void}
    */
-  crearAgregarFormularioFacturador():void{
+  crearAgregarFormularioFacturador(): void {
     this.agregarFacturadorForm = this.fb.group({
-      tipoPersona: ['Fisica', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
+      tipoPersona: ['', Validators.required],
+      nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      primerApellido: [
+        this.obtenerValor('primerApellido'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
+      ],
+      segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.pattern(REGEX_NOMBRE)]],
+      pais: [this.obtenerValor('pais'), Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
+      codigoPostal: [this.obtenerValor('codigoPostal')],
+      colonia: [this.obtenerValor('colonia')],
+      calle: [this.obtenerValor('calle'), Validators.required],
+      numeroExterior: [
+        this.obtenerValor('numeroExterior'),
+        Validators.required,
+      ],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada')],
+      denominacionRazon: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       telefono: [
-        {
+        { 
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
-            : '',
+            : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
           value: this.elementosDeshabilitados.includes('correoElectronico')
             ? 'abc@njk.com'
-            : '',
+            : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
 
-   /**
-   * Valida elementos según el `idProcedimiento` y establece
-   * las listas de elementos no válidos y añadidos.
-   * @returns {void} Lista de elementos no válidos.
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof Facturador } field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
    */
-   validarElementos(): void {
-    switch (this.idProcedimiento) {
-      case 260201:
-        this.elementosDeshabilitados = [
-          'telefono',
-          'correoElectronico'
-        ];
-      
-        break;
-      default:
-        this.elementosDeshabilitados = [];
-    }
+  public obtenerValor(field: keyof Facturador): string | number | undefined {
+    return this.datoSeleccionado?.[0]?.[field as keyof Facturador] ?? '';
   }
 
   /**
@@ -186,6 +198,11 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
+    if (this.agregarFacturadorForm.status === 'INVALID') {
+      this.agregarFacturadorForm.markAllAsTouched();
+      return;
+    }
+
     const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
 
     let nombreRazonSocial: string;
@@ -200,12 +217,11 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_FACTURADOR: Facturador = {
-      nombreRazonSocial:nombreRazonSocial,
+      nombreRazonSocial: nombreRazonSocial,
       rfc: '',
       curp: '',
       telefono: VALOR_FORMULARIO.telefono || '',
-      correoElectronico:
-        VALOR_FORMULARIO.correoElectronico || '',
+      correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
       calle: VALOR_FORMULARIO.calle || '',
       numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
       numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
@@ -217,6 +233,11 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       estadoLocalidad: '',
       codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
+        nombres: VALOR_FORMULARIO.nombres,
+      primerApellido: VALOR_FORMULARIO.primerApellido,
+      segundoApellido: VALOR_FORMULARIO.segundoApellido,
+      razonSocial: VALOR_FORMULARIO.razonSocial,
+      lada: VALOR_FORMULARIO.lada,
     };
 
     this.facturadores.push(NUEVO_FACTURADOR);
@@ -241,6 +262,45 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarFacturadorForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el valor de `tipoPersona`.
+   * Si `tipoPersona` está vacío, deshabilita todos los campos excepto el propio `tipoPersona`.
+   * Si tiene valor, habilita todos los campos y activa el desplegable de nacionalidad.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (this.agregarFacturadorForm?.value?.tipoPersona === '') {
+      Object.keys(this.agregarFacturadorForm.controls).forEach(
+        (controlName) => {
+          this.agregarFacturadorForm.get(controlName)?.disable();
+          if (controlName === 'tipoPersona') {
+            this.agregarFacturadorForm.get(controlName)?.enable();
+          }
+        }
+      );
+    } else {
+      Object.keys(this.agregarFacturadorForm.controls).forEach(
+        (controlName) => {
+          this.agregarFacturadorForm.get(controlName)?.enable();
+          this.estaDeshabilitadoDesplegable = false;
+        }
+      );
+    }
   }
 
   /**
