@@ -10,7 +10,7 @@ import { Observable ,map} from 'rxjs';
 
 import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 
-import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
+import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante, ScianModel } from '../models/datos-de-la-solicitud.model';
 /**
  * @class EstablecimientoService
  * @description
@@ -169,6 +169,16 @@ export class EstablecimientoService {
    */
   getFabricanteDatos(): Observable<JSONResponse> {
     return this.http.get<JSONResponse>('./assets/json/260701/fabricante-tabla.json');
+  }
+
+  /**
+  * @method getScianTablaDatos
+  * @description
+  * Recupera los datos de la tabla SCIAN desde un archivo JSON local.
+  * @returns {Observable<ScianModel>} Observable con los datos de la tabla SCIAN.
+  */
+  getScianTablaDatos(): Observable<ScianModel[]> {
+    return this.http.get<ScianModel[]>('./assets/json/260902/scian-tabla.json');
   }
 }
 

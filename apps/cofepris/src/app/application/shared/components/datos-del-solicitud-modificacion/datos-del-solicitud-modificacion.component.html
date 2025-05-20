@@ -542,7 +542,8 @@
       </div>
     </div>
 
-    <div class="d-flex justify-content-end">
+    @if (mostrarScianBotones) {
+      <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-default btn-space me-2">
         Eliminar
       </button>
@@ -556,6 +557,7 @@
         Agregar
       </button>
     </div>
+    }
   </form>
 
   <form [formGroup]="solicitudEstablecimientoForm">
