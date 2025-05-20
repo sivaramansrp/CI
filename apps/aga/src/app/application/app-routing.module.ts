@@ -47,6 +47,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-iva-ieps',
+    loadChildren: () =>
+      import('./tramites/31202/renewal-vat-ieps-mod-aa.module').then(
+        (m) => m.RenewalVatIepsModAAModule)
+      },
+  {
     path: 'retorno-contenedores',
     loadChildren: () =>
       import('./tramites/11202/retorno-contenedores.module').then(
@@ -157,15 +163,22 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
+  {
     path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then((m) => m.InvocarModule),
   },
   {
-    path: 'attention-Of-Renewal',
+    path: 'atencion-de-renovacion',
     loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
+      import('./tramites/40403/atencion-de-renovacion.module').then(
+        (m) => m.AtencionDeRenovacionModule
       ),
   },
   {
@@ -197,6 +210,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'junta-tecnica-registro',
+    loadChildren: () =>
+      import('./tramites/6102/junta-tecnica-registro.module').then(
+        (m) => m.JuntaTecnicaRegistroModule
+      ),
+  },
+  {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
       import(
@@ -217,6 +237,14 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      ),
+  },
+
   {
     path: 'prestadores-servicio',
     loadChildren: () =>
@@ -253,6 +281,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'desistir-solicitud-informacion-historica',
+    loadChildren: () => 
+      import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
+        (m) => m.DesistirSolicitudInformacionHistoricaModule)
+  },
+  {
     path: 'registro-transportista',
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
@@ -260,7 +294,89 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'proceso-requerimiento',
+    path: 'concluir-relacion',
+    loadChildren: () =>
+      import('./tramites/420103/concluir-relacion.module').then(
+        (m) => m.ConcluirRelacionModule
+      ),
+  },
+  {
+    path: 'tecnologicos',
+    loadChildren: () =>
+      import('./tramites/324/tecnologicos.module').then(
+        (m) => m.TecnologicosModule),
+  },
+  {
+    path: 'autorizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/6402/autorizacion-importacion.module').then(
+        (m) => m.AutorizacionImportacionModule),
+  },
+  {
+
+    path: 'autorizacion-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630103/autorizacion-importacion-temporal.module').then(
+        (m) => m.AutorizacionImportacionTemporalModule),
+  },
+  {
+    path: 'modificacion-donaciones-immex',
+    loadChildren: () =>
+      import('./tramites/11102/modificacion-donaciones-immex.module').then(
+        (m) => m.ModificacionDonacionesImmexModule),
+  },
+  {
+    path: 'retorno-de-partes',
+    loadChildren: () =>
+      import('./tramites/6403/retorno-de-partes.module').then(
+        (m) => m.RetornoDePartesModule),
+  },
+  {
+    path: 'operaciones-de-comercio',
+    loadChildren: () =>
+      import('./tramites/319/operaciones-de-comercio-exterior.module').then(
+        (m) => m.OperacionesDeComercioExteriorModule)
+  },
+  {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10703/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  },
+  {
+    path: 'autorizacion/mercancia-donada',
+    loadChildren: () =>
+      import('./tramites/103/autorizacion-mercancia-donada.module').then(
+        (m) => m.AutorizacionMercanciaDonadaModule
+      ),
+  },
+  {
+    path: 'registrar-proveedores',
+    loadChildren: () =>
+      import('./tramites/420101/registrar-proveedores.module').then(
+        (m) => m.RegistrarProveedoresModule),
+  },
+  {
+    path: 'concluir-relacion',
+    loadChildren: () =>
+      import('./tramites/420102/concluir-relacion.module').then(
+        (m) => m.ConcluirRelacionModule),
+  },
+  {
+    path: 'solicitud-despacho-exportacion',
+    loadChildren: () =>
+      import('./tramites/5601/solicitud-despacho-exportacion.module').then(
+        (m) => m.SolicitudDespachoExportacionModule)
+  },
+  {
+    path: 'renovacion-iva-ieps/mod-a',
+    loadChildren: () =>
+      import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
+        (m) => m.RenewalVatIepsModAModule),
+  },
+  {
+  path: 'proceso-requerimiento',
     loadComponent: () =>
       import('./proceso-requerimiento/proceso-requerimiento.component').then(
         (m) => m.ProcesoRequerimientoComponent
@@ -286,7 +402,7 @@ const ROUTES: Routes = [
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       ),
-  },
+  }
 ];
 
 @NgModule({

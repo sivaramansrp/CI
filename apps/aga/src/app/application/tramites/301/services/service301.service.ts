@@ -1,15 +1,19 @@
 import { Solicitud301State, Tramite301Store } from '../../../core/estados/tramites/tramite301.store';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { APPINJECT } from 'apps/aga/src/app/app.inject';
 import { Observable } from 'rxjs';
-import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Solocitud301Service {
-  urlServer = enviroment.URL_SERVER;
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  private readonly appConfig = inject(APPINJECT);
+  urlServer = this.appConfig.URL_SERVER;
+  urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient, private tramite301Store: Tramite301Store,) { 
     // Lógica de inicialización si es necesario

@@ -1,0 +1,11 @@
+<form [formGroup]="forma">
+    <div class="row">
+      <formas-dinamicas
+        formularioTitulo="Programa seleccionado "
+        [forma]="ninoFormGroup"
+        [formularioDatos]="programaSeleccionado"
+        [estado]="solicitudState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>

@@ -46,6 +46,37 @@
           "budgets": [
             {
               "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "4mb"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
+          "customWebpackConfig": {
+            "path": "apps/dashboard/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/dashboard/src/app/environments/environment.ts",
+              "with": "apps/dashboard/src/app/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "qa": {
+          "budgets": [
+            {
+              "type": "initial",
               "maximumWarning": "500kb",
               "maximumError": "1mb"
             },
@@ -56,9 +87,22 @@
             }
           ],
           "outputHashing": "all",
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": true,
+          "buildOptimizer": true,
           "customWebpackConfig": {
-            "path": "apps/dashboard/webpack.prod.config.ts"
-          }
+            "path": "apps/dashboard/webpack.config.ts"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/dashboard/src/app/environments/environment.ts",
+              "with": "apps/dashboard/src/app/environments/environment.qa.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
@@ -69,7 +113,7 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@nx/angular:module-federation-dev-server",
@@ -83,6 +127,9 @@
         },
         "development": {
           "buildTarget": "dashboard:build:development"
+        },
+        "qa": {
+          "buildTarget": "dashboard:build:qa"
         }
       },
       "defaultConfiguration": "development"

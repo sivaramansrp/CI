@@ -30,6 +30,13 @@
           </div>
         </div>
       </div>
+      <ng-container *ngIf="insumos; else noInsumos">
+        <section>
+          <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
+        </section>
+      </ng-container>
+      <ng-template #noInsumos>
+        <section>
       <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
       <div class="row">
         <div class="col-md-8"></div>
@@ -68,6 +75,8 @@
           </div>
         </div>
       </div>
+     </section>
+     </ng-template>
       <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
@@ -107,10 +116,12 @@
           </div>
         </div>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="!insumos">
         <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
       </div>
-
+      <div class="row mt-5" *ngIf="insumos">
+        <ng-alert [CONTENIDO]="TEXTOS_INSUMOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -211,7 +222,7 @@
             (change)="actualizarValoresStore(datosSolicitudform,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
         </div>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="!insumos">
         <div class="col-md-4 ms-auto">
           <lib-input-check [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'" [id]="'aifaCheckbox'"
             [required]="true" formControlName="aifaCheckbox"
@@ -229,6 +240,7 @@
         <div class="container text-end mt-5">
           <button class="btn btn-default me-2">Modificar</button>
           <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" *ngIf="insumos">Agregar</button>
         </div>
       </div>
     </div>
@@ -255,6 +267,12 @@
         (change)="actualizarValoresStore(manifiestosRepresentanteForm,'informacionConfidencialRadio', 'setInformacionConfidencialRadio')"></app-input-radio>
     </div>
   </form>
+  @if (insumos) {
+    <section>
+    <app-representante-legal-rfc></app-representante-legal-rfc>
+  </section>
+  }
+  
 </div>
 @if (nuevaNotificacion) {
 <section>

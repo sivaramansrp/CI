@@ -3,10 +3,17 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Solicitud importacion regla octava temporal</h1>
+                <h1>Solicitud importación regla octava temporal</h1>
             </div>
-            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+            @if (mostrarErrorFormularios) {
+                <div class="col-12">
+                    <ng-alert [CUSTOMECLASS]="'alert-danger'" [CONTENIDO]="registroAlert"></ng-alert>
+                  </div>
+              }
         </div>
+            <div class="row">
+                <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+            </div>
         <div class="row">
             @switch (indice) {
             @case (1) {

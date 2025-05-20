@@ -10,6 +10,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PermisoModel } from '../models/datos-domicilio-legal.model';
+import { TercerosFabricanteQuery } from '../estados/queries/terceros-fabricante.query';
+import { TercerosFabricanteState } from '../estados/stores/terceros-fabricante.store';
 
 /**
  * Servicio para obtener datos de terceros relacionados y permisos desde archivos JSON locales.
@@ -23,7 +25,7 @@ export class TercerosFabricanteService {
    *
    * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
    */
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient,private query: TercerosFabricanteQuery) {
     // Constructor del servicio
   }
 
@@ -69,12 +71,21 @@ export class TercerosFabricanteService {
     );
   }
 
-  /**
-   * Obtiene los datos de un archivo JSON local.
-   *
-   * @returns Observable que emite un arreglo de objetos PermisoModel.
-   */
+ /**
+ * Recupera los datos desde un archivo JSON local.
+ *
+ * @returns Un `Observable` que emite un arreglo de objetos `PermisoModel`.
+ */
   getTable(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260501/terceros.json');
   }
+
+  /**
+ * Obtiene el estado actual de "Terceros Fabricante" desde el store.
+ *
+ * @returns Un `Observable` que emite el objeto `TercerosFabricanteState`.
+ */
+  getTercerosFabricanteState(): Observable<TercerosFabricanteState> {
+       return this.query.selectSolicitud$;
+     }
 }

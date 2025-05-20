@@ -1,9 +1,11 @@
-import { BsModalRef, BsModalService, ModalDirective, ModalModule, } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalDirective, ModalModule, ModalOptions, } from 'ngx-bootstrap/modal';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, } from '@angular/core';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { PreviewDocumentoComponent } from '../preview-documento/preview-documento.component';
+import { title } from 'process';
 
 
 /**
@@ -56,6 +58,10 @@ export interface Notificacion {
    * @remarks Este texto se muestra en el modal de confirmación.
    */
   txtBtnCancelar: string;
+
+  tamanioModal?: string;
+
+  ruta?: string;
 }
 
 /**
@@ -67,6 +73,7 @@ export enum TipoNotificacionEnum {
   TOASTR = 'toastr',
   BANNER = 'banner'
 }
+
 
 /**
  * Enum que contiene los tipos de noficiaciones que pueden ser mostrados dentro de la
@@ -122,6 +129,7 @@ export class NotificacionesComponent implements OnChanges {
    */
   public verBanner: boolean = false;
 
+
   /**
    * Referencia al modal automático mostrado.
    * Utiliza `ModalDirective` para controlar su comportamiento.
@@ -131,22 +139,34 @@ export class NotificacionesComponent implements OnChanges {
   constructor(
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
-  ) {
-    //
-  }
+    private modalService: BsModalService
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['notificacionInput']) {
       this.notificacionInput = changes['notificacionInput'].currentValue;
       switch (this.notificacionInput?.tipoNotificacion) {
         case TipoNotificacionEnum.ALERTA:
-          this.abrirModal();
+          if (this.notificacionInput.modo === 'html') {
+            this.sanitizarContenidoHtml();
+            this.abrirModal();
+          } else if (this.notificacionInput.modo === 'pdf') {
+            const ESTADO_INICIAL: ModalOptions = {
+              initialState: {
+                ruta: this.notificacionInput.mensaje,
+                title: this.notificacionInput.titulo,
+              }
+            }
+            this.modalRef = this.modalService.show(PreviewDocumentoComponent, ESTADO_INICIAL);
+          } else {
+            this.abrirModal();
+          }
           break;
         case TipoNotificacionEnum.TOASTR:
           this.creaToastr();
           break;
         case TipoNotificacionEnum.BANNER:
-          this.muestraBanner();
+          this.sanitizarContenidoHtml();
           break;
         default:
           break;
@@ -202,6 +222,7 @@ export class NotificacionesComponent implements OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   declinarAccion(): void {
+    this.confirmacionModal.emit(false);
     this.modal?.hide();
   }
 
@@ -215,13 +236,12 @@ export class NotificacionesComponent implements OnChanges {
   }
   // #Termina lógica de modal
 
-  // #Seccion de Banner
   /**
-   * Muestra un banner sanitizando el mensaje de entrada para evitar problemas de seguridad.
+   * Sanitiza el mensaje de entrada para evitar problemas de seguridad.
    * 
    * @returns {void} No retorna ningún valor.
    */
-  muestraBanner(): void {
+  sanitizarContenidoHtml(): void {
     this.notificacionInput.mensaje = this.sanitizer.bypassSecurityTrustHtml(this.notificacionInput.mensaje) as string;
   }
 }

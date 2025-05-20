@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'flora-fauna-silvestre',
+    loadChildren: () =>
+      import('./tramites/250102/flora-fauna.module').then(
+        (m) => m.FloraFaunaModule
+      ),
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
       import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
