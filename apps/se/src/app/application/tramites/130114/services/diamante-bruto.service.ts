@@ -67,10 +67,15 @@ export class DiamanteBrutoService {
       'assets/json/130114/producto-otions.json'
     );
   }
+
+  /**
+   * Obtiene los datos de las partidas de la mercancía desde un archivo JSON.
+   * @returns {Observable<PartidasDeLaMercanciaModelo[]>} Un observable que emite una lista de modelos de partidas de la mercancía.
+   */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-      return this.http.get<PartidasDeLaMercanciaModelo[]>(
-            'assets/json/130114/partidas-de-la.json'
-          );
-    }
+    return this.http.get<PartidasDeLaMercanciaModelo[]>(
+      'assets/json/130114/partidas-de-la.json'
+    );
+  }
 }
 

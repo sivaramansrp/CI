@@ -1,0 +1,270 @@
+<div class="container mt-4">
+  <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
+  <form [formGroup]="agregarDestinatarioFinal">
+    <input type="hidden" formControlName="descPais"/>
+    <input type="hidden" formControlName="descEstado"/>
+    <input type="hidden" formControlName="descMunicipio"/>
+    <input type="hidden" formControlName="descLocalidad"/>
+    <input type="hidden" formControlName="descCodigoPostal"/>
+    <input type="hidden" formControlName="descColonia"/>
+    <!-- Datos Generales -->
+    <h4>Datos generales</h4>
+    <div class="row">
+      <div class="col-md-6"></div>
+      <div class="col-md-6 offset-md-6">
+        <label class="form-label">Tipo persona*:</label>
+          <div class="mt-2">
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                  formControlName="tipoPersona"></app-input-radio>
+              </div>
+                  <div *ngIf="agregarDestinatarioFinal.get('tipoPersona')?.errors?.['required'] && (agregarDestinatarioFinal.get('tipoPersona')?.touched || agregarDestinatarioFinal.get('tipoPersona')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label class="form-label">R.F.C*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
+        <input type="text" class="form-control" formControlName="rfc" />
+        <div *ngIf="agregarDestinatarioFinal.get('rfc')?.errors?.['required'] && (agregarDestinatarioFinal.get('rfc')?.touched || agregarDestinatarioFinal.get('rfc')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === '0') {
+    <div class="row">
+      <div class="form-group">
+        <label
+          class="form-label row mt-3 mover-izquierda fs-2"
+          for="denominacionRazon"
+          >Denominación/razón social*:</label
+        >
+        <input
+          class="form-control col-md-4"
+          id="denominacionRazon"
+          type="text"
+          formControlName="denominacionRazon"
+        />
+        <div *ngIf="agregarDestinatarioFinal.get('denominacionRazon')?.errors?.['required'] && (agregarDestinatarioFinal.get('denominacionRazon')?.touched || agregarDestinatarioFinal.get('denominacionRazon')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Datos Personales -->
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === '1') {
+    <div class="row mt-3">
+      <h4 class="mt-5">Datos personales</h4>
+      <div class="col-md-4">
+        <label class="form-label">Nombre(s)*:</label>
+        <input type="text" class="form-control" formControlName="nombres" />
+        <div *ngIf="agregarDestinatarioFinal.get('nombres')?.errors?.['required'] && (agregarDestinatarioFinal.get('nombres')?.touched || agregarDestinatarioFinal.get('nombres')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Primer apellido*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="primerApellido"
+        />
+        <div *ngIf="agregarDestinatarioFinal.get('primerApellido')?.errors?.['required'] && (agregarDestinatarioFinal.get('primerApellido')?.touched || agregarDestinatarioFinal.get('primerApellido')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Segundo apellido:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="segundoApellido"
+        />
+      </div>
+    </div>
+    } 
+    
+    <h4 class="mt-5">Domicilio</h4>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+          [disabled]="true"
+          (change)="cambiaPais()"
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('pais')?.errors?.['required'] && (agregarDestinatarioFinal.get('pais')?.touched || agregarDestinatarioFinal.get('pais')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="estadosDatos"
+          formControlName="estado"
+          [label]="'Estado/localidad'"
+          [required]="true"
+          (change)="cambiaEstado()"
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('estado')?.errors?.['required'] && (agregarDestinatarioFinal.get('estado')?.touched || agregarDestinatarioFinal.get('estado')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="municipiosDatos"
+          formControlName="municipio"
+          [label]="'Municipio/alcaldía'"
+          [required]="true"
+          (change)="cambiaMunicipio()"
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('municipio')?.errors?.['required'] && (agregarDestinatarioFinal.get('municipio')?.touched || agregarDestinatarioFinal.get('municipio')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="localidadesDatos"
+          formControlName="localidad"
+          [label]="'Localidad'"
+          [required]="true"
+          (change)="cambiaLocalidad()"
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('localidad')?.errors?.['required'] && (agregarDestinatarioFinal.get('localidad')?.touched || agregarDestinatarioFinal.get('localidad')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="codigosPostalesDatos"
+          formControlName="codigoPostal"
+          [label]="'Código postal o equivalente'"
+          [required]="true"
+          (change)="cambiaCodigoPostal()"
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('codigoPostal')?.errors?.['required'] && (agregarDestinatarioFinal.get('codigoPostal')?.touched || agregarDestinatarioFinal.get('codigoPostal')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="coloniasDatos"
+          formControlName="colonia"
+          [label]="'Colonia'"
+          [required]="false"
+          (change)="cambiaColonia()"
+          
+        ></app-catalogo-select>
+        <div *ngIf="agregarDestinatarioFinal.get('colonia')?.errors?.['required'] && (agregarDestinatarioFinal.get('colonia')?.touched || agregarDestinatarioFinal.get('colonia')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="row mt-3">
+      <div class="col-md-9">
+        <label class="form-label">Calle</label>
+        <span class="form-label">*</span>
+        <span class="form-label">:</span>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Física"
+        data-bs-toggle="tooltip"
+      ></span>
+        <input type="text" class="form-control" formControlName="calle" />
+        <div *ngIf="agregarDestinatarioFinal.get('calle')?.errors?.['required'] && (agregarDestinatarioFinal.get('calle')?.touched || agregarDestinatarioFinal.get('calle')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Número exterior</label>
+        <span class="form-label">*</span>
+        <span class="form-label">:</span>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroExterior"
+        />
+        <div *ngIf="agregarDestinatarioFinal.get('numeroExterior')?.errors?.['required'] && (agregarDestinatarioFinal.get('numeroExterior')?.touched || agregarDestinatarioFinal.get('numeroExterior')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="form-label">Número interior:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroInterior"
+        />
+      </div>
+      <div class="col-md-1">
+        <label class="form-label">Lada:</label>
+        <input type="text" class="form-control" formControlName="lada" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Teléfono:</label>
+        <input type="text" class="form-control" formControlName="telefono" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Correo electrónico:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Física"
+        data-bs-toggle="tooltip"
+      ></span>
+        <input
+          type="email"
+          class="form-control"
+          formControlName="correoElectronico"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            name="eliminarMercancias"
+            class="btn btn-danger ms-2"
+            (click)="limpiarFormulario()"
+          >
+            Limpar
+          </button>
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            (click)="guardarDestinatario()"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

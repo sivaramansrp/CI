@@ -225,7 +225,7 @@
   aria-hidden="true"
   #modalAgregarMercancias
 >
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
     <div class="modal-content">
       <div class="modal-body mb-4">
         <form [formGroup]="agregarMercanciasForm">
@@ -242,6 +242,9 @@
                   (change)="fraccionArancelariaSeleccion()"
                   name="fraccionArancelaria"
                 ></app-catalogo-select>
+                <div *ngIf="isInvalid('fraccionArancelaria')" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-8">
                 <label>Descripción de la fracción arancelaria:</label>
@@ -274,6 +277,9 @@
                   [required]="true"
                   (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
                 />
+                <div *ngIf="isInvalid('cantidad')" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-8">
                 <label for="cantidadComercial">Cantidad(letra)</label>
@@ -303,6 +309,9 @@
                     [required]="true"
                     name="genero"
                   ></app-catalogo-select>
+                  <div *ngIf="isInvalid('genero')" class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -314,6 +323,9 @@
                     [required]="true"
                     name="especie"
                   ></app-catalogo-select>
+                  <div *ngIf="isInvalid('especie')" class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -325,6 +337,9 @@
                     [required]="true"
                     name="nombreComun"
                   ></app-catalogo-select>
+                  <div *ngIf="isInvalid('nombreComun')" class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
               </div>
             </div>
@@ -384,7 +399,7 @@
   aria-hidden="true"
   #modalConfirmacion
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content modalsm">
       <div class="modal-body">
         <label>Seleccione la descripcion<br />del producto</label>
