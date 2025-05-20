@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
 import { ALERT } from '../../constants/constantes.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**

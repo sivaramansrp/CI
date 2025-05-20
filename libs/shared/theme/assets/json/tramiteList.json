@@ -157,7 +157,7 @@
     "id": 23,
     "tramite": 40103,
     "linkDashboard": "/aga/modificar-caat-terrestre/solicitante",
-    "linkDepartment": "/aga/modificar-caat-terrestre/solicitante",
+    "linkDepartment": "/pago/modificar-caat-terrestre/solicitante",
     "department": "aga"
   },
   {
@@ -171,7 +171,7 @@
     "id": 25,
     "tramite": 80101,
     "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
-    "linkDepartment": "/se/pago/nuevo-programa-industrial/action",
+    "linkDepartment": "/pago/nuevo-programa-industrial/action",
     "department": "se"
   },
   {
@@ -185,7 +185,7 @@
     "id": 27,
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
-    "linkDepartment": "/se/immex-ampliacion-sensibles/solicitud",
+    "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
     "department": "agace"
   },
   {
@@ -786,8 +786,8 @@
   {
     "id": 113,
     "tramite": 32301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso/aviso-modificacion",
+    "linkDepartment": "/pago/aviso/aviso-modificacion",
     "department": "agace"
   },
   {
@@ -1206,8 +1206,8 @@
   {
     "id": 173,
     "tramite": 31201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-a",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-a",
     "department": "aga"
   },
   {
@@ -1339,8 +1339,8 @@
   {
     "id": 192,
     "tramite": 31202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aa",
     "department": "aga"
   },
   {
@@ -1402,8 +1402,8 @@
   {
     "id": 201,
     "tramite": 31603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud31603",
+    "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud31603",
     "department": "agace"
   },
   {
@@ -1899,8 +1899,8 @@
   {
     "id": 272,
     "tramite": 230201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/phytosanitary-export/solicitud",
+    "linkDepartment": "/pago/phytosanitary-export/solicitud",
     "department": "semarnat"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
     "department": "se"
   },
   {
@@ -2578,8 +2578,8 @@
   {
     "id": 370,
     "tramite": 10703,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/importador-exportador/modification-exencion-impuestos",
+    "linkDepartment": "/pago/importador-exportador/modification-exencion-impuestos",
     "department": "aga"
   },
   {
