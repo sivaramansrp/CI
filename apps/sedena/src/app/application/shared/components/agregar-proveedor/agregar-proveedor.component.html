@@ -132,7 +132,7 @@
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('codigoPostal')?.touched && agregarProveedorForm.get('codigoPostal')?.hasError('required')" class="text-danger">
-            Este campo es obligatorio.
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
           <small *ngIf="agregarProveedorForm.get('codigoPostal')?.touched && agregarProveedorForm.get('codigoPostal')?.hasError('maxlength')" class="text-danger">
             Máximo 12 caracteres permitidos.
@@ -157,7 +157,7 @@
           />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')" class="text-danger">
-            Este campo es obligatorio.
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
           <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('maxlength')" class="text-danger">
             Máximo 300 caracteres permitidos.
@@ -248,7 +248,7 @@
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('email')" class="text-danger">
-            El correo electrónico no es válido.
+            Por favor, escribe una dirección de correo válida.
           </small>
           <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('maxlength')" class="text-danger">
             Máximo 320 caracteres permitidos.

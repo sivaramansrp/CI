@@ -38,7 +38,12 @@
     @if(agregarProveedorForm.get('nacionalidad')?.value !== 'Extranjero' && !esRFC) {
     <div class="row mt-5">
       <div class="col-md-6">
-        <label class="form-label">R.F.C. * :</label>
+        <label class="form-label">R.F.C. * : </label>
+        <span
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="R.F.C."
+          ata-bs-toggle="tooltip"
+        ></span>
         <input type="text" class="form-control" formControlName="rfc" maxlength="15"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('rfc')?.touched && agregarProveedorForm.get('rfc')?.hasError('required')" class="text-danger">
@@ -186,7 +191,7 @@
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('codigoPostal')?.touched && agregarProveedorForm.get('codigoPostal')?.hasError('required')" class="text-danger">
-            Este campo es obligatorio.
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
           <small *ngIf="agregarProveedorForm.get('codigoPostal')?.touched && agregarProveedorForm.get('codigoPostal')?.hasError('required')" class="text-danger">
             Máximo 12 caracteres permitidos.
@@ -294,11 +299,18 @@
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Calle<span *ngIf="campoObligatorioProveedor"> *</span> :</label>
+        <label class="form-label">Calle<span *ngIf=" mostrarAsterisco"> *</span> : </label>
+        <span
+          *ngIf="mostrarInformacion"
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="R.F.C."
+          ata-bs-toggle="tooltip"
+        ></span>
+        
         <input type="text" class="form-control" formControlName="calle" maxlength="300"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')" class="text-danger">
-            Este campo es obligatorio.
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
           <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('maxlength')" class="text-danger">
             Máximo 300 caracteres permitidos.
@@ -367,7 +379,7 @@
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('email')" class="text-danger">
-            El correo electrónico no es válido.
+            Por favor, escribe una dirección de correo válida
           </small>
           <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('maxlength')" class="text-danger">
             Máximo 320 caracteres permitidos.
