@@ -1,196 +1,283 @@
 import {
-  CatalogosSelect,
-  DocumentosCargados,
-} from '../../../core/models/shared/components.model';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import {
-  DPI,
-  MB,
-  PDF
-} from '../../constantes/constantes';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input, OnChanges, OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChildren
+} from '@angular/core';
+import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, MENSAJES_MODAL, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, catchError, map, of, take, takeUntil } from 'rxjs';
+
+import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
+import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
+
+import { NgSelectModule } from '@ng-select/ng-select';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
 
+import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
+import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
-
-
-declare const BOOTSTRAP: { Modal: { getInstance: (element: HTMLElement) => { hide: () => void } | null } }; // Importación para manejar Bootstrap en TS
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
+import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
 
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, FormsModule, NotificacionesComponent],
   templateUrl: './anexar-documentos.component.html',
-  styleUrl: './anexar-documentos.component.scss',
+  styleUrl: './anexar-documentos.component.scss'
 })
-export class AnexarDocumentosComponent implements OnInit {
-  @Input() catalogoDocumentos: Catalogo[] = [];
-  documentoForma!: FormGroup;
+export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * @description Catalogo de documentos obligatorios.
+   * @type {CatalogoDocumento[]}
+   */
+  @Input() catalogoDocumentos: CatalogoDocumento[] = [];
+  
+  /**
+   * @description Catalogo de documentos opcionales.
+   * @type {CatalogoDocumento[]}
+   */
+  @Input() catalogoDocumentosOpcionales: CatalogoDocumento[] = [];
 
-  PDF = PDF;
-  MB = MB;
-  DPI = DPI;
+  /**
+   * @description Evento para cargar archivos.
+   * @type {EventEmitter<void>}
+   */
+  @Input() cargaArchivosEvento!: EventEmitter<void>;
 
-  tamMaximo: number = 0;
-  tiposDocumentos!: CatalogosSelect;
-  documentosCargados: DocumentosCargados[] = [];
-  documentoSeleccionado!: Catalogo;
-  mostrarModal: boolean = false;
+  /**
+   * @description Evento para regresar a la sección de carga de documentos.
+   * @type {EventEmitter<void>}
+   */
+  @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
-  modal: string = '';
-  indiceDocumento!: number;
+  /**
+   * @description Evento para indicar que la carga de documentos se ha realizado.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() cargaRealizada = new EventEmitter<boolean>();
 
-  datosLogin: Login = {
-    user: 'user1@example.com',
-    password: 'clave1',
+  /**
+   * @description Evento para activar el botón de carga de archivos.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() activarBotonCargaArchivos = new EventEmitter<boolean>();
+
+  /**
+   * @description Lista de referencias a los elementos del DOM con la etiqueta 'fileInput'.
+   * Utilizada para gestionar múltiples inputs de archivo en el componente.
+   * @type {QueryList<ElementRef>}
+   */
+  @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
+
+
+  /**
+   * @description Constantes para la unidad del tamaño de los archivos.
+   * @type {string}
+   */
+  readonly MB = UNIDADES_DOCUMENTOS.MB;
+
+  /**
+   * @description Constantes para la unidad de DPI.
+   * @type {string}
+   */
+  readonly DPI = UNIDADES_DOCUMENTOS.DPI;
+
+  /**
+   * @description Estatus de la carga del documento
+   * @type {string}
+   */
+
+  readonly ESTATUS_CARGA_DOCUMENTO = ESTATUS_CARGA_DOCUMENTO;
+
+
+  /**
+   * @description Objeto para almacenar el documento seleccionado.
+   * @type {CatalogoDocumento}
+   */
+  documentoSeleccionado!: CatalogoDocumento;
+
+  /**
+   * @description VAriable para almacenar el token de autenticación.
+   * @type {string}
+   */
+  token!: string;
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales agregados.
+   * @type {number[]}
+   */
+  listDocOpcionalesAgregar: number[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos para cargar.
+   * @type {DocumentosParaCargar[]}
+   */
+  listadoArchivos: DocumentosParaCargar[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales duplicados.
+   */
+  documentosOpcionalesSeleccionados: CatalogoDocumento[] = [];
+
+  /**
+   * @description Variable para almacenar el estado de la carga de documentos.
+   * @type {boolean}
+   */
+  cargarDocumentos = false;
+
+  /**
+   * @description Objeto para almacenar los archivos que se están cargando.
+   * @type {any}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  archivosCargando: any = {
+    obligatorios: [],
+    opcionales: []
   };
 
-  token!: string;
-  base64File: string = '';
+  /**
+   * @description Variable para controlar la visibilidad de la sección de carga de archivos.
+   * @type {boolean}
+   */
+  mostrarSeccionCargaArchivos: boolean = true;
 
-  readonly url: string = URL_PRUEBA;
+  /**
+   * @description Notificador utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject<void>();
 
+  /**
+   * @description Estado de los documentos.
+   * @type {DocumentosState}
+   */
+  private documentosState!: DocumentosState;
 
-  @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
+  public nuevaNotificacion!: Notificacion;
 
   constructor(
-    private toastr: ToastrService,
-    private inicioSesionService: InicioSesionService,
+    private documentosQuery: DocumentosQuery,
+    private documentosStore: DocumentosStore,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder,
-  ) { 
-    // Lógica de inicialización si es necesario
-  }
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit(): void {
-    this.obtenerToken(this.datosLogin);
-    this.crearFormaDocumento();
-  }
-
-  /**
-   * Verifica si hay documentos cargados.
-   * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
-   */
-  get docCargados(): boolean {
-    return this.documentosCargados.length > 0;
-  }
-
-  /**
-   * Determina si el botón de carga debe estar desactivado.
-   * @returns {boolean} `true` si no hay un documento seleccionado, de lo contrario `false`.
-   */
-  get btnDesactivado(): boolean {
-    return !(this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
-  }
-
-  /**
-   * Obtiene el token de autenticación.
-   * @param {Login} body - Datos de inicio de sesión.
-   */
-  obtenerToken(body: Login): void {
-    this.inicioSesionService.obtenerToken(body).subscribe({
-      next: (resp): void => {
-        this.token = resp.jwt;
-      },
-      error: (error): void => {
-        return error;
-      },
-    });
-  }
-
-  crearFormaDocumento(): void {
-    this.documentoForma = this.fb.group({
-      documento: ['', [Validators.required]],
-    });
-  }
-
-  /**
-   * Selecciona un documento de la lista de documentos disponibles y actualiza
-   * las propiedades `documentoSeleccionado` y `tamMaximo` en base al documento seleccionado.
-   *
-   * @remarks
-   * - Obtiene el valor del documento desde el formulario `documentoForma`.
-   * - Busca el documento en el catálogo de documentos `catalogoDocumentos` por su ID.
-   * - Si el documento tiene un tamaño definido, lo convierte de kilobytes a megabytes
-   *   y lo asigna a `tamMaximo`. Si no, asigna 0 a `tamMaximo`.
-   *
-   * @returns {void} Esta función no retorna ningún valor.
-   */
-  seleccionarDocumento(): void {
-    const DOCUMENTO = this.documentoForma.get('documento')?.value;
-    const DOCUMENTO_ENCONTRADO= this.catalogoDocumentos.find(
-      (doc) => doc.id === DOCUMENTO
-    );
-    if (DOCUMENTO_ENCONTRADO) {
-      this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
-    } else {
-      this.toastr.error('Documento no encontrado');
-      return;
-    }
-    this.tamMaximo = this.documentoSeleccionado?.tam
-      ? this.convertirKilobytesAMegabytes(
-        parseInt(this.documentoSeleccionado.tam, 10)
+  
+    this.cargaArchivosEvento
+      .pipe(takeUntil(this.destroyNotifier$),
+        map(() => this.confirmUpload())
       )
-      : 0;
+      .subscribe();
+
+    this.regresarSeccionCargarDocumentoEvento
+      .pipe(takeUntil(this.destroyNotifier$),
+        map(() => this.mostrarSeccionCargaArchivosAccion())
+      )
+      .subscribe();
+
   }
 
   /**
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
+   * @param fileInput file proveniente del input
+   * @param id del catalog de documentos a cargar
+   * @param tipo de documento que se está agregando obligatorio u opcional
    */
-  cargarDoc(event: Event): void {
+  cargarDoc(event: Event, fileInput: HTMLInputElement, id: number, tipo: string): void {
     const ARCHIVO = event.target as HTMLInputElement;
-    const INFORMACION_ARCHIVO= (ARCHIVO.files as FileList)[0];
+    const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
 
     if (INFORMACION_ARCHIVO) {
-      const EXT_ARCHIVO = INFORMACION_ARCHIVO.name
-        .split('.')
-        .pop()
-        ?.toLowerCase();
-
-      if (EXT_ARCHIVO !== this.PDF.toLowerCase()) {
-        this.toastr.error('Solo se aceptan archivos pdf');
+      const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
+      if (EXTENSION_ARCHIVO !== UNIDADES_DOCUMENTOS.PDF.toLowerCase()) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: '',
+          mensaje: MENSAJES_DOCUMENTOS.ONL_YPDF,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+        fileInput.value = '';
         return;
       }
 
-      const TAMANIO_REQUERIDO = this.documentoSeleccionado.tam
-        ? this.convertirKilobytesABytes(
-          parseInt(this.documentoSeleccionado.tam, 10)
-        )
-        : 0;
-      const TAMANIO_ARCHIVO = INFORMACION_ARCHIVO.size;
+      this.documentoSeleccionado = this.catalogoDocumentos.find(doc => doc.id === id) as CatalogoDocumento;
+      const TAMANIO_REQUERIDO: number = AnexarDocumentosComponent.convertirKbaBytes(this.documentoSeleccionado.tam);
+      const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
 
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
-        this.toastr.error(
-          'El tamaño del documento que intenta cargar excede el tamaño permitido'
-        );
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: '',
+          mensaje: MENSAJES_DOCUMENTOS.MAX_SIZE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+        fileInput.value = '';
         return;
       }
-
-      this.subirDocumentoService.subirDocumento(
-        this.token,
-        INFORMACION_ARCHIVO
-      ).subscribe({
-        next: (): void => {
-          this.toastr.success('Documento subido');
-        },
-        error: (_error): void => {
-          this.toastr.error('Error al subir el documento');
-        },
+      this.listadoArchivos.push({
+        name: INFORMACION_ARCHIVO.name,
+        id,
+        archivo: INFORMACION_ARCHIVO,
+        ruta: URL.createObjectURL(INFORMACION_ARCHIVO),
+        cargado: false,
+        tipo,
+        mensaje: '',
+        estatus: 'Pendiente'
       });
 
-      this.documentosCargados.push({
-        tipoDocumento: this.documentoSeleccionado,
-        nombreArchivo: INFORMACION_ARCHIVO.name,
-      });
+      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     }
+  }
+
+  /**
+   * Verifica si un archivo ya existe en la lista de archivos cargados.
+   * @param {number} id - El ID del archivo a verificar.
+   * @returns {boolean} `true` si el archivo ya existe, de lo contrario `false`.
+   */
+  existePreview(id: number): boolean {
+    const ENCONTRADO = this.listadoArchivos.find(f => f.id === id);
+    return ENCONTRADO !== undefined;
+  }
+
+  /**
+   * Sube un archivo al servidor.
+   * @param {any} informacionArchivo - Información del archivo a subir.
+   * @returns {Promise<any>} Promesa que se resuelve cuando la carga se completa.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  uploadFiles(informacionArchivo: any): Promise<any> {
+    return new Promise((resolve) => {
+      this.subirDocumentoService.subirDocumento(this.token, informacionArchivo)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map(() => ({ cargado: true, mensaje: 'Correcto', estatus: 'OK' })),
+          catchError(() => of({ cargado: false, mensaje: 'Error al cargar', estatus: 'Error al cargar' }))
+        )
+        .subscribe(resolve);
+    });
   }
 
   /**
@@ -198,65 +285,286 @@ export class AnexarDocumentosComponent implements OnInit {
    * @param {number} kilobytes - El tamaño en kilobytes.
    * @returns {number} El tamaño en megabytes.
    */
-   convertirKilobytesAMegabytes(kilobytes: number): number {
+  // eslint-disable-next-line class-methods-use-this
+  convertirKilobytesAMegabytes(kilobytes: number): number {
     return Math.round(kilobytes / 1024);
   }
 
   /**
-   * Convierte kilobytes a bytes.
-   * @param {number} kilobytes - El tamaño en kilobytes.
-   * @returns {number} El tamaño en bytes.
-   */
-  convertirKilobytesABytes(kilobytes: number): number {
-    return kilobytes * 1024;
-  }
-
-  /**
    * Abre un archivo PDF en una nueva pestaña del navegador.
-   *
-   * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
+   * @param id
    */
-  verPdf(url: string): void {
-    window.open(url, '_blank');
-  }
-
-  /**
- * Abre el modal para eliminar un documento.
- * @param {number} i - El índice del documento.
- */
-  abrirModal(i: number):void {
-    this.modal = 'show';
-    this.indiceDocumento = i;
-  }
-
-  /**
-   * Muestra el modal para ver un documento.
-   * @param {number} i - El índice del documento.
-   * @param {string} accion - La acción a realizar.
-   */
-  verDocumento(i: number, accion: string):void {
-    this.mostrarModal = accion === 'v';
-  }
-
-  /**
-   * Elimina un documento de la lista.
-   * @param {number} i - El índice del documento.
-   */
-  eliminarDocumento(i: number): void {
-    this.documentosCargados.splice(i, 1);
-    this.cerrarModal();
-    this.toastr.success('Se ha eliminado el archivo exitosamente');
-  }
-
-  /**
-   * Cierra el modal.
-   */
-  cerrarModal(): void {
-    const MODAL_ELEMENT= this.modalConfirmacion.nativeElement;
-    const MODAL_INSTANCE = BOOTSTRAP.Modal.getInstance(MODAL_ELEMENT);
-    if (MODAL_INSTANCE) {
-      MODAL_INSTANCE.hide();
+  verPdf(id: number): void {
+    const RUTA = this.listadoArchivos.find(f => f.id === id)?.ruta;
+    this.limpiarNotificacion();
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'pdf',
+      titulo: 'Vista previa documento',
+      mensaje: RUTA ? RUTA.toString() : '',
+      cerrar: false,
+      txtBtnAceptar: 'Cargar archivos',
+      txtBtnCancelar: 'Cerrar',
+      tamanioModal: 'modal-lg'
     }
   }
+
+  /**
+   * Abre el modal para confirmar la carga de documentos
+   */
+  confirmUpload(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'html',
+      titulo: 'Carga de archivos',
+      mensaje: MENSAJES_MODAL.INFORMACION_SUBIR_DOCUMENTOS,
+      cerrar: false,
+      txtBtnAceptar: 'Cargar archivos',
+      txtBtnCancelar: 'Cerrar',
+      tamanioModal: 'modal-lg'
+    }
+  }
+
+  confirmarCargaArchivos(acepta: boolean): void {
+    if (acepta) {
+      this.cargarDocumentos = true;
+      this.mostrarSeccionCargaArchivos = false;
+      this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
+      this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
+      this.cargarArchivos(this.archivosCargando.obligatorios);
+      this.cargarArchivos(this.archivosCargando.opcionales);
+      this.cargaRealizada.emit(this.cargarDocumentos);
+    }
+  }
+
+  /**
+   * Limpia el archivo seleccionado y lo elimina de la lista de archivos.
+   * @param {CatalogoDocumento} item - El documento a limpiar.
+   * @param {string} tipo - El tipo de documento (obligatorio u opcional).
+   * @returns {void}
+   */
+  limpiarFile(item: CatalogoDocumento, tipo: string): void {
+    let FILE_INPUT: HTMLInputElement | null = null;
+    if (tipo === 'obligatorios') {
+      FILE_INPUT = document.getElementById(`formFile${item.id}`) as HTMLInputElement;
+    } else if (tipo === 'opcionales') {
+      FILE_INPUT = document.getElementById(`formFileOpcionales${item.id}`) as HTMLInputElement;
+    }
+
+    if (FILE_INPUT) {
+      FILE_INPUT.value = ''; // Limpia el archivo seleccionado
+    }
+
+    const INDEX_ARCHIVO: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+    if (INDEX_ARCHIVO !== -1) {
+      this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
+    }
+
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+  }
+
+  /**
+   * Agrega una parte adicional a un documento.
+   * @param {CatalogoDocumento} item - El documento al que se le agregará la parte.
+   * @param {string} origen - El origen del documento (obligatorios u opcionales).
+   * @returns {void}
+   */
+  agregarParte(item: CatalogoDocumento, origen: string): void {
+    if (origen === 'obligatorios') {
+      const INDICE: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
+      if (INDICE !== -1) {
+        const NUEVO_ID: number = (this.catalogoDocumentos[INDICE]?.adicionales?.length ?? 0) + 1;
+        const PARTE_DOCUMENTO: CatalogoDocumento = {
+          id: parseInt(`${item.id}0${NUEVO_ID}`, 10),
+          descripcion: item.descripcion,
+          tam: item.tam,
+          dpi: item.dpi,
+          nuevo: true,
+          uniqueId: crypto.randomUUID()
+        };
+        this.catalogoDocumentos[INDICE].adicionales?.push(PARTE_DOCUMENTO);
+      }
+    } else {
+      const INDICE: number = this.documentosOpcionalesSeleccionados.findIndex(doc => doc.id === item.id);
+      if (INDICE !== -1) {
+        const NUEVO_ID: number = (this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.length ?? 0) + 1;
+        const PARTE_DOCUMENTO: CatalogoDocumento = {
+          id: parseInt(`${item.id}0${NUEVO_ID}`, 10),
+          descripcion: item.descripcion,
+          tam: item.tam,
+          dpi: item.dpi,
+          nuevo: true,
+          uniqueId: crypto.randomUUID()
+        };
+        this.documentosOpcionalesSeleccionados[INDICE].adicionales?.push(PARTE_DOCUMENTO);
+      }
+    }
+  }
+
+  /**
+   * Convierte un tamaño en kilobytes a megabytes.
+   * @param {string | undefined} size - El tamaño en kilobytes como cadena o indefinido.
+   * @returns {string} El tamaño convertido a megabytes como cadena.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  convertKbToMb(size: string | undefined): string {
+    if (size === undefined) {
+      return '0';
+    }
+    return String((parseInt(size, 10) / 1000).toFixed(2));
+  }
+
+  static convertirKbaBytes(size: string | undefined): number {
+    if (size === undefined) {
+      return 0;
+    }
+    return (parseInt(size, 10) * 1000);
+  }
+
+  /**
+   * Agrega documentos opcionales a la lista de documentos opcionales.
+   * @returns {void}
+   * @description Esta función recorre la lista de documentos opcionales a agregar y verifica si ya existen en la lista de documentos opcionales.
+   */
+  agregarOpcionales(): void {
+    this.listDocOpcionalesAgregar.forEach((doc: number) => {
+
+      const INDICE = this.documentosOpcionalesSeleccionados.findIndex((f: CatalogoDocumento) => f.id === doc);
+      if (INDICE === -1) {
+        const OPCIONAL = this.catalogoDocumentosOpcionales.find(f => f.id === doc) as CatalogoDocumento;
+
+        this.documentosOpcionalesSeleccionados.push(OPCIONAL);
+        const INDICE_OPCIONAL = this.catalogoDocumentosOpcionales.findIndex(f => f.id === doc);
+        if (INDICE_OPCIONAL !== -1) {
+          this.catalogoDocumentosOpcionales[INDICE_OPCIONAL] = {
+            ...this.catalogoDocumentosOpcionales[INDICE_OPCIONAL]
+          };
+        }
+      }
+    });
+
+    this.listDocOpcionalesAgregar = [];
+  }
+
+  /**
+   * Carga los archivos seleccionados.
+   * @param {any[]} archivosCargando - Lista de archivos a cargar.
+   * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  async cargarArchivos(archivosCargando: any[]): Promise<void> {
+    for (const ARCHIVO of archivosCargando) {
+      const DATA = await this.uploadFiles(ARCHIVO.archivo);
+      ARCHIVO.mensaje = DATA.mensaje;
+      ARCHIVO.cargado = false;
+      ARCHIVO.estatus = 'cargado';
+    }
+  }
+
+  /**
+   * Elimina un documento opcional de la lista de documentos opcionales.
+   * @param {CatalogoDocumento} item - El documento a eliminar.
+   * @returns {void}
+   */
+  eliminarOpcional(item: CatalogoDocumento): void {
+    const INDICE: number = this.documentosOpcionalesSeleccionados.findIndex(f => f.id === item.id);
+    if (INDICE !== -1) {
+      if (this.documentosOpcionalesSeleccionados[INDICE] &&
+        this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
+        this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: CatalogoDocumento) => {
+          const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
+          this.listadoArchivos.splice(INDICE_LISTADO, 1);
+        });
+      }
+
+      const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+      this.listadoArchivos.splice(INDICE_LISTADO, 1);
+
+      this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
+    }
+    const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(id => id === item.id);
+    if (INDICE_AGREGAR !== -1) {
+      this.listDocOpcionalesAgregar.splice(INDICE_AGREGAR, 1);
+      this.listDocOpcionalesAgregar = [...this.listDocOpcionalesAgregar];
+    }
+    this.cdr.detectChanges();
+
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+  }
+
+  /**
+   * Elimina un nuevo documento de la lista de documentos.
+   * @param {any} item - El documento a eliminar.
+   * @param {boolean} adicional - Indica si el documento es adicional.
+   * @returns {void}
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  eliminarNuevo(item: any, adicional = false): void {
+    if (adicional) {
+      const INDICE_ADICIONAL = item.item.adicionales.findIndex((adicional: CatalogoDocumento) => adicional.id === item.adicional.id);
+      item.item.adicionales.splice(INDICE_ADICIONAL, 1);
+      const INDICE: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+      this.listadoArchivos.splice(INDICE, 1);
+
+      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['catalogoDocumentos']) {
+      this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
+        ...item,
+        adicionales: []
+      }));
+    }
+
+    if (changes['catalogoDocumentosOpcionales']) {
+      this.catalogoDocumentosOpcionales = this.catalogoDocumentosOpcionales.map(item => ({
+        ...item,
+        adicionales: []
+      }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Muestra la sección de carga de archivos y emite un evento para activar el botón de carga de archivos.
+   * @returns {void}
+   */
+  mostrarSeccionCargaArchivosAccion(): void {
+    this.mostrarSeccionCargaArchivos = true;
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.cargado === true);
+
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    this.cargaRealizada.emit(false);
+  }
+
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: '',
+      categoria: '',
+      modo: '',
+      titulo: '',
+      mensaje: '',
+      cerrar: false,
+      txtBtnAceptar: '',
+      txtBtnCancelar: '',
+      tamanioModal: ''
+    }
+  }
+
+
 }

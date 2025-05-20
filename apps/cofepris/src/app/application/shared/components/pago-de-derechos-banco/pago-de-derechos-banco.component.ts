@@ -5,7 +5,8 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -90,12 +91,12 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
 
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.solicitudState?.claveDeReferencia],
-        cadenaDependencia: [this.solicitudState?.cadenaDependencia],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
+        cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required, Validators.maxLength(14)]],
         banco: [this.solicitudState?.banco],
-        llaveDePago: [this.solicitudState?.llaveDePago],
-        fechaPago: [this.solicitudState?.fechaPago],
-        importePago: [this.solicitudState?.importePago],
+        llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],
+        fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
+        importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroEntero]],
       }),
     });
   }
@@ -111,6 +112,18 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
       .subscribe((data): void => {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
+  }
+
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.datosImportadorExportador.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.datosImportadorExportador, 'fechaPago', 'setFechaPago');
   }
 
   /**
@@ -131,6 +144,15 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   }
 
   /**
+  * @method borrarDatos
+  * @description
+  * Método que limpia los datos del formulario relacionado con el importador/exportador.
+  */
+  borrarDatos(): void {
+    this.datosImportadorExportador.reset();
+  }
+
+  /**
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.
    */
@@ -145,5 +167,22 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    */
   get datosImportadorExportador(): FormGroup {
     return this.formSolicitud.get('datosImportadorExportador') as FormGroup;
+  }
+  static validarNumeroEntero(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === '')
+      { return null;
+      }
+    return Number.isInteger(Number(VALOR)) ? null : { notWholeNumber: true };
+  }
+  static validarFechaNoFutura(control: AbstractControl): ValidationErrors | null {
+    const FECHA_INGRESADA = new Date(control.value);
+    const FECHA_ACTUAL = new Date();
+  
+    // Clear time for accurate comparison
+    FECHA_INGRESADA.setHours(0, 0, 0, 0);
+    FECHA_ACTUAL .setHours(0, 0, 0, 0);
+  
+    return FECHA_INGRESADA > FECHA_ACTUAL ? { fechaFuturaInvalida: true } : null;
   }
 }

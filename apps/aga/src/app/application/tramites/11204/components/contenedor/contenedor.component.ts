@@ -494,7 +494,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Agregar solicitud.
    */
   agregarSolicitud(): void {
-    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;

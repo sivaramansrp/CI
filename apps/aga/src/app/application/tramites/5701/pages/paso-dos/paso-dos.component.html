@@ -1,7 +1,17 @@
-<div class="container">
-  <ng-titulo titulo="Requisitos opcionales" />
+<div class="row">
+  <div class="col-md-12" *ngIf="!cargaRealizada">
+    <lib-notificaciones
+      [notificacionInput]="alertaNotificacion"
+    ></lib-notificaciones>
+  </div>
 
-  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
-
-  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+  <div class="col-md-12">
+    <carga-documento
+      [idTipoTRamite]="'5701'"
+      [cargaArchivosEvento]="reenviarEvento"
+      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion"
+      (cargaRealizada)="documentosCargados($event)"
+      (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+    ></carga-documento>
+  </div>
 </div>

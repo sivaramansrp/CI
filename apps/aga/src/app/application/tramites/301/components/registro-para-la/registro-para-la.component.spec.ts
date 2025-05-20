@@ -1,22 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { RegistroParaLaComponent } from './registro-para-la.component';
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
+import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
 describe('RegistroParaLaComponent', () => {
   let component: RegistroParaLaComponent;
   let fixture: ComponentFixture<RegistroParaLaComponent>;
+  let store: Tramite301Store;
+  let query: Tramite301Query;
+
+  const mockSolicitudState = {
+    registro: 1,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RegistroParaLaComponent,
-        CatalogoSelectComponent,
-        BtnContinuarComponent,
-        AlertComponent,
-        TituloComponent,
-      ]
-    })
-    .compileComponents();
+      imports: [RegistroParaLaComponent, ReactiveFormsModule],
+      providers: [
+        FormBuilder,
+        {
+          provide: Tramite301Store,
+          useValue: {
+            setRegistro: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite301Query,
+          useValue: {
+            selectSolicitud$: of(mockSolicitudState),
+          },
+        },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -33,7 +50,7 @@ describe('RegistroParaLaComponent', () => {
     expect(component.indice).toBe(1);
     expect(component.registroOptions).toEqual([
       { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' }
+      { id: 2, descripcion: 'No' },
     ]);
     expect(component.pasos).toEqual([]);
     expect(component.datosPasos.nroPasos).toBe(0); 

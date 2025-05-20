@@ -9,7 +9,7 @@
             [radioOptions]="solicitudOpciones"
             formControlName="solicitud"
             [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'solicitud', 'updateSolicitud')"
+            (valueChange)="setValoresStore(form, 'solicitud')"
             [layout]="'vertical'"
           ></app-input-radio>
           <div *ngIf="esInvalido('solicitud')" class="text-danger">
@@ -27,7 +27,7 @@
             [placeholder]="inputFields[i].placeholder"
             [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
-            (selectionChange)="setValoresStore(form, inputFields[i].controlName, i === 0 ? 'setregimen' : 'setclasificacion')"
+            (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
             <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">

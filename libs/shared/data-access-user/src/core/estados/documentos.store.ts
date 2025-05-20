@@ -1,39 +1,45 @@
-import { Store, StoreConfig } from '@datorama/akita';
+import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
+import { TipoDocumentos } from "../models/shared/anexar-documentos.model";
 
-export interface SolicitudDocumentosState {
-    /**
-     * Parametro de la lista de documentos seleccionados
-     */
-    documentosSeleccionados: string[];
-  }
-  /**
-   * Creación del estado inicial para la interfaz de solicitud de documentos
-   * @returns SolicitudDocumentosState
-   */
-  export function createInitialState(): SolicitudDocumentosState {
+/**
+ * Modelo para almacenar la información del estado de los documentos requeridos y opcionales
+ */
+
+export interface DocumentosState {
+    catalogoDocumentosRequeridos: TipoDocumentos[];
+    catalogoDocumentosOpcionales: TipoDocumentos[];
+}
+
+/**
+ * Creación del estado inicial para el catálogo de documentos
+ * @returns CatalogoDocumentos
+ */
+export function createInitialStateDocumentos(): DocumentosState {
     return {
-        documentosSeleccionados: []
-    };
-  }
+        catalogoDocumentosRequeridos: [],
+        catalogoDocumentosOpcionales: [],
+    }
+}
 
-@Injectable({providedIn: 'root'})
-@StoreConfig({name: 'DocumentosStates', resettable: true})
-export class DocumentosStates extends Store<SolicitudDocumentosState>{
-    constructor(){
-       super( createInitialState());
+@Injectable({
+    providedIn: 'root'
+})
+@StoreConfig({ name: 'documentos', resettable: true })
+export class DocumentosStore extends Store<DocumentosState> {
+    constructor() {
+        super(createInitialStateDocumentos());
     }
+
     /**
-     * Resetear valores
+     * Guarda el catálogo de documentos en el state
+     *
+     * @param catalogoDocumentos
      */
-    resetStore(){
-        this.reset();
-    }
-    /**
-     * Guarda la lista de documentos requeridos
-     * @param documentosSeleccionados 
-     */
-    setSolicitudDocumentos(documentosSeleccionados : string[]){
-        this.update(state => ({... state, documentosSeleccionados}));
+    public establecerCatalogoDocumentos(catalogoDocumentos: TipoDocumentos[]): void {
+        this.update((state) => ({
+            ...state,
+            catalogoDocumentos,
+        }));
     }
 }

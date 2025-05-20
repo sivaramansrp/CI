@@ -52,7 +52,7 @@ RUN npx nx reset
 RUN mkdir -p /app/dist/apps/funcionario
 
 # Build the application
-RUN npx nx build funcionario --configuration=production --skip-nx-cache --verbose
+RUN npx nx build funcionario --configuration=development --skip-nx-cache --verbose
 
 # Verify build success
 RUN test -d "/app/dist/apps/funcionario" && test -f "/app/dist/apps/funcionario/index.html" || exit 1
