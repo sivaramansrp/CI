@@ -23,6 +23,8 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TipoDeAvisoComponent } from './components/tipo-de-aviso/tipo-de-aviso.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ModificarAgenteComponent } from './components/modificar-agente/modificar-agente.component';
+import { ModificarFusionEscisionComponent } from './components/modificar-fusion-escision/modificar-fusion-escision.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     AgregarAgenteComponent,
     CambioDenominacionRazonSocialComponent,
     CatalogoSelectComponent,
+    ModificarAgenteComponent,
+    ModificarFusionEscisionComponent,
     AvisoDeModificationRoutingModule,
     TablaDinamicaComponent,
     ToastrModule.forRoot()

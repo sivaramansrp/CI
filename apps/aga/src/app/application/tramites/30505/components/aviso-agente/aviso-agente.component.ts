@@ -1,4 +1,4 @@
-import { AVISO_AGENTE_DE_TABLA, AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 import { ActivatedRoute, Router} from '@angular/router';
 import { Component, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,6 +6,10 @@ import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/sh
 import { AgregarAgenteComponent } from '../agregar-agente/agregar-agente.component';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
+import { AVISO_AGENTE_DE_TABLA } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
+import { Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
 
 /**
  * Componente encargado de gestionar el aviso de agente dentro del trámite 30505.
@@ -79,6 +83,15 @@ export class AvisoAgenteComponent implements OnInit {
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+   * Arreglo que contiene los agentes seleccionados de tipo AvisoAgente.
+   * 
+   * @remarks
+   * Esta propiedad almacena la lista de agentes que han sido seleccionados por el usuario
+   * en el componente de aviso de agente.
+   */
+  selectedAgente : AvisoAgente[] = [];
+
 
   /**
    * Constructor de la clase AvisoAgenteComponent.
@@ -87,7 +100,9 @@ export class AvisoAgenteComponent implements OnInit {
    * @param router Instancia de Router para la navegación entre rutas.
    * @param route Instancia de ActivatedRoute para acceder a información sobre la ruta actual.
    */
-  constructor(private fb: FormBuilder,private router:Router, private route:ActivatedRoute) { 
+  constructor(private fb: FormBuilder,private router:Router, private route:ActivatedRoute,private tercerosService:TercerosRelacionadosService, private tramite30505Store: Tramite30505AgregarAgenteStore,
+    private tramite30505Query: Tramite30505AgregarAgenteQuery,
+    private ubicaccion : Location) { 
     
   }
 
@@ -140,5 +155,43 @@ export class AvisoAgenteComponent implements OnInit {
 
     });
   }
-  
+
+  /**
+   * Maneja la selección de datos de agentes a partir de un evento.
+   * 
+   * @param evento - Un arreglo de objetos de tipo AvisoAgente que contiene los datos seleccionados del agente.
+   * 
+   * Si existen datos previos en `avisoAgenteDatos`, actualiza la propiedad `selectedAgente` con el evento recibido
+   * y pasa esta información al servicio compartido `tercerosService` mediante el método `setAgente`.
+   */
+  getAgenteDatos(evento:AvisoAgente[]):void{
+   if (this.avisoAgenteDatos?.length > 0) {
+      this.selectedAgente = evento;
+      this.tercerosService.setAgente(this.selectedAgente); // Pass data to the shared service
+    }
+  }
+
+  /**
+   * Elimina el agente seleccionado de la lista.
+   *
+   * Si hay al menos un agente seleccionado, llama al método `eliminarAgento`
+   * del store `tramite30505Store` pasando el primer agente seleccionado.
+   */
+  eliminarAgente():void{
+    if (this.selectedAgente.length > 0) {
+      this.tramite30505Store.eliminarAgento(this.selectedAgente[0]);
+    }
+  }
+
+  /**
+   * Navega a la ruta relativa para modificar un agente.
+   *
+   * Utiliza el enrutador de Angular para redirigir al usuario a la pantalla de modificación de agente,
+   * manteniendo el contexto de la ruta actual.
+   */
+   modificarAgente():void{
+    this.router.navigate(['../modificar-agente'],{
+        relativeTo: this.route,
+      });
+  }
 }

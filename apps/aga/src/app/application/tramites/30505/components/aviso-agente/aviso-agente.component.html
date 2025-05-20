@@ -8,6 +8,7 @@
         [configuracionTabla]="AGENTE_CONFIGURATION_TABLA"
         [datos]="avisoAgenteDatos"
         [acciones]="acciones"
+        (listaDeFilaSeleccionada)="getAgenteDatos($event)"
       >
       </app-tabla-dinamica>
     </div>
@@ -18,9 +19,7 @@
         <button
           type="button"
           id="btnAgregarPersona"
-          class="btn btn-primary me-2"
-          data-bs-toggle="modal" 
-          data-bs-target="#modalAddAgent" 
+          class="btn btn-primary"
           (click)="AgregarTransportias()"
         >
           Agregar
@@ -28,7 +27,8 @@
         <button
           type="button"
           id="btnEliminarPersona"
-          class="btn btn-danger me-2"
+          class="btn btn-danger"
+          (click)="eliminarAgente()"
         >
           Eliminar
         </button>
@@ -36,6 +36,7 @@
           type="button"
           id="btnModificarPersona"
           class="btn btn-secondary"
+          (click)="modificarAgente()"
         >
           Modificar
         </button>

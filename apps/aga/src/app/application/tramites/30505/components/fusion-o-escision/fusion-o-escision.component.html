@@ -350,6 +350,7 @@
           [configuracionTabla]="FUSION_CONFIGURATION_TABLA"
           [datos]="gridFusionEscisionData"
           [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+          (listaDeFilaSeleccionada)="getFusionDatos($event)"
           [tableId]="TableId"
         >
         </app-tabla-dinamica>
@@ -364,6 +365,7 @@
           type="button"
           id="btnAgregarPersona"
           class="btn btn-primary"
+          (click)="abrirModalFusionEscision()"
         >
           Agregar
         </button>
@@ -371,6 +373,7 @@
           type="button"
           id="btnEliminarPersona"
           class="btn btn-danger"
+          (click)="eliminarFusion()"
         >
           Eliminar
         </button>
@@ -378,6 +381,7 @@
           type="button"
           id="btnModificarPersona"
           class="btn btn-secondary"
+          (click)="modificarFusion()"
         >
           Modificar
         </button>

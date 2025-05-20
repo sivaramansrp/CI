@@ -1,7 +1,7 @@
-import { AVISO_RADIO, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { AVISO_RADIO, FUSION_CONFIGURATION_TABLA, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { ActivatedRoute ,Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FUSION_CONFIGURATION_TABLA, FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
+import { FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule , Validators } from '@angular/forms';
 import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
@@ -155,6 +155,14 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
   public AvisoState!: Solicitud30505State;
 
   /**
+   * Arreglo que contiene las fusiones o escisiones seleccionadas por el usuario.
+   * 
+   * Cada elemento del arreglo es una instancia de `FusionEscision`, que representa
+   * una fusión o escisión específica dentro del trámite.
+   */
+  selectedFusion:FusionEscision[] = [];
+
+  /**
    * Constructor del componente FusionOEscision.
    * 
    * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
@@ -166,8 +174,6 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    */
   constructor(private fb: FormBuilder,private router:Router,private route:ActivatedRoute,private tercerosService: TercerosRelacionadosService,public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query) {  
   }
-
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -323,11 +329,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
             this.tramiteStore.setAvisoDatos(datos.numFolioTramite,'numFolioTramite');
             this.tramiteStore.setAvisoDatos(datos.fechaInicioVigencia,'fechaInicioVigencia');
             this.tramiteStore.setAvisoDatos(datos.fechaFinVigencia,'fechaFinVigencia2');
-          },
-          // error => {
-          //   this.dvMessageVisible = true;
-          // }
-           );
+          });
     } else {
       this.dvMessageVisible = true;
     }
@@ -438,5 +440,46 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
   ngOnDestroy():void{
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Maneja la selección de datos de fusión o escisión.
+   * 
+   * Si existen datos en `gridFusionEscisionData`, actualiza la propiedad `selectedFusion`
+   * con el evento recibido y pasa estos datos al servicio compartido `tercerosService`
+   * mediante el método `setFusionada`.
+   * 
+   * @param evento - Arreglo de objetos `FusionEscision` seleccionados.
+   */
+  getFusionDatos(evento: FusionEscision[]): void {
+    if (this.gridFusionEscisionData?.length > 0) {
+      this.selectedFusion = evento;
+      this.tercerosService.setFusionada(this.selectedFusion); // Pass data to the shared service
+    }
+  }
+
+  /**
+   * Elimina el primer elemento seleccionado de la lista de fusiones.
+   *
+   * Si existe al menos un elemento seleccionado en `selectedFusion`, 
+   * este método llama a `removeFusionadoDato` del store para eliminar 
+   * el primer elemento de la selección.
+   */
+   eliminarFusion():void{
+    if (this.selectedFusion.length > 0) {
+      this.tramiteStore.removeFusionadoDato(this.selectedFusion[0]);
+    }
+  }
+
+  /**
+   * Navega a la ruta relativa para modificar una fusión o escisión.
+   *
+   * Utiliza el enrutador de Angular para redirigir al usuario a la pantalla de modificación
+   * de fusión o escisión, manteniendo el contexto de la ruta actual.
+   */
+  modificarFusion():void{
+    this.router.navigate(['../modificar-fusion-escision'],{
+        relativeTo: this.route,
+      });
   }
 }

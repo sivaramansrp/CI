@@ -468,12 +468,20 @@ public setEmpresaControladora(empresaControladora: string): void {
    * @param fusionToRemove - El objeto FusionEscision que se desea eliminar del estado.
    */
    public removeFusionadoDato(fusionToRemove: FusionEscision): void {
-    this.update((state) => ({
-      ...state,
-      fusionEscisionData: state.fusionEscisionData.filter(
-        (fusionDatos) => fusionDatos.rfcBusquedaModal !== fusionToRemove.rfcBusquedaModal
-      ),
-    }));
+   this.update((state) => {
+         const INDICE_BORROR = state.fusionEscisionData.findIndex((ele) =>
+           Object.entries(fusionToRemove).every(([key, value]) => ele[key as keyof FusionEscision] === value)
+         );
+   
+         if (INDICE_BORROR !== -1) {
+           state.fusionEscisionData.splice(INDICE_BORROR, 1);
+         }
+   
+         return {
+           ...state,
+           fusionEscisionData: [...state.fusionEscisionData],
+         };
+       });
   }
 
   
@@ -489,5 +497,5 @@ public setEmpresaControladora(empresaControladora: string): void {
     }));
   }
 
-
+  
 }

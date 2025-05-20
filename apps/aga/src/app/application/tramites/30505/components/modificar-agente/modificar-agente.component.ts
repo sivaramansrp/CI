@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 
 /**
  * Componente para agregar un agente en el trámite 30505.
@@ -20,13 +21,13 @@ import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.mo
  * gestionadas para evitar fugas de memoria.
  */
 @Component({
-  selector: 'app-agregar-agente',
-  templateUrl: './agregar-agente.component.html',
-   styleUrl: './agregar-agente.component.scss',
+  selector: 'app-modificar-agente',
+  templateUrl: './modificar-agente.component.html',
+   styleUrl: './modificar-agente.component.scss',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,CatalogoSelectComponent]
 })
-export class AgregarAgenteComponent implements OnInit,OnDestroy {
+export class ModificarAgenteComponent implements OnInit,OnDestroy {
 
   /**
    * Grupo de controles de formulario que contiene los datos relacionados con el trámite.
@@ -75,14 +76,10 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Arreglo que almacena los datos de los agentes.
-   * Cada elemento del arreglo es de tipo `AvisoAgente`.
-   * 
-   * @type {AvisoAgente[]}
-   */
   public AgenteDatos:AvisoAgente[] = [];
 
+  public selectedAgente = {} as AvisoAgente;
+  
 
   /**
    * Constructor de la clase AgregarAgenteComponent.
@@ -95,27 +92,28 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite30505Store: Tramite30505AgregarAgenteStore,
-    private tramite30505Query: Tramite30505AgregarAgenteQuery,
+    private tercerosService: TercerosRelacionadosService,
     private ubicaccion : Location
   ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * 
-   * - Suscribe al observable `selectSolicitud$` del query `tramite30505Query` para obtener el estado de la solicitud,
-   *   actualizando la propiedad `solicitudState` cada vez que el estado cambia.
-   * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
-   * - Llama al método `crearFormulario` para inicializar el formulario del componente.
+   * - Se suscribe al observable `agente$` del servicio `tercerosService` para obtener información del agente.
+   * - Si existe un agente y la lista no está vacía, selecciona el primer agente y lo asigna a `selectedAgente`.
+   * - Llama al método `crearFormulario()` para inicializar el formulario del componente.
+   * 
+   * @remarks
+   * La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
    */
   ngOnInit(): void {
-    this.tramite30505Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+    this.tercerosService.agente$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((agente) => {
+        if (agente && agente.length > 0) {
+          this.selectedAgente = agente[0];
+        }
+      });
     this.crearFormulario()
   }
 
@@ -134,18 +132,18 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    */
   public crearFormulario():void{
     this.datosTramite = this.fb.group({
-      tipoFigura: [this.solicitudState?.tipoFigura, Validators.required],
-      patenteModificada: ['', Validators.required],
-      numPatenteModal: [this.solicitudState?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: ''}, [Validators.required, Validators.maxLength(13)]],
-      obligFisc: [this.solicitudState?.obligFisc, Validators.requiredTrue],
-      autPantente: [this.solicitudState?.autPantente, Validators.requiredTrue],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
-      razonSocial: ['', Validators.required],
-      patente2: [this.solicitudState?.patente2, [Validators.required, Validators.maxLength(15)]],
-      razonAgencia: ['', Validators.required]
+      tipoFigura: [this.selectedAgente?.tipoFigura, Validators.required],
+      patenteModificada: [this.selectedAgente?.patenteModificada, Validators.required],
+      numPatenteModal: [this.selectedAgente?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
+      rfcModal: [{ value: this.selectedAgente.rfcModal}, [Validators.required, Validators.maxLength(13)]],
+      obligFisc: [this.selectedAgente?.obligFisc, Validators.requiredTrue],
+      autPantente: [this.selectedAgente?.autPantente, Validators.requiredTrue],
+      nombre: [{ value: this.selectedAgente?.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.selectedAgente?.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.selectedAgente?.apellidoMaterno, disabled: true }, Validators.required],
+      razonSocial: [this.selectedAgente?.razonSocial, Validators.required],
+      patente2: [this.selectedAgente?.patente2, [Validators.required, Validators.maxLength(15)]],
+      razonAgencia: [this.selectedAgente?.razonAgencia, Validators.required]
     });
   }
 
@@ -220,17 +218,6 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-  /**
-   * Acepta y agrega un nuevo agente a la lista de agentes asociados al trámite.
-   *
-   * Obtiene los valores actuales del formulario `datosTramite`, construye un objeto
-   * con la información del agente y lo agrega al arreglo `AgenteDatos`. Posteriormente,
-   * actualiza el estado del store con la nueva lista de agentes, reinicia el formulario
-   * y navega a la vista anterior.
-   *
-   * @remarks
-   * Este método se utiliza en el contexto de la gestión de sociedades SCC dentro del trámite 30505.
-   */
   aceptarSociedadesScc():void{
     const VALOR_FORMULARIO = this.datosTramite.getRawValue();
 

@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { TERCEROS_ENCABEZADO_DE_TABLA, TercerosRelacionados } from '../../../../core/models/30505/aviso-modificacion.model';
+import { TercerosRelacionados } from '../../../../core/models/30505/aviso-modificacion.model';
 import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { TERCEROS_ENCABEZADO_DE_TABLA } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 
 /**
  * Componente encargado de gestionar y mostrar los terceros relacionados en el trámite 30505.

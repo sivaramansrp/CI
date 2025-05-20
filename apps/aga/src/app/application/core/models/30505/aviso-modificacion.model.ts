@@ -1,5 +1,3 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-
 /**
  * @description Representa la información de los terceros relacionados.
  * @interface
@@ -18,41 +16,6 @@ export interface TercerosRelacionados{
   apellidoMaterno: string,
   domicilio: string
 }
-
-/**
- * @description
- * Crea y retorna el estado inicial para la solicitud 30505.
- *
- * @returns {Solicitud30505State} El estado inicial de la solicitud 30505 con valores predeterminados.
- *
- * @memberof Tramites30505Store
- *
- * @see Solicitud30505State
- */
-export const TERCEROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<TercerosRelacionados>[] =
-  [
-    {
-      encabezado: 'RFC',
-      clave: (fila) => fila.rfc,
-      orden: 1,
-    },
-    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2},
-    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
-    {
-      encabezado: 'Apellido Paterno',
-      clave: (fila) => fila.apellidoPaterno,
-      orden: 4,
-    },
-    { encabezado: 'Apellido Materno',
-       clave: (fila) => fila.apellidoMaterno,
-        orden: 5 
-      },
-    {
-      encabezado: 'Domicilio',
-      clave: (fila) => fila.domicilio,
-      orden: 6,
-    }
-  ];
 
 /**
  * @description
@@ -82,40 +45,6 @@ export interface FusionEscision{
 
 /**
  * @description
- * Configuración de columnas para la tabla de Fusión/Escisión.
- * Define los encabezados, claves de acceso y el orden de las columnas que se mostrarán en la interfaz.
- * 
- * @type {ConfiguracionColumna<FusionEscision>[]}
- * 
- * @property {string} encabezado - Título de la columna que se muestra en la tabla.
- * @property {(fila: FusionEscision) => any} clave - Función que retorna el valor a mostrar en la columna, dependiendo de la fila y condiciones específicas.
- * @property {number} orden - Orden en el que se muestra la columna en la tabla.
- * 
- * @author Equipo de Desarrollo VUCEM
- * @since 2024-06
- */
-export const FUSION_CONFIGURATION_TABLA: ConfiguracionColumna<FusionEscision>[] =
-  [
-    {
-      encabezado: 'Registro Federal de Contribuyentes',
-      clave: (fila) => fila.certificacionModal == '1'? fila.rfcBusquedaModal: fila.rfcBusquedaModalSC,
-      orden: 1,
-    },
-    { encabezado: 'Denominación o Razón Social', clave: (fila) => fila.certificacionModal == '1' ? fila.razonSocialFusionante : fila.razonSocialFusionanteSC, orden: 2},
-    { encabezado: 'Folio VUCEM de la Última certificación/renovación', clave: (fila) => fila.folioVucemFusionante, orden: 3 },
-    {
-      encabezado: 'Fecha de fin de vigencia de la Última certificación/renovación',
-      clave: (fila) => fila.fechaInicioVigenciaFusionante,
-      orden: 4,
-    },
-    { encabezado: 'Fecha de inicio de vigencia de la Última certificación/renovación',
-       clave: (fila) => fila.fechaFinVigenciaFusionante,
-        orden: 5 
-      },
-  ];
-
-/**
- * @description
  * Representa la información de un aviso de agente, incluyendo datos personales y de autorización.
  *
  * @interface
@@ -130,65 +59,20 @@ export const FUSION_CONFIGURATION_TABLA: ConfiguracionColumna<FusionEscision>[] 
  * @param {string} estatus - Estatus actual del agente.
  */
 export interface AvisoAgente{
-  tipoDeFigura: string,
-  nombre: string,
-  apellidoPaterno: string,
-  apellidoMaterno: string,
-  razonSocial: string,
-  patentAutorizacion: string,
-  estatus: string
+  tipoFigura: string,
+      patenteModificada:string,
+      numPatenteModal: string,
+      rfcModal: string,
+      obligFisc: string,
+      autPantente: string,
+      nombre: string,
+      apellidoPaterno: string,
+      apellidoMaterno:string,
+      razonSocial: string,
+      patente2: string,
+      razonAgencia: string
 }
 
-/**
- * @description
- * Configuración de las columnas para la tabla de Aviso de Agente.
- * Cada objeto en el arreglo representa una columna con su encabezado, función para obtener el valor de la fila y el orden de aparición.
- *
- * @type {ConfiguracionColumna<AvisoAgente>[]}
- *
- * @see AvisoAgente
- * @see ConfiguracionColumna
- *
- * @memberof AvisoModificacion
- *
- * @example
- * // Uso en un componente de tabla:
- * <app-tabla [columnas]="AVISO_AGENTE_DE_TABLA" [datos]="agentes"></app-tabla>
- */
-export const AVISO_AGENTE_DE_TABLA: ConfiguracionColumna<AvisoAgente>[] =
-  [
-    {
-      encabezado: 'Tipo de Figura',
-      clave: (fila) => fila.tipoDeFigura,
-      orden: 1,
-    },
-    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 2 },
-    {
-      encabezado: 'Apellido Paterno',
-      clave: (fila) => fila.apellidoPaterno,
-      orden: 3,
-    },
-    { encabezado: 'Apellido Materno',
-       clave: (fila) => fila.apellidoMaterno,
-        orden: 4 
-      },
-    {
-      encabezado: 'Denominación o Razón Social',
-      clave: (fila) => fila.razonSocial,
-      orden: 5,
-    },
-    {
-      encabezado: 'Patente o Autorización',
-      clave: (fila) => fila.patentAutorizacion,
-      orden: 6,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (fila) => fila.estatus,
-      orden: 7,
-    }
-  ];
-  
   /**
    * @desc Identificador único de la tabla utilizada para mostrar los datos de fusión o escisión en la interfaz de usuario.
    * @type {string}

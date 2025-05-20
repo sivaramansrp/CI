@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { AvisoAgente } from '../../models/30505/aviso-modificacion.model';
 
 /**
  * Interfaz que representa el estado de Solicitud30505AgregarAgente.
@@ -29,6 +30,8 @@ export interface Solicitud30505AgregarAgenteState {
      * El valor de razonAgencia.
      */
     razonAgencia: string;
+
+    agenteDatos:AvisoAgente[];
 }
 /**
  * Función para crear el estado inicial de Solicitud30505AgregarAgente.
@@ -60,6 +63,8 @@ export function createInitialState(): Solicitud30505AgregarAgenteState {
          * El valor de razonAgencia.
          */
         razonAgencia: '',
+
+        agenteDatos:[]
     };
 }
 
@@ -146,6 +151,32 @@ export class Tramite30505AgregarAgenteStore extends Store<Solicitud30505AgregarA
             razonAgencia,
         }));
     }
+
+    public updateAgenteDatos(newAgente: AvisoAgente[]): void {
+        this.update((state) => ({
+          ...state,
+          agenteDatos: [...state.agenteDatos,...newAgente],
+        }));
+      }
+
+    
+    public eliminarAgento(Agente: AvisoAgente): void {
+    this.update((state) => {
+      const INDICE_BORROR = state.agenteDatos.findIndex((ele) =>
+        Object.entries(Agente).every(([key, value]) => ele[key as keyof AvisoAgente] === value)
+      );
+
+      if (INDICE_BORROR !== -1) {
+        state.agenteDatos.splice(INDICE_BORROR, 1);
+      }
+
+      return {
+        ...state,
+        agenteDatos: [...state.agenteDatos],
+      };
+    });
+  }
+
  
 } 
   
