@@ -204,6 +204,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @returns {void}
    */
+
+  
+  onImportePagoInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
+  }
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
