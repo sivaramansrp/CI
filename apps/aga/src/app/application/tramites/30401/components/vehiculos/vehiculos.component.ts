@@ -410,9 +410,9 @@ export class VehiculosComponent implements OnInit {
    * y abre el modal para editar los datos.
    */
   modificarItemVehiculos(): void {
-    const seleccionadas = this.listaFilaSeleccionadaVehiculos;
+    const SELECCIONADAS = this.listaFilaSeleccionadaVehiculos;
   
-    if (!seleccionadas || seleccionadas.length === 0) {
+    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -427,7 +427,7 @@ export class VehiculosComponent implements OnInit {
       return;
     }
   
-    if (seleccionadas.length > 1) {
+    if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
