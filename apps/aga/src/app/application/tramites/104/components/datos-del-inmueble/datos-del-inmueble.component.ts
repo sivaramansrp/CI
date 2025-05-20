@@ -18,7 +18,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
     CatalogoSelectComponent,
     ReactiveFormsModule,TablePaginationComponent],
   templateUrl: './datos-del-inmueble.component.html',
-  styleUrl: './datos-del-inmueble.component.css',
+  styleUrl: './datos-del-inmueble.component.scss',
 })
 export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
 
