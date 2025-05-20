@@ -946,6 +946,7 @@
                   [label]="'UMC'"
                   [required]="true"
                   name="UMC"
+                  [tooltipQuestionCircle]="true"
                 ></app-catalogo-select>
                 <div class="text-danger" *ngIf="getErrorMessage('UMC')">
                   {{ getErrorMessage('UMC') }}
@@ -968,7 +969,8 @@
               {{ getErrorMessage('presentacion') }}
             </div>
           </div>
-          <div class="row">
+          @if (mostrarNumeroYFecha) {
+            <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="numeroRegistro"
@@ -995,6 +997,7 @@
               </div>
             </div>
           </div>
+          }
 
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
