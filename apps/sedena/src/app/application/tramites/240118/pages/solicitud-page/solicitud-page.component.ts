@@ -41,6 +41,13 @@ export class SolicitudPageComponent {
    */
   public indice: number = 1;
 
+/**
+ * @property TEXTOS
+ * @description
+ * Contiene el texto del aviso de privacidad que se mostrará en la página de solicitud.
+ * El valor se obtiene de la constante `AVISO_PRIVACIDAD.Aviso_Privacidad`.
+ * @type {string}
+ */
   TEXTOS: string = AVISO_PRIVACIDAD.Aviso_Privacidad;
 
     /**
