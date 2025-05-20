@@ -29,4 +29,12 @@ export class BandejaDeSolicitudeService {
       })
     );
   }
+
+  public getDepartamento(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/bandeja-de-tareas-pendientes/nombre-del-departamento.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

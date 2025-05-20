@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -51,6 +51,11 @@ export class LibBandejaComponent<T> implements OnInit {
   @Input() configuracionTablaDatos: any[] = [];
    /* Datos que se usan en el formulario de la bandeja */
   @Input() public bandejaSolicitudeDatos: any[] = [];
+  /**
+   * EventEmitter that emits an event whenever a value changes in the component.
+   */
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  
   /* URL a la que se navega al seleccionar un trámite */
   public procedureUrl!: string;
   /* Indica si el formulario es válido */
@@ -197,5 +202,19 @@ export class LibBandejaComponent<T> implements OnInit {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  public obtenerDepartamento(event: { campo: string; valor: any }): void {
+    this.obtenerNombreDelDepartamento.emit((event.campo, event.valor));
+  }
+
+  public filterDatos(): void {
+    console.log(this.bandejaSolicitudeFormGroup.value);
+    // this.configuracionTablaDatos = this.configuracionTablaDatos.filter((item) => {
+    //   return (
+    //     item.numeroDeProcedimiento.toLowerCase() ===  ||
+    //     item.id.toString().includes(this.bandejaSolicitudeFormGroup.value.descripcion)
+    //   );
+    // });
   }
 }

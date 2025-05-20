@@ -1,8 +1,10 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, LibBandejaComponent } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+
 
 /* 
   Componente bandeja-de-tareas-pendientes:
@@ -30,6 +32,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
  * cuando el componente se destruye, evitando fugas de memoria.
  */
   private destroyNotifier$: Subject<void> = new Subject();
+  public departamentoDatos: Array<any> = [];
     /*
    * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
    */
@@ -96,6 +99,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    */
     ngOnInit(): void {
       this.getBandejaDeTablaDatos();
+      this.getNombreDelDepartamento();
     }
 /*
    * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
@@ -106,7 +110,42 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         this.dePendientesTablaDatos = JSON.parse(JSON.stringify(response));
       });
     }
-/*
+
+    public getNombreDelDepartamento(): void {
+      this.bandejaSvc.getDepartamento().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        this.departamentoDatos = DATOS;
+        const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'departamento') as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map((item: { ID_DEPENDENCIA: number; ACRONIMO: string }) => ({
+              descripcion: item.ACRONIMO,
+              id: item.ID_DEPENDENCIA,
+            }));
+          }
+        }
+      });
+    }
+
+    public departamento(event: { campo: string; valor: any }): void {
+      const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event));
+      this.getProcedimiento(SELECTED_DEPARTAMENTO[0].ACRONIMO);
+
+    }
+
+    public getProcedimiento(departamento: string): void {
+        let PROCEDURE_NUMERO = [];
+        PROCEDURE_NUMERO = tramiteDetailsData.filter((v) => v.department === departamento.toLocaleLowerCase());
+        const FILTERED_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento') as ModeloDeFormaDinamica;
+        if (FILTERED_FIELD) {
+          FILTERED_FIELD.opciones = PROCEDURE_NUMERO.map((item: { id: number; tramite: number }) => ({
+              descripcion: item.tramite,
+              id: item.id,
+            }));
+        }
+    }
+ /*
    * Hook de destrucción del componente.
    * Finaliza las suscripciones activas al destruir el componente para evitar fugas de memoria.
    */
