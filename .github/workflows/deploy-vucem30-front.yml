@@ -62,7 +62,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN}}
 
       - name: Push Docker image to GHCR
-        run: docker push ghcr.io/vucem30/dockerized-modulefederation-dashboard-microfront:1.0.0
+        run: docker compose -f ./docker/modulefederation-dashboard.yml push
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
