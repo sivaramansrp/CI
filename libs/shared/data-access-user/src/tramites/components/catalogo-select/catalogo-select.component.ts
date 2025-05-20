@@ -48,7 +48,7 @@ export class CatalogoSelectComponent
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
-      selectControl: [''],
+      selectControl: [-1],
     });
   }
 
