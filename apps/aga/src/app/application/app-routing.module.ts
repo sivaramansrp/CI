@@ -47,6 +47,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-iva-ieps',
+    loadChildren: () =>
+      import('./tramites/31202/renewal-vat-ieps-mod-aa.module').then(
+        (m) => m.RenewalVatIepsModAAModule)
+      },
+  {
     path: 'retorno-contenedores',
     loadChildren: () =>
       import('./tramites/11202/retorno-contenedores.module').then(
@@ -362,6 +368,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule)
+  },
+  {
+    path: 'renovacion-iva-ieps/mod-a',
+    loadChildren: () =>
+      import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
+        (m) => m.RenewalVatIepsModAModule),
   },
   {
   path: 'proceso-requerimiento',

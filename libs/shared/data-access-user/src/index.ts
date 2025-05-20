@@ -154,5 +154,3 @@ export * from './core/estados/consulta.store';
 export * from './core/queries/consulta.query';
 export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
 export * from './tramites/components/carga-documento/carga-documento.component';
-export * from './core/estados/consulta.store';
-export * from './core/queries/consulta.query';
