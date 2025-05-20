@@ -45,7 +45,7 @@ jobs:
           npm install --force
       # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-dashboard-microfront.yml build
+        run: docker compose -f ./docker/modulefederation-dashboard.yml build
      
       - name: Listar archivos
         run: ls -la
