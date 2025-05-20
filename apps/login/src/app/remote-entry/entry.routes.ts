@@ -1,10 +1,9 @@
-import { Route, RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { Route } from '@angular/router';
 
-export const ROUTES: Route[] = [
+export const REMOTEROUTES: Route[] = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'login', loadChildren: () => import('./../auth/auth.module').then(module => module.AppLoginModule)
+    path: 'login', loadChildren: () => import('./../auth/auth.module').then(module => module.AuthModule)
   }
 ]; 
 @NgModule({

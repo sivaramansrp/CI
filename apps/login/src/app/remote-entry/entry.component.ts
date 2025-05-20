@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NxWelcomeComponent } from './nx-welcome.component';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { UserService } from '@ng-mf/data-access-user';
 
 @Component({
   standalone: true,
