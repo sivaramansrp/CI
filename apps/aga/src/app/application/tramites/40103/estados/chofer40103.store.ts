@@ -18,8 +18,8 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacional: unknown[]; // Replaced `any[]` with `unknown[]`
-  PagoDerechosLista: unknown[]; // Replaced `any[]` with `unknown[]`
+  datosDelChoferNacional: unknown[]; // Se reemplazó `any[]` con `unknown[]`
+  PagoDerechosLista: unknown[]; // Se reemplazó `any[]` con `unknown[]`
   curp: string;
   rfc: string;
   // Form Controls

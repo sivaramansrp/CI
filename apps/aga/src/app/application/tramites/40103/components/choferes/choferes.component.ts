@@ -915,10 +915,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       .subscribe({
         next: (response) => {
           this.DatosDelChoferNacional = response;
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        },
+        }
       });
   }
 
