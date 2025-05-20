@@ -7,8 +7,7 @@
 
                 <div class="col-md-4">
                     <label class="form-label" for="nombre">Nombre(s):</label>
-                    <input type="text" class="form-control bg-white" id="nombre" placeholder="Pedro"
-                        formControlName="nombre"
+                    <input type="text" class="form-control bg-white" id="nombre" formControlName="nombre"
                         [class.is-invalid]="datosDelDestinatario.get('nombre')?.touched && datosDelDestinatario.get('nombre')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'nombre')">
                     <div class="invalid-feedback">
@@ -18,8 +17,7 @@
 
                 <div class="col-md-4">
                     <label class="form-label" for="primerApellido">Primer apellido:</label>
-                    <input type="text" class="form-control bg-white" id="primerApellido" placeholder="Juarez"
-                        formControlName="primerApellido"
+                    <input type="text" class="form-control bg-white" id="primerApellido" formControlName="primerApellido"
                         [class.is-invalid]="datosDelDestinatario.get('primerApellido')?.touched && datosDelDestinatario.get('primerApellido')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'primerApellido')">
                     <div class="invalid-feedback">
@@ -29,14 +27,17 @@
 
                 <div class="col-md-4">
                     <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"
-                        readonly>
+                    <input type="text" class="form-control bg-white" id="segundoApellido" formControlName="segundoApellido" [class.is-invalid]="datosDelDestinatario.get('segundoApellido')?.touched && datosDelDestinatario.get('segundoApellido')?.invalid"
+                        (change)="setValorStore(datosDelDestinatario,'segundoApellido')">
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="numeroderegistroFiscal">Número de registro fiscal *:</label>
                     <input type="text" class="form-control bg-white" id="numeroderegistroFiscal"
-                        placeholder="OEAE800904JL9" formControlName="numeroderegistroFiscal"
+                        placeholder="12867612783" formControlName="numeroderegistroFiscal"
                         [class.is-invalid]="datosDelDestinatario.get('numeroderegistroFiscal')?.touched && datosDelDestinatario.get('numeroderegistroFiscal')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'numeroderegistroFiscal')">
                     <div class="invalid-feedback">
@@ -104,18 +105,14 @@
                 <div class="col-md-4">
                     <label class="form-label" for="fax">Fax:</label>
                     <input type="text" class="form-control bg-white" id="fax" placeholder="546456" formControlName="fax"
-                        [class.is-invalid]="domicilioDelDestinatario.get('fax')?.touched && domicilioDelDestinatario.get('fax')?.invalid"
                         (change)="setValorStore(domicilioDelDestinatario,'fax')">
-                    <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="telefono">Teléfono:</label>
                     <input type="text" class="form-control bg-white" id="telefono" placeholder="5555687"
-                        formControlName="telefono"
-                        [class.is-invalid]="domicilioDelDestinatario.get('telefono')?.touched && domicilioDelDestinatario.get('telefono')?.invalid"
-                        (change)="setValorStore(domicilioDelDestinatario,'telefono')">
-                    <div class="invalid-feedback">Ingrese solo dígitos.</div>
+                        formControlName="telefono" (change)="setValorStore(domicilioDelDestinatario,'telefono')">
+                   
                 </div>
 
             </div>
