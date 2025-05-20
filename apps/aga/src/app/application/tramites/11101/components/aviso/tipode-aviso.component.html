@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="container1">
+      <ng-titulo [titulo]="'Aviso'"></ng-titulo>
+      <form [formGroup]="avisoForm">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="numero-de-registro">Número de registro:</label>
+            <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro" readonly />
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <div class="container2">
+      <ng-titulo [titulo]="'Datos del Donante Extranjero'"></ng-titulo>
+      <form [formGroup]="avisoForm">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="form-label" for="nombre-denominacion">Nombre/Denominación o Razón Social:</label>
+            <input type="text" class="form-control" id="nombre-denominacion" formControlName="NobmreDenominationRazonSocial" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="rfc-tax-id">RFC/TAX ID:</label>
+            <input type="text" class="form-control" id="rfc-tax-id" formControlName="rfctaxid" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="telefono">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" formControlName="Telefono" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="correo-electronico">Correo electrónico:</label>
+            <input type="text" class="form-control" id="correo-electronico" formControlName="correoelectronico" readonly />
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <div class="container3">
+      <ng-titulo [titulo]="'Domicilio Fiscal del Donante Extranjero'"></ng-titulo>
+      <form [formGroup]="avisoForm">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="entidad-federativa">Entidad Federativa*:</label>
+            <input type="text" class="form-control" id="entidad-federativa" formControlName="entidadadfederativa" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="alcaldia-municipio">Alcaldía/Municipio*:</label>
+            <input type="text" class="form-control" id="alcaldia-municipio" formControlName="alcadilamunicipio" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="colonia">Colonia*:</label>
+            <input type="text" class="form-control" id="colonia" formControlName="colonia" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="codigo-postal">Código Postal*:</label>
+            <input type="text" class="form-control" id="codigo-postal" formControlName="codigopostal" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="calle">Calle*:</label>
+            <input type="text" class="form-control" id="calle" formControlName="calle" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="numero-exterior">Número y/o letra exterior*:</label>
+            <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="numero-interior">Número y/o letra interior*:</label>
+            <input type="text" class="form-control" id="numero-interior" formControlName="numeroletrainterior" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="entre-calle">Entre calle*:</label>
+            <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="y-calle">Y calle:</label>
+            <input type="text" class="form-control" id="y-calle" formControlName="ycalle" readonly />
+          </div>
+        </div>
+  
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label for="manual" class="m-3">Manual</label>
+            <input type="radio" name="check" id="manual" (change)="setManual(true)" />
+            <label for="carga" class="m-3">Carga masiva</label>
+            <input type="radio" name="check" id="carga" (change)="setManual(false)" />
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <ng-container *ngIf="isManualSelected">
+      <app-mercancia></app-mercancia>
+    </ng-container>
+  </div>
+  

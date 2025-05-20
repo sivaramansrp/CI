@@ -1,17 +1,18 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+
+import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { ReplaySubject,map,takeUntil } from 'rxjs';
 
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
 import { CommonModule } from '@angular/common';
+import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 
 import { BANCO_DATA } from '../../constants/catalogs.enum';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 
-import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 /**
@@ -119,9 +120,9 @@ seleccionarFechaInicio(evento: string): void {
    * Limpia los datos del formulario.
    */
   clearForm(): void {
-    const bancoValue = this.pagoDeDerechos.get('banco')?.value; // Preserve the banco value
-    this.pagoDeDerechosForm.reset(); // Reset the form
-    this.pagoDeDerechos.get('banco')?.setValue(bancoValue); // Restore the banco value
+    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; 
+    this.pagoDeDerechosForm.reset();
+    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); 
   }
 
   /**
@@ -143,7 +144,7 @@ seleccionarFechaInicio(evento: string): void {
     metodoNombre: keyof Solicitud260915Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud260915Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260915Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
