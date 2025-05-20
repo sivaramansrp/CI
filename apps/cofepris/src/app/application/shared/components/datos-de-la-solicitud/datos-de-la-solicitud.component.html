@@ -480,7 +480,8 @@
             (isValid(datosSolicitudForm, 'correoElectronico') && esCampoRequerido('correoElectronico')) ? 'required' : ''
           " />
         <small class="mensaje-error"
-          *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required']">
+          *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required'] &&
+          datosSolicitudForm.get('correoElectronico')?.touched">
           Este campo es obligatorio.</small>
       </div>
     </ng-template>
