@@ -765,7 +765,7 @@
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
-          <div class="form-group">
+          <div class="form-group pt-3">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="clasificacion"
@@ -777,7 +777,7 @@
               {{ getErrorMessage('clasificacion') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="especificarClasificacionProducto"
@@ -818,9 +818,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="denominacionComun"
-              >Denominación o nombre científico*:</label
-            >
+            <label for="denominacionComun">
+              Denominación o nombre científico*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input
               type="text"
               id="denominacionComun"
@@ -831,7 +836,7 @@
               {{ getErrorMessage('denominacionComun') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="tipoDeProducto"
@@ -855,7 +860,7 @@
               {{ getErrorMessage('estadoFormaFarmaceutica') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="estadoFisico"
@@ -868,7 +873,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria">Fracción arancelaria*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input
               type="text"
               id="fraccionArancelaria"
@@ -881,7 +892,7 @@
           </div>
           <div class="form-group">
             <label for="descripcionFraccion"
-              >Descripción de la fracción*:</label
+              >Descripción de la fracción arancelaria*:</label
             >
             <input
               type="text"
@@ -910,7 +921,13 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="UMT">UMT*:</label>
+                <label for="UMT">UMT*:
+                  <span
+                   class="bi bi-question-circle-fill"
+                   title="UMT"
+                  data-bs-toggle="tooltip"
+                  ></span>
+                </label>
                 <input
                   type="text"
                   id="UMT"
