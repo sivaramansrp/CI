@@ -11,6 +11,11 @@
           formControlName="justificacion"
           style="height: 90px"
         ></textarea>
+        <div class="error-message">
+          <small class="text-danger" *ngIf="formDeJustificacion.get('justificacion')?.touched && formDeJustificacion.get('justificacion')?.hasError('required')">
+            Este campo es obligatorio.
+          </small>
+        </div>
       </div>
     </form>
   </div>
@@ -54,9 +59,17 @@
             id="permisoGeneral"
             class="form-control"
             formControlName="permisoGeneral"
-            maxlength="22"
             [required]="true"
+            (input)="onPermisoGeneralInput($event)"
           />
+          <div class="error-message">
+            <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('required')">
+              Este campo es obligatorio.
+            </small>
+            <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('maxlength')">
+              Máximo 22 caracteres permitidos.
+            </small>            
+          </div>
         </div>
         }
         <div class="col-md-8">
@@ -86,6 +99,11 @@
             (valorCambiado)="onFechaCambiada($event)"
             [setFecha]="form.get('fechaPago')?.value"
           ></input-fecha>
+          <div class="error-message">
+            <small class="text-danger" *ngIf="form.get('fechaPago')?.touched && form.get('fechaPago')?.hasError('required')">
+              Este campo es obligatorio.
+            </small>            
+          </div>
         </div>
       </div>
       }
@@ -99,6 +117,11 @@
             (valorCambiado)="onFechaSalidaCambiada($event)"
             [setFecha]="form.get('fechaSalida')?.value"
           ></input-fecha>
+          <div class="error-message">
+            <small class="text-danger" *ngIf="form.get('fechaSalida')?.touched && form.get('fechaSalida')?.hasError('required')">
+              Este campo es obligatorio.
+            </small>            
+          </div>
          </div>
         </div>
         }
@@ -120,6 +143,11 @@
           style="height: 90px"
           [required]="true"
         ></textarea>
+        <div class="error-message">
+          <small class="text-danger" *ngIf="form.get('usoFinal')?.touched && form.get('usoFinal')?.hasError('required')">
+            Este campo es obligatorio.
+          </small>          
+        </div>
       </div>
     </form>
   </div>
@@ -182,7 +210,7 @@
           [layout]="'vertical'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
-        ></app-input-radio>
+        ></app-input-radio>      
       </div>
       <div class="col-md-4">
         <app-input-radio
@@ -191,7 +219,7 @@
           [layout]="'vertical'"
           formControlName="dosSemestre"
           (valueChange)="actualizarDosSemestre($event)"
-        ></app-input-radio>
+        ></app-input-radio>       
       </div>
     </div>
 
@@ -203,6 +231,11 @@
           [required]="false"
           formControlName="anoEnCurso"
         ></lib-input-check>
+        <div class="error-message">
+          <small class="text-danger" *ngIf="form.get('anoEnCurso')?.touched && form.get('anoEnCurso')?.hasError('required')">
+            Este campo es obligatorio.
+          </small>
+        </div>
       </div>
     </div>
   </form>
@@ -222,6 +255,11 @@
                 [required]="true"
               />
               <span> *</span>
+              <div class="error-message">
+                <small class="text-danger" *ngIf="form.get('informacionConfidencial')?.touched && form.get('informacionConfidencial')?.hasError('required')">
+                  Este campo es obligatorio.
+                </small>                
+              </div>
             </div>
             <label
               class="form-check-label"

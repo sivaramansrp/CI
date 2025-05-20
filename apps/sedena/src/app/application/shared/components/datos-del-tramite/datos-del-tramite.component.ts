@@ -397,9 +397,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState?.fechaSalida || '',
         Validators.required,
       ],
-      unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null],
-      dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null],
-      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
+      unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null, Validators.required],
+      dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null, Validators.required],
+      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false ],
       informacionConfidencial: [
         this.datosDelTramiteFormState.informacionConfidencial ?? false,
       ],
@@ -443,6 +443,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute,
     });
   }
+
+  /**
+ * @method onPermisoGeneralInput
+ * @description
+ * Maneja el evento de entrada del campo "permisoGeneral" para asegurar que solo se permitan caracteres numéricos
+ * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
+ * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
+ * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
+ *
+ * @param {Event} event - El evento de entrada generado por el campo de texto.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  onPermisoGeneralInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    this.form.get('permisoGeneral')?.setValue(INPUT.value, { emitEvent: false });
+  }
+
 
      /**
    * Emite el primer destinatario seleccionado para su modificación.
