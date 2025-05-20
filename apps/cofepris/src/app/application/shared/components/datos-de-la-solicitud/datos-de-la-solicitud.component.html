@@ -261,7 +261,7 @@
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button *ngIf="scianConfig.datos.length > 0" type="button" name="eliminarScian" class="btn btn-danger ms-2"
-            (click)="eliminarScian()">
+            (click)="eliminarModal()">
             Eliminar
           </button>
           <button type="button" name="agregarScian" class="btn btn-primary ms-2" data-bs-toggle="modal"
@@ -505,6 +505,13 @@
 @if (mostrarRfcAlerta) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaRfcNotificacion" (confirmacionModal)="mostrarRfcAlerta = false">
+  </lib-notificaciones>
+</section>
+}
+@if (nuevaNotificacionEliminar && nuevaNotificacionEliminar.cerrar) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEliminar"
+    (confirmacionModal)="getEliminarScianModal($event)">
   </lib-notificaciones>
 </section>
 }
