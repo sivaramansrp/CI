@@ -332,6 +332,13 @@ const ROUTES: Routes = [
         (m) => m.OperacionesDeComercioExteriorModule)
   },
   {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10703/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  },
+  {
     path: 'autorizacion/mercancia-donada',
     loadChildren: () =>
       import('./tramites/103/autorizacion-mercancia-donada.module').then(
@@ -355,6 +362,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule)
+  },
+  {
+    path: 'renovacion-iva-ieps/mod-a',
+    loadChildren: () =>
+      import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
+        (m) => m.RenewalVatIepsModAModule),
   }
 ];
 
