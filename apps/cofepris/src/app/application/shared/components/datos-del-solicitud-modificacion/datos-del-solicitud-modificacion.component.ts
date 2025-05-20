@@ -122,6 +122,7 @@ export class DatosDelSolicitudModificacionComponent
  */
   @Input() mostrarNumeroYFecha: boolean = true;
 
+  @Input() mostrarAlerta: boolean = true; // o false, según lo que necesites
   /**
    * Referencia al componente `ManifiestosRepresentanteSeccionComponent`.
    */
@@ -620,15 +621,9 @@ export class DatosDelSolicitudModificacionComponent
       localidad: [''],
       establishomentoColonias: [''],
       calle: ['', Validators.required],
-      lada: [
-        '',
-        [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
-      ],
-      telefono: [
-        '',
-        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-      ],
-      establecimientoDomicilioCodigoPostal: ['', Validators.required],
+      lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],Validators.maxLength(30)],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]],
       scian: this.fb.array([]),
     });
     this.scianForm = this.fb.group({

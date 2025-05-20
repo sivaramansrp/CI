@@ -115,9 +115,12 @@
               class="text-danger">
               El correo electrónico es obligatorio.
             </div>
-            <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
-              class="text-danger">
-              Ingrese un correo electrónico válido.
+            <div
+              *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
+              class="text-danger"
+            >
+              El valor Ingresado no es una dirección válida de correo
+              electrónico
             </div>
           </div>
         </div>
@@ -190,9 +193,12 @@
               class="text-danger">
               El correo electrónico es obligatorio.
             </div>
-            <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
-              class="text-danger">
-              Ingrese un correo electrónico válido.
+            <div
+              *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
+              class="text-danger"
+            >
+              El valor Ingresado no es una dirección válida de correo
+              electrónico.
             </div>
           </div>
         </div>
@@ -202,9 +208,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoDomicilioCodigoPostal">Código postal*:</label>
-            <input class="form-control" type="text" id="establecimientoDomicilioCodigoPostalId" appUppercase
-              formControlName="establecimientoDomicilioCodigoPostal" (change)="
+            <label class="form-label" for="establecimientoDomicilioCodigoPostal"
+              >Código postal*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="establecimientoDomicilioCodigoPostalId"
+              appUppercase
+               maxlength="12"
+              formControlName="establecimientoDomicilioCodigoPostal"
+              (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoDomicilioCodigoPostal'
@@ -215,13 +229,24 @@
               class="text-danger">
               El código postal es obligatorio.
             </div>
+            <div
+              *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['maxlength']"
+              class="text-danger"
+            >
+              El código postal no debe exceder los 12 caracteres.
+            </div>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" [label]="'Estado*'" name="estado" [required]="true"
-              formControlName="establecimientoEstados" (change)="
+            <app-catalogo-select
+              [catalogo]="estado"
+              [label]="'Estado'"
+              name="estado"
+              [required]="true"
+              formControlName="establecimientoEstados"
+              (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoEstados'
@@ -254,8 +279,11 @@
         </div>
       </div>
 
-      <div class="row mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS1.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      <div class="row mt-5" *ngIf="mostrarAlerta">
+        <ng-alert
+          [CONTENIDO]="TEXTOS1.ALERTA"
+          [CUSTOMECLASS]="class"
+        ></ng-alert>
       </div>
 
       <div class="row">
@@ -274,9 +302,15 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establishomentoColonias">Colonias:</label>
-            <input class="form-control" type="text" id="establishomentoColoniasId"
-              formControlName="establishomentoColonias" (change)="
+            <label class="form-label" for="establishomentoColonias"
+              >Colonia:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="establishomentoColoniasId"
+              formControlName="establishomentoColonias"
+              (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establishomentoColonias'
@@ -325,7 +359,14 @@
         <div class="col-md-3">
           <div class="form-group">
             <label class="form-label" for="telefono">Teléfono*:</label>
-            <input class="form-control" type="text" id="telefono" appUppercase formControlName="telefono" (change)="
+            <input
+              class="form-control"
+              type="text"
+              id="telefono"
+              appUppercase
+              maxlength="30"  
+              formControlName="telefono"
+              (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'telefono')
               " />
           </div>
@@ -523,7 +564,10 @@
               [required]="true"
               name="especificarClasificacionProducto"
             ></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('especificarClasificacionProducto')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('especificarClasificacionProducto')"
+            >
               {{ getErrorMessage('especificarClasificacionProducto') }}
             </div>
           </div>
@@ -558,7 +602,10 @@
               formControlName="denominacionComun"
               class="form-control"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('denominacionComun')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('denominacionComun')"
+            >
               {{ getErrorMessage('denominacionComun') }}
             </div>
           </div>
@@ -607,7 +654,10 @@
               formControlName="fraccionArancelaria"
               class="form-control"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('fraccionArancelaria')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('fraccionArancelaria')"
+            >
               {{ getErrorMessage('fraccionArancelaria') }}
             </div>
           </div>
@@ -621,7 +671,10 @@
               formControlName="descripcionFraccion"
               class="form-control"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('descripcionFraccion')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('descripcionFraccion')"
+            >
               {{ getErrorMessage('descripcionFraccion') }}
             </div>
           </div>
