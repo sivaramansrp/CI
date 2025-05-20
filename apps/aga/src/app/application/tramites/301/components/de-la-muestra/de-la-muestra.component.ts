@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, TieneConsultaio } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -44,7 +44,6 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
-  @Input() public procedureState!: TieneConsultaio;
   /**
    * Datos del catálogo relacionados con la mercancía.
    *

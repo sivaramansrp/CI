@@ -143,7 +143,7 @@ export class LibBandejaComponent<T> implements OnInit {
       ROW_OBJETO.estadoDeTramite,
       true,
       false,
-      false
+      true
     );
     if (!this.tieneBandeja) {
       this.router.navigate([this.procedureUrl]);

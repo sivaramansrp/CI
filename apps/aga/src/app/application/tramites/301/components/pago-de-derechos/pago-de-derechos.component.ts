@@ -15,7 +15,6 @@ import {
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TieneConsultaio } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -39,7 +38,6 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
-  @Input() public procedureState!: TieneConsultaio;
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.

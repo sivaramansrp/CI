@@ -12,7 +12,6 @@ export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-s
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export { BandejaDeSolicitudes } from './core/models/shared/lib-bandeja.model';
-export { TieneConsultaio } from './core/models/shared/lib-bandeja.model';
 export { BandejaDeTareasPendientes } from './core/models/shared/bandeja-de-tareas-pendientes.model';
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';

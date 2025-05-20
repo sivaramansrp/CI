@@ -5,7 +5,6 @@ import {
   Aviso,
   ConsultaioQuery,
   Importante,
-  TieneConsultaio,
 } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -56,7 +55,6 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
 
 
-  @Input() public procedureState!: TieneConsultaio;
   /**
    * Formulario principal del componente.
    * Este formulario contiene el campo de registro de importaciones/exportaciones.
