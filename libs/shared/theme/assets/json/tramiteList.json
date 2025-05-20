@@ -1402,8 +1402,8 @@
   {
     "id": 201,
     "tramite": 31603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud31603",
+    "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud31603",
     "department": "agace"
   },
   {
@@ -2578,8 +2578,8 @@
   {
     "id": 370,
     "tramite": 10703,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/importador-exportador/modification-exencion-impuestos",
+    "linkDepartment": "/pago/importador-exportador/modification-exencion-impuestos",
     "department": "aga"
   },
   {

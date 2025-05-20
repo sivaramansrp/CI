@@ -1,0 +1,30 @@
+{
+        "tableHeader": [
+            "Tipo de mercancía",
+            "Cantidad",
+            "Unidad de medida de Comercialización",
+            "Año",
+            "Modelo",
+            "Marco",
+            "Número de serie",
+            "Uso específico de la mercancía",
+            "Condición de la mercancía",
+            "Vehículo"
+        ],
+        "tableBody": [
+            {
+                "tbodyData": [
+                    "S",
+                    "1",
+                    "Matro Cubico",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "S",
+                    "Usado",
+                    "No"
+                ]
+            }
+        ]
+}
