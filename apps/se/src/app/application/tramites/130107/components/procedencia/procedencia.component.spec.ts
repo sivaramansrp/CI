@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PaisProcedenciaComponent } from './pais-procedencia.component';
+import { PaisProcedenciaComponent } from './procedencia.component';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';

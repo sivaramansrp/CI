@@ -1,7 +1,5 @@
-import { CROSLISTA_DE_PAISES, PAIS_PROCEDENCIA, PAIS_PROCEDENCIA_TODOS } from '../../constantes/datos-de-la-solicitud.enum';
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,27 +7,29 @@ import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
-import { ServicioDeFormularioService } from '../../services/formulario-validacion.service'
+import { REPRESENTACION_FEDERAL } from '../../constantes/datos-de-la-solicitud.enum';
+import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 /**
- * @component PaisProcedenciaComponent
+ * @component RepresentacionFederalComponent
  * @description
- * Componente principal para gestionar los datos del país de procedencia en el flujo del trámite 130107.
- * Este componente incluye la lógica para manejar formularios dinámicos y listas cruzadas de países.
+ * Componente principal para gestionar los datos de la representación federal en el flujo del trámite 130107.
+ * Este componente incluye la lógica para manejar formularios dinámicos y datos relacionados con las entidades y representaciones federales.
  * 
- * @selector app-pais-procedencia
- * @templateUrl ./Pais-procedencia.component.html
- * @styleUrl ./Pais-procedencia.component.scss
+ * @selector app-representacion-federal
+ * @templateUrl ./Representacion-federal.component.html
+ * @styleUrl ./Representacion-federal.component.scss
  */
 @Component({
-  selector: 'app-pais-procedencia',
+  selector: 'app-representacion-federal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, CrosslistComponent],
-  templateUrl: './pais-procedencia.component.html',
-  styleUrl: './pais-procedencia.component.scss',
+  imports: [CommonModule, FormasDinamicasComponent, ReactiveFormsModule],
+  templateUrl: './entidad-federal.component.html',
+  styleUrl: './entidad-federal.component.scss',
 })
 
-export class PaisProcedenciaComponent implements OnInit, OnDestroy {
+export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+
   /**
    * @property destroy$
    * @description
@@ -43,7 +43,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
    * @property forma
    * @description
    * Formulario principal del componente.
-   * Incluye un grupo de formularios para manejar los datos del país de procedencia.
+   * Incluye un grupo de formularios para manejar los datos de la representación federal.
    * 
    * @type {FormGroup}
    */
@@ -54,7 +54,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   /**
    * @property ninoFormGroup
    * @description
-   * Getter para acceder al grupo de formularios del país de procedencia.
+   * Getter para acceder al grupo de formularios de representación federal.
    * Retorna el grupo de formularios correspondiente.
    * 
    * @type {FormGroup}
@@ -64,90 +64,13 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @property paisProcedencia
+   * @property datosRepresentacionFederal
    * @description
-   * Datos dinámicos del formulario relacionados con el país de procedencia.
+   * Datos dinámicos del formulario relacionados con la representación federal.
    * 
    * @type {ModeloDeFormaDinamica[]}
    */
-  public paisProcedencia = PAIS_PROCEDENCIA;
-
-  /**
-   * @property paisProcedenciaTodos
-   * @description
-   * Lista de todos los países disponibles para selección.
-   * 
-   * @type {ModeloDeFormaDinamica[]}
-   */
-  public paisProcedenciaTodos = PAIS_PROCEDENCIA_TODOS;
-
-  /**
-   * @property crossList
-   * @description
-   * Referencia a los componentes de listas cruzadas para manejar la selección de países.
-   * 
-   * @type {QueryList<CrosslistComponent>}
-   */
-  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
-
-  /**
-   * @property crosListaDePaises
-   * @description
-   * Lista cruzada de países para selección.
-   * 
-   * @type {string[]}
-   */
-  public crosListaDePaises = CROSLISTA_DE_PAISES;
-
-  /**
-   * @property seleccionarOrigenDelPais
-   * @description
-   * Lista de países seleccionados como origen.
-   * 
-   * @type {string[]}
-   */
-  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
-
-  /**
-   * @property paisDeProcedenciaLabel
-   * @description
-   * Etiquetas para las listas cruzadas de países.
-   * 
-   * @type {CrossListLable}
-   */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País disponible',
-    derecha: 'País seleccionados',
-  };
-
-  /**
-   * @property paisDeProcedenciaBotones
-   * @description
-   * Configuración de los botones para manejar las listas cruzadas de países.
-   * 
-   */
-  readonly paisDeProcedenciaBotones = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      funcion: (): void => this.crossList.toArray()[0].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
-    },
-  ];
+  public datosRepresentacionFederal = REPRESENTACION_FEDERAL;
 
   /**
    * @property solicitudDeRegistroState
@@ -156,6 +79,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
    * 
    * @type {ImportacionesAgropecuariasState}
    */
+  
   public solicitudDeRegistroState!: ImportacionesAgropecuariasState;
 
   /**
@@ -191,7 +115,8 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.datosBloque();
+    this.datosEntidad();
+    this.datosRepresentacion();
   }
 
   /**
@@ -206,31 +131,60 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
     if (event) {
       const VALID_VALUE = typeof event.valor === 'object' ? JSON.stringify(event.valor) : event.valor;
       this.importacionesAgropecuariasStore.setDynamicFieldValue(event.campo, VALID_VALUE);
-      this.servicioDeFormularioService.setFormValue('procedenciaForm', {
+      this.servicioDeFormularioService.setFormValue('representacionForm', {
         [event.campo]: event.valor,
       });
     }
   }
 
   /**
-   * @method datosBloque
+   * @method datosEntidad
    * @description
-   * Método que obtiene los datos del bloque desde el servicio.
+   * Método que obtiene los datos de las entidades desde el servicio.
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
-  datosBloque(): void {
+  datosEntidad(): void {
     this.importacionesAgropecuariasService.datosDeLaSolicitud()
       .pipe(
         takeUntil(this.destroy$),
         map((data) => data.entidad)
       )
-      .subscribe((datosBloque: Catalogo[]) => {
-        const BLOQUE_FIELD = this.paisProcedencia.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'bloque'
+      .subscribe((datosEntidad: Catalogo[]) => {
+        const ENTIDAD_FIELD = this.datosRepresentacionFederal.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'entidad'
         ) as ModeloDeFormaDinamica;
-        if (BLOQUE_FIELD && !BLOQUE_FIELD.opciones) {
-          if (Array.isArray(datosBloque)) {
-            BLOQUE_FIELD.opciones = datosBloque.map(
+        if (ENTIDAD_FIELD && !ENTIDAD_FIELD.opciones) {
+          if (Array.isArray(datosEntidad)) {
+            ENTIDAD_FIELD.opciones = datosEntidad.map(
+              (item: { id: number; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      });
+  }
+
+  /**
+   * @method datosRepresentacion
+   * @description
+   * Método que obtiene los datos de la representación federal desde el servicio.
+   * Actualiza las opciones del formulario dinámico con los datos obtenidos.
+   */
+  datosRepresentacion(): void {
+    this.importacionesAgropecuariasService.datosDeLaSolicitud()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((data) => data.representacion)
+      )
+      .subscribe((datosEntidad: Catalogo[]) => {
+        const ENTIDAD_FIELD = this.datosRepresentacionFederal.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'reprsentation_federal'
+        ) as ModeloDeFormaDinamica;
+        if (ENTIDAD_FIELD && !ENTIDAD_FIELD.opciones) {
+          if (Array.isArray(datosEntidad)) {
+            ENTIDAD_FIELD.opciones = datosEntidad.map(
               (item: { id: number; descripcion: string }) => ({
                 descripcion: item.descripcion,
                 id: item.id,

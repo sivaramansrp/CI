@@ -1,37 +1,34 @@
+import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { FormGroup, ReactiveFormsModule, } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DATOS_DE_LA_MERCANCIA } from '../../constantes/datos-de-la-solicitud.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
-import { PARTIDAS } from '../../constantes/datos-de-la-solicitud.enum';
-import { PARTIDAS_DE_LA_MERCANCIA } from '../../constantes/datos-de-la-solicitud.enum';
-import { PARTIDAS_TABLA } from '../../constantes/importaciones-agropecuarias.enum';
-import { PLANTILLA_PRODUCTO } from '../../constantes/datos-de-la-solicitud.enum';
-import { Partidas } from '../../models/partidas.model';
+import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 /**
- * @component PartidasDeLaMercanciaComponent
+ * @component DatosDeLaMercanciaComponent
  * @description
- * Componente principal para gestionar las partidas de la mercancía en el flujo del trámite 130107.
- * Este componente incluye la lógica para manejar formularios dinámicos, tablas de partidas y datos relacionados con los insumos.
+ * Componente principal para gestionar los datos de la mercancía en el flujo del trámite 130107.
+ * Este componente incluye la lógica para manejar formularios dinámicos y datos relacionados con fracciones arancelarias y UMT.
  * 
- * @selector app-partidas-de-la-mercancia
- * @templateUrl ./Partidas-de-la-mercancia.component.html
- * @styleUrl ./Partidas-de-la-mercancia.component.scss
+ * @selector app-datos-de-la-mercancia
+ * @templateUrl ./Datos-de-la-mercancia.component.html
+ * @styleUrl ./Datos-de-la-mercancia.component.scss
  */
 @Component({
-  selector: 'app-partidas-de-la-mercancia',
+  selector: 'app-datos-de-la-mercancia',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TablaDinamicaComponent],
-  templateUrl: './partidas-de-la-mercancia.component.html',
-  styleUrl: './partidas-de-la-mercancia.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
+  templateUrl: './datos-mercancia.component.html',
+  styleUrl: './datos-mercancia.component.scss',
 })
 
-export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
+export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * @property destroy$
    * @description
@@ -45,7 +42,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * @property forma
    * @description
    * Formulario principal del componente.
-   * Incluye un grupo de formularios para manejar los datos de los insumos.
+   * Incluye un grupo de formularios para manejar los datos de la mercancía.
    * 
    * @type {FormGroup}
    */
@@ -56,7 +53,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * @property ninoFormGroup
    * @description
-   * Getter para acceder al grupo de formularios de insumos.
+   * Getter para acceder al grupo de formularios de mercancía.
    * Retorna el grupo de formularios correspondiente.
    * 
    * @type {FormGroup}
@@ -66,49 +63,13 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @property PartidasDeLaMercancia
+   * @property datosDelMercancia
    * @description
-   * Datos dinámicos del formulario relacionados con las partidas de la mercancía.
+   * Datos dinámicos del formulario relacionados con la mercancía.
    * 
    * @type {ModeloDeFormaDinamica[]}
    */
-  public partidasDeLaMercancia = PARTIDAS_DE_LA_MERCANCIA;
-
-  /**
-   * @property PartidasDeLa
-   * @description
-   * Datos adicionales relacionados con las partidas.
-   * 
-   * @type {ModeloDeFormaDinamica[]}
-   */
-  public partidasDeLa = PARTIDAS;
-
-  /**
-   * @property partidasTabla
-   * @description
-   * Configuración de las columnas de la tabla de partidas.
-   * 
-   * @type {ConfiguracionColumna<Partidas>[]}
-   */
-  public partidasTabla: ConfiguracionColumna<Partidas>[] = PARTIDAS_TABLA;
-
-  /**
-   * @property TablaSeleccion
-   * @description
-   * Tipo de selección para la tabla de partidas.
-   * 
-   * @type {TablaSeleccion}
-   */
-  public tablaSeleccion = TablaSeleccion;
-
-  /**
-   * @property datospartidas
-   * @description
-   * Lista de datos de las partidas de la mercancía.
-   * 
-   * @type {Partidas[]}
-   */
-  public datospartidas: Partidas[] = [];
+  public datosDelMercancia = DATOS_DE_LA_MERCANCIA;
 
   /**
    * @property solicitudDeRegistroState
@@ -124,11 +85,13 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * @description
    * Constructor del componente que inyecta los servicios necesarios para manejar los datos y formularios.
    * 
+   * @param importacionesAgropecuariasService Servicio para obtener datos de la solicitud.
    * @param importacionesAgropecuariasStore Store para manejar el estado de la solicitud.
    * @param importacionesAgropecuariasQuery Query para obtener datos del estado de la solicitud.
    * @param servicioDeFormularioService Servicio para manejar la validación de formularios.
    */
   constructor(
+    private importacionesAgropecuariasService: ImportacionesAgropecuariasService,
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
@@ -149,6 +112,9 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.datosFraccion();
+    this.datosUMT();
   }
 
   /**
@@ -159,36 +125,72 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @param event Objeto que contiene el campo y el valor a actualizar.
    */
-  
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       const VALID_VALUE = typeof event.valor === 'object' ? JSON.stringify(event.valor) : event.valor;
       this.importacionesAgropecuariasStore.setDynamicFieldValue(event.campo, VALID_VALUE);
-      this.servicioDeFormularioService.setFormValue('partidasForm', {
+      this.servicioDeFormularioService.setFormValue('datosMercanciaForm', {
         [event.campo]: event.valor,
       });
     }
   }
 
   /**
-   * @method agregarPartida
+   * @method datosFraccion
    * @description
-   * Método que agrega una nueva partida a la lista de partidas.
-   * Valida el formulario antes de agregar la partida.
+   * Método que obtiene los datos de las fracciones arancelarias desde el servicio.
+   * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
-  agregarPartida(): void {
-    if (this.ninoFormGroup.valid) {
-      const PRODUCTOS = {
-        cantidad: this.ninoFormGroup.get('cantidad')?.value,
-        unidad_de_medida: PLANTILLA_PRODUCTO.unidad_de_medida,
-        fraccion_arancelaria_tigie: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
-        descripcion: this.ninoFormGroup.get('descripcion')?.value,
-        precio_unitario: PLANTILLA_PRODUCTO.precio_unitario,
-        total_usd: this.ninoFormGroup.get('valorPartidaUsd')?.value,
-      };
-      this.datospartidas?.push(PRODUCTOS);
-      this.ninoFormGroup.reset();
-    }
+  datosFraccion(): void {
+    this.importacionesAgropecuariasService.datosDeLaSolicitud()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((data) => data.fraccion)
+      )
+      .subscribe((datosFraccion: Catalogo[]) => {
+        const FRACCION_FIELD = this.datosDelMercancia.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'fraccion_arancelaria'
+        ) as ModeloDeFormaDinamica;
+        if (FRACCION_FIELD && !FRACCION_FIELD.opciones) {
+          if (Array.isArray(datosFraccion)) {
+            FRACCION_FIELD.opciones = datosFraccion.map(
+              (item: { id: number; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      });
+  }
+
+  /**
+   * @method datosUMT
+   * @description
+   * Método que obtiene los datos de las UMT (Unidades de Medida y Tipo) desde el servicio.
+   * Actualiza las opciones del formulario dinámico con los datos obtenidos.
+   */
+  datosUMT(): void {
+    this.importacionesAgropecuariasService.datosDeLaSolicitud()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((data) => data.UMT)
+      )
+      .subscribe((datosFraccion: Catalogo[]) => {
+        const UMT_FIELD = this.datosDelMercancia.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'umt'
+        ) as ModeloDeFormaDinamica;
+        if (UMT_FIELD && !UMT_FIELD.opciones) {
+          if (Array.isArray(datosFraccion)) {
+            UMT_FIELD.opciones = datosFraccion.map(
+              (item: { id: number; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      });
   }
 
   /**
