@@ -110,6 +110,7 @@
           class="form-control"
           formControlName="importePago"
           maxlength="16"
+          (input)="onImportePagoInput($event)"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('importePago')?.touched && pagoDerechosForm.get('importePago')?.hasError('required')" class="text-danger">
