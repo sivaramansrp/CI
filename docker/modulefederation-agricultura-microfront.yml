@@ -1,13 +1,13 @@
 services:
 #----------------------------------------------------------------
-  modulefederation-agriculture-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:1.0.0
+  modulefederation-agricultura-microfront:
+    image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.0
     build: 
       context: ./../
       dockerfile: apps/agriculture/Dockerfile.dev
       args:
         - NODE_ENV=production
-    container_name: modulefederation-agriculture-microfront
+    container_name: modulefederation-agricultura-microfront
     restart: unless-stopped
     expose:
       - '4204'
