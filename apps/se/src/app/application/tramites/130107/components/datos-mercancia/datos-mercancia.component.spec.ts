@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
+import { DatosDeLaMercanciaComponent } from './datos-mercancia.component';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';

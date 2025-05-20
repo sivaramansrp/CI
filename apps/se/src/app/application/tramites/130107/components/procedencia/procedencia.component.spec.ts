@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// Mock Services
 const mockService = {
   datosDeLaSolicitud: jest.fn().mockReturnValue(of({ entidad: [{ id: 1, descripcion: 'Mercosur' }] })),
 };
