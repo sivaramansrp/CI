@@ -623,15 +623,23 @@ const ROUTES: Routes = [
         (m) => m.ImportacionesAgropecuariasModule
       ),
   },
-   {
+  {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/80316/modificaciones-immex-prosec.module').then(
+        (m) => m.ModificacionesImmexProsecModule
+      ),
+  },
+  {
     path: 'cancelaciones-certificado',
     loadChildren: () =>
       import('./tramites/140205/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
-  }
-];
+  },
 
+];
+ 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
