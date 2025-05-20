@@ -197,6 +197,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeMercanciaModule
       ),
   },
+  {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32301/aviso-modify-ivaEIepsAgace.module').then(
+        (m) => m.AvisoModifyIvaElepsAgaceModule
+      ),
+  },
 ];
 
 @NgModule({
