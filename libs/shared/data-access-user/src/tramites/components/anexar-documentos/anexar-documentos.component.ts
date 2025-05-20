@@ -29,8 +29,6 @@ import { DocumentosQuery } from '../../../core/queries/documentos.query';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { DocumentosParaCargar } from '../../../core/models/shared/anexar-documentos.model';
 
-
-
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -44,7 +42,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @type {CatalogoDocumento[]}
    */
   @Input() catalogoDocumentos: CatalogoDocumento[] = [];
-
+  
   /**
    * @description Catalogo de documentos opcionales.
    * @type {CatalogoDocumento[]}
@@ -102,11 +100,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly ESTATUS_CARGA_DOCUMENTO = ESTATUS_CARGA_DOCUMENTO;
 
-  /**
-   * @description Arreglo para almacenar los documentos cargados.
-   * @type {DocumentosCargados[]}
-   */
-  documentosCargados: DocumentosCargados[] = [];
 
   /**
    * @description Objeto para almacenar el documento seleccionado.
@@ -136,13 +129,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @description Arreglo para almacenar los documentos opcionales duplicados.
    */
   documentosOpcionalesSeleccionados: CatalogoDocumento[] = [];
-
-  /**
-   * @description Arreglo para almacenar los documentos opcionales duplicados.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  listDocOpcionalesDuplicado: any[] = [];
-
 
   /**
    * @description Variable para almacenar el estado de la carga de documentos.
@@ -183,25 +169,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
-    private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    this.documentosQuery.selectDocumentoState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((documentosState) => {
-          this.documentosState = documentosState;
-        })
-      )
-      .subscribe();
-
-    this.documentosOpcionalesSeleccionados = (this.documentosState.catalogoDocumentosRequeridos.length > 0) ? this.documentosState.catalogoDocumentosRequeridos : [];
-
-
+  
     this.cargaArchivosEvento
       .pipe(takeUntil(this.destroyNotifier$),
         map(() => this.confirmUpload())
@@ -213,6 +186,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
+
   }
 
   /**
@@ -471,11 +445,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
             ...this.catalogoDocumentosOpcionales[INDICE_OPCIONAL]
           };
         }
-        this.listDocOpcionalesDuplicado = this.documentosOpcionalesSeleccionados.map(op => op.id);
       }
     });
 
-    this.documentosStore.establecerCatalogoDocumentos(this.documentosOpcionalesSeleccionados);
     this.listDocOpcionalesAgregar = [];
   }
 
@@ -504,20 +476,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INDICE !== -1) {
       if (this.documentosOpcionalesSeleccionados[INDICE] &&
         this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
-        /*         if (this.documentosOpcionalesSeleccionados[INDICE].adicionales.length > 0) {
-         */
         this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach((adicional: CatalogoDocumento) => {
           const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
           this.listadoArchivos.splice(INDICE_LISTADO, 1);
         });
-        // }
       }
 
       const INDICE_LISTADO: number = this.listadoArchivos.findIndex(f => f.id === item.id);
       this.listadoArchivos.splice(INDICE_LISTADO, 1);
 
       this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
-      this.listDocOpcionalesDuplicado = this.documentosOpcionalesSeleccionados.map(op => op.id);
     }
     const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(id => id === item.id);
     if (INDICE_AGREGAR !== -1) {
@@ -597,5 +565,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       tamanioModal: ''
     }
   }
+
 
 }
