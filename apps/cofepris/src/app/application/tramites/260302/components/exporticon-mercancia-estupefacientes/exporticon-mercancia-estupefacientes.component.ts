@@ -120,7 +120,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public usoEspesificoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
-    derecha: 'Uso específico',
+    derecha: 'Uso específico seleccionado',
   };
 
   /**
@@ -180,6 +180,18 @@ export class ExporticonMercanciaEstupefacientesComponent
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260302State;
+
+  /**
+   * @property {boolean} esTipoValorOtros
+   * Indica si el tipo de valor es "Otros".
+   */
+  public esTipoValorOtros:boolean=false;
+
+  /**
+   * @property {boolean} esFisicoValorOtros
+   * Indica si el estado físico es "Otros".
+   */
+  public esFisicoValorOtros:boolean=false;
 
   /**
    * @constructor
@@ -284,21 +296,25 @@ export class ExporticonMercanciaEstupefacientesComponent
         Validators.required,
       ],
       tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
+      especifique: [
+        this.obtenerValor('especifique'),
+      ],
       formaFarmaceutica: [
         this.obtenerValor('formaFarmaceutica'),
         Validators.required,
       ],
       estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
+      especifiqueObligatorio:[this.obtenerValor('especifiqueObligatorio'), Validators.required],
       fraccionArancelaria: [
         this.obtenerValor('fraccionArancelaria'),
         Validators.required,
       ],
       descripcionFraccion: [
-        this.obtenerValor('descripcionFraccion'),
+        { value: this.obtenerValor('descripcionFraccion'), disabled: true },
         Validators.required,
       ],
       unidadMedidaTarifa: [
-        this.obtenerValor('unidadMedidaTarifa'),
+        { value: this.obtenerValor('unidadMedidaTarifa'), disabled: true },
         Validators.required,
       ],
       cantidadUMT: [this.obtenerValor('cantidadUMT'), Validators.required],
@@ -323,6 +339,7 @@ export class ExporticonMercanciaEstupefacientesComponent
 
       presentacion: [this.obtenerValor('presentacion'), Validators.required],
       usoEspecifico: [this.obtenerValor('usoEspecifico')],
+
     });
   }
 
@@ -452,6 +469,8 @@ export class ExporticonMercanciaEstupefacientesComponent
       usoEspecifico: event.usoEspecifico,
       numeroCAS: event.numeroCAS,
       paisDeDestino: event.paisDeDestino,
+      especifique: event.especifique,
+      especifiqueObligatorio: event.especifiqueObligatorio,
     };
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
@@ -493,6 +512,62 @@ export class ExporticonMercanciaEstupefacientesComponent
       this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes]
     );
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.mercanciaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  public cambiarFraccionArancelaria(): void {
+    if (this.mercanciaForm.get('fraccionArancelaria')?.value !== '') {
+      this.mercanciaForm.get('unidadMedidaTarifa')?.enable();
+      this.mercanciaForm
+        .get('unidadMedidaTarifa')
+        ?.setValue('Kilogram');
+      this.mercanciaForm.get('descripcionFraccion')?.disable();
+
+      this.mercanciaForm.get('descripcionFraccion')?.enable();
+      this.mercanciaForm
+        .get('descripcionFraccion')
+        ?.setValue('Efedrina y sus sales');
+      this.mercanciaForm.get('descripcionFraccion')?.disable();
+    }
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona un tipo de producto.
+   * Actualmente no implementa ninguna lógica.
+   *
+   * @returns {void}
+   */
+  public tipoProductoSeleccionado($event:Catalogo):void{
+    if($event.descripcion === 'Otro'){
+      this.esTipoValorOtros=true;
+    }else{
+      this.esTipoValorOtros=false;
+    }
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona un estado físico.
+   * Actualmente no implementa ninguna lógica.
+   *
+   * @returns {void}
+   */
+public estadoFisicoSeleccionado($event:Catalogo):void{
+    if($event.descripcion === 'Otro'){
+      this.esFisicoValorOtros=true;
+    }else{
+      this.esFisicoValorOtros=false;
+    }
+}  
 
   /**
    * @method ngOnDestroy
