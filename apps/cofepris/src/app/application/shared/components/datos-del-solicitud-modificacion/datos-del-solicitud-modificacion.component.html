@@ -414,8 +414,12 @@
   <form [formGroup]="solicitudEstablecimientoForm">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
-        <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
-          formControlName="avisoCheckbox" (change)="
+        <lib-input-check
+          [label]="'Aviso de funcionamiento:'"
+          [id]="'avisoCheckbox'"
+          [required]="true"
+          formControlName="avisoCheckbox"
+          (change)="
             toggleNoLicenciaSanitaria($event);
             enCambioDeControl('solicitudEstablecimientoForm', 'avisoCheckbox')
           "></lib-input-check>
@@ -433,6 +437,13 @@
               )
             " />
         </div>
+        @if(solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].invalid && solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].touched) {
+          <div class="d-grid">
+            @if(solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].errors?.['maxlength']) {
+              <span class="mensaje-error">No puede tener más de 20 caracteres</span>
+            }          
+          </div>
+        }
       </div>
     </div>
 
@@ -463,10 +474,21 @@
     <div class="row mt-5" *ngIf="showAifaCheckbox">
       <div class="col-md-6"></div>
       <div class="col-md-6">
-        <lib-input-check [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'" [id]="'aifaCheckbox'"
-          [required]="true" formControlName="aifaCheckbox" (change)="
+        <lib-input-check
+          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
+          [id]="'aifaCheckbox'"
+          [required]="true"
+          formControlName="aifaCheckbox"
+          (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'aifaCheckbox')
-          "></lib-input-check>
+          "
+        ><span
+        class="bi bi-question-circle-fill"
+        title="No. de licencia sanitaria"
+        data-bs-toggle="tooltip"
+      ></span> </lib-input-check>
+       
+   
       </div>
     </div>
     <div class="row">
@@ -540,7 +562,7 @@
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Datos mercancías</h4>
+        <h4 class="modal-title">Datos mercancía</h4>
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
