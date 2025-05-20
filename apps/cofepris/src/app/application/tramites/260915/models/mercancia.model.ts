@@ -26,3 +26,62 @@ export interface MercanciaCrossList {
     /** Lista cruzada para los usos específicos de la mercancía. */
     usoEspecificoCrossList: CrossList;
   }
+
+  export interface MercanciasInfo {
+    /** Identificador único de la mercancía. */
+    id: number;
+
+    /** Clasificación de la mercancía. */
+    clasificacion: string;
+
+    /** Especificación adicional de la mercancía. */
+    especificar: string;
+
+    /** Denominación específica de la mercancía. */
+    denominacionEspecifica: string;
+
+    /** Denominación distintiva de la mercancía. */
+    denominacionDistintiva: string;
+
+    /** Denominación común de la mercancía. */
+    denominacionComun: string;
+
+    /** Forma farmacéutica de la mercancía. */
+    formaFarmaceutica: string;
+
+    /** Estado físico de la mercancía. */
+    estadoFisico: string;
+
+    /** Fracción arancelaria de la mercancía. */
+    fraccionArancelaria: string;
+
+    /** Descripción de la fracción arancelaria. */
+    descripcionFraccion: string;
+
+    /** Unidad de medida de la mercancía. */
+    unidad: string;
+
+    /** Cantidad en la unidad de medida comercial (UMC). */
+    cantidadUMC: string;
+
+    /** Unidad de medida de transporte (UMT). */
+    unidadUMT: string;
+
+    /** Cantidad en la unidad de medida de transporte (UMT). */
+    cantidadUMT: string;
+
+    /** Presentación de la mercancía. */
+    presentacion: string;
+
+    /** País de origen de la mercancía. */
+    paisDeOrigen: string;
+
+    /** País de procedencia de la mercancía. */
+    paisDeProcedencia: string;
+
+    /** Tipo de producto de la mercancía. */
+    tipoProducto: string;
+
+    /** Uso específico de la mercancía. */
+    usoEspecifico: string;
+}
