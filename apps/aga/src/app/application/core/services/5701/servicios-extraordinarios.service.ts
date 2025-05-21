@@ -1,8 +1,9 @@
-import { Observable, catchError, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
-import { JSONResponse } from '@ng-mf/data-access-user';
 import { APPINJECT } from 'apps/aga/src/app/app.inject';
+import { HttpClient } from '@angular/common/http';
+import { JSONResponse } from '@ng-mf/data-access-user';
+
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class ServiciosExtraordinariosService {
    */
   urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Obtiene un catálogo por su ID desde el servidor.
@@ -25,11 +26,10 @@ export class ServiciosExtraordinariosService {
    * @returns Un observable que emite la respuesta JSON del servidor.
    */
   getCatalogoById(id: number): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`)
-      .pipe(
-        catchError((error) => {
-          return throwError(() => error);
-        })
-      );
+    return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`).pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
   }
 }
