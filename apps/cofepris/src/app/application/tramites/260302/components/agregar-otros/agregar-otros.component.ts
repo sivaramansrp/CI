@@ -216,6 +216,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
+    this.tramiteStore.updateSeleccionadoOtrosDatos([]);
     this.ubicaccion.back();
   }
 
@@ -234,7 +235,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       nombreRazonSocial = '';
     }
 
-    // 👇 Replace only nombreRazonSocial, keeping rest of the object the same
+   
     const NUEVO_VALOR_FORMULARIO = {
       ...VALOR_FORMULARIO,
       nombreRazonSocial: nombreRazonSocial,

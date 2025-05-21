@@ -162,6 +162,7 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
    * Navega a la ruta 'pago/importacion-materias-primas-estupefacientes'.
    */
   cancelar(): void {
+    this.tramiteStore.updateSeleccionadoDestinatarioDatos([]);
     this.ubicaccion.back();
   }
 
