@@ -145,6 +145,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31603/registros-de-comercio-exterior/registros-de-comercio-exterior.module').then(
+        (m) => m.RegistrosDeComercioExteriorModule
+      ),
+  },
+  {
     path: 'garantia',
     loadChildren: () =>
       import('./tramites/31101/garantia.module').then(
@@ -188,6 +195,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32509/aviso-de-mercancia.module').then(
         (m) => m.AvisoDeMercanciaModule
+      ),
+  },
+  {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32301/aviso-modify-ivaEIepsAgace.module').then(
+        (m) => m.AvisoModifyIvaElepsAgaceModule
+      ),
+  },
+   {
+    path: 'cancelacion-garantia',
+    loadChildren: () =>
+      import('./tramites/31401/cancelacion-garantia.module').then(
+        (m) => m.CancelacionGarantiaModule
       ),
   },
 ];
