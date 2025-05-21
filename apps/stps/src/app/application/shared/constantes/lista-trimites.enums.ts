@@ -6,7 +6,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         listaComponentes: [{
             id: 'solicitud',
             componentPath: () => import('../../seleccion-tramite/seleccion-tramite.component').then(m => m.SeleccionTramiteComponent),
-            componentName: 'DatosComponent',
+            componentName: 'SeleccionTramiteComponent',
         },]
     },
 ];
