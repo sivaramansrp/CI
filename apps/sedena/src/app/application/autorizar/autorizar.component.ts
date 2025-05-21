@@ -217,13 +217,21 @@ export class AutorizarComponent implements OnInit, OnDestroy {
     }
   }
   /**
-    * @method ngOnDestroy
-    * @description Libera los recursos y cancela las suscripciones para evitar fugas de memoria.
-    * @returns {void}
-    */
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Libera los recursos utilizados por el componente:
+   * - Emite un valor en el `destroyNotifier$` para cancelar las suscripciones activas y evitar fugas de memoria.
+   * - Completa el `destroyNotifier$`.
+   * - Limpia el estado del trámite llamando a `solicitanteConsultaio` y `establecerConsultaio` en el store.
+   * 
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.consultaioStore.solicitanteConsultaio(null);
+    this.consultaioStore.establecerConsultaio('', '', '', '', '', '', false, true, false);
   }
 
 }
