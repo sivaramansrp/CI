@@ -50,8 +50,9 @@ const ROUTES: Routes = [
     path: 'renovacion-iva-ieps',
     loadChildren: () =>
       import('./tramites/31202/renewal-vat-ieps-mod-aa.module').then(
-        (m) => m.RenewalVatIepsModAAModule)
-      },
+        (m) => m.RenewalVatIepsModAAModule
+      ),
+  },
   {
     path: 'retorno-contenedores',
     loadChildren: () =>
@@ -282,9 +283,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'desistir-solicitud-informacion-historica',
-    loadChildren: () => 
-      import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
-        (m) => m.DesistirSolicitudInformacionHistoricaModule)
+    loadChildren: () =>
+      import(
+        './tramites/31910/desistir-solicitud-informacion-historica.module'
+      ).then((m) => m.DesistirSolicitudInformacionHistoricaModule),
   },
   {
     path: 'registro-transportista',
@@ -304,38 +306,43 @@ const ROUTES: Routes = [
     path: 'tecnologicos',
     loadChildren: () =>
       import('./tramites/324/tecnologicos.module').then(
-        (m) => m.TecnologicosModule),
+        (m) => m.TecnologicosModule
+      ),
   },
   {
     path: 'autorizacion-importacion',
     loadChildren: () =>
       import('./tramites/6402/autorizacion-importacion.module').then(
-        (m) => m.AutorizacionImportacionModule),
+        (m) => m.AutorizacionImportacionModule
+      ),
   },
   {
-
     path: 'autorizacion-importacion-temporal',
     loadChildren: () =>
       import('./tramites/630103/autorizacion-importacion-temporal.module').then(
-        (m) => m.AutorizacionImportacionTemporalModule),
+        (m) => m.AutorizacionImportacionTemporalModule
+      ),
   },
   {
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule),
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
   },
   {
     path: 'retorno-de-partes',
     loadChildren: () =>
       import('./tramites/6403/retorno-de-partes.module').then(
-        (m) => m.RetornoDePartesModule),
+        (m) => m.RetornoDePartesModule
+      ),
   },
   {
     path: 'operaciones-de-comercio',
     loadChildren: () =>
       import('./tramites/319/operaciones-de-comercio-exterior.module').then(
-        (m) => m.OperacionesDeComercioExteriorModule)
+        (m) => m.OperacionesDeComercioExteriorModule
+      ),
   },
   {
     path: 'importador-exportador',
@@ -355,28 +362,32 @@ const ROUTES: Routes = [
     path: 'registrar-proveedores',
     loadChildren: () =>
       import('./tramites/420101/registrar-proveedores.module').then(
-        (m) => m.RegistrarProveedoresModule),
+        (m) => m.RegistrarProveedoresModule
+      ),
   },
   {
     path: 'concluir-relacion',
     loadChildren: () =>
       import('./tramites/420102/concluir-relacion.module').then(
-        (m) => m.ConcluirRelacionModule),
+        (m) => m.ConcluirRelacionModule
+      ),
   },
   {
     path: 'solicitud-despacho-exportacion',
     loadChildren: () =>
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
-        (m) => m.SolicitudDespachoExportacionModule)
+        (m) => m.SolicitudDespachoExportacionModule
+      ),
   },
   {
     path: 'renovacion-iva-ieps/mod-a',
     loadChildren: () =>
       import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
-        (m) => m.RenewalVatIepsModAModule),
+        (m) => m.RenewalVatIepsModAModule
+      ),
   },
   {
-  path: 'proceso-requerimiento',
+    path: 'proceso-requerimiento',
     loadComponent: () =>
       import('./proceso-requerimiento/proceso-requerimiento.component').then(
         (m) => m.ProcesoRequerimientoComponent
@@ -402,7 +413,14 @@ const ROUTES: Routes = [
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       ),
-  }
+  },
+  {
+    path: 'fronteriza',
+    loadChildren: () =>
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule
+      ),
+  },
 ];
 
 @NgModule({
