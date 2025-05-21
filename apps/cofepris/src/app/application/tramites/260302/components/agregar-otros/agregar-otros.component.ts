@@ -206,8 +206,8 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.tipoPersonaRadioOpcions=this.tipoPersonaRadioOpcions.filter((item)=>item.value !== TipoPersona.NO_CONTRIBUYENTE);
     this.agregarDatosForm.reset();
-    this.radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
   }
   /**
    * @method cancelar
