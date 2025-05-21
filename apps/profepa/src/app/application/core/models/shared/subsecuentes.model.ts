@@ -48,31 +48,3 @@ export interface BotonDeAccion {
   /** URL de acción asociada al botón. */
   urlAccion: string;
 }
-
-/**
- * @constant LISTA_TRIMITES
- * @description
- * Lista de trámites con sus componentes asociados. Define qué componente debe cargarse por cada trámite.
- *
- * @type {AccuseComponentes[]}
- */
-export const LISTA_TRIMITES: AccuseComponentes[] = [
-  {
-    tramite: 301,
-    listaComponentes: [
-      {
-        /** Identificador interno del componente. */
-        id: 'solicitud',
-
-        /** Ruta dinámica de carga del componente. */
-        componentPath: () =>
-          import(
-            '../../../tramites/31101/pages/paso-uno/paso-uno.component'
-          ).then((m) => m.PasoUnoComponent),
-
-        /** Nombre del componente. */
-        componentName: 'DatosComponent',
-      },
-    ],
-  },
-];

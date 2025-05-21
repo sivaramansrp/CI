@@ -7,10 +7,10 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       {
         id: 'solicitud',
         componentPath: () =>
-          import('../../tramites/31101/pages/paso-uno/paso-uno.component').then(
-            (m) => m.PasoUnoComponent
+          import('../../seleccion-tramite/seleccion-tramite.component').then(
+            (m) => m.SeleccionTramiteComponent
           ),
-        componentName: 'DatosComponent',
+        componentName: 'SeleccionTramiteComponent',
       },
     ],
   },
