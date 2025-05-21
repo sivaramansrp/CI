@@ -395,16 +395,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion',
     loadChildren: () =>
-      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
-        (m) => m.ImportacionNeumaticosComercializarModule
-      ),
+      import(
+        './tramites/130110/importacion-neumaticos-comercializar.module'
+      ).then((m) => m.ImportacionNeumaticosComercializarModule),
   },
   {
     path: 'importacion',
     loadChildren: () =>
-      import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
-        (m) => m.ImportacionEquipoAnticontaminanteModule
-      ),
+      import(
+        './tramites/130113/importacion-equipo-anticontaminante.module'
+      ).then((m) => m.ImportacionEquipoAnticontaminanteModule),
   },
   {
     path: 'importacion-de',
@@ -430,9 +430,9 @@ const ROUTES: Routes = [
   {
     path: 'importacion-otros-vehiculos-usados',
     loadChildren: () =>
-      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
-        (m) => m.ImportacionOtrosVehiculosUsadosModule
-      )
+      import(
+        './tramites/130104/importacion-otros-vehiculos-usados.module'
+      ).then((m) => m.ImportacionOtrosVehiculosUsadosModule),
   },
   {
     path: 'modalidad-ampliacion',
@@ -530,7 +530,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110212/validacion-posteriori.module').then(
         (m) => m.ValidacionPosterioriModuleModule
-      )
+      ),
   },
   {
     path: 'modificaciones-immex-prosec',
@@ -549,9 +549,7 @@ const ROUTES: Routes = [
   {
     path: 'cupos',
     loadChildren: () =>
-      import('./tramites/120403/cupos.module').then(
-        (m) => m.CuposModule
-      ),
+      import('./tramites/120403/cupos.module').then((m) => m.CuposModule),
   },
   {
     path: 'informe-anual-programa',
@@ -561,7 +559,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(
@@ -600,9 +597,9 @@ const ROUTES: Routes = [
   {
     path: 'immex-modificacion-cambio-de-sector',
     loadChildren: () =>
-      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
-        (m) => m.ImmexModificacionCambioDeSectorModule
-      ),
+      import(
+        './tramites/80314/immex-modificacion-cambio-de-sector.module'
+      ).then((m) => m.ImmexModificacionCambioDeSectorModule),
   },
   {
     path: 'validar-certificado-inicialmente',
@@ -646,7 +643,15 @@ const ROUTES: Routes = [
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
       ),
-  }
+  },
+  {
+    path: 'cancelaciones-certificado',
+    loadChildren: () =>
+      import('./tramites/140205/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
+  },
+
 ];
  
 @NgModule({
