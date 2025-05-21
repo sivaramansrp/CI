@@ -1,851 +1,104 @@
-name: CI/CD VUCEM Microfrontends
+name: CI/CD - Microfront Dashboard
 
 on:
   workflow_dispatch:
-    inputs:
-      deploymentEnv:
-        description: 'Entorno de despliegue'
-        required: true
-        type: choice
-        options:
-          - dev
-          - staging
-          - prod
-        default: 'dev'
-      deploymentMode:
-        description: 'Modo de despliegue'
-        required: true
-        type: choice
-        options:
-          - changed
-          - selected
-          - all
-        default: 'changed'
-      selectedApps:
-        description: 'Aplicaciones a desplegar (separadas por comas, solo para modo "selected")'
-        required: false
-        type: string
-        default: 'dashboard'
-      appGroup1:
-        description: 'Grupo 1: dashboard,login,aga,agriculture,se'
-        required: false
-        type: boolean
-        default: false
-      appGroup2:
-        description: 'Grupo 2: semarnat,agace,funcionario,cofepris,amecafe'
-        required: false
-        type: boolean
-        default: false
-      appGroup3:
-        description: 'Grupo 3: sener,inbal,sedena,profepa,crt'
-        required: false
-        type: boolean
-        default: false
-      appGroup4:
-        description: 'Grupo 4: inah,bandejas,stps'
-        required: false
-        type: boolean
-        default: false
-      deployToK8s:
-        description: 'Desplegar en Kubernetes después de construir'
-        required: false
-        type: boolean
-        default: true
   push:
-    branches:
-      - develop
-      - staging
-      - production
+    branches: [ develop ]
     paths:
       - 'apps/**'
       - 'libs/**'
+      - 'package*.json'
+      - 'Dockerfile'
       - 'docker/**'
-      - 'k8s/**'
-      - 'package.json'
-      - 'nx.json'
-      - '.github/workflows/**'
-
-# Definir permisos explícitos para el workflow
-permissions:
-  contents: read
-  packages: write
-
-env:
-  NODE_VERSION: '22.14.0'
-  NX_VERSION: '19.3.1'
-  DOCKER_REGISTRY: 'ghcr.io'
-  AVAILABLE_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener,inbal,sedena,profepa,crt,inah,bandejas,stps'
-  NX_SKIP_NX_CACHE: true
-  NX_NATIVE_BINDINGS: false
 
 jobs:
-  setup:
+  build-deploy:
     runs-on: ubuntu-latest
-    outputs:
-      env: ${{ steps.set-env.outputs.env }}
-      apps_to_deploy: ${{ steps.determine-apps.outputs.apps_to_deploy }}
-      deployment_matrix: ${{ steps.create-matrix.outputs.matrix }}
-      k8s_deploy: ${{ steps.check-k8s-deploy.outputs.deploy_to_k8s }}
-    # Solo ejecutar cuando es push a develop, staging o production, o cuando se ejecuta manualmente
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'))
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Needed for git diff
-
-      - name: Set deployment environment
-        id: set-env
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "env=${{ github.event.inputs.deploymentEnv }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
-            echo "env=prod" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            echo "env=staging" >> $GITHUB_OUTPUT
-          else
-            echo "env=dev" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Detect changed files
-        id: changed-files
-        run: |
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Get the base commit
-            BASE_COMMIT=$(git rev-parse HEAD^)
-            # Get the HEAD commit
-            HEAD_COMMIT=$(git rev-parse HEAD)
-            
-            echo "Comparing changes between $BASE_COMMIT and $HEAD_COMMIT"
-            
-            # Get changed files
-            CHANGED_FILES=$(git diff --name-only $BASE_COMMIT $HEAD_COMMIT)
-            echo "Changed files: $CHANGED_FILES"
-            echo "changed_files<<EOF" >> $GITHUB_OUTPUT
-            echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-            
-            # Verify if this is a merge to develop, staging, or production
-            if [[ "${{ github.ref }}" == "refs/heads/develop" || "${{ github.ref }}" == "refs/heads/staging" || "${{ github.ref }}" == "refs/heads/production" ]]; then
-              echo "Running on direct push or merge to target branch"
-            else
-              echo "::warning::This workflow will only run when directly pushing to or merging into develop, staging, or production branches."
-              exit 0
-            fi
-          else
-            echo "changed_files=" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Check for K8s deployment
-        id: check-k8s-deploy
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            DEPLOY_TO_K8S="${{ github.event.inputs.deployToK8s }}"
-          else
-            # Si es una integración automática (push), verificar si hay cambios en k8s/
-            if grep -q "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
-              DEPLOY_TO_K8S="true"
-            else
-              DEPLOY_TO_K8S="true"  # Por defecto, siempre desplegar en k8s
-            fi
-          fi
-          
-          echo "deploy_to_k8s=$DEPLOY_TO_K8S" >> $GITHUB_OUTPUT
-          echo "Deployment to Kubernetes: $DEPLOY_TO_K8S"
-
-      - name: Setup Node.js for detection
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install NX globally
-        run: npm install -g nx@${{ env.NX_VERSION }}
-
-      # Optimización para instalar solo dependencias mínimas para la detección
-      - name: Install dependencies for affected detection
-        run: |
-          npm install --no-package-lock --no-save --no-audit --prefer-offline @nx/workspace nx
-          npm install --no-package-lock --no-audit --prefer-offline @nx/nx-linux-x64-gnu
-
-      - name: Detect changed apps
-        id: detect-apps
-        run: |
-          # Default to empty
-          CHANGED_APPS=""
-          DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
-          
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "selected" ]]; then
-            # Check if any specific apps were provided in the selectedApps input
-            if [[ -n "${{ github.event.inputs.selectedApps }}" ]]; then
-              SELECTED_APPS="${{ github.event.inputs.selectedApps }}"
-            else
-              SELECTED_APPS=""
-              
-              # Process app groups
-              if [[ "${{ github.event.inputs.appGroup1 }}" == "true" ]]; then
-                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
-                SELECTED_APPS+="dashboard,login,aga,agriculture,se"
-              fi
-              
-              if [[ "${{ github.event.inputs.appGroup2 }}" == "true" ]]; then
-                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
-                SELECTED_APPS+="semarnat,agace,funcionario,cofepris,amecafe"
-              fi
-              
-              if [[ "${{ github.event.inputs.appGroup3 }}" == "true" ]]; then
-                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
-                SELECTED_APPS+="sener,inbal,sedena,profepa,crt"
-              fi
-              
-              if [[ "${{ github.event.inputs.appGroup4 }}" == "true" ]]; then
-                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
-                SELECTED_APPS+="inah,bandejas,stps"
-              fi
-              
-              # If no group was selected, default to dashboard
-              if [[ -z "$SELECTED_APPS" ]]; then
-                SELECTED_APPS="dashboard"
-              fi
-            fi
-            
-            # Remove duplicates from selected apps
-            SELECTED_APPS=$(echo "$SELECTED_APPS" | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
-            
-            CHANGED_APPS="$SELECTED_APPS"
-            echo "Manually selected apps: $CHANGED_APPS"
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "all" ]]; then
-            # Deploy all apps
-            CHANGED_APPS="${{ env.AVAILABLE_APPS }}"
-            echo "Deploying all available apps: $CHANGED_APPS"
-          else
-            # Auto-detect changed apps
-            # 1. Check for changes in apps/ directory
-            if grep -q "^apps/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
-              echo "Changes detected in apps/ directory"
-              # Extract app names from changed files
-              APP_DIRS=$(grep "^apps/" <<< "${{ steps.changed-files.outputs.changed_files }}" | cut -d'/' -f2 | sort -u | tr '\n' ',' | sed 's/,$//')
-              CHANGED_APPS="$APP_DIRS"
-              echo "Apps with changes from files: $CHANGED_APPS"
-            fi
-            
-            # 2. Check for changes in k8s manifests
-            if grep -q "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
-              echo "Changes detected in k8s/ directory"
-              K8S_APPS=$(grep "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}" | cut -d'/' -f2 | grep -v "README.md\|vucem-microfrontends.yaml" | sort -u | tr '\n' ',' | sed 's/,$//' | sed 's/-microfront//g')
-              
-              if [[ -n "$CHANGED_APPS" && -n "$K8S_APPS" ]]; then
-                CHANGED_APPS="$CHANGED_APPS,$K8S_APPS"
-              elif [[ -n "$K8S_APPS" ]]; then
-                CHANGED_APPS="$K8S_APPS"
-              fi
-              
-              echo "Apps with changes from k8s: $CHANGED_APPS"
-            fi
-            
-            # 3. Check for changes in libs/ directory or shared dependencies
-            if grep -q "^libs/" <<< "${{ steps.changed-files.outputs.changed_files }}" || 
-               grep -q "package.json" <<< "${{ steps.changed-files.outputs.changed_files }}" ||
-               grep -q "nx.json" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
-              echo "Changes detected in shared dependencies, rebuilding all apps"
-              CHANGED_APPS="${{ env.AVAILABLE_APPS }}"
-            fi
-            
-            # 4. Use NX affected if available and we have specific app changes
-            if command -v npx &> /dev/null && [[ -n "$CHANGED_APPS" && "$CHANGED_APPS" != "${{ env.AVAILABLE_APPS }}" ]]; then
-              echo "Using NX to detect affected apps"
-              NX_AFFECTED=$(npx nx show projects --affected --type=app --json | jq -r '.[]' | tr '\n' ',' | sed 's/,$//')
-              
-              if [[ -n "$NX_AFFECTED" ]]; then
-                if [[ -n "$CHANGED_APPS" ]]; then
-                  CHANGED_APPS="$CHANGED_APPS,$NX_AFFECTED"
-                else
-                  CHANGED_APPS="$NX_AFFECTED"
-                fi
-                echo "NX affected apps: $NX_AFFECTED"
-              fi
-            fi
-          fi
-          
-          # Always include dashboard when other apps change
-          if [[ -n "$CHANGED_APPS" && ! "$CHANGED_APPS" =~ (^|,)dashboard(,|$) ]]; then
-            CHANGED_APPS="dashboard,$CHANGED_APPS"
-          fi
-          
-          # Remove duplicates and sort
-          if [[ -n "$CHANGED_APPS" ]]; then
-            CHANGED_APPS=$(echo "$CHANGED_APPS" | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
-          fi
-          
-          echo "Final list of apps to deploy: $CHANGED_APPS"
-          echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
-
-      - name: Determine apps to deploy
-        id: determine-apps
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
-            
-            if [[ "$DEPLOYMENT_MODE" == "all" ]]; then
-              # Deploy all available apps
-              echo "apps_to_deploy=${{ env.AVAILABLE_APPS }}" >> $GITHUB_OUTPUT
-            elif [[ "$DEPLOYMENT_MODE" == "selected" && -n "${{ github.event.inputs.selectedApps }}" ]]; then
-              # Deploy selected apps
-              echo "apps_to_deploy=${{ github.event.inputs.selectedApps }}" >> $GITHUB_OUTPUT
-            else
-              # Deploy changed apps
-              echo "apps_to_deploy=${{ steps.detect-apps.outputs.changed_apps }}" >> $GITHUB_OUTPUT
-            fi
-          else
-            # Auto CI mode, deploy detected changed apps
-            echo "apps_to_deploy=${{ steps.detect-apps.outputs.changed_apps }}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create build matrix
-        id: create-matrix
-        run: |
-          # Get the apps to deploy from the previous step
-          APPS_TO_DEPLOY="${{ steps.determine-apps.outputs.apps_to_deploy }}"
-          
-          if [[ -z "$APPS_TO_DEPLOY" ]]; then
-            echo "No apps to deploy, setting up empty matrix"
-            echo "matrix={\"app\":[]}" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # Simple approach: directly create a valid JSON array without relying on jq
-          # Remove any whitespace and ensure we have valid app names
-          CLEAN_APPS=$(echo "$APPS_TO_DEPLOY" | tr -d ' ' | sed 's/,$//')
-          
-          # Create JSON array directly with proper formatting
-          echo "Creating matrix from apps: $CLEAN_APPS"
-          
-          # Start JSON array
-          JSON_ARRAY="["
-          
-          # Split by comma and add each app with proper JSON formatting
-          IFS=',' read -ra APP_ARRAY <<< "$CLEAN_APPS"
-          for ((i=0; i<${#APP_ARRAY[@]}; i++)); do
-            # Skip empty entries
-            if [[ -n "${APP_ARRAY[$i]}" ]]; then
-              # Add quotes around the app name
-              JSON_ARRAY+="\"${APP_ARRAY[$i]}\""
-              
-              # Add comma if not the last element
-              if [ $i -lt $((${#APP_ARRAY[@]}-1)) ]; then
-                JSON_ARRAY+=","
-              fi
-            fi
-          done
-          
-          # Close JSON array
-          JSON_ARRAY+="]"
-          
-          # Set the matrix output
-          echo "matrix={\"app\":$JSON_ARRAY}" >> $GITHUB_OUTPUT
-          
-          # Debug output
-          echo "Matrix configuration:"
-          echo "{\"app\":$JSON_ARRAY}"
-
-      - name: Prepare K8s manifests
-        if: steps.check-k8s-deploy.outputs.deploy_to_k8s == 'true'
-        run: |
-          echo "Preparing Kubernetes manifests for deployment..."
-          
-          # Crear directorio para manifiestos procesados
-          mkdir -p k8s-deploy
-          
-          # Copiar manifiestos individuales o usar el template principal
-          if [ -f "k8s/vucem-microfrontends.yaml" ]; then
-            echo "Encontrado template principal, preparando para despliegue..."
-            cp -v k8s/vucem-microfrontends.yaml k8s-deploy/
-          else
-            echo "No se encontró template principal, verificando manifiestos individuales..."
-            # Verificar que existan los directorios para cada microservicio
-            APPS_TO_DEPLOY="${{ steps.determine-apps.outputs.apps_to_deploy }}"
-            IFS=',' read -ra APP_ARRAY <<< "$APPS_TO_DEPLOY"
-            
-            for app in "${APP_ARRAY[@]}"; do
-              if [ -d "k8s/${app}-microfront" ] || [ -d "k8s/${app}" ]; then
-                APP_DIR="k8s/${app}-microfront"
-                [ ! -d "$APP_DIR" ] && APP_DIR="k8s/${app}"
-                
-                if [ -d "$APP_DIR" ]; then
-                  echo "Copiando manifiestos para $app desde $APP_DIR"
-                  mkdir -p k8s-deploy/${app}
-                  cp -v $APP_DIR/*-${{ steps.set-env.outputs.env }}.yaml k8s-deploy/${app}/ 2>/dev/null || echo "No se encontraron manifiestos para $app con sufijo -${{ steps.set-env.outputs.env }}.yaml"
-                fi
-              else
-                echo "No se encontró directorio k8s para $app"
-              fi
-            done
-          fi
-          
-          # Verificar que tengamos algún manifiesto
-          if [ ! "$(ls -A k8s-deploy)" ]; then
-            echo "ADVERTENCIA: No se encontraron manifiestos para desplegar"
-          else
-            echo "Manifiestos preparados para despliegue:"
-            find k8s-deploy -type f -name "*.yaml" | sort
-          fi
-
-  build:
-    needs: setup
-    if: needs.setup.outputs.apps_to_deploy != ''
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.setup.outputs.deployment_matrix) }}
-      fail-fast: false
     env:
-      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
+      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
     steps:
+      # Obtiene el código de tu repositorio.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential libpng-dev
-
+      #  Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Set npm environment variables
-        run: |
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-
-      - name: Install native bindings for Nx and SWC
-        run: |
-          npm install @nx/nx-linux-x64-gnu
-          npm install @swc/core-linux-x64-gnu
-
-      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
-      - name: Install dependencies
-        run: npm ci --no-audit --prefer-offline
-
-      - name: Build ${{ matrix.app }}
-        run: |
-          echo "Building ${{ matrix.app }} for ${{ env.DEPLOYMENT_ENV }} environment"
+          node-version: '22.14.0'
           
-          # Set build command based on environment
-          if [[ "${{ env.DEPLOYMENT_ENV }}" == "prod" ]]; then
-            BUILD_CMD="build-prod"
-          else
-            BUILD_CMD="build"
-          fi
-          
-          # Handle special case for dashboard
-          if [[ "${{ matrix.app }}" == "dashboard" ]]; then
-            npx nx $BUILD_CMD ${{ matrix.app }} --configuration=${{ env.DEPLOYMENT_ENV }}
-          else
-            npx nx $BUILD_CMD ${{ matrix.app }} --configuration=${{ env.DEPLOYMENT_ENV }}
-          fi
-
-      - name: Verify build output
-        run: |
-          if [[ "${{ matrix.app }}" == "dashboard" ]]; then
-            BUILD_DIR="dist/apps/${{ matrix.app }}"
-          else
-            BUILD_DIR="dist/apps/${{ matrix.app }}"
-          fi
-          
-          if [[ ! -d "$BUILD_DIR" ]]; then
-            echo "::error::Build failed - output directory $BUILD_DIR does not exist"
-            exit 1
-          fi
-          
-          echo "Build succeeded - files in $BUILD_DIR:"
-          ls -la $BUILD_DIR
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.DOCKER_REGISTRY }}/vucem30-dev/frontend/vucem-front-${{ matrix.app }}
-          tags: |
-            type=raw,value=${{ env.DEPLOYMENT_ENV }}
-            type=sha,format=short
-            type=raw,value=latest,enable=${{ env.DEPLOYMENT_ENV == 'dev' }}
-
-      # Optimización para reducir minutos de CI: uso de cache eficiente
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./apps/${{ matrix.app }}/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.app }}-${{ env.DEPLOYMENT_ENV }}
-          cache-to: type=gha,scope=${{ matrix.app }}-${{ env.DEPLOYMENT_ENV }},mode=max
-          build-args: |
-            ENV=${{ env.DEPLOYMENT_ENV }}
-            APP_NAME=${{ matrix.app }}
-
-  prepare-k8s:
-    needs: [setup, build]
-    if: needs.setup.outputs.k8s_deploy == 'true'
-    runs-on: ubuntu-latest
-    env:
-      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
-      APPS_TO_DEPLOY: ${{ needs.setup.outputs.apps_to_deploy }}
-    outputs:
-      manifests_ready: ${{ steps.check-manifests.outputs.manifests_ready }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Instalar NX globalmente
+        run: npm install -g nx@19.3.1
         
-      - name: Create Kubernetes manifests
+      # Instala el módulo nativo requerido para Linux.
+      - name: Install native binding for Nx on Linux
+        run: npm install @nx/nx-linux-x64-gnu
+        
+      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+      - name: Install SWC native binding for Linux
+        run: npm install @swc/core-linux-x64-gnu
+        
+
+      # 3. Instala las dependencias usando --force, tal como lo haces localmente.
+      - name: Install dependencies
         run: |
-          # Make directory for env-specific manifests
-          mkdir -p k8s-${{ env.DEPLOYMENT_ENV }}
-          
-          # Determinar recursos según el entorno
-          if [[ "${{ env.DEPLOYMENT_ENV }}" == "prod" ]]; then
-            REPLICAS="3"
-            MIN_REPLICAS="3"
-            MAX_REPLICAS="15"
-            CPU_REQUEST="200m"
-            MEM_REQUEST="256Mi"
-            CPU_LIMIT="1000m"
-            MEM_LIMIT="512Mi"
-          elif [[ "${{ env.DEPLOYMENT_ENV }}" == "staging" ]]; then
-            REPLICAS="2"
-            MIN_REPLICAS="2"
-            MAX_REPLICAS="10"
-            CPU_REQUEST="150m"
-            MEM_REQUEST="192Mi"
-            CPU_LIMIT="750m"
-            MEM_LIMIT="384Mi"
-          else
-            # Entorno de desarrollo
-            REPLICAS="1"
-            MIN_REPLICAS="1"
-            MAX_REPLICAS="5"
-            CPU_REQUEST="100m"
-            MEM_REQUEST="128Mi"
-            CPU_LIMIT="500m"
-            MEM_LIMIT="256Mi"
-          fi
-          
-          # Process the template - Usar el namespace correcto para el registry
-          cat k8s/vucem-microfrontends.yaml | \
-          sed "s/\${ENV}/${{ env.DEPLOYMENT_ENV }}/g" | \
-          sed "s/\${REGISTRY}/${{ env.DOCKER_REGISTRY }}\/vucem30-dev\/frontend/g" | \
-          sed "s/\${TAG}/${{ env.DEPLOYMENT_ENV }}/g" | \
-          sed "s/\${REPLICAS}/${REPLICAS}/g" | \
-          sed "s/\${MIN_REPLICAS}/${MIN_REPLICAS}/g" | \
-          sed "s/\${MAX_REPLICAS}/${MAX_REPLICAS}/g" | \
-          sed "s/memory: \"128Mi\"/memory: \"${MEM_REQUEST}\"/g" | \
-          sed "s/memory: \"256Mi\"/memory: \"${MEM_LIMIT}\"/g" | \
-          sed "s/cpu: \"100m\"/cpu: \"${CPU_REQUEST}\"/g" | \
-          sed "s/cpu: \"500m\"/cpu: \"${CPU_LIMIT}\"/g" > k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
-          
-          # Asegurar que el imagePullSecret correcto esté en el manifiesto
-          sed -i "s/name: github-container-registry/name: vucem30registrykey/g" k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
-          
-          # Eliminar la anotación conflictiva del Ingress
-          # Elimina kubernetes.io/ingress.class cuando ingressClassName está definido
-          sed -i '/kubernetes.io\/ingress.class/d' k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
-          
-          # Asegurar que los microservicios adicionales estén incluidos en el manifiesto
-          echo "Verificando que todos los microservicios listados en AVAILABLE_APPS estén en el manifiesto..."
-          
-          # Verificar que el manifiesto fue creado correctamente
-          if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
-            echo "::error::No se pudo crear el manifiesto"
-            exit 1
-          fi
-          echo "Manifiesto creado correctamente en k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml"
-          
-          echo "Created Kubernetes manifest for ${{ env.DEPLOYMENT_ENV }} environment"
-          echo "Manifest includes all microfrontends but will only restart the updated ones"
-      
-      - name: Prepare deployment script
-        id: generate-deployment
-        run: |
-          # Verificar que el script de despliegue existe
-          if [ ! -f "deploy_commands.sh" ]; then
-            echo "::error::No se encontró el archivo deploy_commands.sh en el repositorio"
-            exit 1
-          fi
-          
-          # Comprobar que el script tiene permisos de ejecución
-          chmod +x deploy_commands.sh
-          
-          # Preparar el script con el entorno adecuado
-          echo "Utilizando script de despliegue con entorno: ${{ env.DEPLOYMENT_ENV }}"
-          DEPLOY_CMD="./deploy_commands.sh ${{ env.DEPLOYMENT_ENV }}"
-          
-          # Store deployment command
-          echo "script=$DEPLOY_CMD" >> $GITHUB_OUTPUT
-      
-      # Crear script de parche
-      - name: Create script patch
-        run: |
-          cat << 'EOF' > script_patch.sh
-          #!/bin/bash
+          npm install --force
+    
+      - name: Listar archivos
+        run: ls -la
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
-          # Este script actualiza el archivo deploy_commands.sh original con los parches necesarios
-          # para solucionar los problemas de despliegue
-
-          if [ ! -f "deploy_commands.sh" ]; then
-            echo "ERROR: No se encontró el archivo deploy_commands.sh"
-            exit 1
-          fi
-
-          # Crea una copia de seguridad
-          cp deploy_commands.sh deploy_commands.sh.bak
-
-          # Modificación 1: Añadir soporte para la creación del secreto con GITHUB_TOKEN
-          # Buscar la sección que verifica el secreto y reemplazarla
-          sed -i '/echo "Verificando secreto para pull de imágenes..."/,/fi/c\
-          echo "Verificando secreto para pull de imágenes..."\
-          microk8s kubectl get secret vucem30registrykey -n default >/dev/null 2>\&1\
-          if [ $? -ne 0 ]; then\
-            echo "Creando secreto vucem30registrykey en el namespace default..."\
-            \
-            # Si GITHUB_TOKEN está disponible, usarlo para crear el secreto\
-            if [ -n "${GITHUB_TOKEN}" ]; then\
-              microk8s kubectl create secret docker-registry vucem30registrykey \\\
-                --docker-server=ghcr.io \\\
-                --docker-username=vucem30-dev \\\
-                --docker-password=${GITHUB_TOKEN} \\\
-                --docker-email=admin@vucem.com \\\
-                -n default\
-              \
-              if [ $? -ne 0 ]; then\
-                echo "ADVERTENCIA: No se pudo crear el secreto automáticamente."\
-                echo "El despliegue podría fallar. Cree el secreto con:"\
-                echo "kubectl create secret docker-registry vucem30registrykey \\\\"\
-                echo "  --docker-server=ghcr.io \\\\"\
-                echo "  --docker-username=USUARIO \\\\"\
-                echo "  --docker-password=TOKEN \\\\"\
-                echo "  --docker-email=EMAIL \\\\"\
-                echo "  -n default"\
-              else\
-                echo "Secreto creado correctamente."\
-              fi\
-            else\
-              echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace default."\
-              echo "El despliegue podría fallar. Cree el secreto con:"\
-              echo "kubectl create secret docker-registry vucem30registrykey \\\\"\
-                echo "  --docker-server=ghcr.io \\\\"\
-                echo "  --docker-username=USUARIO \\\\"\
-                echo "  --docker-password=TOKEN \\\\"\
-                echo "  --docker-email=EMAIL \\\\"\
-                echo "  -n default"\
-            fi\
-          fi' deploy_commands.sh
-
-          # Modificación 2: Añadir el procesamiento del manifiesto eliminando la anotación conflictiva
-          # Buscar la sección antes de aplicar el manifiesto
-          grep -n "Aplicar manifiesto" deploy_commands.sh
-          if [ $? -eq 0 ]; then
-            line_num=$(grep -n "Aplicar manifiesto" deploy_commands.sh | head -1 | cut -d':' -f1)
-            echo "Insertando código para procesar el manifiesto en la línea: $line_num"
-            sed -i "${line_num}i\\
-          # Crear una copia temporal del manifiesto para procesarlo\\
-          TMP_MANIFEST=\"\$K8S_TEMP_DIR/tmp-manifest-\$DEPLOYMENT_ENV.yaml\"\\
-          cp \"\$MANIFEST_FILE\" \"\$TMP_MANIFEST\"\\
-          \\
-          # Eliminar la anotación conflictiva del Ingress\\
-          sed -i '/kubernetes.io\\/ingress.class/d' \"\$TMP_MANIFEST\"\\
-          " deploy_commands.sh
-          else
-            echo "No se encontró la sección 'Aplicar manifiesto' en el script"
-          fi
-
-          # Modificación 3: Usar el archivo temporal para el despliegue
-          sed -i 's/microk8s kubectl apply -f "\$MANIFEST_FILE"/microk8s kubectl apply -f "\$TMP_MANIFEST"/g' deploy_commands.sh
-          sed -i 's/microk8s kubectl apply --validate=true --dry-run=client -f "\$MANIFEST_FILE"/microk8s kubectl apply --validate=true --dry-run=client -f "\$TMP_MANIFEST"/g' deploy_commands.sh
-          
-          # Modificación 4: Ya no es necesaria porque se reemplazó la sección de rollout con una nueva implementación
-
-          echo "Script deploy_commands.sh actualizado con éxito."
-          echo "Se ha creado una copia de seguridad en deploy_commands.sh.bak"
-          EOF
-          chmod +x script_patch.sh
-          cat script_patch.sh
-
-      - name: Check manifests
-        id: check-manifests
-        run: |
-          # Verificar si tenemos manifiestos disponibles
-          if [ -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
-            echo "manifests_ready=true" >> $GITHUB_OUTPUT
-            echo "Manifiestos preparados para despliegue"
-          else
-            echo "manifests_ready=false" >> $GITHUB_OUTPUT
-            echo "No se encontraron manifiestos preparados para despliegue"
-            echo "Fallo en la preparación de manifiestos, saltando el paso de despliegue"
-          fi
-
-      - name: Upload kubernetes manifests
-        uses: actions/upload-artifact@v4
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
         with:
-          name: k8s-manifests
-          path: |
-            k8s-${{ env.DEPLOYMENT_ENV }}/
-            script_patch.sh
-            deploy_commands.sh
-          retention-days: 1
+          registry: ghcr.io
+          username: ${{ github.actor  }}
+          password: ${{secrets.GHCR_PAT}}
 
-  deploy-to-k8s:
-    needs: [setup, build, prepare-k8s]
-    if: needs.setup.outputs.k8s_deploy == 'true' && needs.prepare-k8s.outputs.manifests_ready == 'true'
-    runs-on: ubuntu-latest
-    env:
-      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: k8s-manifests
-
-      - name: Setup SSH for deployment
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-
-      - name: Verify downloaded files
+      - name: Push Docker image to GHCR
         run: |
-          echo "Verificando archivos descargados:"
-          find . -type f | sort
-          
-          # Verificar permisos
-          chmod +x script_patch.sh
-          chmod +x deploy_commands.sh
-          
-          # Verificar estructura de directorios
-          if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
-            echo "Error: No se encontró el manifiesto principal"
-            exit 1
-          fi
-
-      # Transferir el script de despliegue y el script de parche
-      - name: Transfer deployment script and patch
-        uses: appleboy/scp-action@v0.1.4
+          docker compose -f ./docker/modulefederation-dashboard.yml build && docker compose -f ./docker/modulefederation-dashboard.yml push
+          docker compose -f ./docker/modulefederation-login-microfront.yml build && docker compose -f ./docker/modulefederation-login-microfront.yml push
+          docker compose -f ./docker/modulefederation-aga-microfront.yml build && docker compose -f ./docker/modulefederation-aga-microfront.yml push
+          docker compose -f ./docker/modulefederation-amecafe-microfront.yml build && docker compose -f ./docker/modulefederation-amecafe-microfront.yml push
+          docker compose -f ./docker/modulefederation-cofepris-microfront.yml build && docker compose -f ./docker/modulefederation-cofepris-microfront.yml push
+          docker compose -f ./docker/modulefederation-crt-microfront.yml build && docker compose -f ./docker/modulefederation-crt-microfront.yml push
+          docker compose -f ./docker/modulefederation-inah-microfront.yml build && docker compose -f ./docker/modulefederation-inah-microfront.yml push
+          docker compose -f ./docker/modulefederation-inbal-microfront.yml build && docker compose -f ./docker/modulefederation-inbal-microfront.yml push
+          docker compose -f ./docker/modulefederation-profepa-microfront.yml build && docker compose -f ./docker/modulefederation-profepa-microfront.yml push
+          docker compose -f ./docker/modulefederation-se-microfront.yml build && docker compose -f ./docker/modulefederation-se-microfront.yml push
+          docker compose -f ./docker/modulefederation-se-microfront.yml build && docker compose -f ./docker/modulefederation-se-microfront.yml push
+          docker compose -f ./docker/modulefederation-sedena-microfront.yml build && docker compose -f ./docker/modulefederation-sedena-microfront.yml push
+          docker compose -f ./docker/modulefederation-semarnat-microfront.yml build && docker compose -f ./docker/modulefederation-semarnat-microfront.yml push
+          docker compose -f ./docker/modulefederation-sener-microfront.yml build && docker compose -f ./docker/modulefederation-sener-microfront.yml push
+          docker compose -f ./docker/modulefederation-stps-microfront.yml build && docker compose -f ./docker/modulefederation-stps-microfront.yml push
+          docker compose -f ./docker/modulefederation-funcionario-microfront.yml build && docker compose -f ./docker/modulefederation-funcionario-microfront.yml push
+          docker compose -f ./docker/modulefederation-bandejas-microfront.yml build && docker compose -f ./docker/modulefederation-bandejas-microfront.yml push
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
-          source: "deploy_commands.sh,script_patch.sh"
-          target: "/home/ubuntu/v30/k8s-temp"
-          # Evitar borrar otros archivos
-          rm: false
-          overwrite: true
-          
-      # Transferir el manifiesto Kubernetes
-      - name: Transfer Kubernetes manifest
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          source: "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml"
-          target: "/home/ubuntu/v30/k8s-temp"
-          # Evitar la estructura de directorios
-          strip_components: 1
-          # Evitar borrar otros archivos
-          rm: false
-          overwrite: true
-
-      # Luego ejecutar los comandos de despliegue en el servidor remoto
-      - name: Deploy to Kubernetes
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          envs: GITHUB_TOKEN
-          script_stop: true
           script: |
-            cd /home/ubuntu/v30/k8s-temp
-            
-            # Verificar que los archivos existen
-            echo "Verificando archivos en el servidor..."
-            ls -la
-            
-            if [ ! -f "vucem-microfrontends.yaml" ]; then
-              echo "ERROR: No se encuentra el archivo vucem-microfrontends.yaml"
-              exit 1
-            fi
-            
-            if [ ! -f "deploy_commands.sh" ]; then
-              echo "ERROR: No se encuentra el archivo deploy_commands.sh"
-              exit 1
-            fi
-            
-            if [ ! -f "script_patch.sh" ]; then
-              echo "ERROR: No se encuentra el archivo script_patch.sh"
-              exit 1
-            fi
-            
-            # Asegurarse que los scripts tienen permisos de ejecución
-            chmod +x deploy_commands.sh
-            chmod +x script_patch.sh
-            
-            # Aplicar el parche al script de despliegue
-            echo "Aplicando parches al script de despliegue..."
-            ./script_patch.sh
-            
-            # Crear directorio para logs si no existe
-            mkdir -p /home/ubuntu/v30/deployment-logs
-            
-            # Ejecutar el script de despliegue con el entorno apropiado
-            # Capturar la salida en un archivo de registro
-            LOG_FILE="/home/ubuntu/v30/deployment-logs/deploy-${{ env.DEPLOYMENT_ENV }}-$(date +%Y%m%d-%H%M%S).log"
-            ./deploy_commands.sh ${{ env.DEPLOYMENT_ENV }} | tee $LOG_FILE
-            
-            # Verificación final (opcional, ya que el script ya incluye verificaciones)
-            echo "=== Resumen final del despliegue ===" | tee -a $LOG_FILE
-            microk8s kubectl get pods -n default | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
-            
-            # Verificar estado de los servicios
-            echo "" | tee -a $LOG_FILE
-            echo "=== Estado de los servicios ===" | tee -a $LOG_FILE
-            microk8s kubectl get services -n default | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
-            
-            # Verificar ingress
-            echo "" | tee -a $LOG_FILE
-            echo "=== Estado del ingress ===" | tee -a $LOG_FILE
-            microk8s kubectl get ingress -n default | tee -a $LOG_FILE || echo "No se encontraron ingress"
-            
-            # Reinicio explícito de los deployments de microservicios (dashboard y login son prioritarios)
-            echo "" | tee -a $LOG_FILE
-            echo "=== Reiniciando explícitamente los deployments ===" | tee -a $LOG_FILE
-            
-            # Reiniciar dashboard y login primero
-            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
-            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
-            
-            # Verificar estado de los principales
-            sleep 10
-            microk8s kubectl get deployments -n default | grep modulefederation | grep -E 'dashboard|login' | tee -a $LOG_FILE
-            
-            # Mostrar ubicación del log
-            echo "" | tee -a $LOG_FILE
-            echo "Logs de despliegue guardados en: $LOG_FILE"
-            
-            # Verificar estado del cluster
-            echo "" | tee -a $LOG_FILE
-            echo "=== Estado de los nodos del cluster ===" | tee -a $LOG_FILE
-            microk8s kubectl get nodes | tee -a $LOG_FILE
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-crt-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-inah-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-se-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-sener-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-stps-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-bandejas-microfront-deployment-dev -n default
