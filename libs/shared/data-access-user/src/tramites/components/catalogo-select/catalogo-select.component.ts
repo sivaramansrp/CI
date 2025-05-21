@@ -52,6 +52,12 @@ export class CatalogoSelectComponent
     });
   }
 
+  
+  get formattedLabel(): string {
+  const LABEL = this.label?.trim() || '';
+  return this.required ? `${LABEL} * :` : `${LABEL}:`;
+  }
+
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
   // eslint-disable-next-line class-methods-use-this, no-empty-function, @typescript-eslint/no-empty-function
