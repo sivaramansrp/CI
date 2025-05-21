@@ -1,16 +1,35 @@
 <div class="form-group">
   <form [formGroup]="FormInputRadio">
-    <div [ngClass]="{'radio-row': gridLayout}">
-      <div *ngFor="let option of radioOptions" [ngStyle]="obtenerEstiloParaRadio()" #radioContainer>
-        <input
-          type="radio"
-          [value]="option.value"
-          [id]="option.value"
-          [checked]="selectedValue === option.value"
-          (change)="onSelectionChange(option.value)"
-          formControlName="seleccion"
-        />
-        <span class="etiqueta-de-radio" [ngClass]="{ 'fw-bold': gridLayout }" [title]="option.label">{{ option.label }}</span>
+    <div [ngClass]="{ 'radio-row': gridLayout }">
+      <div
+        *ngFor="let option of radioOptions"
+        [ngStyle]="obtenerEstiloParaRadio()"
+        #radioContainer
+      >
+        <ng-container *ngFor="let part of getParts()">
+          <ng-container [ngSwitch]="part">
+            <input
+              *ngSwitchCase="'input'"
+              type="radio"
+              [value]="option.value"
+              [id]="option.value"
+              [checked]="selectedValue === option.value"
+              (change)="onSelectionChange(option.value)"
+              formControlName="seleccion"
+            />
+            <span
+              *ngSwitchCase="'label'"
+              class="etiqueta-de-radio"
+              [ngClass]="{
+                'fw-bold': gridLayout,
+                'radio-label-margin-left': labelName === 'last',
+                'radio-label-margin-right': labelName !== 'last'
+              }"
+              [title]="option.label"
+              >{{ option.label }}</span
+            >
+          </ng-container>
+        </ng-container>
         <span
           *ngIf="showTooltip && option.hint"
           class="bi bi-question-circle-fill fs-4 m-1"
