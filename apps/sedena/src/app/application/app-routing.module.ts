@@ -186,6 +186,13 @@ const ROUTES: Routes = [
         (m) => m.AutorizarComponent
       ),
   },
+  {
+    path: 'proceso-requerimiento',
+      loadComponent: () =>
+        import('./proceso-requerimiento/proceso-requerimiento.component').then(
+          (m) => m.ProcesoRequerimientoComponent
+        ),
+    }
 ];
 
 @NgModule({
