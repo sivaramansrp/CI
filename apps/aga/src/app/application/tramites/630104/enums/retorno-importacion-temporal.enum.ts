@@ -5,12 +5,12 @@
  * @constant {RegExp} REGEX_POSTAL - Validación para códigos postales.
  * @constant {RegExp} REGEX_TELEFONO - Validación para números telefónicos.
  */
-import { 
-    REGEX_CORREO_ELECTRONICO, 
-    REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, 
-    REGEX_POSTAL, 
+import {
+    REGEX_CORREO_ELECTRONICO,
+    REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
+    REGEX_POSTAL,
     REGEX_TELEFONO
-  } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+} from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 /**
  * Configuración para el campo de fecha límite estimada de retorno.
@@ -19,7 +19,7 @@ import {
  * @property {boolean} habilitado - Indica si el campo está habilitado para interacción.
  * @property {boolean} desactivado - Indica si el campo está desactivado por defecto.
  */
-  export const ESTIMADA_RETORNO = {
+export const ESTIMADA_RETORNO = {
     labelNombre: 'Fecha límite estimada de retorno',
     required: true,
     habilitado: true,
@@ -131,8 +131,8 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         desactivado: false,
         soloLectura: false,
         validadores: [
-           { tipo: 'required'},
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la lista detallada de la mercancía.' }
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la lista detallada de la mercancía.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -200,7 +200,6 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         validadores: [
             { tipo: 'required' }
         ],
-        tooltipQuestionCircle:true,
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
@@ -212,11 +211,12 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         campo: 'fechaLimiteRetorno',
         clase: 'col-md-4',
         tipoInput: 'date',
-        desactivado: false,
-        soloLectura: false,
+        desactivado: true,
+        soloLectura: true,
         validadores: [
             { tipo: 'required' }
         ],
+        tooltipQuestionCircle: true,
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
@@ -258,7 +258,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'LIBERTAD',
@@ -274,7 +274,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroExterior.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroExterior.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'SN',
@@ -290,7 +290,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroInterior.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroInterior.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -307,7 +307,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la codigoPostal.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la codigoPostal.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -323,7 +323,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la colonia.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la colonia.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'VICTORIA DE DURANGO CENTRO',
@@ -339,7 +339,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la pais.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la pais.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'ESTADOS UNIDOS MEXICANOS',
@@ -356,7 +356,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la td_estadoLocalidad_representante_rep.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la td_estadoLocalidad_representante_rep.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'DURANGO',
@@ -372,7 +372,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la estadoLocalidad.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la estadoLocalidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'VICTORIA DE DURANGO',
@@ -389,7 +389,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la delegacionMunicipio.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la delegacionMunicipio.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'DURANGO',
@@ -405,7 +405,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la telefono.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la telefono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '618-256-2532',
@@ -442,7 +442,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la nombre.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la nombre.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'EUROFOODS DE MEXICO',
@@ -459,7 +459,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la apellidoPaterno.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la apellidoPaterno.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'GONZALEZ',
@@ -475,7 +475,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la segundoApellido.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la segundoApellido.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'PINAL',
@@ -491,7 +491,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la descripcionGiro.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la descripcionGiro.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'Consultorios de medicina general pertenecientes al sector privado que cuenten con título de médico conforme a las leyes',
@@ -507,7 +507,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la rfc.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la rfc.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'MAVL621207C95',
@@ -523,7 +523,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la curp.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la curp.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'MAVL621207HDGRLS06',
@@ -539,11 +539,11 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+            { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop:5
+        marginTop: 5
     },
 ]
 
@@ -577,7 +577,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -636,7 +636,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -665,7 +665,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+            { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -681,7 +681,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
+            { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -697,7 +697,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
+            { tipo: 'pattern', valor: REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -705,7 +705,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
     }
 ];
 
- 
+
 /**
  * Definición de campos para el formulario de nombre del propietario.
  * Contiene campos para registrar el nombre completo o razón social del propietario.
@@ -835,7 +835,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -894,7 +894,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -910,7 +910,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el municipio.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el municipio.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -939,29 +939,29 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el localidad.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el localidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 5
-},
+    },
 
-{
-    id: 'ddlColonia',
-    labelNombre: 'Colonia',
-    campo: 'colonia',
-    clase: 'col-md-6',
-    tipoInput: 'select-catalogos',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 5
-},
+    {
+        id: 'ddlColonia',
+        labelNombre: 'Colonia',
+        campo: 'colonia',
+        clase: 'col-md-6',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 5
+    },
     {
         id: 'correoElectronico',
         labelNombre: 'Correo electrónico',
@@ -972,7 +972,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+            { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -988,7 +988,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
+            { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -1004,7 +1004,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
+            { tipo: 'pattern', valor: REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
