@@ -21,6 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TramiteSedenaSharedQuery } from '../../estados/tramiteQuery.query';
+import { TramiteSedenaSharedStore } from '../../estados/tramiteStore.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -60,6 +62,17 @@ export class DatosMercanciaComponent implements OnInit {
    * @event updateMercanciaDetalle
    */
   @Output() updateMercanciaDetalle = new EventEmitter<MercanciaDetalle[]>();
+
+
+  /**
+   * @output
+   * @description
+   * Evento emitido cuando se requiere editar o actualizar un detalle de mercancía.
+   * Emite una tupla que contiene el objeto `MercanciaDetalle` y el índice correspondiente.
+   * 
+   * @param { [MercanciaDetalle, number] } - Una tupla con el detalle de la mercancía y su índice.
+   */
+  @Output() editarActualizarMercanciaDetalle = new EventEmitter<[MercanciaDetalle, number]>();
 
   /**
  * @property {number} idProcedimiento
@@ -130,6 +143,22 @@ export class DatosMercanciaComponent implements OnInit {
   public seleccionadasPaisDeOriginDatos: string[] = [];
 
   /**
+   * @property {MercanciaDetalle | null} datosFiltradosEditar
+   * @description Contiene los datos filtrados de la mercancía seleccionada para edición.
+   * Si no hay mercancía seleccionada, su valor es null.
+   */
+  datosFiltradosEditar: MercanciaDetalle | null = null;
+
+  /**
+   * Índice del elemento seleccionado para editar en la lista de datos filtrados.
+   * 
+   * @type {number}
+   * @memberof DatosMercanciaComponent
+   * @default -1 Indica que no hay ningún elemento seleccionado para edición.
+   */
+  indiceDatosFiltradosEditar: number = -1;
+
+  /**
    * Constructor del componente.
    * @method constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -137,6 +166,9 @@ export class DatosMercanciaComponent implements OnInit {
    * @param {ActivatedRoute} activatedRoute - Ruta activa actual.
    * @param {Location} ubicaccion - Servicio para navegación hacia atrás.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener catálogos relacionados con la mercancía.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener catálogos y datos relacionados con la mercancía.
+   * @param {TramiteSedenaSharedStore} tramiteStore - Store compartido para la gestión del estado del trámite.
+   * @param {TramiteSedenaSharedQuery} tramiteQuery - Query compartido para consultar el estado del trámite.
    * @returns {void}
    */
   constructor(
@@ -144,9 +176,11 @@ export class DatosMercanciaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService // eslint-disable-next-line no-empty-function
+    private datosSolicitudService: DatosSolicitudService,
+    private tramiteStore: TramiteSedenaSharedStore,
+    private tramiteQuery: TramiteSedenaSharedQuery
   ) {}
-
+  
   /**
    * Carga los catálogos necesarios para llenar los selectores del formulario.
    * @method cargarDatos
@@ -224,7 +258,12 @@ export class DatosMercanciaComponent implements OnInit {
     };
 
     this.datosMercancias.push(DATOS_MERCANCIA);
-    this.updateMercanciaDetalle.emit(this.datosMercancias);
+    if (this.datosFiltradosEditar) {
+      this.tramiteStore.updateEditSingleMerccancialTablaDatosConfig(null);
+      this.editarActualizarMercanciaDetalle.emit([DATOS_MERCANCIA, this.indiceDatosFiltradosEditar]);
+    } else {
+      this.updateMercanciaDetalle.emit(this.datosMercancias);
+    }
     this.datosMercancia.reset();
     this.ubicaccion.back();
   }
@@ -260,6 +299,26 @@ export class DatosMercanciaComponent implements OnInit {
         this.datosMercancia.get('umt')?.disable();
       }
     });
+      this.tramiteQuery.getEditSingleMerccancialTablaDatosConfig$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((datosFiltrados: { index: number; data: MercanciaDetalle }[] | null) => {
+          if (datosFiltrados && datosFiltrados.length > 0) {
+            this.datosFiltradosEditar = datosFiltrados[0].data;
+            this.indiceDatosFiltradosEditar = datosFiltrados[0].index;
+          }
+        });
+    if (this.datosFiltradosEditar) {
+      this.datosMercancia.patchValue({
+        descripcion: this.datosFiltradosEditar.descripcion,
+        fraccionArancelaria: this.datosFiltradosEditar.fraccionArancelaria,
+        descFraccion: this.datosFiltradosEditar.descripcionFraccion,
+        cantidadUMT: this.datosFiltradosEditar.cantidadUMT,
+        umt: this.datosFiltradosEditar.unidadMedidaTarifa,
+        valorComercial: this.datosFiltradosEditar.valorComercial,
+        umc: this.datosFiltradosEditar.umc,
+        tipoMoneda: this.datosFiltradosEditar.tipoMoneda,
+      });
+    }
   }
 
   /**
@@ -330,6 +389,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   cancelar(): void {
+    this.tramiteStore.updateEditSingleMerccancialTablaDatosConfig(null);
     this.ubicaccion.back();
   }
 }

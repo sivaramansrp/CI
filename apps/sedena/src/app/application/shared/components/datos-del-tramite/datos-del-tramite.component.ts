@@ -57,6 +57,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
+import { TramiteSedenaSharedStore } from '../../estados/tramiteStore.store';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -280,6 +281,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.form.patchValue({ fechaSalida: fecha });
   }
   /**
+   * @property {string[]} selectedDatas
+   * Lista de datos seleccionados en el componente Crosslist.
+   * Se utiliza para almacenar las aduanas seleccionadas por el usuario.
+   */
+  tableSelectedDatas: MercanciaDetalle[] = [];
+
+  /**
    * Estado inicial del formulario del trámite, recibido desde el componente padre.
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
@@ -321,10 +329,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
      */
     @Output() modificarMercanciasDatos: EventEmitter<MercanciaDetalle> = new EventEmitter<MercanciaDetalle>(true);
     /**
-     * @output eliminarMercanciaFinalEvent - Evento que emite cuando se elimina un destinatario final.
-     * Este EventEmitter emite una instancia de `MercanciaDetalle`.
+     * @output eliminarMercanciaFinalEvent - Evento emitido al eliminar destinatarios finales seleccionados.
+     * Este EventEmitter emite un arreglo de instancias de `MercanciaDetalle` que han sido eliminadas.
      */
-    @Output() eliminarMercanciaFinalEvent: EventEmitter<MercanciaDetalle> = new EventEmitter<MercanciaDetalle>(true);
+    @Output() eliminarMercanciaFinalEvent: EventEmitter<MercanciaDetalle[]> = new EventEmitter<MercanciaDetalle[]>(true);
 
   /**
    * Configuración utilizada para construir la tabla dinámica de mercancías.
@@ -368,12 +376,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
    * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
    * @param {Router} router - Servicio de enrutamiento.
+   * @param {TramiteSedenaSharedStore} tramiteSedenaSharedStore - Servicio para la gestión del estado compartido del trámite.
    * @returns {void}
    */
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private tramiteSedenaSharedStore: TramiteSedenaSharedStore
   ) { 
     // Constructor vacío, se puede agregar lógica adicional si es necesario.
   }
@@ -463,15 +473,45 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
 
-     /**
-   * Emite el primer destinatario seleccionado para su modificación.
-   * Utiliza el `EventEmitter` modificarMercanciasDatos para enviar el dato al componente padre.
-   *
-   * @returns {void}
-   */
+    /**
+     * @method
+     * @description
+     * Modifica el destinatario seleccionado en la tabla de mercancías. 
+     * Si hay una sola fila seleccionada, emite el evento para modificar los datos de la mercancía,
+     * actualiza la configuración de edición en el store y navega a la pantalla de agregar datos de mercancía.
+     * Si no hay filas seleccionadas o hay más de una, muestra un error en la consola.
+     *
+     * @returns {void}
+     *
+     * @memberof DatosDelTramiteComponent
+     */
     modificarDestinatario(): void {
-      if (this.mercanciaTablaSeleccionada.length > 0) {
-        this.modificarMercanciasDatos.emit(this.mercanciaTablaSeleccionada[0]);
+      if (this.tableSelectedDatas.length > 0) {
+        const DATOS_FILTRADOS = this.tableSelectedDatas
+          .map(selected => {
+            const MATCHED_INDEX = this.datosMercanciaTabla.findIndex(data =>
+              Object.keys(selected).some(
+          key => selected[key as keyof MercanciaDetalle] === data[key as keyof MercanciaDetalle]
+              )
+            );
+            if (MATCHED_INDEX !== -1) {
+              return {
+              index: MATCHED_INDEX,
+              data: this.datosMercanciaTabla[MATCHED_INDEX]
+              };
+            }
+            return null;
+          })
+          .filter((item): item is { index: number; data: MercanciaDetalle } => item !== null);
+        if (DATOS_FILTRADOS.length === 1) {
+          this.modificarMercanciasDatos.emit(DATOS_FILTRADOS[0].data);
+          this.tramiteSedenaSharedStore.updateEditSingleMerccancialTablaDatosConfig(DATOS_FILTRADOS);
+          this.router.navigate(['../agregar-datos-mercancia'], {
+          relativeTo: this.activatedRoute,
+          });
+        } else {
+          console.error('No single entry available for editing.');
+        }
       } else {
         console.error('No row selected for modification.');
       }
@@ -484,8 +524,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
      */
     eliminarDestinatarioFinal():void{
       
-      if (this.mercanciaTablaSeleccionada.length > 0) {
-        this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0]);
+      if (this.tableSelectedDatas.length > 0) {
+        this.eliminarMercanciaFinalEvent.emit(this.tableSelectedDatas);
       } else {
         console.error('No row selected for deletion.');
       }
@@ -624,6 +664,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       dosSemestre: event,
     });
+  }
+  
+  /**
+   * Maneja el evento de selección de filas en la tabla de mercancías.
+   * Actualiza la lista interna de datos seleccionados.
+   *
+   * @param {MercanciaDetalle[]} event - Arreglo de mercancías seleccionadas.
+   */
+  handleListaDeFilaSeleccionada(event: MercanciaDetalle[]): void {
+    this.tableSelectedDatas = event;
   }
 
   /**
