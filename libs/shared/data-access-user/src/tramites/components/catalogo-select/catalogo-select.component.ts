@@ -53,9 +53,13 @@ export class CatalogoSelectComponent
   }
 
   
+  /**
+   * Devuelve la etiqueta formateada para el campo select, agregando un asterisco si es requerido.
+   * @returns {string} Etiqueta formateada.
+   */
   get formattedLabel(): string {
-  const LABEL = this.label?.trim() || '';
-  return this.required ? `${LABEL} * :` : `${LABEL}:`;
+    const LABEL = this.label?.trim() || '';
+    return this.required ? `${LABEL} * :` : `${LABEL}:`;
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
