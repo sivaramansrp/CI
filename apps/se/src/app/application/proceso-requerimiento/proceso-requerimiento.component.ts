@@ -33,12 +33,11 @@ import {
 import { Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
+import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 import { OnInit } from '@angular/core';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
-import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
 /**
  * Componente principal para el proceso de requerimiento.
