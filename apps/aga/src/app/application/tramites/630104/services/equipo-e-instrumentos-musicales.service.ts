@@ -40,15 +40,6 @@ export class EquipoEInstrumentosMusicalesService {
     return this.http.get<Catalogo[]>('/assets/json/630104/aduana-de-ingreso.json');
   }
 
-  // /**
-  //  * Obtiene la lista de prórrogas desde un archivo JSON local.
-  //  * 
-  //  * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
-  //  */
-  // getProrroga(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>('/assets/json/630104/prorroga.json');
-  // }
-
   /**
    * Obtiene la lista de propietarios desde un archivo JSON local.
    * 

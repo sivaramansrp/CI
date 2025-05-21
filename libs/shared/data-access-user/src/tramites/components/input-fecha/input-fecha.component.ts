@@ -41,7 +41,7 @@ export class InputFechaComponent implements OnChanges {
     this.generarFormulario(OBJECT_DATE);
   }
 
-  ngOnChanges(): void {
+  ngOnChanges():void {
     if (this.setFecha !== '' && this.setFecha !== null) {
       const FECHA = this.setFecha.split('/');
       const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);

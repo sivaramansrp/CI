@@ -36,7 +36,5 @@ describe('DatosGeneralesComponent', () => {
   it('debería tener la estructura correcta del formulario', () => {
     component.inicializarFormulario();
     expect(component.datosGeneralesFormulario instanceof FormGroup).toBe(true);
-    // Agregar verificaciones específicas de los controles del formulario si aplica
-    // Ejemplo: expect(component.datosGeneralesFormulario.get('fieldName')).toBeDefined();
   });
 });
