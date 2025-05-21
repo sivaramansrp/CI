@@ -360,7 +360,6 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         valorPredeterminado: '',
         marginTop: 4,
         habilitado: true,
-        tooltip: 'Seleccione la fecha límite estimada para el retorno de la mercancía.' // Nuevo tooltip
     },
     {
         id: 'fechaLimiteRetorno',
