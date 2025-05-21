@@ -63,9 +63,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+      
       ],
       marcadorDePosicion: '',
     },
@@ -78,9 +76,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+       
       ],
       marcadorDePosicion: '',
     },
@@ -93,9 +89,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+        
       ],
       marcadorDePosicion: '',
       valorPredeterminado: '',
@@ -111,14 +105,46 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
+       
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+    },
+    {
+      id: 'departamento',
+      labelNombre: 'Nombre del departamento',
+      campo: 'departamento',
+      clase: 'col-md-6',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
         {
           tipo: 'required'
         }
       ],
       marcadorDePosicion: '',
       valorPredeterminado: '',
-      marginTop: 0,
-      habilitado: true
-    }
+      marginTop: 0
+    },
+    {
+      id: 'procedimiento',
+      labelNombre: 'Número de procedimiento',
+      campo: 'procedimiento',
+      clase: 'col-md-6',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
 
   ];

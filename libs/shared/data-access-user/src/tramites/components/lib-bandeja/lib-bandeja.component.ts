@@ -1,16 +1,16 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
-// import { ConsultaioStore } from '../../../core/estados/consulta.store';
-import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 
 /*
  * Componente LibBandejaComponent
@@ -51,6 +51,19 @@ export class LibBandejaComponent<T> implements OnInit {
   @Input() configuracionTablaDatos: any[] = [];
    /* Datos que se usan en el formulario de la bandeja */
   @Input() public bandejaSolicitudeDatos: any[] = [];
+  /**
+   * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
+   */
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  /**
+   * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
+   */
+  @Input() public seleccionadoDepartamento: SeleccionadoDepartamento = {
+    tieneDepartamento: false,
+    numeroDeProcedimiento: '',
+    nombreDelDepartamento: '',
+  };
+  
   /* URL a la que se navega al seleccionar un trámite */
   public procedureUrl!: string;
   /* Indica si el formulario es válido */
@@ -75,6 +88,10 @@ export class LibBandejaComponent<T> implements OnInit {
   public itemsPerPage: number = 5;
   /* Datos del cuerpo para miembros de la empresa paginados */
   public miembroDeLaEmpresaBodyData: unknown[] = [];
+  /**
+   * Indica si la configuración de datos de la tabla está disponible.
+   */
+  public tieneConfiguracionTablaDatos: boolean = false;
  /*
    * Constructor que inyecta Router y ConsultaioStore
    */
@@ -87,9 +104,6 @@ export class LibBandejaComponent<T> implements OnInit {
    * Valida si la bandeja contiene formulario y aplica filtro a columnas
    */
   ngOnInit(): void {
-    if (this.tieneBandeja) {
-      this.hasValidForm = true;
-    }
     this.filterConfiguracionTabla();
   }
 /*
@@ -197,5 +211,40 @@ export class LibBandejaComponent<T> implements OnInit {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  /**
+   * Maneja la selección de un departamento emitiendo la información del departamento seleccionado
+   * y reseteando el control de formulario 'procedimiento' si ya hay un departamento seleccionado.
+   *
+   * @param event - Un objeto que contiene el campo seleccionado (`campo`) y su valor (`valor`).
+   */
+  public obtenerDepartamento(event: { campo: string; valor: any }): void {
+    this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
+    if(this.seleccionadoDepartamento.tieneDepartamento) {
+      this.bandejaSolicitudeFormGroup.get('procedimiento')?.setValue('');
+    }
+  }
+
+  /**
+   * Filtra el arreglo `configuracionTablaDatos` según el número de procedimiento
+   * y el nombre del departamento seleccionados. Actualiza la propiedad `hasValidForm`
+   * de acuerdo con la validez del formulario `bandejaSolicitudeFormGroup`.
+   * Establece la bandera `tieneConfiguracionTablaDatos` en `true` si existen
+   * resultados filtrados, de lo contrario la establece en `false`.
+   */
+  public filterDatos(): void {
+    this.configuracionTablaDatos = this.configuracionTablaDatos.filter((item) => {
+      return (
+        Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento) &&
+        item.departamento.toLowerCase() === this.seleccionadoDepartamento.nombreDelDepartamento.toLowerCase()
+      );
+    });
+    this.hasValidForm = this.bandejaSolicitudeFormGroup.valid;
+    if (this.configuracionTablaDatos.length > 0) {
+      this.tieneConfiguracionTablaDatos = true;
+    } else {
+      this.tieneConfiguracionTablaDatos = false;
+    }
   }
 }
