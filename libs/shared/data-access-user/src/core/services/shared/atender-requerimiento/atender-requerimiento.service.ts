@@ -25,6 +25,18 @@ export class AtenderRequerimientoService {
     }
 
 
+    /**
+ * Obtiene la información de los requisitos de un requerimiento.
+ *
+ * Realiza una petición HTTP GET para obtener los datos de requisitos desde un archivo JSON local.
+ *
+ * @returns {Observable<Requerimiento>} Un observable que emite la información del requerimiento.
+ *
+ * @example
+ * this.atenderRequerimientoService.informacionRequisitos().subscribe((resp) => {
+ *   console.log(resp.data.fechaRequerimiento);
+ * });
+ */
 public informacionRequisitos():Observable<Requerimiento> {
   return this.http.get<Requerimiento>('./assets/json/shared/informacion-requisitos.json');
 }
