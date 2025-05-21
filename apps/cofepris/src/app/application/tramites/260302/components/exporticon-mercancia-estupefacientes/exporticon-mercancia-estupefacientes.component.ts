@@ -18,6 +18,10 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_DECIMAL,
+  REGEX_SOLO_DIGITOS,
+  REGEX_VALID_UMC,
+  REGEX_VALID_UMT,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -194,6 +198,19 @@ export class ExporticonMercanciaEstupefacientesComponent
   public esFisicoValorOtros:boolean=false;
 
   /**
+   * @property {boolean} formFormaceuticaColapsable
+   * Indica si el formulario de forma farmacéutica está colapsado.
+   */
+  public validoUMCValor:boolean=false;
+
+  /**
+   * @property {boolean} formFormaceuticaColapsable
+   * Indica si el formulario de forma farmacéutica está colapsado.
+   */
+
+  public validoUMTValor:boolean=false;
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -307,7 +324,7 @@ export class ExporticonMercanciaEstupefacientesComponent
       especifiqueObligatorio:[this.obtenerValor('especifiqueObligatorio'), Validators.required],
       fraccionArancelaria: [
         this.obtenerValor('fraccionArancelaria'),
-        Validators.required,
+        [Validators.required,Validators.minLength(8),Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       descripcionFraccion: [
         { value: this.obtenerValor('descripcionFraccion'), disabled: true },
@@ -317,8 +334,8 @@ export class ExporticonMercanciaEstupefacientesComponent
         { value: this.obtenerValor('unidadMedidaTarifa'), disabled: true },
         Validators.required,
       ],
-      cantidadUMT: [this.obtenerValor('cantidadUMT'), Validators.required],
-      cantidadUMC: [this.obtenerValor('cantidadUMC'), Validators.required],
+      cantidadUMT: [this.obtenerValor('cantidadUMT'), [Validators.required,Validators.pattern(REGEX_VALID_UMT)]],
+      cantidadUMC: [this.obtenerValor('cantidadUMC'), [Validators.required,Validators.pattern(REGEX_VALID_UMC)]],
       unidadMedidaComercializacion: [
         this.obtenerValor('unidadMedidaComercializacion'),
         Validators.required,
@@ -568,6 +585,38 @@ public estadoFisicoSeleccionado($event:Catalogo):void{
       this.esFisicoValorOtros=false;
     }
 }  
+
+  /**
+   * Método que se ejecuta cuando se selecciona una unidad de medida comercial.
+   * Actualmente no implementa ninguna lógica.
+   *
+   * @returns {void}
+   */
+obtenerMensajeError(controlName: string): string {
+  const CONTROL = this.mercanciaForm.get(controlName);
+
+  if (!CONTROL || !CONTROL.errors) {
+    return '';
+  }
+
+ 
+  if (CONTROL.errors['required']) {
+    return 'Este campo es obligatorio';
+  }
+
+
+  if (!REGEX_DECIMAL.test(CONTROL.value)) {
+    return 'Por favor, escribe un número entero válido';
+  }
+
+ 
+  if (CONTROL.errors['pattern']) {
+    return controlName==='cantidadUMT' ? 'Este campo permite doce números enteros y hasta cinco decimales':
+    'Este campo permite doce números enteros y hasta diez decimales';
+  }
+
+  return '';
+}
 
   /**
    * @method ngOnDestroy

@@ -33,7 +33,10 @@
                 : ''
             "
           />
-          <div *ngIf="esInvalido('especificarClasificacionProducto')" class="text-danger">
+          <div
+            *ngIf="esInvalido('especificarClasificacionProducto')"
+            class="text-danger"
+          >
             <small
               *ngIf="mercanciaForm.controls['especificarClasificacionProducto'].errors?.['required']"
             >
@@ -67,7 +70,10 @@
                 : ''
             "
           />
-             <div *ngIf="esInvalido('denominacionCumonInternacional')" class="text-danger">
+          <div
+            *ngIf="esInvalido('denominacionCumonInternacional')"
+            class="text-danger"
+          >
             <small
               *ngIf="mercanciaForm.controls['denominacionCumonInternacional'].errors?.['required']"
             >
@@ -96,7 +102,10 @@
                 : ''
             "
           />
-             <div *ngIf="esInvalido('marcaComercialDenominacion')" class="text-danger">
+          <div
+            *ngIf="esInvalido('marcaComercialDenominacion')"
+            class="text-danger"
+          >
             <small
               *ngIf="mercanciaForm.controls['marcaComercialDenominacion'].errors?.['required']"
             >
@@ -114,24 +123,27 @@
           formControlName="tipoProducto"
           [label]="'Tipo de producto'"
           [required]="true"
-          (selectionChange)="
-            tipoProductoSeleccionado($event)
-          "
+          (selectionChange)="tipoProductoSeleccionado($event)"
           name="tipoProducto"
           [placeholder]="'Selecciona un valor'"
         ></app-catalogo-select>
       </div>
     </div>
 
-      <div class="row" *ngIf="esTipoValorOtros">
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <label class="form-label" for="especifique">Especifique:</label>
-                        <input class="form-control" id="especifique" type="text" formControlName="especifique"
-                            [ngClass]="isValid(mercanciaForm, 'especifique') ? 'required' : ''">
-                    </div>
-                </div>
-            </div>
+    <div class="row" *ngIf="esTipoValorOtros">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="especifique">Especifique:</label>
+          <input
+            class="form-control"
+            id="especifique"
+            type="text"
+            formControlName="especifique"
+            [ngClass]="isValid(mercanciaForm, 'especifique') ? 'required' : ''"
+          />
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-md-10 ml-2">
@@ -140,24 +152,31 @@
           formControlName="estadoFisico"
           [label]="'Estado físico'"
           [required]="true"
-            (selectionChange)="
-            estadoFisicoSeleccionado($event)
-          "
+          (selectionChange)="estadoFisicoSeleccionado($event)"
           name="estadoFisico"
-           [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Selecciona un valor'"
         ></app-catalogo-select>
       </div>
     </div>
 
-      <div class="row" *ngIf="esFisicoValorOtros">
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <label class="form-label" for="especifiqueObligatorio">Especifique*:</label>
-                        <input class="form-control" id="especifiqueObligatorio" type="text" formControlName="especifiqueObligatorio"
-                            [ngClass]="isValid(mercanciaForm, 'especifiqueObligatorio') ? 'required' : ''">
-                    </div>
-                </div>
-            </div>
+    <div class="row" *ngIf="esFisicoValorOtros">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="especifiqueObligatorio"
+            >Especifique*:</label
+          >
+          <input
+            class="form-control"
+            id="especifiqueObligatorio"
+            type="text"
+            formControlName="especifiqueObligatorio"
+            [ngClass]="
+              isValid(mercanciaForm, 'especifiqueObligatorio') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
 
     <div class="row mt-5">
       <div class="col-md-12 mt-3">
@@ -208,18 +227,26 @@
             id="fraccionArancelaria"
             type="text"
             formControlName="fraccionArancelaria"
-            (change)="
-              cambiarFraccionArancelaria()
-            "
+            (change)="cambiarFraccionArancelaria()"
             [ngClass]="
               isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''
             "
           />
-            <div *ngIf="esInvalido('fraccionArancelaria')" class="text-danger">
+          <div *ngIf="esInvalido('fraccionArancelaria')" class="text-danger">
             <small
               *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['required']"
             >
               Este campo es obligatorio
+            </small>
+            <small
+              *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['pattern']"
+            >
+              Por favor, sólo escribe dígitos
+            </small>
+            <small
+              *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['minlength']"
+            >
+              Por favor, no escribas menos de 8 caracteres
             </small>
           </div>
         </div>
@@ -253,11 +280,10 @@
             formControlName="cantidadUMT"
             [ngClass]="isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''"
           />
-            <div *ngIf="esInvalido('cantidadUMT')" class="text-danger">
+          <div *ngIf="esInvalido('cantidadUMT')" class="text-danger">
             <small
-              *ngIf="mercanciaForm.controls['cantidadUMT'].errors?.['required']"
             >
-              Este campo es obligatorio
+              {{ obtenerMensajeError('cantidadUMT') }}
             </small>
           </div>
         </div>
@@ -279,7 +305,7 @@
               isValid(mercanciaForm, 'unidadMedidaTarifa') ? 'required' : ''
             "
           />
-           <div *ngIf="esInvalido('unidadMedidaTarifa')" class="text-danger">
+          <div *ngIf="!esInvalido('unidadMedidaTarifa')" class="text-danger">
             <small
               *ngIf="mercanciaForm.controls['unidadMedidaTarifa'].errors?.['required']"
             >
@@ -301,11 +327,10 @@
             formControlName="cantidadUMC"
             [ngClass]="isValid(mercanciaForm, 'cantidadUMC') ? 'required' : ''"
           />
-         <div *ngIf="esInvalido('cantidadUMC')" class="text-danger">
+          <div *ngIf="esInvalido('cantidadUMC')" class="text-danger">
             <small
-              *ngIf="mercanciaForm.controls['cantidadUMC'].errors?.['required']"
             >
-              Este campo es obligatorio
+                {{ obtenerMensajeError('cantidadUMC') }}
             </small>
           </div>
         </div>
@@ -354,7 +379,7 @@
               isValid(mercanciaForm, 'cantidadDeLotes') ? 'required' : ''
             "
           />
-              <div *ngIf="esInvalido('cantidadDeLotes')" class="text-danger">
+          <div *ngIf="esInvalido('cantidadDeLotes')" class="text-danger">
             <small
               *ngIf="mercanciaForm.controls['cantidadDeLotes'].errors?.['required']"
             >
@@ -377,17 +402,15 @@
           [maxlength]="250"
           formControlName="presentacion"
           style="height: 90px"
-             [ngClass]="
-              isValid(mercanciaForm, 'presentacion') ? 'required' : ''
-            "
+          [ngClass]="isValid(mercanciaForm, 'presentacion') ? 'required' : ''"
         ></textarea>
-            <div *ngIf="esInvalido('presentacion')" class="text-danger">
-            <small
-              *ngIf="mercanciaForm.controls['presentacion'].errors?.['required']"
-            >
-              Este campo es obligatorio
-            </small>
-          </div>
+        <div *ngIf="esInvalido('presentacion')" class="text-danger">
+          <small
+            *ngIf="mercanciaForm.controls['presentacion'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
     </div>
 

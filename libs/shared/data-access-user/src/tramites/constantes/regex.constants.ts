@@ -434,3 +434,9 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
 
 export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
+
+export const REGEX_VALID_UMT=/^\d{1,12}(\.\d{1,5})?$/
+
+export const REGEX_VALID_UMC=/^\d{1,12}(\.\d{1,10})?$/
+
+export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
