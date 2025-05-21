@@ -29,16 +29,14 @@
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="btn-group-center">
-      <button
-        class="btn btn-primary ms-2 d-flex"
-        type="button"
-        (click)="agregaPersona()"
-      >
-        Agregar
-      </button>
-    </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <button
+      class="btn btn-primary ms-2 d-flex"
+      type="button"
+      (click)="agregaPersona()"
+    >
+      Agregar
+    </button>
   </div>
 </div>
 
@@ -70,3 +68,10 @@
   </div>
   <div class="col-md-2"></div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
