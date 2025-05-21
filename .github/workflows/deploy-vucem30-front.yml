@@ -73,4 +73,4 @@ jobs:
           script: |
             cd /home/ubuntu/v30
             microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev -n default
-	    microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev -n default
