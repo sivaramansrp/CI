@@ -388,6 +388,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/11101/aviso-mercancia-donada.module').then(
         (m) => m.AvisoMercanciaDonadaModule),
+  },
+  {
+    path:'renovacion-iva-ieps/mod-aaa',
+    loadChildren:()=>
+      import('./tramites/31203/renewal-vatIeps-mod-aaa.module').then(
+        (m) => m.RenewalVatIepsModAAAModule),
   }
 ];
 
