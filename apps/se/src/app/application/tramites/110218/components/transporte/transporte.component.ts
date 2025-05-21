@@ -109,7 +109,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
        */
       numerodeVuelo: [
         this.estadoSeleccionado?.numerodeVuelo,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS), Validators.maxLength(15)],
       ],
     });
   }

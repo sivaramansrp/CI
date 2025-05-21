@@ -1,15 +1,21 @@
-
-import {AfterViewInit,Component,ElementRef,Input,OnDestroy,OnInit,ViewChild} from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { PagoDerechosLista, Vehiculo } from '../../../40103/models/registro-muestras-mercancias.model';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
-import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
 import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
@@ -96,24 +102,19 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   formVehiculo!: FormGroup;
 
   /**
-   * Lista de vehículos.
-   */
-  vehiculos: any[] = [];
-
-  /**
    * Observable que contiene la lista de vehículos.
    */
-  vehiculosList$: Observable<any[]> = new Observable();
+  vehiculosList$: Observable<unknown[]> = new Observable();
   private subscriptions: Subscription = new Subscription();
-   /**
+  /**
    * Lista de unidades de arrastre.
    */
-  unidadesdearrastre: any[] = [];
+  unidadesdearrastre: unknown[] = [];
 
   /**
    * Observable que contiene la lista de unidades de arrastre.
    */
-  unidadesdearrastreList$: Observable<any[]> = new Observable();
+  unidadesdearrastreList$: Observable<unknown[]> = new Observable();
 
   /**
    * Pestaña seleccionada actualmente.
@@ -128,7 +129,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Lista de vehículos con arrastre.
    */
-  vehiculoArrastr: any[] = [];
+  vehiculoArrastr: unknown[] = [];
 
   /**
    * Catálogo de vehículos.
@@ -144,6 +145,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Catálogo de colores de vehículos.
    */
   VehiculoColors: Catalogo[] = [];
+
+  /**
+   * Lista de vehículos.
+   */
+  vehiculos: Vehiculo[] = [];
 
   /**
    * Lista de países emisores para la segunda placa.
@@ -188,8 +194,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Texto de selección no disponible para el color del vehículo.
    */
-  nonSelectionTextColorAGA: string =
-    VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+  nonSelectionTextColorAGA: string = VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
 
   /**
    * Texto de selección no disponible para los años.
@@ -276,8 +281,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Etiqueta para la descripción del vehículo en la solicitud.
    */
-  labelDescripcionVehiculo: string =
-    VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
+  labelDescripcionVehiculo: string = VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
 
   /**
    * Texto del botón para limpiar el formulario.
@@ -305,93 +309,96 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Representa una lista de configuraciones para el parque vehicular, donde cada elemento
    * define las propiedades de un vehículo y su mapeo correspondiente a los datos de origen.
-   * 
+   *
    * Cada objeto en la lista contiene:
    * - `encabezado`: El nombre de la columna que se mostrará en la interfaz de usuario.
    * - `clave`: Una función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor correspondiente.
    * - `orden`: El orden en el que se deben mostrar las columnas.
-   * 
-   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => any; orden: number }>}
+   *
+   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => unknown; orden: number }>}
    */
   ParqueVehicular = [
     {
       encabezado: 'Número de identificación vehicular',
-      clave: (item: PagoDerechosLista) => item.número,
+      clave: (item: PagoDerechosLista): string | undefined => item.número,
       orden: 1,
     },
     {
       encabezado: 'Tipo de vehículo',
-      clave: (item: PagoDerechosLista) => item.calle,
+      clave: (item: PagoDerechosLista): string | undefined => item.calle,
       orden: 2,
     },
     {
       encabezado: 'ID de vehículo',
-      clave: (item: PagoDerechosLista) => item.estado,
+      clave: (item: PagoDerechosLista): string | undefined => item.estado,
       orden: 3,
     },
     {
       encabezado: 'Número de Placas',
-      clave: (item: PagoDerechosLista) => item.pais,
+      clave: (item: PagoDerechosLista): string | undefined => item.pais,
       orden: 4,
     },
     {
       encabezado: 'País Emisor',
-      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      clave: (item: PagoDerechosLista): string | undefined =>
+        item.apellidoPaterno,
       orden: 5,
     },
     {
       encabezado: 'Estado o provincia',
-      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      clave: (item: PagoDerechosLista): string | undefined =>
+        item.apellidoMaterno,
       orden: 6,
     },
     {
       encabezado: 'Marca',
-      clave: (item: PagoDerechosLista) => item.rfc,
+      clave: (item: PagoDerechosLista): string | undefined => item.rfc,
       orden: 7,
     },
     {
       encabezado: 'Modelo',
-      clave: (item: PagoDerechosLista) => item.gafete,
+      clave: (item: PagoDerechosLista): string | undefined => item.gafete,
       orden: 8,
     },
     {
       encabezado: 'Año',
-      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      clave: (item: PagoDerechosLista): string | undefined =>
+        item.vigenciaGafete,
       orden: 9,
     },
     {
       encabezado: 'Transponder',
-      clave: (item: PagoDerechosLista) => item.municipio,
+      clave: (item: PagoDerechosLista): string | undefined => item.municipio,
       orden: 10,
     },
     {
       encabezado: 'Color',
-      clave: (item: PagoDerechosLista) => item.colonia,
+      clave: (item: PagoDerechosLista): string | undefined => item.colonia,
       orden: 11,
     },
     {
       encabezado: 'Número económico',
-      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      clave: (item: PagoDerechosLista): string | undefined => item.paisOrigen,
       orden: 12,
     },
     {
       encabezado: 'Número 2da Placa',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
       orden: 13,
     },
     {
       encabezado: 'País Emisor 2da Placa',
-      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      clave: (item: PagoDerechosLista): string | undefined => item.paisOrigen,
       orden: 14,
     },
     {
       encabezado: 'País Emisor 2da Placa',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
       orden: 15,
     },
     {
       encabezado: 'Descripción',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
       orden: 16,
     },
   ];
@@ -417,32 +424,32 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   unidadesDeArrastre = [
     {
       encabezado: 'VIN del vehículo',
-      clave: (item: PagoDerechosLista) => item.número,
+      clave: (item: PagoDerechosLista): string | undefined => item.número,
       orden: 1,
     },
     {
       encabezado: 'Tipo de unidad de arrastre',
-      clave: (item: PagoDerechosLista) => item.calle,
+      clave: (item: PagoDerechosLista): string | undefined => item.calle,
       orden: 2,
     },
     {
       encabezado: 'Número económico',
-      clave: (item: PagoDerechosLista) => item.estado,
+      clave: (item: PagoDerechosLista): string | undefined => item.estado,
       orden: 3,
     },
     {
       encabezado: 'Número de Placas',
-      clave: (item: PagoDerechosLista) => item.pais,
+      clave: (item: PagoDerechosLista): string | undefined => item.pais,
       orden: 4,
     },
     {
       encabezado: 'País Emisor',
-      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      clave: (item: PagoDerechosLista): string | undefined => item.apellidoPaterno,
       orden: 5,
     },
     {
       encabezado: 'Estado o provincia',
-      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      clave: (item: PagoDerechosLista): string | undefined => item.apellidoMaterno,
       orden: 6,
     },
   ];
@@ -544,15 +551,15 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
     this.subscriptions.add(
-      this.chofer40103Query.getvehiculos$.subscribe((vehiculos: any) => {
-        this.vehiculos = vehiculos;
+      this.chofer40103Query.getvehiculos$.subscribe((vehiculos) => {
+        this.vehiculos = vehiculos.map((vehiculo) => JSON.parse(vehiculo) as Vehiculo);
       })
     );
     this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
     this.unidadesDearrastre();
     this.subscriptions.add(
       this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
-        (unidadesdearrastre: any) => {
+        (unidadesdearrastre: unknown[]) => {
           this.unidadesdearrastre = unidadesdearrastre;
         }
       )
@@ -573,7 +580,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.modalInstance) {
       this.modalInstance.hide();
     }
-    const NEW_VEHICULO = {
+    const NEW_VEHICULO: Vehiculo = {
       id: (this.vehiculos?.length || 0) + 1,
       solicitudVehiculoVin2:
         this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
@@ -608,7 +615,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Comprueba si el VIN ya existe en el estado de Akita
     const VIN_EXISTS = this.vehiculos?.some(
-      (item) =>
+      (item: Vehiculo) =>
         item.solicitudVehiculoVin2 === NEW_VEHICULO.solicitudVehiculoVin2
     );
 
@@ -623,7 +630,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     // Actualizar el estado de Akita
-    this.chofer40103Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
+    this.chofer40103Store.setVehiculos([
+      ...(this.vehiculos as unknown as string[]),
+      JSON.stringify(NEW_VEHICULO),
+    ]);
     this.formVehiculo.reset();
     this.toastr.success('¡Vehículo añadido exitosamente!');
     this.closeModal();
@@ -696,7 +706,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Obtiene los valores del formulario.
    */
-  get getFormValues() {
+  get getFormValues(): { [key: string]: AbstractControl } {
     return this.formVehiculo.controls;
   }
 

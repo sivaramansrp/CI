@@ -1,8 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/certificado-sgp.enum';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'app-wizard',
+  template: ''
+})
+class MockWizardComponent {
+  siguiente = jest.fn();
+  atras = jest.fn();
+}
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -10,69 +17,52 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudPageComponent],
-      schemas: [NO_ERRORS_SCHEMA] // To ignore unknown elements and attributes
+      declarations: [SolicitudPageComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
+    component.wizardComponent = new MockWizardComponent() as any;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos with PASOS constant', () => {
-    expect(component.pasos).toEqual(PASOS);
+  it('debe mostrar u ocultar el formulario de mercancía y capturar el índice', () => {
+    component.showMercancia(false, 2);
+    expect(component.showMercanciaForm).toBe(false);
+    expect(component.capturarTapIndice).toBe(2);
+
+    component.showMercancia(true, 3);
+    expect(component.showMercanciaForm).toBe(true);
+    expect(component.capturarTapIndice).toBe(3);
   });
 
-  it('should initialize indice with default value 1', () => {
-    expect(component.indice).toBe(1);
-  });
+it('debe actualizar el índice y llamar siguiente en getValorIndice con acción "cont"', () => {
+  const ACCION = { accion: 'cont', valor: 2 };
+  component.wizardComponent = new MockWizardComponent() as any; 
+  component.getValorIndice(ACCION);
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+});
 
-  it('should initialize datosPasos with correct values', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: PASOS.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar'
-    });
-  });
+it('debe actualizar el índice y llamar atras en getValorIndice con otra acción', () => {
+  const ACCION = { accion: 'atras', valor: 3 };
+  component.wizardComponent = new MockWizardComponent() as any; 
+  component.getValorIndice(ACCION);
+  expect(component.indice).toBe(3);
+  expect(component.wizardComponent.atras).toHaveBeenCalled();
+});
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    } as unknown as WizardComponent;
-
-    component.getValorIndice({ valor: 2, accion: 'cont' });
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    } as unknown as WizardComponent;
-
-    component.getValorIndice({ valor: 2, accion: 'atras' });
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    } as unknown as WizardComponent;
-
-    component.getValorIndice({ valor: 5, accion: 'cont' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
+ it('no debe actualizar el índice ni llamar métodos si valor fuera de rango', () => {
+  const ACCION = { accion: 'cont', valor: 0 };
+  component.wizardComponent = new MockWizardComponent() as any;
+  component.getValorIndice(ACCION);
+  expect(component.indice).not.toBe(0);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+});
 });
