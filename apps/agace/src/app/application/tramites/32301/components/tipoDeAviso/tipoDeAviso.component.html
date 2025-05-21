@@ -1,0 +1,109 @@
+<div class="container">
+  <form [formGroup]="miFormulario" (ngSubmit)="aiEnviar()">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <label for="modalidadCertificacion"
+          >Modalidad de la certificación
+        </label>
+        <input
+          type="text"
+          id="modalidadCertificacion"
+          formControlName="modalidadCertificacion"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <ng-alert
+      [CONTENIDO]="'Debe seleccionar por lo menos un tipo de aviso'"
+    ></ng-alert>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="foreignClientsSuppliers"
+        (change)="aiEnviar(); setClientesProveedoresExtranjeros()"
+      />
+      <label class="form-check-label">
+        Aviso de modificaciones de clientes y proveedores extranjeros.
+      </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="nationalSuppliers"
+        (change)="aiEnviar(); setProveedoresNacionales()"
+      />
+      <label class="form-check-label">
+        Aviso de modificaciones de proveedores nacionales.
+      </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="modificationsMembers"
+        (change)="aiEnviar(); setModificacionesMiembros()"
+      />
+      <label class="form-check-label">
+        Aviso de modificciones de socios, accionistas, miembros o integrantes,
+        administrador único o consejo de administración y representantes
+        legales.
+      </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="changesToLegalDocuments"
+        (change)="aiEnviar(); setCambiosDocumentosLegales()"
+      />
+      <label class="form-check-label">
+        Aviso cuando varíe o cambie la situación respecto del documento con el
+        que se haya acreditado el legal uso y goce del inmueble o inmuebles en
+        donde se lleven a acabo los procesos productivos o la prestación de
+        servicios según se trate, referente a la vigencia, las partes y
+        domicilio
+      </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="mergerOrSplitNotice"
+        (change)="aiEnviar(); setNotifiFusionOescision()"
+      />
+      <label class="form-check-label"> Aviso de fusión o escisión </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="additionFractions"
+        (change)="aiEnviar(); setAdicionalesFractions()"
+      />
+      <label class="form-check-label"> Aviso de adición de fracciones </label>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-info">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              formControlName="acepto253"
+              (change)="aiEnviar(); setAceptacion253()"
+            />
+            <label class="form-check-label">
+              * Bajo protesta de decir verdad, manifiesto que los datos
+              asentados en el presente documento son ciertos y que las
+              facultades que me fueron otorgadas para representar al solicitante
+              no me han sido modificadas y/ o revocadas.
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
