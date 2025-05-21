@@ -58,6 +58,14 @@
       [notificacionInput]="nuevaNotificacion" 
       (confirmacionModal)="cerrarMultipleSeleccionPopup()">
     </lib-notificaciones>
+
+    <lib-notificaciones *ngIf="serieAgregadaPopupAbierto" [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarSerieAgregadaPopup()">
+    </lib-notificaciones>
+    
+    <lib-notificaciones *ngIf="mercanciaAgregadaPopupAbierto" [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarMercanciaAgregadaPopup()">
+    </lib-notificaciones>
   </form>
 
   @if(mostrarModalDatosMercancia){
@@ -169,7 +177,7 @@
           </div>
           <div class="col-md-5 d-flex justify-content-start gap-1">
             <div class="form-group mt-auto">
-              <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia()">
+              <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia(true)">
                 Agregar
               </button>
               <button type="button" class="btn btn-default">Limpiar</button>
@@ -192,7 +200,7 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-12 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia()">
+            <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia(false)">
               Guardar
             </button>
             <button type="button" class="btn btn-danger" (click)="alternarModalMercancia()">

@@ -167,6 +167,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   confirmEliminarPopupCerrado: boolean = true;
 
   /**
+   * Indica si el popup de serie agregada está abierto.
+   */
+  serieAgregadaPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup de mercancía agregada está abierto.
+   */
+  mercanciaAgregadaPopupAbierto: boolean = false;
+
+  /**
    * Indica si el botón de eliminar está habilitado.
    */
   enableEliminarBoton: boolean = false;
@@ -386,6 +396,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.cerrarEliminarConfirmationPopup();
   }
 
+  /**
+   * Muestra notificación después de agregar un número de serie.
+   */
+  mostrarNotificacionSerieAgregada(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Número de serie agregado',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.serieAgregadaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de serie agregada.
+   */
+  cerrarSerieAgregadaPopup(): void {
+    this.serieAgregadaPopupAbierto = false;
+  }
+
+  /**
+   * Muestra notificación después de guardar la mercancía.
+   */
+  mostrarNotificacionMercanciaAgregada(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'La mercancia fue agregada correctamente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mercanciaAgregadaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de mercancía agregada.
+   */
+  cerrarMercanciaAgregadaPopup(): void {
+    this.mercanciaAgregadaPopupAbierto = false;
+    this.alternarModalMercancia();
+  }
   
 /**
  * Abre el popup de selección múltiple si el botón de modificar está habilitado.
@@ -473,7 +531,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario, actualiza o agrega una nueva fila en la tabla de mercancías,
    * y actualiza el estado del almacén correspondiente.
    */
-  enviarFormularioMercancia(): void {
+  enviarFormularioMercancia(isAgregar: Boolean): void {
     const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: ConfiguracionItem = {
@@ -511,7 +569,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     
     this.tramite300105Store.setMercanciaTablaDatos(this.datosTablaMercancia);
     this.formularioMercancia.reset();
-    this.alternarModalMercancia();
+    if (isAgregar) {
+      this.mostrarNotificacionSerieAgregada();
+    } else {
+      this.mostrarNotificacionMercanciaAgregada();
+    }
   }
 
   /**
