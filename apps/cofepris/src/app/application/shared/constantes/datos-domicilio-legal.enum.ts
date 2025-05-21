@@ -78,3 +78,21 @@ export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
   paisProveedor: true, // Indica si el país del proveedor es visible. Por defecto es `true`.
   paisProcedencia: true, // Indica si el país de procedencia es visible. Por defecto es `true`.
 };
+
+
+/*
+ * Configuración de la notificación de alerta para indicar la falta de comunicación con el Sistema de COFEPRIS.
+ */
+export const NUEVA_NOTIFICACION = {
+  tipoNotificacion: 'alert', // Define el tipo de notificación como alerta.
+  categoria: 'danger', // Categoría de la notificación, indica un mensaje crítico.
+  modo: 'action', // Modo en el que se presenta la notificación, requiere acción del usuario.
+  titulo: '', // Título de la notificación, actualmente vacío.
+  mensaje: 
+    'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.', 
+    // Mensaje que informa sobre la falta de comunicación y solicita captura de datos.
+  cerrar: false, // Indica si la notificación se puede cerrar manualmente. `false` significa que no se puede cerrar.
+  tiempoDeEspera: 2000, // Tiempo de espera antes de que la notificación desaparezca automáticamente, en milisegundos.
+  txtBtnAceptar: 'Aceptar', // Texto del botón para aceptar la notificación.
+  txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
+};

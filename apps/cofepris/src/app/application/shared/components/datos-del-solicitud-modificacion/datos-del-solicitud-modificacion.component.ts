@@ -74,6 +74,7 @@ import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+import { NUEVA_NOTIFICACION } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -142,7 +143,7 @@ export class DatosDelSolicitudModificacionComponent
    * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion: Notificacion = NUEVA_NOTIFICACION;
 
   /**
    * Índice del elemento que se desea eliminar.
@@ -169,19 +170,6 @@ export class DatosDelSolicitudModificacionComponent
    * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
    */
   abrirModal(i: number = 0): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje:
-        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-
     this.elementoParaEliminar = i;
   }
 
