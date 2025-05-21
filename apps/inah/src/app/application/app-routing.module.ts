@@ -13,8 +13,8 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/280101/permiso-de-exportacion.module').then(
         (m) => m.PermisoDeExportacionModule
-      )
-    },
+      ),
+  },
   {
     path: 'evaluar',
     loadComponent: () =>
@@ -25,6 +25,15 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./autorizar/autorizar.component').then(
         (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       ),
   },
 ];

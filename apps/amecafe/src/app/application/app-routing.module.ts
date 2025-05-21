@@ -6,27 +6,28 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'cafe-exportadores',
     loadChildren: () =>
       import('./tramites/290101/nacional-cafe-exportadores.module').then(
         (m) => m.NacionalCafeExportadoresModule
-      )
+      ),
   },
   {
     path: 'registrar-solicitud',
-    loadChildren: () => import('./tramites/290201/registrar-solicitud/registrar-solicitud.module').then(
-      (m) => m.RegistrarSolicitudModule
-    )
+    loadChildren: () =>
+      import(
+        './tramites/290201/registrar-solicitud/registrar-solicitud.module'
+      ).then((m) => m.RegistrarSolicitudModule),
   },
   {
     path: 'nacional-registro-del-cafe-exportadores',
     loadChildren: () =>
-      import('./tramites/290301/nacional-registro-del-cafe-exportadores.module').then(
-        (m) => m.NacionalRegistroDelCafeExportadoresModule
-      )
+      import(
+        './tramites/290301/nacional-registro-del-cafe-exportadores.module'
+      ).then((m) => m.NacionalRegistroDelCafeExportadoresModule),
   },
   {
     path: 'evaluar',
@@ -40,7 +41,15 @@ const ROUTES: Routes = [
         (m) => m.AutorizarComponent
       ),
   },
-
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
 ];
 
 @NgModule({
