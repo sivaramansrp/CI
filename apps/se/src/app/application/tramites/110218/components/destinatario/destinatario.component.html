@@ -6,7 +6,7 @@
             <div class="row">
 
                 <div class="col-md-4">
-                    <label class="form-label" for="nombre">Nombre(s) *:</label>
+                    <label class="form-label" for="nombre">Nombre(s)*:</label>
                     <input type="text" class="form-control bg-white" id="nombre" formControlName="nombre"
                         [class.is-invalid]="datosDelDestinatario.get('nombre')?.touched && datosDelDestinatario.get('nombre')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'nombre')">
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="primerApellido">Primer apellido *:</label>
+                    <label class="form-label" for="primerApellido">Primer apellido*:</label>
                     <input type="text" class="form-control bg-white" id="primerApellido" formControlName="primerApellido"
                         [class.is-invalid]="datosDelDestinatario.get('primerApellido')?.touched && datosDelDestinatario.get('primerApellido')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'primerApellido')">
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="segundoApellido">Segundo apellido *:</label>
+                    <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
                     <input type="text" class="form-control bg-white" id="segundoApellido" formControlName="segundoApellido" [class.is-invalid]="datosDelDestinatario.get('segundoApellido')?.touched && datosDelDestinatario.get('segundoApellido')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'segundoApellido')">
                     <div class="invalid-feedback">
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="numeroderegistroFiscal">Número de registro fiscal *:</label>
+                    <label class="form-label" for="numeroderegistroFiscal">Número de registro fiscal*:</label>
                     <input type="text" class="form-control bg-white" id="numeroderegistroFiscal"
                         placeholder="12867612783" formControlName="numeroderegistroFiscal"
                         [class.is-invalid]="datosDelDestinatario.get('numeroderegistroFiscal')?.touched && datosDelDestinatario.get('numeroderegistroFiscal')?.invalid"
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="col-md-8">
-                    <label class="form-label" for="razonSocial">Razón social *:</label>
+                    <label class="form-label" for="razonSocial">Razón social*:</label>
                     <input type="text" class="form-control bg-white" id="razonSocial" formControlName="razonSocial"
                         [class.is-invalid]="datosDelDestinatario.get('razonSocial')?.touched && datosDelDestinatario.get('razonSocial')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'razonSocial')">
@@ -67,7 +67,7 @@
             <div class="row">
 
                 <div class="col-md-8">
-                    <label class="form-label" for="calle">Calle *:</label>
+                    <label class="form-label" for="calle">Calle*:</label>
                     <input type="text" class="form-control bg-white" id="calle" placeholder="CALLE"
                         formControlName="calle"
                         [class.is-invalid]="domicilioDelDestinatario.get('calle')?.touched && domicilioDelDestinatario.get('calle')?.invalid"
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="numeroLetra">Número y/o letra *:</label>
+                    <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
                     <input type="text" class="form-control bg-white" id="numeroLetra" placeholder="NUMERO"
                         formControlName="numeroLetra"
                         [class.is-invalid]="domicilioDelDestinatario.get('numeroLetra')?.touched && domicilioDelDestinatario.get('numeroLetra')?.invalid"
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="correoElectronico">Correo electrónico *:</label>
+                    <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
                     <input type="email" class="form-control bg-white" id="correoElectronico"
                         placeholder="correo@correo.com" formControlName="correoElectronico"
                         [class.is-invalid]="domicilioDelDestinatario.get('correoElectronico')?.touched && domicilioDelDestinatario.get('correoElectronico')?.invalid"
