@@ -39,10 +39,19 @@
     }
 
     @if(indice === 4 && esAcuse === false) {
-        <firma-electronica
-        [tipo]="''"
-        (firma)="obtieneFirma($event)"
-      ></firma-electronica>
+      <div class="row">
+                <div class="col-md-12">
+                    <h2 class="titulo mt-5 mb-5">Firmar solicitud</h2>
+                </div>
+            </div>
+      <div class="row justify-content-center">
+          <div class="col-md-6">
+            <firma-electronica
+            [tipo]="''"
+            (firma)="obtieneFirma($event)"
+          ></firma-electronica>
+        </div>
+      </div>
     }
 
     @if(indice !== 2 && esAcuse === false) {
