@@ -124,7 +124,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
-      curp: [this.obtenerValor('curp')],
+      curp: [this.obtenerValor('curp'),[Validators.required]],
       rfc: [this.obtenerValor('rfc'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       nombreDescripcion: [this.obtenerValor('nombreDescripcion'),[Validators.required]],
       nacionalidad: ['true'],
@@ -207,6 +207,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   limpiarFormulario(): void {
     this.agregarDatosForm.reset();
+    this.radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
   }
   /**
    * @method cancelar
@@ -296,7 +297,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   alternarOpcionNoContribuyente(debeAgregar: boolean): void {
   const NO_CONTRIBUYENTE = {
-    label: 'No Contribuyente',
+    label: TipoPersona.NO_CONTRIBUYENTE,
     value: TipoPersona.NO_CONTRIBUYENTE
   };
 
