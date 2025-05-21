@@ -39,4 +39,8 @@ export class DatosMercanciaContenedoraComponent {
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
   }
+
+  editUpdateMercanciaDetalle(data: MercanciaDetalle, index: number): void {
+    this.tramiteStore.updateMercanciaTablaDatosByIndex(data, index);
+  }
 }
