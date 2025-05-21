@@ -5,13 +5,13 @@ import { ImportacionesAgropecuariasState,ImportacionesAgropecuariasStore } from 
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DATOS_DEL_TRAMITE } from '../../constantes/datos-de-la-solicitud.enum';
-import { DatosDeLaMercanciaComponent } from '../Datos-de-la-mercancia/Datos-de-la-mercancia.component';
+import { DatosDeLaMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
-import { PaisProcedenciaComponent } from '../Pais-procedencia/Pais-procedencia.component';
-import { PartidasDeLaMercanciaComponent } from '../Partidas-de-la-mercancia/Partidas-de-la-mercancia.component';
-import { RepresentacionFederalComponent } from '../Representacion-federal/Representacion-federal.component';
+import { PaisProcedenciaComponent } from '../procedencia/procedencia.component';
+import { PartidasDeLaMercanciaComponent } from '../partidas-mercancia/partidas-mercancia.component';
+import { RepresentacionFederalComponent } from '../entidad-federal/entidad-federal.component';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 /**
