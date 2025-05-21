@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitarDocumentosEvaluacionComponent } from './solicitar-documentos-evaluacion.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DocumentosStates } from '../../../core/estados/documentos.store';
-import { SolicitudDocumentosQuery } from '../../../core/queries/documentos.query';
+import { SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
+import { SolicitudDocumentosQuery } from '../../../core/queries/solicitud-documentos.query';
 
 describe('SolicitarDocumentosEvaluacionComponent', () => {
   let component: SolicitarDocumentosEvaluacionComponent;
@@ -25,14 +25,14 @@ describe('SolicitarDocumentosEvaluacionComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: DocumentosStates, useValue: documentosStatesMock },
+        { provide: SolicitudDocumentosStore, useValue: documentosStatesMock },
         { provide: SolicitudDocumentosQuery, useValue: solicitudRequerimientoQueryMock }
       ]
     })
       .overrideComponent(SolicitarDocumentosEvaluacionComponent, {
         set: {
           providers: [
-            { provide: DocumentosStates, useValue: documentosStatesMock },
+            { provide: SolicitudDocumentosStore, useValue: documentosStatesMock },
             { provide: SolicitudDocumentosQuery, useValue: solicitudRequerimientoQueryMock }
           ]
         }
