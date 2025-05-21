@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses-resoluciones/acuses-resoluciones.component";
 import { CommonModule } from "@angular/common";
+import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
+import { DictamenesComponent } from "../consulta-generica/bandeja-dictamenes/dictamenes.component";
+import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
+import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
+import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
+import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
 
 /**
@@ -19,7 +26,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trim
  */@Component({
   selector: 'app-reviewers-tabs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,DocumentosComponent,DictamenesComponent, ConsultarequerimientosComponent, OpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
   templateUrl: './reviewers-tabs.component.html',
   styleUrl: './reviewers-tabs.component.scss',
 })
@@ -33,6 +40,7 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @property {Tabulaciones[]} listaDeTabulaciones
    * @description Lista de objetos que representan las pestañas disponibles para navegación.
    */
+  
   listaDeTabulaciones: Tabulaciones[] = tramiteDetailsData;
   /**
    * @property {number} tramite

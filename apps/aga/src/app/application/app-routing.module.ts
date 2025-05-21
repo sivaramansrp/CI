@@ -387,6 +387,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'fronteriza',
+    loadChildren: () =>
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule
+      ),
+  },
+  {
+    path: 'renovacion-iva-ieps/mod-aaa',
+    loadChildren: () =>
+      import('./tramites/31203/renewal-vatIeps-mod-aaa.module').then(
+        (m) => m.RenewalVatIepsModAAAModule
+      ),
+  },
+  {
     path: 'proceso-requerimiento',
     loadComponent: () =>
       import('./proceso-requerimiento/proceso-requerimiento.component').then(
@@ -412,13 +426,6 @@ const ROUTES: Routes = [
         './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
-      ),
-  },
-  {
-    path: 'fronteriza',
-    loadChildren: () =>
-      import('./tramites/11101/aviso-mercancia-donada.module').then(
-        (m) => m.AvisoMercanciaDonadaModule
       ),
   },
 ];

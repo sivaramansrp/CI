@@ -33,7 +33,7 @@ import {
 import { Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { LISTA_TRIMITES } from '../core/enums/atender-requerimientos.enums';
+import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { OnInit } from '@angular/core';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
@@ -371,5 +371,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.consultaioStore.establecerConsultaio('', '', '', '', '', '', false, true, false);
   }
 }

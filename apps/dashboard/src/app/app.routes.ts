@@ -109,7 +109,7 @@ export const appRoutes: Route[] = [
       }).then((m) => m.AppSedenaModule),
   },
   {
-    path: 'agace',
+    path: 'inbal',
     loadChildren: () =>
       loadRemoteModule({
         remoteEntry: `${ENVIRONMENT.REMOTE_APPS.inbal}/remoteAppEntry.js`,
@@ -134,6 +134,33 @@ export const appRoutes: Route[] = [
         remoteName: 'profepa',
         exposedModule: './Module',
       }).then((m) => m.AppProfepaModule),
+  },
+  {
+    path: 'inah',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.inah}/remoteAppEntry.js`,
+        remoteName: 'inah',
+        exposedModule: './Module',
+      }).then((m) => m.AppINAHModule),
+  },
+  {
+    path: 'crt',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.crt}/remoteAppEntry.js`,
+        remoteName: 'crt',
+        exposedModule: './Module',
+      }).then((m) => m.AppCrtModule),
+  },
+  {
+    path: 'stps',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.stps}/remoteAppEntry.js`,
+        remoteName: 'stps',
+        exposedModule: './Module',
+      }).then((m) => m.AppStpsModule),
   },
   {
     path: 'bandeja-de-solicitudes',

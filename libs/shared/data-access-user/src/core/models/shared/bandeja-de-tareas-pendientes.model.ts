@@ -8,3 +8,9 @@ export interface BandejaDeTareasPendientes {
     numeroDeProcedimiento: string;
     origin: string;
 }
+
+export interface SeleccionadoDepartamento {
+    tieneDepartamento: boolean;
+    nombreDelDepartamento: string;
+    numeroDeProcedimiento: string;
+}

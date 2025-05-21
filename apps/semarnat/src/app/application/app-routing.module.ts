@@ -79,6 +79,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'phytosanitary-export',
+    loadChildren: () =>
+      import('./tramites/230201/phytosanitary-export.module').then(
+        (m) => m.PhytosanitaryExportModule
+      ),
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
       import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
@@ -104,6 +111,13 @@ const ROUTES: Routes = [
         './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
       ),
   },
 ];

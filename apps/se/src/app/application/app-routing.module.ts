@@ -620,6 +620,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'modalidad-terciarización',
+    loadChildren: () =>
+      import('./tramites/80105/modalidad-terciarización.module').then(
+        (m) => m.ModalidadTerciarizaciónModule
+      ),
+  },
+  {
     path: 'importaciones-agropecuarias',
     loadChildren: () =>
       import(
@@ -631,6 +638,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
+      ),
+  },
+  {
+    path: 'cancelaciones-certificado',
+    loadChildren: () =>
+      import('./tramites/140205/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   },
   {
@@ -652,6 +666,13 @@ const ROUTES: Routes = [
         './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
       ),
   },
 ];

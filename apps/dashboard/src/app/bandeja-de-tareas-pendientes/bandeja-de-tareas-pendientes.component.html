@@ -8,6 +8,8 @@
               [configuracionTabla]="dePendientesConfiguracionTabla"
               [configuracionTablaDatos]="dePendientesTablaDatos"
               [bandejaSolicitudeDatos]="bandejaDeTareasForma"
+              [seleccionadoDepartamento]="selectedDepartamentoObj"
+              (obtenerNombreDelDepartamento)="departamento($event)"
             >
             </lib-bandeja>
           </ng-container>
