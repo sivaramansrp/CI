@@ -1,15 +1,20 @@
 <div class="form-group">
   <form [formGroup]="FormInputRadio">
     <div *ngFor="let option of radioOptions" [ngClass]="layout">
-      <input
-        type="radio"
-        [value]="option.value"
-        [id]="option.value"
-        [checked]="selectedValue === option.value"
-        (change)="onSelectionChange(option.value)"
-        formControlName="seleccion"
-      />
-      <span class="radio-label">{{ option.label }}</span>
+      <ng-container *ngFor="let part of getParts()">
+        <ng-container [ngSwitch]="part">
+          <input
+            *ngSwitchCase="'input'"
+            type="radio"
+            [value]="option.value"
+            [id]="option.value"
+            [checked]="selectedValue === option.value"
+            (change)="onSelectionChange(option.value)"
+            formControlName="seleccion"
+          />
+          <span *ngSwitchCase="'label'" [ngClass]="labelName === 'last' ? 'radio-label-margin-left' : 'radio-label-margin-right'">{{ option.label }}</span>
+        </ng-container>
+      </ng-container>
       <span
         *ngIf="showTooltip && option.hint"
         class="bi bi-question-circle-fill fs-4 m-1"

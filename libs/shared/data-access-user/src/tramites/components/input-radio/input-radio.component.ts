@@ -15,7 +15,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.
  * Soporta diseños verticales y horizontales y puede configurarse para ser un campo requerido.
@@ -34,7 +33,6 @@ import { CommonModule } from '@angular/common';
     },
   ],
 })
-
 export class InputRadioComponent implements OnInit {
   @Input() description!: string; // Optional description
   @Input() showDescription: boolean = false;
@@ -68,6 +66,12 @@ export class InputRadioComponent implements OnInit {
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';
 
   /**
+   * Entrada que determina la posición de la etiqueta respecto al botón de opción:
+   * 'first' para mostrarla antes del input, 'last' para mostrarla después
+   */
+  @Input() labelName: 'first' | 'last' = 'last';
+
+  /**
    * Indica si se debe mostrar un tooltip con la descripción del campo.
    * @default false
    */
@@ -93,7 +97,6 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', VALIDATORS],
     });
   }
-  
   private onChange: (value: string | number | null) => void = () => { };
   private onTouched: () => void = () => { };
   /**
@@ -129,5 +132,13 @@ export class InputRadioComponent implements OnInit {
     } else {
       this.FormInputRadio.enable();
     }
+  }
+
+  /**
+   * Devuelve el orden en que se deben renderizar la etiqueta y el input de radio.
+   * @returns Si labelName es 'first', la etiqueta va primero; de lo contrario, el input va primero.
+   */
+  getParts(): ('label' | 'input')[] {
+    return this.labelName === 'first' ? ['label', 'input'] : ['input', 'label'];
   }
 }
