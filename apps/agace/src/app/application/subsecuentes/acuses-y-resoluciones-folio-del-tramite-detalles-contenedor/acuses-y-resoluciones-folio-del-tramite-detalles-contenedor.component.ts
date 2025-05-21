@@ -165,7 +165,7 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       this.guardarDatos?.department,
       this.guardarDatos?.folioTramite,
       this.guardarDatos?.tipoDeTramite,
-      's',
+      this.guardarDatos?.estadoDeTramite,
       true,
       false,
       false // Replace 'null' with the appropriate value for the missing argument
@@ -280,6 +280,7 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           true,
           false,
           false
@@ -291,6 +292,7 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
           false,
           false,
           true
