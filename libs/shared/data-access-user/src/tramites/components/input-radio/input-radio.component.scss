@@ -1,15 +1,27 @@
+.vertical {
+  display: block;
+  margin-bottom: 10px;
+}
+.horizontal {
+  display: inline-block;
+  margin-right: 30px;
+}
+.etiqueta-de-radio {
+  margin-left: 15px;
+  }
 
+  .fw-bold {
+    font-weight: 600;
+  }
 
-  .vertical {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  .horizontal {
-    display: inline-block;
-    margin-right: 30px;
-  }
-  
-  .radio-label {
-    margin-left: 15px; /* Adjust the value as needed */
-  }
+  .radio-row {
+    display: flex;
+    justify-content: flex-start;
+}
+.radio-label-margin-left {
+  margin-left: 15px;
+}
+
+.radio-label-margin-right {
+  margin-right: 15px;
+}
