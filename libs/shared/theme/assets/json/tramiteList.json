@@ -2039,8 +2039,8 @@
   {
     "id": 292,
     "tramite": 90102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/autorizacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec-productor/prosec",
     "department": "se"
   },
   {

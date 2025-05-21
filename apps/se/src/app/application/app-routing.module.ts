@@ -470,6 +470,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'autorizacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90102/autorizacion-prosec-productor.module').then(
+        (m) => m.AutorizacionProsecProductorModule
+      ),
+  },
+  {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
