@@ -109,6 +109,7 @@ export interface FormularioPago {
     llavePago: string;
     fechaPago: string;
     importePago: string;
+    fechaFactura:string;
 }
 export interface EnviarDatos {
     pagoDeformaValida: boolean,
@@ -132,7 +133,8 @@ export function createDatosState(params: Partial<Agricultura> = {}): Agricultura
             banco: '',
             llavePago: '',
             fechaPago: '',
-            importePago: ''
+            importePago: '',
+            fechaFactura: ''
         },
         formularioMovilizacion: params.formularioMovilizacion || {
             medioDeTransporte: '',
