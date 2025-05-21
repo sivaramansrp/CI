@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './detalles-folio.component.html',
-  styleUrl: './detalles-folio.component.css',
+  styleUrl: './detalles-folio.component.scss',
 })
 export class DetallesFolioComponent implements OnInit, OnDestroy {
   /**

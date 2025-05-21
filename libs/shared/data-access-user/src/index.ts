@@ -5,8 +5,14 @@ export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
 export { enviroment } from './enviroments/enviroment';
-export { InputConfig, LabelValueDatos, ListaPasosWizard, MenuConfig, Props } from './core/models/forma-render.model';
-export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
+export {
+  InputConfig,
+  LabelValueDatos,
+  ListaPasosWizard,
+  MenuConfig,
+  Props,
+} from './core/models/forma-render.model';
+export { ModalFuncionesComponent } from './tramites/components/modal-funciones/modal-funciones.component';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
@@ -24,7 +30,10 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
 export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
-export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store';
+export {
+  TramiteFolioState,
+  TramiteFolioStore,
+} from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/ambientes';
@@ -47,7 +56,7 @@ export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/31602/comercio-exterior.model';
-export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/models/shared/agregar-trasnporte.model';
 export * from './core/models/shared/catalogo.model';
 export * from './core/models/shared/anexar-documentos.model';
 export * from './core/models/shared/catalogos.model';
@@ -145,7 +154,7 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/solicitante-constantes.enum';
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/directives/Uppercase/uppercase.directive';
@@ -155,7 +164,7 @@ export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';

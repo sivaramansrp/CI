@@ -13,8 +13,8 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/280101/permiso-de-exportacion.module').then(
         (m) => m.PermisoDeExportacionModule
-      )
-    },
+      ),
+  },
   {
     path: 'evaluar',
     loadComponent: () =>
@@ -28,12 +28,21 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
     path: 'proceso-requerimiento',
-      loadComponent: () =>
-        import('./proceso-requerimiento/proceso-requerimiento.component').then(
-          (m) => m.ProcesoRequerimientoComponent
-        ),
-    }
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
 ];
 
 @NgModule({

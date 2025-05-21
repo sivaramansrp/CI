@@ -28,7 +28,7 @@ import {
   AcusesYResoluciones,
   BotonDeAccion,
 } from '../../core/models/shared/subsecuentes.model';
-import { LISTA_TRIMITES } from '../../core/enums/atender-requerimientos.enums';
+import { LISTA_TRIMITES } from '../../core/enums/lista-trimites.enums';
 import { SubsecuentesService } from '../../core/services/subsecuntes/subsecuentes.service';
 
 import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
@@ -59,7 +59,7 @@ import { Router } from '@angular/router';
   templateUrl:
     './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.html',
   styleUrl:
-    './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.css',
+    './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.scss',
 })
 export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   implements OnDestroy, OnInit
@@ -168,7 +168,7 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       this.guardarDatos?.estadoDeTramite,
       true,
       false,
-      false
+      false // Replace 'null' with the appropriate value for the missing argument
     );
   }
 
