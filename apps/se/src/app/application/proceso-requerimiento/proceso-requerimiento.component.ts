@@ -371,5 +371,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.consultaioStore.establecerConsultaio('', '', '', '', '', '', false, true, false);
   }
 }
