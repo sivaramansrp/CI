@@ -154,3 +154,7 @@ export * from './core/queries/consulta.query';
 export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
 export * from './tramites/components/carga-documento/carga-documento.component';
 export * from './core/enums/evaluar.trimites.enums';
+export * from './core/estados/solicitud-documentos.store';
+export * from './core/queries/solicitud-documentos.query';
+export * from './core/estados/requerimientos.store';
+export * from './core/queries/requerimientos.query';
