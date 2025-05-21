@@ -441,11 +441,19 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  {path: 'reportes',
-    loadChildren:() =>
+  {
+    path: 'reportes',
+    loadChildren: () =>
       import('./tramites/110207/reportes.module').then(
         (m) => m.ReportesModule
       )
+  },
+  {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
   },
   {
     path: 'catalogos',
@@ -454,33 +462,33 @@ const ROUTES: Routes = [
         (m) => m.CatalogosModule
       ),
   },
-{  
+  {
     path: 'expedicion-certificados-asignacion-directa',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
       ),
-  },  
+  },
   {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
         (m) => m.ImmexModificationModule
-      ),  
-   },
-   {
+      ),
+  },
+  {
     path: 'registro-solicitud-immex',
     loadChildren: () =>
       import('./tramites/80210/registro-solicitud-immex.module').then(
         (m) => m.registroSolicitudImmexModule
       ),
-   },
+  },
   {
-    path:'registro-expansion',
+    path: 'registro-expansion',
     loadChildren: () =>
       import('./tramites/80211/registro-expansion.module').then(
         (m) => m.RegistroExpansionModule
-      ),    
+      ),
   },
   {
     path: 'validar-inicialmente-certificado',
@@ -490,7 +498,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-modificacion', 
+    path: 'registro-modificacion',
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
         (m) => m.RegistroModificacionModule
@@ -525,13 +533,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'ampliacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90202/ampliacion-prosec-productor.module').then(
+        (m) => m.AmpliacionProsecProductorModule
+      ),
+  },
+  {
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120403/cupos.module').then(
         (m) => m.CuposModule
       ),
   },
-{
+  {
     path: 'informe-anual-programa',
     loadChildren: () =>
       import('./tramites/150103/informe-anual-programa.module').then(
@@ -554,11 +569,11 @@ const ROUTES: Routes = [
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
   },
   {
-        path: 'programa-prosec',
-        loadChildren: () =>
-          import('./tramites/90302/programa-prosec.module').then(
-            (m) => m.ProgramaProsecModule
-          ),
+    path: 'programa-prosec',
+    loadChildren: () =>
+      import('./tramites/90302/programa-prosec.module').then(
+        (m) => m.ProgramaProsecModule
+      ),
   },
 
   {
@@ -575,11 +590,46 @@ const ROUTES: Routes = [
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
   },
+  {
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import('./tramites/80314/immex-modificacion-cambio-de-sector.module').then(
+        (m) => m.ImmexModificacionCambioDeSectorModule
+      ),
+  },
+  {
+    path: 'validar-certificado-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
 
+  {
+    path: 'solicitud-de-registro-tpl',
+    loadChildren: () =>
+      import('./tramites/120101/solicitud-de-registro-tpl.module').then(
+        (m) => m.SolicitudDeRegistroTplModule
+      ),
+  },
+  {
+    path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  },
+  {
+    path: 'importaciones-agropecuarias',
+    loadChildren: () =>
+      import('./tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module').then(
+        (m) => m.ImportacionesAgropecuariasModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

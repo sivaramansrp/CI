@@ -73,3 +73,22 @@ export interface MercanciaTabla {
   numeroFactura?: string;
   complemento?: string;
 }
+
+/**
+ * Representa los datos del formulario relacionados con el certificado de origen.
+ */
+export interface FormularioSi {
+  si?: boolean;
+  entidadFederativa?: string;
+  bloque?: string;
+  fraccionArancelariaForm?: string;
+  registroProductoForm?: string;
+  nombreComercialForm?: string;
+  fechaInicioInput?: string;
+  fechaFinalInput?: string;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  numeroDeRegistroFiscal?: string;
+  razonSocial?: string;
+}
