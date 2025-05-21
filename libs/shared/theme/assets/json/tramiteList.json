@@ -2039,8 +2039,8 @@
   {
     "id": 292,
     "tramite": 90102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/autorizacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec-productor/prosec",
     "department": "se"
   },
   {
@@ -2116,15 +2116,15 @@
   {
     "id": 303,
     "tramite": 11101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/fronteriza/aviso-mercancia-donada",
+    "linkDepartment": "/pago/fronteriza/aviso-mercancia-donada",
     "department": "aga"
   },
   {
     "id": 304,
     "tramite": 31401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/cancelacion-garantia/pantallas",
+    "linkDepartment": "/pago/cancelacion-garantia/pantallas",
     "department": "agace"
   },
   {

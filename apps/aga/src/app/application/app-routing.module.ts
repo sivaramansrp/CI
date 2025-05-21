@@ -374,6 +374,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
         (m) => m.RenewalVatIepsModAModule),
+  },
+  {
+    path: 'fronteriza',
+    loadChildren: () =>
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule),
   }
 ];
 
