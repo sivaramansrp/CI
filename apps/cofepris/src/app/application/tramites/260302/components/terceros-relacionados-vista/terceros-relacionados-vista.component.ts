@@ -2,6 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -16,13 +18,15 @@ import {
   Destinatario,
   MENSAJE_TABLA_OBLIGATORIA,
 } from '../../../../shared/models/terceros-relacionados.model';
+import {
+  MENSAJE_SIN_FILA_SELECCIONADA,
+  TIPO_ACTUALIZACION,
+} from '../../../../shared/constantes/datos-solicitud.enum';
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
-import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
-
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -38,6 +42,7 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
     TablaDinamicaComponent,
     AlertComponent,
     TituloComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
@@ -66,13 +71,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de Destinatarioes.
    */
-  configuracionTablaDestinatario: ConfiguracionColumna<Destinatario>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatario: ConfiguracionColumna<Destinatario>[] =
+    DESTINATARIO_ENCABEZADO_DE_TABLA;
 
-    /**
+  /**
    * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de Destinatarioes.
    */
-    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =OTROS_ENCABEZADO_DE_TABLA;
+  configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
+    OTROS_ENCABEZADO_DE_TABLA;
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -95,8 +102,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @property {Destinatario[]}destinatarioTablaDatos
    * Datos de la tabla de fabricantes.
    */
- destinatarioTablaDatos$!: Observable<Destinatario[]>;
-
+  destinatarioTablaDatos$!: Observable<Destinatario[]>;
 
   /**
    * @property {Destinatario[]} DestinatarioTablaDatos
@@ -122,13 +128,21 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Almacena la fila seleccionada de la tabla de Otros.
    */
   public seleccionadaDestinatario!: Destinatario[];
-  
+
   /**
    * @property {Otros[]} seleccionadaOtros
    * Almacena la fila seleccionada de la tabla de Otros.
    */
   public seleccionadaOtros!: Otros[];
 
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
 
   /**
    * @constructor
@@ -141,7 +155,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite260302Query,
     private router: Router,
     private activatedROute: ActivatedRoute,
-    private tramiteStore: Tramite260302Store,
+    private tramiteStore: Tramite260302Store
   ) {
     //
   }
@@ -155,6 +169,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
 
     this.otrasTablaDatos$ = this.tramiteQuery.getOtrasTablaDatos$;
+
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: MENSAJE_SIN_FILA_SELECCIONADA,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -178,14 +204,26 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     });
   }
 
-
   modificarDestinatario(): void {
-    this.tramiteStore.updateSeleccionadoDestinatarioDatos(this.seleccionadaDestinatario);
+    if (!this.seleccionadaDestinatario) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateSeleccionadoDestinatarioDatos(
+      this.seleccionadaDestinatario
+    );
     this.navigate(TIPO_TABLA_DATOS.DESTINATARIO);
   }
 
-  eliminarDestinatario():void{
-      this.tramiteStore.updateDestinatarioTablaDatos(this.seleccionadaDestinatario, TIPO_ACTUALIZACION.ELIMINAR);
+  eliminarDestinatario(): void {
+    if (!this.seleccionadaDestinatario) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateDestinatarioTablaDatos(
+      this.seleccionadaDestinatario,
+      TIPO_ACTUALIZACION.ELIMINAR
+    );
   }
 
   /**
@@ -205,15 +243,24 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @param filaSeleccionada - Array de objetos Otros seleccionados.
    */
   modificarOtros(): void {
+    if (!this.seleccionadaOtros) {
+      this.mostrarAlerta = true;
+      return;
+    }
     this.tramiteStore.updateSeleccionadoOtrosDatos(this.seleccionadaOtros);
     this.navigateOtros();
   }
 
-  eliminarOtros():void{
-    this.tramiteStore.updateOtrosTablaDatos(this.seleccionadaOtros, TIPO_ACTUALIZACION.ELIMINAR);
+  eliminarOtros(): void {
+    if (!this.seleccionadaOtros) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateOtrosTablaDatos(
+      this.seleccionadaOtros,
+      TIPO_ACTUALIZACION.ELIMINAR
+    );
   }
-
-
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
