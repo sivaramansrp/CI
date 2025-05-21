@@ -30,7 +30,7 @@ export class InputFechaComponent implements OnChanges {
   mountSelect!: { name: string; value: number; indexWeek: number }[];
   mostrar: boolean = false;
   Formulario!: FormGroup;
-
+  @Input() icono: boolean = true;
   constructor(
     private fb: FormBuilder
   ) {

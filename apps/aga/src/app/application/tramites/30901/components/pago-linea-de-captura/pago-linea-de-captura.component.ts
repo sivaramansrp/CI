@@ -4,13 +4,13 @@ import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
 import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.model';
+import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
 import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -85,7 +85,6 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     },
   ];
 
-
   /**
    * Lista de pagos de derechos asociados a la solicitud.
    * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
@@ -120,11 +119,11 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     this.formPagoLC = this.fb.group({
       lineaCaptura: [
         this.solicitud30901State.lineaCaptura,
-        [Validators.maxLength(20)],
+        [Validators.required, Validators.maxLength(20)],
       ],
       valorPago: [
         { value: this.solicitud30901State.valorPago, disabled: true },
-        [Validators.maxLength(20)],
+        [Validators.required, Validators.maxLength(20)],
       ],
     });
 
@@ -133,7 +132,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((response: Solicitud30901State) => {
           this.solicitud30901State = response;
-          this.pagoDerechosLista = response.pagoDerechosLista;
+          // this.pagoDerechosLista = response.pagoDerechosLista;
           this.formPagoLC.patchValue({
             lineaCaptura: this.solicitud30901State.lineaCaptura,
             valorPago: this.solicitud30901State.valorPago,
@@ -207,10 +206,15 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    */
   anadirTarifasDePago(): void {
     const LINEA_CAPTURA = this.formPagoLC.get('lineaCaptura')?.value;
+    LINEA_CAPTURA.markAsTouched();
+    if (LINEA_CAPTURA?.invalid) {
+      return;
+    }
     const VALOR_PAGO = this.formPagoLC.get('valorPago')?.value;
     if (!LINEA_CAPTURA || !VALOR_PAGO) {
       return;
     }
+
     const JSON_OBJECT = [
       {
         linea: LINEA_CAPTURA,

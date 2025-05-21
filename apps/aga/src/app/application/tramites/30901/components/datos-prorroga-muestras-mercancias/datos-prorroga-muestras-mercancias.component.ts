@@ -50,17 +50,17 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @type {string}
    */
   vigenciaActualTextoLabel: string =
-    'La fecha actual de inicio y fin de vigencia de su authorización es la siguiente:';
+    'La fecha actual de inicio y fin de vigencia de su authorización es la siguiente :';
   /**
    * Etiqueta para la fecha de inicio de vigencia.
    * @type {string}
    */
-  fechaInicioVigenciaLabel: string = 'Fecha de Inicio de Vigencia';
+  fechaInicioVigenciaLabel: string = 'Fecha de inicio de vigencia';
   /**
    * Etiqueta para la fecha de fin de vigencia.
    * @type {string}
    */
-  fechaFinVigenciaLabel: string = 'Fecha de Fin de Vigencia';
+  fechaFinVigenciaLabel: string = 'Fecha de fin de vigencia';
 
   /**
    * Configuración para la fecha de fin de vigencia.
@@ -70,7 +70,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @property {boolean} habilitado - Indica si el campo está habilitado.
    */
   configuracionFechaFinVigencia: InputFecha = {
-    labelNombre: 'Fecha de Inicio de Vigencia',
+    labelNombre: 'Fecha de inicio de vigencia',
     required: false,
     habilitado: false,
   };
@@ -83,7 +83,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @property {boolean} habilitado - Indica si el campo está habilitado.
    */
   configuracionFechaInicioVigencia: InputFecha = {
-    labelNombre: 'Fecha de fin de Vigencia',
+    labelNombre: 'Fecha de fin de vigencia',
     required: false,
     habilitado: false,
   };
