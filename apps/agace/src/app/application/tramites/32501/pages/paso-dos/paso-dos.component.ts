@@ -14,7 +14,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
 
 /**
- * Componente PasoDosComponent que representa el segundo paso del trámite 32605.
+ * Componente PasoDosComponent que representa el segundo paso del trámite 32501.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -30,7 +30,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-dos.component.scss',
 })
 /**
- * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 32605.
+ * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 32501.
  */
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
