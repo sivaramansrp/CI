@@ -359,7 +359,8 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
-        habilitado: true
+        habilitado: true,
+        tooltip: 'Seleccione la fecha límite estimada para el retorno de la mercancía.' // Nuevo tooltip
     },
     {
         id: 'fechaLimiteRetorno',
@@ -372,7 +373,6 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         validadores: [
             { tipo: 'required' }
         ],
-        tooltipQuestionCircle:"true",
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
