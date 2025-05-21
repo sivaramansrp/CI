@@ -100,8 +100,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===  tipoPersona.FISICA ||
-        agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===  tipoPersona.FISICA ) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
