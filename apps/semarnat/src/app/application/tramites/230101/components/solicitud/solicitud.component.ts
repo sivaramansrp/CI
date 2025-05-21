@@ -101,7 +101,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    */
   public paisDeProcedenciaLabel = {
     tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionados',
+    derecha: 'País(es) seleccionadas',
   };
 
   /**
@@ -118,17 +118,17 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    */
   public aduanaLabel = {
     tituluDeLaIzquierda: 'Aduanas disponibles',
-    derecha: 'Aduanas seleccionados',
+    derecha: 'Aduanas seleccionadas',
   };
 
   /**
    * @property {Object} paisLabel - Etiquetas utilizadas para las secciones de países en la interfaz de usuario.
    * @property {string} paisLabel.tituluDeLaIzquierda - Texto para la sección de países disponibles.
-   * @property {string} paisLabel.derecha - Texto para la sección de países seleccionados.
+   * @property {string} paisLabel.derecha - Texto para la sección de países seleccionadas.
    */
   public paisLabel = {
     tituluDeLaIzquierda: 'Países disponibles',
-    derecha: 'Países seleccionados',
+    derecha: 'Países seleccionadas',
   };
 
   /**
@@ -137,8 +137,8 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    * @property {string} derecha - Texto para el encabezado de la lista de entidades seleccionadas.
    */
   public destinoLabel = {
-    tituluDeLaIzquierda: 'Entidades desponibles',
-    derecha: 'Entidades seleccionados',
+    tituluDeLaIzquierda: 'Entidades disponibles',
+    derecha: 'Entidades seleccionadas',
   };
 
    /**
@@ -323,6 +323,17 @@ export class SolicitudComponent implements OnInit, OnDestroy{
         this.dSolicitud = data.dSolicitud;
       }
     });
+  }
+
+  cambiarTipoRegimen(): void {
+    const VALOR = this.tipoRegimen.get('regimen')?.value;
+    if(VALOR === 'definitivos'){
+      this.disponsibleAduanaCheckboxes[0].hide = false;
+      this.disponsibleAduanaCheckboxes[1].hide = false;
+    } else {
+      this.disponsibleAduanaCheckboxes[0].hide = true;
+      this.disponsibleAduanaCheckboxes[1].hide = true;
+    }
   }
 
   /**
