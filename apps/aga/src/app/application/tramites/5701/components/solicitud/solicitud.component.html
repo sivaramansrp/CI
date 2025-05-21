@@ -477,6 +477,8 @@
           </option>
         </select>
       </div>
+    </div>
+    <div class="row">
       @if (!despachoSeleccionado) {
       <div class="col-md-4">
         <div>
@@ -506,9 +508,6 @@
         ></app-catalogo-select>
       </div>
       }
-    </div>
-
-    <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="tipoOperacion"
@@ -520,6 +519,9 @@
           "
         ></app-catalogo-select>
       </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-4">
         <label for="patente" class="form-label"
           >Patente/Número de autorización:</label
@@ -537,6 +539,7 @@
           [id]="'relacionSociedad'"
           [label]="'Relación de sociedad'"
           [required]="false"
+          [reverse]="true"
           formControlName="relacionSociedad"
           (change)="
             setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
@@ -547,6 +550,7 @@
           [id]="'encargoConferido'"
           [label]="'Encargo conferido'"
           [required]="false"
+          [reverse]="true"
           formControlName="encargoConferido"
           (change)="
             setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
