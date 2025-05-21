@@ -38,9 +38,9 @@
       </div>
     </div>
 
-    <ng-titulo titulo="Aduanas de salida" />
+    <ng-titulo *ngIf="tipoOperacionSeleccionado" titulo="Aduanas de salida" />
 
-    <div class="row mt-3">
+   <div *ngIf="tipoOperacionSeleccionado" class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist [fechas]="listaOriginalMovimientos" [fechasSeleccionadas]="listSeleccionadaMovimientos"
           [botones]="botonesMovimientos"></crosslist>
@@ -79,7 +79,7 @@
           </div>
           <div class="col-md-5">
             <div class="form-group">
-              <input id="numEquipos" type="text" class="form-control" formControlName="numEquipos" [required]="true"
+              <input id="numEquipos" type="text" class="form-control" formControlName="numEquipos" [required]="true" maxlength="2"
                 [class.is-invalid]="formularioMercancia.get('numEquipos')?.touched && formularioMercancia.get('numEquipos')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('numEquipos')" class="text-danger">
@@ -92,7 +92,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="marca">Marca*:</label>
-              <input id="marca" type="text" class="form-control" formControlName="marca" [required]="true"
+              <input id="marca" type="text" class="form-control" formControlName="marca" [required]="true" maxlength="50"
                 [class.is-invalid]="formularioMercancia.get('marca')?.touched && formularioMercancia.get('marca')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('marca')" class="text-danger">
@@ -103,7 +103,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="modelo">Modelo*:</label>
-              <input id="modelo" type="text" class="form-control" formControlName="modelo" [required]="true"
+              <input id="modelo" type="text" class="form-control" formControlName="modelo" [required]="true" maxlength="100"
                 [class.is-invalid]="formularioMercancia.get('modelo')?.touched && formularioMercancia.get('modelo')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('modelo')" class="text-danger">
@@ -116,7 +116,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="voltaje">Voltaje máximo del tubo de R-X*:</label>
-              <input id="voltaje" type="text" class="form-control" formControlName="voltaje" [required]="true"
+              <input id="voltaje" type="text" class="form-control" formControlName="voltaje" [required]="true" maxlength="11"
                 [class.is-invalid]="formularioMercancia.get('voltaje')?.touched && formularioMercancia.get('voltaje')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('voltaje')" class="text-danger">
@@ -134,7 +134,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="corriente">Corriente máxima del tubo de R-X*:</label>
-              <input id="corriente" type="text" class="form-control" formControlName="corriente" [required]="true"
+              <input id="corriente" type="text" class="form-control" formControlName="corriente" [required]="true" maxlength="11"
                 [class.is-invalid]="formularioMercancia.get('corriente')?.touched && formularioMercancia.get('corriente')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('corriente')" class="text-danger">
@@ -167,7 +167,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="serie">Número de serie*:</label>
-              <input id="serie" type="text" class="form-control" formControlName="serie" [required]="true"
+              <input id="serie" type="text" class="form-control" formControlName="serie" [required]="true" maxlength="150"
                 [class.is-invalid]="formularioMercancia.get('serie')?.touched && formularioMercancia.get('serie')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('serie')" class="text-danger">
