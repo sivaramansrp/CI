@@ -61,6 +61,7 @@ jobs:
       - name: Push Docker image to GHCR
         run: |
           docker compose -f ./docker/modulefederation-dashboard.yml build && docker compose -f ./docker/modulefederation-dashboard.yml push
+          docker compose -f ./docker/modulefederation-login-microfront.yml build && docker compose -f ./docker/modulefederation-login-microfront.yml push
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
@@ -72,4 +73,4 @@ jobs:
           script: |
             cd /home/ubuntu/v30
             microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev -n default
-
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev -n default
