@@ -627,6 +627,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'modalidad-terciarización',
+    loadChildren: () =>
+      import('./tramites/80105/modalidad-terciarización.module').then(
+        (m) => m.ModalidadTerciarizaciónModule
+      ),
+  },
+  {
     path: 'importaciones-agropecuarias',
     loadChildren: () =>
       import('./tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module').then(
