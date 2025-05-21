@@ -408,6 +408,16 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+
+/**
+ * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.
+ */
+export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,9})(\.\d{1,2})?$/;
+
+/**
+ * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente tres decimales.
+ */
+export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,9})(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  * 
