@@ -157,7 +157,7 @@
     "id": 23,
     "tramite": 40103,
     "linkDashboard": "/aga/modificar-caat-terrestre/solicitante",
-    "linkDepartment": "/aga/modificar-caat-terrestre/solicitante",
+    "linkDepartment": "/pago/modificar-caat-terrestre/solicitante",
     "department": "aga"
   },
   {
@@ -171,7 +171,7 @@
     "id": 25,
     "tramite": 80101,
     "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
-    "linkDepartment": "/se/pago/nuevo-programa-industrial/action",
+    "linkDepartment": "/pago/nuevo-programa-industrial/action",
     "department": "se"
   },
   {
@@ -185,7 +185,7 @@
     "id": 27,
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
-    "linkDepartment": "/se/immex-ampliacion-sensibles/solicitud",
+    "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
     "department": "agace"
   },
   {
@@ -786,8 +786,8 @@
   {
     "id": 113,
     "tramite": 32301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso/aviso-modificacion",
+    "linkDepartment": "/pago/aviso/aviso-modificacion",
     "department": "agace"
   },
   {
@@ -1339,8 +1339,8 @@
   {
     "id": 192,
     "tramite": 31202,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aa",
     "department": "aga"
   },
   {
@@ -1899,8 +1899,8 @@
   {
     "id": 272,
     "tramite": 230201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/phytosanitary-export/solicitud",
+    "linkDepartment": "/pago/phytosanitary-export/solicitud",
     "department": "semarnat"
   },
   {
@@ -2039,8 +2039,8 @@
   {
     "id": 292,
     "tramite": 90102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/autorizacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec-productor/prosec",
     "department": "se"
   },
   {
@@ -2116,15 +2116,15 @@
   {
     "id": 303,
     "tramite": 11101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/fronteriza/aviso-mercancia-donada",
+    "linkDepartment": "/pago/fronteriza/aviso-mercancia-donada",
     "department": "aga"
   },
   {
     "id": 304,
     "tramite": 31401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/cancelacion-garantia/pantallas",
+    "linkDepartment": "/pago/cancelacion-garantia/pantallas",
     "department": "agace"
   },
   {

@@ -1,6 +1,6 @@
 import { AgregarTransporteComponent, CargaDocumentoComponent, CatalogosService, InputRadioComponent, NotificacionesComponent, UppercaseDirective } from '@ng-mf/data-access-user';
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, NavComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SolicitanteComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { NgModule, forwardRef } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
@@ -53,6 +53,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     forwardRef(() => WizardComponent),
     forwardRef(() => UppercaseDirective),
     forwardRef(() => InputRadioComponent),
+    forwardRef(() => NotificacionesComponent),
     forwardRef(() => CargaDocumentoComponent),
     ToastrModule.forRoot()
   ],

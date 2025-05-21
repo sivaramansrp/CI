@@ -1,8 +1,8 @@
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { Notificacion } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TEXTOS } from '@ng-mf/data-access-user';
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
