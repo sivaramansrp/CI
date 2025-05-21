@@ -189,6 +189,8 @@ export interface TablaMercanciasDatos {
   paisDeDestino?:string,
   denominacionCumonInternacional?:string;
   marcaComercialDenominacion?:string;
+  especifique?: string;
+  especifiqueObligatorio?:string;
 
 }
 
