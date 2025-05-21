@@ -21,6 +21,7 @@
               <td>{{ item?.tramite }}</td>
               <td>
                 <a [routerLink]="item.linkDashboard"
+                  (click)="configuraOrigenPeticion()"
                   >{{ ruta }}{{ item.linkDashboard }}</a
                 >
               </td>

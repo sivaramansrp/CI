@@ -13,7 +13,7 @@ const ROUTES: Routes = [
     redirectTo: 'solicitud',
   },
   {
-    path: 'actualizacion',
+    path: 'actualizacion/:id',
     component: ComponenteDeActualizacionComponent
   }
 ];
