@@ -359,7 +359,7 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
-        habilitado: true,
+        habilitado: true
     },
     {
         id: 'fechaLimiteRetorno',
