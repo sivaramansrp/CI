@@ -62,6 +62,7 @@
             type="text"
             formControlName="denominacionRazon"
             maxlength="250"
+            [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''"
           />
           <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
             <small *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['required']">
@@ -74,14 +75,13 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarFacturadorForm.get('tipoPersona')?.untouched)
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA )
     {
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control" formControlName="nombres" maxlength="200" />
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200" [ngClass]="esInvalido('nombres') ? 'required' : ''"  />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['nombres'].errors?.['required']">
             Este campo es obligatorio
@@ -98,6 +98,7 @@
           class="form-control"
           formControlName="primerApellido"
           maxlength="200"
+          [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('primerApellido')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['primerApellido'].errors?.['required']">
@@ -140,7 +141,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado*:</label>
-        <input type="text" class="form-control" formControlName="estado" />
+        <input type="text" class="form-control" formControlName="estado" [ngClass]="esInvalido('estado') ? 'required' : ''" />
         <div *ngIf="esInvalido('estado')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['estado'].errors?.['required']">
             Este campo es obligatorio
@@ -161,7 +162,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Colonia o equivalente:</label>
-        <input type="text" class="form-control" formControlName="colonia" />
+        <input type="text" class="form-control" maxlength="100" formControlName="colonia" />
       </div>
       <div class="col-md-4">
         <label class="form-label">Calle*:</label>
@@ -170,7 +171,7 @@
           title="Domicilio, calle, número interior, número exterior, lote"
           data-bs-toggle="tooltip"
         ></span>
-        <input type="text" class="form-control" formControlName="calle" maxlength="100" />
+        <input type="text" class="form-control" formControlName="calle" maxlength="100" [ngClass]="esInvalido('calle') ? 'required' : ''" />
         <div *ngIf="esInvalido('calle')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['calle'].errors?.['required']">
             Este campo es obligatorio
@@ -183,6 +184,8 @@
           type="text"
           class="form-control"
           formControlName="numeroExterior"
+          maxlength="55"
+          [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['numeroExterior'].errors?.['required']">
@@ -199,15 +202,16 @@
           type="text"
           class="form-control"
           formControlName="numeroInterior"
+          maxlength="55"
         />
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" />
+        <input type="text" class="form-control" maxlength="5" formControlName="lada" />
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" formControlName="telefono" />
+        <input type="text" class="form-control" maxlength="24" formControlName="telefono" />
         <div *ngIf="esInvalido('telefono')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['telefono'].errors?.['pattern']">
             Existen datos incorrectos que no cumplen con el formato esperado
