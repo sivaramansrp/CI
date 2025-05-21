@@ -323,7 +323,15 @@ const ROUTES: Routes = [
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule),
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
+  },
+  {
+    path: 'registro-poblacional',
+    loadChildren: () =>
+      import('./tramites/6502/registro-poblacional.module').then(
+        (m) => m.RegistroPoblacionalModule
+      ),
   },
   {
     path: 'retorno-de-partes',

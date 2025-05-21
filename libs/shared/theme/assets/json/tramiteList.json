@@ -2109,8 +2109,8 @@
   {
     "id": 302,
     "tramite": 6502,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-poblacional/solicitud",
+    "linkDepartment": "/pago/registro-poblacional/solicitud",
     "department": "aga"
   },
   {
