@@ -2081,8 +2081,8 @@
   {
     "id": 298,
     "tramite": 140218,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-permiso/solicitud",
+    "linkDepartment": "/pago/renuncia-de-permiso/solicitud",
     "department": "sener"
   },
   {
