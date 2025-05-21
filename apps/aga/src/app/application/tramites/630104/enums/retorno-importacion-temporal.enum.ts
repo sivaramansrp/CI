@@ -200,7 +200,7 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         validadores: [
             { tipo: 'required' }
         ],
-        tooltipQuestionCircle:"true",
+        tooltipQuestionCircle:true,
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,
