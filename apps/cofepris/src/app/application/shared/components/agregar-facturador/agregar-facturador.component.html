@@ -75,8 +75,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarFacturadorForm.get('tipoPersona')?.untouched)
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA )
     {
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
