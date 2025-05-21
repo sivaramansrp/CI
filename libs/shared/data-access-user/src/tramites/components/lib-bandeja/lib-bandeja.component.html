@@ -75,7 +75,7 @@
     </div>
 }
 
-    @if(hasValidForm) {
+    @if(hasValidForm && tieneConfiguracionTablaDatos) {
         <div class="row mt-2">
             <div class="col-md">
               <h4 class="mb-4">{{tablaTitulo}}</h4>
@@ -97,6 +97,12 @@
               (itemsPerPageChange)="onItemsPerPageChange($event)"
             >
             </app-table-pagination>
+        </div>
+    } @else if(hasValidForm && !tieneConfiguracionTablaDatos) {
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h4 class="mb-4 text-center">No se encontraron datos</h4>
+            </div>
         </div>
     }
 </div>

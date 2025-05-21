@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
+import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
 
 
@@ -32,7 +33,33 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
  * cuando el componente se destruye, evitando fugas de memoria.
  */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Almacena los datos relacionados con los departamentos.
+   * Cada elemento del arreglo representa un departamento y su información asociada.
+   * La estructura de cada elemento es de tipo `any`, por lo que puede contener cualquier forma de datos de departamento.
+   */
   public departamentoDatos: Array<any> = [];
+  /**
+   * Almacena una lista de números de procedimiento.
+   *
+   * @remarks
+   * Este arreglo contiene los números de procedimiento relevantes para el componente.
+   * El tipo está definido como `Array<any>`, lo que permite almacenar cualquier tipo de valor.
+   * Considere especificar un tipo más preciso para una mejor seguridad de tipos.
+   */
+  public procedureNumero: Array<any> = [];
+  /**
+   * Representa el objeto del departamento actualmente seleccionado.
+   * 
+   * @property {boolean} tieneDepartamento - Indica si un departamento está seleccionado.
+   * @property {string} numeroDeProcedimiento - El número de procedimiento asociado al departamento.
+   * @property {string} nombreDelDepartamento - El nombre del departamento seleccionado.
+   */
+  public selectedDepartamentoObj: SeleccionadoDepartamento = {
+    tieneDepartamento: false,
+    numeroDeProcedimiento: '',
+    nombreDelDepartamento: '',
+  };
     /*
    * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
    */
@@ -111,6 +138,14 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
       });
     }
 
+    /**
+     * Obtiene los datos de los departamentos desde el servicio y actualiza las opciones del campo del formulario.
+     *
+     * Este método se suscribe al observable `getDepartamento` de `bandejaSvc`, procesa la respuesta de la API
+     * y asigna los datos de los departamentos a `departamentoDatos`. Luego localiza el campo del formulario con el ID 'departamento'
+     * en `bandejaDeTareasForma` y, si el campo existe y aún no tiene opciones, llena su propiedad `opciones`
+     * con los acrónimos e IDs de los departamentos.
+     */
     public getNombreDelDepartamento(): void {
       this.bandejaSvc.getDepartamento().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         const API_RESPONSE = JSON.parse(JSON.stringify(response));
@@ -128,18 +163,45 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
       });
     }
 
+    /**
+     * Maneja los cambios en el departamento o procedimiento seleccionado según el evento proporcionado.
+     *
+     * @param event - Un objeto que contiene el campo (`campo`) que está cambiando y su nuevo valor (`valor`).
+     *   - Si `campo` es `'departamento'`, actualiza el objeto de departamento seleccionado, asigna su acrónimo y obtiene los procedimientos relacionados.
+     *   - Si `campo` es `'procedimiento'`, actualiza el objeto de departamento seleccionado con el número de procedimiento seleccionado.
+     *   - Para cualquier otro valor, reinicia el estado de selección del departamento.
+     */
     public departamento(event: { campo: string; valor: any }): void {
-      const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event));
-      this.getProcedimiento(SELECTED_DEPARTAMENTO[0].ACRONIMO);
+      if(event.campo === 'departamento') {
+        this.selectedDepartamentoObj.tieneDepartamento = true;
+        const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event.valor));
+        if(SELECTED_DEPARTAMENTO[0].ACRONIMO !== null && SELECTED_DEPARTAMENTO[0].ACRONIMO !== undefined && SELECTED_DEPARTAMENTO[0].ACRONIMO !== '') {
+          this.selectedDepartamentoObj.nombreDelDepartamento = SELECTED_DEPARTAMENTO[0].ACRONIMO;
+          this.getProcedimiento(SELECTED_DEPARTAMENTO[0].ACRONIMO);
+        }
+      } else if(event.campo === 'procedimiento') {
+        this.selectedDepartamentoObj.tieneDepartamento = false;
+        const SELECTED_PROCEDURE = this.procedureNumero.filter((item) => item.id === Number(event.valor));
+        this.selectedDepartamentoObj.numeroDeProcedimiento = SELECTED_PROCEDURE[0].tramite;
+      } else {
+          this.selectedDepartamentoObj.tieneDepartamento = false;
+      }
 
     }
 
+    /**
+     * Filtra la lista de procedimientos (`tramiteDetailsData`) por el departamento especificado,
+     * actualiza la propiedad `procedureNumero` con los resultados filtrados y establece las
+     * opciones disponibles para el campo 'procedimiento' en el formulario dinámico (`bandejaDeTareasForma`).
+     *
+     * @param departamento - El nombre del departamento por el cual filtrar los procedimientos.
+     */
     public getProcedimiento(departamento: string): void {
-        let PROCEDURE_NUMERO = [];
-        PROCEDURE_NUMERO = tramiteDetailsData.filter((v) => v.department === departamento.toLocaleLowerCase());
+        this.procedureNumero = [];
+        this.procedureNumero = tramiteDetailsData.filter((v) => v.department === departamento.toLocaleLowerCase());
         const FILTERED_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento') as ModeloDeFormaDinamica;
         if (FILTERED_FIELD) {
-          FILTERED_FIELD.opciones = PROCEDURE_NUMERO.map((item: { id: number; tramite: number }) => ({
+          FILTERED_FIELD.opciones = this.procedureNumero.map((item: { id: number; tramite: number }) => ({
               descripcion: item.tramite,
               id: item.id,
             }));

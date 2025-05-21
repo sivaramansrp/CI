@@ -22,6 +22,9 @@ export class BandejaDeSolicitudeService {
     );
   }
 
+  /**
+   * Recupera la información del departamento desde un archivo JSON local.
+   */
   public getTareasPendientesTablaDatos(): Observable<JSONResponse> {
     return this.http.get<JSONResponse>('assets/json/bandeja-de-tareas-pendientes/de-tareas-pendientes-tabla.json').pipe(
       catchError((error) => {
@@ -30,6 +33,9 @@ export class BandejaDeSolicitudeService {
     );
   }
 
+  /**
+   * Recupera la información del departamento desde un archivo JSON local.
+   */
   public getDepartamento(): Observable<JSONResponse> {
     return this.http.get<JSONResponse>('assets/json/bandeja-de-tareas-pendientes/nombre-del-departamento.json').pipe(
       catchError((error) => {

@@ -400,7 +400,7 @@ public eventoDeCambioDeValor(event: any, campo: string): void {
   }
 
   if (campo) {
-    this.emitirCambioDeValor.emit({ campo, valor: VALOR });
+    this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
   }
 }
 

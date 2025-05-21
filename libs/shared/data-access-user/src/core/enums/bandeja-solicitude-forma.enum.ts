@@ -63,9 +63,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+      
       ],
       marcadorDePosicion: '',
     },
@@ -78,9 +76,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+       
       ],
       marcadorDePosicion: '',
     },
@@ -93,9 +89,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+        
       ],
       marcadorDePosicion: '',
       valorPredeterminado: '',
@@ -111,9 +105,7 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        {
-          tipo: 'required'
-        }
+       
       ],
       marcadorDePosicion: '',
       valorPredeterminado: '',
