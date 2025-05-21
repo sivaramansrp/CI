@@ -11,7 +11,7 @@ export interface SolicitudDocumentosState {
  * Creación del estado inicial para la interfaz de solicitud de documentos
  * @returns SolicitudDocumentosState
  */
-export function createInitialState(): SolicitudDocumentosState {
+export function createInitialSolicitudDocumentosStates(): SolicitudDocumentosState {
     return {
         documentosSeleccionados: []
     };
@@ -19,9 +19,9 @@ export function createInitialState(): SolicitudDocumentosState {
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'DocumentosStates', resettable: true })
-export class DocumentosStates extends Store<SolicitudDocumentosState> {
+export class SolicitudDocumentosStore extends Store<SolicitudDocumentosState> {
     constructor() {
-        super(createInitialState());
+        super(createInitialSolicitudDocumentosStates());
     }
     /**
      * Resetear valores

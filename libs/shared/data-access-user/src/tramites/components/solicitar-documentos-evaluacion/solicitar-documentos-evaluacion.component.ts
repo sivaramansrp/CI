@@ -1,7 +1,7 @@
 import { Catalogo, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
 import { Component, OnInit } from '@angular/core';
-import { DocumentosStates, SolicitudDocumentosState } from '../../../core/estados/solicitud-documentos.store';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SolicitudDocumentosState, SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -63,7 +63,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   description: string | undefined;
 
   constructor(private fb: FormBuilder,
-    private documentosStates: DocumentosStates,
+    private documentosStates: SolicitudDocumentosStore,
     private solicitudRequerimientoQuery: SolicitudDocumentosQuery
   ) {
     // do nothing.
@@ -122,7 +122,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DocumentosStates): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof SolicitudDocumentosStore): void {
     this.valor = form.get(campo)?.value;
     (this.documentosStates[metodoNombre] as (value: string) => void)(this.valor);
   }
