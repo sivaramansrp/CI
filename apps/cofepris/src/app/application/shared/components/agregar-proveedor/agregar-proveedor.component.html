@@ -67,8 +67,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarProveedorForm.get('tipoPersona')?.untouched) {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA ) {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
