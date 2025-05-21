@@ -194,6 +194,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.configuracionTablaDatos = this.solicitudState.datosDelContenedor;
         })
       )
       .subscribe();
@@ -204,10 +205,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     /**
     * Escuchar los datos actualizados de la fila
     */
-    this.consultaAvisoAcreditacionService.formData$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((formData) => {
-        this.updateTableRow(formData);
+    this.consultaAvisoAcreditacionService.formData$.pipe(takeUntil(this.destroyNotifier$)).subscribe((formData) => {
+      formData.forEach((row) => this.updateTableRow(row));
       });
   }
 
@@ -472,7 +471,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       valorEnPesos: FORM_VALUES.valorEnPesos,
       comprobanteDePago: 'N/A',
     };
-    this.configuracionTablaDatos.push(NEW_ROW);
+    this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
     this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
     this.abrirModal();
     this.registroForm.reset();
@@ -537,18 +536,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return;
     }
     if (SELECTED_ROW) {
-      this.consultaAvisoAcreditacionService.setUpdatedRow(SELECTED_ROW);
+      this.consultaAvisoAcreditacionService.setUpdatedRow([SELECTED_ROW]);
       this.tramite32101Store.setAbc(SELECTED_ROW);
       setTimeout(() => {
         if (CURRENT_URL.includes('agace')) {
-          this.router.navigate([
-            '/agace/consulta-aviso-acreditacion/actualizacion',
-          ]);
+          this.router.navigate(
+        ['/agace/consulta-aviso-acreditacion/actualizacion',
+  SELECTED_ROW.id]);
         }
         if (CURRENT_URL.includes('pago')) {
-          this.router.navigate([
-            '/pago/consulta-aviso-acreditacion/actualizacion',
-          ]);
+          this.router.navigate(
+        ['/pago/consulta-aviso-acreditacion/actualizacion',
+  SELECTED_ROW.id]);
         }
       }, 100);
     }
@@ -580,24 +579,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.abrirEleminarModal();
   }
 
-  /**
-   * Actualiza el formulario con los datos ingresados y los envía al servicio correspondiente.
-   *
-   * @remarks
-   * Este método toma los valores actuales del formulario `registroForm`,
-   * los encapsula en una constante y los pasa al servicio `consultaAvisoAcreditacionService`
-   * para actualizar la fila correspondiente.
-   *
-   * @example
-   * // Supongamos que el formulario tiene los siguientes valores:
-   * // { nombre: 'Juan', edad: 30 }
-   * formularioDeActualizacion();
-   * // El servicio `consultaAvisoAcreditacionService` procesará estos datos.
-   */
-  formularioDeActualizacion(): void {
-    const FORM_DATA = this.registroForm.value;
-    this.consultaAvisoAcreditacionService.setUpdatedRow(FORM_DATA);
-  }
 
   /**
   * Validador personalizado para verificar si la fecha es menor o igual a la fecha actual 
@@ -662,6 +643,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     if (INDEX !== -1) {
       this.configuracionTablaDatos[INDEX] = updatedRow;
+      this.configuracionTablaDatos = [...this.configuracionTablaDatos];
     }
   }
 
