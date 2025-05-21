@@ -18,7 +18,7 @@
           Física
           <span
           class="bi bi-question-circle-fill"
-          title="Física"
+          title="Una persona física es entendida como toda persona con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
@@ -33,7 +33,7 @@
           Moral
           <span
           class="bi bi-question-circle-fill"
-          title="Física"
+          title="Una persona moral es entendida como una empresa con una actividad específica"
           data-bs-toggle="tooltip"
         ></span>
         </div>
@@ -56,10 +56,10 @@
         <label class="form-label">R.F.C*:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="R.F.C"
+        title="Registro Federal de Contribuyente"
         data-bs-toggle="tooltip"
       ></span>
-        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" />
+        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" [ngClass]="esInvalido('rfc') ? 'required' : ''" />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['rfc'].errors?.['required']">
             Este campo es obligatorio
@@ -87,6 +87,7 @@
           type="text"
           formControlName="denominacionRazon"
           [maxlength]="250"
+          [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']">
@@ -105,7 +106,7 @@
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control" [maxlength]="200" formControlName="nombres" />
+        <input type="text" class="form-control" [maxlength]="200" formControlName="nombres" [ngClass]="esInvalido('nombres') ? 'required' : ''" />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['nombres'].errors?.['required']">
             Este campo es obligatorio
@@ -122,6 +123,7 @@
           class="form-control"
           formControlName="primerApellido"
           [maxlength]="200"
+          [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('primerApellido')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['primerApellido'].errors?.['required']">
@@ -251,10 +253,10 @@
         <span class="form-label">:</span>
         <span
         class="bi bi-question-circle-fill"
-        title="Física"
+        title="Domicilio, calle, número interior, número exterior, lote"
         data-bs-toggle="tooltip"
       ></span>
-        <input type="text" class="form-control" [maxlength]="100" formControlName="calle" />
+        <input type="text" class="form-control" [maxlength]="100" formControlName="calle" [ngClass]="esInvalido('calle') ? 'required' : ''" />
         <div *ngIf="esInvalido('calle')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['calle'].errors?.['required']">
             Este campo es obligatorio
@@ -269,6 +271,8 @@
           type="text"
           class="form-control"
           formControlName="numeroExterior"
+          [maxlength]="55"
+          [ngClass]="esInvalido('calle') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']">
@@ -285,15 +289,16 @@
           type="text"
           class="form-control"
           formControlName="numeroInterior"
+          [maxlength]="55"
         />
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" />
+        <input type="text" class="form-control" [maxlength]="5" formControlName="lada" />
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" formControlName="telefono" />
+        <input type="text" class="form-control" [maxlength]="24" formControlName="telefono" />
         <div *ngIf="esInvalido('telefono')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['telefono'].errors?.['pattern']">
             Existen datos incorrectos que no cumplen con el formato esperado
@@ -304,7 +309,7 @@
         <label class="form-label">Correo electrónico:</label>
         <span
         class="bi bi-question-circle-fill"
-        title="Física"
+        title="ejemplo@dominio.com"
         data-bs-toggle="tooltip"
       ></span>
         <input

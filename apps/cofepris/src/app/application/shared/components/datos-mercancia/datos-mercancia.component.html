@@ -144,7 +144,7 @@
             <div class="col-md-10">
                 <div class="form-group">
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria*:</label>
-                    <span class="bi bi-question-circle-fill" title="Fracción arancelaria"
+                    <span class="bi bi-question-circle-fill" title="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
                     data-bs-toggle="tooltip"></span>
                     <input class="form-control" id="fraccionArancelaria" type="text" formControlName="fraccionArancelaria"
                     (change)="cambiarFraccionArancelaria()"
@@ -172,7 +172,7 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <label class="form-label" for="cantidadUmt">UMT*:</label>
-                    <span class="bi bi-question-circle-fill" title="UMT"
+                    <span class="bi bi-question-circle-fill" title="Unidad de medida de la tarifa"
                     data-bs-toggle="tooltip"></span>
                     <input class="form-control" id="cantidadUmt" type="text" formControlName="cantidadUmt"
                         [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''">
@@ -190,7 +190,7 @@
             </div>
             <div class="col-md-5 ml-2">
                 <app-catalogo-select [catalogo]="cantidadUmcDatos" formControlName="cantidadUmc" [label]="'UMC'"
-                    [required]="true" [tooltipQuestionCircle]="true" name="cantidadUmc"></app-catalogo-select>
+                    [required]="true" [tooltipQuestionCircle]="true" [questionCircleTooltip]="'Unidad de medida de comercialización'" name="cantidadUmc"></app-catalogo-select>
             </div>
         </div>
         @if(!elementosNoValidos.includes('presentacion')){

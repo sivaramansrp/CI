@@ -344,11 +344,6 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * regresa a la página anterior en el historial del navegador.
    */
   guardarFabricante(): void {
-    if (this.agregarFabricanteForm.status === 'INVALID') {
-      this.agregarFabricanteForm.markAllAsTouched();
-      return;
-    }
-
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
     let nombreRazonSocial: string;
