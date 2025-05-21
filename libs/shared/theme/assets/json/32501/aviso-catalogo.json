@@ -16,7 +16,7 @@
         ],
         "labelNombre": "Fracción arancelaria",
         "required": true,
-        "primerOpcion": "Seleccione un valor"
+        "primerOpcion": "Seleccione una opción"
     },
     "entidadFederativa": {
         "catalogos": [
@@ -35,7 +35,7 @@
         ],
         "labelNombre": "Entidad federativa",
         "required": true,
-        "primerOpcion": "Seleccione un valor"
+        "primerOpcion": "Seleccione una opción"
     },
     "delegacionMunicipio": {
         "catalogos": [
@@ -54,7 +54,7 @@
         ],
         "labelNombre": "Alcaldía o municipio",
         "required": true,
-        "primerOpcion": "Seleccione un valor"
+        "primerOpcion": "Seleccione una opción"
     },
     "colonia": {
         "catalogos": [
@@ -73,7 +73,7 @@
         ],
         "labelNombre": "Colonia",
         "required": true,
-        "primerOpcion": "Seleccione un valor"
+        "primerOpcion": "Seleccione una opción"
     },
     "aduanaDeImportacion": {
         "catalogos": [
@@ -92,7 +92,7 @@
         ],
         "labelNombre": "Aduana de importación",
         "required": true,
-        "primerOpcion": "Seleccione un valor"
+        "primerOpcion": "Seleccione una opción"
     },
     "opcionTipoDeDocumento": {
         "labelNombre": "Tipo de documento",

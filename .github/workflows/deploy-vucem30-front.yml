@@ -3,7 +3,7 @@ name: CI/CD - Microfront Dashboard
 on:
   workflow_dispatch:
   push:
-    branches: [ develop ]
+    branches: [ QA ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -43,10 +43,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --force
-      # 4. Construye el proyecto Angular con Nx (build del dashboard).
-      - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-dashboard.yml build
-     
+    
       - name: Listar archivos
         run: ls -la
         
@@ -58,12 +55,28 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner  }}
-          password: ${{ secrets.GITHUB_TOKEN}}
+          username: ${{ github.actor  }}
+          password: ${{secrets.GHCR_PAT}}
 
       - name: Push Docker image to GHCR
-        run: docker push ghcr.io/vucem30/dockerized-modulefederation-dashboard-microfront:1.0.0
-
+        run: |
+          docker compose -f ./docker/modulefederation-dashboard.yml build && docker compose -f ./docker/modulefederation-dashboard.yml push
+          docker compose -f ./docker/modulefederation-login-microfront.yml build && docker compose -f ./docker/modulefederation-login-microfront.yml push
+          docker compose -f ./docker/modulefederation-aga-microfront.yml build && docker compose -f ./docker/modulefederation-aga-microfront.yml push
+          docker compose -f ./docker/modulefederation-amecafe-microfront.yml build && docker compose -f ./docker/modulefederation-amecafe-microfront.yml push
+          docker compose -f ./docker/modulefederation-cofepris-microfront.yml build && docker compose -f ./docker/modulefederation-cofepris-microfront.yml push
+          docker compose -f ./docker/modulefederation-crt-microfront.yml build && docker compose -f ./docker/modulefederation-crt-microfront.yml push
+          docker compose -f ./docker/modulefederation-inah-microfront.yml build && docker compose -f ./docker/modulefederation-inah-microfront.yml push
+          docker compose -f ./docker/modulefederation-inbal-microfront.yml build && docker compose -f ./docker/modulefederation-inbal-microfront.yml push
+          docker compose -f ./docker/modulefederation-profepa-microfront.yml build && docker compose -f ./docker/modulefederation-profepa-microfront.yml push
+          docker compose -f ./docker/modulefederation-se-microfront.yml build && docker compose -f ./docker/modulefederation-se-microfront.yml push
+          docker compose -f ./docker/modulefederation-se-microfront.yml build && docker compose -f ./docker/modulefederation-se-microfront.yml push
+          docker compose -f ./docker/modulefederation-sedena-microfront.yml build && docker compose -f ./docker/modulefederation-sedena-microfront.yml push
+          docker compose -f ./docker/modulefederation-semarnat-microfront.yml build && docker compose -f ./docker/modulefederation-semarnat-microfront.yml push
+          docker compose -f ./docker/modulefederation-sener-microfront.yml build && docker compose -f ./docker/modulefederation-sener-microfront.yml push
+          docker compose -f ./docker/modulefederation-stps-microfront.yml build && docker compose -f ./docker/modulefederation-stps-microfront.yml push
+          docker compose -f ./docker/modulefederation-funcionario-microfront.yml build && docker compose -f ./docker/modulefederation-funcionario-microfront.yml push
+          docker compose -f ./docker/modulefederation-bandejas-microfront.yml build && docker compose -f ./docker/modulefederation-bandejas-microfront.yml push
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -73,5 +86,19 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-dashboard-microfront-deployment-dev -n default
-
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-crt-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-inah-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-se-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-sener-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-stps-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-bandejas-microfront-deployment-dev -n default

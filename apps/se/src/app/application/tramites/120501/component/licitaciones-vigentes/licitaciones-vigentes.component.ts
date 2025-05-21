@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -8,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria,  CONFIGURACION_ACCIONISTAS_TABLA, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -34,7 +33,6 @@ import { Subject } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
-import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
 import { Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 
 import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
@@ -105,10 +103,14 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Configuración para la tabla de accionistas.
    */
   configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
+
+
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos:any;
+  datos:Complementaria[] = [];
+  
+
   /**
    * Datos de los pasos del asistente.
    */
@@ -190,7 +192,17 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * 
    */
   montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
+  
+  
+  /**
+   * Indica si se muestra la representación federal.
+   */
+  showRepresentacionFederal: boolean = false;
 
+   /**
+   * Indica si se muestra la selección de participante.
+   */
+  showSeleccionarParticipante: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -225,6 +237,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       rfc: ["", Validators.required],
       adquirienteMontoDisponible: [""],
       montoRecibir: ["", Validators.required],
+      rfc1: [""],
     })
 
   }
@@ -347,7 +360,7 @@ getValorIndice(e: AccionBoton):void{
  */
 getDetallesDelalicitacion():void{
   this.service.getDetallesDelalicitacion().subscribe(
-    (data:any)=>{
+    (data:DetallesLicitacion)=>{
       this.detalledelaLicitacionForm.patchValue({
         numeraDelicitacion:data.numeraDelicitacion,
         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
@@ -374,7 +387,7 @@ getDetallesDelalicitacion():void{
      */ 
   obtenerDatosDeTabla(): void {
     this.service.getTableData().subscribe(
-        (data: any) => {
+        (data: Complementaria[]) => {
             this.datos = data;
         }
     );
@@ -386,7 +399,7 @@ getDetallesDelalicitacion():void{
  */
 getAdquiriente():void{
   this.service.getAdquiriente().subscribe(
-    (data:any)=>{
+    (data:Adquiriente)=>{
       this.adquiriente.patchValue({
         rfc:data.rfc,
         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
@@ -405,7 +418,7 @@ getAdquiriente():void{
      */
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
   const VALOR = form.get(campo)?.value;
-  (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
+  (this.tramite120501Store[metodoNombre] as (value: unknown) => void)(VALOR);
 }
 
 /**
@@ -440,5 +453,53 @@ montoRecibirValue(): void {
   const MONTO_RECIBIR = this.adquiriente.get('montoRecibir')?.value;
   this.tramite120501Store.setmontoRecibir(MONTO_RECIBIR);
 }
+/**
+ * Abre el modal para modificar la información.
+ *
+ * LicitacionesVigentesComponent
+ * 
+ */
+abrirModificarModal(event: Complementaria): void {
+  this.showRepresentacionFederal = true;
+}
 
+/**
+ * Muestra la sección para seleccionar un participante.
+ * Cambia el valor de la propiedad `showSeleccionarParticipante` a `true`,
+ * lo que habilita la visualización de la interfaz correspondiente.
+ */
+seleccionarParticipante():void{
+  this.showSeleccionarParticipante = true;
+}
+
+/**
+ * Agrega el valor del campo 'rfc1' al array 'datos1'.
+ * Si el campo está vacío, no realiza ninguna acción.
+ */
+agregarRFC1(): void {
+  const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
+  if (RFC1VALUE) {
+    this.datos.push({
+      registrofederaldecontribuyentes: RFC1VALUE,
+      numerodelicitacion: '',
+      fechadelicitacion: '',
+      descripcion: '',
+      montoadjudicado: '',
+      fechainiciovigencia: '',
+      fechafinvigencia: ''
+    });
+    this.adquiriente.get('rfc1')?.reset();
+  }
+}
+/**
+ * Mueve el valor seleccionado de 'datos1' al campo 'rfc'.
+ * Índice del elemento seleccionado en el array 'datos1'.
+ */
+moverRFC1(selectedEntry: Complementaria): void {
+   const INDEX = this.datos.indexOf(selectedEntry); 
+  if (INDEX !== -1 && selectedEntry.registrofederaldecontribuyentes) {
+    this.adquiriente.get('rfc')?.setValue(selectedEntry.registrofederaldecontribuyentes);
+    this.datos.splice(INDEX, 1);
+  }
+}
 }
