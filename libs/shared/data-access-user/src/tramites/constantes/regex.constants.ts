@@ -314,7 +314,7 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
  * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
  * @constant
  */
-export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para validar una llave de pago.
@@ -445,3 +445,30 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
+export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
+
+
+export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
+export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
+/**
+ * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Guiones (-)
+ *
+ * Desglose de la expresión regular:
+ * - `^`: Aserta el inicio de la cadena.
+ * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
+ * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
+ *
+ * Ejemplos de coincidencias:
+ * - "123-456" (coincide con "123-")
+ * - "  -789" (coincide con "  -")
+ * - "42" (coincide con "42")
+ *
+ * Ejemplos de no coincidencias:
+ * - "abc123" (no comienza con un dígito, espacio o guión)
+ * - "!@#" (no comienza con un carácter válido)
+ */
+export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
