@@ -20,7 +20,9 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/medicamentos-contengan.model';
+import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
+import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -106,6 +108,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   otrasTablaDatos$!: Observable<Otros[]>;
 
   /**
+ * @property {Otros[]} seleccionadaOtros
+ * Almacena la fila seleccionada de la tabla de Otros.
+ */
+  public seleccionadaOtros!: Otros[];
+  /**
+ * @property {Destinatario[]} seleccionadaOtros
+ * Almacena la fila seleccionada de la tabla de Otros.
+ */
+  public seleccionadaDestinatario!: Destinatario[];
+
+
+  /**
    * @property {Subject<void>} destroy$
    * Subject para cancelar suscripciones y evitar fugas de memoria.
    * @private
@@ -127,6 +141,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite260304Query,
+    private tramiteStore: Tramite260304Store,
     private router: Router,
     private activatedROute: ActivatedRoute
   ) {
@@ -163,6 +178,25 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedROute,
     });
   }
+
+  modificarOtros(): void {
+    this.tramiteStore.updateSeleccionadoOtrosDatos(this.seleccionadaOtros);
+    this.navigateOtros();
+  }
+
+  eliminarOtros(): void {
+    this.tramiteStore.updateOtrosTablaDatos(this.seleccionadaOtros, TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+  modificarDestinatario(): void {
+    this.tramiteStore.updateSeleccionadoDestinatarioDatos(this.seleccionadaDestinatario);
+    this.navigate(TIPO_TABLA_DATOS.DESTINATARIO);
+  }
+
+  eliminarDestinatario(): void {
+    this.tramiteStore.updateDestinatarioTablaDatos(this.seleccionadaDestinatario, TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

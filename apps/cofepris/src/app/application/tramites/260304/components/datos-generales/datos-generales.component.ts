@@ -12,16 +12,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { OnDestroy } from '@angular/core';
 import { Otros } from '../../models/medicamentos-contengan.model';
 import { TERCEROS_NACIONALIDAD_RADIO_OPCIONS } from '../../constants/medicamentos-contengan.enum';
 import { TERCEROS_PERSONA_RADIO_OPCIONS } from '../../constants/medicamentos-contengan.enum';
 import { TIPO_TABLA_DATOS } from '../../constants/medicamentos-contengan.enum';
+import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
 @Component({
@@ -37,7 +38,7 @@ import { Tramite260304Store } from '../../estados/tramite260304Store.store';
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
-export class DatosGeneralesComponent implements OnDestroy {
+export class DatosGeneralesComponent implements OnDestroy, OnInit {
   /**
    * Variable que almacena el tipo de dato, que se inicializa más tarde.
    * Se usa el operador `!` para indicar que la variable no es nula ni indefinida en el momento de su uso.
@@ -88,6 +89,13 @@ export class DatosGeneralesComponent implements OnDestroy {
    */
   tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
+    /**
+   * @property {Destinatario} datoSeleccionado
+   * Almacena el destinatario seleccionado.
+   * Se inicializa como un objeto vacío de tipo `Destinatario`.
+   */
+  public datoSeleccionado!: Destinatario
+
   /**
    * Constructor del componente `DatosGeneralesComponent`.
    * Inicializa el formulario y carga los datos necesarios para el componente.
@@ -104,12 +112,37 @@ export class DatosGeneralesComponent implements OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private fb: FormBuilder,
     private tramiteStore: Tramite260304Store,
+    private tramiteQuery: Tramite260304Query,
     private router: Router,
     private ubicaccion: Location
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
     this.crearFormulario();
     this.cargarDatos();
+  }
+
+    ngOnInit(): void {
+    this.cargarDatos();
+    this.tramiteQuery.getDestinatarioSeleccionado$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.datoSeleccionado = seccionState?.[0] ?? ({} as Destinatario);
+          this.crearFormulario();
+        })
+      )
+      .subscribe();
+  }
+      /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarDatosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
@@ -121,27 +154,28 @@ export class DatosGeneralesComponent implements OnDestroy {
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
       nombreRazonSocial: [
-        '',
+        this.obtenerValor('nombreRazonSocial'),
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
       ],
-      nombres: ['', Validators.required],
+      nombres: [this.obtenerValor('nombres'), Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       pais: ['', Validators.required],
-      estado: [''],
-      codigoPostal: [''],
+      estado: [this.obtenerValor('codigoPostal')],
+      codigoPostal: [this.obtenerValor('codigoPostal')],
       colonia: [''],
-      calle: ['', Validators.required],
+      calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [''],
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      correoElectronico: ['', [Validators.email]],
       tipoPersona: ['', Validators.required],
+      denominacionRazon: [''],
     });
   }
 
@@ -156,6 +190,16 @@ export class DatosGeneralesComponent implements OnDestroy {
       .subscribe((data) => {
         this.paisesDatos = data;
       });
+  }
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(
+    field: keyof Destinatario
+  ): string | number | undefined | string[] {
+    return this.datoSeleccionado?.[field as keyof Destinatario] ?? '';
   }
 
   /**

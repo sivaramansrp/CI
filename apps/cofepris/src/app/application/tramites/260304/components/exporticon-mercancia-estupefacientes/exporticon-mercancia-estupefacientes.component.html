@@ -5,26 +5,17 @@
     <div class="row">
       <div class="col-md-8">
         <div class="ml-2">
-          <app-catalogo-select
-            [catalogo]="clasificacionProductoDatos"
-            formControlName="clasificacionProducto"
-            [label]="'Clasificación del producto'"
-            [required]="true"
-            name="clasificacionProducto"
-          ></app-catalogo-select>
+          <app-catalogo-select [catalogo]="clasificacionProductoDatos" formControlName="clasificacionProducto"
+            [label]="'Clasificación del producto'" [required]="true" name="clasificacionProducto"></app-catalogo-select>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 ml-2">
         <div class="form-group">
-          <app-catalogo-select
-            [catalogo]="especificarClasificacionProductoDatos"
-            formControlName="especificarClasificacionProducto"
-            [label]="'Especificar clasificación del producto'"
-            [required]="true"
-            name="especificarClasificacionProducto"
-          ></app-catalogo-select>
+          <app-catalogo-select [catalogo]="especificarClasificacionProductoDatos"
+            formControlName="especificarClasificacionProducto" [label]="'Especificar clasificación del producto'"
+            [required]="true" name="especificarClasificacionProducto"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -32,25 +23,21 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="denominacionCumonInternacional"
-            >Denominación común internacional (DCI)*:</label
-          >
-          <span
-            class="bi bi-question-circle-fill"
-            title="Denominación común internacional (DCI)"
-            data-bs-toggle="tooltip"
-          ></span>
-          <input
-            class="form-control"
-            id="denominacionCumonInternacional"
-            type="textarea"
-            formControlName="denominacionCumonInternacional"
-            [ngClass]="
+          <label class="form-label" for="denominacionCumonInternacional">Denominación común internacional (DCI) *
+            :</label>
+          <span class="bi bi-question-circle-fill" title="Denominación común internacional (DCI)"
+            data-bs-toggle="tooltip"></span>
+          <input class="form-control" id="denominacionCumonInternacional" type="textarea" [maxlength]="250"
+            formControlName="denominacionCumonInternacional" [ngClass]="
               isValid(mercanciaForm, 'denominacionCumonInternacional')
                 ? 'required'
                 : ''
-            "
-          />
+            " />
+          <div *ngIf="esInvalido('denominacionCumonInternacional')" class="text-danger">
+            <small *ngIf="mercanciaForm.controls['denominacionCumonInternacional'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -58,33 +45,27 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="marcaComercialDenominacion"
-            >Marca comercial o denominación distintiva:*
+          <label class="form-label" for="marcaComercialDenominacion">Marca comercial o denominación distintiva * :
           </label>
-          <input
-            class="form-control"
-            id="marcaComercialDenominacion"
-            type="text"
-            formControlName="marcaComercialDenominacion"
-            [ngClass]="
+          <input class="form-control" id="marcaComercialDenominacion" type="text" [maxlength]="250"
+            formControlName="marcaComercialDenominacion" [ngClass]="
               isValid(mercanciaForm, 'marcaComercialDenominacion')
                 ? 'required'
                 : ''
-            "
-          />
+            " />
+          <div *ngIf="esInvalido('marcaComercialDenominacion')" class="text-danger">
+            <small *ngIf="mercanciaForm.controls['marcaComercialDenominacion'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8 ml-2">
-        <app-catalogo-select
-          [catalogo]="tipoProductoDatos"
-          formControlName="tipoProducto"
-          [label]="'Tipo de producto'"
-          [required]="true"
-          name="tipoProducto"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="tipoProductoDatos" formControlName="tipoProducto" [label]="'Tipo de producto'"
+          [required]="true" name="tipoProducto"></app-catalogo-select>
       </div>
     </div>
 
@@ -96,24 +77,16 @@
               <h4 class="panel-title">
                 <a> Forma farmacéutica </a>
               </h4>
-              <button
-                type="button"
-                class="collpase-button"
-                [class.collapsed]="!formFormaceuticaColapsable"
-              ></button>
+              <button type="button" class="collpase-button" [class.collapsed]="!formFormaceuticaColapsable"></button>
             </div>
             @if(formFormaceuticaColapsable){
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
-                <crosslist
-                  [fechas]="seleccionarOrigenFormaFormaceutica"
-                  [label]="formaFaramaceuticaLabel"
-                  [botones]="aduanasEntradaBotons"
-                  [fechasSeleccionadas]="seleccionadasFormaFormaceuticaDatos"
+                <crosslist [fechas]="seleccionarOrigenFormaFormaceutica" [label]="formaFaramaceuticaLabel"
+                  [botones]="aduanasEntradaBotons" [fechasSeleccionadas]="seleccionadasFormaFormaceuticaDatos"
                   (fechasSeleccionadasChange)="
                     formaFarmaceuticaSeleccionadasChange($event)
-                  "
-                ></crosslist>
+                  "></crosslist>
               </div>
             </div>
             }
@@ -125,39 +98,38 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria*:</label
-          >
-          <span
-            class="bi bi-question-circle-fill"
-            title="Fracción arancelaria"
-            data-bs-toggle="tooltip"
-          ></span>
-          <input
-            class="form-control"
-            id="fraccionArancelaria"
-            type="text"
-            formControlName="fraccionArancelaria"
+          <label class="form-label" for="fraccionArancelaria">Fracción arancelaria * :</label>
+          <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+          <input class="form-control" id="fraccionArancelaria" type="text" formControlName="fraccionArancelaria"
             [ngClass]="
               isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''
-            "
-          />
+            " />
+          <div *ngIf="esInvalido('fraccionArancelaria')" class="text-danger">
+            <small *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+            <small *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['pattern']">
+              Por favor, sólo escribe dígitos
+            </small>
+            <small *ngIf="mercanciaForm.controls['fraccionArancelaria'].errors?.['minlength']">
+              Por favor, no escribas menos de 8 caracteres
+            </small>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="descripcionFraccion"
-            >Descripción de la fracción arancelaria*:</label
-          >
-          <input
-            class="form-control"
-            id="descripcionFraccion"
-            disable
-            type="text"
-            formControlName="descripcionFraccion"
-          />
+          <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria * :</label>
+          <input class="form-control" id="descripcionFraccion" disable type="text"
+          maxlength="250"
+            formControlName="descripcionFraccion" />
+             <div *ngIf="esInvalido('descripcionFraccion')" class="text-danger">
+            <small *ngIf="mercanciaForm.controls['descripcionFraccion'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -165,61 +137,37 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
-          <input
-            class="form-control"
-            id="cantidadUMT"
-            type="text"
-            formControlName="cantidadUMT"
-            [ngClass]="isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''"
-          />
+          <label class="form-label" for="cantidadUMT">Cantidad UMT * :</label>
+          <input class="form-control" id="cantidadUMT" type="text" formControlName="cantidadUMT"
+            [ngClass]="isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="unidadMedidaTarifa">UMT*:</label>
-          <span
-            class="bi bi-question-circle-fill"
-            title="UMT"
-            data-bs-toggle="tooltip"
-          ></span>
-          <input
-            class="form-control"
-            id="unidadMedidaTarifa"
-            type="text"
-            formControlName="unidadMedidaTarifa"
+          <label class="form-label" for="unidadMedidaTarifa">UMT * :</label>
+          <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
+          <input class="form-control" id="unidadMedidaTarifa" type="text" formControlName="unidadMedidaTarifa"
             [ngClass]="
               isValid(mercanciaForm, 'unidadMedidaTarifa') ? 'required' : ''
-            "
-          />
+            " />
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8 ml-2">
-        <app-catalogo-select
-          [catalogo]="cantidadUmcDatos"
-          formControlName="unidadMedidaComercializacion"
-          [label]="'UMC'"
-          [required]="true"
-          [tooltipQuestionCircle]="true"
-          name="unidadMedidaComercializacion"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="cantidadUmcDatos" formControlName="unidadMedidaComercializacion"
+          [label]="'UMC'" [required]="true" [tooltipQuestionCircle]="true"
+          name="unidadMedidaComercializacion"></app-catalogo-select>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="numeroCAS">Número CAS </label>
-          <input
-            class="form-control"
-            id="marcaComercialDenominación"
-            type="text"
-            formControlName="numeroCAS"
-            [ngClass]="isValid(mercanciaForm, 'numeroCAS') ? 'required' : ''"
-          />
+          <label class="form-label" for="numeroCAS">Número CAS</label>
+          <input class="form-control" id="marcaComercialDenominación" type="text" formControlName="numeroCAS"
+            [ngClass]="isValid(mercanciaForm, 'numeroCAS') ? 'required' : ''" />
         </div>
       </div>
     </div>
@@ -227,31 +175,25 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="cantidadDeLotes"
-            >Cantidad de lotes *:
+          <label class="form-label" for="cantidadDeLotes">Cantidad de lotes * :
           </label>
-          <input
-            class="form-control"
-            id="cantidadDeLotes"
-            type="textarea"
-            formControlName="cantidadDeLotes"
-            [ngClass]="
+          <input class="form-control" id="cantidadDeLotes" type="textarea" [maxlength]="150"
+            formControlName="cantidadDeLotes" [ngClass]="
               isValid(mercanciaForm, 'cantidadDeLotes') ? 'required' : ''
-            "
-          />
+            " />
+          <div *ngIf="esInvalido('cantidadDeLotes')" class="text-danger">
+            <small *ngIf="mercanciaForm.controls['cantidadDeLotes'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8 ml-2">
-        <app-catalogo-select
-          [catalogo]="paisDeDestinoDatos"
-          formControlName="paisDeDestino"
-          [label]="'País de destino '"
-          [required]="true"
-          name="paisDeDestino"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="paisDeDestinoDatos" formControlName="paisDeDestino"
+          [label]="'País de destino '" [required]="true" name="paisDeDestino"></app-catalogo-select>
       </div>
     </div>
 
@@ -261,26 +203,17 @@
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(2)">
               <h4 class="panel-title">
-                <a> Uso específico </a>
+                <a> Uso específico</a>
               </h4>
-              <button
-                type="button"
-                class="collpase-button"
-                [class.collapsed]="!usoEspesificoColapsable"
-              ></button>
+              <button type="button" class="collpase-button" [class.collapsed]="!usoEspesificoColapsable"></button>
             </div>
             @if(usoEspesificoColapsable){
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
-                <crosslist
-                  [fechas]="usoEspesificoDatos"
-                  [label]="usoEspesificoLabel"
-                   [botones]="aduanasEntradaBotons"
-                  [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
-                  (fechasSeleccionadasChange)="
+                <crosslist [fechas]="usoEspesificoDatos" [label]="usoEspesificoLabel" [botones]="aduanasEntradaBotons"
+                  [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos" (fechasSeleccionadasChange)="
                     usoEspesificoSeleccionadasChange($event)
-                  "
-                ></crosslist>
+                  "></crosslist>
               </div>
             </div>
             }
@@ -292,18 +225,11 @@
     <div class="row">
       <div class="col-md-7">
         <div class="form-group">
-          <label class="form-label" for="detallarUsoEspecifico"
-            >Detallar uso específico</label
-          >
-          <input
-            class="form-control"
-            id="detallarUsoEspecifico"
-            type="textarea"
-            formControlName="detallarUsoEspecifico"
+          <label class="form-label" for="detallarUsoEspecifico">Detallar uso específico</label>
+          <input class="form-control" id="detallarUsoEspecifico" type="textarea" formControlName="detallarUsoEspecifico"
             [ngClass]="
               isValid(mercanciaForm, 'detallarUsoEspecifico') ? 'required' : ''
-            "
-          />
+            " />
         </div>
       </div>
     </div>
@@ -311,14 +237,15 @@
     <div class="row">
       <div class="col-md-7">
         <div class="form-group">
-          <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
-          <input
-            class="form-control"
-            id="cantidadUMC"
-            type="text"
-            formControlName="cantidadUMC"
-            [ngClass]="isValid(mercanciaForm, 'cantidadUMC') ? 'required' : ''"
-          />
+          <label class="form-label" for="cantidadUMC">Cantidad UMC * :</label>
+          <input class="form-control" id="cantidadUMC" type="text" formControlName="cantidadUMC"
+            [ngClass]="isValid(mercanciaForm, 'cantidadUMC') ? 'required' : ''" />
+              <div *ngIf="esInvalido('cantidadUMC')" class="text-danger">
+            <small
+            >
+                {{ obtenerMensajeError('cantidadUMC') }}
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -326,20 +253,13 @@
     <div class="row mt-2">
       <div class="col-md-7">
         <div class="form-group">
-          <label class="form-label" for="numeroRegistroSanitario"
-            >Número de registro sanitario*:</label
-          >
-          <input
-            class="form-control"
-            id="numeroRegistroSanitario"
-            type="number"
-            formControlName="numeroRegistroSanitario"
-            [ngClass]="
+          <label class="form-label" for="numeroRegistroSanitario">Número de registro sanitario * :</label>
+          <input class="form-control" id="numeroRegistroSanitario" type="number"
+            formControlName="numeroRegistroSanitario" [ngClass]="
               isValid(mercanciaForm, 'numeroRegistroSanitario')
                 ? 'required'
                 : ''
-            "
-          />
+            " />
         </div>
       </div>
     </div>
@@ -347,35 +267,20 @@
     <div class="row">
       <div class="col-7 ml-1">
         <label class="form-label text-start" for="presentacion">
-          Presentación*:
+          Presentación * :
         </label>
-        <textarea
-          id="presentacion"
-          class="form-control height"
-          rows="3"
-          formControlName="presentacion"
-          style="height: 90px"
-        ></textarea>
+        <textarea id="presentacion" class="form-control height" rows="3" formControlName="presentacion"
+          style="height: 90px"></textarea>
       </div>
     </div>
   </form>
 
   <div class="row mt-3">
     <div class="pull-right ml-2 col text-end">
-      <button
-        type="button"
-        name="eliminarScian"
-        class="btn btn-danger ms-2"
-        (click)="eliminarDetalleMercancia()"
-      >
+      <button type="button" name="eliminarScian" class="btn btn-danger ms-2" (click)="eliminarDetalleMercancia()">
         Eliminar Detalle
       </button>
-      <button
-        type="button"
-        name="eliminarScian"
-        class="btn btn-primary ms-2"
-        (click)="agregarDetalleMercancia()"
-      >
+      <button type="button" name="eliminarScian" class="btn btn-primary ms-2" (click)="agregarDetalleMercancia()">
         Agregar Detalle
       </button>
     </div>
@@ -383,44 +288,24 @@
 
   <div class="row mt-5">
     <div class="col-md-12">
-      <h5 class="my-4">Detalle mercancía producto terminado*:</h5>
-      <label class="form-label fs-4"> Producto Terminado </label>
-      <app-tabla-dinamica
-        [tipoSeleccionTabla]="tipoSeleccionTabla"
-        [configuracionTabla]="tablaDetalleMercancia"
-        [datos]="detalleMercanciaDatos"
-        (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
-      ></app-tabla-dinamica>
+      <h5 class="my-4">Detalle mercancía producto terminado * :</h5>
+      <label class="form-label fs-4">Producto Terminado</label>
+      <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tablaDetalleMercancia"
+        [datos]="detalleMercanciaDatos" (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"></app-tabla-dinamica>
     </div>
   </div>
 
   <div class="row mt-3">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button
-          type="button"
-          name="eliminarScian"
-          class="btn btn-danger ms-2"
-          (click)="limpiarMercancia()"
-        >
+        <button type="button" name="eliminarScian" class="btn btn-danger ms-2" (click)="limpiarMercancia()">
           Limpiar
         </button>
-        <button
-          type="button"
-          name="eliminarScian"
-          class="btn btn-danger ms-2"
-          (click)="cancelar()"
-        >
+        <button type="button" name="eliminarScian" class="btn btn-danger ms-2" (click)="cancelar()">
           Cancelar
         </button>
-        <button
-          type="button"
-          name="agregarScian"
-          class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarScain"
-          (click)="agregarMercancia()"
-        >
+        <button type="button" name="agregarScian" class="btn btn-primary ms-2" data-bs-toggle="modal"
+          data-bs-target="#modalAgregarScain" (click)="agregarMercancia()">
           Agregar
         </button>
       </div>

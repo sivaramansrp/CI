@@ -18,6 +18,10 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_DECIMAL,
+  REGEX_SOLO_DIGITOS,
+  REGEX_VALID_UMC,
+  REGEX_VALID_UMT,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -325,6 +329,35 @@ export class ExporticonMercanciaEstupefacientesComponent
       .subscribe();
   }
 
+    /**
+   * Método que se ejecuta cuando se selecciona una unidad de medida comercial.
+   * Actualmente no implementa ninguna lógica.
+   *
+   * @returns {void}
+   */
+obtenerMensajeError(controlName: string): string {
+  const CONTROL = this.mercanciaForm.get(controlName);
+
+  if (!CONTROL || !CONTROL.errors) {
+    return '';
+  }
+ if (CONTROL.errors['required']) {
+    return 'Este campo es obligatorio';
+  }
+
+
+  if (!REGEX_DECIMAL.test(CONTROL.value)) {
+    return 'Por favor, escribe un número entero válido';
+  }
+
+ 
+  if (CONTROL.errors['pattern']) {
+    return controlName==='cantidadUMT' ? 'Este campo permite doce números enteros y hasta cinco decimales':
+    'Este campo permite doce números enteros y hasta diez decimales';
+  }
+
+  return '';
+}
   /**
     * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
     * @param {keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes} field - Nombre del campo a obtener.
@@ -332,6 +365,17 @@ export class ExporticonMercanciaEstupefacientesComponent
     */
   public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes): string | number | undefined | string[] {
     return this.detalleMercanciaDatosSeleccionados?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes];
+  }
+    /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.mercanciaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
   /**
    * @method crearMercanciaForm

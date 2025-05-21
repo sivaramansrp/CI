@@ -2,85 +2,55 @@
   <ng-titulo titulo="Terceros relacionados"></ng-titulo>
 
   <div class="row mt-5">
-    <ng-alert
-      [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
-      [CUSTOMECLASS]="infoAlert"
-    ></ng-alert>
+    <ng-alert [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA" [CUSTOMECLASS]="infoAlert"></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Destinatario (destino final)*:</h6>
+    <h6>Destinatario (destino final) * :</h6>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica
-      [configuracionTabla]="configuracionTablaDestinatario"
-      [datos]="(destinatarioTablaDatos$ | async) || []"
-      [tipoSeleccionTabla]="tipoSeleccionTabla"
-    ></app-tabla-dinamica>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDestinatario"
+      [datos]="(destinatarioTablaDatos$ | async) || []" [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="seleccionadaDestinatario=$event"></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-        >
+        <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarDestinatario()">
           Modificar
         </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-        >
+        <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarDestinatario()">
           Eliminar
         </button>
 
-        <button
-          type="button"
-          name="agregarMercancias"
-          class="btn btn-primary ms-2"
-          (click)="navigate(tipoTablaDatos.DESTINATARIO)"
-        >
+        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"
+          (click)="navigate(tipoTablaDatos.DESTINATARIO)">
           Agregar
         </button>
       </div>
     </div>
   </div>
 
-  <div class="row mt-5"><h6>Otros :</h6></div>
   <div class="row mt-5">
-    <app-tabla-dinamica
-      [configuracionTabla]="configuracionTablaOtros"
-      [datos]="(otrasTablaDatos$ | async) || []"
+    <h6>Otros:</h6>
+  </div>
+  <div class="row mt-5">
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaOtros" [datos]="(otrasTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
-    ></app-tabla-dinamica>
+      (listaDeFilaSeleccionada)="seleccionadaOtros=$event"></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-        >
+        <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarOtros()">
           Modificar
         </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-        >
+        <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarOtros()">
           Eliminar
         </button>
 
-        <button
-          type="button"
-          name="agregarMercancias"
-          class="btn btn-primary ms-2"
-          (click)="navigateOtros()"
-        >
+        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="navigateOtros()">
           Agregar
         </button>
       </div>

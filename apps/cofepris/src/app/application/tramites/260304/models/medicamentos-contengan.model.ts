@@ -12,7 +12,11 @@ export interface Otros extends Facturador {
    */
   nombreDescripcion: string;
 }
-
+export interface TipoPersonaModel{
+      label: string, 
+      value: string,
+      hint?: string,
+}
 /**
  * @interface DetalleMercancíaProductoTerminado
  * @description Representa los detalles de una mercancía de producto terminado.
@@ -35,4 +39,5 @@ export interface DetalleMercancíaProductoTerminado {
    * @description Número de registro sanitario del producto.
    */
   registroSanitario: string;
+  
 }
