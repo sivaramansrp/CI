@@ -438,6 +438,12 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
+export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
+
+
+export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
+export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
  * - Dígitos (0-9)
