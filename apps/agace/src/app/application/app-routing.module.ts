@@ -198,6 +198,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32301/aviso-modify-ivaEIepsAgace.module').then(
+        (m) => m.AvisoModifyIvaElepsAgaceModule
+      ),
+  },
+   {
+    path: 'cancelacion-garantia',
+    loadChildren: () =>
+      import('./tramites/31401/cancelacion-garantia.module').then(
+        (m) => m.CancelacionGarantiaModule
+      ),
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
       import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
@@ -215,7 +229,7 @@ const ROUTES: Routes = [
         import('./proceso-requerimiento/proceso-requerimiento.component').then(
           (m) => m.ProcesoRequerimientoComponent
         ),
-    }
+  }
 ];
 
 @NgModule({

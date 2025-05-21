@@ -1,12 +1,12 @@
 import { Route } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
-import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 import { ENVIRONMENT } from './environments/environment';
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { SubsecuentesComponent } from './subsecuentes/subsecuentes.component';
+import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 
 export const appRoutes: Route[] = [
   {

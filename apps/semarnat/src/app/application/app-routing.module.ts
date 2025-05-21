@@ -58,7 +58,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/231002/aviso-retorno.module').then((m) => m.AvisoRetornoModule),
    },
-  {
+   {
+    path: 'phytosanitary-export',
+    loadChildren: () =>
+      import('./tramites/230201/phytosanitary-export.module').then((m) => m.PhytosanitaryExportModule),
+   },
+   {
     path: 'evaluar',
     loadComponent: () =>
       import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
