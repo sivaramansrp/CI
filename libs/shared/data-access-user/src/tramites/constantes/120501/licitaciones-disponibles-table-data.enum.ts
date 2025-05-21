@@ -1,4 +1,4 @@
-interface Complementaria {
+export interface Complementaria {
   numerodelicitacion: string;
   fechadelicitacion: string;
   descripcion: string;
@@ -6,7 +6,37 @@ interface Complementaria {
   fechainiciovigencia: string;
   fechafinvigencia: string;
 }
+export interface Adquiriente {
+    rfc:string,
+    adquirienteMontoDisponible:string,
+    montoRecibir:string
+}
+export interface LicitacionesDisponibles {
+  numerodelicitacion: string;
+  fechadelicitacion: string;
+  descripcion: string;
+  montoadjudicado: string;
+  fechainiciovigencia: string;
+  fechafinvigencia: string;
 
+}
+export interface DetallesLicitacion {
+  numeraDelicitacion: string;
+  fechaDelEventoDelicitacion: string;
+  descripcionDelProducto: string;
+  unidadTarifaria: string;
+  regimenAduanero: string;
+  fraccionArancelaria: string;
+  fechaDeiniciodeVigenciadelCupo:string,
+  adquirienteMontoDisponible:string,
+  fechaDefindeVigenciadelCupo:string,
+  obserVaciones:string,
+  bloqueComercial:string,
+  paises:string,
+  montoadJudicado:string,
+  montoDisponible:string,
+  montoMaximo:string
+}
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
   {
     encabezado: 'Número de licitación',
