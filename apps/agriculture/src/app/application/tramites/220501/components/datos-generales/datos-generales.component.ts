@@ -1,11 +1,13 @@
-import { CapturaOpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ROWS } from '../../constantes/constantes';
 import { RevisionService } from '../../services/revision.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
@@ -15,18 +17,6 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-/**
- * Interfaz para definir la estructura de las filas.
- */
-interface Row {
-  Partida: string;
-  Tiporequisito: string;
-  Requisito: string;
-  Certificado: number;
-  Fraccion: string;
-  Descripcion: string;
-  Nico: string;
-}
 
 /**
  * Componente para gestionar los datos generales.
@@ -35,6 +25,8 @@ interface Row {
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss'],
+  standalone: true,
+  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,InputRadioComponent,CommonModule],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
@@ -168,7 +160,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   empresadeTransportista!: Catalogo;
 
-  solicitud220501State : Solicitud220501State = {} as Solicitud220501State;
+  /**
+   * Estado de la solicitud 220501.
+   * @type {Solicitud220501State}
+   */
+  solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -184,9 +180,26 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /** 
    * Variable que almacena las opciones disponibles para el botón de radio. 
    */
-  opcionDeBotonDeRadio = CapturaOpcionesDeBotonDeRadio;
+  opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
 
-
+  /**
+   * Índice actual de la fila.
+   * @type {number}
+   */
+  currentIndex = 0;
+/**
+   * Filas de datos.
+   * @type {Row[]}
+   */
+rows = ROWS; 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios.
+   * @param revisionService Servicio de revisión para obtener datos.
+   * @param validacionesService Servicio de validaciones de formularios.
+   * @param solicitud220501Store Store para gestionar el estado de la solicitud 220501.
+   * @param solicitud220501Query Query para acceder al estado de la solicitud 220501.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private revisionService: RevisionService,
@@ -194,9 +207,14 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query
   ) {
-  //
+    // Constructor vacío
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Aquí se inicializa el formulario y se obtienen los datos necesarios.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.forma = this.fb.group({
       foliodel: [{ value: this.solicitud220501State.fetchapago, disabled: true }],
@@ -206,8 +224,8 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       claveUCON: [{ value: this.solicitud220501State.claveUCON, disabled: true }],
       establecimientoTIF: [this.solicitud220501State.establecimientoTIF, Validators.required],
       nombre: [this.solicitud220501State.nombre, Validators.required],
-      numeroguia:[{value:this.solicitud220501State.numeroguia, disabled: true},Validators.required],
-      regimen:[this.solicitud220501State.regimen,Validators.required],
+      numeroguia: [{ value: this.solicitud220501State.numeroguia, disabled: true }, Validators.required],
+      regimen: [this.solicitud220501State.regimen, Validators.required],
       capturaDatosMercancia: [this.solicitud220501State.capturaDatosMercancia],
       coordenadas: [{ value: this.solicitud220501State.coordenadas, disabled: true }],
       movilizacion: [this.solicitud220501State.movilizacion, Validators.required],
@@ -259,8 +277,8 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * y luego actualiza el store con la respuesta recibida.
    */
   actualizarDatosDelaSolicitud(): void {
-    this.revisionService.getDatosDelaSolicitud().subscribe({
-      next: (resp:Solicitud220501State) => {
+    this.revisionService.getDatosDelaSolicitud().pipe(takeUntil(this.destroyed$)).subscribe({
+      next: (resp: Solicitud220501State) => {
         this.solicitud220501Store.setFoliodel(resp.foliodel);
         this.solicitud220501Store.setClaveUCON(resp.claveUCON);
         this.solicitud220501Store.setEstablecimientoTIF(resp.establecimientoTIF);
@@ -274,52 +292,12 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Filas de datos.
-   * @type {Row[]}
-   */
-  rows: Row[] = [
-    {
-      Partida: '1',
-      Tiporequisito: 'Inspección ocular',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '2',
-      Tiporequisito: 'inspección de oído',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '3',
-      Tiporequisito: 'inspección de nariz',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-  ];
-
-
-  /**
    * Muestra u oculta el contenido colapsable.
    * @returns {void}
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
-  /**
-   * Índice actual de la fila.
-   * @type {number}
-   */
-  currentIndex = 0;
 
   /**
    * Rota la fila en la dirección especificada.
@@ -348,7 +326,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.revisionService.getAduanaIngreso().subscribe((resp) => {
+    this.revisionService.getAduanaIngreso().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -368,7 +346,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.revisionService.getOficianaInspeccion().subscribe((resp) => {
+    this.revisionService.getOficianaInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -388,7 +366,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoInspeccion(): void {
-    this.revisionService.getPuntoInspeccion().subscribe((resp) => {
+    this.revisionService.getPuntoInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -408,7 +386,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.revisionService.getEstablecimiento().subscribe((resp) => {
+    this.revisionService.getEstablecimiento().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -421,18 +399,19 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Obtiene el régimen al que se destinarán las mercancías.
    * Este método llama al servicio de revisión para obtener el régimen.
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.revisionService.getRegimenDestinaran().subscribe((resp) => {
+    this.revisionService.getRegimenDestinaran().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
         this.regimenDestinaran = {
-          labelNombre: 'Régimen al que se destinarán las mercancías',
+          labelNombre: 'Régimen al que se destinará la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
@@ -447,12 +426,12 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.revisionService.getMovilizacionNacional().subscribe((resp) => {
+    this.revisionService.getMovilizacionNacional().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
         this.movilizacionNacional = {
-          labelNombre: 'Movilización Nacional',
+          labelNombre: 'Datos para movilización nacional',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
@@ -467,7 +446,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.revisionService.getPuntoVerificacion().subscribe((resp) => {
+    this.revisionService.getPuntoVerificacion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -480,13 +459,14 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Obtiene la empresa transportista.
    * Este método llama al servicio de revisión para obtener la empresa transportista.
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.revisionService.getEmpresaTransportista().subscribe((resp) => {
+    this.revisionService.getEmpresaTransportista().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -499,6 +479,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Selecciona una aduana de ingreso y actualiza el store con la descripción correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
@@ -533,7 +514,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.solicitud220501Store.setRegimen(event.id);
   }
 
-
   /**
    * Selecciona una movilización nacional y actualiza el store con la descripción correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información de la movilización seleccionada.
@@ -561,7 +541,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   seleccionarPuntoVerificacion(event: Catalogo): void {
     this.solicitud220501Store.setPunto(event.id);
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
