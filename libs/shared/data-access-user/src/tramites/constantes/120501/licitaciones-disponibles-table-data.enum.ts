@@ -5,6 +5,7 @@ export interface Complementaria {
   montoadjudicado: string;
   fechainiciovigencia: string;
   fechafinvigencia: string;
+  registrofederaldecontribuyentes: string;
 }
 export interface Adquiriente {
     rfc:string,
