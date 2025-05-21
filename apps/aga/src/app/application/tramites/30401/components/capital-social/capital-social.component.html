@@ -26,6 +26,14 @@
               "
               >Este campo es obligatorio.</small
             >
+            <small *ngIf="inicializarFormulario.controls['capitalSocial'].hasError('pattern')">
+              No cumple con el formato esperado
+            </small>
+          <small
+            *ngIf="inicializarFormulario.controls['capitalSocial'].hasError('maxlength')"
+          >
+            El capital social no puede exceder los 20 caracteres.
+          </small>
           </div>
         </div>
       </div>

@@ -28,4 +28,18 @@ export interface PagoDeDerechos {
 
   /** Fecha en la que se efectuó el pago. */
   fetchapago: string;
+  
 }
+
+export interface OpcionDeRadio {
+    /**
+     * @description Etiqueta o texto visible para la opción de radio.
+     */
+    label: string;
+
+    /**
+     * @description Valor asociado a la opción de radio.
+     */
+    value: string;
+}
+

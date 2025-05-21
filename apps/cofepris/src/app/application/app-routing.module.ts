@@ -613,6 +613,89 @@ const ROUTES: Routes = [
         (m) => m.ProcesoRequerimientoComponent
       ),
   },
+{   
+  path: 'permiso-sanitario-productos',
+  loadChildren: () =>
+    import('./tramites/260104/permiso-sanitario-productos.module').then(
+      (m) => m.PermisoSanitarioProductosModule
+    ),
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+},
+{
+  path: 'importacion-plafest',
+  loadChildren: () =>
+    import('./tramites/260507/importacion-plafest.module').then(
+      (m) => m.ImportacionPlafestModule
+    ),
+},
+{
+      path: 'medicamentos-donacion',
+      loadChildren: () =>
+        import('./tramites/260909/medicamentos-donacion.module').then(
+          (m) => m.MedicamentosDonacionModule
+        )
+    },    
+  {
+    path: 'importar-de-remedios-herbals',
+    loadChildren: () =>
+      import('./tramites/260919/importar-de-remedios-herbals.module').then(
+        (m) => m.ImportarDeRemediosHerbalsModule
+      ),
+  },
+  {
+    path: 'permiso-vegetales-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260509/permiso-vegetales-nutrientes.module').then(
+        (m) => m.PermisoVegetalesNutrientesModule
+      ),
+  },
+  {
+    path: 'permiso-nutrientes-exportacion',
+    loadChildren: () =>
+      import('./tramites/260511/permiso-nutrientes-exportacion.module').then(
+        (m) => m.PermisoNutrientesExportacionModule
+      ),
+  },
+  {
+    path: 'permiso-pruebas-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260510/permiso-pruebas-nutrientes.module').then(
+        (m) => m.PermisoPruebasNutrientesModule
+      ),
+  },
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  }
 ];
 
 @NgModule({
