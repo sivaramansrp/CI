@@ -59,7 +59,7 @@ import { Router } from '@angular/router';
   templateUrl:
     './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.html',
   styleUrl:
-    './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.css',
+    './acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component.scss',
 })
 export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   implements OnDestroy, OnInit

@@ -28,7 +28,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     FirmaElectronicaComponent,
   ],
   templateUrl: './confirmar-notificacion.component.html',
-  styleUrl: './confirmar-notificacion.component.css',
+  styleUrl: './confirmar-notificacion.component.scss',
 })
 export class ConfirmarNotificacionComponent {
   /**

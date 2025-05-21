@@ -25,7 +25,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
   templateUrl: './acuse-recibo.component.html',
-  styleUrl: './acuse-recibo.component.css',
+  styleUrl: './acuse-recibo.component.scss',
 })
 export class AcuseReciboComponent implements OnInit, OnDestroy {
   /**
