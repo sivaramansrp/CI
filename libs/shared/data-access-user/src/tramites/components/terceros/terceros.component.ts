@@ -1,19 +1,35 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TercerosState, TercerosStore } from '../../../core/estados/terceros.store';
+import {
+  TercerosState,
+  TercerosStore,
+} from '../../../core/estados/terceros.store';
 import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
 import { TercerosQuery } from '../../../core/queries/terceros.query';
 import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
   selector: 'lib-terceros',
   templateUrl: './terceros.component.html',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TituloComponent, UppercaseDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TituloComponent,
+    UppercaseDirective,
+  ],
   styleUrl: './terceros.component.scss',
 })
 export class TercerosComponent implements OnInit, OnDestroy {
@@ -32,13 +48,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
   public tercerosState!: TercerosState;
   private destroyNotifier$: Subject<void> = new Subject();
 
-
   constructor(
     private fb: FormBuilder,
     private tercerosStore: TercerosStore,
     private tercerosQuery: TercerosQuery,
-  ) { }
-
+    private validacionesService: ValidacionesFormularioService
+  ) {}
 
   ngOnInit(): void {
     this.tercerosQuery.selectTerceros$
@@ -81,6 +96,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
   eliminar(i: number): void {
     this.personas.splice(i, 1);
     this.tercerosStore.setTerceros(this.personas);
+  }
+
+  /**
+   * Verifica si un campo específico en el formulario de persona es válido.
+   *
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
+   * o `null` si no se puede determinar la validez.
+   */
+  isValid(field: string): boolean | null {
+    return this.validacionesService.isValid(this.FormPersona, field);
+  }
+
+  correoValido(): boolean | undefined {
+    return this.FormPersona.get('correo')?.hasError('pattern') && this.FormPersona.get('correo')?.touched;
   }
 
   ngOnDestroy(): void {
