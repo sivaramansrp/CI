@@ -52,6 +52,10 @@ export class LibBandejaComponent<T> implements OnInit {
    /* Datos que se usan en el formulario de la bandeja */
   @Input() public bandejaSolicitudeDatos: any[] = [];
   /**
+   * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
+   */
+  @Input() public duplicarDatos: any[] = [];
+  /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
   @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
@@ -130,6 +134,7 @@ export class LibBandejaComponent<T> implements OnInit {
    */
   public enviarDatos(): void {
     this.hasValidForm = true;
+    this.tieneConfiguracionTablaDatos = true;
     if (this.dinamicasBandejaForma.valid) {
       this.hasValidForm = true;
     }
@@ -244,6 +249,7 @@ export class LibBandejaComponent<T> implements OnInit {
     if (this.configuracionTablaDatos.length > 0) {
       this.tieneConfiguracionTablaDatos = true;
     } else {
+      this.configuracionTablaDatos = this.duplicarDatos;
       this.tieneConfiguracionTablaDatos = false;
     }
   }

@@ -1,4 +1,4 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
@@ -109,6 +109,10 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Datos que se mostrarán en la tabla de tareas pendientes.
    */
     public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
+    /**
+     * Almacena una copia de los datos de tareas pendientes para su uso dentro del componente.
+     */
+    public copiarDatos: BandejaDeTareasPendientes[] = [];
      /*
    * Estructura del formulario utilizado para la bandeja de tareas pendientes.
    */
@@ -117,7 +121,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Constructor del componente.
    * Inyecta el servicio BandejaDeSolicitudeService para obtener los datos necesarios.
    */
-    constructor(private bandejaSvc: BandejaDeSolicitudeService) {
+    constructor(private bandejaSvc: BandejaDeSolicitudeService, private consultaStore: ConsultaioStore) {
   
     }
  /*
@@ -135,6 +139,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     public getBandejaDeTablaDatos(): void {
       this.bandejaSvc.getTareasPendientesTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         this.dePendientesTablaDatos = JSON.parse(JSON.stringify(response));
+        this.copiarDatos = this.dePendientesTablaDatos;
       });
     }
 
