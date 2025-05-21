@@ -74,7 +74,7 @@ import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
-import { NUEVA_NOTIFICACION } from '../../constantes/datos-domicilio-legal.enum';
+import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -348,10 +348,7 @@ export class DatosDelSolicitudModificacionComponent
   /**
    * Etiqueta para el crosslist de país de procedencia.
    */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: ' País de orígen',
-    derecha: 'País(es) seleccionado(s)',
-  };
+  public paisDeProcedenciaLabel = PAIS_DE_PROCEDENCIA_LABEL;
   /**
    * Lista de países para la selección de origen.
    */
@@ -575,7 +572,7 @@ export class DatosDelSolicitudModificacionComponent
       .getJustificationData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: PropietarioTipoPersona[]) => {
-        this.genericOptions = data; // Bind the fetched data
+        this.genericOptions = data;
       });
     this.domicilioEstablecimientoQuery
       .select()
@@ -725,7 +722,6 @@ export class DatosDelSolicitudModificacionComponent
   enCambioDeControl(formName: string, controlName: string): void {
     let formGroup: FormGroup;
 
-    // Determine which form group to use
     switch (formName) {
       case 'scianForm':
         formGroup = this.scianForm;
@@ -838,9 +834,9 @@ export class DatosDelSolicitudModificacionComponent
         usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       };
 
-      // Add the new data to the table
+      // Añade los nuevos datos a la tabla
       this.mercanciasTablaDatos.push(MERCANCIA);
-      // Reset the form
+      // Restablecer el formulario
       this.formMercancias.reset();
       this.cerrarModalMercancía();
     }

@@ -1,4 +1,5 @@
 import { ConfiguracionVisibilidad } from "../models/datos-domicilio-legal.model";
+import { CrossListLable } from "../models/datos-solicitud.model";
 
 /*
  * Mensaje de alerta que informa al usuario sobre el cumplimiento de requisitos y normatividad aplicable.
@@ -96,3 +97,8 @@ export const NUEVA_NOTIFICACION = {
   txtBtnAceptar: 'Aceptar', // Texto del botón para aceptar la notificación.
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
+
+export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: ' País de orígen',
+    derecha: 'País(es) seleccionado(s)',
+  }
