@@ -474,3 +474,52 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  * - "12a45" (contiene caracteres no numéricos)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar un número de teléfono de 10 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 10 dígitos numéricos.
+ * 
+ * Ejemplos válidos:
+ * - "1234567890"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789" (menos de 10 dígitos)
+ * - "12345678901" (más de 10 dígitos)
+ * - "12345678a0" (contiene caracteres no numéricos)
+ */
+export const REGEX_VALID_UMT=/^\d{1,12}(\.\d{1,5})?$/
+
+/**
+ * Expresión regular para validar un número de UMC (Unidad de Medida y Costo).
+ * 
+ * Esta expresión regular asegura que la entrada contenga hasta 12 dígitos enteros
+ * y opcionalmente hasta 10 dígitos decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123456789012"
+ * - "123456789012.1234567890"
+ * 
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos enteros)
+ * - "123456789012.12345678901" (más de 10 dígitos decimales)
+ */
+export const REGEX_VALID_UMC=/^\d{1,12}(\.\d{1,10})?$/
+
+/**
+ * Expresión regular para validar un número decimal.
+ * 
+ * Esta expresión regular asegura que la entrada contenga dígitos enteros
+ * y opcionalmente una parte decimal.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123." (falta un decimal después del punto)
+ * - "123.456" (más de 2 decimales)
+ * - "abc" (contiene caracteres no numéricos)
+ */
+export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
