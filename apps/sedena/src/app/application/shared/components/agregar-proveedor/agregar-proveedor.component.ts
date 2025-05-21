@@ -128,22 +128,22 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
+          Validators.maxLength(254),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+      colonia: ['', Validators.required],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
     });
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
@@ -159,7 +159,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         if (this.idProcedimiento === 240118) {
       this.agregarProveedorForm.enable();
     } 
-     if (this.idProcedimiento === 240120) {
+    else if (this.idProcedimiento === 240120) {
       this.agregarProveedorForm.enable();
     }
     else {
@@ -228,6 +228,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
         this.agregarProveedorForm.value.primerApellido
@@ -263,7 +267,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
     this.agregarProveedorForm.disable();
-    this.agregarProveedorForm.get('tipoPersona')?.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar

@@ -285,23 +285,23 @@ export class AgregarDestinatarioFinalComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['', Validators.required],
-      denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      denominacionRazon: ['', [Validators.required, Validators.maxLength(254)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
       colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      nacionalidad: [],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
+      nacionalidad: ['', Validators.required],
     });
     this.cargarDatos();
     this.agregarDestinatarioFinal.disable();
@@ -397,7 +397,8 @@ export class AgregarDestinatarioFinalComponent
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
     this.agregarDestinatarioFinal.disable();
-    this.agregarDestinatarioFinal.get('tipoPersona')?.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
+    this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
   }
   /**
    * @method cancelar
