@@ -8,15 +8,23 @@
 }
 .etiqueta-de-radio {
   margin-left: 15px;
-  }
+}
 
-  .fw-bold {
-    font-weight: 600;
-  }
+.fw-bold {
+  font-weight: 600;
+}
 
-  .radio-row {
-    display: flex;
-    justify-content: flex-start;
+.radio-label {
+  margin-left: 15px; /* Adjust the value as needed */
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.radio-row {
+  display: flex;
+  justify-content: flex-start;
 }
 .radio-label-margin-left {
   margin-left: 15px;
