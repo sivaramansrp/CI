@@ -153,20 +153,8 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
           this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
         },
       });
-
-    this.tramite = 301;
+    this.tramite = Number(this.guardarDatos?.procedureId);
     this.departamento = this.guardarDatos?.department.toLowerCase();
-    this.consultaioStore.establecerConsultaio(
-      this.guardarDatos?.procedureId,
-      this.guardarDatos?.parameter,
-      this.guardarDatos?.department,
-      this.guardarDatos?.folioTramite,
-      this.guardarDatos?.tipoDeTramite,
-      this.guardarDatos?.estadoDeTramite,
-      true,
-      false,
-      false // Replace 'null' with the appropriate value for the missing argument
-    );
   }
 
   /**
@@ -261,6 +249,17 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.consultaioStore.establecerConsultaio(
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      false,
+      true,
+      false
+    );
   }
 
   /**
