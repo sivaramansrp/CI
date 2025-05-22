@@ -88,6 +88,13 @@ const ROUTES: Routes = [
           (m) => m.ProcesoRequerimientoComponent
         ),
     },
+  {
+    path: 'renuncia-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140218/renuncia-de-permiso.module').then(
+        (m) => m.RenunciaDePermisoModule
+      ),
+  }
 ];
 
 @NgModule({

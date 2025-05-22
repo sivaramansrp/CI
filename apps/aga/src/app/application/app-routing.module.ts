@@ -331,6 +331,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-poblacional',
+    loadChildren: () =>
+      import('./tramites/6502/registro-poblacional.module').then(
+        (m) => m.RegistroPoblacionalModule
+      ),
+  },
+  {
     path: 'retorno-de-partes',
     loadChildren: () =>
       import('./tramites/6403/retorno-de-partes.module').then(
