@@ -34,14 +34,14 @@ import { ManifiestoComponent } from "./components/manifiesto/manifiesto.componen
     ReactiveFormsModule,
     BtnContinuarComponent,
     TablaDinamicaComponent,
-    FirmaElectronicaComponent,
     AlertComponent,
     ToastrModule.forRoot(),
     DatosDeLaSolicitudComponent,
     TipoPropietarioComponent,
     DatosMercanciaComponent,
     ManifiestoComponent,
-    AnexarDocumentosComponent
+    FirmaElectronicaComponent,
+    AnexarDocumentosComponent,
 ],
   providers: [
     ToastrService,

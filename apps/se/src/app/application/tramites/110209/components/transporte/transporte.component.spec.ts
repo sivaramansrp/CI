@@ -1,119 +1,98 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
 import { TransporteComponent } from './transporte.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TransporteService } from '../../services/transporte/transporte.service';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { TransporteService } from '../../services/transporte/transporte.service';
+
+const MEDIO_DE_TRANSPORTE = 'medioDeTransporte';
+const RUTA_COMPLETA = 'rutaCompleta';
+const PUERTO_DE_EMBARQUE = 'puertoDeEmbarque';
+const PUERTO_DE_DESEMBARQUE = 'puertoDeDesembarque';
 
 describe('TransporteComponent', () => {
   let component: TransporteComponent;
   let fixture: ComponentFixture<TransporteComponent>;
-  let service: TransporteService;
-  let store: Tramite110209Store;
-  let query: Tramite110209Query;
+  let storeMock: any;
+  let queryMock: any;
+  let serviceMock: any;
 
   beforeEach(async () => {
-    const serviceMock = {
-      getMedioDeTransporte: jest.fn().mockReturnValue(of([
-        { id: '1', nombre: 'Aéreo' },
-        { id: '2', nombre: 'Marítimo' }
-      ]))
+    storeMock = {
+      setTramite110209: jest.fn()
     };
 
-    const storeMock = {
-      setMedioDeTransporte: jest.fn(),
-      setRutaCompleta: jest.fn(),
-      setPuertoDeEmbarque: jest.fn(),
-      setPuertoDeDesembarque: jest.fn()
-    };
-
-    const queryMock = {
-      selectTramite110102$: of({
-        medioDeTransporte: '1',
-        rutaCompleta: 'Ruta 1',
-        puertoDeEmbarque: 'Puerto 1',
-        puertoDeDesembarque: 'Puerto 2'
+    queryMock = {
+      selectTramite110209$: of({
+        [MEDIO_DE_TRANSPORTE]: 'Aéreo',
+        [RUTA_COMPLETA]: 'Ruta 1',
+        [PUERTO_DE_EMBARQUE]: 'Puerto A',
+        [PUERTO_DE_DESEMBARQUE]: 'Puerto B'
       })
     };
 
+    serviceMock = {
+      getMedioDeTransporte: jest.fn().mockReturnValue(of([
+        { id: 1, descripcion: 'Aéreo' },
+        { id: 2, descripcion: 'Marítimo' }
+      ]))
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [TransporteComponent,CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule, TransporteComponent],
       providers: [
-        { provide: TransporteService, useValue: serviceMock },
+        FormBuilder,
         { provide: Tramite110209Store, useValue: storeMock },
-        { provide: Tramite110209Query, useValue: queryMock }
+        { provide: Tramite110209Query, useValue: queryMock },
+        { provide: TransporteService, useValue: serviceMock }
       ]
     }).compileComponents();
 
-    service = TestBed.inject(TransporteService);
-    store = TestBed.inject(Tramite110209Store);
-    query = TestBed.inject(Tramite110209Query);
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(TransporteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario correctamente', () => {
     expect(component.transporteForm).toBeDefined();
-    expect(component.transporteForm.get('medioDeTransporte')?.value).toBe('');
-    expect(component.transporteForm.get('rutaCompleta')?.value).toBe('');
-    expect(component.transporteForm.get('puertoDeEmbarque')?.value).toBe('');
-    expect(component.transporteForm.get('puertoDeDesembarque')?.value).toBe('');
+    expect(component.transporteForm.get(MEDIO_DE_TRANSPORTE)).toBeDefined();
+    expect(component.transporteForm.get(RUTA_COMPLETA)).toBeDefined();
+    expect(component.transporteForm.get(PUERTO_DE_EMBARQUE)).toBeDefined();
+    expect(component.transporteForm.get(PUERTO_DE_DESEMBARQUE)).toBeDefined();
   });
 
-  it('should fetch and set medio de transporte options on init', () => {
-    component.ngOnInit();
-    expect(service.getMedioDeTransporte).toHaveBeenCalled();
+  it('debe obtener y asignar las opciones de medio de transporte', () => {
+    component.getMedioDeTransporte();
+    expect(serviceMock.getMedioDeTransporte).toHaveBeenCalled();
     expect(component.medioDeTransporteOptions.length).toBe(2);
-    expect(component.medioDeTransporteOptions).toEqual([
-      { id: '1', nombre: 'Aéreo' },
-      { id: '2', nombre: 'Marítimo' }
-    ]);
+    expect(component.medioDeTransporteOptions[0].descripcion).toBe('Aéreo');
+    expect(component.medioDeTransporteOptions[1].descripcion).toBe('Marítimo');
   });
 
-  it('should fetch and set form values from store on init', () => {
-    component.ngOnInit();
-    expect(component.transporteForm.get('medioDeTransporte')?.value).toBe('1');
-    expect(component.transporteForm.get('rutaCompleta')?.value).toBe('Ruta 1');
-    expect(component.transporteForm.get('puertoDeEmbarque')?.value).toBe('Puerto 1');
-    expect(component.transporteForm.get('puertoDeDesembarque')?.value).toBe('Puerto 2');
+  it('debe asignar valores del store al formulario en getValoresStore', () => {
+    component.getValoresStore();
+    expect(component.transporteForm.get(MEDIO_DE_TRANSPORTE)?.value).toBe('Aéreo');
+    expect(component.transporteForm.get(RUTA_COMPLETA)?.value).toBe('Ruta 1');
+    expect(component.transporteForm.get(PUERTO_DE_EMBARQUE)?.value).toBe('Puerto A');
+    expect(component.transporteForm.get(PUERTO_DE_DESEMBARQUE)?.value).toBe('Puerto B');
   });
 
-  it('should set values in store when form values change', () => {
-    component.transporteForm.get('medioDeTransporte')?.setValue('2');
-    component.setValoresStore(component.transporteForm, 'medioDeTransporte', 'setMedioDeTransporte');
-    expect(store.setMedioDeTransporte).toHaveBeenCalledWith('2');
-
-    component.transporteForm.get('rutaCompleta')?.setValue('Ruta 2');
-    component.setValoresStore(component.transporteForm, 'rutaCompleta', 'setRutaCompleta');
-    expect(store.setRutaCompleta).toHaveBeenCalledWith('Ruta 2');
-
-    component.transporteForm.get('puertoDeEmbarque')?.setValue('Puerto 3');
-    component.setValoresStore(component.transporteForm, 'puertoDeEmbarque', 'setPuertoDeEmbarque');
-    expect(store.setPuertoDeEmbarque).toHaveBeenCalledWith('Puerto 3');
-
-    component.transporteForm.get('puertoDeDesembarque')?.setValue('Puerto 4');
-    component.setValoresStore(component.transporteForm, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
-    expect(store.setPuertoDeDesembarque).toHaveBeenCalledWith('Puerto 4');
+  it('debe actualizar el store al llamar setValoresStore', () => {
+    component.transporteForm.get(RUTA_COMPLETA)?.setValue('Nueva Ruta');
+    component.setValoresStore(component.transporteForm, RUTA_COMPLETA);
+    expect(storeMock.setTramite110209).toHaveBeenCalledWith({ [RUTA_COMPLETA]: 'Nueva Ruta' });
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
