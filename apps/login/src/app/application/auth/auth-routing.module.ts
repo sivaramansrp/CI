@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 export const ROUTES_AUTH: Routes = [
   {
-    path: 'auth',
+    path: '',
     component: AuthPageComponent
   },
 ];
