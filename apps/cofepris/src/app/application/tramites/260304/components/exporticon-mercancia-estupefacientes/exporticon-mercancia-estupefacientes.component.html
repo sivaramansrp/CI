@@ -140,6 +140,12 @@
           <label class="form-label" for="cantidadUMT">Cantidad UMT * :</label>
           <input class="form-control" id="cantidadUMT" type="text" formControlName="cantidadUMT"
             [ngClass]="isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''" />
+              <div *ngIf="esInvalido('cantidadUMT')" class="text-danger">
+            <small
+            >
+              {{ obtenerMensajeError('cantidadUMT') }}
+            </small>
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -150,6 +156,13 @@
             [ngClass]="
               isValid(mercanciaForm, 'unidadMedidaTarifa') ? 'required' : ''
             " />
+          <div *ngIf="esInvalido('unidadMedidaTarifa')" class="text-danger">
+            <small
+              *ngIf="mercanciaForm.controls['unidadMedidaTarifa'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -260,6 +273,16 @@
                 ? 'required'
                 : ''
             " />
+                <div
+            *ngIf="esInvalido('numeroRegistroSanitario')"
+            class="text-danger"
+          >
+            <small
+              *ngIf="mercanciaForm.controls['numeroRegistroSanitario'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -269,8 +292,15 @@
         <label class="form-label text-start" for="presentacion">
           Presentación * :
         </label>
-        <textarea id="presentacion" class="form-control height" rows="3" formControlName="presentacion"
+        <textarea id="presentacion" class="form-control height" rows="3" [maxlength]="250" formControlName="presentacion"
           style="height: 90px"></textarea>
+            <div *ngIf="esInvalido('presentacion')" class="text-danger">
+          <small
+            *ngIf="mercanciaForm.controls['presentacion'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
     </div>
   </form>

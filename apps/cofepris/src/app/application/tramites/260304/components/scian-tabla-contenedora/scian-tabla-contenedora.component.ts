@@ -5,6 +5,12 @@ import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/s
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
+/**
+ * @component ScianTablaContenedoraComponent
+ * @description
+ * Componente contenedor encargado de mostrar la tabla SCIAN y gestionar la selección
+ * de configuraciones SCIAN, actualizando el estado asociado en el store del trámite.
+ */
 @Component({
   selector: 'app-scian-tabla-contenedora',
   standalone: true,
@@ -21,6 +27,15 @@ export class ScianTablaContenedoraComponent {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
+   * @property {TablaScianConfig} scianSeleccionado
+   * @description
+   * Configuración seleccionada para la tabla SCIAN.
+   */
+  public scianSeleccionado!: TablaScianConfig;
+
+  /**
+   * @constructor
+   * @description
    * Constructor de la clase que inyecta el store del trámite.
    * @param tramite260304Store {Tramite260304Store} Store asociado al trámite 260304.
    */
@@ -29,20 +44,17 @@ export class ScianTablaContenedoraComponent {
   }
 
   /**
-   * @type {TablaScianConfig}
-   * Configuración seleccionada para la tabla SCIAN
-   */
-  public scianSeleccionado!: TablaScianConfig;
-
-  /**
+   * @method obtenerSeleccionado
+   * @description
    * Método que actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
-   *
+   * Agrega la nueva selección al arreglo de configuraciones SCIAN.
+   * 
    * @param event - Objeto de tipo `TablaScianConfig` que contiene los datos seleccionados de la tabla.
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
     this.tramite260304Store.update((state) => ({
       ...state,
-      scianConfigDatos: [...state.scianConfigDatos,event],
+      scianConfigDatos: [...state.scianConfigDatos, event],
     }));
   }
 }
