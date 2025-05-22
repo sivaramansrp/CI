@@ -1,8 +1,9 @@
-
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constantes/texto.enum';
 
 /**
+ * @component PasoDosComponent
+ * @description
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoDosComponent
  * @selector app-paso-dos
@@ -17,8 +18,8 @@ import { TEXTOS_REQUISITOS } from '../../constantes/texto.enum';
 export class PasoDosComponent {
 
   /**
-   * Objeto con los textos de los requisitos.
-   * @property {object} TEXTOS_REQUISITOS - Textos para los requisitos del certificado zoosanitario.
+   * @property {object} TEXTOS
+   * @description Objeto con los textos de los requisitos del certificado zoosanitario.
    */
   TEXTOS = TEXTOS_REQUISITOS;
 

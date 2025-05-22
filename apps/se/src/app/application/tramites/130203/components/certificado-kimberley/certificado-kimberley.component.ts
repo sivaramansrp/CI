@@ -1,18 +1,17 @@
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
 
-import { Observable } from 'rxjs';
 
 import {
   Catalogo,
   CatalogoSelectComponent,
+  REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -99,67 +98,8 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * @description
-   * Observable que proporciona el nombre del exportador desde el estado del trámite.
-   */
-  nombreExportador$: Observable<string | null> =
-    this.tramite130203Query.nombreExportador$;
-
-  /**
-   * @description
-   * Observable que proporciona la dirección del exportador desde el estado del trámite.
-   */
-  direccionExportador$: Observable<string | null> =
-    this.tramite130203Query.direccionExportador$;
-
-  /**
-   * @description
-   * Observable que proporciona el nombre del importador desde el estado del trámite.
-   */
-  nombreImportador$: Observable<string | null> =
-    this.tramite130203Query.nombreImportador$;
-
-  /**
-   * @description
-   * Observable que proporciona la dirección del importador desde el estado del trámite.
-   */
-  direccionImportador$: Observable<string | null> =
-    this.tramite130203Query.direccionImportador$;
-
-  /**
-   * @description
-   * Observable que proporciona el número en letra de los lotes desde el estado del trámite.
-   */
-  numeroEnLetraDeLosLotes$: Observable<string | null> =
-    this.tramite130203Query.numeroEnLetraDeLosLotes$;
-
-  /**
-   * @description
-   * Observable que proporciona el número en letra de los lotes en inglés desde el estado del trámite.
-   */
-  numeroEnLetraDeLosLotesEnIngles$: Observable<string | null> =
-    this.tramite130203Query.numeroEnLetraDeLosLotesEnIngles$;
-
-  /**
-   * @description
-   * Observable que proporciona el número de factura desde el estado del trámite.
-   */
-  numeroDeFactura$: Observable<string | null> =
-    this.tramite130203Query.numeroDeFactura$;
-  /**
-   * Observables para los datos de los diamantes.
-   */
-  cantidadEnQuilates$: Observable<string | null> =
-    this.tramite130203Query.cantidadEnQuilates$;
-
-  /**
-   * @description
-   * Observable que proporciona el valor de los diamantes desde el estado del trámite.
-   */
-  valorDeLosDiamantes$: Observable<string | null> =
-    this.tramite130203Query.valorDeLosDiamantes$;
-
+  paisId: number | null = null;
+ 
   /**
    * @description
    * Constructor del componente.
@@ -174,7 +114,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     private tramite130203Query: Tramite130203Query,
     private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService
   ) {
-    // Constructor
+    this.inicializarFormulario();
   }
 
   /**
@@ -182,60 +122,50 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
-    this.subscribeToState();
-    this.inicializarFormulario();
     this.loadData();
+    this.subscribeToState();
+    
+
   }
 
   /**
    * @description
    * Se suscribe al estado del store y actualiza los formularios con los valores del estado.
    */
-  private subscribeToState(): void {
-    this.tramite130203Query.select()
+   subscribeToState(): void {
+    this.tramite130203Query.selectSolicitud$
     .pipe(takeUntil(this.destroyed$))
-    .subscribe((state) => {
-      this.solicitudState = state;
-      if (this.formularioEmpresa) {
+      .subscribe((seccionState) => {
         this.formularioEmpresa.patchValue({
-          especifique: state.especifique,
-          numero: state.numero,
-          nombre: state.nombre,
-          tipoEmpresa: state.tipoEmpresa,
+          especifique: seccionState.especifique,
+          numero: seccionState.numero,
+          nombre: seccionState.nombre,
+          tipoEmpresa: seccionState.tipoEmpresa,
+          paisOrigen: seccionState.paisOrigen,
+          lineaCheckbox: seccionState.lineaCheckbox
         });
-      }
-    });
+        this.datosDelExportador.patchValue({
+          direccionExportador: seccionState.direccionExportador,
+          
+        });
+        this.datosDelImportador.patchValue({
+          nombreImportador: seccionState.nombreImportador,
+          direccionImportador: seccionState.direccionImportador,
+        });
+        this.datosDeLaRemesa.patchValue({
+          numeroEnLetraDeLosLotes: seccionState.numeroEnLetraDeLosLotes,
+          numeroEnLetraDeLosLotesEnIngles:
+          seccionState.numeroEnLetraDeLosLotesEnIngles,
+          numeroDeFactura: seccionState.numeroDeFactura,
+       });  
+        this.datosDeLosDiamantes.patchValue({
+          cantidadEnQuilates: seccionState.cantidadEnQuilates,
+          valorDeLosDiamantes: seccionState.valorDeLosDiamantes,
+        });        
+      })
+    
 
-    this.tramite130203Query.select().pipe(takeUntil(this.destroyed$)).subscribe((state) => {
-      this.solicitudState = state;
-
-      // Set values for datosDelExportador
-      this.datosDelExportador.patchValue({
-        nombreExportador: state.nombreExportador || '',
-        direccionExportador: state.direccionExportador || '',
-      });
-
-      // Set values for datosDelImportador
-      this.datosDelImportador.patchValue({
-        nombreImportador: state.nombreImportador || '',
-        direccionImportador: state.direccionImportador || '',
-      });
-
-      // Set values for datosDeLaRemesa
-      this.datosDeLaRemesa.patchValue({
-        numeroEnLetraDeLosLotes: state.numeroEnLetraDeLosLotes || '',
-        numeroEnLetraDeLosLotesEnIngles:
-          state.numeroEnLetraDeLosLotesEnIngles || '',
-        numeroDeFactura: state.numeroDeFactura || '',
-      });
-
-      // Set values for datosDeLosDiamantes
-      this.datosDeLosDiamantes.patchValue({
-        cantidadEnQuilates: state.cantidadEnQuilates || '',
-        valorDeLosDiamantes: state.valorDeLosDiamantes || '',
-      });
-    });
+    
   }
 
   /**
@@ -251,7 +181,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @description
    * Carga los datos iniciales desde el servicio.
    */
-  private loadData(): void {
+  loadData(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getPaisesEmisores()
       .pipe(takeUntil(this.destroyed$))
@@ -265,6 +195,15 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       .subscribe((nombres) => {
         this.nombresIngles = nombres;
       });
+
+      this.exportacionDeDiamantesEnBrutoService.getNombreExporter()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((nombreExportador) => {
+        this.datosDelExportador.patchValue({
+          nombreExportador: nombreExportador,
+        });
+      })
+
   }
 
   /**
@@ -274,46 +213,42 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   public inicializarFormulario(): void {
     this.formularioEmpresa = this.fb.group({
       especifique: [
-        { value: this.solicitudState?.especifique || '0', disabled: true },
+        {disabled: true, value: ''},
         Validators.maxLength(20),
       ],
-      numero: [this.solicitudState?.numero || '', [Validators.required]],
+      numero: ['', [Validators.required]],
       tipoEmpresa: [
-        this.solicitudState?.tipoEmpresa || '',
+        '',
         Validators.required,
       ],
-      nombre: [this.solicitudState?.nombre || '', [Validators.required]],
-      lineaCheckbox: [this.solicitudState?.lineaCheckbox || false],
+      nombre: ['', [Validators.required]],
+      lineaCheckbox: [''],
       paisOrigen: [
-        this.solicitudState?.paisOrigen || null,
+        '',
         Validators.required,
       ],
     });
-  }
-
-  /**
-   * @description
-   * Método que se ejecuta cuando cambia el valor de 'lineaCheckbox'.
-   * @param value Nuevo valor de 'lineaCheckbox'.
-   */
-  public onLineaCheckboxChange(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
-    this.setValoresStore(this.formularioEmpresa, 'lineaCheckbox', 'setLineaCheckbox');
-  }
-
-  /**
-   * @description
-   * Método que se ejecuta cuando cambia el valor de 'tipoEmpresa'.
-   * @param event Evento de cambio.
-   */
-  public onTipoEmpresaChange(event: Event): void {
-    const VALUE = (event.target as HTMLSelectElement).value;
-    this.setValoresStore(
-      this.formularioEmpresa,
-      'tipoEmpresa',
-      'setTipoEmpresa'
-    );
-    this.updateNombreIngles(Number(VALUE));
+    this.datosDelExportador = this.fb.group({
+      nombreExportador: [{
+          value: '',
+          disabled: true,
+        }
+      ],
+      direccionExportador: ['', [Validators.required]],
+    })
+    this.datosDelImportador = this.fb.group({
+      nombreImportador: ['', [Validators.required]],
+      direccionImportador: ['', [Validators.required]],
+    });
+    this.datosDeLaRemesa = this.fb.group({
+      numeroEnLetraDeLosLotes: ['', [Validators.required]],
+      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required]],
+      numeroDeFactura: ['', [Validators.required]],
+    });
+    this.datosDeLosDiamantes = this.fb.group({
+      cantidadEnQuilates: ['', [Validators.required]],
+      valorDeLosDiamantes: ['', [Validators.required]],
+    });
   }
 
   /**
@@ -322,13 +257,14 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @param paisId ID del país seleccionado.
    */
   public updateNombreIngles(paisId: number): void {
+    this.paisId = paisId;
     const MATCHING_ITEMS = this.nombresIngles.filter(
-      (item) => item.idDelPais === paisId
+      (item) => item.idDelPais === this.paisId
     );
     const NOMBRE = MATCHING_ITEMS.length > 0 ? MATCHING_ITEMS[0].name : '';
 
     this.formularioEmpresa.get('nombre')?.setValue(NOMBRE);
-    this.setValoresStore(this.formularioEmpresa, 'nombre', 'setNombre');
+    this.setValoresStore(this.formularioEmpresa, 'nombre');
   }
 
   /**
@@ -336,21 +272,14 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Actualiza el valor en el store basado en el formulario.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Método del store a invocar.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite130203Store
-  ): void {
+  setValoresStore( form: FormGroup, campo: string ): void {
     const VALOR = form.get(campo)?.value;
-    if (VALOR !== undefined) {
-      (
-        this.tramite130203Store[metodoNombre] as (
-          value: string | number | boolean | null
-        ) => void
-      )(VALOR);
+    this.tramite130203Store.actualizarEstado({ [campo]: VALOR });
+    if(campo === 'tipoEmpresa'){
+      this.updateNombreIngles(Number(VALOR));
     }
+    
   }
 
   /**
@@ -387,9 +316,10 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     });
 
     this.datosDeLaRemesa = this.fb.group({
-      numeroEnLetraDeLosLotes: ['', [Validators.required]],
-      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required]],
-      numeroDeFactura: ['', [Validators.required]],
+      numeroEnLetraDeLosLotes: ['',
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
+      numeroDeFactura: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
     });
 
     this.datosDeLosDiamantes = this.fb.group({
@@ -399,13 +329,25 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.datosDeLaRemesa.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
    * @description
    * Obtiene el nombre del exportador desde el formulario y lo guarda en el store.
    */
   getNombreExportador(): void {
     const NOMBRE_EXPORTADOR =
       this.datosDelExportador.get('nombreExportador')?.value;
-    this.tramite130203Store.setNombreExportador(NOMBRE_EXPORTADOR);
+    this.tramite130203Store.actualizarEstado(NOMBRE_EXPORTADOR);
   }
 
   /**
@@ -416,7 +358,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const DIRECCION_EXPORTADOR = this.datosDelExportador.get(
       'direccionExportador'
     )?.value;
-    this.tramite130203Store.setDireccionExportador(DIRECCION_EXPORTADOR);
+    this.tramite130203Store.actualizarEstado(DIRECCION_EXPORTADOR);
   }
 
   /**
@@ -426,7 +368,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getNombreImportador(): void {
     const NOMBRE_IMPORTADOR =
       this.datosDelImportador.get('nombreImportador')?.value;
-    this.tramite130203Store.setNombreImportador(NOMBRE_IMPORTADOR);
+    this.tramite130203Store.actualizarEstado(NOMBRE_IMPORTADOR);
   }
 
   /**
@@ -437,7 +379,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const DIRECCION_IMPORTADOR = this.datosDelImportador.get(
       'direccionImportador'
     )?.value;
-    this.tramite130203Store.setDireccionImportador(DIRECCION_IMPORTADOR);
+    this.tramite130203Store.actualizarEstado(DIRECCION_IMPORTADOR);
   }
 
   /**
@@ -448,7 +390,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const NUMERO_EN_LETRA_DE_LOS_LOTES = this.datosDeLaRemesa.get(
       'numeroEnLetraDeLosLotes'
     )?.value;
-    this.tramite130203Store.setNumeroEnLetraDeLosLotes(
+    this.tramite130203Store.actualizarEstado(
       NUMERO_EN_LETRA_DE_LOS_LOTES
     );
   }
@@ -460,7 +402,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES = this.datosDeLaRemesa.get(
       'numeroEnLetraDeLosLotesEnIngles'
     )?.value;
-    this.tramite130203Store.setNumeroEnLetraDeLosLotesEnIngles(
+    this.tramite130203Store.actualizarEstado(
       NUMERO_EN_LETRA_DE_LOS_LOTES_EN_INGLES
     );
   }
@@ -471,7 +413,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getNumeroDeFactura(): void {
     const NUMERO_DE_FACTURA =
       this.datosDeLaRemesa.get('numeroDeFactura')?.value;
-    this.tramite130203Store.setNumeroDeFactura(NUMERO_DE_FACTURA);
+    this.tramite130203Store.actualizarEstado(NUMERO_DE_FACTURA);
   }
 
   /**
@@ -481,7 +423,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   getCantidadEnQuilates(): void {
     const CANTIDAD_EN_QUILATES =
       this.datosDeLosDiamantes.get('cantidadEnQuilates')?.value;
-    this.tramite130203Store.setCantidadEnQuilates(CANTIDAD_EN_QUILATES);
+    this.tramite130203Store.actualizarEstado(CANTIDAD_EN_QUILATES);
   }
 
   /**
@@ -492,6 +434,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const VALOR_DE_LOS_DIAMANTES = this.datosDeLosDiamantes.get(
       'valorDeLosDiamantes'
     )?.value;
-    this.tramite130203Store.setValorDeLosDiamantes(VALOR_DE_LOS_DIAMANTES);
+    this.tramite130203Store.actualizarEstado(VALOR_DE_LOS_DIAMANTES);
   }
 }

@@ -71,7 +71,7 @@ export class PaisProcendenciaComponent implements OnChanges {
  * Evento emitido para establecer valores en el store.
  * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
  */
-@Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+@Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string;}>();
 /**
  * Configuración de los botones para la gestión de la selección de países.
  * 
@@ -197,7 +197,7 @@ enCambioDeBloque(event: Event): void {
  * @param {string} campo - El campo a actualizar.
  * @param {string} metodoNombre - El nombre del método.
  */
-setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-  this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+setValoresStore(form: FormGroup, campo: string): void {
+  this.setValoresStoreEvent.emit({ form, campo });
 }
 }

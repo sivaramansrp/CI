@@ -17,7 +17,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { Observable } from 'rxjs';
+import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -26,7 +26,6 @@ import { takeUntil } from 'rxjs';
  *
  * Este componente permite a los usuarios introducir y visualizar los detalles del transporte,
  * incluyendo información sobre puertos, embarcaciones y vuelos.
- *
  */
 @Component({
   selector: 'app-transporte',
@@ -38,100 +37,95 @@ import { takeUntil } from 'rxjs';
 export class TransporteComponent implements OnInit, OnDestroy {
   /**
    * Formulario para los detalles del transporte.
-   * TransporteComponent
+   * Contiene los campos relacionados con los puertos, embarcaciones y vuelos.
    */
-  detallestransporte: FormGroup;
+  detallestransporte!: FormGroup;
 
   /**
-   * Observable para el puerto de embarque.
-   * TransporteComponent
-   */
-  puertodeEmbarque$: Observable<string | null> = this.tramite110218Query.puertodeEmbarque$;
-  /**
-   * Observable para el puerto de desembarque.
-   * TransporteComponent
-   */
-  puertodeDesembarque$: Observable<string | null> = this.tramite110218Query.puertodeDesembarque$;
-  /**
-   * Observable para el puerto de tránsito.
-   * TransporteComponent
-   */
-  puertodeTransito$: Observable<string | null> = this.tramite110218Query.puertodeTransito$;
-  /**
-   * Observable para el nombre de la embarcación.
-   * TransporteComponent
-   */
-  nombredelaEmbarcacion$: Observable<string | null> = this.tramite110218Query.nombredelaEmbarcacion$;
-  /**
-   * Observable para el número de vuelo.
-   * TransporteComponent
-   */
-  numerodeVuelo$: Observable<string | null> = this.tramite110218Query.numerodeVuelo$;
-
-  /**
-   * Subject para la destrucción del componente.
-   * TransporteComponent
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
 
   /**
+   * Estado seleccionado del trámite 110218.
+   * Contiene los valores actuales almacenados en el estado global.
+   */
+  estadoSeleccionado!: Solicitud110218State;
+
+  /**
    * Constructor del componente.
    *
-   * Constructor de formularios.
-   * Store para el trámite 110218.
-   * Query para el trámite 110218.
+   * @param formBuilder - Constructor de formularios reactivos.
+   * @param tramite110218Store - Store para manejar el estado del trámite 110218.
+   * @param tramite110218Query - Query para consultar el estado del trámite 110218.
    */
   constructor(
-    private fb: FormBuilder,
+    public formBuilder: FormBuilder,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query
-  ) {
-    this.detallestransporte = this.crearFormularioDetallesTransporte();
-  }
+  ) {}
 
-  private crearFormularioDetallesTransporte(): FormGroup {
-    return this.fb.group({
-      puertodeEmbarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      puertodeDesembarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      puertodeTransito: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      nombredelaEmbarcacion: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      numerodeVuelo: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
+  /**
+   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   * Los campos incluyen puertos, embarcaciones y vuelos.
+   */
+  inicializarFormulario(): void {
+    this.detallestransporte = this.formBuilder.group({
+      /**
+       * Puerto de embarque.
+       * Campo obligatorio, solo permite letras y espacios.
+       */
+      puertodeEmbarque: [
+        this.estadoSeleccionado?.puertodeEmbarque,
+        [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)],
+      ],
+      /**
+       * Puerto de desembarque.
+       * Campo obligatorio, solo permite letras y espacios.
+       */
+      puertodeDesembarque: [
+        this.estadoSeleccionado?.puertodeDesembarque,
+        [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)],
+      ],
+      /**
+       * Puerto de tránsito.
+       * Campo obligatorio, solo permite letras y espacios.
+       */
+      puertodeTransito: [
+        this.estadoSeleccionado?.puertodeTransito,
+        [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)],
+      ],
+      /**
+       * Nombre de la embarcación.
+       * Campo obligatorio, solo permite letras y espacios.
+       */
+      nombredelaEmbarcacion: [
+        this.estadoSeleccionado?.nombredelaEmbarcacion,
+        [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)],
+      ],
+      /**
+       * Número de vuelo.
+       * Campo obligatorio, solo permite números.
+       */
+      numerodeVuelo: [
+        this.estadoSeleccionado?.numerodeVuelo,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS), Validators.maxLength(15)],
+      ],
     });
   }
 
   /**
-   * Método de inicialización del componente.
-   * TransporteComponent
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Obtiene el estado actual del trámite y configura el formulario.
    */
   ngOnInit(): void {
-    this.suscribirseACambiosDeTienda();
+    this.getValorStore();
+    this.inicializarFormulario();
   }
 
   /**
-   * Suscribe a los cambios en el store y actualiza el formulario.
-   * TransporteComponent
-   */
-  suscribirseACambiosDeTienda(): void {
-    const OBSERVABLES = {
-      puertodeEmbarque: this.puertodeEmbarque$,
-      puertodeDesembarque: this.puertodeDesembarque$,
-      nombredelaEmbarcacion: this.nombredelaEmbarcacion$,
-      numerodeVuelo: this.numerodeVuelo$,
-      puertodeTransito: this.puertodeTransito$,
-    };
-
-    Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
-      OBSERVABLES$.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
-        if (value) {
-          this.detallestransporte.get(controlName)?.setValue(value);
-        }
-      });
-    });
-  }
-
-  /**
-   * Método de destrucción del componente.
-   * TransporteComponent
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -139,31 +133,27 @@ export class TransporteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja los cambios en los controles del formulario y actualiza el store.
-   * TransporteComponent
-   * Nombre del control del formulario.
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
    */
-  enCambioDeDetallesDeTransporte(controlName: string): void {
-    const VALUE = this.detallestransporte.get(controlName)?.value;
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite110218Store.setTramite110218State({
+      [control]: VALOR,
+    });
+  }
 
-    switch (controlName) {
-      case 'puertodeEmbarque':
-        this.tramite110218Store.establecerPuertodeEmbarque(VALUE);
-        break;
-      case 'puertodeDesembarque':
-        this.tramite110218Store.establecerPuertodeDesembarque(VALUE);
-        break;
-      case 'nombredelaEmbarcacion':
-        this.tramite110218Store.establecerNombredelaEmbarcacion(VALUE);
-        break;
-      case 'numerodeVuelo':
-        this.tramite110218Store.establecerNúmerodeVuelo(VALUE);
-        break;
-      case 'puertodeTransito':
-        this.tramite110218Store.establecerPuertodeTránsito(VALUE);
-        break;
-      default:
-        break;
-    }
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
+   */
+  getValorStore(): void {
+    this.tramite110218Query.selectTramite110218State$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+      });
   }
 }

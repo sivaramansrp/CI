@@ -1,20 +1,19 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { BtnContinuarComponent, PASOS } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, PASOS } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
+
+import { CommonModule } from '@angular/common';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 

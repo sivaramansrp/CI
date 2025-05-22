@@ -69,7 +69,6 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.crearFormularioDirectorGeneral();
     this.establecerValoresDeFormulario();
-    this.actualizarTienda(this.directorGeneralForm.value);
   }
 
   /**
@@ -98,14 +97,6 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Actualiza la tienda con los datos del formulario actualizados.
-   * @param updatedData Los datos actualizados del formulario.
-   */
-  actualizarTienda(actualizarTienda: unknown): void {
-    const DATOS_EXISTENTES = this.chofer40103Query.getValue().choferes;
-    // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
-  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Libera la suscripción a los cambios del formulario.

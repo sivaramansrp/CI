@@ -1,7 +1,7 @@
-<div class="container field-height">
+<div class="container-fluid ps-2 field-height">
     <ng-titulo [titulo]="'Tipo de Propietario'"></ng-titulo>
     <form [formGroup]="tipoPropietarioFormulario" >
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Propietario'" [required]="true" [tooltipQuestionCircle]="true"
                     [catalogo]="propietarioOpciones" formControlName="propietario"
@@ -17,22 +17,32 @@
             </div>
         </div>
      @if(mostrarFormularioPersonaExtranjera){
-     <div class="row mt-4">
-            <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioNombre"
-                [estado]="estadoSeleccionado"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-        </div>
-    <div class="row mt-4">
-            <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioDireccion"
-                [estado]="estadoSeleccionado"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-        </div>
+     
+           <div class="container ps-2">
+                <div class="row">
+                    <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioNombre"
+                        [estado]="estadoSeleccionado"
+                        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                </div>
+                <div class="row">
+                    <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioDireccion"
+                        [estado]="estadoSeleccionado"
+                        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                </div>
+           </div>
+       
+    
+          
+        
         }
     }
   
 </form>
-</div>
+
    @if(mostrarSolicitante)
    {
-    <solicitante></solicitante>
+   
+     <solicitante></solicitante>
+   
   } 
+ </div> 
