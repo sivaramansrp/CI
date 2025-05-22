@@ -53,7 +53,15 @@
             >Nombre comercial de la mercancía (no incluir claves, códigos,
             etc.)</label
           >
-          <span class="require">*:</span>
+          <span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                solicitudForm.get('nombreComercialMercancia')?.invalid &&
+                solicitudForm.get('nombreComercialMercancia')?.touched
+            }"
+            >*</span
+          >:
         </div>
         <div id="divOtrosSectorServicios">
           <textarea
@@ -61,27 +69,65 @@
             formControlName="nombreComercialMercancia"
             rows="5"
             style="height: 50px"
-            class="form-control"
+            class="form-control no-resize"
             (change)="onNombreComercialMercancia($event)"
           ></textarea>
-          <span
-            *ngIf="
-              solicitudForm.get('nombreComercialMercancia')?.invalid &&
-              solicitudForm.get('nombreComercialMercancia')?.touched
-            "
-            id="descMercancia"
-            class="text-danger"
-          >
-            Ingrese sólo caracteres alfanumericos
-          </span>
+          <div>
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('nombreComercialMercancia')
+                  ?.hasError('required') &&
+                solicitudForm.get('nombreComercialMercancia')?.touched
+              "
+              id="descMercancia"
+              class="text-danger"
+            >
+              Este campo es obligatorio
+            </span>
+
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('nombreComercialMercancia')
+                  ?.hasError('maxlength') &&
+                solicitudForm.get('nombreComercialMercancia')?.touched
+              "
+              id="descMercancia"
+              class="text-danger"
+            >
+              Por favor, no escribas más de 450 caracteres
+            </span>
+
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('nombreComercialMercancia')
+                  ?.hasError('pattern') &&
+                solicitudForm.get('nombreComercialMercancia')?.touched
+              "
+              id="descMercanciaPattern"
+              class="text-danger"
+            >
+              Por favor, corrija el nombre
+            </span>
+          </div>
         </div>
       </div>
       <div class="col-md-12 mt-5">
         <div>
           <label for="descDetalladaMercancia"
-            >Nombre comercial de la mercancía.
+            >Descripción detallada de la mercancía
           </label>
-          <span class="require">*:</span>
+          <span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                solicitudForm.get('descDetalladaMercancia')?.invalid &&
+                solicitudForm.get('descDetalladaMercancia')?.touched
+            }"
+            >*</span
+          >:
         </div>
         <div id="divOtrosSectorServicios">
           <textarea
@@ -89,19 +135,47 @@
             formControlName="descDetalladaMercancia"
             rows="10"
             style="height: 250px"
-            class="form-control"
+            class="form-control no-resize"
             (change)="onDescDetalladaMercancia($event)"
           ></textarea>
-          <span
-            *ngIf="
-              solicitudForm.get('descDetalladaMercancia')?.invalid &&
-              solicitudForm.get('descDetalladaMercancia')?.touched
-            "
-            id="descMercancia"
-            class="text-danger"
-          >
-            Ingrese sólo caracteres alfanumericos
-          </span>
+          <div>
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('descDetalladaMercancia')
+                  ?.hasError('required') &&
+                solicitudForm.get('descDetalladaMercancia')?.touched
+              "
+              id="descMercancia"
+              class="text-danger"
+            >
+              Este campo es obligatorio
+            </span>
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('descDetalladaMercancia')
+                  ?.hasError('maxlength') &&
+                solicitudForm.get('descDetalladaMercancia')?.touched
+              "
+              id="descMercancia"
+              class="text-danger"
+            >
+              Por favor, no escribas más de 4000 caracteres
+            </span>
+            <span
+              *ngIf="
+                solicitudForm
+                  .get('descDetalladaMercancia')
+                  ?.hasError('pattern') &&
+                solicitudForm.get('descDetalladaMercancia')?.touched
+              "
+              id="descMercanciaPattern"
+              class="text-danger"
+            >
+              Por favor, corrija el nombre
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -116,26 +190,44 @@
       <div class="col-md-2">
         <div>
           <label for="fraccionI">Fracción I</label>
-          <span class="require">*:</span>
+          <span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                solicitudForm.get('fraccionI')?.invalid &&
+                solicitudForm.get('fraccionI')?.touched
+            }"
+            >*</span
+          >:
         </div>
         <div>
           <input
-            type="text"
+            type="number"
             id="fraccion1"
             formControlName="fraccionI"
-            maxlength="10"
             class="form-control"
             (change)="onFraccionI($event)"
           />
           <span
             *ngIf="
-              solicitudForm.get('fraccionI')?.invalid &&
+              solicitudForm.get('fraccionI')?.hasError('required') &&
               solicitudForm.get('fraccionI')?.touched
             "
             id="validacionDesc"
             class="text-danger"
           >
-            Ingrese sólo caracteres alfanumericos
+            Este campo es obligatorio
+          </span>
+
+          <span
+            *ngIf="
+              solicitudForm.get('fraccionI')?.hasError('maxlength') ||
+              (solicitudForm.get('fraccionI')?.hasError('minlength') &&
+                solicitudForm.get('fraccionI')?.touched)
+            "
+            class="text-danger"
+          >
+            Las fracciones propuestas deben ser de 8 o 10 dígitos
           </span>
         </div>
       </div>
@@ -202,26 +294,43 @@
       <div class="col-md-2">
         <div>
           <label for="fraccionII">Fracción II</label>
-          <span class="require">*:</span>
+          <span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                solicitudForm.get('fraccionII')?.invalid &&
+                solicitudForm.get('fraccionII')?.touched
+            }"
+            >*</span
+          >:
         </div>
         <div>
           <input
-            type="text"
+            type="number"
             id="fraccion2"
             formControlName="fraccionII"
-            maxlength="10"
             class="form-control"
             (change)="onFraccionII($event)"
           />
           <span
             *ngIf="
-              solicitudForm.get('fraccionII')?.invalid &&
+              solicitudForm.get('fraccionII')?.hasError('required') &&
               solicitudForm.get('fraccionII')?.touched
             "
             id="validacionDesc"
             class="text-danger"
           >
-            Ingrese sólo caracteres alfanumericos
+            Este campo es obligatorio
+          </span>
+          <span
+            *ngIf="
+              solicitudForm.get('fraccionII')?.hasError('maxlength') ||
+              (solicitudForm.get('fraccionII')?.hasError('minlength') &&
+                solicitudForm.get('fraccionII')?.touched)
+            "
+            class="text-danger"
+          >
+            Las fracciones propuestas deben ser de 8 o 10 dígitos
           </span>
         </div>
       </div>
@@ -291,14 +400,23 @@
         </div>
         <div>
           <input
-            type="text"
+            type="number"
             id="fraccion3"
             formControlName="fraccionIII"
-            maxlength="10"
             class="form-control"
             (change)="onFraccionIII($event)"
           />
         </div>
+        <span
+          *ngIf="
+            solicitudForm.get('fraccionIII')?.hasError('maxlength') ||
+            (solicitudForm.get('fraccionIII')?.hasError('minlength') &&
+              solicitudForm.get('fraccionIII')?.touched)
+          "
+          class="text-danger"
+        >
+          Las fracciones propuestas deben ser de 8 o 10 dígitos
+        </span>
       </div>
 
       <div class="col-md-2">

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { InspeccionFisicaPasos } from '../../enums/solicitud-pantallas.enum';
+import { INSPECCION_FISICA_PASOS } from '../../enums/solicitud-pantallas.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -27,7 +27,7 @@ interface AccionBoton {
 /** Componente para gestionar la inspección física de los servicios extraordinarios */
 export class InspeccionFisicaComponent {
   /** Lista de pasos del asistente inicializados desde la enumeración */
-  pasos: ListaPasosWizard[] = InspeccionFisicaPasos;
+  pasos: ListaPasosWizard[] = INSPECCION_FISICA_PASOS;
 
   /** Índice de pasos activos actuales*/
   indice: number = 1;
