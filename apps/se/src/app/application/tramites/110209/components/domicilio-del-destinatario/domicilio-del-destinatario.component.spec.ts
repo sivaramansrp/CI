@@ -1,119 +1,86 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomicilioDelDestinatarioComponent } from './domicilio-del-destinatario.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { of } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+
+const CALLE = 'calle';
+const NUMERO_LETRA = 'numeroLetra';
+const CIUDAD = 'ciudad';
+const CORREO_ELECTRONICO = 'correoElectronico';
+const FAX = 'fax';
+const TELEFONO = 'telefono';
 
 describe('DomicilioDelDestinatarioComponent', () => {
   let component: DomicilioDelDestinatarioComponent;
   let fixture: ComponentFixture<DomicilioDelDestinatarioComponent>;
-  let store: Tramite110209Store;
-  let query: Tramite110209Query;
-  
+  let storeMock: any;
+  let queryMock: any;
+
   beforeEach(async () => {
+    storeMock = {
+      setTramite110209: jest.fn()
+    };
+
+    queryMock = {
+      selectTramite110209$: of({
+        [CALLE]: 'Calle 1',
+        [NUMERO_LETRA]: '123A',
+        [CIUDAD]: 'Ciudad X',
+        [CORREO_ELECTRONICO]: 'correo@dominio.com',
+        [FAX]: '5551234',
+        [TELEFONO]: '5556789'
+      })
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DomicilioDelDestinatarioComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, DomicilioDelDestinatarioComponent],
       providers: [
         FormBuilder,
-        {
-          provide: Tramite110209Store,
-          useValue: {
-            setCalle: jest.fn(),
-            setNumeroLetra: jest.fn(),
-            setCiudad: jest.fn(),
-            setCorreoElectronico: jest.fn(),
-            setFax: jest.fn(),
-            setTelefono: jest.fn(),
-          }
-        },
-        {
-          provide: Tramite110209Query,
-          useValue: {
-            selectTramite110102$: of({
-              calle: 'Calle Falsa 123',
-              numeroLetra: 'A',
-              ciudad: 'Ciudad X',
-              correoElectronico: 'example@mail.com',
-              fax: 123456789,
-              telefono: 987654321
-            })
-          }
-        }
+        { provide: Tramite110209Store, useValue: storeMock },
+        { provide: Tramite110209Query, useValue: queryMock }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioDelDestinatarioComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite110209Store);
-    query = TestBed.inject(Tramite110209Query);
-  });
-
-  beforeEach(() => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Form initialization', () => {
-    it('should create the form with the correct controls', () => {
-      const form = component.domicilioDelDestinatarioForm;
-      
-      expect(form).toBeDefined();
-      expect(form.controls['calle']).toBeDefined();
-      expect(form.controls['numeroLetra']).toBeDefined();
-      expect(form.controls['ciudad']).toBeDefined();
-      expect(form.controls['correoElectronico']).toBeDefined();
-      expect(form.controls['fax']).toBeDefined();
-      expect(form.controls['telefono']).toBeDefined();
-    });
+  it('debe crear el formulario correctamente', () => {
+    component.crearFormulario();
+    expect(component.domicilioDelDestinatarioForm).toBeDefined();
+    expect(component.domicilioDelDestinatarioForm.get(CALLE)).toBeDefined();
+    expect(component.domicilioDelDestinatarioForm.get(CORREO_ELECTRONICO)).toBeDefined();
   });
 
-  describe('getValoresStore', () => {
-    it('should patch form with values from the store query', () => {
-      // Call the method
-      component.getValoresStore();
-
-      // Check if form values are patched correctly
-      expect(component.domicilioDelDestinatarioForm.get('calle')?.value).toBe('Calle Falsa 123');
-      expect(component.domicilioDelDestinatarioForm.get('numeroLetra')?.value).toBe('A');
-      expect(component.domicilioDelDestinatarioForm.get('ciudad')?.value).toBe('Ciudad X');
-      expect(component.domicilioDelDestinatarioForm.get('correoElectronico')?.value).toBe('example@mail.com');
-      expect(component.domicilioDelDestinatarioForm.get('fax')?.value).toBe(123456789);
-      expect(component.domicilioDelDestinatarioForm.get('telefono')?.value).toBe(987654321);
-    });
+  it('debe inicializar el formulario con valores del store en ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.domicilioDelDestinatarioForm.get(CALLE)?.value).toBe('Calle 1');
+    expect(component.domicilioDelDestinatarioForm.get(NUMERO_LETRA)?.value).toBe('123A');
+    expect(component.domicilioDelDestinatarioForm.get(CIUDAD)?.value).toBe('Ciudad X');
+    expect(component.domicilioDelDestinatarioForm.get(CORREO_ELECTRONICO)?.value).toBe('correo@dominio.com');
+    expect(component.domicilioDelDestinatarioForm.get(FAX)?.value).toBe('5551234');
+    expect(component.domicilioDelDestinatarioForm.get(TELEFONO)?.value).toBe('5556789');
   });
 
-  describe('setValoresStore', () => {
-    it('should call setCalle method from store with the correct value', () => {
-      const form = component.domicilioDelDestinatarioForm;
-      form.get('calle')?.setValue('Calle Test');
+  it('debe actualizar el store al llamar setValoresStore', () => {
+    component.crearFormulario();
+    component.domicilioDelDestinatarioForm.get(CALLE)?.setValue('Nueva Calle');
+    component.setValoresStore(component.domicilioDelDestinatarioForm, CALLE);
+    expect(storeMock.setTramite110209).toHaveBeenCalledWith({ [CALLE]: 'Nueva Calle' });
+  });
 
-      component.setValoresStore(form, 'calle', 'setCalle');
-      
-      expect(store.setCalle).toHaveBeenCalledWith('Calle Test');
-    });
-
-    it('should call setNumeroLetra method from store with the correct value', () => {
-      const form = component.domicilioDelDestinatarioForm;
-      form.get('numeroLetra')?.setValue('B');
-      
-      component.setValoresStore(form, 'numeroLetra', 'setNumeroLetra');
-      
-      expect(store.setNumeroLetra).toHaveBeenCalledWith('B');
-    });
-
-    it('should call setCorreoElectronico method from store with the correct value', () => {
-      const form = component.domicilioDelDestinatarioForm;
-      form.get('correoElectronico')?.setValue('newemail@mail.com');
-      
-      component.setValoresStore(form, 'correoElectronico', 'setCorreoElectronico');
-      
-      expect(store.setCorreoElectronico).toHaveBeenCalledWith('newemail@mail.com');
-    });
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

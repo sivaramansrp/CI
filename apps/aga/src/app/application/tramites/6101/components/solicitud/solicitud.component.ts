@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REGEX_IMPORTE_PAGO } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { Solicitud6101Query } from '../../estados/solicitud6101.query';
 import { Solicitud6101State } from '../../estados/solicitud6101.store';
@@ -82,15 +83,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroPedimento: [this.solicitud6101State.numeroPedimento],
       nombreComercialMercancia: [
         this.solicitud6101State.nombreComercialMercancia,
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(450),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
       ],
       descDetalladaMercancia: [
         this.solicitud6101State.descDetalladaMercancia,
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(4000),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
       ],
       fraccionI: [
         this.solicitud6101State.fraccionI,
-        [Validators.required, Validators.maxLength(10)],
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(10),
+        ],
       ],
       capitulo: [{ value: this.solicitud6101State.capitulo, disabled: true }],
       partida: [{ value: this.solicitud6101State.partida, disabled: true }],
@@ -102,7 +115,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       fraccionII: [
         this.solicitud6101State.fraccionII,
-        [Validators.required, Validators.maxLength(10)],
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(8),
+        ],
       ],
       capituloII: [
         { value: this.solicitud6101State.capituloII, disabled: true },
@@ -116,7 +133,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       fraccionIII: [
         this.solicitud6101State.fraccionIII,
-        [Validators.maxLength(10)],
+        [Validators.maxLength(10), Validators.minLength(8)],
       ],
       capituloIII: [
         { value: this.solicitud6101State.capituloIII, disabled: true },
