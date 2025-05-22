@@ -5,14 +5,15 @@ import { Validators } from '@angular/forms';
 
 import { FormGroup } from '@angular/forms';
 
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { Adquiriente, AlertComponent, Complementaria,  Complementaria1,  CONFIGURACION_ACCIONISTAS_TABLA, CONFIGURACION_ACCIONISTAS_TABLA1, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria, Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
+import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
