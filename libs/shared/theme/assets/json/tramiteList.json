@@ -11,7 +11,7 @@
     "tramite": 301,
     "linkDashboard": "/aga/importante/datosdelasolicitud",
     "linkDepartment": "/aga/importante/datosdelasolicitud",
-    "department": "aga "
+    "department": "aga"
   },
   {
     "id": 3,
@@ -178,7 +178,7 @@
     "id": 26,
     "tramite": 80102,
     "linkDashboard": "/se/autorizacion-programa-nuevo/solicitud",
-    "linkDepartment": "/se/autorizacion-programa-nuevo/solicitud",
+    "linkDepartment": "/pago/autorizacion-programa-nuevo/solicitud",
     "department": "se"
   },
   {
@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-    "id": 191,
-    "tramite": 30503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "aga"
-  },
+        "id": 191,
+        "tramite": 30505,
+        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+        "department": "aga"
+    },
   {
     "id": 192,
     "tramite": 31202,
@@ -1451,8 +1451,8 @@
   {
     "id": 208,
     "tramite": 221603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agriculture/sanidad/solicitante",
+    "linkDepartment": "/pago/sanidad/solicitante",
     "department": "agricultura"
   },
   {
@@ -1989,9 +1989,9 @@
   },
   {
     "id": 285,
-    "tramite": 80103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+     "tramite": 80103,
+    "linkDashboard": "/se/registro-solicitud-immex-modalidad/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad/action",
     "department": "se"
   },
   {
