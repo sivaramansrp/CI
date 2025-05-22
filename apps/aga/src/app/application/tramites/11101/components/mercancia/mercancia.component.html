@@ -1,0 +1,95 @@
+<div class="conatiner">
+    <div class="container1">
+        <ng-titulo titulo="Discripccion de la mercancia" />
+        <form [formGroup]="mercanciaForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="estado">Estado*:</label>
+                    <input type="text" class="form-control" id="estado" formControlName="estado" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="cantidad">Cantidad*:</label>
+                    <input type="number" class="form-control" id="cantidad" formControlName="cantidad" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="forma-parta-de-patrimonia">Forma parta de patrimonia*:</label>
+                    <input type="text" class="form-control" id="forma-parta-de-patrimonia"
+                        formControlName="formapartadepatrimonia" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="descripcion">Descripcion*:</label>
+                    <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion"
+                        readonly></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="valor">valor*:</label>
+                    <input type="text" class="form-control" id="valor" formControlName="valor" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="unida-de-medida">unida-de-medida*:</label>
+                    <input type="text" class="form-control" id="unida-de-medida" formControlName="unidadmedida"
+                        readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="fraccion-arancelaria">fraccion arancelaria*:</label>
+                    <input type="number" class="form-control" id="fraccion-arancelaria"
+                        formControlName="fraccionarancelaria" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="nico">nico*:</label>
+                    <input type="text" class="form-control" id="nico" formControlName="nico" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="marca">marca*:</label>
+                    <input type="text" class="form-control" id="marca" formControlName="marca" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="modelo">modelo*:</label>
+                    <input type="text" class="form-control" id="modelo" formControlName="modelo" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="numero-de-serie">numero de serie*:</label>
+                    <input type="text" class="form-control" id="numero-de-serie" formControlName="numerodeserie"
+                        readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="moneda">Moneda*:</label>
+                    <input type="text" class="form-control" id="moneda" formControlName="moneda" readonly />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container2">
+        <ng-titulo titulo="fines a que se  destinara" />
+        <form [formGroup]="mercanciaForm">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label" for="fin">fin* :</label>
+                    <input type="text" class="form-control" id="fin" formControlName="fin" readonly />
+                </div>
+                <div class="col-md-9">
+                    <label class="form-label" for="especifique">Especifique* :</label>
+                    <textarea class="form-control" id="especifique" formControlName="especifique" readonly></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container3 mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <button type="button" name="LimPiar" class="btn btn-default"> LimPiar </button>
+                    <button type="button" name="Agregar" class="btn btn-primary ms-2"> Agregar </button>
+                    <button type="button" name="EliminarPFE" class="btn btn-danger ms-2"> Eliminar </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12" >
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
+                [datos]="discripccionDeLaMercanciaForm"></app-tabla-dinamica>
+        </div>
+    </div>
+</div>
