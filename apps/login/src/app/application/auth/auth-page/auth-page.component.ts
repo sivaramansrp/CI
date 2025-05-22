@@ -2,7 +2,6 @@ import * as uuid from 'uuid';
 import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { Rol } from '@ng-mf/data-access-user';
-import { Router } from '@angular/router';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { UsuarioStore } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
@@ -17,7 +16,6 @@ export class AuthPageComponent implements OnInit {
     public ruta: string = '';
 
     constructor(
-        private router: Router,
         private usuarioStore: UsuarioStore,
     ) {
 
