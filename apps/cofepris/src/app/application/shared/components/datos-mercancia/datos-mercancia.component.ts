@@ -23,6 +23,7 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -375,6 +376,10 @@ export class DatosMercanciaComponent implements OnInit {
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260219:
+        this.elementosAnadidos = ['especifique', 'especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260201:
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break
@@ -557,7 +562,10 @@ export class DatosMercanciaComponent implements OnInit {
       ],
       cantidadUmtValor: [
        this.obtenerValor('cantidadUmtValor'),
-        Validators.required,
+        [Validators.required,
+        Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ]
+
       ],
       cantidadUmt: [
         {
@@ -568,7 +576,9 @@ export class DatosMercanciaComponent implements OnInit {
       ],
       cantidadUmcValor: [
 this.obtenerValor('cantidadUmcValor'),
-        Validators.required,
+        [Validators.required,
+          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ],
       ],
       cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
       presentacion: [this.obtenerValor('presentacion'), Validators.required],
