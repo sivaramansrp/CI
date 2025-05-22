@@ -162,3 +162,10 @@ export * from './core/models/31602/comercio-exterior.model';
 export * from './tramites/components/carga-documento/carga-documento.component';
 export * from './core/estados/consulta.store';
 export * from './core/queries/consulta.query';
+
+export * from './core/services/shared/catalogos/tipo-operacion.service';
+export * from './core/services/shared/catalogos/tipo-transporte.service';
+export * from './core/services/shared/catalogos/tipo-despacho.service';
+export * from './core/services/shared/catalogos/tipo-pedimento.service';
+
+
