@@ -1,18 +1,29 @@
-import { Component, OnDestroy } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.model';
+import { REGEX_LINEA_CAPTURA } from '@ng-mf/data-access-user';
 import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
 import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -26,6 +37,20 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-pago-linea-de-captura',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NotificacionesComponent,
+    InputFechaComponent,
+    TablaDinamicaComponent,
+    TituloComponent,
+  ],
+  providers: [
+    RenovacionesMuestrasMercanciasService,
+    ToastrService,
+    BsModalService,
+  ],
   templateUrl: './pago-linea-de-captura.component.html',
   styleUrl: './pago-linea-de-captura.component.scss',
 })
@@ -85,6 +110,14 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     },
   ];
 
+  seleccionadaLineaCapturaLista: PagoDerechosLista[] =
+    [] as PagoDerechosLista[];
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Lista de pagos de derechos asociados a la solicitud.
    * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
@@ -119,7 +152,11 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     this.formPagoLC = this.fb.group({
       lineaCaptura: [
         this.solicitud30901State.lineaCaptura,
-        [Validators.required, Validators.maxLength(20)],
+        [
+          Validators.required,
+          Validators.maxLength(20),
+          Validators.pattern(REGEX_LINEA_CAPTURA),
+        ],
       ],
       valorPago: [
         { value: this.solicitud30901State.valorPago, disabled: true },
@@ -127,12 +164,23 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       ],
     });
 
+    this.formPagoLC.get('lineaCaptura')?.valueChanges.subscribe((value) => {
+      if (value) {
+        const CLEANED = value.replace(REGEX_REEMPLAZAR, '').toUpperCase();
+        if (value !== CLEANED) {
+          this.formPagoLC
+            .get('lineaCaptura')
+            ?.setValue(CLEANED, { emitEvent: false });
+        }
+      }
+    });
+
     this.solicitud30901Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((response: Solicitud30901State) => {
           this.solicitud30901State = response;
-          // this.pagoDerechosLista = response.pagoDerechosLista;
+          this.pagoDerechosLista = response.pagoDerechosLista;
           this.formPagoLC.patchValue({
             lineaCaptura: this.solicitud30901State.lineaCaptura,
             valorPago: this.solicitud30901State.valorPago,
@@ -163,31 +211,9 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       .obtenerOpcionesDesplegables()
       .subscribe({
         next: (res: ImportanteCatalogoSeleccion) => {
-          const PAGO_DERECHOS_LISTA = [
-            ...this.solicitud30901State.pagoDerechosLista,
-            ...res.pagoDerechosLista,
-          ];
-          this.solicitud30901Store.setPagoDerechosLista(PAGO_DERECHOS_LISTA);
           this.solicitud30901Store.setValorPago(res.pagoDerechosLista[0].monto);
         },
       });
-  }
-
-  /**
-   * Valida y formatea el campo 'lineaCaptura' del formulario 'formPagoLC'.
-   *
-   * Este método elimina todos los caracteres no alfanuméricos de la cadena
-   * y convierte todos los caracteres a mayúsculas.
-   *
-   * @returns {void}
-   */
-  validarLineaCaptura(): void {
-    this.formPagoLC.patchValue({
-      lineaCaptura: this.formPagoLC
-        .get('lineaCaptura')
-        ?.value.replace(REGEX_REEMPLAZAR, '')
-        .toUpperCase(),
-    });
   }
 
   /**
@@ -205,23 +231,81 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Agrega tarifas de pago obteniendo los valores del formulario y actualizando la tabla.
    */
   anadirTarifasDePago(): void {
-    const LINEA_CAPTURA = this.formPagoLC.get('lineaCaptura')?.value;
-    LINEA_CAPTURA.markAsTouched();
-    if (LINEA_CAPTURA?.invalid) {
-      return;
-    }
-    const VALOR_PAGO = this.formPagoLC.get('valorPago')?.value;
-    if (!LINEA_CAPTURA || !VALOR_PAGO) {
+    if (this.formPagoLC.invalid) {
+      this.formPagoLC.markAllAsTouched();
       return;
     }
 
     const JSON_OBJECT = [
       {
-        linea: LINEA_CAPTURA,
-        monto: VALOR_PAGO,
+        linea: this.formPagoLC.get('lineaCaptura')?.value,
+        monto: this.formPagoLC.get('valorPago')?.value,
       },
     ];
+
+    for (const INDEX in this.pagoDerechosLista) {
+      if (
+        this.pagoDerechosLista[INDEX].linea ===
+        this.formPagoLC.get('lineaCaptura')?.value
+      ) {
+        return;
+      }
+    }
     this.solicitud30901Store.setPagoDerechosLista(JSON_OBJECT);
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona una fila en la lista de pagos de derechos.
+   * Asigna la fila seleccionada (o filas) a la variable `seleccionadaLineaCapturaLista`.
+   *
+   * @param evento - Arreglo de objetos de tipo `PagoDerechosLista` que representa las filas seleccionadas.
+   */
+  onFilaSeleccionada(evento: PagoDerechosLista[]): void {
+    this.seleccionadaLineaCapturaLista = evento;
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la lista de pagos de derechos.
+   *
+   * - Si no hay ninguna fila seleccionada, muestra una notificación de advertencia al usuario.
+   * - Si hay filas seleccionadas, obtiene sus líneas, filtra la lista original eliminando esas líneas
+   *   y actualiza el store con la nueva lista.
+   * - Finalmente, limpia la selección actual.
+   */
+  eliminarSeleccion(): void {
+    if (this.seleccionadaLineaCapturaLista.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: 'Selecciona por lo menos un registro',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const LINEAS_A_ELIMINAR = this.seleccionadaLineaCapturaLista.map(
+      (item) => item.linea
+    );
+
+    const NUEVA_LISTA = this.pagoDerechosLista.filter(
+      (elemento) => !LINEAS_A_ELIMINAR.includes(elemento.linea)
+    );
+    this.seleccionadaLineaCapturaLista = [];
+    this.solicitud30901Store.setPagoDerechosLista(NUEVA_LISTA);
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.formPagoLC.invalid) {
+      this.formPagoLC.markAllAsTouched();
+    }
+    return this.formPagoLC.valid;
   }
 
   /**

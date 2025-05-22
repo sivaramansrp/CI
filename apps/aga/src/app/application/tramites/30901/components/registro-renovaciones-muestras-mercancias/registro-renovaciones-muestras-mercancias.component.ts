@@ -1,5 +1,9 @@
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -7,12 +11,15 @@ import { Importante } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
 import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -27,6 +34,19 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-registro-renovaciones-muestras-mercancias',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    AlertComponent,
+  ],
+  providers: [
+    RenovacionesMuestrasMercanciasService,
+    ToastrService,
+    BsModalService,
+  ],
   templateUrl: './registro-renovaciones-muestras-mercancias.component.html',
   styleUrl: './registro-renovaciones-muestras-mercancias.component.scss',
 })
@@ -341,7 +361,8 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
       }
       descripcion = 'Vacas lecheras.';
     } else {
-      descripcion = '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.';
+      descripcion =
+        '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.';
     }
     this.solicitud30901Store.setNicoDescripcion(descripcion);
     this.solicitud30901Store.setComboNicos(valor.id);
