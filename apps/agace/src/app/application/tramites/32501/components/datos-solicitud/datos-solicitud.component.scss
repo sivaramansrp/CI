@@ -35,13 +35,30 @@
   margin: 0px 25px 25px 0px;
 }
 
-textarea.form-control {
-  height: 0% !important;
-}
 
 .modal-content {
   padding-left: 6% !important;
   padding-right: 6% !important;
   padding-bottom: 5% !important;
 
+}
+
+.no-resize{
+  resize: none;
+}
+
+.textarea-height {
+  height: 100px !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
 }
