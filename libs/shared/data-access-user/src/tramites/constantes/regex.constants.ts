@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
@@ -305,7 +307,7 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
  * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
  * @constant
  */
-export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para validar una llave de pago.
@@ -370,27 +372,6 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
 
-/**
- * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
- * - Dígitos (0-9)
- * - Espacios en blanco
- * - Guiones (-)
- *
- * Desglose de la expresión regular:
- * - `^`: Aserta el inicio de la cadena.
- * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
- * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
- *
- * Ejemplos de coincidencias:
- * - "123-456" (coincide con "123-")
- * - "  -789" (coincide con "  -")
- * - "42" (coincide con "42")
- *
- * Ejemplos de no coincidencias:
- * - "abc123" (no comienza con un dígito, espacio o guión)
- * - "!@#" (no comienza con un carácter válido)
- */
-export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
 
 /**
  * Expresión regular para validar nombres.
@@ -427,3 +408,60 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.456"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12a45" (contiene caracteres no numéricos)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
+
+
+export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
+export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
+/**
+ * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Guiones (-)
+ *
+ * Desglose de la expresión regular:
+ * - `^`: Aserta el inicio de la cadena.
+ * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
+ * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
+ *
+ * Ejemplos de coincidencias:
+ * - "123-456" (coincide con "123-")
+ * - "  -789" (coincide con "  -")
+ * - "42" (coincide con "42")
+ *
+ * Ejemplos de no coincidencias:
+ * - "abc123" (no comienza con un dígito, espacio o guión)
+ * - "!@#" (no comienza con un carácter válido)
+ */
+export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;

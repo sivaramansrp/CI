@@ -8,16 +8,9 @@
         <th></th>
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <th>
-          <input
-            class="cursor-pointer"
-            type="checkbox"
-            name="filaSeleccionada"
-            (change)="seleccionarDeseleccionarTodos($event)"
-            aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="
-              datos.length ? filasSeleccionadas.length === datos.length : false
-            "
-          />
+          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
+            (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
+            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " />
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->

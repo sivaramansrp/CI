@@ -281,6 +281,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         transporte: [{ value: '020202', disabled: true }],
         punto: ['', [Validators.required]],
       });
+      
   }
    
 
@@ -621,7 +622,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         this.movilizacionNacional = {
           labelNombre: 'Movilización Nacional',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'Aéreo',
           catalogos: RESPONSE,
         };
       }
@@ -643,7 +644,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         this.puntoVerificacion = {
           labelNombre: 'Punto de verificación federal',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'REGIÓN NORTE, LA CONCHA, SIN.',
           catalogos: RESPONSE,
         };
       }
@@ -664,7 +665,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         this.empresaTransportista = {
           labelNombre: 'Nombre de la empresa transportista',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'testabc',
           catalogos: RESPONSE,
         };
       }

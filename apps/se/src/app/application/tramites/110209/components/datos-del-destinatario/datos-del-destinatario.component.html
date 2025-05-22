@@ -1,12 +1,10 @@
-<div class="container">
+<form [formGroup]="datosDelDestinatarioForm">
     <ng-titulo [titulo]="'Datos del destinatario'"></ng-titulo>
-    <form [formGroup]="datosDelDestinatarioForm">
         <div class="row">
-
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="nombre">Nombre(s) :</label>
-                    <input type="text" (change)="setValoresStore(datosDelDestinatarioForm,'nombre','setNombre')"
+                    <input type="text" (change)="setValoresStore(datosDelDestinatarioForm,'nombre')"
                         class="form-control" id="nombre" formControlName="nombre" placeholder="Juan" />
                     <div
                         *ngIf="datosDelDestinatarioForm.get('nombre')?.touched && datosDelDestinatarioForm.get('nombre')?.invalid">
@@ -22,7 +20,7 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="primerApellido">Primer apellido :</label>
                     <input type="text"
-                        (change)="setValoresStore(datosDelDestinatarioForm,'primerApellido','setPrimerApellido')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'primerApellido')"
                         class="form-control" id="primerApellido" formControlName="primerApellido" placeholder="Perez" />
                     <div *ngIf="datosDelDestinatarioForm.get('primerApellido')?.invalid">
                         <small *ngIf="datosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
@@ -37,7 +35,7 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="segundoApellido">Segundo apellido :</label>
                     <input type="text"
-                        (change)="setValoresStore(datosDelDestinatarioForm,'segundoApellido','setSegundoApellido')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'segundoApellido')"
                         class="form-control" id="segundoApellido" formControlName="segundoApellido"
                         placeholder="Perez" />
                     <div *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.invalid">
@@ -57,7 +55,7 @@
                     <label class="form-label width-unset" for="numeroDeRegistroFiscal">Número de registro
                         fiscal *:</label>
                     <input type="text"
-                        (change)="setValoresStore(datosDelDestinatarioForm,'numeroDeRegistroFiscal','setNumeroDeRegistroFiscal')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'numeroDeRegistroFiscal')"
                         class="form-control" id="numeroDeRegistroFiscal" formControlName="numeroDeRegistroFiscal"
                         placeholder="3243254532" />
                     <div
@@ -78,7 +76,7 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="razonSocial">Razón social :</label>
                     <input type="text"
-                        (change)="setValoresStore(datosDelDestinatarioForm,'razonSocial','setRazonSocial')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'razonSocial')"
                         class="form-control" id="razonSocial" formControlName="razonSocial"/>
                         <div *ngIf="datosDelDestinatarioForm.get('razonSocial')?.invalid">
                             <small *ngIf="datosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
@@ -91,4 +89,3 @@
 
         </div>
     </form>
-</div>
