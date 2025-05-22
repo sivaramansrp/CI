@@ -120,6 +120,13 @@ export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117, 240407, 240123
  */
 export const FETCHA_PAGO = [240107, 240106, 240407];
 
+/**
+ * Identificadores numéricos relacionados con fechas de salida.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con fechas de salida en el sistema.
+ */
 export const FETCHA_SALIDA = [240123];
 
 /**
@@ -131,7 +138,15 @@ export const FETCHA_SALIDA = [240123];
  */
 export const ES_CURP = [240107, 240114, 240118, 240117, 240121,240311];
 
+/**
+ * Identificadores numéricos relacionados con RFC.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con NACIONAL en el sistema.
+ */
 export const ES_NACIONAL = [240118];
+
 /**
  * Período del primer semestre.
  *
@@ -218,6 +233,7 @@ export const ES_RFC = [240117];
  * Este valor es utilizado para identificar permisos que no están habilitados o disponibles en ciertas funcionalidades.
  */
 export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
+
 /**
  * @constant
  * @name ADUANA_TEXTO
