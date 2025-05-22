@@ -1,25 +1,184 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { ModalOperacionComponent } from './modal-operacion.component';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
+import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  CrosslistComponent,
+  InputCheckComponent,
+  InputFechaComponent,
+  InputHoraComponent,
+  InputRadioComponent,
+  SelectPaisesComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ModalOperacionComponent', () => {
   let component: ModalOperacionComponent;
   let fixture: ComponentFixture<ModalOperacionComponent>;
-  let mercDesmSinMonServiceMock: jest.Mocked<MercDesmSinMonService>;
+  let mercDesmSinMonServiceMock: jest.Mocked<MercanciasDesmontadasOSinMontarService>;
   let solicitud32501QueryMock: jest.Mocked<Solicitud32501Query>;
   let solicitud32501StoreMock: jest.Mocked<Solicitud32501Store>;
 
   beforeEach(async () => {
     mercDesmSinMonServiceMock = {
-      obtenerAvisoDelCatalogo: jest.fn(),
-    } as unknown as jest.Mocked<MercDesmSinMonService>;
+      obtenerAvisoDelCatalogo: jest.fn(() =>
+        of({
+          cveFraccionArancelaria: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: '01031001-Reproductors de raza..',
+              },
+              {
+                id: 2,
+                descripcion: '01031002-Reproductors de raza..',
+              },
+              {
+                id: 3,
+                descripcion: '01031003-Reproductors de raza..',
+              },
+            ],
+            labelNombre: 'Fracción arancelaria',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          entidadFederativa: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'MEXICO-1',
+              },
+              {
+                id: 2,
+                descripcion: 'MEXICO-2',
+              },
+              {
+                id: 3,
+                descripcion: 'MEXICO-3',
+              },
+            ],
+            labelNombre: 'Entidad federativa',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          delegacionMunicipio: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'ATENCO-1',
+              },
+              {
+                id: 2,
+                descripcion: 'ATENCO-2',
+              },
+              {
+                id: 3,
+                descripcion: 'ATENCO-3',
+              },
+            ],
+            labelNombre: 'Alcaldía o municipio',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          colonia: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'LA NORIA-1',
+              },
+              {
+                id: 2,
+                descripcion: 'LA NORIA-2',
+              },
+              {
+                id: 3,
+                descripcion: 'LA NORIA-3',
+              },
+            ],
+            labelNombre: 'Colonia',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          aduanaDeImportacion: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'Test-1',
+              },
+              {
+                id: 2,
+                descripcion: 'Test-2',
+              },
+              {
+                id: 3,
+                descripcion: 'Test-3',
+              },
+            ],
+            labelNombre: 'Aduana de importación',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          opcionTipoDeDocumento: {
+            labelNombre: 'Tipo de documento',
+            required: false,
+            primerOpcion: 'Seleccione un tipo de documento',
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'Manifiesto',
+              },
+              {
+                id: 2,
+                descripcion: 'ID Oficial',
+              },
+              {
+                id: 3,
+                descripcion: 'Actas',
+              },
+              {
+                id: 4,
+                descripcion: 'Poderes',
+              },
+              {
+                id: 5,
+                descripcion: 'Otros',
+              },
+            ],
+          },
+        })
+      ),
+    } as unknown as jest.Mocked<MercanciasDesmontadasOSinMontarService>;
 
     solicitud32501QueryMock = {
       seleccionarSolicitud$: of({
+        adace: '',
+        fechaIniExposicion: '',
+        ideGenerica1: '',
+        idTransaccionVU: '',
+        cveFraccionArancelaria: '',
+        nico: '',
+        peso: '',
+        valorUSD: '',
+        descripcionMercancia: '',
+        nombreComercial: '',
+        entidadFederativa: '',
+        delegacionMunicipio: '',
+        colonia: '',
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        codigoPostal: '',
         patente: '',
         rfc: '',
         pedimento: '',
@@ -28,17 +187,39 @@ describe('ModalOperacionComponent', () => {
     } as unknown as jest.Mocked<Solicitud32501Query>;
 
     solicitud32501StoreMock = {
-      actualizarAduana: jest.fn(),
-      actualizarPatente: jest.fn(),
-      actualizaRFC: jest.fn(),
-      actualizarPedimento: jest.fn(),
+      actualizarAduana: jest.fn(() => of(1)),
+      actualizarPatente: jest.fn(() => of('ABC123')),
+      actualizaRFC: jest.fn(() => of('RFC123')),
+      actualizarPedimento: jest.fn(() => of('PED123')),
     } as unknown as jest.Mocked<Solicitud32501Store>;
 
     await TestBed.configureTestingModule({
-      declarations: [ModalOperacionComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [],
+      imports: [
+        ModalOperacionComponent,
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        WizardComponent,
+        BtnContinuarComponent,
+        InputCheckComponent,
+        InputFechaComponent,
+        InputHoraComponent,
+        CrosslistComponent,
+        TituloComponent,
+        SelectPaisesComponent,
+        AnexarDocumentosComponent,
+        AlertComponent,
+        CatalogoSelectComponent,
+        InputRadioComponent,
+        TablaDinamicaComponent,
+        HttpClientTestingModule,
+      ],
       providers: [
-        { provide: MercDesmSinMonService, useValue: mercDesmSinMonServiceMock },
+        {
+          provide: MercanciasDesmontadasOSinMontarService,
+          useValue: mercDesmSinMonServiceMock,
+        },
         { provide: Solicitud32501Query, useValue: solicitud32501QueryMock },
         { provide: Solicitud32501Store, useValue: solicitud32501StoreMock },
       ],
@@ -65,133 +246,8 @@ describe('ModalOperacionComponent', () => {
   });
 
   it('should call obtenerAvisoDelCatalogo on initialization', () => {
-    mercDesmSinMonServiceMock.obtenerAvisoDelCatalogo.mockReturnValue(
-      of({
-        cveFraccionArancelaria: {
-          catalogos: [
-            {
-              id: 1,
-              descripcion: '01031001-Reproductors de raza..',
-            },
-            {
-              id: 2,
-              descripcion: '01031002-Reproductors de raza..',
-            },
-            {
-              id: 3,
-              descripcion: '01031003-Reproductors de raza..',
-            },
-          ],
-          labelNombre: 'Fracción arancelaria',
-          required: true,
-          primerOpcion: 'Seleccione un valor',
-        },
-        entidadFederativa: {
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'MEXICO-1',
-            },
-            {
-              id: 2,
-              descripcion: 'MEXICO-2',
-            },
-            {
-              id: 3,
-              descripcion: 'MEXICO-3',
-            },
-          ],
-          labelNombre: 'Entidad federativa',
-          required: true,
-          primerOpcion: 'Seleccione un valor',
-        },
-        delegacionMunicipio: {
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'ATENCO-1',
-            },
-            {
-              id: 2,
-              descripcion: 'ATENCO-2',
-            },
-            {
-              id: 3,
-              descripcion: 'ATENCO-3',
-            },
-          ],
-          labelNombre: 'Alcaldía o municipio',
-          required: true,
-          primerOpcion: 'Seleccione un valor',
-        },
-        colonia: {
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'LA NORIA-1',
-            },
-            {
-              id: 2,
-              descripcion: 'LA NORIA-2',
-            },
-            {
-              id: 3,
-              descripcion: 'LA NORIA-3',
-            },
-          ],
-          labelNombre: 'Colonia',
-          required: true,
-          primerOpcion: 'Seleccione un valor',
-        },
-        aduanaDeImportacion: {
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test-1',
-            },
-            {
-              id: 2,
-              descripcion: 'Test-2',
-            },
-            {
-              id: 3,
-              descripcion: 'Test-3',
-            },
-          ],
-          labelNombre: 'Aduana de importación',
-          required: true,
-          primerOpcion: 'Seleccione un valor',
-        },
-        opcionTipoDeDocumento: {
-          labelNombre: 'Tipo de documento',
-          required: false,
-          primerOpcion: 'Seleccione un tipo de documento',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Manifiesto',
-            },
-            {
-              id: 2,
-              descripcion: 'ID Oficial',
-            },
-            {
-              id: 3,
-              descripcion: 'Actas',
-            },
-            {
-              id: 4,
-              descripcion: 'Poderes',
-            },
-            {
-              id: 5,
-              descripcion: 'Otros',
-            },
-          ],
-        },
-      })
-    );
-    component.obtenerAvisoDelCatalogo();
+    jest.spyOn(mercDesmSinMonServiceMock, 'obtenerAvisoDelCatalogo');
+    mercDesmSinMonServiceMock.obtenerAvisoDelCatalogo();
     expect(
       mercDesmSinMonServiceMock.obtenerAvisoDelCatalogo
     ).toHaveBeenCalled();
