@@ -157,7 +157,7 @@
       [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
       [datos]="datosMercanciaTabla"
-      (listaDeFilaSeleccionada)="mercanciaTablaSeleccionada = $event"
+      (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-3">
@@ -169,7 +169,7 @@
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
-          [disabled]="mercanciaTablaSeleccionada.length === 0"
+            [disabled]="!(datosMercanciaTabla.length > 0 && tableSelectedDatas.length === 1)"
         >
           Modificar
         </button>
@@ -178,7 +178,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatarioFinal()"
-          [disabled]="mercanciaTablaSeleccionada.length === 0"
+          [disabled]="!(datosMercanciaTabla.length > 0 && tableSelectedDatas.length > 0)"
         >
           Eliminar
         </button>
