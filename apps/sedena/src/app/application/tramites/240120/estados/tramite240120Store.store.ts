@@ -238,4 +238,26 @@ export class Tramite240120Store extends Store<Tramite240120State> {
         };
       });
     }
+
+    /**
+   * Elimina múltiples mercancías de la lista merccancialTablaDatos comparando los objetos.
+   *
+   * @param {MercanciaDetalle[]} mercancias - Array de mercancías a eliminar.
+   * @returns {void}
+   */
+  public eliminarMultiplesPorComparacion(mercancias: MercanciaDetalle[]): void {
+    this.update(state => {
+      const FILTERED_ARRAY = state.merccancialTablaDatos.filter(itemState =>
+        !mercancias.some(itemToDelete =>
+          Object.keys(itemToDelete).every(
+            key => itemToDelete[key as keyof MercanciaDetalle] === itemState[key as keyof MercanciaDetalle]
+          )
+        )
+      );
+      return {
+        ...state,
+        merccancialTablaDatos: FILTERED_ARRAY,
+      };
+    });
+  }
 }
