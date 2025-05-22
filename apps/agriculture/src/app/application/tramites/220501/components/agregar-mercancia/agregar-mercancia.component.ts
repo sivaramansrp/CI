@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220501State, Solicitud220501Store } from '../../estados/tramites220501.store';
+import { CommonModule } from '@angular/common';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -11,9 +14,15 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-agregar-mercancia',
   templateUrl: './agregar-mercancia.component.html',
-  styleUrl: './agregar-mercancia.component.scss'
+  styleUrl: './agregar-mercancia.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule],
 })
-export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
+
+/**
+ * Componente que permite agregar mercancía a una solicitud.
+ */
+export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   /**
    * Formulario para agregar mercancía.
    */
@@ -23,8 +32,18 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
    * Datos de mercancías recibidos como entrada.
    */
   @Input() mercanciasDatos = [{
+    /**
+     * Datos de la mercancía en formato de tabla.
+     * @type {string[]}
+     */
     tbodyData: [] as string[]
   }];
+
+  /**
+   * Evento emitido cuando se actualiza la mercancía.
+   * @type {EventEmitter<MercanciaTabla>}
+   */
+  @Output() actualizarMercancia = new EventEmitter<MercanciaTabla>();
 
   /**
    * Evento emitido cuando se cancela la acción.
@@ -49,7 +68,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
    */
   constructor(
     private fb: FormBuilder,
-    public solicitud220501Store:Solicitud220501Store,
+    public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query,
   ) {
     this.crearFormulario();
@@ -70,27 +89,27 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
    */
   crearFormulario(): void {
     this.agregarMercanciaForm = this.fb.group({
-        fraccionArancelaria: [{ value: this.solicitud220501State.fraccionArancelaria, disabled: true }],
-        descripcionFraccion: [{ value: this.solicitud220501State.descripcionFraccion, disabled: true }],
-        nico: [{ value: this.solicitud220501State.nico, disabled: true }],
-        descripcion: [{ value: this.solicitud220501State.descripcion, disabled: true }],
-        unidaddeMedidaDeUMT: [{ value: this.solicitud220501State.unidaddeMedidaDeUMT, disabled: true }],
-        cantidadTotalUMT: [{ value: this.solicitud220501State.cantidadTotalUMT, disabled: true }],
-        saldoPendiente: [{ value: this.solicitud220501State.saldoPendiente, disabled: true }],
-        saldoACapturar: [this.solicitud220501State.saldoACapturar, [Validators.required, Validators.maxLength(16)]]
+      fraccionArancelaria: [{ value: this.solicitud220501State.fraccionArancelaria, disabled: true }],
+      descripcionFraccion: [{ value: this.solicitud220501State.descripcionFraccion, disabled: true }],
+      nico: [{ value: this.solicitud220501State.nico, disabled: true }],
+      descripcion: [{ value: this.solicitud220501State.descripcion, disabled: true }],
+      unidaddeMedidaDeUMT: [{ value: this.solicitud220501State.unidaddeMedidaDeUMT, disabled: true }],
+      cantidadTotalUMT: [{ value: this.solicitud220501State.cantidadTotalUMT, disabled: true }],
+      saldoPendiente: [{ value: this.solicitud220501State.saldoPendiente, disabled: true }],
+      saldoACapturar: [this.solicitud220501State.saldoACapturar, [Validators.required, Validators.maxLength(16)]]
     });
 
     this.solicitud220501Query.selectSolicitud$
-           .pipe(
-             takeUntil(this.destroyed$),
-             map((data: Solicitud220501State) => {
-               this.solicitud220501State = data;
-               this.agregarMercanciaForm.patchValue({
-                 saldoACapturar: this.solicitud220501State.saldoACapturar,
-               });
-             })
-           )
-           .subscribe();
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: Solicitud220501State) => {
+          this.solicitud220501State = data;
+          this.agregarMercanciaForm.patchValue({
+            saldoACapturar: this.solicitud220501State.saldoACapturar,
+          });
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -99,17 +118,21 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
   setFormData(): void {
     const DATA = this.mercanciasDatos[0].tbodyData;
     this.agregarMercanciaForm.patchValue({
-        fraccionArancelaria: DATA[0],
-        descripcionFraccion: DATA[1],
-        nico: DATA[2],
-        descripcion: DATA[3],
-        unidaddeMedidaDeUMT: DATA[5],
-        saldoPendiente:  DATA[6],
-        cantidadTotalUMT:  DATA[7]        
+      fraccionArancelaria: DATA[0],
+      descripcionFraccion: DATA[1],
+      nico: DATA[2],
+      descripcion: DATA[3],
+      unidaddeMedidaDeUMT: DATA[5],
+      saldoPendiente: DATA[6],
+      cantidadTotalUMT: DATA[7]
     });
   }
 
-  setSaldoACapturar(event: Event): void{
+  /**
+   * Método para manejar la selección de la mercancía
+   * @param event Evento que se dispara al cambiar el valor del campo "saldoACapturar".
+   */
+  setSaldoACapturar(event: Event): void {
     const VALUE = (event.target as HTMLInputElement).value;
     this.solicitud220501Store.setSaldoACapturar(VALUE);
   }
@@ -126,21 +149,33 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
   }
 
   /**
-   * Método para cancelar la acción y emitir el evento correspondiente.
+   * Método para aceptar la acción de agregar mercancía.
+   * Valida el formulario y emite el evento con los datos del formulario.
+   * @returns {void}
    */
-  cerrarModal(estaConfirmado: boolean): void {
-    if (estaConfirmado) {
-      this.cancelarEvento.emit(false);
+  aceptar(): void {
+    if (this.agregarMercanciaForm.valid) {
+      this.actualizarMercancia.emit(this.agregarMercanciaForm.getRawValue());
     }
   }
 
-        /**
+  /**
+   * Método para cancelar la acción de agregar mercancía.
+   * Emite el evento de cancelación.
+   * @param estaConfirmado Indica si la acción fue confirmada o no.
+   * @returns {void}
+   */
+  cerrarModal(estaConfirmado: boolean): void {
+    this.cancelarEvento.emit(estaConfirmado);
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Desuscribe el componente de todos los observables.
    * @returns {void}
-   * */
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

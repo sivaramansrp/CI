@@ -1,72 +1,65 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MercanciasService } from './mercancias.service';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { of } from 'rxjs';
+
+const MERCANCIAS_URL = 'assets/json/110209/mercancias.json';
+const TIPO_DE_FACTURA_URL = 'assets/json/110209/tipo-de-factura.json';
+const UNIDAD_URL = 'assets/json/110209/unidad.json';
 
 describe('MercanciasService', () => {
   let service: MercanciasService;
-  let httpMock: HttpTestingController;
+  let httpMock: any;
 
   beforeEach(() => {
+    httpMock = {
+      get: jest.fn()
+    };
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [MercanciasService, HttpCoreService]
+      providers: [
+        MercanciasService,
+        { provide: HttpCoreService, useValue: httpMock }
+      ]
     });
 
     service = TestBed.inject(MercanciasService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
-
-  it('should be created', () => {
+  it('debe crearse el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch mercancias from JSON file', () => {
-    const mockMercancias = [
-      { id: '1', nombre: 'Mercancia 1' },
-      { id: '2', nombre: 'Mercancia 2' }
-    ];
+  it('debe llamar a http.get con la URL correcta en getMercancias', () => {
+    const MOCK_RESPONSE_MERCANCIAS = [{ id: 1, nombre: 'Mercancia 1' }];
+    httpMock.get.mockReturnValue(of(MOCK_RESPONSE_MERCANCIAS));
 
-    service.getMercancias().subscribe((mercancias) => {
-      expect(mercancias).toEqual(mockMercancias);
+    service.getMercancias().subscribe(res => {
+      expect(res).toEqual(MOCK_RESPONSE_MERCANCIAS);
     });
 
-    const req = httpMock.expectOne('assets/json/110209/mercancias.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockMercancias);
+    expect(httpMock.get).toHaveBeenCalledWith(MERCANCIAS_URL);
   });
 
-  it('should fetch tipos de factura from JSON file', () => {
-    const mockTiposDeFactura = [
-      { id: '1', nombre: 'Factura 1' },
-      { id: '2', nombre: 'Factura 2' }
-    ];
+  it('debe llamar a http.get con la URL correcta en getTipoDeFactura', () => {
+    const MOCK_RESPONSE_TIPO_FACTURA = [{ id: 1, nombre: 'Factura A' }];
+    httpMock.get.mockReturnValue(of(MOCK_RESPONSE_TIPO_FACTURA));
 
-    service.getTipoDeFactura().subscribe((tiposDeFactura) => {
-      expect(tiposDeFactura).toEqual(mockTiposDeFactura);
+    service.getTipoDeFactura().subscribe(res => {
+      expect(res).toEqual(MOCK_RESPONSE_TIPO_FACTURA);
     });
 
-    const req = httpMock.expectOne('assets/json/110209/tipo-de-factura.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockTiposDeFactura);
+    expect(httpMock.get).toHaveBeenCalledWith(TIPO_DE_FACTURA_URL);
   });
 
-  it('should fetch unidades from JSON file', () => {
-    const mockUnidades = [
-      { id: '1', nombre: 'Unidad 1' },
-      { id: '2', nombre: 'Unidad 2' }
-    ];
+  it('debe llamar a http.get con la URL correcta en getUnidad', () => {
+    const MOCK_RESPONSE_UNIDAD = [{ id: 1, nombre: 'Unidad A' }];
+    httpMock.get.mockReturnValue(of(MOCK_RESPONSE_UNIDAD));
 
-    service.getUnidad().subscribe((unidades) => {
-      expect(unidades).toEqual(mockUnidades);
+    service.getUnidad().subscribe(res => {
+      expect(res).toEqual(MOCK_RESPONSE_UNIDAD);
     });
 
-    const req = httpMock.expectOne('assets/json/110209/unidad.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockUnidades);
+    expect(httpMock.get).toHaveBeenCalledWith(UNIDAD_URL);
   });
 });

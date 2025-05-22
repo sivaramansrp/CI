@@ -1,3 +1,5 @@
+import { Adquiriente, Complementaria, DetallesLicitacion, LicitacionesDisponibles } from '../../../tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
+import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
@@ -13,8 +15,8 @@ export class LicitacionesDisponiblesService {
     // Lógica de inicialización si es necesario
   }
 
-  getData(): Observable<unknown> {
-    return this.http.get<{ [key: string]: unknown }>('assets/json/120501/licitaciones-disponibles.json');
+  getData(): Observable<LicitacionesDisponibles[]> {
+    return this.http.get<LicitacionesDisponibles[]>('assets/json/120501/licitaciones-disponibles.json');
   }
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/120501/entidad-federativa.json');
@@ -22,13 +24,13 @@ export class LicitacionesDisponiblesService {
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/120501/representacion-federal.json');
   }
-  getDetallesDelalicitacion(): Observable<unknown> {
-    return this.http.get('assets/json/120501/detalles-licitacion.json');
+  getDetallesDelalicitacion(): Observable<DetallesLicitacion> {
+    return this.http.get<DetallesLicitacion>('assets/json/120501/detalles-licitacion.json');
   }
-  getAdquiriente(): Observable<unknown> {
-    return this.http.get('assets/json/120501/adquiriente.json');
+  getAdquiriente(): Observable<Adquiriente> {
+    return this.http.get<Adquiriente>('assets/json/120501/adquiriente.json');
   }
-  getTableData(): Observable<unknown> {
-    return this.http.get('assets/json/120501/datos-de-la-tabla.json');
+  getTableData(): Observable<Complementaria[]> {
+    return this.http.get<Complementaria[]>('assets/json/120501/datos-de-la-tabla.json');
   }
 }

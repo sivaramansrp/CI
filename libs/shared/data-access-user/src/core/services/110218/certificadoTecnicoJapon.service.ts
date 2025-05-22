@@ -22,13 +22,11 @@ export class CertificadoTecnicoJaponService {
   getrepresentante(): Observable<{ empresa: string }> {
     return this.http.get<{ empresa: string }>('assets/json/110218/representante-legal.json');
   }
-  
-  getdestinatario(): Observable<{ segundoApellido: string }> {
-    return this.http.get<{ segundoApellido: string }>('assets/json/110218/destinatario.json');
-  }
+ 
   getUnidadMedida():Observable<Catalogo[]>{
     return this.http.get<Catalogo[]>('assets/json/110218/unidad-medida.json');
   }
+  
   getTipodeFctura():Observable<Catalogo[]>{
     return this.http.get<Catalogo[]>('assets/json/110218/tipo-de-factura.json');
   }

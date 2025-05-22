@@ -1,14 +1,13 @@
 import {
   CatalogoPaises,
   CatalogoResponse,
+  JSONResponse,
   RespuestaCatalogos,
 } from '../../../models/shared/catalogos.model';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
-import { JSONResponse } from '../../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +16,8 @@ export class CatalogosService {
   urlServer = ENVIRONMENT.URL_SERVER;
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient) { 
-    // Lógica de inicialización si es necesario
-  }
+  constructor(private http: HttpClient) 
+  { }
 
   /**
    * Obtiene un catálogo desde el servidor.

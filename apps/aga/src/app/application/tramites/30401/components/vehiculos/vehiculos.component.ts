@@ -2,6 +2,7 @@ import {
   CategoriaMensaje,
   Notificacion,
   NotificacionesComponent,
+  REGEX_PATRON_ALFANUMERICO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
@@ -212,7 +213,7 @@ export class VehiculosComponent implements OnInit {
       id: [null],
       marca: ['', [Validators.required]],
       modelo: ['', [Validators.required]],
-      vin: ['', [Validators.required]],
+      vin: ['', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
     });
   }
 
@@ -353,16 +354,16 @@ export class VehiculosComponent implements OnInit {
    * fila Fila seleccionada.
    */
   manejarFilaSeleccionada(fila: VehiculosTabla[]): void {
-    if (fila.length === 0) {
+    this.listaFilaSeleccionadaVehiculos = fila;
+      if (fila.length === 0) {
+      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
       return;
     }
-    this.listaFilaSeleccionadaVehiculos = fila;
-    this.filaSeleccionadaVehiculos = fila[fila.length - 1];
-    this.enableModficarBoton = true;
-    this.enableEliminarBoton = true;
+  this.filaSeleccionadaVehiculos = fila[fila.length - 1];
   }
+  
 
   /**
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
@@ -409,18 +410,42 @@ export class VehiculosComponent implements OnInit {
    * y abre el modal para editar los datos.
    */
   modificarItemVehiculos(): void {
-    if (
-      this.listaFilaSeleccionadaVehiculos &&
-      this.listaFilaSeleccionadaVehiculos?.length === 1
-    ) {
-      this.actualizarFilaSeleccionada();
-      this.agregarDialogoDatos();
-      this.patchModifyiedData();
-    } else {
-      this.abrirMultipleSeleccionPopup();
+    const SELECCIONADAS = this.listaFilaSeleccionadaVehiculos;
+  
+    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
     }
+  
+    if (SELECCIONADAS.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+    this.actualizarFilaSeleccionada();
+    this.agregarDialogoDatos();
+    this.patchModifyiedData();
   }
-
+  
   /**
    * @method patchModifyiedData
    * Rellena el formulario con los datos de la fila seleccionada para su modificación.
@@ -448,12 +473,10 @@ export class VehiculosComponent implements OnInit {
       titulo: '',
       mensaje: 'Selecciona sólo un registro para modificar.',
       cerrar: false,
-      txtBtnAceptar: 'Cerca',
+      txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
-    if (this.enableModficarBoton) {
-      this.multipleSeleccionPopupAbierto = true;
-    }
+    this.multipleSeleccionPopupAbierto = true;
   }
 
   /**
@@ -463,11 +486,21 @@ export class VehiculosComponent implements OnInit {
    */
   confirmEliminarVehiculosItem(): void {
     if (this.listaFilaSeleccionadaVehiculos.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
       return;
     }
     this.abrirElimninarConfirmationopup();
   }
-
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.

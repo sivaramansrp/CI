@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-//import { loadRemoteModule } from '@nx/angular/mf';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
 import { ENVIRONMENT } from './environments/environment';

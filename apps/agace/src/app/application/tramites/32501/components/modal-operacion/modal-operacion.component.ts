@@ -1,17 +1,34 @@
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { InputHoraComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectPaisesComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -24,6 +41,27 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-modal-operacion',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    WizardComponent,
+    BtnContinuarComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    InputHoraComponent,
+    CrosslistComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+    SelectPaisesComponent,
+    AnexarDocumentosComponent,
+    AlertComponent,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    TablaDinamicaComponent,
+  ],
+  providers: [MercanciasDesmontadasOSinMontarService],
   templateUrl: './modal-operacion.component.html',
   styleUrl: './modal-operacion.component.scss',
 })
@@ -34,7 +72,6 @@ import { takeUntil } from 'rxjs';
  * de formularios reactivos y la suscripción a cambios en el estado de la solicitud.
  * También maneja la limpieza de suscripciones al destruirse el componente.
  */
-
 export class ModalOperacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario para los datos de la operación de importación.
