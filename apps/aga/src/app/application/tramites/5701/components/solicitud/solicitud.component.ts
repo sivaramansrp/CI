@@ -21,8 +21,12 @@ import {
   SeccionLibState,
   SeccionLibStore,
   TIPO_SOLICITUD,
+  TipoDespachoService,
+  TipoOperacionService,
+  TipoPedimentoService,
   TipoPersona,
   TipoSolicitudService,
+  TipoTransporteService,
   ValidacionesFormularioService,
   ValidaRfcService,
 } from '@ng-mf/data-access-user';
@@ -334,6 +338,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService,
     private tipoSolicitudService: TipoSolicitudService,
+    private readonly tipoOperacionService: TipoOperacionService,
+    private readonly tipoTransporteService: TipoTransporteService,
+    private readonly tipoPedimentoService: TipoPedimentoService,
+    private readonly tipoDespachoService: TipoDespachoService,
     private readonly aduanaService: AduanaService,
     private readonly patenteService: PatenteService,
     private readonly patenteApoderadoService: PatenteApoderadoService,
@@ -626,19 +634,19 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       })
     );
 
-    const TIPO_OPERACION$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
+    const TIPO_OPERACION$ = this.tipoOperacionService
+      .getListaTipoOperacion()
       .pipe(
         map((resp) => {
-          this.tipoOperacion = JSON.parse(resp.data);
+          this.tipoOperacion = resp.datos;
         })
       );
 
-    const TIPO_TRANSPORTE$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_TRANSPORTE)
+    const TIPO_TRANSPORTE$ = this.tipoTransporteService
+      .getListaTipoTransporte()
       .pipe(
         map((resp) => {
-          const CATALOGO_TRANSPORTE = JSON.parse(resp.data);
+          const CATALOGO_TRANSPORTE = resp.datos;
 
           const TIPO_VEHICULO = VEHICULO;
           this.tipoVehiculo = CATALOGO_TRANSPORTE.filter((elemento: Catalogo) =>
@@ -653,19 +661,19 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         })
       );
 
-    const CAT_DESPACHO_LDA$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_DESPACHO_LDA)
+    const CAT_DESPACHO_LDA$ = this.tipoDespachoService
+      .getListaTipoDespacho()
       .pipe(
         map((resp) => {
-          this.despachoLdaCatalogo = JSON.parse(resp.data);
+          this.despachoLdaCatalogo = resp.datos;
         })
       );
 
-    const CAT_DESPACHO_DD$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_DESPACHO_DD)
+    const CAT_DESPACHO_DD$ = this.tipoDespachoService
+      .getListaTipoDespacho()
       .pipe(
         map((resp) => {
-          this.despachoDDCatalogo = JSON.parse(resp.data);
+          this.despachoDDCatalogo = resp.datos;
         })
       );
 
