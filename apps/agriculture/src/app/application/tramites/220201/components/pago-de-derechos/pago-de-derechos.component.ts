@@ -81,11 +81,8 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
       "value": "si"
     }
   ];
-  /**
-     * Valor seleccionado en el radio button de exención de pago.
-     * @property {string} selectedValue
-     */
-  selectedValue: string = 'no';
+  
+
 
     private destroyNotifier$ = new Subject<void>();
 
