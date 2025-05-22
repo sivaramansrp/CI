@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <ng-container>
+            <lib-bandeja
+              [titulo]="'Bandeja de tareas pendientes'"
+              [tieneBandeja]="true"
+              [tablaTitulo]="'Lista de pendientes'"
+              [configuracionTabla]="dePendientesConfiguracionTabla"
+              [configuracionTablaDatos]="dePendientesTablaDatos"
+              [bandejaSolicitudeDatos]="bandejaDeTareasForma"
+              [seleccionadoDepartamento]="selectedDepartamentoObj"
+              [duplicarDatos]="copiarDatos"
+              (obtenerNombreDelDepartamento)="departamento($event)"
+            >
+            </lib-bandeja>
+          </ng-container>
+    </div>
+</div>

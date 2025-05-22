@@ -444,9 +444,7 @@ const ROUTES: Routes = [
   {
     path: 'reportes',
     loadChildren: () =>
-      import('./tramites/110207/reportes.module').then(
-        (m) => m.ReportesModule
-      )
+      import('./tramites/110207/reportes.module').then((m) => m.ReportesModule),
   },
   {
     path: 'expedicion-certificados-frontera',
@@ -535,9 +533,7 @@ const ROUTES: Routes = [
   {
     path: 'modificaciones-immex-prosec',
     loadChildren: () =>
-      import('./tramites/90304/prosec.module').then(
-        (m) => m.ProsecModule
-      ),
+      import('./tramites/90304/prosec.module').then((m) => m.ProsecModule),
   },
   {
     path: 'ampliacion-prosec-productor',
@@ -633,9 +629,9 @@ const ROUTES: Routes = [
   {
     path: 'importaciones-agropecuarias',
     loadChildren: () =>
-      import('./tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module').then(
-        (m) => m.ImportacionesAgropecuariasModule
-      ),
+      import(
+        './tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module'
+      ).then((m) => m.ImportacionesAgropecuariasModule),
   },
   {
     path: 'modificaciones-immex-prosec',
@@ -651,11 +647,38 @@ const ROUTES: Routes = [
         (m) => m.CancelacionesModule
       ),
   },
-
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
 ];
- 
+
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
