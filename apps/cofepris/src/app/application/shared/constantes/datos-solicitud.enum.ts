@@ -334,6 +334,14 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+/**
+ * @const CROSLISTA_DE_FORMAS_FARMACEUTICAS
+ * @description Lista de países representados como cadenas de texto.
+ * Esta constante contiene nombres de países con sus respectivas denominaciones oficiales.
+ *
+ * @type {string[]}
+ */
+
 export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
   'AEROSOL',
   'CAPSULAS',

@@ -179,15 +179,11 @@ export class Tramite260103Store extends Store<Tramite260103State> {
 public updateFabricanteTablaDatos(fabricanteTablaDatos: Fabricante[], id?: number): void {
   this.update((state) => {
     const UPDATED_LIST = [...state.fabricanteTablaDatos];
-
     fabricanteTablaDatos.forEach((nuevo) => {
       const INDEX = UPDATED_LIST.findIndex(item => item.id === nuevo.id);
-
       if (id && nuevo.id === id && INDEX !== -1) {
-        // Replace existing if matching id found
         UPDATED_LIST[INDEX] = { ...UPDATED_LIST[INDEX], ...nuevo };
       } else if (!id || INDEX === -1) {
-        // Add new item
         UPDATED_LIST.push(nuevo);
       }
     });
