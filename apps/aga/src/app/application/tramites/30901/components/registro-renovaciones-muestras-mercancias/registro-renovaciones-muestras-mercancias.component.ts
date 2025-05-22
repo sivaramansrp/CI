@@ -393,6 +393,17 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
   }
 
   /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.formRegistroMuestras.invalid) {
+      this.formRegistroMuestras.markAllAsTouched();
+    }
+    return this.formRegistroMuestras.valid;
+  }
+
+  /**
    * Hook del ciclo de vida que se invoca cuando se destruye el componente.
    * - Verifica si la suscripción `darseDeBaja` está activa.
    * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.

@@ -39,6 +39,12 @@ export class PasoUnoComponent {
   pagoLineaDeCapturaComponent!: PagoLineaDeCapturaComponent;
 
   /**
+   * Referencia al componente RegistroRenovacionesMuestrasMercanciasComponent
+   */
+  @ViewChild(RegistroRenovacionesMuestrasMercanciasComponent)
+  registroRenovacionesMuestrasMercanciasComponent!: RegistroRenovacionesMuestrasMercanciasComponent;
+
+  /**
    * Selecciona una pestaña específica.
    * @param i - El índice de la pestaña a seleccionar.
    */
