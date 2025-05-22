@@ -1,4 +1,3 @@
-import exp from "constants";
 
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros

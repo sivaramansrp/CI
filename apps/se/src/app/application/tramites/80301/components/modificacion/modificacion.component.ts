@@ -181,8 +181,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
  * // Ahora, registro.desEstatus será 'Activada'.
  * ```
  */
-valorDeAlternancia(event: { row: DatosDelModificacion; column: string }): void {
-  const ROW = event.row; // Obtiene el registro de la fila.
+valorDeAlternancia(event: DatosDelModificacion): void {
+  const ROW = event; // Obtiene el registro de la fila.
   const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id); // Busca el índice del registro en la tabla.
   // Alterna el estado entre 'Baja' y 'Activada'.
   this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';

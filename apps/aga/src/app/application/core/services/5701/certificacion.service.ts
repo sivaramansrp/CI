@@ -1,7 +1,7 @@
 import { API_CERTIFICACION, RFC_QUERY } from "../../../constantes/5701/api-constants";
 import { catchError, map, Observable, throwError } from "rxjs";
 import { CertificacionResponse } from "../../models/5701/Certificacion.model";
-import { enviroment } from "@libs/shared/data-access-user/src";
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -12,7 +12,7 @@ export class CertificacionService {
     private readonly host: string;
 
     constructor(private http: HttpClient) {
-        this.host = `${enviroment.API_HOST}/api/`;
+        this.host = `${ENVIRONMENT.API_HOST}/api/`;
     }
 
     /**

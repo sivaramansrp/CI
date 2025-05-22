@@ -195,7 +195,7 @@ export class TablaConEntradaComponent<T> {
 
   changeCheckBoxValue(evento: Event, i: number, llave: string): void {
     const VALUE = (evento.target as HTMLInputElement).value; // Captura el valor ingresado
-    (this.datos[i] as Record<string, any>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
+    (this.datos[i] as Record<string, string | number | boolean>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
     this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
   }
 
