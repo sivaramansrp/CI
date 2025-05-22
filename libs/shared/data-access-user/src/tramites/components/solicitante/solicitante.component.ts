@@ -24,6 +24,7 @@ import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 
 @Component({
@@ -33,6 +34,7 @@ import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directi
     TituloComponent,
     ReactiveFormsModule,
     CommonModule,
+    TooltipModule,
     forwardRef(() => UppercaseDirective),
   ],
   templateUrl: './solicitante.component.html',

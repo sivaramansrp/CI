@@ -175,8 +175,6 @@ export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './core/models/31602/comercio-exterior.model';
 
-export * from './core/estados/consulta.store';
-export * from './core/queries/consulta.query';
 export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
 export * from './tramites/components/carga-documento/carga-documento.component';
 export * from './core/enums/evaluar.trimites.enums';
@@ -184,3 +182,10 @@ export * from './core/estados/solicitud-documentos.store';
 export * from './core/queries/solicitud-documentos.query';
 export * from './core/estados/requerimientos.store';
 export * from './core/queries/requerimientos.query';
+
+export * from './core/services/shared/catalogos/tipo-operacion.service';
+export * from './core/services/shared/catalogos/tipo-transporte.service';
+export * from './core/services/shared/catalogos/tipo-despacho.service';
+export * from './core/services/shared/catalogos/tipo-pedimento.service';
+
+

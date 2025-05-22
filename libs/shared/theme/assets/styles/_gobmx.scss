@@ -3431,35 +3431,35 @@ tbody.collapse.in {
   background-image: none;
 }
 
-.btn-success {
-  &.disabled {
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+// .btn-success {
+//   &.disabled {
+//     background-color: #5cb85c;
+//     border-color: #4cae4c;
 
-    &.active,
-    &.focus,
-    &:active,
-    &:focus,
-    &:hover {
-      background-color: #5cb85c;
-      border-color: #4cae4c;
-    }
-  }
+//     &.active,
+//     &.focus,
+//     &:active,
+//     &:focus,
+//     &:hover {
+//       background-color: #5cb85c;
+//       border-color: #4cae4c;
+//     }
+//   }
 
-  &[disabled] {
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+//   &[disabled] {
+//     background-color: #5cb85c;
+//     border-color: #4cae4c;
 
-    &.active,
-    &.focus,
-    &:active,
-    &:focus,
-    &:hover {
-      background-color: #5cb85c;
-      border-color: #4cae4c;
-    }
-  }
-}
+//     &.active,
+//     &.focus,
+//     &:active,
+//     &:focus,
+//     &:hover {
+//       background-color: #5cb85c;
+//       border-color: #4cae4c;
+//     }
+//   }
+// }
 
 fieldset[disabled] .btn-success {
   background-color: #5cb85c;

@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Adquiriente, AlertComponent, Complementaria, Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria,  CONFIGURACION_ACCIONISTAS_TABLA, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -33,8 +33,6 @@ import { Subject } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
-import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
-import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 
 import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
@@ -106,19 +104,12 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
 
-  /**
- * Configuración para la tabla de accionistas (segunda tabla).
- */
-  configTableArray1 = CONFIGURACION_ACCIONISTAS_TABLA1;
+
   /**
    * Datos de ejemplo para la tabla.
    */
   datos:Complementaria[] = [];
   
-  /**
-   *Datos de ejemplo para la segunda tabla.
-  */
-  datos1: Complementaria1[] = [];
 
   /**
    * Datos de los pasos del asistente.
@@ -488,7 +479,15 @@ seleccionarParticipante():void{
 agregarRFC1(): void {
   const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
   if (RFC1VALUE) {
-    this.datos1.push({ registrofederaldecontribuyentes: RFC1VALUE });
+    this.datos.push({
+      registrofederaldecontribuyentes: RFC1VALUE,
+      numerodelicitacion: '',
+      fechadelicitacion: '',
+      descripcion: '',
+      montoadjudicado: '',
+      fechainiciovigencia: '',
+      fechafinvigencia: ''
+    });
     this.adquiriente.get('rfc1')?.reset();
   }
 }
@@ -496,11 +495,11 @@ agregarRFC1(): void {
  * Mueve el valor seleccionado de 'datos1' al campo 'rfc'.
  * Índice del elemento seleccionado en el array 'datos1'.
  */
-moverRFC1(selectedEntry: Complementaria1): void {
-   const INDEX = this.datos1.indexOf(selectedEntry); 
+moverRFC1(selectedEntry: Complementaria): void {
+   const INDEX = this.datos.indexOf(selectedEntry); 
   if (INDEX !== -1 && selectedEntry.registrofederaldecontribuyentes) {
     this.adquiriente.get('rfc')?.setValue(selectedEntry.registrofederaldecontribuyentes);
-    this.datos1.splice(INDEX, 1);
+    this.datos.splice(INDEX, 1);
   }
 }
 }
