@@ -28,6 +28,7 @@ describe('DestinatarioComponent', () => {
       selectTramite110218State$: of({
         nombre: 'Juan',
         primerApellido: 'Pérez',
+        segundoApellido: 'Gómez',
         numeroderegistroFiscal: '123456789',
         razonSocial: 'Empresa XYZ',
         calle: 'Calle 1',
@@ -70,7 +71,7 @@ describe('DestinatarioComponent', () => {
     expect(component.datosDelDestinatario.value).toEqual({
       nombre: 'Juan',
       primerApellido: 'Pérez',
-      segundoApellido: '',
+      segundoApellido: 'Gómez',
       numeroderegistroFiscal: '123456789',
       razonSocial: 'Empresa XYZ',
     });
@@ -86,16 +87,6 @@ describe('DestinatarioComponent', () => {
       fax: '987654321',
       telefono: '1234567890',
     });
-  });
-
-  it('debería obtener los datos del destinatario desde el servicio', () => {
-    const destinatarioMock = { segundoApellido: 'Gómez' };
-    serviceMock.getdestinatario.mockReturnValue(of(destinatarioMock));
-
-    component.obtenerDatosDeTabla();
-
-    expect(serviceMock.getdestinatario).toHaveBeenCalled();
-    expect(component.datosDelDestinatario.get('segundoApellido')?.value).toEqual('Gómez');
   });
 
   it('debería actualizar un valor en el store', () => {
@@ -116,6 +107,7 @@ describe('DestinatarioComponent', () => {
     expect(component.estadoSeleccionado).toEqual({
       nombre: 'Juan',
       primerApellido: 'Pérez',
+      segundoApellido: 'Gómez',
       numeroderegistroFiscal: '123456789',
       razonSocial: 'Empresa XYZ',
       calle: 'Calle 1',

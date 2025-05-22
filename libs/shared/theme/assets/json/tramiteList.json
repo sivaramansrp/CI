@@ -25,7 +25,7 @@
     "tramite": 701,
     "linkDashboard": "/aga/registro-digitalizar-documentos/solicitud",
     "linkDepartment": "/pago/registro-digitalizar-documentos/solicitud",
-    "department": "agadig"
+    "department": "aga"
   },
   {
     "id": 5,
@@ -248,7 +248,7 @@
     "id": 36,
     "tramite": 90305,
     "linkDashboard": "/se/prosec-modificacion/solicitante",
-    "linkDepartment": "/se/prosec-modificacion/solicitante",
+    "linkDepartment": "/pago/prosec-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -332,7 +332,7 @@
     "id": 48,
     "tramite": 110218,
     "linkDashboard": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
-    "linkDepartment": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+    "linkDepartment": "/pago/certificado-tecnico-japon/validar-certificado-tecnico-japon",
     "department": "se"
   },
   {
@@ -1346,8 +1346,8 @@
   {
     "id": 193,
     "tramite": 31203,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aaa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aaa",
     "department": "aga"
   },
   {
@@ -2039,8 +2039,8 @@
   {
     "id": 292,
     "tramite": 90102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/autorizacion-prosec-productor/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec-productor/prosec",
     "department": "se"
   },
   {
@@ -2081,8 +2081,8 @@
   {
     "id": 298,
     "tramite": 140218,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-permiso/solicitud",
+    "linkDepartment": "/pago/renuncia-de-permiso/solicitud",
     "department": "sener"
   },
   {
@@ -2109,8 +2109,8 @@
   {
     "id": 302,
     "tramite": 6502,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-poblacional/solicitud",
+    "linkDepartment": "/pago/registro-poblacional/solicitud",
     "department": "aga"
   },
   {
@@ -2123,8 +2123,8 @@
   {
     "id": 304,
     "tramite": 31401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/cancelacion-garantia/pantallas",
+    "linkDepartment": "/pago/cancelacion-garantia/pantallas",
     "department": "agace"
   },
   {
@@ -4226,5 +4226,12 @@
     "linkDashboard": "/aga/autorizacion/mercancia-donada",
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
-  }
+  },
+ {
+    "id": 605,
+    "tramite": 140205,
+    "linkDashboard": "/se/cancelaciones-certificado/solicitud",
+    "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
+    "department": "se"
+ }
 ]

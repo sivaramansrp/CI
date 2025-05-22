@@ -1,9 +1,8 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
+
 import { BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 /**
