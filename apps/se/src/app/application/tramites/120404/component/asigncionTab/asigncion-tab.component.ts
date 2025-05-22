@@ -19,7 +19,7 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
@@ -138,7 +138,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   loadComboUnidadMedida(): void {
     this.service.getAsigncion().pipe(
       takeUntil(this.destroyed$)
-    ).subscribe((data): void => {
+    ).subscribe((data) => {
       this.solicitanteList = data as Catalogo[];
     });
   }

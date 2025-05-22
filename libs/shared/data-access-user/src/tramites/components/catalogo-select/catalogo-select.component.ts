@@ -48,8 +48,18 @@ export class CatalogoSelectComponent
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
-      selectControl: [''],
+      selectControl: [-1],
     });
+  }
+
+  
+  /**
+   * Devuelve la etiqueta formateada para el campo select, agregando un asterisco si es requerido.
+   * @returns {string} Etiqueta formateada.
+   */
+  get formattedLabel(): string {
+    const LABEL = this.label?.trim() || '';
+    return this.required ? `${LABEL} * :` : `${LABEL}:`;
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
@@ -113,7 +123,7 @@ export class CatalogoSelectComponent
   writeValue(value: string): void {
     if (value === null || value === undefined) {
       // Limpia el valor en el formulario interno del componente
-      this.formSelect.get('selectControl')?.reset();
+      this.formSelect.get('selectControl')?.reset('');
     } else {
       // Establece el valor si no está vacío
       if (this.formSelect.get('selectControl')?.value !== value) {

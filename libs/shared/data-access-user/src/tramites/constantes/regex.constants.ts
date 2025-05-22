@@ -1,6 +1,9 @@
+import exp from "constants";
+
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
 };
 
 // Expresión regular para verificar si la entrada comienza con espacios
@@ -304,7 +307,7 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
  * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
  * @constant
  */
-export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para validar una llave de pago.
@@ -369,6 +372,78 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
 
+
+/**
+ * Expresión regular para validar nombres.
+ *
+ * Esta expresión regular asegura que un nombre:
+ * - No comience ni termine con un espacio.
+ * - Contenga caracteres alfanuméricos, incluyendo caracteres especiales como Ñ, ñ, Ä, Ë, Ï, Ö, Ü, Ç, ç, y otros.
+ * - Permita caracteres como &, /, -, ., ', y paréntesis.
+ * - Admite caracteres griegos como α y β.
+ *
+ * Ejemplos válidos:
+ * - "Juan Pérez"
+ * - "María-José"
+ * - "O'Connor"
+ * - "Αλέξανδρος"
+ *
+ * Ejemplos no válidos:
+ * - " Juan" (comienza con un espacio)
+ * - "Pérez " (termina con un espacio)
+ * - "Juan@Pérez" (contiene un carácter no permitido)
+ */
+export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
+/**
+ * Expresión regular para validar archivos con formato Excel.
+ * 
+ * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
+ * - `.xls`: Formato de archivo Excel 97-2003.
+ * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
+ * 
+ * Desglose de la expresión regular:
+ * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
+ * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
+ * - `$`: Aserción para el final de la cadena.
+ * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
+ */
+export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.456"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12a45" (contiene caracteres no numéricos)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
+
+
+export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
+export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
  * - Dígitos (0-9)
@@ -390,18 +465,3 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
  * - "!@#" (no comienza con un carácter válido)
  */
 export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
-
-/**
- * Expresión regular para validar archivos con formato Excel.
- * 
- * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
- * - `.xls`: Formato de archivo Excel 97-2003.
- * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
- * 
- * Desglose de la expresión regular:
- * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
- * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
- * - `$`: Aserción para el final de la cadena.
- * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
- */
-export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;

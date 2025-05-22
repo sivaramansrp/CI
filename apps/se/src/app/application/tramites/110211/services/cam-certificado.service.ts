@@ -14,16 +14,16 @@ export class CamCertificadoService {
   constructor(private readonly http: HttpClient) { }
  
   /**
-   * @description Fetches an array of `Catalogo` objects from a JSON file located at the specified URL.
-   * @param fileName The name of the JSON file to fetch data from.
-   * @returns An `Observable` that emits an array of `Catalogo` objects.
+   * @description Obtiene un array de objetos `Catalogo` desde un archivo JSON ubicado en la URL especificada.
+   * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
+   * @returns Un `Observable` que emite un array de objetos `Catalogo`.
    * @method obtenerMenuDesplegable
    * @memberof CamCertificadoService
    * @usageNotes
-   * This method constructs the full URL by appending the `fileName` to the base URL (`this.url`) 
-   * and performs an HTTP GET request to retrieve the data.
+   * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`) 
+   * y realiza una solicitud HTTP GET para recuperar los datos.
    * 
-   * Example:
+   * Ejemplo:
    * ```typescript
    * this.camCertificadoService.obtenerMenuDesplegable('menu.json').subscribe(menu => {
    *   console.log(menu);
@@ -38,16 +38,16 @@ export class CamCertificadoService {
   }
 
   /**
-   * @description Fetches an array of `Mercancia` objects from a JSON file located at the specified URL.
-   * @param fileName The name of the JSON file to fetch data from.
-   * @returns An `Observable` that emits an array of `Mercancia` objects.
+   * @description Obtiene un array de objetos `Mercancia` desde un archivo JSON ubicado en la URL especificada.
+   * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
+   * @returns Un `Observable` que emite un array de objetos `Mercancia`.
    * @method obtenerTablaDatos
    * @memberof CamCertificadoService
    * @usageNotes
-   * This method constructs the full URL by appending the `fileName` to the base URL (`this.url`) 
-   * and performs an HTTP GET request to retrieve the data.
+   * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`) 
+   * y realiza una solicitud HTTP GET para recuperar los datos.
    * 
-   * Example:
+   * Ejemplo:
    * ```typescript
    * this.camCertificadoService.obtenerTablaDatos('data.json').subscribe(data => {
    *   console.log(data);

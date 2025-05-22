@@ -9,10 +9,10 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OpcionesDeBotonDeRadio } from '../../enums/solicitud-pantallas.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
@@ -73,7 +73,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
     return this.parentContainer.control as FormGroup;
   }
   esSolicitudFerrosValor!: string;
-  opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   tableData = {
     tableBody: [],

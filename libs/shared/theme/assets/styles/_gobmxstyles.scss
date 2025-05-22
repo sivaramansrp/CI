@@ -1,4 +1,4 @@
-@import "./_colores";
+@import './_colores';
 
 /* Alert */
 .alert,
@@ -9,6 +9,7 @@
 .alert .alert-link,
 .close {
   font-weight: 700;
+  font-size: small;
 }
 
 .alert {
@@ -31,7 +32,6 @@
     }
   }
 }
-
 
 .alert-dismissible .close {
   position: absolute;
@@ -99,8 +99,11 @@
 
 .alert {
   border-width: 2px;
+  padding: 24px;
+}
+
+.alert-text-center {
   text-align: center;
-  padding: 20px 15px;
 }
 
 .alert-dismissable,
@@ -136,7 +139,7 @@ hr.red {
     background-color: #b38e5d;
     position: absolute;
     display: block;
-    content: " ";
+    content: ' ';
   }
 }
 
@@ -184,8 +187,6 @@ hr.red {
   }
 }
 
-
-
 .btn-default {
   border: 2px solid $color-gray-btn-default;
   box-shadow: 0 0 $color-gray-btn-default;
@@ -224,20 +225,32 @@ hr.red {
     border-color: $color-primario;
     color: #fff;
   }
-}
 
-.btn-disabled {
-  background-color: $color-primario;
-  color: $color-white;
-  opacity: 0.6;
-  padding: 10px 25px;
-  cursor: not-allowed;
-
-  &:hover {
+  &[disabled] {
     background-color: $color-primario;
+    border-color: $color-primario;
     color: $color-white;
+    opacity: 0.65;
+    cursor: not-allowed;
   }
 }
+
+.btn-success {
+  &.disabled {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+
+    &.active,
+    &.focus,
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+    }
+  }
+}
+
 
 /* Estilos del nav-gob */
 .nav-gob {
@@ -286,4 +299,3 @@ hr.red {
 .modal-footer {
   border-top: none;
 }
-

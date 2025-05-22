@@ -12,6 +12,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { NO_VISIBILIDAD_UMC } from '../../constants/datos-del-tramilte.enum';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
@@ -98,6 +99,13 @@ export class DatosMercanciaComponent implements OnInit {
    * @property {Catalogo[]} monedaCatalogo
    */
   monedaCatalogo: Catalogo[] = [];
+  
+  /**
+   * @description Indica la visibilidad del campo de Unidad de Medida y Cantidad (UMC).
+   * @type {boolean}
+   * @default false
+   */
+  public visibilidadCampoUMC = true;
 
   /**
    * Lista de países disponibles para seleccionar el país de origen.
@@ -224,6 +232,8 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    this.visibilidadCampoUMC = NO_VISIBILIDAD_UMC.includes(this.idProcedimiento) ? false : true;
+    this.campoObligatorioChange();
     this.puedeMostrarLaListaCruzada = PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(this.idProcedimiento);
   }
 
@@ -252,7 +262,30 @@ export class DatosMercanciaComponent implements OnInit {
       paisDeOriginDatos: [null],
     });
     this.cargarDatos();
+
+
+    if (this.idProcedimiento === 240122) {
+      this.datosMercancia.get('umc')?.disable();
+    }
   }
+
+    /**
+     * @method campoObligatorioChange
+     * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
+     * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
+     * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
+     *
+     * @returns {void} Este método no retorna ningún valor.
+     */
+    campoObligatorioChange(): void {
+      const UMC = this.datosMercancia.get('umc');
+      if (!this.visibilidadCampoUMC) {
+        UMC?.clearValidators();
+      } else {
+        UMC?.setValidators([Validators.required]);
+      }
+      UMC?.updateValueAndValidity();
+    }
 
   /**
    * Limpia todos los campos del formulario.

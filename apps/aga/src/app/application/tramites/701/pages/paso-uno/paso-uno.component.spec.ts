@@ -1,14 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable require-await */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable sort-imports */
-/* eslint-disable max-classes-per-file */
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, NO_ERRORS_SCHEMA, Output, Pipe, PipeTransform } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,27 +11,27 @@ import { PasoUnoComponent } from './paso-uno.component';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
 @Pipe({name: 'translate'})
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 @Pipe({name: 'phoneNumber'})
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 @Pipe({name: 'safeHtml'})
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

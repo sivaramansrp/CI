@@ -11,6 +11,10 @@
           />
           <span class="fw-bold align-middle"> *</span>
           <div>{{ manifiestosText }} </div>
+          <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
+            Debe aceptar el manifiesto.
+          </div>
+          
         </div>
       </div>
       <div class="row">
@@ -24,76 +28,93 @@
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>
+      <div *ngIf="hasError('informacionConfidencialRadio', 'required')" class="text-danger mt-1">
+        Seleccione una opción sobre la información confidencial.
       </div>
-      <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="representanteRfc">RFC*:</label>
-            <input
-              class="form-control"
-              id="representanteRfc"
-              type="text"
-              formControlName="representanteRfc"
-              (change)="onControlChange('representanteRfc')"
-             
-            />
-          </div>
-        </div>
-        <div class="col-md-2 mt-5">
-          <button
-            type="button"
-            name="representanteRfcBuscar"
-            class="btn btn-default"
-            (click)="buscarRepresentanteRfc()"
-          >
-            Buscar
-          </button>
+      </div>
+ <div *ngIf="showRepresentanteLegal">
+  <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="representanteRfc">RFC*:</label>
+        <input
+          class="form-control"
+          id="representanteRfc"
+          type="text"
+          maxlength="13"
+          formControlName="representanteRfc"
+          (change)="onControlChange('representanteRfc')"
+         
+        />
+        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
+          El nombre o razón social del representante legal es obligatorio.
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="representanteNombre"
-              >Nombre o Razón Social*:</label
-            >
-            <input
-              class="form-control"
-              id="representanteNombre"
-              type="text"
-              formControlName="representanteNombre"
-              (change)="onControlChange('representanteNombre')"
-            />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="apellidoPaterno"
-              >Apellido paterno*:</label
-            >
-            <input
-              class="form-control"
-              id="apellidoPaterno"
-              type="text"
-              formControlName="apellidoPaterno"
-              (change)="onControlChange('apellidoPaterno')"
-            />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="apellidoMaterno"
-              >Apellido materno:</label
-            >
-            <input
-              class="form-control"
-              id="apellidoMaterno"
-              type="text"
-              formControlName="apellidoMaterno"
-              (change)="onControlChange('apellidoMaterno')"
-            />
-          </div>
+    </div>
+    <div class="col-md-2 mt-5">
+      <button
+        type="button"
+        name="representanteRfcBuscar"
+        class="btn btn-primary"
+        (click)="buscarRepresentanteRfc()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="representanteNombre"
+          >Nombre o Razón Social*:</label
+        >
+        <input
+          class="form-control"
+          id="representanteNombre"
+          type="text"
+          formControlName="representanteNombre"
+          (change)="onControlChange('representanteNombre')"
+        />
+        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
+          El nombre o razón social del representante legal es obligatorio.
         </div>
       </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="apellidoPaterno"
+          >Apellido paterno*:</label
+        >
+        <input
+          class="form-control"
+          id="apellidoPaterno"
+          type="text"
+          formControlName="apellidoPaterno"
+          (change)="onControlChange('apellidoPaterno')"
+        />
+        <div *ngIf="hasError('apellidoPaterno', 'required')" class="text-danger mt-1">
+          El apellido paterno es obligatorio.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="apellidoMaterno"
+          >Apellido materno:</label
+        >
+        <input
+          class="form-control"
+          id="apellidoMaterno"
+          type="text"
+          formControlName="apellidoMaterno"
+          (change)="onControlChange('apellidoMaterno')"
+        />
+      </div>
+    </div>
+  </div>
+
+</div>
+     
 </form>
 

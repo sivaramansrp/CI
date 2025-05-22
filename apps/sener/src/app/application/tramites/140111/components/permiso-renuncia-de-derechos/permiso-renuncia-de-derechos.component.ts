@@ -87,7 +87,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
       mercacniaSolicitudPermisoValidoDesde: [{ value: '', disabled: true }],
       mercacniaSolicitudPermisoValidoHasta: [{ value: '', disabled: true }],
       motivoRenunciaDeDerechos:['', [Validators.required, Validators.maxLength(255)]],
-      mercacniaSolicitudControlar: [true, Validators.requiredTrue]
+      mercacniaSolicitudControlar: [false, Validators.requiredTrue]
     });
   }
 
@@ -124,9 +124,9 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    /**
    * Obtiene el valor de un control en el formulario y lo pasa a un método del store para actualizar el estado.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140111Store): void {
+   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite140111Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite140111Store.establecerDatos({[campo]: VALOR});
   }
 
   /**
@@ -140,6 +140,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
             this.formulario.patchValue(
                 {
                   motivoRenunciaDeDerechos:seccionState.motivoRenunciaDeDerechos,
+                  mercacniaSolicitudControlar:seccionState.mercacniaSolicitudControlar 
                 }
               )
           })

@@ -12,14 +12,14 @@
         <th>
           <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
             (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="filasSeleccionadas.length === datos.length" />
+            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " />
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
-        @if(acciones){
+        @if(acciones && acciones.length){
         <th>Acciones</th>
         }
 
@@ -49,16 +49,16 @@
         @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
           <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
-            (click)="cambiarValor(fila)" aria-label="Seleccionar">BAJA</button>
+            (click)="cambiarValor(fila)" aria-label="Seleccionar">{{obtenerTextoBoton(fila)}}</button>
         </td>
         }
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
+        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
           {{ col.clave(fila) || ' ' }}
         </td>
+         @if(acciones && acciones.length){
         <td class="align-icon">
-          @if(acciones.length > 0){
             @for(accion of acciones; track $index){
               @switch(accion){
                 @case(accionesEnum.VER){
@@ -75,8 +75,8 @@
                 }
                 }
             }
-        }
         </td>
+           }
       </tr>
     </tbody>
   </table>

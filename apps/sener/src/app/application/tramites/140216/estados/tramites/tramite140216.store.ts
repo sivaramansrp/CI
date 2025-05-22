@@ -240,7 +240,6 @@ export function createInitialState(): BusquedaPermisos140216State {
         localidad: '',
         municipioAlcaldia: '',
         telefono: '',
-
         folio: '',
         tipoSolicitud: '',
         regimen: '',

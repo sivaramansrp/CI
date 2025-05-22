@@ -5,76 +5,82 @@ import { EventEmitter } from '@angular/core';
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
 
+  const MOCK_MERCANCIA_INPUT_VALUES = [
+    { label: 'Etiqueta de Prueba', placeholder: 'Marcador de Prueba', required: true, controlName: 'testControl' },
+  ];
+
+  const MOCK_PRODUCTO_OPCIONES: { label: string; value: string }[] = [];
+  const MOCK_MERCANCIA_CATALOGO_ARRAY: { id: number; descripcion: string }[][] = []; 
+
+
   beforeEach(() => {
     component = new DatosDeLaMercanciaComponent();
     component.form = new FormGroup({
       testControl: new FormControl('', Validators.required),
       plazo: new FormControl(''),
     });
-    component.mercanciaInputValues = [
-      { label: 'Test Label', placeholder: 'Test Placeholder', required: true, controlName: 'testControl' },
-    ];
-    component.productoOpciones = [];
-    component.mercanciaCatalogoArray = [];
+    component.mercanciaInputValues = MOCK_MERCANCIA_INPUT_VALUES;
+    component.productoOpciones = MOCK_PRODUCTO_OPCIONES;
+    component.mercanciaCatalogoArray = MOCK_MERCANCIA_CATALOGO_ARRAY;
     component.setValoresStoreEvent = new EventEmitter();
     component.alCambioDelCampoValores = new EventEmitter();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
   describe('esInvalido', () => {
-    it('should return true if the control is invalid and touched or dirty', () => {
-      const control = component.form.get('testControl');
-      control?.markAsTouched();
+    it('debería devolver true si el control es inválido y está tocado o modificado', () => {
+      const CONTROL = component.form.get('testControl');
+      CONTROL?.markAsTouched();
       expect(component.esInvalido('testControl')).toBe(true);
     });
 
-    it('should return false if the control is valid', () => {
-      const control = component.form.get('testControl');
-      control?.setValue('Valid Value');
+    it('debería devolver false si el control es válido', () => {
+      const CONTROL = component.form.get('testControl');
+      CONTROL?.setValue('Valor Válido');
       expect(component.esInvalido('testControl')).toBe(false);
     });
 
-    it('should return false if the control does not exist', () => {
-      expect(component.esInvalido('nonExistentControl')).toBe(false);
+    it('debería devolver false si el control no existe', () => {
+      expect(component.esInvalido('controlInexistente')).toBe(false);
     });
   });
 
   describe('setValoresStore', () => {
-    it('should emit setValoresStoreEvent with the correct data', () => {
-      const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
+    it('debería emitir setValoresStoreEvent con los datos correctos', () => {
+      const EMIT_SPY = jest.spyOn(component.setValoresStoreEvent, 'emit');
       component.setValoresStore(component.form, 'testField');
-      expect(emitSpy).toHaveBeenCalledWith({ form: component.form, campo: 'testField' });
+      expect(EMIT_SPY).toHaveBeenCalledWith({ form: component.form, campo: 'testField' });
     });
   });
 
   describe('alCambioDelCampo', () => {
-    it('should emit alCambioDelCampoValores with the correct data for index 0', () => {
-      const emitSpy = jest.spyOn(component.alCambioDelCampoValores, 'emit');
+    it('debería emitir alCambioDelCampoValores con los datos correctos para el índice 0', () => {
+      const EMIT_SPY = jest.spyOn(component.alCambioDelCampoValores, 'emit');
       component.alCambioDelCampo(component.form, 'testControl', 0);
-      expect(emitSpy).toHaveBeenCalledWith({
+      expect(EMIT_SPY).toHaveBeenCalledWith({
         form: component.form,
         campo: 'testControl',
         metodoNombre: 'setFraccion',
       });
     });
 
-    it('should emit alCambioDelCampoValores with the correct data for index 1', () => {
-      const emitSpy = jest.spyOn(component.alCambioDelCampoValores, 'emit');
+    it('debería emitir alCambioDelCampoValores con los datos correctos para el índice 1', () => {
+      const EMIT_SPY = jest.spyOn(component.alCambioDelCampoValores, 'emit');
       component.alCambioDelCampo(component.form, 'testControl', 1);
-      expect(emitSpy).toHaveBeenCalledWith({
+      expect(EMIT_SPY).toHaveBeenCalledWith({
         form: component.form,
         campo: 'testControl',
         metodoNombre: 'setUmt',
       });
     });
 
-    it('should emit alCambioDelCampoValores with the correct data for index 2', () => {
-      const emitSpy = jest.spyOn(component.alCambioDelCampoValores, 'emit');
+    it('debería emitir alCambioDelCampoValores con los datos correctos para el índice 2', () => {
+      const EMIT_SPY = jest.spyOn(component.alCambioDelCampoValores, 'emit');
       component.alCambioDelCampo(component.form, 'testControl', 2);
-      expect(emitSpy).toHaveBeenCalledWith({
+      expect(EMIT_SPY).toHaveBeenCalledWith({
         form: component.form,
         campo: 'testControl',
         metodoNombre: 'setNico',
@@ -83,11 +89,11 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
 
   describe('alCambiarPlazo', () => {
-    it('should update the plazo control value and call setValoresStore', () => {
-      const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-      component.alCambiarPlazo('newPlazo');
-      expect(component.form.get('plazo')?.value).toBe('newPlazo');
-      expect(setValoresStoreSpy).toHaveBeenCalledWith(component.form, 'plazo');
+    it('debería actualizar el valor del control plazo y llamar a setValoresStore', () => {
+      const SET_VALORES_STORE_SPY = jest.spyOn(component, 'setValoresStore');
+      component.alCambiarPlazo('nuevoPlazo');
+      expect(component.form.get('plazo')?.value).toBe('nuevoPlazo');
+      expect(SET_VALORES_STORE_SPY).toHaveBeenCalledWith(component.form, 'plazo');
     });
   });
 });
