@@ -6,7 +6,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'pantallas-extraordinarios',
@@ -27,15 +27,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/220202/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
-      )
+      ),
   },
   {
-
     path: 'sagarpa',
     loadChildren: () =>
-      import('./tramites/220501/sagarpa.module').then(
-        (m) => m.SagarpaModule
-      ),
+      import('./tramites/220501/sagarpa.module').then((m) => m.SagarpaModule),
   },
   {
     path: 'inspeccion-fisica',
@@ -48,35 +45,36 @@ const ROUTES: Routes = [
     path: 'importacion-acuacultura',
     loadChildren: () =>
       import('./tramites/220203/importacion-de-acuicultura.module').then(
-        (m) => m.ImportacionDeAcuiculturaModule)
+        (m) => m.ImportacionDeAcuiculturaModule
+      ),
   },
   {
     path: 'pantallas-captura',
     loadChildren: () =>
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
-      )
+      ),
   },
   {
     path: 'desistimiento',
     loadChildren: () =>
       import('./tramites/220404/desistimiento.module').then(
         (m) => m.DesistimientoModule
-      )
+      ),
   },
   {
     path: 'inspeccion-fisica',
     loadChildren: () =>
       import('./tramites/220701/inspeccion-fisica-zoosanitario.module').then(
         (m) => m.InspeccionFisicaZoosanitarioModule
-      )
+      ),
   },
-  {  
+  {
     path: 'peticion-requisitos-fitosanitarios',
     loadChildren: () =>
       import('./tramites/220102/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
-      )
+      ),
   },
   {
     path: 'inspeccion-fitosanitario',
@@ -89,39 +87,69 @@ const ROUTES: Routes = [
     path: 'certificado-exportacion',
     loadChildren: () =>
       import('./tramites/220403/exportaccion-acuicola.module').then(
-      (m) => m.ExportaccionAcuicolaModule
-      )
+        (m) => m.ExportaccionAcuicolaModule
+      ),
   },
   {
-
     path: 'acuicola-fisica',
     loadChildren: () =>
       import('./tramites/220703/acuicola-fisica.module').then(
         (m) => m.AcuicolaFisicaModule
       ),
   },
-    { path: 'fitosanitario',
+  {
+    path: 'fitosanitario',
     loadChildren: () =>
       import('./tramites/221602/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       ),
   },
-  { path: 'zoosanitario',
+  {
+    path: 'zoosanitario',
     loadChildren: () =>
       import('./tramites/221601/zoosanitario-para-importacion.module').then(
         (m) => m.ZoosanitarioParaImportacionModule
       ),
   },
-  { path: 'sanidadacuicola',
+  {
+    path: 'sanidadacuicola',
     loadChildren: () =>
       import('./tramites/220503/sanidad-acuicola.module').then(
         (m) => m.SanidadAcuicolaModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
