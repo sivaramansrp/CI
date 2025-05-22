@@ -198,10 +198,6 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
-    if (this.agregarDestinatarioFinal.status === 'INVALID') {
-      this.agregarDestinatarioFinal.markAllAsTouched();
-      return;
-    }
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
 
     let nombreRazonSocial: string;
@@ -385,7 +381,7 @@ export class AgregarDestinatarioFinalComponent
           : [],
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
-      lada: [this.obtenerValor('lada'), Validators.required],
+      lada: [this.obtenerValor('lada')],
       telefono: [
         {
           value: this.elementosDeshabilitados.includes('telefono')
@@ -402,7 +398,7 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }

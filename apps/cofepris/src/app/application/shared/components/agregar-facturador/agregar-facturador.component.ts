@@ -198,11 +198,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
-    if (this.agregarFacturadorForm.status === 'INVALID') {
-      this.agregarFacturadorForm.markAllAsTouched();
-      return;
-    }
-
     const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
 
     let nombreRazonSocial: string;
