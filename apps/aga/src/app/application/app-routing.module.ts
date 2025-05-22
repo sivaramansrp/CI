@@ -47,6 +47,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'renovacion-iva-ieps',
+    loadChildren: () =>
+      import('./tramites/31202/renewal-vat-ieps-mod-aa.module').then(
+        (m) => m.RenewalVatIepsModAAModule)
+      },
+  {
     path: 'retorno-contenedores',
     loadChildren: () =>
       import('./tramites/11202/retorno-contenedores.module').then(
@@ -275,6 +281,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'desistir-solicitud-informacion-historica',
+    loadChildren: () => 
+      import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
+        (m) => m.DesistirSolicitudInformacionHistoricaModule)
+  },
+  {
     path: 'registro-transportista',
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
@@ -311,7 +323,15 @@ const ROUTES: Routes = [
     path: 'modificacion-donaciones-immex',
     loadChildren: () =>
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
-        (m) => m.ModificacionDonacionesImmexModule),
+        (m) => m.ModificacionDonacionesImmexModule
+      ),
+  },
+  {
+    path: 'registro-poblacional',
+    loadChildren: () =>
+      import('./tramites/6502/registro-poblacional.module').then(
+        (m) => m.RegistroPoblacionalModule
+      ),
   },
   {
     path: 'retorno-de-partes',
@@ -324,6 +344,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/319/operaciones-de-comercio-exterior.module').then(
         (m) => m.OperacionesDeComercioExteriorModule)
+  },
+  {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10703/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
   },
   {
     path: 'autorizacion/mercancia-donada',
@@ -349,6 +376,24 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule)
+  },
+  {
+    path: 'renovacion-iva-ieps/mod-a',
+    loadChildren: () =>
+      import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
+        (m) => m.RenewalVatIepsModAModule),
+  },
+  {
+    path: 'fronteriza',
+    loadChildren: () =>
+      import('./tramites/11101/aviso-mercancia-donada.module').then(
+        (m) => m.AvisoMercanciaDonadaModule),
+  },
+  {
+    path:'renovacion-iva-ieps/mod-aaa',
+    loadChildren:()=>
+      import('./tramites/31203/renewal-vatIeps-mod-aaa.module').then(
+        (m) => m.RenewalVatIepsModAAAModule),
   }
 ];
 

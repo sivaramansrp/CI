@@ -1,25 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs'; 
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Chofer40103Store } from './chofer40103.store';
+import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import {
-  DatosDelVehículo,
-  DatosDelVehículoPaisEmisor,
-  Emisor2daPlaca,
-  VehiculoColor,
-  VehiculoVEHs,
-} from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
 /**
-* Servicio para gestionar datos relacionados con choferes y vehículos en el contexto del trámite 40103.
-* Proporciona métodos para agregar choferes, obtener datos de choferes nacionales, y consultar catálogos relacionados.
-* 
-* @author Ultrasist
-* @version 1.0
-* @since 2025
-*/
+ * Servicio para gestionar datos relacionados con choferes y vehículos en el contexto del trámite 40103.
+ * Proporciona métodos para agregar choferes, obtener datos de choferes nacionales, y consultar catálogos relacionados.
+ * 
+ * @author Ultrasist
+ * @version 1.0
+ * @since 2025
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -29,17 +23,17 @@ export class Chofer40103Service {
    * URL base del servidor para realizar solicitudes HTTP.
    */
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
- 
+
   /**
    * Sujeto de comportamiento que almacena la lista de choferes.
    */
   private choferesListSubject = new BehaviorSubject<DatosDelVehículo[]>([]);
- 
+
   /**
    * Observable que expone la lista de choferes.
    */
   choferesList$ = this.choferesListSubject.asObservable();
- 
+
   /**
    * Constructor del servicio.
    * Inicializa los datos almacenados en el almacenamiento local y actualiza el estado de la tienda Akita.
@@ -56,7 +50,7 @@ export class Chofer40103Service {
       this.choferesListSubject.next(JSON.parse(STORE_DATA));
     }
   }
- 
+
   /**
    * Agrega un nuevo chofer a la lista.
    * 
@@ -64,7 +58,7 @@ export class Chofer40103Service {
    * @param isExtranjero Indica si el chofer es extranjero. Por defecto es `false`.
    */
   addChofer(
-    nuevoMiembro: DatosDelVehículo,
+    nuevoMiembro: Chofer,
     isExtranjero: boolean = false
   ): void {
     if (!nuevoMiembro) {
@@ -74,10 +68,10 @@ export class Chofer40103Service {
       ? 'choferesextranjeroList'
       : 'choferesList';
     const STORE_DATA = localStorage.getItem(STORAGE_KEY);
-    const CHOFER_ARRAY: any[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
+    const CHOFER_ARRAY: Chofer[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
     CHOFER_ARRAY.push(nuevoMiembro);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
- 
+
     // Actualizar tienda Akita
     this.chofer40103Store.update((state) => ({
       ...state,
@@ -86,12 +80,12 @@ export class Chofer40103Service {
         : state.choferesExtranjero,
       choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
     }));
- 
+
     if (isExtranjero) {
       this.choferesListSubject.next(CHOFER_ARRAY);
     }
   }
- 
+
   /**
    * Obtiene los datos de choferes nacionales.
    * 
@@ -100,7 +94,7 @@ export class Chofer40103Service {
   getChoferNacionalData(): Observable<DatosDelVehículo[]> {
     return this.http.get<DatosDelVehículo[]>(this.urlServer);
   }
- 
+
   /**
    * Obtiene la lista de estados.
    * 
@@ -111,7 +105,7 @@ export class Chofer40103Service {
       `${this.urlServer}/estados`
     );
   }
- 
+
   /**
    * Obtiene la lista de municipios de un estado específico.
    * 
@@ -125,7 +119,7 @@ export class Chofer40103Service {
       `${this.urlServer}/municipios?estado=${claveEstado}`
     );
   }
- 
+
   /**
    * Obtiene la lista de colonias de un municipio específico.
    * 
@@ -139,7 +133,7 @@ export class Chofer40103Service {
       `${this.urlServer}/colonias?municipio=${claveMunicipio}`
     );
   }
- 
+
   /**
    * Obtiene el catálogo de tipos de vehículos de arrastre.
    * 
@@ -150,7 +144,7 @@ export class Chofer40103Service {
       '/assets/json/40103/tipo-vehiculo-arrastre.json'
     );
   }
- 
+
   /**
    * Obtiene el catálogo de países emisores.
    * 
@@ -159,7 +153,7 @@ export class Chofer40103Service {
   getPaisEmisor(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/pais-catalogo.json');
   }
- 
+
   /**
    * Obtiene el catálogo de colores de vehículos.
    * 
@@ -168,7 +162,7 @@ export class Chofer40103Service {
   getcolorAGA(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/color-catalogo.json');
   }
- 
+
   /**
    * Obtiene el catálogo de países emisores de la segunda placa.
    * 
@@ -179,7 +173,7 @@ export class Chofer40103Service {
       '/assets/json/40103/pais-emisor-2da-placa.json'
     );
   }
- 
+
   /**
    * Obtiene el catálogo de colores de vehículos para solicitudes.
    * 
@@ -188,7 +182,7 @@ export class Chofer40103Service {
   getsolicitudVehiculoColor(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/vehiculo-color.json');
   }
- 
+
   /**
    * Obtiene el catálogo de países de origen.
    * 
@@ -197,7 +191,7 @@ export class Chofer40103Service {
   getPaisOrigenChn(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/pais-origen.json');
   }
- 
+
   /**
    * Obtiene el catálogo de delegaciones.
    * 
@@ -206,15 +200,16 @@ export class Chofer40103Service {
   getDelegacionChn(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/municipio.json');
   }
-/**
- * Obtiene la lista de estados desde un archivo JSON local.
- *
- * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
- */
-getEstado(): Observable<Catalogo[]> {
-  return this.http.get<Catalogo[]>('/assets/json/40103/estado.json');
-}
- 
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   *
+   * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+   */
+  getEstado(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/estado.json');
+  }
+
   /**
    * Obtiene el catálogo de colonias.
    * 
@@ -223,7 +218,7 @@ getEstado(): Observable<Catalogo[]> {
   getColoniaChn(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/colonia.json');
   }
- 
+
   /**
    * Obtiene el catálogo de nacionalidades.
    * 
@@ -232,7 +227,7 @@ getEstado(): Observable<Catalogo[]> {
   getNacionaliDadChe(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/nacionalidad.json');
   }
- 
+
   /**
    * Obtiene el catálogo de choferes.
    * 
@@ -241,15 +236,16 @@ getEstado(): Observable<Catalogo[]> {
   getChoferData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/chofer.json');
   }
- /**
- * Obtiene los datos de una tabla desde un archivo JSON.
- *
- * @template T El tipo genérico de los datos que se espera recibir.
- * @param {string} fileName - Nombre del archivo JSON que contiene los datos.
- * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
- */
-obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
-  const JSONURL = this.url + fileName;
-  return this.http.get<T[]>(JSONURL);
-}
+
+  /**
+   * Obtiene los datos de una tabla desde un archivo JSON.
+   *
+   * @template T El tipo genérico de los datos que se espera recibir.
+   * @param {string} fileName - Nombre del archivo JSON que contiene los datos.
+   * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
+   */
+  obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
+    const JSONURL = this.url + fileName;
+    return this.http.get<T[]>(JSONURL);
+  }
 }

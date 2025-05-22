@@ -115,24 +115,23 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Establece los valores en el store.
-   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
-   * @param {string} campo - El nombre del campo del formulario.
-   * @param {keyof Tramite110209Store} metodoNombre - El nombre del método del store.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
-    if(form.get(campo)?.valid){
-    const VALOR = form.get(campo)?.value;
-    (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
+   /**
+     * Establece el valor en Tramite110209Store para el campo especificado del formulario.
+     * 
+     * @param {FormGroup} form - El grupo de formularios que contiene el campo.
+     * @param {string} campo - El nombre del campo a obtener y guardar en el store.
+     * @returns {void}
+     */
+    setValoresStore(form: FormGroup, campo: string): void {
+      const VALOR = form.get(campo)?.value;
+      this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
-  }
 
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
   getValoresStore(): void {
-    this.tramite110209Query.selectTramite110102$
+    this.tramite110209Query.selectTramite110209$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -161,8 +160,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  navegar(): void {  
-    this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
+  navegar(): void {
+    this.tramite110209Store.setTramite110209({ ['mercanciasSeleccionadas']: this.mercanciasSeleccionadas });
     this.modificarEventCertificado.emit(true);
   }
 

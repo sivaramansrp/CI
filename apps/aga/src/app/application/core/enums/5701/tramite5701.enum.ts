@@ -11,6 +11,7 @@ export const FECHA_FINAL = {
 };
 
 // Mensajes de error en el modal
+export const MSG_CAMBIO_TIPO_SOLICITUD = ''
 export const TITULO_MODAL = 'Aviso';
 export const ERR_CAMPOS_OBLIGATORIOS = 'Debes capturar todos los datos marcados como obligatorios.';
 export const ERR_INPUT_BUSQUEDA_VACIO = 'No has proporcionado información que es requerida.';
@@ -18,6 +19,7 @@ export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS = 'No se encontraron datos con e
 export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
 export const MSG_ELIMINA_ELEMENTO = 'Datos eliminados correctamente.';
 export const ADV_LIMPIA_CAMPOS = 'Los datos capturados serán borrados, estás de acuerdo (SI/NO)?';
+export const MSG_DATOS_GUARDADOS = 'Datos guardados correctamente.';
 
 export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
 export const MSG_ADUANA_PEDIMENTO = 'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';
@@ -96,4 +98,9 @@ export const EMPRESAS_CERTIFICADAS = [
     value: 'aaa',
   }
 ]
+
+export const TIPO_TRAMITE: number = 5701;
+
+// TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
+export const CVE_UNIDAD_ADMIN = 'CV1';
 
