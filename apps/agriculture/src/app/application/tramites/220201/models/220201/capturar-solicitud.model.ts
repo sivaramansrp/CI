@@ -114,8 +114,7 @@ export interface FilaSolicitud {
  * @property {string} importePago - Importe de pago.
  */
 export interface PagoDeDerechos {
-  exentoPagoNo: string;
-  exentoPagoSi: string;
+exentoPago:string;
   justificacion: string;
   claveReferencia: string;
   cadenaDependencia: string;
@@ -154,8 +153,7 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       terceros: []
     },
     pagoDeDerechos: params.pagoDeDerechos || { // Initialize as an object
-      exentoPagoNo: '',
-      exentoPagoSi: '',
+      exentoPago:'',
       justificacion: '',
       claveReferencia: '',
       cadenaDependencia: '',
