@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-    "id": 191,
-    "tramite": 30503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "aga"
-  },
+        "id": 191,
+        "tramite": 30505,
+        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+        "department": "aga"
+    },
   {
     "id": 192,
     "tramite": 31202,

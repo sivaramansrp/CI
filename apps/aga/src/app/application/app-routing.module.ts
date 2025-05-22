@@ -387,6 +387,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+     path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
+  },
+  {
     path: 'renovacion-iva-ieps/mod-a',
     loadChildren: () =>
       import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
