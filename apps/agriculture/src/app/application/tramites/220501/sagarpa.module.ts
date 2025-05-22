@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AlertComponent, InputRadioComponent } from '@ng-mf/data-access-user';
+import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user'
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
@@ -22,6 +22,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { RevisionDocumentalComponent } from './components/revision-documental/revision-documental.component';
+import { RevisionService } from './services/revision.service';
 import { SagarpaRoutingModule } from './sagarpa-routing.module';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
@@ -35,17 +36,11 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
-    SolicitudComponent,
     SolicitudPageComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    RevisionDocumentalComponent,
-    MedioTransporteComponent,
-    AgregarMercanciaComponent,
-    DatosGeneralesComponent,
-    TercerosRelacionadosComponent,
-    PagoDeDerechosComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -71,11 +66,18 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
+    SolicitudComponent,
+    RevisionDocumentalComponent,
+    MedioTransporteComponent,
+    AgregarMercanciaComponent,
+    DatosGeneralesComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
     ToastrModule.forRoot()
   ],
-  exports: [SolicitudComponent, SolicitudPageComponent],
+  exports: [SolicitudPageComponent],
   providers:[
-    ToastrService,
+    ToastrService,RevisionService
   ]
 })
 export class SagarpaModule {}

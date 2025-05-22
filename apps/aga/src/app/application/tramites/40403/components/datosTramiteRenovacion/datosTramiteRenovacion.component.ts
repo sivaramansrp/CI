@@ -26,7 +26,6 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    * Formulario reactivo utilizado para capturar los datos del trámite.
    */
   formulario!: FormGroup;
-
   /**
    * Catálogo de tipos de CAAT aéreo.
    */

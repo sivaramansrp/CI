@@ -1,25 +1,25 @@
 {
   "code": 200,
-  "data": [
+  "datos": [
     {
       "id": 0,
-      "value": "Por Evaluar"
+      "descripcion": "Por Evaluar"
     },
     {
       "id": 1,
-      "value": "Normal"
+      "descripcion": "Normal"
     },
     {
       "id": 2,
-      "value": "Copia simple"
+      "descripcion": "Copia simple"
     },
     {
       "id": 3,
-      "value": "Parte dos"
+      "descripcion": "Parte dos"
     },
     {
       "id": 4,
-      "value": "Remesa consolidado"
+      "descripcion": "Remesa consolidado"
     }
   ],
   "message": "Consulta exitosa"

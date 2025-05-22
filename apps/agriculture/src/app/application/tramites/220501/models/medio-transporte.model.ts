@@ -14,4 +14,27 @@ export interface MedioTransporte {
     /** Total de guías amparadas en el medio de transporte. */
     totalGuias: string;
   }
+
+  /**
+   * Interfaz que representa los datos de la mercancía en la tabla.
+   * @interface MercanciaTabla
+   */
+  export interface MercanciaTabla {
+    /** Identificación de la mercancía. */
+    fraccionArancelaria: string; 
+    /** Descripción de la mercancía. */
+    descripcionFraccion: string; 
+    /** Número de identificación de la mercancía (NICO). */
+    nico: string; 
+    /** Descripción adicional de la mercancía. */
+    descripcion: string;
+    /** Cantidad de mercancía a capturar. */
+    saldoACapturar: string;
+    /** Unidad de medida de la mercancía. */
+    unidaddeMedidaDeUMT: string;
+    /** Cantidad total de mercancía en unidades de medida de transporte (UMT). */ 
+    cantidadTotalUMT: string;
+    /** Saldo pendiente de la mercancía. */
+    saldoPendiente: string; 
+  }
   

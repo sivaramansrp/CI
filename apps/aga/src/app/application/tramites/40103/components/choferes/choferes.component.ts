@@ -1,5 +1,16 @@
 import {
-  AfterViewInit,
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Chofer40103Store,
+  Choferesnacionales40103State,
+} from '../../estados/chofer40103.store';
+import {
   Component,
   ElementRef,
   Input,
@@ -7,41 +18,29 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
+import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
-import { Chofer40103Store, Choferesnacionales40103State } from '../../estados/chofer40103.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-
-import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
+import { DatosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { Observable, Subject } from 'rxjs';
 import { ReplaySubject } from 'rxjs';
 import { SharedModule } from '@ng-mf/data-access-user';
-import { choferesEnum } from '../constantes/choferes.enum';
-import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
-import { datosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
-import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { takeUntil } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { take } from 'rxjs/operators';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
+import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { map } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-choferes',
@@ -58,7 +57,6 @@ import mockData from '@libs/shared/theme/assets/json/40103/director-general-mock
   ],
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
-
   CHOFERES_PAGE = CHOFERES_PAGE;
   modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
@@ -81,7 +79,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   /**
    * Lista de datos de los choferes nacionales.
    *
-   * @type {datosDelChoferNacional[]}
+   * @type {DatosDelChoferNacional[]}
    */
 
   /**
@@ -89,41 +87,41 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    */
   public solicitud40103State!: Choferesnacionales40103State;
 
-  datosDelChoferNacional: datosDelChoferNacional[] =
-    [] as datosDelChoferNacional[];
-  municipios: any[] = [];
-  colonias: any[] = [];
-  paises: any[] = [];
-  choferesExtranjero: any[] = [];
-  choferes: any[] = [];
+  DatosDelChoferNacional: DatosDelChoferNacional[] =
+    [] as DatosDelChoferNacional[];
+  municipios: unknown[] = [];
+  colonias: unknown[] = [];
+  paises: unknown[] = [];
+  choferesExtranjero: unknown[] = [];
+  choferes: unknown[] = [];
   formChoferes!: FormGroup;
   /**
    * Observable que contiene la lista de choferes nacionales.
    *
-   * @type {Observable<any[]>}
+   * @type {Observable<unknown[]>}
    */
-  choferesList$: Observable<any[]> = new Observable();
+  choferesList$: Observable<unknown[]> = new Observable();
 
   /**
    * Observable que proporciona los datos del chofer nacional.
    *
-   * @type {Observable<any[]>}
+   * @type {Observable<unknown[]>}
    */
-  getdatosDelChoferNacional$: Observable<any[]> = new Observable();
+  getDatosDelChoferNacional$: Observable<unknown[]> = new Observable();
 
   /**
    * Observable que proporciona la lista de choferes extranjeros.
    *
-   * @type {Observable<any[]>}
+   * @type {Observable<unknown[]>}
    */
-  getchoferesExtranjeros$: Observable<any[]> = new Observable();
+  getchoferesExtranjeros$: Observable<unknown[]> = new Observable();
 
   /**
    * Observable que contiene la lista de choferes extranjeros.
    *
-   * @type {Observable<any[]>}
+   * @type {Observable<unknown[]>}
    */
-  choferesextranjerosList$: Observable<any[]> = new Observable();
+  choferesextranjerosList$: Observable<unknown[]> = new Observable();
 
   /**
    * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
@@ -133,77 +131,77 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   isEditing: boolean = false;
-  selectedRow: any;
+  selectedRow: unknown;
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  tableColumns: ConfiguracionColumna<datosDelChoferNacional>[] = [
+  tableColumns: ConfiguracionColumna<DatosDelChoferNacional>[] = [
     {
       encabezado: 'CURP',
-      clave: (item: datosDelChoferNacional) => item.curp,
+      clave: (item: DatosDelChoferNacional) => item.curp,
       orden: 1,
     },
     {
       encabezado: 'RFC',
-      clave: (item: datosDelChoferNacional) => item.rfc,
+      clave: (item: DatosDelChoferNacional) => item.rfc,
       orden: 2,
     },
     {
       encabezado: 'Número',
-      clave: (item: datosDelChoferNacional) => item.nombre,
+      clave: (item: DatosDelChoferNacional) => item.nombre,
       orden: 3,
     },
     {
       encabezado: 'País',
-      clave: (item: datosDelChoferNacional) => item.pais,
+      clave: (item: DatosDelChoferNacional) => item.pais,
       orden: 4,
     },
     {
       encabezado: 'Apellido Paterno',
-      clave: (item: datosDelChoferNacional) => item.apellidoPaterno,
+      clave: (item: DatosDelChoferNacional) => item.apellidoPaterno,
       orden: 5,
     },
     {
       encabezado: 'Apellido Materno',
-      clave: (item: datosDelChoferNacional) => item.apellidoMaterno,
+      clave: (item: DatosDelChoferNacional) => item.apellidoMaterno,
       orden: 6,
     },
     {
       encabezado: 'RFC',
-      clave: (item: datosDelChoferNacional) => item.rfc,
+      clave: (item: DatosDelChoferNacional) => item.rfc,
       orden: 7,
     },
     {
       encabezado: 'Gafete',
-      clave: (item: datosDelChoferNacional) => item.gafete,
+      clave: (item: DatosDelChoferNacional) => item.gafete,
       orden: 8,
     },
     {
       encabezado: 'Vigencia Gafete',
-      clave: (item: datosDelChoferNacional) => item.vigenciaGafete,
+      clave: (item: DatosDelChoferNacional) => item.vigenciaGafete,
       orden: 9,
     },
     {
       encabezado: 'Municipio o Alcaldía',
-      clave: (item: datosDelChoferNacional) => item.municipio,
+      clave: (item: DatosDelChoferNacional) => item.municipio,
       orden: 10,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: datosDelChoferNacional) => item.colonia,
+      clave: (item: DatosDelChoferNacional) => item.colonia,
       orden: 11,
     },
     {
       encabezado: 'País de Origen',
-      clave: (item: datosDelChoferNacional) => item.paisOrigen,
+      clave: (item: DatosDelChoferNacional) => item.paisOrigen,
       orden: 12,
     },
     {
       encabezado: 'Ciudad',
-      clave: (item: datosDelChoferNacional) => item.ciudad,
+      clave: (item: DatosDelChoferNacional) => item.ciudad,
       orden: 13,
     },
   ];
@@ -321,7 +319,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   ];
   /**
    * Lista de pagos de derechos asociados a la solicitud.
-   * Se inicializa como un array vacío con la estructura de `datosDelChoferNacional`.
+   * Se inicializa como un array vacío con la estructura de `DatosDelChoferNacional`.
    */
 
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
@@ -375,12 +373,12 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   public paisChn!: Catalogo[];
 
   /**
-   * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.
+   * @property {unknown[]} facturasDisponible - Array de datos de facturas disponibles.
    */
-  facturasDisponible: datosDelChoferNacional[] = [];
-  ConfiguracionColumna!: ConfiguracionColumna<datosDelChoferNacional>[];
+  facturasDisponible: DatosDelChoferNacional[] = [];
+  ConfiguracionColumna!: ConfiguracionColumna<DatosDelChoferNacional>[];
   /**
-   * @property {any[]} facturasAsociadas - Array de datos de facturas asociadas.
+   * @property {unknown[]} facturasAsociadas - Array de datos de facturas asociadas.
    */
   facturasAsociadas: choferesExtranjeros[] = [];
 
@@ -433,20 +431,20 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         })
       )
       .subscribe();
-    this.getdatosDelChoferNacional$
+    this.getDatosDelChoferNacional$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         if (data && data.length > 0) {
-          this.datosDelChoferNacional = data;
+          this.DatosDelChoferNacional = data as DatosDelChoferNacional[];
         }
       });
 
     this.choferesList$ = this.chofer40103Query.getChoferes$;
-    this.choferesextranjerosList$ = this.chofer40103Query.getchoferesextranjero$;
+    this.choferesextranjerosList$ =
+      this.chofer40103Query.getchoferesextranjero$;
+    this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe();
 
-    this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe((_choferes: unknown) => {});
-
-    this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe((_choferesextranjeros: unknown) => {});
+    this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe();
 
     this.chofernacionalForm();
     this.loadStoredData();
@@ -580,7 +578,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Obtiene los controles de formulario del formulario choferes.
    */
-  get getFormValues() {
+  get getFormValues(): { [key: string]: AbstractControl } {
     return this.formChoferes.controls;
   }
 
@@ -615,14 +613,14 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    */
   extranjeroGuardars(): void {
     if (
-      !this.datosDelChoferNacional ||
-      this.datosDelChoferNacional.length === 0
+      !this.DatosDelChoferNacional ||
+      this.DatosDelChoferNacional.length === 0
     ) {
       this.toastr.warning('No data to submit.');
       return;
     }
 
-    const submittedData = this.datosDelChoferNacional.map((item) => ({
+    const SUBMITTEDDATA = this.DatosDelChoferNacional.map((item) => ({
       ...item,
       clave: item?.calle || '',
       descripcion: item?.rfc || '',
@@ -630,15 +628,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.chofer40103Store.update((state) => {
       return {
         ...state,
-        datosDelChoferNacional: [
+        DatosDelChoferNacional: [
           ...(state.datosDelChoferNacional || []),
-          ...submittedData,
+          ...SUBMITTEDDATA,
         ],
       };
     });
 
     this.toastr.success('Data submitted successfully!');
-    this.datosDelChoferNacional = [];
+    this.DatosDelChoferNacional = [];
   }
 
   /**
@@ -742,9 +740,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * @param choferData Objeto que contiene los datos del chofer, incluyendo las claves de estado y municipio.
    * @returns void
    */
-  actualizarDesplegables(choferData: any): void {
-    const ESTADO_CLAVE = choferData.datosGenerales.estados;
-    const MUNICIPIO_CLAVE = choferData.datosGenerales.municipio;
+  actualizarDesplegables(choferData: unknown): void {
+    const ESTADO_CLAVE = (choferData as { datosGenerales: { estados: string } })
+      .datosGenerales.estados;
+    const MUNICIPIO_CLAVE = (
+      choferData as { datosGenerales: { municipio: string } }
+    ).datosGenerales.municipio;
 
     if (ESTADO_CLAVE) {
       this.loadMunicipios(ESTADO_CLAVE);
@@ -844,12 +845,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Alterna la selección de una fila en la tabla de choferes y actualiza el formulario con los datos de la fila seleccionada.
    *
-   * @param {any} row - Objeto que representa la fila seleccionada.
+   * @param {unknown} row - Objeto que representa la fila seleccionada.
    * @returns {void}
    */
-  toggleRowSelection(row: any): void {
+  toggleRowSelection(row: unknown): void {
     this.selectedRow = row;
-    this.formChoferes.patchValue(row);
+    this.formChoferes.patchValue(row as { [key: string]: unknown });
   }
 
   /**
@@ -877,13 +878,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     if (this.selectedRow) {
       const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
       this.choferesList$ = this.choferesList$.pipe(
-        map((choferes: any) => {
-          return choferes.map((chofer: any) => {
-            if ((chofer as any).id === (this.selectedRow as any).id) {
-              return UPDATE_ROWS;
+        map((choferes: unknown) => {
+          return (choferes as DatosDelChoferNacional[]).map(
+            (chofer: DatosDelChoferNacional) => {
+              if (
+                (chofer as DatosDelChoferNacional).id ===
+                (this.selectedRow as DatosDelChoferNacional).id
+              ) {
+                return UPDATE_ROWS;
+              }
+              return chofer;
             }
-            return chofer;
-          });
+          );
         })
       );
 
@@ -904,15 +910,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    */
   recuperarDatos(): void {
     this.chofer40103Service
-      .obtenerTablaDatos<datosDelChoferNacional>('facturasDisponible.json')
+      .obtenerTablaDatos<DatosDelChoferNacional>('facturasDisponible.json')
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (response) => {
-          this.datosDelChoferNacional = response;
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        },
+          this.DatosDelChoferNacional = response;
+        }
       });
   }
 

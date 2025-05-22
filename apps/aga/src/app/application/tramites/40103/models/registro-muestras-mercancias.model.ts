@@ -64,7 +64,7 @@ export interface ImportanteCatalogoSeleccion {
    * Lista de pagos de derechos asociados a la solicitud.
    * Contiene información sobre los pagos realizados o pendientes.
    */
-  datosDelChoferNacional: datosDelChoferNacional[];
+  datosDelChoferNacional: DatosDelChoferNacional[];
 }
 /**
  * Representa un registro de muestras de mercancías.
@@ -201,7 +201,8 @@ export interface MuestrasMercanciasStore {
  * Interfaz que representa la lista de pagos de derechos.
  * Contiene la información de la línea de captura y el monto correspondiente.
  */
-export interface datosDelChoferNacional {
+export interface DatosDelChoferNacional {
+  id: unknown;
   /** Línea de captura del pago. */
   curp?: string;
   rfc?: string;
@@ -281,4 +282,57 @@ export interface PagoDerechosLista {
   fechaFindDeVigencia?: string;
   municipioAlcaldía?: string;
   PaísDeResidencia?: string;
+}
+
+export interface Vehiculo {
+  id: number;
+  solicitudVehiculoVin2: string;
+  solicitudVehiculoTipoVehiculo: string;
+  solicitudVehiculoNumeroEconomico: string;
+  solicitudVehiculoNumeroPlacas: string;
+  solicitudVehiculoPaisEmisor: string;
+  solicitudDomicilioEstado: string;
+  solicitudVehiculoMarca: string;
+  solicitudVehiculoModelo: string;
+  anioVehiculoVEH: string;
+  solicitudVehiculoTransponder: string;
+  solicitudVehiculoColor: string;
+  solicitudVehiculoNumero2daPlaca?: string;
+  solicitudVehiculoEmisor2daPlaca?: string;
+  solicitudVehiculoPaisEmisorSegundaPlaca?: string;
+  solicitudVehiculoDesc?: string;
+}
+
+export interface Chofer {
+  descripcion: string;
+  clave: string;
+  id: number;
+  curp?: string;
+  rfc?: string;
+  nombre?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  gafete?: string;
+  vigenciagafete?: string;
+  calle?: string;
+  numeroExterior?: string;
+  numeroInterior?: string;
+  ciudad?: string;
+  localidad?: string;
+  codigoPostal?: string;
+  paisChn?: string;
+  estado?: string;
+  numerodelsegurosocial?: string;
+  entidadFederativaCHN?: string;
+  delegacionCHN?: string;
+  coloniaCHN?: string;
+  paisOrigenCHN?: string;
+  correo?: string;
+  telefono?: string;
+  nacionalidadCHE?: string;
+  nss?: string;
+  ideFiscal?: string;
+  paisCHE?: string;
+  entidadFederativaCHE?: string;
+  paisOrigenCHE?: string;
 }
