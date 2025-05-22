@@ -4,13 +4,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, RespuestaCatalogos, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { skip } from 'rxjs';
 
 /**
@@ -112,23 +113,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       "value": "no"
     },
   ]
-  tableData = {
-    header: [
-      "No. partida",
-      "Tipo de requisito",
-      "Requisito",
-      "Número de Certificado Internacional",
-      "Fracción arancelaria",
-      "Descripción de la fracción",
-      "Nico",
-    ],
+   cuerpoTabla: FilaSolicitud[] = [];
 
-
-  };
-
-  encabezadoDeTabla: string[] = this.tableData.header;
   mesaCuerpo: string[] = [];
-
+tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+  ];
 
 
   /**

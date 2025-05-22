@@ -140,10 +140,11 @@
             <label for="mercancia">Mercancía</label>
           </div>
           <div class="col-md-12">
-            <ng-table
-              [commonTableHeader]="tableData.header"
-              [commonTableBody]="mesaCuerpo"
-            ></ng-table>
+              <app-tabla-dinamica
+                    [tipoSeleccionTabla]="tipoSeleccionsoli"
+                    [configuracionTabla]="configuracionColumnasoli"
+                    [datos]="cuerpoTabla"
+                  ></app-tabla-dinamica> 
           </div>
         </div>
         <div class="row my-5">

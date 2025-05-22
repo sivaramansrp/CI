@@ -14,6 +14,7 @@ import {
   InputRadioComponent,
   SharedModule,
   SolicitanteComponent,
+  TablaDinamicaComponent,
   TableComponent,
   TercerosComponent,
   TituloComponent,
@@ -61,6 +62,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     TableComponent,
     CatalogoSelectComponent,
     TercerosComponent,
+    TablaDinamicaComponent,
     ToastrModule.forRoot(),
   ],
   providers: [

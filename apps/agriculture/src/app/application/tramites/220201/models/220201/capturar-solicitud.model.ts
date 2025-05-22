@@ -91,7 +91,15 @@ export interface DatosParaMovilizacionNacional {
   transporte: string;
   punto: string;
 }
-
+export interface FilaSolicitud {
+    noPartida: string;
+    tipoRequisito: string;
+    requisito: string;
+    numeroCertificadoInternacional: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    nico: string;
+}
 /**
  * Modelo para pago de derechos
  * @export
