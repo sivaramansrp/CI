@@ -5,8 +5,7 @@
     <form [formGroup]="datosdelexportador" novalidate>
       <div class="row">
         <div class="col-md-12">
-          <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador
-            *:</label>
+          <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador*:</label>
           <input type="text" class="form-control bg-white" id="nombredelRepresentante"
             placeholder="Ingrese el nombre del representante" formControlName="nombredelRepresentante"
             [class.is-invalid]="datosdelexportador.get('nombredelRepresentante')?.touched && datosdelexportador.get('nombredelRepresentante')?.invalid" 
@@ -21,12 +20,12 @@
         </div>
 
         <div class="col-md-8">
-          <label class="form-label" for="empresa">Empresa *:</label>
+          <label class="form-label" for="empresa">Empresa*:</label>
           <input type="text" class="form-control" id="empresa" formControlName="empresa" readonly>
         </div>
 
         <div class="col-md-4">
-          <label class="form-label" for="cargo">Cargo *:</label>
+          <label class="form-label" for="cargo">Cargo*:</label>
           <input type="text" class="form-control bg-white" id="cargo" placeholder="Ingrese el cargo"
             formControlName="cargo"
             [class.is-invalid]="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid" 
@@ -38,7 +37,7 @@
         </div>
 
         <div class="col-md-4">
-          <label class="form-label" for="telefonos">Teléfono *:</label>
+          <label class="form-label" for="telefonos">Teléfono*:</label>
           <input type="text" class="form-control bg-white" id="telefonos" placeholder="Ingrese el telefono"
             formControlName="telefonos"
             [class.is-invalid]="datosdelexportador.get('telefonos')?.touched && datosdelexportador.get('telefonos')?.invalid"
@@ -51,7 +50,7 @@
         </div>
 
         <div class="col-md-4">
-          <label class="form-label" for="faxs">Fax *:</label>
+          <label class="form-label" for="faxs">Fax*:</label>
           <input type="text" class="form-control bg-white" id="faxs" placeholder="Ingrese el fax" formControlName="faxs"
             [class.is-invalid]="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid" 
             (change)="setValorStore(datosdelexportador,'faxs')" />
@@ -63,7 +62,7 @@
         </div>
 
         <div class="col-md-4">
-          <label class="form-label" for="correoElectronicos">Correo electrónico *:</label>
+          <label class="form-label" for="correoElectronicos">Correo electrónico*:</label>
           <input type="text" class="form-control bg-white" id="correoElectronicos"
             placeholder="Ingrese su correo electrónico" formControlName="correoElectronicos"
             [class.is-invalid]="datosdelexportador.get('correoElectronicos')?.touched && datosdelexportador.get('correoElectronicos')?.invalid"

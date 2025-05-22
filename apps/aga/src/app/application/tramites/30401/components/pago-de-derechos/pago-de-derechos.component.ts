@@ -5,7 +5,7 @@
  */
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, REGEX_NUMERO_DECIMAL_2_DIGITOS, REGEX_PATRON_ALFANUMERICO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
@@ -108,16 +108,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDeDerechosForm = this.fb.group({
       claveDeReferencia: [
         this.seccionState.claveDeReferencia,
-        [Validators.required, Validators.maxLength(9)],
+        [Validators.required, Validators.maxLength(9),
+          Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       ],
       cadenaPagoDependencia: [
         this.seccionState.cadenaPagoDependencia,
-        [Validators.required, Validators.maxLength(14)],
+        [Validators.required, Validators.maxLength(14),Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       ],
       clave: [this.seccionState.clave, Validators.required],
       llaveDePago: [
-        this.seccionState.fecPago,
-        [Validators.required, Validators.maxLength(10)],
+        this.seccionState.llaveDePago,
+        [Validators.required, Validators.maxLength(10),Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       ],
       fecPago: [
         this.seccionState.fecPago,
@@ -129,6 +130,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.maxLength(16),
           PagoDeDerechosComponent.noComaValidator(),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_2_DIGITOS),
         ],
       ],
       manifiestoDeclaracion: [
@@ -150,6 +152,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ?.updateValueAndValidity({ emitEvent: false });
   }
 
+  /**
+ * Maneja la transformación a mayúsculas de los valores de los campos de entrada.
+ *
+ * @param {string} field - Nombre del campo de control del formulario.
+ * @param {Event} event - Evento activado por el cambio en el campo de entrada.
+ *
+ * @description
+ * Este método captura el evento de entrada y convierte el valor ingresado
+ * a mayúsculas antes de actualizar el control de formulario especificado. 
+ * Se evita la emisión del evento para prevenir actualizaciones innecesarias del formulario.
+ */
+
+  public manejarEntradaMayusculas(field: string, event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT && INPUT.value) {
+      this.pagoDeDerechosForm.get(field)?.setValue(INPUT.value.toUpperCase(), { emitEvent: false });
+    }
+  }
   /**
    * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
    * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
@@ -243,6 +263,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       : false;
   }
 
+  /**
+ * Restablece el formulario de pago de derechos.
+ *
+ * @description
+ * Este método reinicia todos los valores del formulario `pagoDeDerechosForm`,
+ * eliminando cualquier dato ingresado previamente.
+ */
+  public borrarDatosDelPago(): void {
+    this.pagoDeDerechosForm.reset();
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
