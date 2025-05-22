@@ -332,7 +332,7 @@
     "id": 48,
     "tramite": 110218,
     "linkDashboard": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
-    "linkDepartment": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+    "linkDepartment": "/pago/certificado-tecnico-japon/validar-certificado-tecnico-japon",
     "department": "se"
   },
   {
@@ -2109,8 +2109,8 @@
   {
     "id": 302,
     "tramite": 6502,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-poblacional/solicitud",
+    "linkDepartment": "/pago/registro-poblacional/solicitud",
     "department": "aga"
   },
   {

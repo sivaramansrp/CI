@@ -1,5 +1,5 @@
 <div [formGroup]="formSelect" [ngClass]="{'row': isInline}">
-    <label for="{id}" class="form-label text-left" [ngClass]="{'col-sm-3': isInline}" *ngIf="label">{{ label }}@if (required) {*}:
+    <label for="{id}" class="form-label text-left" [ngClass]="{'col-sm-3': isInline}" *ngIf="label">{{ formattedLabel }}
         @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{label}}"
         data-bs-toggle="tooltip"></span>}
     </label>
