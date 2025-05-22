@@ -12,6 +12,7 @@
             formControlName="coordenadas"
             placeholder=""
             type="text"
+               (change)="setValoresStore()"
           />
         </div>
       </div>
@@ -24,6 +25,7 @@
             [label]="'Medio de transporte'"
             [required]="true"
             name="medio"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
@@ -36,6 +38,7 @@
             formControlName="transporte"
             placeholder=""
             type="text"
+               (change)="setValoresStore()"
           />
         </div>
         <div class="col-md-8">
@@ -45,6 +48,7 @@
             [label]="'Punto de verificación federal'"
             [required]="false"
             name="punto"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -54,6 +58,7 @@
             [label]="'Nombre de la empresa transportista'"
             [required]="true"
             name="nombre"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
       </div>

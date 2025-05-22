@@ -10,9 +10,10 @@ import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
+import {Subject, skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
-import { skip } from 'rxjs';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -128,7 +129,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
 
-
+  private destroyNotifier$ = new Subject<void>();
   /**
    * Constructor del componente.
    * @constructor
@@ -136,7 +137,8 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
-    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery
   ) {
     this.crearFormulario();
     this.initActionFormBuild();
@@ -166,6 +168,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       }
       this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
+
     this.obtenerListasDesplegables();
   }
 
@@ -173,7 +176,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild() {
+  initActionFormBuild() { 
     this.datosDelaSolicitud = this.fb.group({
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
@@ -184,6 +187,12 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       numeroGuia: [''],
       certficacion: [''],
       regimen: ['', Validators.required],
+    });
+        this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
+      if (datosDeLaSolicitud) {
+        console.log('Datos de la solicitud:', datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+      }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
   }
@@ -214,7 +223,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.aduanaDeIngreso = DATOS;
     });
@@ -225,7 +234,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerSanidadAgropecuariaList
    */
   obtenerSanidadAgropecuariaList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
     });
@@ -236,7 +245,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
     });
@@ -247,7 +256,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerEstablecimientoList
    */
   obtenerEstablecimientoList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
     });
@@ -259,7 +268,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    */
 
   obtenerVeterinarioList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
     });
@@ -270,13 +279,26 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerRegimenList
    */
   obtenerRegimenList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });
   }
-  ngOnDestroy(): void {
+  
+    /**
+     * @description Actualiza los datos almacenados en el store.
+     * @method setValoresStore
+     * @param {FormGroup} form - El formulario a obtener los valores.
+     * @param {string} campo - El nombre del campo del formulario a obtener.
+     */
+    setValoresStore(
+    ): void {
+      const VALOR = this.datosDelaSolicitud.value;
+      this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
+    }
 
-    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(this.datosDelaSolicitud.value);
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -12,7 +12,8 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
-import { skip } from 'rxjs';
+import {Subject, skip, takeUntil } from 'rxjs';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
@@ -56,7 +57,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
    * @property {FormGroup} pagoForm
    */
   pagoForm: FormGroup = this.fb.group({
-    exentoPago: [{ value: '', disabled: false }],
+    exentoPago: [{ value: 'si', disabled: false }],
     justificacion: [{ value: '', disabled: false }, Validators.required],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
@@ -77,7 +78,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
     },
     {
       "label": "Sí",
-      "value": "Si"
+      "value": "si"
     }
   ];
   /**
@@ -86,17 +87,26 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
      */
   selectedValue: string = 'no';
 
+    private destroyNotifier$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+      private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery
+  ) {
     this.obtenerDetallesDeListaDeOpciones();
   }
 
   ngOnInit(): void {
+     this.certificadoZoosanitarioQuery.seleccionarPagoDerechos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
+      if (datosDeLaSolicitud) {
+        this.pagoForm.patchValue(datosDeLaSolicitud);
+      }
+    });
     this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         pagoDeformaValida: false,
@@ -123,7 +133,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
    * @method obtenerBancoSelectorList
    */
   obtenerBancoSelectorList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.bancoSelector = DATOS as Catalogo[];
     });
@@ -134,13 +144,18 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.justificacionSelector = DATOS as Catalogo[];
     });
   }
+      setValoresStore(
+    ): void {
+      const VALOR = this.pagoForm.value;
+ this.certificadoZoosanitarioServices.updatePagoDeDerechos(VALOR);
+    }
   ngOnDestroy(): void {
-
-    this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.pagoForm.value);
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

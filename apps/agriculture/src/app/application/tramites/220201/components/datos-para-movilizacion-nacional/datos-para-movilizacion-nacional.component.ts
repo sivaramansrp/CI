@@ -4,8 +4,9 @@ import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Subject,skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { skip } from 'rxjs';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -55,13 +56,16 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @property {CatalogosSelect} puntoDeVerificacionFederal
    */
   puntoDeVerificacionFederal: Catalogo[] = [];
+    private destroyNotifier$ = new Subject<void>();
   /**
    * Constructor de la clase DatosParaMovilizacionNacionalComponent.
    * @constructor
    * @param {FormBuilder} fb - Inyección de dependencia del servicio FormBuilder.
    * @param {HttpClient} httpServicios - Inyección de dependencia del servicio HttpClient.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+      private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery
+  ) {
     this.movilizacionForm = this.fb.group({
       coordenadas: [''],
       nombre: ['', Validators.required],
@@ -85,6 +89,11 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       }
       this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
+       this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
+      if (datosDeLaSolicitud) {
+        this.movilizacionForm.patchValue(datosDeLaSolicitud);
+      }
+    });
     this.obtenerListasDesplegables();
   }
 
@@ -104,7 +113,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerTransporteListList
    */
   obtenerTransporteListList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.medioTransporteList = DATOS;
     });
@@ -115,7 +124,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenernombreDeLaEmpresaTransportistaList
    */
   obtenernombreDeLaEmpresaTransportistaList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.nombreDeLaEmpresaTransportista = DATOS;
     });
@@ -126,7 +135,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerPuntoDeVerificaciónList
    */
   obtenerPuntoDeVerificaciónList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoDeVerificacionFederal = DATOS;
     });
@@ -137,13 +146,19 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
  * @method obtenerIdentificacionTransporteList
  */
   obtenerIdentificacionTransporteList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.identificacionTransporteList = DATOS;
     });
   }
+     setValoresStore(
+    ): void {
+      const VALOR = this.movilizacionForm.value;
+ this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(VALOR);
+    }
   ngOnDestroy(): void {
-
-    this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.movilizacionForm.value);
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+   
   }
 }
