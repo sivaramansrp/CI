@@ -6,6 +6,9 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -14,17 +17,20 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        CommonModule,
+        ReactiveFormsModule,
         WizardComponent,
+        BtnContinuarComponent,
+        SolicitudPageComponent,
         PasoUnoComponent,
         PasoDosComponent,
         PasoTresComponent,
-        BtnContinuarComponent
+        HttpClientTestingModule
       ],
-      declarations: [SolicitudPageComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
-    
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -40,8 +46,8 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('should get value index', () => {
-    const event = { accion: 'cont', valor: 2 };
+    const event = { accion: 'cont', valor: 1 };
     component.getValorIndice(event);
-    expect(component.indice).toBe(2);
+    expect(component.indice).toBe(1);
   });
 });

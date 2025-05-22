@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0"
+          data-toggle="tab">Empresa</a>
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="1"
+          data-toggle="tab">Cancelación de Certificados de Cupo</a>
+      </li>
+
+    </ul>
+    <ng-container>
+      @switch (indice) {
+      @case (1) {
+      <datos-empresa></datos-empresa>
+      }
+      @case (2) {
+      <app-cancelacion-certificados></app-cancelacion-certificados>
+      }
+      }
+    </ng-container>
+  </div>
+</div>

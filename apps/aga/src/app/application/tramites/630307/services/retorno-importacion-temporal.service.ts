@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 /**
  * Servicio que gestiona las solicitudes relacionadas con el trámite 630307.
  * Proporciona métodos para obtener datos desde archivos JSON locales, como aduanas, prórrogas, propietarios y tipos de propietarios.
@@ -72,5 +72,12 @@ export class RetornoImportacionTemporalService {
 
   getPais(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630307/pais.json');
+  }
+  /**
+     * Obtiene los datos del documentos seleccionados.
+     * @returns Observable con los datos del documentos seleccionados.
+     */
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/630307/documentos-seleccionados.json');
   }
 }
