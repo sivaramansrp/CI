@@ -523,3 +523,17 @@ export const REGEX_VALID_UMC=/^\d{1,12}(\.\d{1,10})?$/
  * - "abc" (contiene caracteres no numéricos)
  */
 export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
+
+/* Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45612"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012.4567" (más de 3 decimales)
+ * - "1234567890123" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_12_ENTEROS_5_DECIMALES = /^\d{1,12}(\.\d{1,5})?$/;
