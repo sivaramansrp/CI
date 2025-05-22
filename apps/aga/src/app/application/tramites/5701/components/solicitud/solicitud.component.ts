@@ -10,6 +10,7 @@ import {
   FormulariosService,
   ICatalogo,
   Notificacion,
+  PaisesService,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   Recinto,
@@ -340,6 +341,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private tipoSolicitudService: TipoSolicitudService,
     private readonly tipoOperacionService: TipoOperacionService,
     private readonly tipoTransporteService: TipoTransporteService,
+    private readonly paisesService: PaisesService,
     private readonly tipoPedimentoService: TipoPedimentoService,
     private readonly tipoDespachoService: TipoDespachoService,
     private readonly aduanaService: AduanaService,
@@ -617,14 +619,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$)
       );
 
-    const CATALOGO_PAISES$ = this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+    const CATALOGO_PAISES$ = this.paisesService
+      .getListaPaises()
       .pipe(
         map((resp) => {
-          if (resp.length > 0) {
-            this.paisesOrigen = resp;
-            this.paisesProcedencia = resp;
-          }
+          this.paisesOrigen = resp.datos;
+          this.paisesProcedencia = resp.datos;
         })
       );
 

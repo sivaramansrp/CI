@@ -167,5 +167,8 @@ export * from './core/services/shared/catalogos/tipo-operacion.service';
 export * from './core/services/shared/catalogos/tipo-transporte.service';
 export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
+export * from './core/services/shared/catalogos/paises.service';
+
+
 
 
