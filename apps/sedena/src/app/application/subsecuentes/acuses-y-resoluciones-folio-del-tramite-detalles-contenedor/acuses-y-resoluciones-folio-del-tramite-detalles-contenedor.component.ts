@@ -28,7 +28,7 @@ import {
   AcusesYResoluciones,
   BotonDeAccion,
 } from '../../core/models/shared/subsecuentes.model';
-import { LISTA_TRIMITES } from '../../core/enums/atender-requerimientos.enums';
+import { LISTA_TRIMITES } from '../../shared/constants/lista-trimites.enums';
 import { SubsecuentesService } from '../../core/services/subsecuntes/subsecuentes.service';
 
 import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
