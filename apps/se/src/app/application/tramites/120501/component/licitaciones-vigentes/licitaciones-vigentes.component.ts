@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Adquiriente, AlertComponent, Complementaria,  CONFIGURACION_ACCIONISTAS_TABLA, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria,  Complementaria1,  CONFIGURACION_ACCIONISTAS_TABLA, CONFIGURACION_ACCIONISTAS_TABLA1, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -104,12 +104,20 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
 
+  /**
+   * Configuración para la tabla de accionistas.
+   */
+  configTableArray1 = CONFIGURACION_ACCIONISTAS_TABLA1;
 
   /**
    * Datos de ejemplo para la tabla.
    */
   datos:Complementaria[] = [];
   
+   /**
+   * Datos de ejemplo para la tabla.
+   */
+  datos1:Complementaria1[] = []
 
   /**
    * Datos de los pasos del asistente.
@@ -479,15 +487,7 @@ seleccionarParticipante():void{
 agregarRFC1(): void {
   const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
   if (RFC1VALUE) {
-    this.datos.push({
-      registrofederaldecontribuyentes: RFC1VALUE,
-      numerodelicitacion: '',
-      fechadelicitacion: '',
-      descripcion: '',
-      montoadjudicado: '',
-      fechainiciovigencia: '',
-      fechafinvigencia: ''
-    });
+    this.datos1.push({ registrofederaldecontribuyentes: RFC1VALUE });
     this.adquiriente.get('rfc1')?.reset();
   }
 }
@@ -495,11 +495,11 @@ agregarRFC1(): void {
  * Mueve el valor seleccionado de 'datos1' al campo 'rfc'.
  * Índice del elemento seleccionado en el array 'datos1'.
  */
-moverRFC1(selectedEntry: Complementaria): void {
-   const INDEX = this.datos.indexOf(selectedEntry); 
+moverRFC1(selectedEntry: Complementaria1): void {
+  const INDEX = this.datos1.indexOf(selectedEntry); 
   if (INDEX !== -1 && selectedEntry.registrofederaldecontribuyentes) {
     this.adquiriente.get('rfc')?.setValue(selectedEntry.registrofederaldecontribuyentes);
-    this.datos.splice(INDEX, 1);
+    this.datos1.splice(INDEX, 1);
   }
 }
 }
