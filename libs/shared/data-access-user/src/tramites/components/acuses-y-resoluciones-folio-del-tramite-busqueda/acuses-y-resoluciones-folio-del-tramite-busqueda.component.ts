@@ -71,7 +71,8 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   /**
    * URL del procedimiento para la navegación.
    */
-  @Input() public procedureUrl!: string;
+
+  public procedureUrl!: string;
 
   /**
    * Datos configurados para la tabla.
@@ -192,13 +193,6 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   }
 
   /**
-   * Navega a la URL del procedimiento.
-   */
-  continuar(): void {
-    this.router.navigate([this.procedureUrl]);
-  }
-
-  /**
    * Método que se ejecuta al destruir el componente.
    * Libera los recursos y completa las suscripciones.
    */
@@ -216,7 +210,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento
     );
-    console.log(ROW_OBJETO);
+
     const ORIGIN: string = 'SUBSECUENTES'; // Inicializar ORIGEN con un valor predeterminado
     this.tramiteData = tramiteDetailsData.filter(
       (v) => v.tramite === PROCEDURE

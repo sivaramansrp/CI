@@ -74,13 +74,10 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
   viewChild!: Type<unknown>;
 
   /** ID del trámite actual. */
-  tramite: number = 301;
+  tramite: number = 0;
 
   /** URL para regresar al procedimiento subsecuente. */
   procedureRegresorUrl = '/subsecuentes';
-
-  /** URL del procedimiento de datos de la solicitud. */
-  procedureUrl = '/aga/importante/datosdelasolicitud';
 
   /** Datos de la consulta guardados en el store. */
   guardarDatos!: ConsultaioState;
@@ -153,6 +150,7 @@ export class AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
           this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
         },
       });
+
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.departamento = this.guardarDatos?.department.toLowerCase();
   }
