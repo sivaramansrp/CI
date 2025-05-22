@@ -1451,8 +1451,8 @@
   {
     "id": 208,
     "tramite": 221603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agriculture/sanidad/solicitante",
+    "linkDepartment": "/pago/sanidad/solicitante",
     "department": "agricultura"
   },
   {
