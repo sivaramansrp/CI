@@ -7,12 +7,14 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 
 import {
   Catalogo,
-  InputFecha
+  InputFecha,
+  TituloComponent
 } from '@ng-mf/data-access-user';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -32,6 +34,8 @@ import {
 } from '../../../220203/constantes/220203/importacion-de-acuicultura.enum';
 
 import { OpcionDeRadio } from '../../../220203/models/220203/importacion-de-acuicultura.module';
+
+import { CatalogoSelectComponent, InputFechaComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -56,7 +60,15 @@ interface RadioOption {
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.scss']
+  styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [
+    InputRadioComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    TituloComponent
+  ]
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$ = new Subject<void>();

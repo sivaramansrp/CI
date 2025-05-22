@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { DatosDeFila, DatosForma, FilaSolicitud } from '../../models/220202/fitosanitario.model';
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
 import { Subject, takeUntil } from 'rxjs';
+
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 
 /**
  * @component DatosDeLaSolicitudComponent
@@ -19,7 +20,16 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.scss']
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    CommonModule
+  ],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 

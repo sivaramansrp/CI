@@ -1,12 +1,12 @@
+
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
-import { Catalogo } from '@ng-mf/data-access-user';
-
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Movilizacion } from '../../models/220202/fitosanitario.model';
 
 /**
@@ -33,7 +33,13 @@ import { Movilizacion } from '../../models/220202/fitosanitario.model';
 @Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
-  styleUrls: ['./datos-para-movilizacion-nacional.component.scss']
+  styleUrls: ['./datos-para-movilizacion-nacional.component.scss'],
+  standalone: true,
+  imports: [
+    TituloComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule
+  ]
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
   /**
