@@ -54,3 +54,25 @@ export interface ItemTransporte {
     llave: keyof TransporteCarretero | keyof TransporteFerroviario | keyof TransportePeatonal | keyof TransporteOtro | keyof TransporteAereo | keyof TransporteMaritimo;
     valor: string;
 }
+
+export interface TransporteBackend {
+    tipo_transporte: string;
+    emp_transportista?: string;
+    numero_porte?: string;
+    fecha_porte?: string;
+    marca_transporte?: string;
+    modelo_transporte?: string;
+    placas_transporte?: string;
+    contenedor_transporte?: string;
+    observaciones?: string;
+    numero_bl?: string;
+    tipo_equipo?: string;
+    iniciales_equipo?: string;
+    numero_equipo?: string;
+    rfc_empresa?: string;
+    nombre_transportista?: string;
+    num_gafete?: string;
+    tipo_transporte_des?: string;
+    datos_transporte?: string;
+    descripcion_equipo?: string;
+}

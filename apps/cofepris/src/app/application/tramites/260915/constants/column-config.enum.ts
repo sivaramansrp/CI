@@ -1,6 +1,7 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FilaData, FilaData2 } from '../models/fila-modal';
 import { Destinatario, TramitesAsociados } from '../models/destinatario.model';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FilaData } from '../models/fila-modal';
+import { MercanciasInfo } from '../models/mercancia.model';
 
 /**
  * Configuración de la tabla para destinatarios.
@@ -119,23 +120,23 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
 /**
  * Configuración de las columnas para mercancías.
  */
-export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<FilaData2>[] = [
+export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<MercanciasInfo>[] = [
   {
     /** Configuración de la columna para la clasificación del producto */
     encabezado: 'Clasificación del producto',
-    clave: (fila) => fila.clasificaionProductos,
+    clave: (fila) => fila.clasificacion,
     orden: 1,
   },
   {
     /** Configuración de la columna para especificar la clasificación del producto */
     encabezado: 'Especificar Clasificación del producto',
-    clave: (fila) => fila.especificarProducto,
+    clave: (fila) => fila.especificar,
     orden: 2,
   },
   {
     /** Configuración de la columna para la denominación específica del producto */
     encabezado: 'Denominación específico del producto',
-    clave: (fila) => fila.nombreProductoEspecifico,
+    clave: (fila) => fila.denominacionEspecifica,
     orden: 3,
   },
   {
@@ -146,81 +147,87 @@ export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<FilaData2>[
   },
   {
     /** Configuración de la columna para la denominación o nombre científico */
-    encabezado: 'Denominación o nombre cientifico*',
-    clave: (fila) => fila.denominacionNombre,
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (fila) => fila.denominacionComun,
     orden: 5,
   },
   {
     /** Configuración de la columna para el tipo de producto */
+    encabezado: 'Forma farmacéutica',
+    clave: (fila) => fila.formaFarmaceutica,
+    orden: 6,
+  },
+  {
+    /** Configuración de la columna para el uso específico */
     encabezado: 'Tipo de producto',
     clave: (fila) => fila.tipoProducto,
-    orden: 6,
+    orden: 7,
   },
   {
     /** Configuración de la columna para el estado físico */
     encabezado: 'Estado fisico',
     clave: (fila) => fila.estadoFisico,
-    orden: 7,
+    orden: 8,
   },
   {
     /** Configuración de la columna para la fracción arancelaria */
     encabezado: 'Fracción arancelaria',
     clave: (fila) => fila.fraccionArancelaria,
-    orden: 8,
+    orden: 9,
   },
   {
     /** Configuración de la columna para la descripción de la fracción arancelaria */
     encabezado: 'Descripción de la fracción arancelaria',
-    clave: (fila) => fila.descripcionFraccionArancelaria,
-    orden: 9,
+    clave: (fila) => fila.descripcionFraccion,
+    orden: 10,
   },
   {
     /** Configuración de la columna para la unidad de medida de comercialización (UMC) */
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (fila) => fila.umc,
-    orden: 10,
+    clave: (fila) => fila.unidad,
+    orden: 11,
   },
   {
     /** Configuración de la columna para la cantidad UMC */
     encabezado: 'Cantidad UMC',
     clave: (fila) => fila.cantidadUMC,
-    orden: 11,
+    orden: 12,
   },
   {
     /** Configuración de la columna para la unidad de medida de tarifa (UMT) */
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (fila) => fila.umt,
-    orden: 12,
+    clave: (fila) => fila.unidadUMT,
+    orden: 13,
   },
   {
     /** Configuración de la columna para la cantidad UMT */
     encabezado: 'Cantidad UMT',
     clave: (fila) => fila.cantidadUMT,
-    orden: 13,
+    orden: 14,
   },
   {
     /** Configuración de la columna para la presentación farmacéutica o tipo de envase */
     encabezado: 'presentacion farmaceutica o tipo de envase',
-    clave: (fila) => fila.presentacionFarmaceutica,
-    orden: 14,
+    clave: (fila) => fila.presentacion,
+    orden: 15,
   },
   {
     /** Configuración de la columna para el país de origen */
     encabezado: 'País de origen',
     clave: (fila) => fila.paisDeOrigen,
-    orden: 15,
+    orden: 16,
   },
   {
     /** Configuración de la columna para el país de procedencia */
     encabezado: 'País de procedencia',
     clave: (fila) => fila.paisDeProcedencia,
-    orden: 16,
+    orden: 17,
   },
   {
     /** Configuración de la columna para el uso específico */
     encabezado: 'Uso específico',
     clave: (fila) => fila.usoEspecifico,
-    orden: 17,
+    orden: 18,
   },
 ];
 
