@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, RespuestaCatalogos, SharedModule, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -36,7 +37,11 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   imports:[SharedModule,
           CommonModule, TituloComponent,
               ReactiveFormsModule,
-              CatalogoSelectComponent]
+              CatalogoSelectComponent,
+            CrosslistComponent,
+          InputRadioComponent,
+             AlertComponent,
+        TablaDinamicaComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
