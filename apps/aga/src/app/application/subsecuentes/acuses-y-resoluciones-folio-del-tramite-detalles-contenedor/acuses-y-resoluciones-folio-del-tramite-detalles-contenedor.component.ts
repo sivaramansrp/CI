@@ -24,12 +24,9 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import {
-  AcusesYResoluciones,
-  BotonDeAccion,
-} from '../../core/models/shared/subsecuentes.model';
+import { AcusesYResoluciones, BotonDeAccion } from '@ng-mf/data-access-user';
 import { LISTA_TRIMITES } from '../../core/enums/lista-trimites.enums';
-import { SubsecuentesService } from '../../core/services/subsecuntes/subsecuentes.service';
+import { SubsecuentesService } from '@ng-mf/data-access-user';
 
 import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { ListaComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';

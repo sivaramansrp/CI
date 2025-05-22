@@ -1,5 +1,5 @@
-import { AcusesYResoluciones } from '../../models/shared/subsecuentes.model';
-import { BotonDeAccion } from '../../models/shared/subsecuentes.model';
+import { AcusesYResoluciones } from '../../../models/shared/subsecuentes.model';
+import { BotonDeAccion } from '../../../models/shared/subsecuentes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
