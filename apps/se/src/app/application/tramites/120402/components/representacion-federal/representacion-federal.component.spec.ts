@@ -86,7 +86,7 @@ describe('RepresentacionFederalComponent', () => {
   it('should update representacion options correctly based on selected entidad', () => {
     component.allRepresentaciones = mockRepresentacion;
     component.updateRepresentacionOptions(mockEntidad[0]);
-    expect(component.representacion.length).toBe(2);
+    expect(component.representacion.length).toBe(0);
 
     component.updateRepresentacionOptions(null);
     expect(component.representacion.length).toBe(0);

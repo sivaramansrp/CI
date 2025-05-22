@@ -74,10 +74,7 @@ export class AsignacionDirectaDeCupoComponent {
       private tramite120402Query: Tramite120402Query
     ) {}
  
-
-
-
-  /**
+ /**
    * Notificación para mostrar alertas al usuario.
    * @type {Notificacion}
    */
@@ -98,44 +95,18 @@ export class AsignacionDirectaDeCupoComponent {
    * @param e The action button event containing the action and value.
    */
   public getValorIndice(e: AccionBoton): void {
-       console.log('inside getValorIndice', this.showAlert);
-    
-       if(this.showAlert===true){
-    
-    if (e.valor > 0 && e.valor < 5) {
+   
+   
+if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
-    }
+    
   }}
   /**
    * Actualiza el estado del grid de comercializadores de productos.
    */
-  actualizaGridComercializadoresProductos(): void {
-     const VALOR_ENTIDAD = this.tramite120402Query.getValue().entidad;
-    const VALOR_REPRESENTACION =
-      this.tramite120402Query.getValue().representacion;
-       
-      if (!VALOR_ENTIDAD || !VALOR_REPRESENTACION) {//
-          console.log('inside actualizaGridComercializadoresProductos');
-        this.showAlert = true;
-        }
-        else{
-          this.showAlert = false;
-        }
-        
-      this.nuevaAlertaNotificacion = {
-          tipoNotificacion: 'banner',
-          categoria: 'danger', 
-          modo: 'action',
-          titulo: '',
-          mensaje: this.MENSAJE_CONFIRMACION,
-          cerrar: true,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-  }
-}
 }

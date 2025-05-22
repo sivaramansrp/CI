@@ -177,7 +177,13 @@ describe('SeleccionDelCupoComponent', () => {
 
   // Pruebas de acciones en la tabla
   it('debería manejar correctamente la acción de cupo seleccionado', () => {
-    const row = { id: '1', descripcion: 'Cupo 1' };
+    const row = {
+      id: '1',
+      descripcion: 'Cupo 1',
+      tipoAsignacion: 'Tipo de asignación 1',
+      fracciones: ['001', '002'],
+      tipoCupo: 'Tipo de cupo 1'
+    };
     component.onAccionCupo({ row, column: 'editar' });
     
     expect(tramite120402Store.setCupoSeleccionado).toHaveBeenCalledWith(row);

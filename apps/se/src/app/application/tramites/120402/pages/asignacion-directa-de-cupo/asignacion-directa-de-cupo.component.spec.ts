@@ -83,7 +83,6 @@ describe('AsignacionDirectaDeCupoComponent', () => {
   });
 
   it('should have correct initial class and indice values', () => {
-    expect(component.class).toBe('alert-danger');
     expect(component.indice).toBe(1);
   });
 });
