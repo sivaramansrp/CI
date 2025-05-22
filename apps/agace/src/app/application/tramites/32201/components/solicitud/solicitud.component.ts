@@ -227,21 +227,6 @@ export class SolicitudComponent implements OnInit {
   }
 
   /**
-   * Emite el evento continuar.
-   */
-  continuar(): void {
-    this.continuarEvento.emit('');
-  }
-
-  guardar(): void {
-    // updateOtrosTablaDatos([this.agregarDatosForm.value]);
-    // this.tramite32201Store.setSolicitud(this.solicitudForm.value);
-    // this.tramite32201Store.setMedicamentos(this.archivoMedicamentos);
-    // this.tramite32201Store.setManifiesto(this.solicitudForm.value.manifiesto);
-      
-  }
-
-  /**
    * Establece el valor de un campo en el store de Tramite32201.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
