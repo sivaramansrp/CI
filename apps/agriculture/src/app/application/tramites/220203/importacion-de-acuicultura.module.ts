@@ -45,18 +45,18 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    PagoDeDerechosComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DatosDeLaSolicitudComponent,
-    DatosParaMovilizacionComponent,
     SanidadCertificadoComponent
   ],
   imports: [
     CommonModule,
     ImportacionDeAcuiculturaRoutingModule,
     ReactiveFormsModule,
+    DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionComponent,
+    PagoDeDerechosComponent,
 
     // UI Components from data-access-user
     TablaDinamicaComponent,

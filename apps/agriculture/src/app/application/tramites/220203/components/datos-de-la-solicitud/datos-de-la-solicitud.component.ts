@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
@@ -10,7 +10,6 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 
 import { Subject, takeUntil } from 'rxjs';
 import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
-import { isDisabledDay } from 'ngx-bootstrap/chronos';
 
 interface DatoTabla {
   solicitud: string;
@@ -41,7 +40,17 @@ interface FilaSolicitud {
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss'
+  styleUrl: './datos-de-la-solicitud.component.scss',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    TituloComponent,
+    InputRadioComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    TableComponent
+  ],
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   private destroyNotifier$ = new Subject<void>();
@@ -217,11 +226,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    */
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      console.log(datos);
       this.datosMercanciaStore = datos.datosMercancia;
     })
     this.createFromGroup();
-    console.log(this.datosMercanciaFormGroup.value);
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
     this.obtenerCatalogosUMC();
@@ -257,31 +264,31 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Creates the 'mercanciaGroup' form group.
    */
   createMercanciaGroup() {
-    const mercanciaData = this.datosMercanciaStore.mercanciaGroup || {};
+    const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
 
-    const formGroup = this.fb.group({
-      tipoRequisito: [mercanciaData.tipoRequisito || '', Validators.required],
-      requisito: [mercanciaData.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [mercanciaData.numeroCertificadoInternacional || '', Validators.required],
-      numeroOficioCasoEspecial: [mercanciaData.numeroOficioCasoEspecial || ''],
-      fraccionArancelaria: [mercanciaData.fraccionArancelaria || '', Validators.required],
-      descripcionFraccionArancelaria: [mercanciaData.descripcionFraccionArancelaria || '', Validators.required],
-      nico: [mercanciaData.nico || '', Validators.required],
-      descripcionNico: [mercanciaData.descripcionNico || '', Validators.required],
-      descripcion: [mercanciaData.descripcion || '', Validators.required],
-      cantidadUMT: [mercanciaData.cantidadUMT || '', Validators.required],
-      umt: [mercanciaData.umt, Validators.required],
-      cantidadUMC: [mercanciaData.cantidadUMC || '', Validators.required],
-      umc: [mercanciaData.umc || '', Validators.required],
-      uso: [mercanciaData.uso || '', Validators.required],
-      numeroDeLote: [mercanciaData.numeroDeLote || '', Validators.required],
-      faseDeDesarrollo: [mercanciaData.faseDeDesarrollo || '', Validators.required],
-      especie: [mercanciaData.especie || '', Validators.required],
-      paisDeOrigen: [mercanciaData.paisDeOrigen || '', Validators.required],
-      paisDeProcedencia: [mercanciaData.paisDeProcedencia || '', Validators.required],
+    const FORMGROUP = this.fb.group({
+      tipoRequisito: [MERCANCIADATA.tipoRequisito || '', Validators.required],
+      requisito: [MERCANCIADATA.requisito || '', Validators.required],
+      numeroCertificadoInternacional: [MERCANCIADATA.numeroCertificadoInternacional || '', Validators.required],
+      numeroOficioCasoEspecial: [MERCANCIADATA.numeroOficioCasoEspecial || ''],
+      fraccionArancelaria: [MERCANCIADATA.fraccionArancelaria || '', Validators.required],
+      descripcionFraccionArancelaria: [MERCANCIADATA.descripcionFraccionArancelaria || '', Validators.required],
+      nico: [MERCANCIADATA.nico || '', Validators.required],
+      descripcionNico: [MERCANCIADATA.descripcionNico || '', Validators.required],
+      descripcion: [MERCANCIADATA.descripcion || '', Validators.required],
+      cantidadUMT: [MERCANCIADATA.cantidadUMT || '', Validators.required],
+      umt: [MERCANCIADATA.umt, Validators.required],
+      cantidadUMC: [MERCANCIADATA.cantidadUMC || '', Validators.required],
+      umc: [MERCANCIADATA.umc || '', Validators.required],
+      uso: [MERCANCIADATA.uso || '', Validators.required],
+      numeroDeLote: [MERCANCIADATA.numeroDeLote || '', Validators.required],
+      faseDeDesarrollo: [MERCANCIADATA.faseDeDesarrollo || '', Validators.required],
+      especie: [MERCANCIADATA.especie || '', Validators.required],
+      paisDeOrigen: [MERCANCIADATA.paisDeOrigen || '', Validators.required],
+      paisDeProcedencia: [MERCANCIADATA.paisDeProcedencia || '', Validators.required],
     });
 
-    return formGroup;
+    return FORMGROUP;
   }
 
 
@@ -430,7 +437,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       });
     }
     const VALOR = this.datosMercanciaFormGroup.value;
-    console.log(VALOR, 'FormGroup');
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );

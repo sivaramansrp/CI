@@ -1,8 +1,8 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
@@ -17,7 +17,24 @@ import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuic
 @Component({
   selector: 'app-datos-para-movilizacion',
   templateUrl: './datos-para-movilizacion.component.html',
-  styleUrls: ['./datos-para-movilizacion.component.scss']
+  styleUrls: ['./datos-para-movilizacion.component.scss'],
+  standalone: true,
+  imports: [
+    TituloComponent,
+    InputRadioComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    CrosslistComponent,
+    BtnContinuarComponent,
+    AnexarDocumentosComponent,
+    TableComponent,
+    SolicitanteComponent,
+    TercerosComponent,
+    AlertComponent,
+    FirmaElectronicaComponent,
+    ReactiveFormsModule
+  ]
 })
 export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
 

@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
@@ -20,6 +20,20 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [
+    InputRadioComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    CrosslistComponent,
+    BtnContinuarComponent,
+    AnexarDocumentosComponent,
+    TableComponent,
+    TituloComponent,
+    AlertComponent,
+    ReactiveFormsModule
+  ]
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
