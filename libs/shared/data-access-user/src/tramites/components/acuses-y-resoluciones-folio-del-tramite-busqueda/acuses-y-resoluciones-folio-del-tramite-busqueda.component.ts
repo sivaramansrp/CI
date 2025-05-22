@@ -52,6 +52,8 @@ export const FECHA_FINAL = {
 export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   implements OnInit, OnDestroy
 {
+  @Input()
+  public procedureUrl!: string;
   public tramiteData: TramiteDetails[] = [];
   /**
    * Formulario para la búsqueda de acuses y resoluciones.
@@ -67,12 +69,6 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Configuración del campo de fecha final.
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
-
-  /**
-   * URL del procedimiento para la navegación.
-   */
-
-  public procedureUrl!: string;
 
   /**
    * Datos configurados para la tabla.
