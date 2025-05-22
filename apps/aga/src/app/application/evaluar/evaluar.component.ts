@@ -167,14 +167,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.tramite) {
       this.selectTramite(this.tramite);
-      this.consultaioStore.establecerConsultaio(
-        this.guardarDatos?.procedureId,
-        this.guardarDatos?.parameter,
-        this.guardarDatos?.department,
-        this.guardarDatos?.folioTramite,
-        this.guardarDatos?.tipoDeTramite,
-        this.guardarDatos?.estadoDeTramite,
-        true, false, false);
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
