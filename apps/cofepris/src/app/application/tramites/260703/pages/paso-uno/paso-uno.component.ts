@@ -1,7 +1,3 @@
-import {
-  Catalogo,
-  ConfiguracionColumna,
-} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -15,6 +11,9 @@ import {
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
+import {
+  ConfiguracionColumna
+} from '@libs/shared/data-access-user/src';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
@@ -25,6 +24,7 @@ import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.mo
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
+  providers: [SolicitudPermisoService]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
