@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, RespuestaCatalogos, SharedModule, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {Subject,skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
@@ -23,7 +24,13 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 @Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
-  styleUrl: './datos-para-movilizacion-nacional.component.scss'
+  styleUrl: './datos-para-movilizacion-nacional.component.scss',
+  standalone: true,
+  imports:[SharedModule,
+        CommonModule, TituloComponent,
+            ReactiveFormsModule,
+            CatalogoSelectComponent,
+            ]
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
 

@@ -39,9 +39,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     PasoUnoComponent,
     ZoosanitarioPageComponent,
-    DatosDeLaSolicitudComponent,
-    DatosParaMovilizacionNacionalComponent,
-    PagoDeDerechosComponent,
+  
   ],
   imports: [
     SharedModule,
@@ -63,7 +61,10 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     CatalogoSelectComponent,
     TercerosComponent,
     TablaDinamicaComponent,
+    PagoDeDerechosComponent,
     ToastrModule.forRoot(),
+    DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionNacionalComponent,
   ],
   providers: [
     ToastrService

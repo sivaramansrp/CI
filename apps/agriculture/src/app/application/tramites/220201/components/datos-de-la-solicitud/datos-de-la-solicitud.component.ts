@@ -1,10 +1,10 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, ConfiguracionColumna, RespuestaCatalogos, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, RespuestaCatalogos, SharedModule, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -12,6 +12,7 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
 
 import {Subject, skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
@@ -30,7 +31,12 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.scss']
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
+  standalone: true,
+  imports:[SharedModule,
+          CommonModule, TituloComponent,
+              ReactiveFormsModule,
+              CatalogoSelectComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -190,7 +196,6 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     });
         this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        console.log('Datos de la solicitud:', datosDeLaSolicitud);
         this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
       }
     });
