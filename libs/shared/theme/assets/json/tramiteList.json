@@ -262,7 +262,7 @@
     "id": 38,
     "tramite": 110102,
     "linkDashboard": "/se/exportador-autorizado/registrar-solicitud",
-    "linkDepartment": "/se/exportador-autorizado/registrar-solicitud",
+    "linkDepartment": "/pago/exportador-autorizado/registrar-solicitud",
     "department": "se"
   },
   {

@@ -14,7 +14,8 @@ describe('DatosDeLaMercanciaComponent', () => {
 
   beforeEach(async () => {
     storeMock = {
-      setCveRegistroProductor: jest.fn()
+      setCveRegistroProductor: jest.fn(),
+      establecerDatos: jest.fn()
     };
 
     queryMock = {
@@ -36,9 +37,9 @@ describe('DatosDeLaMercanciaComponent', () => {
       ]
     }).compileComponents();
 
-    const FIXTURE = TestBed.createComponent(DatosDeLaMercanciaComponent);
-    component = FIXTURE.componentInstance;
-    FIXTURE.detectChanges();
+    fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('debe crear el componente', () => {
@@ -54,8 +55,8 @@ describe('DatosDeLaMercanciaComponent', () => {
 
   it('debe establecer valores en el store al llamar setValoresStore', () => {
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('654321');
-    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor', 'setCveRegistroProductor');
-    expect(storeMock.setCveRegistroProductor).toHaveBeenCalledWith('654321');
+    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor');
+    expect(storeMock.establecerDatos).toHaveBeenCalledWith({ cveRegistroProductor: '654321' });
   });
 
   it('debe obtener valores del store y asignarlos al formulario', () => {
