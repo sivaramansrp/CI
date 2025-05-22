@@ -33,4 +33,9 @@ export class PasoUnoComponent implements AfterViewInit {
    seleccionaTab(i: number): void {
      this.indice = i;
    }
+  /**
+   * Indica si se debe mostrar el botón para copiar los datos en la interfaz de usuario.
+   * Cuando es `true`, el botón de copiar datos será visible; cuando es `false`, el botón estará oculto.
+   */
+   mostrarBotonCopiarDatos: boolean = false;
 }

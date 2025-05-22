@@ -1,3 +1,4 @@
+import { AnexarDocumentosComponent, Catalogo, TEXTOS, TituloComponent,AlertComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,6 +12,8 @@ import { TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
+  standalone: true,
+  imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent]
 })
 
 export class PasoDosComponent implements OnDestroy {
@@ -66,4 +69,21 @@ export class PasoDosComponent implements OnDestroy {
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
   }
+
+  /**
+     * Catálogo de documentos disponibles para el trámite.
+     * @type {Catalogo[]}
+     */
+    catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * Clase CSS para mostrar alertas informativas.
+   * @type {string}
+   */
+    infoAlert = 'alert-info';
+    /**
+     * Constante que contiene los textos utilizados en el componente.
+     * @type {any}
+     */
+    TEXTOS = TEXTOS;
 }

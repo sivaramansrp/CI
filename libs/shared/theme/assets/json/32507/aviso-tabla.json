@@ -6,6 +6,13 @@
             "pesoKg": "2500.75",
             "descripcionUnidadMedida": "Kilogramos",
             "descripcion": "Carga de productos electrónicos"
+          },
+        {
+            "idTransaccionVUCEM": "TX987654321",
+            "cantidad": "50",
+            "pesoKg": "1500.50",
+            "descripcionUnidadMedida": "Kilogramos",
+            "descripcion": "Carga de productos alimenticios"
           }
        
     ]

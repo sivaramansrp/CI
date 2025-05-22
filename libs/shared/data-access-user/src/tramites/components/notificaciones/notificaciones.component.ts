@@ -1,12 +1,24 @@
-import { BsModalRef, BsModalService, ModalDirective, ModalModule, ModalOptions, } from 'ngx-bootstrap/modal';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, } from '@angular/core';
+import {
+  BsModalRef,
+  BsModalService,
+  ModalDirective,
+  ModalModule,
+  ModalOptions,
+} from 'ngx-bootstrap/modal';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ToastrService } from 'ngx-toastr';
 import { PreviewDocumentoComponent } from '../preview-documento/preview-documento.component';
-import { title } from 'process';
-
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Modelo que contiene los atributos necesarios para mostrar una notificación al usuario.
@@ -71,9 +83,8 @@ export interface Notificacion {
 export enum TipoNotificacionEnum {
   ALERTA = 'alert',
   TOASTR = 'toastr',
-  BANNER = 'banner'
+  BANNER = 'banner',
 }
-
 
 /**
  * Enum que contiene los tipos de noficiaciones que pueden ser mostrados dentro de la
@@ -92,7 +103,6 @@ export enum CategoriaMensaje {
   imports: [CommonModule, AlertComponent, ModalModule],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
-  providers: [BsModalService]
 })
 export class NotificacionesComponent implements OnChanges {
   /**
@@ -119,16 +129,15 @@ export class NotificacionesComponent implements OnChanges {
   public mostrarModal: boolean = false;
 
   /**
-   * Referencia al modal de tipo `BsModalRef`.
-   * Utilizada para manejar el estado y las acciones del modal.
-   */
-  public modalRef!: BsModalRef;
-
-  /**
    * Indica si el banner debe mostrarse.
    */
   public verBanner: boolean = false;
 
+  /**
+   * Referencia al modal de tipo `BsModalRef`.
+   * Utilizada para manejar el estado y las acciones del modal.
+   */
+  public modalRef!: BsModalRef;
 
   /**
    * Referencia al modal automático mostrado.
@@ -140,7 +149,7 @@ export class NotificacionesComponent implements OnChanges {
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
     private modalService: BsModalService
-  ) { }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['notificacionInput']) {
@@ -155,9 +164,12 @@ export class NotificacionesComponent implements OnChanges {
               initialState: {
                 ruta: this.notificacionInput.mensaje,
                 title: this.notificacionInput.titulo,
-              }
-            }
-            this.modalRef = this.modalService.show(PreviewDocumentoComponent, ESTADO_INICIAL);
+              },
+            };
+            this.modalRef = this.modalService.show(
+              PreviewDocumentoComponent,
+              ESTADO_INICIAL
+            );
           } else {
             this.abrirModal();
           }
@@ -180,16 +192,16 @@ export class NotificacionesComponent implements OnChanges {
    */
   public creaToastr(): void {
     switch (this.notificacionInput?.categoria) {
-      case (CategoriaMensaje.ALERTA):
+      case CategoriaMensaje.ALERTA:
         this.toastr.warning(this.notificacionInput?.mensaje);
         break;
-      case (CategoriaMensaje.ERROR):
+      case CategoriaMensaje.ERROR:
         this.toastr.error(this.notificacionInput?.mensaje);
         break;
-      case (CategoriaMensaje.EXITO):
+      case CategoriaMensaje.EXITO:
         this.toastr.success(this.notificacionInput?.mensaje);
         break;
-      case (CategoriaMensaje.INFORMACION):
+      case CategoriaMensaje.INFORMACION:
         this.toastr.info(this.notificacionInput?.mensaje);
         break;
       default:
@@ -224,6 +236,7 @@ export class NotificacionesComponent implements OnChanges {
   declinarAccion(): void {
     this.confirmacionModal.emit(false);
     this.modal?.hide();
+    this.confirmacionModal.emit(false);
   }
 
   /**
@@ -238,10 +251,12 @@ export class NotificacionesComponent implements OnChanges {
 
   /**
    * Sanitiza el mensaje de entrada para evitar problemas de seguridad.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   sanitizarContenidoHtml(): void {
-    this.notificacionInput.mensaje = this.sanitizer.bypassSecurityTrustHtml(this.notificacionInput.mensaje) as string;
+    this.notificacionInput.mensaje = this.sanitizer.bypassSecurityTrustHtml(
+      this.notificacionInput.mensaje
+    ) as string;
   }
 }

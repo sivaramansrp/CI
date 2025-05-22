@@ -1,25 +1,38 @@
-import { TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { of } from 'rxjs';
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
-  let mockStore: any;
-  let mockQuery: any;
+  let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
+  let storeMock: any;
+  let queryMock: any;
 
   beforeEach(async () => {
-    mockStore = { establecerDatos: jest.fn() };
-    mockQuery = { selectTramite110102$: of({ cveRegistroProductor: '123456789012' }) };
+    storeMock = {
+      setCveRegistroProductor: jest.fn()
+    };
+
+    queryMock = {
+      selectTramite110102$: of({
+        cveRegistroProductor: '123456'
+      })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDeLaMercanciaComponent],
+      imports: [
+        DatosDeLaMercanciaComponent,
+        ReactiveFormsModule,
+        CommonModule
+      ],
       providers: [
         FormBuilder,
-        { provide: Tramite110102Store, useValue: mockStore },
-        { provide: Tramite110102Query, useValue: mockQuery }
+        { provide: Tramite110102Store, useValue: storeMock },
+        { provide: Tramite110102Query, useValue: queryMock }
       ]
     }).compileComponents();
 
@@ -32,57 +45,71 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit debe llamar a getValoresStore', () => {
-    const SPY = jest.spyOn(component, 'getValoresStore');
-    component.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
+  it('debe inicializar el formulario con valores por defecto', () => {
+    expect(component.datosDeLamercanciaFrom).toBeDefined();
+    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('123456');
+    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value).toBeNull();
+    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
   });
 
-  it('setValoresStore debe llamar a establecerDatos en el store', () => {
-    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('987654321098');
-    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor');
-    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ cveRegistroProductor: '987654321098' });
+  it('debe establecer valores en el store al llamar setValoresStore', () => {
+    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('654321');
+    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor', 'setCveRegistroProductor');
+    expect(storeMock.setCveRegistroProductor).toHaveBeenCalledWith('654321');
   });
 
-  it('getValoresStore debe actualizar el valor del formulario desde el store', () => {
-    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('');
+  it('debe obtener valores del store y asignarlos al formulario', () => {
     component.getValoresStore();
-    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('123456789012');
+    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('123456');
   });
 
-  it('esInvalido debe retornar true si el control es inválido y tocado', () => {
-    const CONTROL = component.datosDeLamercanciaFrom.get('cveRegistroProductor');
-    CONTROL?.setValue('');
-    CONTROL?.markAsTouched();
-    expect(component.esInvalido('cveRegistroProductor')).toBe(true);
+  it('debe retornar true si un control es inválido', () => {
+    const CONTROL_NAME = 'cveRegistroProductor';
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('');
+    expect(component.esInvalido(CONTROL_NAME)).toBe(true);
   });
 
-  it('esInvalido debe retornar false si el control es válido', () => {
-    const CONTROL = component.datosDeLamercanciaFrom.get('cveRegistroProductor');
-    CONTROL?.setValue('123456789012');
-    CONTROL?.markAsTouched();
-    expect(component.esInvalido('cveRegistroProductor')).toBe(false);
+  it('debe retornar false si un control es válido', () => {
+    const CONTROL_NAME = 'cveRegistroProductor';
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('123456');
+    expect(component.esInvalido(CONTROL_NAME)).toBe(false);
   });
 
-  it('actualizaGridComercializadoresProductos debe habilitar el campo si idSolicitud es null', () => {
+  it('debe habilitar cveRegistroProductor si idSolicitud es null', () => {
     component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(null);
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     component.actualizaGridComercializadoresProductos();
     expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enabled).toBe(true);
   });
 
-  it('actualizaGridComercializadoresProductos debe deshabilitar el campo si idSolicitud tiene valor', () => {
+  it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
     component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(1);
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
     component.actualizaGridComercializadoresProductos();
     expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disabled).toBe(true);
   });
 
-  it('ngOnDestroy debe completar el subject destroyed$', () => {
-    const SPY_NEXT = jest.spyOn((component as any).destroyed$, 'next');
-    const SPY_COMPLETE = jest.spyOn((component as any).destroyed$, 'complete');
+  it('debe mostrar la notificación correcta si cveRegistroProductor tiene un error de patrón', () => {
+    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('invalid');
+    component.actualizaGridComercializadoresProductos();
+    expect(component.nuevaAlertaNotificacion.mensaje).toBe('Debe introducir la clave de registro.');
+  });
+
+  it('debe mostrar la notificación correcta si cveRegistroProductor no coincide con el valor esperado', () => {
+    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('999999');
+    component.actualizaGridComercializadoresProductos();
+    expect(component.nuevaAlertaNotificacion.mensaje).toBe(
+      'El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.'
+    );
+  });
+
+  it('debe completar el subject destroyed$ al destruir el componente', () => {
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(SPY_NEXT).toHaveBeenCalled();
-    expect(SPY_COMPLETE).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

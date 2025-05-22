@@ -101,7 +101,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
        * Segundo apellido del destinatario.
        * Campo de solo lectura.
        */
-      segundoApellido: [{ value: '', disabled: true }],
+      segundoApellido: [this.estadoSeleccionado?.segundoApellido, [Validators.required]],
       /**
        * Número de registro fiscal del destinatario.
        * Campo obligatorio, solo permite números.
@@ -151,18 +151,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
        * Fax del destinatario.
        * Campo obligatorio, solo permite números.
        */
-      fax: [
-        this.estadoSeleccionado?.fax,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
-      ],
+      fax: [this.estadoSeleccionado?.fax],
       /**
        * Teléfono del destinatario.
        * Campo obligatorio, solo permite números.
        */
       telefono: [
-        this.estadoSeleccionado?.telefono,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
-      ],
+        this.estadoSeleccionado?.telefono],
     });
   }
 
@@ -171,26 +166,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Obtiene los datos necesarios y configura los formularios.
    */
   ngOnInit(): void {
-    this.obtenerDatosDeTabla();
     this.getValorStore();
     this.crearFormularioDatosDelDestinatario();
     this.crearFormularioDomicilioDelDestinatario();
   }
 
-  /**
-   * Obtiene los datos del destinatario desde el servicio.
-   * Actualiza el campo "segundoApellido" en el formulario con los datos obtenidos.
-   */
-  obtenerDatosDeTabla(): void {
-    this.service
-      .getdestinatario()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: { segundoApellido: string }) => {
-        this.datosDelDestinatario.patchValue({
-          segundoApellido: data.segundoApellido,
-        });
-      });
-  }
+  
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
