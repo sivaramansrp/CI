@@ -25,7 +25,7 @@ import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { AcusesYResoluciones, BotonDeAccion } from '@ng-mf/data-access-user';
-import { LISTA_TRIMITES } from '../../shared/constantes/lista-trimites.enums';
+import { LISTA_TRIMITES } from '../../shared/constants/lista-trimites.enums';
 import { SubsecuentesService } from '@ng-mf/data-access-user';
 
 import { AccuseComponentes } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
