@@ -57,7 +57,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
    * @property {FormGroup} pagoForm
    */
   pagoForm: FormGroup = this.fb.group({
-    exentoPago: [{ value: 'si', disabled: false }],
+    exentoPago: [{ value: 'si', disabled: false },Validators.required],
     justificacion: [{ value: '', disabled: false }, Validators.required],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
@@ -81,7 +81,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
       "value": "si"
     }
   ];
-  
+
 
 
     private destroyNotifier$ = new Subject<void>();
