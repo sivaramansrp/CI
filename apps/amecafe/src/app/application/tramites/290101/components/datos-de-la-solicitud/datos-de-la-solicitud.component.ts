@@ -193,35 +193,40 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Datos seleccionados de la tabla de regiones.
    * Contiene la información de las regiones seleccionadas por el usuario.
    * @type {RegionesInfo[]}
    */
 
- regionesSeleccionadas: RegionesInfo[] = [];
-  /**
+  regionesSeleccionadas: RegionesInfo[] = [];
+  
+   /**
+   * Datos seleccionados de la tabla de café de exportación.
+   * Contiene la información de los cafés seleccionados por el usuario.
+   * @type {CafeExporacionInfo[]}
+   */
+
+  cafeSeleccionado: CafeExporacionInfo[] = [];
+
+ /**
    * Datos seleccionados de la tabla de beneficios.
    * Contiene la información de los beneficios seleccionados por el usuario.
    * @type {BeneficiosInfo[]}
    */
 
-  cafeSeleccionado: CafeExporacionInfo[] = [];
+  beneficiosSeleccionados: BeneficiosInfo[] = [];
+ 
   /**
    * Datos seleccionados de la tabla de bodegas.
    * Contiene la información de las bodegas seleccionadas por el usuario.
    * @type {BodegasInfo[]}
    */
-  beneficiosSeleccionados: BeneficiosInfo[] = [];
-  /**
-   * Datos seleccionados de la tabla de café de exportación.
-   * Contiene la información de los cafés seleccionados por el usuario.
-   * @type {CafeExporacionInfo[]}
-   */
+
   bodegasSeleccionadas: BodegasInfo[] = [];
 
-
-  /**
+   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {ProductoTablaServicios} productoTablaServicios - Servicio para obtener los datos de las tablas.
