@@ -1,3 +1,4 @@
+// Componente para la vista de los anexos dos y tres en el trámite 80103
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
@@ -10,6 +11,15 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
+/*
+  * Componente para mostrar la vista de los anexos dos y tres en el trámite 80103.
+  *
+  * Este componente utiliza el servicio `Tramite80101Query` para obtener los datos de los anexos
+  * y el servicio `Tramite80101Store` para almacenar y gestionar el estado de los datos.
+  *
+  * @export
+  * @class AnexoVistaDosYTresComponent
+  */
 
 @Component({
   selector: 'app-anexo-vista-dos-y-tres',
@@ -18,6 +28,13 @@ import { takeUntil } from 'rxjs';
   templateUrl: './anexo-vista-dos-y-tres.component.html',
   styleUrl: './anexo-vista-dos-y-tres.component.scss',
 })
+/*
+  * Clase que representa el componente de la vista de los anexos dos y tres.
+  *
+  * @class AnexoVistaDosYTresComponent
+  * @implements {OnInit}
+  * @implements {OnDestroy}
+  */
 export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   /**
    * Lista de encabezados del anexo dos.
@@ -53,13 +70,18 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/*
+  * Constructor del componente.
+  * @param {Tramite80101Query} query - Consulta para obtener los datos de los anexos.
+*/
   constructor(private query: Tramite80101Query,
     private store: Tramite80101Store
   ) {
-    //constructor vacío
+   
   }
-
+/*
+  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+*/
   ngOnInit(): void {
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))

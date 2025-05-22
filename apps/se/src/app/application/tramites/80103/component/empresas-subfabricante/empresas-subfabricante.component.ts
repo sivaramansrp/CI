@@ -1,3 +1,27 @@
+/**
+ * compo doc
+ * @component
+ * @selector app-empresas-subfabricante
+ * @description
+ * Este componente es responsable de gestionar la sección de empresas subfabricantes
+ * en el trámite 80103. Permite visualizar, buscar, agregar, complementar y eliminar
+ * plantas subfabricantes asociadas a un subcontratista, utilizando el estado centralizado
+ * proporcionado por Tramite80101Store y Tramite80101Query.
+ *
+ * Funcionalidades principales:
+ * - Visualiza y administra la lista de plantas subfabricantes disponibles y seleccionadas.
+ * - Permite buscar plantas subfabricantes por RFC y estado.
+ * - Permite agregar y eliminar plantas subfabricantes a la lista seleccionada.
+ * - Permite complementar información de plantas y navegar a la sección correspondiente.
+ * - Utiliza Observables para reaccionar a los cambios en el estado de los datos.
+ *
+ * Componentes importados:
+ * - `EmpresasSubfabricantesComponent`: Componente para mostrar y gestionar las plantas subfabricantes.
+ *
+ * @templateUrl ./empresas-subfabricante.component.html
+ * @styleUrl ./empresas-subfabricante.component.scss
+ */
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
@@ -6,7 +30,6 @@ import { CommonModule } from '@angular/common';
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { GestionarEmpresasSubfabricantesComponent } from '../../../../shared/components/gestionar-empresas-subfabricante/gestionar-empresas-subfabricante.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
@@ -16,7 +39,16 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
 import { EmpresasSubfabricantesComponent } from '../../../../shared/components/empresas-subfabricante/empresas-subfabricante.component';
-
+/*
+  * Componente para gestionar la sección de empresas subfabricantes en el trámite 80103.
+  *
+  * Este componente permite buscar, agregar, complementar y eliminar plantas subfabricantes
+  * asociadas a un subcontratista. Utiliza el estado centralizado para almacenar y modificar
+  * la información de las plantas subfabricantes.
+  *
+  * @export
+  * @class EmpresasSub
+  * */
 
 @Component({
   selector: 'app-empresas-subfabricante',
@@ -26,8 +58,13 @@ import { EmpresasSubfabricantesComponent } from '../../../../shared/components/e
   styleUrl: './empresas-subfabricante.component.scss',
   host: { hostID: crypto.randomUUID().toString() },
 })
+/*
+* Clase que representa el componente de empresas subfabricantes.
+*/
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
-
+/**
+ * ID del host del componente.
+ */
   @Input() tabIndex: number = 0;
 
   /**
@@ -88,10 +125,17 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   * @property {Subject<void>} destroyNotifier$
   */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/*
+  * Datos de la tabla de subfabricantes disponibles.*/
   configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
+  /**
+   * Datos de la tabla de subfabricantes seleccionados.
+   * @property {PlantasSubfabricante[]} configuracionTablaSeleccionadas
+   */
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
-
+/*
+  * Constructor del componente.
+*/
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
     private fb: FormBuilder,
     public query: Tramite80101Query,

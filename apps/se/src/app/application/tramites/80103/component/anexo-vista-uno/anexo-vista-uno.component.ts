@@ -1,3 +1,6 @@
+/*
+* VistaUnoComponent
+*/
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +18,17 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
+/*
+  * Componente para mostrar la vista del anexo uno en el trámite 80103.
+  *
+  * Este componente utiliza el servicio `Tramite80101Query` para obtener los datos del anexo uno
+  * y el servicio `Tramite80101Store` para almacenar y gestionar el estado de los datos.
+  *
+  * @export
+  * @class AnexoVistaUnoComponent
+  * @implements {OnInit}
+  * @implements {OnDestroy}
+  */
 
 @Component({
   selector: 'app-anexo-vista-uno',
@@ -23,12 +37,26 @@ import { takeUntil } from 'rxjs';
   templateUrl: './anexo-vista-uno.component.html',
   styleUrl: './anexo-vista-uno.component.scss',
 })
+/*
+  * Clase que representa el componente de la vista del anexo uno.
+  *
+  * @class AnexoVistaUnoComponent
+  * @implements {OnInit}
+  * @implements {OnDestroy}
+  */
 export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
-
+/*
+  * Configuración del anexo Uno.
+  * @type {Object}
+*/
   public anexoUnoConfig = {
     anexoUnoTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO,
   }
+  /**
+   * Configuración del anexo Dos.
+   * @type {Object}
+   */
   public anexoImportacionConfig = {
     anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO,
@@ -53,12 +81,20 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
  * @property {Subject<void>} destroyNotifier$
  */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Constructor del componente.
+   * @param {Router} router - Router para la navegación entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Ruta activada para obtener información de la ruta actual.
+   * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos del trámite.
+   * @param {Tramite80101Query} query - Consulta para obtener los datos del trámite.
+   */
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
-    // eslint-disable-next-line no-empty-function
     private query: Tramite80101Query) { }
-
+/*
+* Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+*/
   ngOnInit(): void {
     this.query.selectImportarTablsDatos$
       .pipe(takeUntil(this.destroyNotifier$))

@@ -1,10 +1,20 @@
+// Componente para la vista de los anexos dos y tres en el trámite 80103
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
-import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+/*
+  * Componente para mostrar la lista de empresas terciarizadas en el trámite 80103.
+  *
+  * Este componente utiliza el servicio `NuevoProgramaIndustrialService` para obtener la lista de estados
+  * y gestionar la información relacionada con las empresas terciarizadas.
+  *
+  * @export
+  * @class EmpresasTerciarizadaasComponent
+  */
 
 @Component({
   selector: 'app-empresas-terciarizadaas',
@@ -13,8 +23,18 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciar
   templateUrl: './empresas-terciarizadaas.component.html',
   styleUrl: './empresas-terciarizadaas.component.scss',
 })
+/*
+  * Clase que representa el componente de empresas terciarizadas.
+  *
+  * @class EmpresasTerciarizadaasComponent
+  * @implements {OnDestroy}
+  */
 export class EmpresasTerciarizadaasComponent implements OnDestroy {
 
+  /*
+  * Constructor del componente.
+  * @param {NuevoProgramaIndustrialService} nuevoProgramaIndustrialService - Servicio para gestionar la información del nuevo programa industrial.
+  */
   constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,){
 
   }
@@ -26,7 +46,10 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
   * @property {Subject<void>} destroyNotifier$
   */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/*
+* Lista de encabezados de la tabla de empresas terciarizadas.
+* @type {ConfiguracionColumna<DisponsibleFiscal>[]}
+*/
   public parentTablaConfig: ConfiguracionColumna<DisponsibleFiscal>[] = [
     { encabezado: 'Calle', clave: (item) => item.calle, orden: 1 },
     { encabezado: 'Número exterior', clave: (item) => item.numeroExterior, orden: 2 },
@@ -40,6 +63,10 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
     { encabezado: 'Domicilio fiscal del solicitante', clave: (item) => item.domicilioFiscalSolicitante, orden: 10 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 11 },
   ];
+  /**
+   * Lista de encabezados de la tabla de empresas terciarizadas.
+   * @type {ConfiguracionColumna<DisponsibleFiscal>[]}
+   */
   estadosCatalogo: Catalogo[]=[];
 
    /**

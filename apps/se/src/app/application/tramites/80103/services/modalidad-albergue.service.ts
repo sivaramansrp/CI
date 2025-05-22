@@ -1,5 +1,6 @@
+import { AmpliacionServiciosResponse , CatalogoResponso, InfoServicios, PlantasSubfabricanteResponse} from '../models/nuevo-programa-industrial.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { InfoServicios, Servicio } from '../models/nuevo-programa-industrial.model';
+
 import { Observable, map } from 'rxjs';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
@@ -18,23 +19,21 @@ export class NuevoProgramaIndustrialService {
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
    * @returns {Observable<any>} - Observable con los datos obtenidos.
    */
-  getDatos(): Observable<InfoServicios> {
-    return this.http
-    .get<Servicio[]>("assets/json/80205/ampliacion-servicios.json")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .pipe(map((res: any) => res.data.InfoServicios));
+ getDatos(): Observable<InfoServicios> {
+  return this.http
+    .get<AmpliacionServiciosResponse>("assets/json/80205/ampliacion-servicios.json")
+    .pipe(map(res => res.data.infoServicios));
 }
    
   /**
    * Obtiene la lista de selección de ingreso desde un archivo JSON.
    * @returns {Observable<any>} - Observable con los datos obtenidos.
    */
-  obtenerIngresoSelectList(): Observable<Catalogo[]> {
-    return this.http
-    .get<Catalogo[]>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .pipe(map((res: any) => res.data));
-  }
+ obtenerIngresoSelectList(): Observable<Catalogo[]> {
+  return this.http
+    .get<CatalogoResponso>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
+    .pipe(map(res => res.data));
+}
 
    /**
    * Obtiene la lista de estados.
@@ -52,16 +51,11 @@ export class NuevoProgramaIndustrialService {
    * @method getSubfabricantesDisponibles
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-  getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
-    return (
-      this.http
-        .get<PlantasSubfabricante[]>(
-          'assets/json/80207/submanufactureras-disponibles-datos.json'
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .pipe(map((response: any) => response.data))
-    );
-  }
+getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
+  return this.http
+    .get<PlantasSubfabricanteResponse>('assets/json/80207/submanufactureras-disponibles-datos.json')
+    .pipe(map(response => response.data));
+}
 
   /**
    * Obtiene los datos de complementos desde un archivo JSON local.
@@ -69,10 +63,7 @@ export class NuevoProgramaIndustrialService {
    * @returns Un observable que emite los datos de tipo `DatosComplimentos`.
    */
   obtenerComplimentos(): Observable<DatosComplimentos> {
-    return this.http
-    .get<DatosComplimentos>("assets/json/80102/datos-complimentos.json")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .pipe(map((res: any) => res));
-  }
+  return this.http.get<DatosComplimentos>("assets/json/80102/datos-complimentos.json");
+}
 
 }

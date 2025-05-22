@@ -1,6 +1,7 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
 
 /**
  * Representa la estructura de datos para un servicio IMMEX.
@@ -134,4 +135,46 @@ export interface AnnexoUno{
   importarDatosTabla:AnexoUnoEncabezado[];
   datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
   seccionActiva: string;
+}
+/**
+ * Representa la respuesta de una solicitud de ampliación de servicios.
+ * 
+ * @interface AmpliacionServiciosResponse
+ * @property {number} code - Código de respuesta del servicio.
+ * @property {object} data - Datos relacionados con la ampliación de servicios.
+ * @property {string} data.idsubmanufacturer - ID del subfabricante.
+ * @property {InfoServicios} data.infoServicios - Información sobre los servicios.
+ */
+export interface AmpliacionServiciosResponse {
+  code: number;
+  data: {
+    idsubmanufacturer: string;
+    infoServicios: InfoServicios;
+  };
+}
+/*
+  * Representa la respuesta de una solicitud de ampliación de servicios.
+  * 
+  * @interface AmpliacionServiciosResponse
+  * @property {number} code - Código de respuesta del servicio.
+  * @property {object} data - Datos relacionados con la ampliación de servicios.
+  * @property {string} data.idsubmanufacturer - ID del subfabricante.
+  * @property {InfoServicios} data.infoServicios - Información sobre los servicios.
+  */
+export interface CatalogoResponso {
+  code: number;
+  data: Catalogo[];
+  message: string;
+}
+/*
+  * Representa la respuesta de una solicitud de catálogo.
+  * 
+  * @interface CatalogoResponse
+  * @property {number} code - Código de respuesta del catálogo.
+  * @property {Catalogo[]} data - Datos del catálogo.
+  * @property {string} message - Mensaje asociado a la respuesta.
+  */
+export interface PlantasSubfabricanteResponse {
+  code: number;
+  data: PlantasSubfabricante[];
 }

@@ -1,11 +1,44 @@
+/**
+ * compo doc
+ * @component
+ * @selector app-aggregar-complimentos
+ * @description
+ * Este componente es responsable de gestionar la sección de agregación de cumplimientos
+ * en el trámite 80103. Permite visualizar, agregar, modificar y eliminar datos de cumplimientos
+ * y de socios/accionistas, tanto nacionales como extranjeros, utilizando el estado centralizado
+ * proporcionado por Tramite80101Store y Tramite80101Query.
+ *
+ * Funcionalidades principales:
+ * - Visualiza los datos de cumplimientos y las tablas de socios/accionistas nacionales y extranjeros.
+ * - Permite modificar los datos de cumplimientos y almacenarlos en el estado.
+ * - Permite agregar y eliminar socios/accionistas en las tablas correspondientes según el tipo de RFC.
+ * - Utiliza Observables para reaccionar a los cambios en el estado de los datos.
+ *
+ * Componentes importados:
+ * - `ComplimentosComponent`: Componente para mostrar y gestionar los cumplimientos.
+ *
+ * @templateUrl ./aggregar-complimentos.component.html
+ * @styleUrl ./aggregar-complimentos.component.scss
+ */
+
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
-import { Component } from '@angular/core';
+
+import { Component, OnDestroy } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+/*
+  * Componente para agregar cumplimentos en el trámite 80103.
+  * 
+  * Este componente permite gestionar los cumplimientos y los datos de los accionistas
+  * en el trámite 80103. Utiliza el estado centralizado para almacenar y modificar la información.
+  * 
+  * @export
+  * @class AggregarComplimentosComponent
+  */
 
 @Component({
   selector: 'app-aggregar-complimentos',
@@ -14,13 +47,43 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
-export class AggregarComplimentosComponent {
+export class AggregarComplimentosComponent implements OnDestroy {
+  /**
+   * Almacena los datos de los cumplimentos.
+   * 
+   * @type {DatosComplimentos}
+   * @memberof AggregarComplimentosComponent
+   */
   datosComplimentos!: DatosComplimentos;
+  /**
+   * Notificador para destruir el componente y liberar recursos.
+   * 
+   * @type {Subject<void>}
+   * @memberof AggregarComplimentosComponent
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Observable que emite los datos de los cumplimentos.
+   * 
+   * @type {Observable<SociaoAccionistas[]>}
+   * @memberof AggregarComplimentosComponent
+   */
   tablaDatosComplimentos$: Observable<SociaoAccionistas[]>;
+  /*
+    * Observable que emite los datos de los cumplimentos extranjeros.
+    * 
+    * @type {Observable<SociaoAccionistas[]>}
+    * @memberof AggregarComplimentosComponent
+    */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
+  /*
+  * Constructor del componente.
+  * 
+  * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos de los cumplimentos.
+  * @param {Tramite80101Query} tramiteQuery - Consulta para obtener los datos de los cumplimentos.
+  */
 
-  constructor(
+constructor(
     private store: Tramite80101Store,
     private tramiteQuery: Tramite80101Query,
   ) {
@@ -81,4 +144,9 @@ export class AggregarComplimentosComponent {
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
+  ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
+
 }
