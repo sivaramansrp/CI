@@ -70,7 +70,8 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
   /**
    * URL del procedimiento para la navegación.
    */
-  @Input() public procedureUrl = '';
+  @Input()
+  public procedureUrl = '';
 
   /**
    * URL para regresar al procedimiento anterior.
