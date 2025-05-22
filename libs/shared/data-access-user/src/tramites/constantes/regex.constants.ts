@@ -1,9 +1,9 @@
-import exp from "constants";
+import exp from 'constants';
 
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
-  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
 };
 
 // Expresión regular para verificar si la entrada comienza con espacios
@@ -181,57 +181,57 @@ export const REGEX_NUMEROS = /[^0-9]/g;
  *   - Valido: "123", "123.45"
  *   - No válido: "abc", "123abc"
  */
-export const REGEX_ALTO = ('^[0-9]*\\.?[0-9]+$');
+export const REGEX_ALTO = '^[0-9]*\\.?[0-9]+$';
 
 /**
  * Expresión regular que valida números enteros o decimales.
- * 
+ *
  * @description Esta expresión regular acepta cualquier número entero o decimal positivo.
  * @example
  *   - Valido: "123", "123.45"
  *   - No válido: "abc", "123abc", "-123"
  */
-export const REGEX_ANCHO = ('^[0-9]*\\.?[0-9]+$');
+export const REGEX_ANCHO = '^[0-9]*\\.?[0-9]+$';
 
 /**
  * Expresión regular que valida números enteros o decimales.
- * 
+ *
  * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar profundidades.
  * @example
  *   - Valido: "123", "123.45"
  *   - No válido: "abc", "123abc", "-123"
  */
-export const REGEX_PROFUNDIDAD = ('^[0-9]*\\.?[0-9]+$');
+export const REGEX_PROFUNDIDAD = '^[0-9]*\\.?[0-9]+$';
 
 /**
  * Expresión regular que valida números enteros o decimales.
- * 
+ *
  * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar diámetros.
  * @example
  *   - Valido: "123", "123.45"
  *   - No válido: "abc", "123abc", "-123"
  */
-export const REGEX_DIAMETRO = ('^[0-9]*\\.?[0-9]+$');
+export const REGEX_DIAMETRO = '^[0-9]*\\.?[0-9]+$';
 
 /**
  * Expresión regular que valida un año de creación en formato de cuatro dígitos.
- * 
+ *
  * @description Esta expresión regular acepta cualquier año en formato de cuatro dígitos (por ejemplo, 2024).
  * @example
  *   - Valido: "2024"
  *   - No válido: "abc", "202", "20245"
  */
-export const REGEX_ANO_DE_CREACION = ('^[0-9]{4}$');
+export const REGEX_ANO_DE_CREACION = '^[0-9]{4}$';
 
 /**
  * Expresión regular que valida números enteros o decimales.
- * 
+ *
  * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar avalúos.
  * @example
  *   - Valido: "123", "123.45"
  *   - No válido: "abc", "123abc", "-123"
  */
-export const REGEX_AVALUO = ('^[0-9]*\\.?[0-9]+$');
+export const REGEX_AVALUO = '^[0-9]*\\.?[0-9]+$';
 
 /**
  * Expresión regular para validar correos electrónicos.
@@ -248,16 +248,15 @@ export const REGEX_CORREO_ELECTRONICO =
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
 
-
 /**
  * Expresión regular para validar números decimales con hasta 2 decimales.
- * 
+ *
  * Este patrón permite validar números que pueden contener una parte entera y opcionalmente una parte decimal con hasta 2 dígitos.
  * Ejemplos válidos:
  * - 123
  * - 123.45
  * - 0.5
- * 
+ *
  * Ejemplos no válidos:
  * - 123.456 (más de 2 decimales)
  * - abc (no es un número)
@@ -289,17 +288,17 @@ export const REGEX_CURP =
 export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
 
 export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
-/** 
- * Expresión regular para validar números en formato USD. 
- * Permite dígitos y el punto decimal. 
+/**
+ * Expresión regular para validar números en formato USD.
+ * Permite dígitos y el punto decimal.
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
 
 /**
-* Expresión regular para validar una cadena que contenga solo números enteros
-* separados por comas y espacios opcionales.
-* Ejemplo válido: 123, 456, 789
-*/
+ * Expresión regular para validar una cadena que contenga solo números enteros
+ * separados por comas y espacios opcionales.
+ * Ejemplo válido: 123, 456, 789
+ */
 export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 
 /**
@@ -336,22 +335,22 @@ export const REGEX_SIN_DIGITOS = /\D/g;
 /**
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
-export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
+export const REGEX_TELEFONO_DIGITOS = '/^d{10}$/';
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  */
-export const REGEX_POSTAL = '/^\d{5}$/';
+export const REGEX_POSTAL = '/^d{5}$/';
 /**
  * Expresión regular para validar cadenas alfanuméricas con espacios.
- * 
+ *
  * Esta expresión regular permite letras (mayúsculas y minúsculas), números y espacios.
  * No se permiten caracteres especiales.
- * 
+ *
  * Ejemplos válidos:
  * - "Hola 123"
  * - "Codigo con espacios"
- * 
+ *
  * Ejemplos no válidos:
  * - "Hola@123" (contiene un carácter especial)
  */
@@ -359,10 +358,10 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para reemplazar caracteres no alfanuméricos ni espacios.
- * 
+ *
  * Esta expresión regular identifica cualquier carácter que no sea una letra (mayúscula o minúscula),
  * un número o un espacio, y lo reemplaza.
- * 
+ *
  * Ejemplo de uso:
  * ```typescript
  * const cadena = "Hola@123!";
@@ -371,7 +370,6 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  * ```
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
-
 
 /**
  * Expresión regular para validar nombres.
@@ -393,14 +391,15 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
  * - "Pérez " (termina con un espacio)
  * - "Juan@Pérez" (contiene un carácter no permitido)
  */
-export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
+export const REGEX_NOMBRE =
+  /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
 /**
  * Expresión regular para validar archivos con formato Excel.
- * 
+ *
  * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
  * - `.xls`: Formato de archivo Excel 97-2003.
  * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
- * 
+ *
  * Desglose de la expresión regular:
  * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
  * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
@@ -410,12 +409,12 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
- * 
+ *
  * Ejemplos válidos:
  * - "123"
  * - "123.456"
  * - "0.5"
- * 
+ *
  * Ejemplos no válidos:
  * - "123.4567" (más de 3 decimales)
  * - "1234567890123456" (más de 15 dígitos enteros)
@@ -425,12 +424,12 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
- * 
+ *
  * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
- * 
+ *
  * Ejemplos válidos:
  * - "12345"
- * 
+ *
  * Ejemplos no válidos:
  * - "1234" (menos de 5 dígitos)
  * - "123456" (más de 5 dígitos)
@@ -440,10 +439,9 @@ export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
 export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
 
-
 export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
-export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
-export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
+export const REGEX_PERMITE_11_2_DIGITS = /^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_3_DIGITS = /^\d{1,11}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
  * - Dígitos (0-9)
@@ -465,3 +463,15 @@ export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
  * - "!@#" (no comienza con un carácter válido)
  */
 export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
+
+/**
+ * Expresión regular para validar una "Línea de Captura".
+ *
+ * Formato:
+ * - Exactamente 10 caracteres alfanuméricos en mayúsculas
+ * - Seguido de "M1"
+ * - Seguido de exactamente 8 caracteres alfanuméricos en mayúsculas
+ *
+ * Ejemplo válido: `ABCD123456M1XYZ98765`
+ */
+export const REGEX_LINEA_CAPTURA = /^([A-Z0-9]{10}M1[A-Z0-9]{8}$)/;

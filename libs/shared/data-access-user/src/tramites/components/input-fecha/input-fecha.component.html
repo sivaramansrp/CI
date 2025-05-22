@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="input_fecha" class="form-label" >{{datos.labelNombre}}{{datos.required ? '*' : ''}}:</label>
+  <label for="input_fecha" class="form-label" >{{datos.labelNombre}}{{datos.required ? ' *:' : ''}}</label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
     <div class="input-group-text" id="input_fecha">
       <div class="fecha">
@@ -8,7 +8,10 @@
       <div class="icono">
         <span class="d-flex justify-content-end " id="basic-addon2" style="cursor: pointer;"
           (click)="mostrarCalendario()">
-          <i class="bi bi-calendar-event"></i></span>
+          @if(icono){
+            <i class="bi bi-calendar-event"></i>
+          }
+        </span>
       </div>
     </div>
     <div class="border" *ngIf="mostrar" id="calendario">
