@@ -3138,9 +3138,9 @@
   {
     "id": 450,
     "tramite": 220103,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agricultura/sanidad-acuicola-importacion/solicitud",
+    "linkDepartment": "/pago/sanidad-acuicola-importacion/solicitud",
+    "department": "agriculture"
   },
   {
     "id": 451,
