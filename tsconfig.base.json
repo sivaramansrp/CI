@@ -20,6 +20,7 @@
     "paths": {
       "@libs/*": ["libs/*"],
       "@ng-mf/data-access-user": ["libs/shared/data-access-user/src/index.ts"],
+      "@package-json": ["package.json"],
       "aga/Routes": ["apps/aga/src/app/remote-entry/entry.routes.ts"],
       "agace/Routes": ["apps/agace/src/app/remote-entry/entry.routes.ts"],
       "agriculture/Routes": [
