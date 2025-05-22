@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoSolicitanteComponent } from './paso-solicitante.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoSolicitanteComponent', () => {
   let component: PasoSolicitanteComponent;
@@ -8,6 +11,8 @@ describe('PasoSolicitanteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoSolicitanteComponent],
+      imports: [SolicitanteComponent,HttpClientTestingModule],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
