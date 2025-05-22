@@ -1,6 +1,6 @@
 <div class="container table-container">
   <ng-titulo titulo="Importante" />
-  <form [formGroup]="registroParaLaForm">
+  <form *ngIf="registroParaLaForm" [formGroup]="registroParaLaForm">
     <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
 
     <div class="row" style="padding-bottom: 20px; text-align: right">
@@ -15,6 +15,7 @@
       [label]="
         '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?'
       "
+      [isDisabled]="esFormularioSoloLectura"
       [required]="true"
       name="registro"
       (change)="setValoresStore(registroParaLaForm, 'registro', 'setRegistro')"
@@ -22,7 +23,4 @@
   </form>
 </div>
 
-<div>
-  <btn-continuar [datos]="datosPasos"></btn-continuar>
-</div>
 <ng-alert [CONTENIDO]="ADVERTENCIA.Aviso"></ng-alert>
