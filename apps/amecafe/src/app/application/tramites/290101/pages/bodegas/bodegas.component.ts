@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { BodegasFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
@@ -94,6 +95,7 @@ export class BodegasComponent implements OnInit {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private activateRoute: ActivatedRoute,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -103,7 +105,23 @@ export class BodegasComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+     const BODEGAS_DATOS = {
+      TABLA_Columna_1: this.bodegaForm.value.razonSocial,
+      TABLA_Columna_2: this.bodegaForm.value.propAlquil,
+      TABLA_Columna_3: this.bodegaForm.value.calle,
+      TABLA_Columna_4: this.bodegaForm.value.numeroExterior,
+      TABLA_Columna_5: this.bodegaForm.value.numeroInterior,
+      TABLA_Columna_6: this.bodegaForm.value.colonia,
+      TABLA_Columna_7: this.bodegaForm.value.estado,
+      TABLA_Columna_8: this.bodegaForm.value.codigoPostal,
+      TABLA_Columna_9: this.bodegaForm.value.capacidadAlmacenaje,
+      estatus: true,
+    }
+    this.tramiteStore.setBodegasTabla([BODEGAS_DATOS]);
+
+
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+      relativeTo: this.activateRoute,});
   }
 
   /**
