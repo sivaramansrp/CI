@@ -1,9 +1,3 @@
-// import { withModuleFederation } from '@nx/angular/module-federation';
-// import config from './module-federation.config';
-
-// module.exports = withModuleFederation(config);
-
-
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');
@@ -11,50 +5,50 @@ const share = mf.share;
 
 const sharedMappings = new mf.SharedMappings();
 sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
- /* mapped paths to share */
+  /* mapped paths to share */
 ]);
 
 module.exports = {
- output: {
-  uniqueName: 'login',
-  publicPath: 'auto',
-  scriptType: 'text/javascript'
- },
- optimization: {
-  runtimeChunk: false
- },
- resolve: {
-  alias: {
-   ...sharedMappings.getAliases()
-  }
- },
- plugins: [
-  new ModuleFederationPlugin({
-   name: 'login',
-   filename: 'remoteAppEntry.js',
-   exposes: {
-    './Module': 'apps/login/src/app/remote-entry/entry.module.ts',
-   },
-   shared: share({
-    '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-    '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-    '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-    '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-    '@angular-architects/module-federation': {
-     singleton: true,
-     strictVersion: true,
-     requiredVersion: 'auto'
-    },
-    "@ng-mf/data-access-user": {
-      "singleton": false,
-      "import": "libs/shared/data-access-user/src/index.ts",
-    },
-    ...sharedMappings.getDescriptors()
-   })
-  }),
-  sharedMappings.getPlugin()
- ],
- watchOptions: {
+  output: {
+    uniqueName: 'login',
+    publicPath: 'auto',
+    scriptType: 'text/javascript'
+  },
+  optimization: {
+    runtimeChunk: false
+  },
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases()
+    }
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'login',
+      filename: 'remoteAppEntry.js',
+      exposes: {
+        './Module': 'apps/login/src/app/remote-entry/entry.module.ts',
+      },
+      shared: share({
+        '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        '@angular-architects/module-federation': {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: 'auto'
+        },
+        "@ng-mf/data-access-user": {
+          "singleton": false,
+          "import": "libs/shared/data-access-user/src/index.ts",
+        },
+        ...sharedMappings.getDescriptors()
+      })
+    }),
+    sharedMappings.getPlugin()
+  ],
+  watchOptions: {
     ignored: 'node_modules'
   }
 };

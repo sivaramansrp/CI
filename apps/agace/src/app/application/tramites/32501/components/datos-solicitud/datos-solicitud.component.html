@@ -30,6 +30,7 @@
           [isRequired]="avisoOpcionesDeRadio.required"
           [selectedValue]="formAviso.get('ideGenerica1')?.value"
           [layout]="'horizontal'"
+          [labelName]="'first'"
           (valueChange)="setTipoDeAviso($event)"
         ></app-input-radio>
       </div>
@@ -109,7 +110,15 @@
         </div>
       </div>
       <div class="col-md-4 mt-3">
-        <label for="nico">NICO*:</label>
+        <label for="nico">NICO<span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                formAviso.get('nico')?.invalid &&
+                formAviso.get('nico')?.touched
+            }"
+            >*</span
+          >:</label>
         <input
           id="nico"
           formControlName="nico"
@@ -131,7 +140,15 @@
         </div>
       </div>
       <div class="col-md-4 mt-3">
-        <label for="peso">Peso (Kg)*:</label>
+        <label for="peso">Peso (Kg)<span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                formAviso.get('peso')?.invalid &&
+                formAviso.get('peso')?.touched
+            }"
+            >*</span
+          >:</label>
         <input
           id="peso"
           formControlName="peso"
@@ -156,7 +173,17 @@
         </div>
       </div>
       <div class="col-md-4 mt-3">
-        <label for="valorUSD">Valor USD*:</label>
+        <label for="valorUSD"
+          >Valor USD<span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                formAviso.get('valorUSD')?.invalid &&
+                formAviso.get('valorUSD')?.touched
+            }"
+            >*</span
+          >:
+        </label>
         <input
           id="valorUSD"
           formControlName="valorUSD"
@@ -184,15 +211,24 @@
         </div>
       </div>
       <div class="col-md-8 mt-3">
-        <label for="descripcionMercancia"> Descripción de la mercancía </label>
-        <span class="text-danger">*</span>:
+        <label for="descripcionMercancia">
+          Descripción de la mercancía<span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                formAviso.get('descripcionMercancia')?.invalid &&
+                formAviso.get('descripcionMercancia')?.touched
+            }"
+            >*</span
+          >:
+        </label>
         <textarea
           id="descripcionMercancia"
           formControlName="descripcionMercancia"
-          rows="3"
+          rows="5"
           (change)="actualizarDescripcionMercancia($event)"
-          class="form-control"
-          [ngClass]="esValido('descripcionMercancia') ? 'required' : ''"
+          class="form-control no-resize textarea-height"
+          [ngClass]="esValido('descripcionMercancia') ? 'required  no-resize textarea-height' : ' no-resize textarea-height'"
         ></textarea>
         <div *ngIf="noEsValido('descripcionMercancia')" class="text-danger">
           <span
@@ -251,6 +287,7 @@
           [label]="opcionDelegacionMunicipio.labelNombre"
           [required]="opcionDelegacionMunicipio.required"
           name="delegacionMunicipio"
+          [isDisabled]="!formAviso.get('entidadFederativa')?.value"
           (selectionChange)="actualizarDelegacionMunicipio($event)"
         ></app-catalogo-select>
         <div *ngIf="noEsValido('delegacionMunicipio')" class="text-danger">
@@ -263,6 +300,7 @@
           [catalogo]="opcionColonia.catalogos"
           [label]="opcionColonia.labelNombre"
           [required]="opcionColonia.required"
+          [isDisabled]="!formAviso.get('delegacionMunicipio')?.value"
           name="colonia"
           (selectionChange)="actualizarColonia($event)"
         ></app-catalogo-select>

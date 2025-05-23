@@ -5,7 +5,7 @@
  * - `label`: El texto mostrado a la usuaria.
  * - `value`: El valor correspondiente de la opción.
  */
-export const OpcionesDeBotonDeRadio = [
+export const OPCIONES_DE_BOTON_DE_RADIO = [
     {
       label: 'Sí',
       value: '1',
@@ -23,13 +23,13 @@ export const OpcionesDeBotonDeRadio = [
  * - "Animales Vivos" tiene un valor de '1'.
  * - "Productos Subproductos" tiene un valor de '0'.
  */
-  export const CapturaOpcionesDeBotonDeRadio = [
+  export const CAPTURA_OPCIONES_DE_BOTON_DE_RADIO = [
     {
         label: 'Animales Vivos',
         value: '1',
       },
       {
-        label: 'Productos Subproductos',
+        label: 'Productos y Subproductos',
         value: '0',
       }
   ];

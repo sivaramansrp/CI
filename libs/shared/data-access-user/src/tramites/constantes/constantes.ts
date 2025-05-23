@@ -78,9 +78,9 @@ export const TIPO_PERSONA = {
  * Contiene identificadores para solicitudes individuales, semanales y mensuales.
  */
 export const TIPO_SOLICITUD = {
-  INDIVIDUAL: 27,
-  SEMANAL: 28,
-  MENSUAL: 29,
+  INDIVIDUAL: 1,
+  SEMANAL: 2,
+  MENSUAL: 3,
 };
 
 /**
