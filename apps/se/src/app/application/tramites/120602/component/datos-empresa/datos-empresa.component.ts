@@ -151,30 +151,31 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       this.inicializarEstadoFormulario();
+       this.inicializarFormulario();
       })
     )
     .subscribe()
+    console.log('this.esFormularioSoloLectura', this.esFormularioSoloLectura)
    }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.inicializarFormulario();
     this.obtenerFederalEstatal();
   }
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
-    } else {
-      this.inicializarFormulario();
-    }
-  }
+  // inicializarEstadoFormulario(): void {
+  //   if (this.esFormularioSoloLectura) {
+  //     this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+  //   } else {
+  //     this.inicializarFormulario();
+  //   }
+  // }
 
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -184,16 +185,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.formularioEmpresa.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.formularioEmpresa.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
-}
+//   guardarDatosFormulario(): void {
+//     this.inicializarFormulario();
+// }
 
   /**
   * Inicializa el formulario reactivo de la empresa.
@@ -242,6 +236,14 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       datosEstado: [this.solicitudState.datosEstado],
       correoElectronico: [this.solicitudState.correoElectronico],
     });
+
+    if (this.esFormularioSoloLectura) {
+      this.formularioEmpresa.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioEmpresa.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
