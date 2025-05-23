@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
 
@@ -19,7 +19,7 @@ import { ExportadorAutorizadoService } from '../../service/exportador-autorizado
   templateUrl: './datos-mercancia.component.html',
   standalone: false, // Indica que este componente no es un componente independiente (standalone).
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
 
 
@@ -29,11 +29,6 @@ export class DatosMercanciaComponent implements OnInit {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   public consultaState!:ConsultaioState;
-  public tieneConsulta:any= {
-    readonly: true,
-    create: false,
-    update: false,
-  }
     /**
    * Índice de la pestaña actualmente seleccionada.
    * Inicializado a 1 por defecto.
@@ -51,23 +46,20 @@ export class DatosMercanciaComponent implements OnInit {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
-      this.getBandejaSolicitudesDatos();
-    // if(this.consultaState.readonly) {
       
-    // } else {
-    //   this.esDatosRespuesta = true;
-    // }
+    if(this.consultaState.readonly) {
+      this.getBandejaSolicitudesDatos();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
-  public getBandejaSolicitudesDatos() {
-    // this.tieneConsulta.readonly = this.consultaState.readonly;
-    // this.tieneConsulta.create = this.consultaState.create;
-    // this.tieneConsulta.update = this.consultaState.update;
+   getBandejaSolicitudesDatos():void {
     this.exportadorAutorizadoService.getRegistro()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: Tramite110102State) => {
         if(response) {
           this.esDatosRespuesta = true;
-          console.log('response', response);
           this.exportadorAutorizadoService.setRegistro(response);
         }
       });
@@ -80,5 +72,10 @@ export class DatosMercanciaComponent implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

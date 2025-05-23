@@ -2,7 +2,7 @@
 /**
  * Este componente maneja la representación federal.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule, } from '@angular/common';
 
@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import {CatalogoSelectComponent, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, ConsultaioQuery, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo} from '@ng-mf/data-access-user';
 
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
@@ -29,7 +29,7 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
- @Input() public procedureState!: boolean;
+ procedureState!: boolean;
 
   /**
    * FormGroup que contiene los datos del formulario de representación federal.
@@ -65,11 +65,16 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
    * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: RepresentacionfederalService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
+  constructor(private fb: FormBuilder, 
+    private consultaQuery: ConsultaioQuery,
+    private service: RepresentacionfederalService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
     this.formularioRepresentacionFederalForm = this.fb.group({
       solicitudEntidadFederativaEntidadClave: ['', Validators.required],
       unidadAdministrativaClave: ['', Validators.required],
       protestoDecirVerdad: [false]
+    });
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+      this.procedureState = seccionState.readonly;
     });
   }
 
@@ -89,6 +94,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     } else {
       this.representacionFederalOptions = [];
     }
+    this.enableDisableControl();
   }
 
   /**
@@ -104,6 +110,15 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  enableDisableControl(): void {  
+
+    if (this.procedureState) {
+      this.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.disable();
+    } else {
+      this.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.enable();
+    }
+  }
   /**
    * Maneja el cambio de la entidad federativa.
    * @param {any} valor - El valor de la entidad federativa seleccionada.

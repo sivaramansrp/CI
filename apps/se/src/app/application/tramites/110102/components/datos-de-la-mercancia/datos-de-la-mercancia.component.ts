@@ -1,13 +1,13 @@
 /**
  * Este componente maneja los datos de la mercancía.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Notificacion, NotificacionesComponent, REG_X,TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent, REG_X,TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 
 import { Tramite110102State, Tramite110102Store } from '../../estados/store/tramite110102.store';
@@ -24,14 +24,12 @@ import { Tramite110102State, Tramite110102Store } from '../../estados/store/tram
 })
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
 
-
- @Input() public procedureState!: boolean;
+ procedureState!: boolean;
   /**
    * Formulario para el registro de la mercancía del comercializador.
    * @type {FormGroup}
    */
   datosDeLamercanciaFrom!: FormGroup;
-esFormularioSoloLectura!: boolean;
   /**
    * Subject que emite un evento cuando el componente es destruido,
    * permitiendo la desuscripción de observables.
@@ -52,8 +50,13 @@ seccionState!:Tramite110102State
    * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
    * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
-    
+  constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store,
+    private consultaQuery: ConsultaioQuery,
+     private tramite110102Query: Tramite110102Query) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+        this.procedureState = seccionState.readonly;
+      });
+
   }
 
   /**
@@ -90,11 +93,11 @@ seccionState!:Tramite110102State
 
 
   enableDisableControl(): void {
-    if (this.procedureState===false) {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
+    if (this.procedureState) {
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     } 
     else {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
     }
   }
   /**

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ExportadorAutorizadoService } from "@ng-mf/data-access-user";
+import { ConsultaioQuery, ExportadorAutorizadoService } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
@@ -25,6 +25,8 @@ import { map } from 'rxjs/operators';
 })
 export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy {
 
+
+   procedureState!: boolean;
   /**
    * Subject que emite un evento cuando el componente es destruido,
    * permitiendo la desuscripción de observables.
@@ -71,8 +73,13 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
    * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
    * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: ExportadorAutorizadoService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
+  constructor(private fb: FormBuilder,
+    private consultaQuery: ConsultaioQuery,
+     private service: ExportadorAutorizadoService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
     // Lógica del constructor puede ser añadida aquí si es necesario
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+      this.procedureState = seccionState.readonly;
+    });
   }
 
   /**
@@ -93,6 +100,24 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
 
     this.showDivExportador = this.registroExportadorForm.get('solicitaExportadorAutorizado')?.value;
     this.showDivExportadorJPN = this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value;
+    this.enableDisableControl();
+  }
+
+  enableDisableControl(): void {
+    if(this.procedureState) {
+      this.registroExportadorForm.get('solicitaSeparacionContable')?.disable();
+      this.registroExportadorForm.get('solicitaExportadorAutorizado')?.disable();
+      this.registroExportadorForm.get('condicionExportador')?.disable();
+      this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.disable();
+      this.registroExportadorForm.get('condicionExportadorJPN')?.disable();
+    }
+    else {
+      this.registroExportadorForm.get('solicitaSeparacionContable')?.enable();
+      this.registroExportadorForm.get('solicitaExportadorAutorizado')?.enable();
+      this.registroExportadorForm.get('condicionExportador')?.enable();
+      this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.enable();
+      this.registroExportadorForm.get('condicionExportadorJPN')?.enable();
+    }
   }
 
   /**
