@@ -115,7 +115,7 @@ export const PROTESTA = {
   <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
 };
 export const FECHA_SALIDA = {
-  labelNombre: 'Fecha de expedición de certificado de Molino o de calidad',
+  labelNombre: 'Fecha de expedición de certificado de molino o de calidad',
   required: true,
   habilitado: true,
 };
