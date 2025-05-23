@@ -261,7 +261,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public crearAgregarMiembroForm(): void {
     this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
-      enSuCaracterde: ['', Validators.required],
+      enSuCaracterDe: [''],
       obligadoaTributarenMexico: ['', Validators.required],
       nacionalidad: ['', Validators.required],
       registroFederaldeContribuyentes: [

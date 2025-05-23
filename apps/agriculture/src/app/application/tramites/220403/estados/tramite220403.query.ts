@@ -28,6 +28,10 @@ export class Tramite220403Query extends Query<FormularioGrupo> {
     return state.pagoDerechos;
   });
 
+  selectTramite$ = this.select((state) => {
+        return state;
+      });
+
   constructor(protected override store: Tramite220403Store) {
     super(store);
   }

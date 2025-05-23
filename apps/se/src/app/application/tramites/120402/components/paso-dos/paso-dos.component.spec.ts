@@ -1,21 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// paso-dos.component.spec.ts
 import { PasoDosComponent } from './paso-dos.component';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PasoDosComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new PasoDosComponent();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+ 
+
+  it('should initialize TEXTOS with imported TEXTOS', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
   });
 });

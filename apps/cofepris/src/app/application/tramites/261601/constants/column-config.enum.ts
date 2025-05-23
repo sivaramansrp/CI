@@ -8,7 +8,7 @@ import { TramitesAsociados } from '../models/destinatario.model';
 export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<TramitesAsociados>[] = [
   {
     /** Configuración de la columna para el número */
-    encabezado: 'No.',
+    encabezado: '',
     clave: (fila) => fila?.No,
     orden: 1,
   },

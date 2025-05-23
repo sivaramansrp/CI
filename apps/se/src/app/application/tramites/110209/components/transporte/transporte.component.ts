@@ -92,18 +92,19 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Establece los valores en el store.
    * @param {FormGroup} form - El formulario del cual se obtienen los valores.
    * @param {string} campo - El nombre del campo del formulario.
-   * @param {keyof Tramite110209Store} metodoNombre - El nombre del método del store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
+  setValoresStore(form: FormGroup, campo: string): void {
+    // Obtiene el valor del campo especificado en el formulario
     const VALOR = form.get(campo)?.value;
-    (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    // Actualiza el store con el nuevo valor para el campo correspondiente
+    this.tramite110209Store.setTramite110209({ [campo]: VALOR });
   }
 
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
   getValoresStore(): void {
-    this.tramite110209Query.selectTramite110102$
+    this.tramite110209Query.selectTramite110209$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {

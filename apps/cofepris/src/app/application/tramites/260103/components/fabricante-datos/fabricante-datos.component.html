@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar Fabricante"></ng-titulo>
+  <ng-titulo titulo="Agregar fabricante"></ng-titulo>
   <form [formGroup]="agregarDatosForm">
   
     <!-- Datos Generales -->
@@ -12,9 +12,9 @@
         <div class="form-check">
           <app-input-radio
             [radioOptions]="tipoPersonaRadioOpcions"
-            (valueChange)="changeNacionalidad()"
             id="contenidoOpcionTipoPersona"
             formControlName="tipoPersona"
+            [showTooltip]="true"
             (change)="changeNacionalidad()"
           >
           </app-input-radio>
@@ -51,7 +51,7 @@
         />
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4 mt-2">
           <div class="pull-right">
             <button
               type="button"
@@ -286,6 +286,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="guardar()"
+            [disabled]="!agregarDatosForm.valid"
           >
             Guardar
           </button>

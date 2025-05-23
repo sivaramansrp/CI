@@ -83,8 +83,8 @@ export function createInitialState(): Tramite130201State {
     usoEspecifico: '',
     justificacionImportacionExportacion: '',
     observaciones: '',
-    entidad: '',
-    representacion: '',
+    entidad: '1',
+    representacion: '1',
     acotacion: '',
     descripcionNico: '',
   };

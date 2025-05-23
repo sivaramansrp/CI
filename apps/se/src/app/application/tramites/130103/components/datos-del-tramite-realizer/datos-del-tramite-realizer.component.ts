@@ -267,6 +267,9 @@ export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
   * // Actualiza el estado dinámico del campo "regimen" con el valor "Régimen B".
   */
   establecerCambioDeValor(event: { campo: string; valor?: object }): void {
+    if (event.campo === 'regimen') {
+      this.ninoFormGroup.get('clasificacion')?.reset('');
+    }
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
       this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
