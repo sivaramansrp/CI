@@ -236,13 +236,12 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     
       this.inicializarEstadoFormulario();
 
-    console.log('ngOnInit');
    // this.formularioTotalCount();
     //this.actualizarRecuentoTotalDeFilas();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
-    //this.getDetallesDelalicitacion();
-    //this.getAdquiriente();
+    this.getDetallesDelalicitacion();
+    this.getAdquiriente();
     this.obtenerDatosDeTabla();
 
     // this.montoRecibir$.subscribe((montoRecibir) => {
@@ -289,8 +288,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       montoMaximo: [{value:this.seccionState?.montoMaximo, disabled: true}, Validators.required],
     })
     this.adquiriente = this.fb.group({
-      rfc: [this.seccionState?.rfc, Validators.required],
-      adquirienteMontoDisponible: [this.seccionState?.adquirienteMontoDisponible],
+      rfc: [{value:this.seccionState?.rfc,disabled: true}, Validators.required],
+      adquirienteMontoDisponible: [{value:this.seccionState?.adquirienteMontoDisponible,disabled: true}],
       montoRecibir: [this.seccionState?.montoRecibir, Validators.required],
       rfc1: [this.seccionState?.rfc1],
     })
@@ -404,27 +403,27 @@ getValorIndice(e: AccionBoton):void{
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
-// getDetallesDelalicitacion():void{
-//   this.service.getDetallesDelalicitacion().subscribe(
-//     (data:DetallesLicitacion)=>{
-//       this.detalledelaLicitacionForm.patchValue({
-//         numeraDelicitacion:data.numeraDelicitacion,
-//         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
-//         descripcionDelProducto:data.descripcionDelProducto,
-//         unidadTarifaria:data.unidadTarifaria,
-//         regimenAduanero:data.regimenAduanero,
-//         fraccionArancelaria:data.fraccionArancelaria,
-//         fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
-//         fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
-//         obserVaciones:data.obserVaciones,
-//         bloqueComercial:data.bloqueComercial,
-//         paises:data.paises,
-//         montoadJudicado:data.montoadJudicado,
-//         montoDisponible:data.montoDisponible,
-//         montoMaximo:data.montoMaximo
-//       })
-//     })
-// }
+getDetallesDelalicitacion():void{
+  this.service.getDetallesDelalicitacion().subscribe(
+    (data:DetallesLicitacion)=>{
+      this.detalledelaLicitacionForm.patchValue({
+        numeraDelicitacion:data.numeraDelicitacion,
+        fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
+        descripcionDelProducto:data.descripcionDelProducto,
+        unidadTarifaria:data.unidadTarifaria,
+        regimenAduanero:data.regimenAduanero,
+        fraccionArancelaria:data.fraccionArancelaria,
+        fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
+        fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
+        obserVaciones:data.obserVaciones,
+        bloqueComercial:data.bloqueComercial,
+        paises:data.paises,
+        montoadJudicado:data.montoadJudicado,
+        montoDisponible:data.montoDisponible,
+        montoMaximo:data.montoMaximo
+      })
+    })
+}
    /**
      * Obtiene los datos de la tabla desde el servicio.
      *
@@ -443,16 +442,16 @@ getValorIndice(e: AccionBoton):void{
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
-// getAdquiriente():void{
-//   this.service.getAdquiriente().subscribe(
-//     (data:Adquiriente)=>{
-//       this.adquiriente.patchValue({
-//         rfc:data.rfc,
-//         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
-//       })
-//     })
+getAdquiriente():void{
+  this.service.getAdquiriente().subscribe(
+    (data:Adquiriente)=>{
+      this.adquiriente.patchValue({
+        rfc:data.rfc,
+        adquirienteMontoDisponible:data.adquirienteMontoDisponible,
+      })
+    })
   
-// }
+}
 /**
      * Establece los valores en el store del trámite 120501.
      *
