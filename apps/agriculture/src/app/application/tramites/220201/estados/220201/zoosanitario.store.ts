@@ -77,9 +77,9 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
-            formaValida: {
+            validarEnvio: {
                 ...state?.validarEnvio,
-                ...updatedFormaValida, // Only the updated fields are merged here
+                ...updatedFormaValida,
             }
         }));
     }
