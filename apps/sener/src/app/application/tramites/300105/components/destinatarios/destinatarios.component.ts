@@ -177,6 +177,11 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   esOperacionDeActualizacion: boolean = false;
 
   /**
+   * Indica si el popup de relación de mercancía está abierto.
+   */
+  relacionMercanciaPopupAbierto: boolean = false;
+
+  /**
    * Constructor del componente.
    * autorizacionDeRayosXService Servicio para manejar datos relacionados con autorizaciones de vida silvestre.
    * tramite300105Store Almacén de estado para el trámite 300105.
@@ -437,9 +442,15 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    * Valida el formulario, actualiza o agrega una nueva fila en la tabla de mercancías,
    * y actualiza el estado del almacén correspondiente.
    */
-  enviarFormularioMercancia(): void {
+  enviarFormularioMercancia(isGuardar: boolean = false): void {
+    this.formularioMercancia.markAllAsTouched();
+
+    if (this.formularioMercancia.invalid) {
+      return;
+    }
+
     const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
-  
+
     const TABLA_ROW: DestinatarioConfiguracionItem = {
       id: this.esOperacionDeActualizacion
         ? this.formularioMercancia.get('id')?.value
@@ -457,18 +468,51 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
         this.formularioMercancia.get('tipoMercancia')?.value
       ),
     };
-  
-    const EXISTING_INDEX = this.datosTablaDestinatario.findIndex(item => item.id === TABLA_ROW.id);
-  
-    if (EXISTING_INDEX > -1) {
-      this.datosTablaDestinatario[EXISTING_INDEX] = TABLA_ROW;
-    } else {
-      this.datosTablaDestinatario = [...this.datosTablaDestinatario, TABLA_ROW];
-    }
     
-    this.tramite300105Store.setDestinatarioTablaDatos(this.datosTablaDestinatario);
-    this.formularioMercancia.reset();
-    this.alternarModalMercancia();
+    if (!isGuardar || this.esOperacionDeActualizacion) {
+      const EXISTING_INDEX = this.datosTablaDestinatario.findIndex(item => item.id === TABLA_ROW.id);
+
+      if (EXISTING_INDEX > -1) {
+        this.datosTablaDestinatario[EXISTING_INDEX] = TABLA_ROW;
+      } else if (!isGuardar) {
+        this.datosTablaDestinatario = [...this.datosTablaDestinatario, TABLA_ROW];
+      }
+
+      this.tramite300105Store.setDestinatarioTablaDatos(this.datosTablaDestinatario);
+    }
+
+    if (!isGuardar) {
+      // Si es "Relacionar mercancia", mostrar notificación pero no cerrar el modal
+      this.mostrarNotificacionRelacionMercancia();
+    } else {
+      // Si es "Guardar", resetear el formulario y cerrar el modal
+      this.formularioMercancia.reset();
+      this.alternarModalMercancia();
+    }
+  }
+
+  /**
+   * Muestra notificación después de relacionar mercancía.
+   */
+  mostrarNotificacionRelacionMercancia(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Relación agregada',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.relacionMercanciaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de relación de mercancía.
+   */
+  cerrarRelacionMercanciaPopup(): void {
+    this.relacionMercanciaPopupAbierto = false;
   }
 
   /**

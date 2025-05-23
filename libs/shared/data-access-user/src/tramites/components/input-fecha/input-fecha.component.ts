@@ -20,9 +20,8 @@ import { InputFecha } from '../../../core/models/shared/components.model';
 export class InputFechaComponent implements OnChanges {
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();
   @Input() setFecha!: string;
-  @Input({required: true}) datos!: InputFecha;
-
-
+  @Input({ required: true }) datos!: InputFecha;
+  @Input() tooltipQuestionCircle: boolean = false;
   meses = MESES;
   semana = SEMANA;
 
@@ -44,7 +43,7 @@ export class InputFechaComponent implements OnChanges {
 
   ngOnChanges():void {
     if (this.setFecha !== '' && this.setFecha !== null) {
-      const FECHA= this.setFecha.split('/');
+      const FECHA = this.setFecha.split('/');
       const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
@@ -83,7 +82,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('anio')?.setValue(
       (event.target as HTMLInputElement).value,
     );
-    const OBJECT_DATE= moment.utc(
+    const OBJECT_DATE = moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
@@ -98,7 +97,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('mes')?.setValue(
       (event.target as HTMLInputElement).value,
     );
-    const OBJECT_DATE= moment.utc(
+    const OBJECT_DATE = moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
@@ -132,12 +131,12 @@ export class InputFechaComponent implements OnChanges {
       const IN = parseInt(a) + 1;
       const DIA_FORMATO = IN > 9 ? IN : '0' + IN;
       const DAY_OBJECT = moment(
-      `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`,
+        `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`,
       );
       return {
-      name: DAY_OBJECT.format('dddd'),
-      value: IN,
-      indexWeek: DAY_OBJECT.isoWeekday(),
+        name: DAY_OBJECT.format('dddd'),
+        value: IN,
+        indexWeek: DAY_OBJECT.isoWeekday(),
       };
     });
     this.mountSelect = ARRAY_DAYS;
@@ -165,7 +164,7 @@ export class InputFechaComponent implements OnChanges {
         .add(1, 'month');
       this.Formulario.get('mes')?.setValue(NEXT_DATE.format('M'));
       this.Formulario.get('anio')?.setValue(NEXT_DATE.format('YYYY'));
-      const OBJECT_DATE= moment.utc(
+      const OBJECT_DATE = moment.utc(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
       );
       this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
@@ -226,7 +225,7 @@ export class InputFechaComponent implements OnChanges {
     }
     const ELEMENTO_OBJETIVO = event.target as HTMLElement;
     const CALENDARIO = document.querySelector('#calendario');
-    
+
     if (CALENDARIO && !CALENDARIO.contains(ELEMENTO_OBJETIVO)) {
       this.mostrar = false;
     }
