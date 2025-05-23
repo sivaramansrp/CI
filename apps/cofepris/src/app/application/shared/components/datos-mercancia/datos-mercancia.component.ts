@@ -23,6 +23,7 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -86,6 +87,12 @@ export class DatosMercanciaComponent implements OnInit {
    * Input que recibe el estado inicial del formulario de mercancía.
    */
   @Input() public mercanciaFormState!: MercanciaForm;
+
+  /**
+   * @property {TablaMercanciasDatos} datoSeleccionado
+   * Dato seleccionado de la tabla de mercancías recibido como entrada desde el componente padre.
+   */
+  @Input() public datoSeleccionado!:TablaMercanciasDatos;
 
   /**
    * @event mercanciaSeleccionado
@@ -163,6 +170,12 @@ export class DatosMercanciaComponent implements OnInit {
    * Controla la visibilidad del listado de uso específico.
    */
   public usoEspesificoColapsable = false;
+
+  /**
+   * @property {string[]} elementosRequirdos
+   * Lista de elementos requeridos para el formulario.
+   */
+  public elementosRequirdos: string[] = [];
 
   /** Etiquetas personalizadas para los crosslists */
   public paisDeOriginLabel: CrossListLable = {
@@ -298,6 +311,7 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.validarElementos();
     this.crearMercanciaForm();
+    this.crossListRequirdos();
   }
 
   /**
@@ -335,6 +349,18 @@ export class DatosMercanciaComponent implements OnInit {
    * Lista de registros Clave seleccionados.
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
+
+  /**
+   * @method crossListRequirdos
+   * @description Actualiza las etiquetas de los crosslists según los elementos requeridos.
+   * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
+   */
+  crossListRequirdos(): void {
+    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+  }
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -372,8 +398,17 @@ export class DatosMercanciaComponent implements OnInit {
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260219:
+        this.elementosAnadidos = ['especifique', 'especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260201:
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        this.elementosRequirdos = [
+          'paisDeOrigen',
+          'paisDeProcedencia',
+          'usoEspecífico'
+        ]
         break
       default:
         if (this.detalleMercancia) {
@@ -514,38 +549,38 @@ export class DatosMercanciaComponent implements OnInit {
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
-        this.mercanciaFormState.clasificacionProducto,
+        this.obtenerValor('clasificacionProducto'),
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.mercanciaFormState.especificarClasificacionProducto,
+       this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionEspecificaProducto: [
-        this.mercanciaFormState.denominacionEspecificaProducto,
+      this.obtenerValor('denominacionEspecificaProducto'),
         Validators.required,
       ],
       denominacionDistintiva: [
-        this.mercanciaFormState.denominacionDistintiva,
+         this.obtenerValor('denominacionDistintiva'),
         Validators.required,
       ],
       denominacionComun: [
-        this.mercanciaFormState.denominacionComun,
+       this.obtenerValor('denominacionComun'),
         Validators.required,
       ],
-      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
       formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica,
+       this.obtenerValor('formaFarmaceutica'),
         Validators.required,
       ],
-      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
       fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria,
+      this.obtenerValor('fraccionArancelaria'),
         Validators.required,
       ],
       descripcionFraccion: [
         {
-          value: this.mercanciaFormState.descripcionFraccion,
+          value: this.obtenerValor('descripcionFraccion'),
           disabled: this.elementosDeshabilitados.includes(
             'descripcionFraccion'
           ),
@@ -553,37 +588,42 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       cantidadUmtValor: [
-        this.mercanciaFormState.cantidadUmtValor,
-        Validators.required,
+       this.obtenerValor('cantidadUmtValor'),
+        [Validators.required,
+        Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ]
+
       ],
       cantidadUmt: [
         {
-          value: this.mercanciaFormState.cantidadUmt,
+          value: this.obtenerValor('cantidadUmt'),
           disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
         },
         Validators.required,
       ],
       cantidadUmcValor: [
-        this.mercanciaFormState.cantidadUmcValor,
-        Validators.required,
+this.obtenerValor('cantidadUmcValor'),
+        [Validators.required,
+          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ],
       ],
-      cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+      cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
+      presentacion: [this.obtenerValor('presentacion'), Validators.required],
       numeroRegistroSanitario: [
-        this.mercanciaFormState.numeroRegistroSanitario,
+       this.obtenerValor('numeroRegistroSanitario'),
         Validators.required,
       ],
-      fechaCaducidad: [this.mercanciaFormState.fechaCaducidad],
+      fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
-        this.mercanciaFormState.paisDeOriginDatos || [],
+      this.obtenerValor('paisDeOriginDatos') || [],
         Validators.required,
       ],
       paisDeProcedenciaDatos: [
-        this.mercanciaFormState.paisDeProcedenciaDatos || [],
+         this.obtenerValor('paisDeProcedenciaDatos') || [],
         Validators.required,
       ],
       usoEspecifico: [
-        this.mercanciaFormState.usoEspecifico || [],
+         this.obtenerValor('usoEspecifico') || [],
         Validators.required,
       ],
     });
@@ -607,15 +647,22 @@ export class DatosMercanciaComponent implements OnInit {
           this.mercanciaForm.addControl(
             NOMBRE_DEL_CONTROL,
             new FormControl(
-              this.mercanciaFormState[
-                NOMBRE_DEL_CONTROL as keyof MercanciaForm
-              ],
+             this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
               { validators: [Validators.required] }
             )
           );
         }
       }
     }
+  }
+
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaForm): string | number | undefined | string[] {
+    return this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaForm];
   }
 
   /**

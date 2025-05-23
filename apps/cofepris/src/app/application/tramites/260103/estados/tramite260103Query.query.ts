@@ -59,4 +59,45 @@ export class Tramite260103Query extends Query<Tramite260103State> {
   getFabricanteTablaDatos$ = this.select(
     (state) => state.fabricanteTablaDatos
   );
+
+  /**
+   * @method eliminarFabricantePorId
+   * @description Elimina un fabricante de la lista `fabricanteTablaDatos` basado en su ID.
+   * 
+   * @param {number} id - El identificador único del fabricante que se desea eliminar.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * eliminarFabricantePorId(123);
+   * 
+   * @remarks
+   * Este método actualiza el estado de la tienda eliminando el fabricante cuyo ID coincide
+   * con el proporcionado. Si no se encuentra un fabricante con el ID especificado, no se
+   * realizarán cambios en la lista.
+   */
+   eliminarFabricantePorId(id: number): void {
+    const CURRENT = this.getValue().fabricanteTablaDatos;
+    const UPDATED = CURRENT.filter(f => f.id !== id);
+    this.store.update({ fabricanteTablaDatos: UPDATED });
+  }
+
+  /**
+   * @method eliminarDestinatarioPorId
+   * @description Elimina un destinatario de la lista `destinatarioTableDatos` basado en su identificador único.
+   * 
+   * @param {number} id - El identificador único del destinatario que se desea eliminar.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * eliminarDestinatarioPorId(123);
+   * 
+   * @remarks
+   * Este método actualiza el estado de la tienda eliminando el destinatario cuyo `id` coincide
+   * con el proporcionado. Si no se encuentra un destinatario con el `id` especificado, no se realizan cambios.
+   */
+  eliminarDestinatarioPorId(id: number): void {
+    const CURRENT = this.getValue().destinatarioTableDatos;
+    const UPDATED = CURRENT.filter(f => f.id !== id);
+    this.store.update({ destinatarioTableDatos: UPDATED });
+  }
 }

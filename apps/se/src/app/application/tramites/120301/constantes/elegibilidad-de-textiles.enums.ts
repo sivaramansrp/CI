@@ -174,4 +174,19 @@ export const CATALOGOS = [
     { id: 3, descripcion: 'Option 3' }
 ];
 
+/**
+ * Constante que representa el estado "TodoValido".
+ *
+ * @constant
+ * @type {string}
+ * @description Indica que todo es válido.
+ */
 export const VALIDO = 'TodoValido'
+
+/**
+ * @description El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional.
+ *
+ * @remarks
+ * Esta constante se utiliza para mostrar una nota aclaratoria sobre la representación federal de los montos.
+ */
+export const REPRESENTACION_FEDERAL_NOTA = 'El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional';
