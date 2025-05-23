@@ -1248,8 +1248,8 @@
   {
     "id": 179,
     "tramite": 260910,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
+    "linkDashboard": "/cofepris/modificacion-al-permiso-sanitario/solicitante",
+    "linkDepartment": "/pago/modificacion-al-permiso-sanitario/solicitante",
     "department": "cofepris"
   },
   {
