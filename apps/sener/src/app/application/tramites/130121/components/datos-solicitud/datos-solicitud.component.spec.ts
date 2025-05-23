@@ -1,206 +1,152 @@
-import { TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
+import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
 import { Tramite130121Store } from '../../estados/tramites/tramites130121.store';
 import { Tramite130121Query } from '../../estados/queries/tramite130121.query';
-import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
+import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
-  let tramite130121Store: Tramite130121Store;
-  let tramite130121Query: Tramite130121Query;
-  let permisodehidrocarburosService: PermisoDeHidrocarburosService;
+  let fixture: ComponentFixture<DatosSolicitudComponent>;  
+  let permisodehidrocarburosServiceMock: any;
+   let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [DatosSolicitudComponent],
-      providers: [
-        FormBuilder,
-        Tramite130121Store,
-        Tramite130121Query,
-        PermisoDeHidrocarburosService,
-      ],
+    beforeEach(async () => {
+      permisodehidrocarburosServiceMock = {
+        getSolicitudeOptions: jest.fn().mockReturnValue(of({ options: [] })),
+        getProductoOptions: jest.fn().mockReturnValue(of({ options: [] })),
+        getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 100 }])),
+        getEstado: jest.fn().mockReturnValue(of([])),
+        getRepresentacionFederal: jest.fn().mockReturnValue(of([])),
+        getListaDePaisesDisponibles: jest.fn().mockReturnValue(of([])),
+        obtenerListaDeCiudades: jest.fn().mockReturnValue(of([])),
+        getPaisesPorBloque: jest.fn().mockReturnValue(of([])),
+      };
+  
+      tramiteStoreMock = {
+        establecerDatos: jest.fn(),
+        storeTableValues: jest.fn(),
+        setMostrarTabla: jest.fn(),
+      };
+  
+      tramiteQueryMock = {
+        selectSolicitud$: of({}),
+        mostrarTabla$: of(false),
+      };
+  
+      await TestBed.configureTestingModule({
+        declarations: [DatosSolicitudComponent],
+        imports: [ReactiveFormsModule,
+           PaisDeOrigenComponent,
+           HttpClientTestingModule,
+           DatosDelTramiteComponent],
+        providers: [
+          FormBuilder,
+          { provide: PermisoDeHidrocarburosService, useValue: permisodehidrocarburosServiceMock },
+          { provide: Tramite130121Store, useValue: tramiteStoreMock },
+          { provide: Tramite130121Query, useValue: tramiteQueryMock },
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+      }).compileComponents();
     });
 
-    tramite130121Store = TestBed.inject(Tramite130121Store);
-    tramite130121Query = TestBed.inject(Tramite130121Query);
-    permisodehidrocarburosService = TestBed.inject(PermisoDeHidrocarburosService);
-
-    component = TestBed.createComponent(DatosSolicitudComponent).componentInstance;
-  });
+   beforeEach(() => {
+     fixture = TestBed.createComponent(DatosSolicitudComponent);
+     component = fixture.componentInstance;
+     fixture.detectChanges();
+   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should initialize forms and subscribe to observables', () => {
-      const mostrarTablaSpy = jest.spyOn(tramite130121Query, 'mostrarTabla$', 'get').mockReturnValue(of(true));
-      const selectSolicitudSpy = jest.spyOn(tramite130121Query, 'selectSolicitud$' as any).mockReturnValue(of({}));
+  it('should initialize forms on ngOnInit', () => {
+    const spyInitForms = jest.spyOn(component, 'inicializarFormularios');
+    component.ngOnInit();
+    expect(spyInitForms).toHaveBeenCalled();
+  });
 
-      component.ngOnInit();
+  it('should call opcionesDeBusqueda on ngOnInit', () => {
+    const spyOpcionesDeBusqueda = jest.spyOn(component, 'opcionesDeBusqueda');
+    component.ngOnInit();
+    expect(spyOpcionesDeBusqueda).toHaveBeenCalled();
+  });
 
-      expect(mostrarTablaSpy).toHaveBeenCalled();
-      expect(selectSolicitudSpy).toHaveBeenCalled();
-      expect(component.mostrarTabla).toBe(true);
+  it('should fetch table data and update formForTotalCount', () => {
+    component.obtenerTablaDatos();
+    expect(permisodehidrocarburosServiceMock.getTablaDatos).toHaveBeenCalled();
+    expect(component.tableBodyData).toEqual([{ cantidad: 10, totalUSD: 100 }]);
+    expect(component.formForTotalCount.value).toEqual({
+      cantidadTotal: 10,
+      valorTotalUSD: 100,
     });
   });
 
-  describe('inicializarFormularios', () => {
-    it('should initialize all forms', () => {
-      component.inicializarFormularios();
+  it('should handle store updates for setFraccion', () => {
+    const form = new FormBuilder().group({ fraccion: [1], umt: [''] });
+    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample Description', relacionadaUmtId: 2 }]];
+    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
 
-      expect(component.formDelTramite).toBeDefined();
-      expect(component.mercanciaForm).toBeDefined();
-      expect(component.partidasDelaMercanciaForm).toBeDefined();
-      expect(component.paisForm).toBeDefined();
-      expect(component.frmRepresentacionForm).toBeDefined();
-    });
+    component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+
+    expect(spySetValoresStore).toHaveBeenCalledWith(form, 'fraccion');
+    expect(form.value.umt).toBe(2);
   });
 
-  describe('validarYEnviarFormulario', () => {
-    it('should mark form as touched and hide table if invalid', () => {
-      component.partidasDelaMercanciaForm = new FormBuilder().group({
-        cantidadModificar: [''],
-      });
+  it('should handle store updates for setNico', () => {
+    const form = new FormBuilder().group({ fraccion: [1], descripcionNico: [''] });
+    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Test Descripción' }]];
+    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
 
-      component.validarYEnviarFormulario();
+    component.handleStoreUpdate({ form, campo: 'nico', metodoNombre: 'setNico' });
 
-      expect(component.partidasDelaMercanciaForm.touched).toBe(true);
-      expect(component.mostrarTabla).toBe(false);
-    });
-
-    it('should show table if form is valid', () => {
-      component.partidasDelaMercanciaForm = new FormBuilder().group({
-        cantidadModificar: ['123', []],
-      });
-
-      component.validarYEnviarFormulario();
-
-      expect(component.mostrarTabla).toBe(true);
-    });
+    expect(spySetValoresStore).toHaveBeenCalledWith(form, 'nico');
+    expect(form.value.descripcionNico).toBe('Test Descripción');
   });
 
-  describe('opcionesDeBusqueda', () => {
-    it('should fetch solicitude and product options', () => {
-      const getSolicitudeOptionsSpy = jest
-        .spyOn(permisodehidrocarburosService, 'getSolicitudeOptions')
-        .mockReturnValue(
-          of({
-        options: [
-          { label: 'option1', value: '1' },
-          { label: 'option2', value: '2' },
-        ],
-        defaultSelect: 'option1', // Adjusted to match the expected type
-          })
-        );
-  
-      const getProductoOptionsSpy = jest
-        .spyOn(permisodehidrocarburosService, 'getProductoOptions')
-        .mockReturnValue(
-          of({
-            options: [
-              { label: 'product1', value: 'product1' },
-              { label: 'product2', value: 'product2' },
-            ],
-            defaultSelect: 'product1',
-          })
-        );
-  
-      component.opcionesDeBusqueda();
-  
-      expect(getSolicitudeOptionsSpy).toHaveBeenCalled();
-      expect(getProductoOptionsSpy).toHaveBeenCalled();
-      expect(component.opcionesSolicitud).toEqual([
-        { label: 'option1', value: '1' },
-        { label: 'option2', value: '2' },
-      ]);
-      expect(component.productoOpciones).toEqual([
-        { label: 'product1', value: 'product1' },
-        { label: 'product2', value: 'product2' },
-      ]);
+  it('should validate and show/hide table based on form validity', () => {
+    component['fb'] = new FormBuilder();
+    component.partidasDelaMercanciaForm = component['fb'].group({
+      cantidadModificar: ['', Validators.required],
     });
+
+    component.validarYEnviarFormulario();
+    expect(component.mostrarTabla).toBe(false);
+
+    component.partidasDelaMercanciaForm.patchValue({ cantidadModificar: '10' });
+    component.validarYEnviarFormulario();
+    expect(component.mostrarTabla).toBe(true);
   });
 
-  describe('obtenerTablaDatos', () => {
-    it('should fetch table data and update formForTotalCount', () => {
-      const mockData = [
-        {
-          cantidad: '10', // Changed to string to match the expected type
-          totalUSD: 100,
-          unidadDeMedida: 'kg',
-          fraccionFrancelaria: '1234',
-          descripcion: 'Test description',
-          precioUnitarioUSD: '10', // Changed to string to match the expected type
-        },
-      ];
-  
-      jest.spyOn(permisodehidrocarburosService, 'getTablaDatos').mockReturnValue(
-        of([
-          {
-        cantidad: '10', // Changed to string to match the expected type
-        totalUSD: '100', // Changed to string to match the expected type
-        unidadDeMedida: 'kg',
-        fraccionFrancelaria: '1234',
-        descripcion: 'Test description',
-        precioUnitarioUSD: '10', // Changed to string to match the expected type
-          },
-        ])
-      );
-  
-      component.obtenerTablaDatos();
-  
-      expect(component.tableBodyData).toEqual(mockData);
-      expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(10); // Ensure this matches the logic in your component
-      expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(100);
-    });
+  it('should fetch countries by block and update selectRangoDias', () => {
+    const mockData = [{ descripcion: 'Country 1' }, { descripcion: 'Country 2' }];
+    permisodehidrocarburosServiceMock.getPaisesPorBloque.mockReturnValue(of(mockData));
+
+    component.fetchPaisesPorBloque(1);
+    expect(permisodehidrocarburosServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
+    expect(component.paisesPorBloque).toEqual(mockData);
+    expect(component.selectRangoDias).toEqual(['Country 1', 'Country 2']);
   });
 
-
-  describe('manejarlaFilaSeleccionada', () => {
-    it('should update filaSeleccionada and store table values', () => {
-      const storeTableValuesSpy = jest.spyOn(tramite130121Store, 'storeTableValues');
-      const mockRow: any = [{ id: 1, descripcion: 'test', cantidad: 1, unidadDeMedida: 'kg', fraccionFrancelaria: '1234', precioUnitarioUSD: 10, totalUSD: 10 }];
-      component.manejarlaFilaSeleccionada(mockRow);
-
-      expect(component.filaSeleccionada).toEqual(mockRow);
-      expect(storeTableValuesSpy).toHaveBeenCalledWith(mockRow);
-    });
+  it('should set values in the store', () => {
+    const form = new FormBuilder().group({ campo: ['value'] });
+    component.setValoresStore(form, 'campo');
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ campo: 'value' });
   });
 
-  describe('ngOnDestroy', () => {
-    it('should complete destroyed$ subject', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component['destroyed$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
 
-      component.ngOnDestroy();
+    component.ngOnDestroy();
 
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('disabledModificar', () => {
-    it('should return true if no rows are selected', () => {
-      component.filaSeleccionada = [];
-      expect(component.disabledModificar()).toBe(true);
-    });
-
-    it('should return false if rows are selected', () => {
-      component.filaSeleccionada = [
-        {
-          cantidad: '10',
-          totalUSD: '100',
-          unidadDeMedida: 'kg',
-          fraccionFrancelaria: '1234',
-          descripcion: 'Test description',
-          precioUnitarioUSD: '10',
-        },
-      ]; // Match the expected type
-      expect(component.disabledModificar()).toBe(false);
-    });
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

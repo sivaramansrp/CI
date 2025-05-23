@@ -1,9 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
@@ -11,10 +8,11 @@ import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/sh
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { InputFecha } from '../../../core/models/shared/components.model';
-import { InputFechaComponent} from '../input-fecha/input-fecha.component';
+import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { ToastrService } from 'ngx-toastr';
-
+import { TramiteDetails } from '../../../core/models/tramiteDetails';
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
 
 /**
  * Configuración para el campo de fecha inicial.
@@ -54,6 +52,9 @@ export const FECHA_FINAL = {
 export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   implements OnInit, OnDestroy
 {
+  @Input()
+  public procedureUrl!: string;
+  public tramiteData: TramiteDetails[] = [];
   /**
    * Formulario para la búsqueda de acuses y resoluciones.
    */
@@ -68,11 +69,6 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Configuración del campo de fecha final.
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
-
-  /**
-   * URL del procedimiento para la navegación.
-   */
-  @Input() public procedureUrl!: string;
 
   /**
    * Datos configurados para la tabla.
@@ -108,14 +104,15 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   public constructor(
     protected readonly formBuilder: FormBuilder,
     public acuseYResolucionesFolioTramiteService: AcuseYResolucionesFolioTramiteService,
-    public router: Router
+    public router: Router,
+    private consultaioStore: ConsultaioStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
+   *
    * - Llama al método `getAucesYResolucionesFolioTramiteDatos` para obtener los datos iniciales.
    * - Configura el formulario reactivo `formBusqueda` con los campos:
    *   - `solicitante`: Campo de texto vacío.
@@ -192,13 +189,6 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   }
 
   /**
-   * Navega a la URL del procedimiento.
-   */
-  continuar(): void {
-    this.router.navigate([this.procedureUrl]);
-  }
-
-  /**
    * Método que se ejecuta al destruir el componente.
    * Libera los recursos y completa las suscripciones.
    */
@@ -211,8 +201,31 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Maneja el evento de clic en una fila de la tabla.
    * Navega a la URL del procedimiento.
    */
-  onFilaClic(): void {
-    this.router.navigate([this.procedureUrl]);
+  onFilaClic(event: any): void {
+    const ROW_OBJETO = event;
+    const PROCEDURE: unknown | number = Number(
+      ROW_OBJETO.numeroDeProcedimiento
+    );
+
+    const ORIGIN: string = 'SUBSECUENTES'; // Inicializar ORIGEN con un valor predeterminado
+    this.tramiteData = tramiteDetailsData.filter(
+      (v) => v.tramite === PROCEDURE
+    );
+    this.procedureUrl = this.tramiteData[0].linkDashboard;
+    this.consultaioStore.establecerConsultaio(
+      String(PROCEDURE),
+      ORIGIN,
+      this.tramiteData[0].department,
+      ROW_OBJETO.folioTramite,
+      ROW_OBJETO.tipoDeTramite,
+      ROW_OBJETO.estadoDeTramite,
+      true,
+      false,
+      true
+    );
+    if (ORIGIN === 'SUBSECUENTES') {
+      this.router.navigate([`/${this.tramiteData[0].department}/subsecuentes`]);
+    }
   }
 
   /**

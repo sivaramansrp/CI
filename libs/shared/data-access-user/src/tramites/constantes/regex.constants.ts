@@ -2,8 +2,16 @@
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
-  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/, // Hasta 12 enteros y 2 decimales
+  SOLO_NUMEROS_Y_PUNTO: /^[0-9.]+$/, // Permite solo números y puntos
+  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/ // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
 };
+
+/**
+ * Expresión regular que valida que la cadena no contenga los caracteres <, >, / o \.
+ */
+export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>\/\\]+$/;
 
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
@@ -420,8 +428,8 @@ export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
  * - "1234567890123456" (más de 15 dígitos enteros)
  * - "abc" (no es un número)
  */
-export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  * 
