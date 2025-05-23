@@ -117,6 +117,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit 
         this.pagoForm.patchValue(datosDeLaSolicitud);
       }
     });
+    
     this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         pagoDeformaValida: false,

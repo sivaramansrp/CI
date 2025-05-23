@@ -1,0 +1,31 @@
+{
+  "datosDeLaSolicitud": {
+    "tipoMercancia": "yes",
+    "aduanaIngreso": "160",
+    "oficinaInspeccion":"161",
+    "puntoInspeccion": "170",
+    "claveUCON": "UCON123456",
+    "establecimientoTIF": "1",
+    "nombreVeterinario": "3",
+    "numeroGuia": "GUIA987654321",
+    "certificacion": "Certificación ZS-2025",
+    "regimen": "101",
+    "datosDeMercancia": "50 reses, raza Angus, procedentes de Texas"
+  },
+  "datosParaMovilizacionNacional": {
+    "coordenadas": "25.6866,-100.3161",
+    "nombre": "3",
+    "medio": "101",
+    "transporte": "Camión tipo jaula",
+    "punto": "160"
+  },
+  "pagoDeDerechos": {
+    "exentoPago": "no",
+    "justificacion": "2",
+    "claveReferencia": "REF-20250523-ZS",
+    "cadenaDependencia": "SAGARPA-MOVIL-2025",
+    "banco": "3",
+    "llavePago": "LLP-77889900",
+    "importePago": "1500.00"
+  }
+}

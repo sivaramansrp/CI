@@ -36,15 +36,6 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
   seleccionarTodo$ = this.select();
 
   /**
-   * Selector para obtener el objeto `solicitante`.
-   *
-   * @readonly
-   * @type {Observable<any>}
-   * @memberof ZoosanitarioQuery
-   */
-  seleccionarSolicitante$ = this.select(estado => estado.solicitante);
-
-  /**
    * Selector para obtener los datos de la solicitud.
    *
    * @readonly
@@ -62,14 +53,6 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
    */
   seleccionarMovilizacionNacional$ = this.select(estado => estado.datosParaMovilizacionNacional);
 
-  /**
-   * Selector para obtener los terceros relacionados.
-   *
-   * @readonly
-   * @type {Observable<any>}
-   * @memberof ZoosanitarioQuery
-   */
-  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
 
   /**
    * Selector para obtener los datos de pago de derechos.

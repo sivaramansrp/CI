@@ -9,10 +9,8 @@
  * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos.
  */
 export interface CapturarSolicitud {
-  solicitante: Solicitante;
   datosDeLaSolicitud: DatosDeLaSolicitud;
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
-  tercerosRelacionados: TercerosRelacionados;
   pagoDeDerechos: PagoDeDerechos;
   validarEnvio: ValidarEnvio;
   sampleData:DummyJson;
@@ -123,6 +121,13 @@ export interface FilaSolicitud {
     descripcionFraccion: string;
     nico: string;
 }
+
+
+export interface ApiSolicitud {
+  pagoDeDerechos: PagoDeDerechos;
+  datosDeLaSolicitud: DatosDeLaSolicitud;
+  datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
+}
 /**
  * Modelo para pago de derechos
  * @export
@@ -147,12 +152,6 @@ exentoPago:string;
 }
 export function createDatosState(params: Partial<CapturarSolicitud> = {}): CapturarSolicitud {
   return {
-    solicitante: params.solicitante || { // Initialize as an object
-      rfc: '',
-      nombreRazonSocial: '',
-      aPaterno: '',
-      correo: ''
-    },
     datosDeLaSolicitud: params.datosDeLaSolicitud || {
       tipoMercancia:'', 
       aduanaIngreso: '',
@@ -172,9 +171,6 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       medio: '',
       transporte: '',
       punto: '',
-    },
-    tercerosRelacionados: params.tercerosRelacionados || { // Initialize as an object with an array
-      terceros: []
     },
     pagoDeDerechos: params.pagoDeDerechos || { // Initialize as an object
       exentoPago:'',
@@ -204,7 +200,7 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
 
     estadoDeTramite: '', 
 
-    readonly: true, 
+    readonly: false, 
 
     create: true, 
 

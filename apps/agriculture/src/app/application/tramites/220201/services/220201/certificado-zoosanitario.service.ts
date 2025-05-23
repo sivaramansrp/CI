@@ -51,14 +51,8 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
 
-
-
   limpiarFormulario(): void {
     this.zoosanitarioStore.limpiarFormulario();
-  }
-
-  getSolicitante(): Observable<Solicitante> {
-    return this.zoosanitarioStore._select(state => state.solicitante); // Use _select for observable
   }
 
   getDatosDeLaSolicitud(): Observable<DatosDeLaSolicitud> {
@@ -67,10 +61,6 @@ export class CertificadoZoosanitarioServiceService {
 
   getDatosParaMovilizacionNacional(): Observable<DatosParaMovilizacionNacional> {
     return this.zoosanitarioStore._select(state => state.datosParaMovilizacionNacional);
-  }
-
-  getTercerosRelacionados(): Observable<TercerosRelacionados> {
-    return this.zoosanitarioStore._select(state => state.tercerosRelacionados);
   }
 
   getPagoDeDerechos(): Observable<PagoDeDerechos> {
