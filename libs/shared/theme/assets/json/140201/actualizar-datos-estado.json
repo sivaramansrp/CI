@@ -1,0 +1,20 @@
+{
+    "entidadFederativa": "valor ficticio",
+    "colonia": "valor ficticio",
+    "localidad": "valor ficticio",
+    "municipio": "valor ficticio",
+    "paisInput": "valor ficticio",
+    "numeroInterior": "valor ficticio",
+    "codigoPostal": "valor ficticio",
+    "telefono": "valor ficticio",
+    "nombre": "valor ficticio",
+    "apellidoPaterno": "valor ficticio",
+    "correoElectronico": "valor ficticio",
+    "rfcIngresado": "valor ficticio",
+    "motivoCancelacion": "valor ficticio",
+    "entidadExterna": "valor ficticio",
+    "nombreSolicitanteIPC": "valor ficticio",
+    "cargoSolicitanteIPC": "valor ficticio",
+    "folioOficioSolicitudIPC": "valor ficticio",
+    "correoSolicitanteIPC": "valor ficticio"
+}
