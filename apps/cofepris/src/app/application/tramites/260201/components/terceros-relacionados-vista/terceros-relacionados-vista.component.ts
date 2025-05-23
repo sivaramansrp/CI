@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ELEMENTOS_REQUERIDOS } from '../../constants/psicotropicos-poretorno.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
@@ -56,6 +57,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
      * @private
      */
     private destroy$ = new Subject<void>();
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * @constructor

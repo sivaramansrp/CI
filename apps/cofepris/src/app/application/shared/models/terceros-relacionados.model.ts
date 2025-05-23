@@ -29,6 +29,11 @@ export interface Fabricante {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  razonSocial?: string;
+  lada?: string;
 }
 
 /**
@@ -112,6 +117,11 @@ export interface Destinatario {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
+   nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  razonSocial?: string;
+  lada?: string;
 }
 
 /**
@@ -195,6 +205,11 @@ export interface Proveedor {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  razonSocial?: string;
+  lada?: string;
 }
 
 /**
@@ -278,6 +293,11 @@ export interface Facturador {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  razonSocial?: string;
+  lada?: string;
 }
 
 /**
@@ -370,4 +390,3 @@ export interface TercerosRelacionadosDatos {
   proveedorTablaDatos: Proveedor[];
   facturadorTablaDatos: Facturador[];
 }
- 

@@ -5,6 +5,7 @@ import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DATOS_ELEMENTOS_REQUERIDOS } from '../../constantes/maquila-materias-primas.enum';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
@@ -126,6 +127,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   * Se utiliza para manejar y almacenar datos relacionados con la sección específica.
   */
   private seccion!: SeccionLibState;
+
+  /**
+   * Lista de elementos requeridos utilizados en el componente.
+   * 
+   * Esta propiedad contiene los datos necesarios para representar
+   * los elementos requeridos en la solicitud. Los datos son obtenidos
+   * desde la constante `DATOS_ELEMENTOS_REQUERIDOS`.
+   */
+  public elementosRequeridos = DATOS_ELEMENTOS_REQUERIDOS;
 
   
   constructor(private tramite260206Query: Tramite260206Query,
