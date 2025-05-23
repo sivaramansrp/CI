@@ -3,7 +3,6 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../enviroments/enviroment';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +19,7 @@ export class ExpansionDeProductoresService {
   * @param http: constructor de HttpClient
   */
   constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario {
     // Lógica de inicialización si es necesario
    }
 
@@ -40,6 +40,10 @@ export class ExpansionDeProductoresService {
         })
       );
     }
+
+    getRegistroExpansionDeProductoresData(): Observable<any> {
+    return this.http.get<any>('assets/json/301/registro_toma_muestras_mercancias.json');
+  }
 
 
 

@@ -7,7 +7,9 @@ import DomiciliosTabla from 'libs/shared/theme/assets/json/90201/domicilios-de-p
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud90201State } from '../../../../estados/tramites/tramite90201.store';
 
 
 /**
@@ -34,6 +36,19 @@ export class DomiciliosDePlantasComponent {
    * Este formulario se utiliza para capturar y validar la información de los domicilios.
    */
   public formDomiciliosDePlantas!: FormGroup;
+
+   /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+    public solicitudState!: Solicitud90201State;
 
   /**
    * Configuración de la tabla para los domicilios de plantas.
@@ -71,9 +86,42 @@ export class DomiciliosDePlantasComponent {
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear el formulario.
    */
-  constructor(private fb: FormBuilder) {
-    this.establecerFormDomiciliosDePlantas();
+  constructor(private fb: FormBuilder,private consultaioQuery: ConsultaioQuery) {
+    //this.establecerFormDomiciliosDePlantas();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.establecerFormDomiciliosDePlantas();
+      })
+    )
+    .subscribe()
+    
+    
   }
+
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.establecerFormDomiciliosDePlantas();
+    }  
+  }
+
+    guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.formDomiciliosDePlantas.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDomiciliosDePlantas.enable();
+      } else {
+      }
+  }
+
 
   /**
    * Inicializa el grupo de formularios para "Domicilios de Plantas" con valores predeterminados y campos deshabilitados.
@@ -89,6 +137,9 @@ export class DomiciliosDePlantasComponent {
     });
   }
 
-
+ ngonDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }

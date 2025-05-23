@@ -11,6 +11,8 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
 import { ProductorIndirectoTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   Solicitud90201State,
   Tramite90201Store,
@@ -29,7 +31,7 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, FormsModule],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, FormsModule,ReactiveFormsModule],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
@@ -74,6 +76,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  formProductorIndirecto!: FormGroup;
+
   /**
    * Representa el RFC (Registro Federal de Contribuyentes) de un usuario.
    * Este es un identificador único utilizado para fines fiscales en México.
@@ -84,6 +88,12 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * Representa la suscripción al estado de la solicitud.
    */
   private subscription: Subscription = new Subscription();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor del componente SectoresYMercanciasComponent.
@@ -93,41 +103,73 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite90201Store: Tramite90201Store,
-    private tramite90201Query: Tramite90201Query
-  ) {}
+    private tramite90201Query: Tramite90201Query,
+    private consultaioQuery: ConsultaioQuery,
+    private fb: FormBuilder
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarProductorFormulario();
+      })
+    )
+    .subscribe()
+  }
 
+    inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
+  }
+   
+  guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+         this.formProductorIndirecto.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formProductorIndirecto.enable();
+      } else {
+      }
+  }
   /**
    * Inicializa el componente ProductorIndirecto.
    * Se suscribe al estado de la solicitud y actualiza el RFC con el valor del estado.
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite90201Query.selectSolicitud$
+  this.inicializarEstadoFormulario();
+  }
+  
+  inicializarFormulario(): void{
+       this.tramite90201Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
-    this.rfc = this.solicitudState?.rfc;
-  }
 
-  /**
-   * Método que se llama cuando el componente se destruye.
-   * Limpia el notifier de destrucción.
-   */
+           })
+           
+          ).subscribe()
+
+          this.inicializarProductorFormulario();
+    }
+
+  inicializarProductorFormulario(): void {
+    this.formProductorIndirecto = this.fb.group({
+          rfc: [this.solicitudState?.rfc],
+          })
+        
+  }
+  
   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
     const VALOR = this.rfc;
     (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
-  /**
-   * Método que se llama cuando el componente se destruye.
-   * Limpia el notifier de destrucción.
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+ ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

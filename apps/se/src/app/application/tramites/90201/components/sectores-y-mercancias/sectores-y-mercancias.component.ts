@@ -27,6 +27,7 @@ import {
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
@@ -74,6 +75,16 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public TEXTOS = Sectoresy;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  public solicitudState!: Solicitud90201State;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Configuración para las columnas de la tabla.
    *
    * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
@@ -114,10 +125,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
-
-  public solicitudState!: Solicitud90201State;
-  private destroyNotifier$: Subject<void> = new Subject();
-
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    *
@@ -128,27 +135,61 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private _expansionDesvc: ExpansionDeProductoresService,
     private fb: FormBuilder,
     private tramite90201Store: Tramite90201Store,
-    private tramite90201Query: Tramite90201Query
-  ) {}
+    private tramite90201Query: Tramite90201Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.establecerFormSectores();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
    * Inicializa los catálogos llamando al método `inicializaCatalogos`.
    */
-  ngOnInit(): void {
-    this.subscription.add(
-      this.tramite90201Query.selectSolicitud$
+    ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.inicializaCatalogos();
+  }
+ 
+  inicializarFormulario(): void{
+       this.tramite90201Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
-    this.inicializaCatalogos();
-    this.establecerFormSectores();
+
+           })
+           
+          ).subscribe()
+
+          this.establecerFormSectores();
+        }
+
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
   }
+
+    guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.sectoresForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.sectoresForm.enable();
+      } else {
+      }
+  }
+
+
 
   /**
    * Inicializa el `sectoresForm` con valores predeterminados y validadores.
@@ -196,7 +237,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este método se utiliza para indicar que no se ha seleccionado un sector.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+   this.destroyNotifier$.next();
+   this.destroyNotifier$.complete();
   }
 
   /**
