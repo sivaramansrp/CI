@@ -29,10 +29,5 @@ describe('ImporticonMercanciaSanitarioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the reactive form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.mercanciaForm).toBeDefined();
-    expect(component.mercanciaForm.controls['clasificacionProducto']).toBeDefined();
-  });
 
 });

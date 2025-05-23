@@ -7,7 +7,7 @@ import {
   TablaSeleccion,
   TipoNotificacionEnum,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   ConfiguracionItem,
   SERIE_TABLA_CONFIGURACION,
@@ -37,6 +37,10 @@ import { Tramite300105Query } from '../../estados/tramite300105.query';
   styleUrls: ['./datos-solicitud.component.scss'],
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /** 
+  * Tipo de operación recibida como entrada desde el componente padre. 
+  */
+  @Input() tipoOperacionSeleccionado!: string | number;
   /**
    * Referencia al componente Crosslist para gestionar listas dinámicas.
    */
@@ -167,6 +171,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   confirmEliminarPopupCerrado: boolean = true;
 
   /**
+   * Indica si el popup de serie agregada está abierto.
+   */
+  serieAgregadaPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup de mercancía agregada está abierto.
+   */
+  mercanciaAgregadaPopupAbierto: boolean = false;
+
+  /**
    * Indica si el botón de eliminar está habilitado.
    */
   enableEliminarBoton: boolean = false;
@@ -242,28 +256,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.formularioMercancia = this.formBuilder.group({
       id: [DATOS_PREDETERMINADOS.id],
-      marca: [DATOS_PREDETERMINADOS.marca, Validators.required],
-      modelo: [DATOS_PREDETERMINADOS.modelo, Validators.required],
-      serie: [DATOS_PREDETERMINADOS.serie, Validators.required],
-      voltaje: [DATOS_PREDETERMINADOS.voltaje, Validators.required],
-      unidadMedidaVoltaje: [
-        DATOS_PREDETERMINADOS.unidadMedidaVoltaje,
-        Validators.required,
-      ],
-      corriente: [DATOS_PREDETERMINADOS.corriente, Validators.required],
-      unidadMedidaCorriente: [
-        DATOS_PREDETERMINADOS.unidadMedidaCorriente,
-        Validators.required,
-      ],
-      numEquipos: [DATOS_PREDETERMINADOS.numEquipos, Validators.required],
-      fraccionArancelaria: [
-        DATOS_PREDETERMINADOS.fraccionArancelaria,
-        Validators.required,
-      ],
-      fraccionDescripcion: [
-        DATOS_PREDETERMINADOS.fraccionDescripcion,
-        Validators.required,
-      ],
+      marca: [DATOS_PREDETERMINADOS.marca, [Validators.required, Validators.maxLength(50)]],
+      modelo: [DATOS_PREDETERMINADOS.modelo, [Validators.required, Validators.maxLength(100)]],
+      serie: [DATOS_PREDETERMINADOS.serie, [Validators.required, Validators.maxLength(150)]],
+      voltaje: [DATOS_PREDETERMINADOS.voltaje, [Validators.required, Validators.maxLength(11)]],
+      unidadMedidaVoltaje: [DATOS_PREDETERMINADOS.unidadMedidaVoltaje, Validators.required],
+      corriente: [DATOS_PREDETERMINADOS.corriente, [Validators.required, Validators.maxLength(11)]],
+      unidadMedidaCorriente: [DATOS_PREDETERMINADOS.unidadMedidaCorriente, Validators.required],
+      numEquipos: [DATOS_PREDETERMINADOS.numEquipos, [Validators.required, Validators.maxLength(2)]],
+      fraccionArancelaria: [DATOS_PREDETERMINADOS.fraccionArancelaria, Validators.required],
+      fraccionDescripcion: [DATOS_PREDETERMINADOS.fraccionDescripcion, Validators.required],
     });
     this.formularioMercancia.get('fraccionDescripcion')?.disable();
   }
@@ -386,6 +388,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.cerrarEliminarConfirmationPopup();
   }
 
+  /**
+   * Muestra notificación después de agregar un número de serie.
+   */
+  mostrarNotificacionSerieAgregada(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Número de serie agregado',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.serieAgregadaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de serie agregada.
+   */
+  cerrarSerieAgregadaPopup(): void {
+    this.serieAgregadaPopupAbierto = false;
+  }
+
+  /**
+   * Muestra notificación después de guardar la mercancía.
+   */
+  mostrarNotificacionMercanciaAgregada(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'La mercancia fue agregada correctamente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mercanciaAgregadaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de mercancía agregada.
+   */
+  cerrarMercanciaAgregadaPopup(): void {
+    this.mercanciaAgregadaPopupAbierto = false;
+    this.alternarModalMercancia();
+  }
   
 /**
  * Abre el popup de selección múltiple si el botón de modificar está habilitado.
@@ -473,7 +523,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario, actualiza o agrega una nueva fila en la tabla de mercancías,
    * y actualiza el estado del almacén correspondiente.
    */
-  enviarFormularioMercancia(): void {
+  enviarFormularioMercancia(isAgregar: boolean): void {
     const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: ConfiguracionItem = {
@@ -511,7 +561,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     
     this.tramite300105Store.setMercanciaTablaDatos(this.datosTablaMercancia);
     this.formularioMercancia.reset();
-    this.alternarModalMercancia();
+    if (isAgregar) {
+      this.mostrarNotificacionSerieAgregada();
+    } else {
+      this.mostrarNotificacionMercanciaAgregada();
+    }
   }
 
   /**

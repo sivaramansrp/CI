@@ -275,8 +275,8 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
  * permitiendo al usuario seleccionar entre una persona física o moral.
  */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
-  { label: 'Física', value: TipoPersona.FISICA },
-  { label: 'Moral', value: TipoPersona.MORAL }
+  { label: 'Física', value: TipoPersona.FISICA,hint:'Física' },
+  { label: 'Moral', value: TipoPersona.MORAL ,hint:'Moral'}
 ];
 
 /**
