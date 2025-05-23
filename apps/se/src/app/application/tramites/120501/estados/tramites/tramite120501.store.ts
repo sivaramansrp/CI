@@ -9,8 +9,8 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  * @returns Solicitud120501
  */
 export interface Solicitud120501State {
-  entidadFederativa: Catalogo | null;
-  representacionFederal: Catalogo | null;
+  entidadFederativa: string;
+  representacionFederal: string;
   numeraDelicitacion: string;
   fechaDelEventoDelicitacion: string;
   descripcionDelProducto: string;
@@ -34,8 +34,8 @@ export interface Solicitud120501State {
 export function createInitialState(): Solicitud120501State {
   return{
       
-      entidadFederativa:null,
-      representacionFederal:null,
+      entidadFederativa:'',
+      representacionFederal:'',
       numeraDelicitacion: '',
       fechaDelEventoDelicitacion: '',
       descripcionDelProducto: '', 
@@ -72,13 +72,13 @@ export class Tramite120501Store extends Store<Solicitud120501State> {
         montoRecibir,
       }));
     }
-    public setEntidadFederativa(entidadFederativa: Catalogo):void {
+    public setEntidadFederativa(entidadFederativa: string):void {
       this.update((state) => ({
         ...state,
         entidadFederativa,
       }));
     }
-    public setRepresentacionFederal(representacionFederal: Catalogo):void {
+    public setRepresentacionFederal(representacionFederal: string):void {
       this.update((state) => ({
         ...state,
         representacionFederal,

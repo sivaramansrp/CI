@@ -17,11 +17,11 @@
           <div class="row">
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="entidadFederativaOptions" formControlName="entidadFederativa" [label]="'Entidad federativa'"
-                [required]="true" name="federalent" (change)="onChangeEntiadFederative()"></app-catalogo-select>
+                [required]="true" [isDisabled]="esFormularioSoloLectura" name="federalent" (change)="onChangeEntiadFederative()" ></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="representacionFederalOptions" formControlName="representacionFederal" [label]="'Representación federal'"
-                [required]="true" name="representfederal" (change)="onChangeRepresentacionFederal()"></app-catalogo-select>
+                [required]="true" [isDisabled]="esFormularioSoloLectura" name="representfederal" (change)="onChangeRepresentacionFederal()"></app-catalogo-select>
             </div>
           </div>
           </form>
@@ -34,7 +34,7 @@
           <div class="row">
               <div class="col-md-4">
                   <label class="form-label" for="numeraDelicitacion">Número de licitación:</label>
-                  <input type="text" class="form-control" id="numeraDelicitacion" formControlName="numeraDelicitacion" size="30" readonly>
+                  <input type="text" class="form-control" id="numeraDelicitacion" formControlName="numeraDelicitacion" size="30">
               </div>
       
               <div class="col-md-4">
@@ -118,7 +118,7 @@
             <div class="row rfc1" *ngIf="showSeleccionarParticipante">
               <div class="col-md-4">
                 <label class="form-label" for="rfc1">RFC:</label>
-                <input type="text" class="form-control bg-white" id="rfc1" formControlName="rfc1">
+                <input type="text" class="form-control" id="rfc1" formControlName="rfc1">
               </div>
               <div class="col-md-4 mt-5">
                 <button type="button" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
@@ -134,7 +134,7 @@
              
             <div class="col-md-4">
               <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
-              <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
+              <input type="text" class="form-control" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
               (change)="montoRecibirValue()">
               <div *ngIf="isInvalid('montoRecibir')" class="text-danger">
                 Este campo es obligatorio

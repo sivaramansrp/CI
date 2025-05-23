@@ -4,8 +4,8 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
 
 /**
@@ -26,6 +26,7 @@ export class PasoSolicitanteComponent implements OnInit, OnDestroy{
   indice: number = 1;
   private destroyed$ = new Subject<void>();
   public esDatosRespuesta: boolean = false;
+  public consultaState!:ConsultaioState;
   update = true;
   constructor(private service:LicitacionesDisponiblesService,private consultaQuery: ConsultaioQuery){
   //constructor
@@ -39,11 +40,11 @@ export class PasoSolicitanteComponent implements OnInit, OnDestroy{
     this.indice = i;
   }
   ngOnInit(): void {
-  //  this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-  //         this.consultaState = seccionState;
-  //     })).subscribe();
-    
-    if(this.update) {
+   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+  
+    if(this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

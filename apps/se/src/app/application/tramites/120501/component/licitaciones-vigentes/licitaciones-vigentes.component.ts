@@ -226,16 +226,14 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+        //   this.esFormularioSoloLectura = true;
+        //  this.inicializarEstadoFormulario();
   }
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Solicitud120501State) => {
-        this.seccionState = data;
-      });
+    
       this.inicializarEstadoFormulario();
 
     console.log('ngOnInit');
@@ -266,28 +264,29 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     // });
   }
   inicializarFormulario(): void {
-    this.formForTotalCount = this.fb.group({
-      recuentoTotalDeFilas: [{ value: '', disabled: true }],
-    })
+    this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Solicitud120501State) => {
+        this.seccionState = data;
+      });
     this.formulario = this.fb.group({
       entidadFederativa: [this.seccionState?.entidadFederativa, Validators.required],
       representacionFederal: [this.seccionState?.representacionFederal, Validators.required],
     });
     this.detalledelaLicitacionForm = this.fb.group({
-      numeraDelicitacion: [this.seccionState?.numeraDelicitacion, Validators.required],
-      fechaDelEventoDelicitacion: [this.seccionState?.fechaDelEventoDelicitacion, Validators.required],
-      descripcionDelProducto:[this.seccionState?.descripcionDelProducto, Validators.required],
-      unidadTarifaria:[this.seccionState?.unidadTarifaria, Validators.required],
-      regimenAduanero: [this.seccionState?.regimenAduanero, Validators.required],
-      fraccionArancelaria: [this.seccionState?.fraccionArancelaria, Validators.required],
-      fechaDeiniciodeVigenciadelCupo: [this.seccionState?.fechaDeiniciodeVigenciadelCupo, Validators.required],
-      fechaDefindeVigenciadelCupo:[this.seccionState?.fechaDefindeVigenciadelCupo, Validators.required],
-      obserVaciones: [this.seccionState?.obserVaciones, Validators.required],
-      bloqueComercial: [this.seccionState?.bloqueComercial, Validators.required],
-      paises: [this.seccionState?.paises, Validators.required],
-      montoadJudicado: [this.seccionState?.montoadJudicado, Validators.required],
-      montoDisponible: [this.seccionState?.montoDisponible, Validators.required],
-      montoMaximo: [this.seccionState?.montoMaximo, Validators.required],
+      numeraDelicitacion: [{value:this.seccionState?.numeraDelicitacion,disabled: true}, Validators.required ],
+      fechaDelEventoDelicitacion: [{value:this.seccionState?.fechaDelEventoDelicitacion,disabled: true}, Validators.required],
+      descripcionDelProducto:[{value:this.seccionState?.descripcionDelProducto, disabled: true}, Validators.required],
+      unidadTarifaria:[{value:this.seccionState?.unidadTarifaria, disabled: true}, Validators.required],
+      regimenAduanero: [{value: this.seccionState?.regimenAduanero, disabled: true}, Validators.required],
+      fraccionArancelaria: [{value:this.seccionState?.fraccionArancelaria, disabled: true}, Validators.required],
+      fechaDeiniciodeVigenciadelCupo: [{value:this.seccionState?.fechaDeiniciodeVigenciadelCupo, disabled: true}, Validators.required],
+      fechaDefindeVigenciadelCupo:[{value:this.seccionState?.fechaDefindeVigenciadelCupo, disabled: true}, Validators.required],
+      obserVaciones: [{value:this.seccionState?.obserVaciones, disabled: true}, Validators.required],
+      bloqueComercial: [{value:this.seccionState?.bloqueComercial, disabled: true}, Validators.required],
+      paises: [{value:this.seccionState?.paises, disabled: true}, Validators.required],
+      montoadJudicado: [{value:this.seccionState?.montoadJudicado, disabled: true}, Validators.required],
+      montoDisponible: [{value:this.seccionState?.montoDisponible, disabled: true}, Validators.required],
+      montoMaximo: [{value:this.seccionState?.montoMaximo, disabled: true}, Validators.required],
     })
     this.adquiriente = this.fb.group({
       rfc: [this.seccionState?.rfc, Validators.required],
@@ -307,8 +306,12 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+      this.detalledelaLicitacionForm.disable();
       this.adquiriente.disable();
     } else if (!this.esFormularioSoloLectura) {
+      this.formulario.enable();
+      this.detalledelaLicitacionForm.enable();
       this.adquiriente.enable();
     } else {
       // No se requiere ninguna acción en el formulario
@@ -471,9 +474,21 @@ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite12050
 * 
 */
 onChangeEntiadFederative(): void {
-  const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
-  this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
-}
+   if (
+      this.formulario.get('entidadFederativa')?.value ===
+      '1'
+    ) {
+      this.formulario.get('entidadFederativa')?.disable();
+    } else {
+      this.formulario.get('entidadFederativa')?.enable();
+    }
+
+     const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
+     this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
+  }
+ 
+
+
 
 /**
 * Actualiza el valor de la representación federal en el store.
@@ -545,4 +560,6 @@ moverRFC1(selectedEntry: Complementaria): void {
     this.datos.splice(INDEX, 1);
   }
 }
+
+
 }

@@ -1,18 +1,13 @@
 {
-    //adquiriente
     "rfc":"eeg860212925",
     "adquirienteMontoDisponible":"15",
     "montoRecibir":"5000000",
-
-    //datos-de-la-tabla
     "numerodelicitacion":"002/2024 ",
     "fechadelicitacion":"2024-03-22 ",
     "descripcion":"",
     "montoadjudicado":"9985",
     "fechainiciovigencia":"2024-03-01",
     "fechafinvigencia":"2024-12-31",
-
-    //detalles-licitacion
     "numeraDelicitacion":"002/2024",
     "fechaDelEventoDelicitacion":"2024-03-22",
     "descripcionDelProducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON",
@@ -27,11 +22,7 @@
     "montoadJudicado":"9985",
     "montoDisponible":"9985",
     "montoMaximo":"10000",
-
-    //dropdown 1: entidad-federativa
     "entidadFederativa":"1",
-
-    //dropdown 2: representacion-federal
     "representacionFederal":"1"
    
   
