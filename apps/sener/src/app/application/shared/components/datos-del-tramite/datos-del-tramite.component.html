@@ -14,7 +14,7 @@
           ></app-input-radio>
           <div *ngIf="esInvalido('solicitud')" class="text-danger">
             <small *ngIf="form.controls['solicitud'].errors?.['required']">
-              Este campo es obligatorio.
+              Por favor, selecciona una opción.
             </small>
           </div>
         </div>
@@ -31,7 +31,7 @@
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
             <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">
-              Este campo es obligatorio.
+              Por favor, selecciona una opción.
             </small>
           </div>
         </div>

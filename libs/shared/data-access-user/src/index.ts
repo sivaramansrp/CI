@@ -1,15 +1,25 @@
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
+export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
+export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
 export { enviroment } from './enviroments/enviroment';
-export { InputConfig, LabelValueDatos, ListaPasosWizard, MenuConfig, Props } from './core/models/forma-render.model';
-export { ModalFuncionesComponent} from './tramites/components/modal-funciones/modal-funciones.component';
+export {
+  InputConfig,
+  LabelValueDatos,
+  ListaPasosWizard,
+  MenuConfig,
+  Props,
+} from './core/models/forma-render.model';
+export { ModalFuncionesComponent } from './tramites/components/modal-funciones/modal-funciones.component';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
+export { BandejaDeSolicitudes } from './core/models/shared/lib-bandeja.model';
+export { BandejaDeTareasPendientes } from './core/models/shared/bandeja-de-tareas-pendientes.model';
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -20,13 +30,18 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
 export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
-export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store';
+export {
+  TramiteFolioState,
+  TramiteFolioStore,
+} from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/ambientes';
 export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
 export * from './core/enums/constantes-alertas.enum';
+export * from './core/enums/constantes-alertas.enum';
+export * from './core/enums/bandeja-solicitude-forma.enum';
 export * from './core/enums/forma-render.enum';
 export * from './core/enums/forma-validators.enum';
 export * from './core/enums/solicitar-transferencia.enum';
@@ -41,7 +56,7 @@ export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/31602/comercio-exterior.model';
-export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/models/shared/agregar-trasnporte.model';
 export * from './core/models/shared/catalogo.model';
 export * from './core/models/shared/anexar-documentos.model';
 export * from './core/models/shared/catalogos.model';
@@ -139,7 +154,7 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/solicitante-constantes.enum';
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/directives/Uppercase/uppercase.directive';
@@ -149,7 +164,7 @@ export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './tramites/directives/solo-numeros/solo-numeros.directive';
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
@@ -159,13 +174,18 @@ export * from './tramites/components/notificaciones/notificaciones.component';
 
 export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './core/models/31602/comercio-exterior.model';
+
+export * from './core/services/shared/atender-requerimiento/atender-requerimiento.service';
 export * from './tramites/components/carga-documento/carga-documento.component';
-export * from './core/estados/consulta.store';
-export * from './core/queries/consulta.query';
+export * from './core/enums/evaluar.trimites.enums';
+export * from './core/estados/solicitud-documentos.store';
+export * from './core/queries/solicitud-documentos.query';
+export * from './core/estados/requerimientos.store';
+export * from './core/queries/requerimientos.query';
 
 export * from './core/services/shared/catalogos/tipo-operacion.service';
 export * from './core/services/shared/catalogos/tipo-transporte.service';
 export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
-
-
+export * from './core/services/shared/subsecuentes/subsecuentes.service';
+export * from './core/models/shared/subsecuentes.model';
