@@ -62,6 +62,7 @@ export interface ValidarEnvio {
  * @property {string} regimen - Régimen.
  */
 export interface DatosDeLaSolicitud {
+  tipoMercancia:string;
   aduanaIngreso: string;
   oficinaInspeccion: string;
   puntoInspeccion: string;
@@ -130,7 +131,8 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       aPaterno: '',
       correo: ''
     },
-    datosDeLaSolicitud: params.datosDeLaSolicitud || { // Initialize as an object
+    datosDeLaSolicitud: params.datosDeLaSolicitud || {
+      tipoMercancia:'', 
       aduanaIngreso: '',
       oficinaInspeccion: '',
       puntoInspeccion: '',

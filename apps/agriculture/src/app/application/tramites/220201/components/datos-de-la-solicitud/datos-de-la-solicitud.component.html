@@ -72,7 +72,6 @@
             ></label>
             <input
               formControlName="claveUCON"
-              value=""
               class="form-control"
               id="claveUCON"
               placeholder=""
@@ -108,6 +107,7 @@
             <input
               class="form-control"
               id="numeroGuia"
+              formControlName="numeroGuia"
               placeholder=""
               type="text"
               libUppercase
@@ -136,8 +136,9 @@
           <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
             [isRequired]="true"
-            [selectedValue]="selectedValue"
             [layout]="'vertical'"
+            name="tipoMercancia"
+            formControlName="tipoMercancia"
                (change)="setValoresStore()"
           ></app-input-radio>
         </div>

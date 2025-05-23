@@ -113,7 +113,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @property {CatalogosSelect} regimen
    */
   regimen: Catalogo[] = [];
-  selectedValue: string = 'no';
 
   opcionDeBotonDeRadio: RadioOpcion[] = [
     {
@@ -189,6 +188,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    */
   initActionFormBuild() { 
     this.datosDelaSolicitud = this.fb.group({
+      tipoMercancia: ['yes', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
