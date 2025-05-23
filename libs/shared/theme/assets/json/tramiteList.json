@@ -170,7 +170,7 @@
   {
     "id": 25,
     "tramite": 80101,
-    "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
+    "linkDashboard": "/se/nuevo-programa-industrial/action",
     "linkDepartment": "/pago/nuevo-programa-industrial/action",
     "department": "se"
   },
@@ -212,8 +212,8 @@
   {
     "id": 31,
     "tramite": 80208,
-    "linkDashboard": "/se/pago/solicitud-modalidad/modalidad",
-    "linkDepartment": "/se/pago/solicitud-modalidad/modalidad",
+    "linkDashboard": "/se/solicitud-modalidad/modalidad",
+    "linkDepartment": "/pago/solicitud-modalidad/modalidad",
     "department": "se"
   },
   {
@@ -527,8 +527,8 @@
   {
     "id": 76,
     "tramite": 220404,
-    "linkDashboard": "/agriculture/pago/desistimiento/desistimiento-page",
-    "linkDepartment": "/agriculture/pago/desistimiento/desistimiento-page",
+    "linkDashboard": "/agriculture/desistimiento/desistimiento-page",
+    "linkDepartment": "/pago/desistimiento/desistimiento-page",
     "department": "agriculture"
   },
   {
@@ -730,8 +730,8 @@
   {
     "id": 105,
     "tramite": 570101,
-    "linkDashboard": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
-    "linkDepartment": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+    "linkDashboard": "/aga/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+    "linkDepartment": "/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
     "department": "aga"
   },
   {
@@ -884,7 +884,7 @@
   {
     "id": 127,
     "tramite": 130110,
-    "linkDashboard": "/se/pago/importacion/neumaticos-comercializar",
+    "linkDashboard": "/se/importacion/neumaticos-comercializar",
     "linkDepartment": "/pago/importacion/neumaticos-comercializar",
     "department": "se"
   },
@@ -1003,21 +1003,21 @@
   {
     "id": 144,
     "tramite": 220403,
-    "linkDashboard": "/pago/certificado-exportacion/acuicola",
+    "linkDashboard": "/agriculture/certificado-exportacion/acuicola",
     "linkDepartment": "/pago/certificado-exportacion/acuicola",
     "department": "agriculture"
   },
   {
     "id": 145,
     "tramite": 260102,
-    "linkDashboard": "/pago/consumo-personal/solicitud",
+    "linkDashboard": "/cofepris/consumo-personal/solicitud",
     "linkDepartment": "/pago/consumo-personal/solicitud",
     "department": "cofepris"
   },
   {
     "id": 146,
     "tramite": 260206,
-    "linkDashboard": "/pago/maquila-materias-primas/solicitud",
+    "linkDashboard": "/cofepris/maquila-materias-primas/solicitud",
     "linkDepartment": "/pago/maquila-materias-primas/solicitud",
     "department": "cofepris"
   },
@@ -1038,7 +1038,7 @@
   {
     "id": 149,
     "tramite": 260218,
-    "linkDashboard": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+    "linkDashboard": "/cofepris/dispositivos-medicos-laboratorio/contenedor-de-pasos",
     "linkDepartment": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
     "department": "cofepris"
   },
