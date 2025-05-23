@@ -57,7 +57,7 @@
         <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
           {{ col.clave(fila) || ' ' }}
         </td>
-         @if(acciones.length > 0){
+         @if(acciones && acciones.length){
         <td class="align-icon">
             @for(accion of acciones; track $index){
               @switch(accion){

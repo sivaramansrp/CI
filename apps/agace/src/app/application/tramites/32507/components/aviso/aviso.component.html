@@ -12,36 +12,36 @@
     </ng-container>
 
     <!-- second section -->
-    <ng-titulo titulo="Datos de la empresa IMMEX que transfiere y presenta el aviso" />
+    <ng-titulo titulo="Datos de la empresa IMMEX que presenta la documentación complementaria del aviso" />
     <ng-container formGroupName="datosEmpresa">
-      <div class="row">
-        <div class="col-md-6">
-          <label for="valorProgramaImmex">
-            Número de programa IMMEX
-          </label>
-          <span class="require">*</span>
-          <label for="puntos">:</label>
-          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
-            [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
-            formControlName="valorProgramaImmex"
-            (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
-            (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="valorAnioProgramaImmex">Año de programa IMMEX</label>
-            <span class="require">*</span>
-            <label for="puntos">:</label>
-            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
-              maxlength="4" formControlName="valorAnioProgramaImmex"
-              [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
-              (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
-          </div>
-        </div>
-      </div>
+      <div class="row  mb-3">
+  <div class="col-md-4 text-end">
+    <label for="valorProgramaImmex" class="form-label mb-0">
+      Número de programa IMMEX <span class="require">*</span>:
+    </label>
+  </div>
+  <div class="col-md-4">
+    <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
+      [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
+      formControlName="valorProgramaImmex"
+      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
+      (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
+  </div>
+</div>
+<div class="row  mb-3">
+  <div class="col-md-4 text-end">
+    <label for="valorAnioProgramaImmex" class="form-label mb-0">
+      Año de programa IMMEX <span class="require">*</span>:
+    </label>
+  </div>
+  <div class="col-md-4">
+    <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
+      maxlength="4" formControlName="valorAnioProgramaImmex"
+      [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
+      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
+      (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
+  </div>
+</div>
     </ng-container>
     <!-- Third section -->
     <ng-titulo titulo="Datos de la ADACE que asistió a la destrucción" />
@@ -75,11 +75,12 @@
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
         [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-               <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
-          Modificar
-        </button>
+
         <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
           Agregar
+        </button>
+        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarDomicilio()">
+          Eliminar
         </button>
       </div>
     </div>
@@ -127,29 +128,28 @@
 
                 <div class="row">
                   <div class="col-md-6 mb-6">
-                  <div>
-                    <label>Datos de las mercancías destruídas*:</label>
-                    <input type="text" class="form-control" formControlName="descripcion"
-                      id="descripcion" maxlength="250"
-                      [ngClass]="isValid(adaceForm,'descripcion') ? 'required' : ''"
-                      (change)="setValoresStore(adaceForm,'descripcion', 'setAvisoFormularioDescripcion')">
+                    <div>
+                      <label>Descripción*:</label>
+                      <input type="text" class="form-control" formControlName="descripcion" id="descripcion"
+                        maxlength="250" [ngClass]="isValid(adaceForm,'descripcion') ? 'required' : ''"
+                        (change)="setValoresStore(adaceForm,'descripcion', 'setAvisoFormularioDescripcion')">
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer custom-footer mt-4 justify-content-end">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
               <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
             </div>
           </div>
-         
+
         </div>
-       
+
       </div>
-      
+
     </ng-container>
-   
+
 
   </form>
 
