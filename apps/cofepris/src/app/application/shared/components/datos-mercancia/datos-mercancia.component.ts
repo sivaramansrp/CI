@@ -23,6 +23,7 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -86,6 +87,8 @@ export class DatosMercanciaComponent implements OnInit {
    * Input que recibe el estado inicial del formulario de mercancía.
    */
   @Input() public mercanciaFormState!: MercanciaForm;
+
+  @Input() public datoSeleccionado!:TablaMercanciasDatos;
 
   /**
    * @event mercanciaSeleccionado
@@ -298,6 +301,7 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.validarElementos();
     this.crearMercanciaForm();
+
   }
 
   /**
@@ -370,6 +374,10 @@ export class DatosMercanciaComponent implements OnInit {
         break;
       case 260207:
         this.elementosAnadidos = ['especifique'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260219:
+        this.elementosAnadidos = ['especifique', 'especifiqueForma', 'especifiqueEstado'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260201:
@@ -514,38 +522,38 @@ export class DatosMercanciaComponent implements OnInit {
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
-        this.mercanciaFormState.clasificacionProducto,
+        this.obtenerValor('clasificacionProducto'),
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.mercanciaFormState.especificarClasificacionProducto,
+       this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionEspecificaProducto: [
-        this.mercanciaFormState.denominacionEspecificaProducto,
+      this.obtenerValor('denominacionEspecificaProducto'),
         Validators.required,
       ],
       denominacionDistintiva: [
-        this.mercanciaFormState.denominacionDistintiva,
+         this.obtenerValor('denominacionDistintiva'),
         Validators.required,
       ],
       denominacionComun: [
-        this.mercanciaFormState.denominacionComun,
+       this.obtenerValor('denominacionComun'),
         Validators.required,
       ],
-      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
       formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica,
+       this.obtenerValor('formaFarmaceutica'),
         Validators.required,
       ],
-      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
       fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria,
+      this.obtenerValor('fraccionArancelaria'),
         Validators.required,
       ],
       descripcionFraccion: [
         {
-          value: this.mercanciaFormState.descripcionFraccion,
+          value: this.obtenerValor('descripcionFraccion'),
           disabled: this.elementosDeshabilitados.includes(
             'descripcionFraccion'
           ),
@@ -553,37 +561,42 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       cantidadUmtValor: [
-        this.mercanciaFormState.cantidadUmtValor,
-        Validators.required,
+       this.obtenerValor('cantidadUmtValor'),
+        [Validators.required,
+        Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ]
+
       ],
       cantidadUmt: [
         {
-          value: this.mercanciaFormState.cantidadUmt,
+          value: this.obtenerValor('cantidadUmt'),
           disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
         },
         Validators.required,
       ],
       cantidadUmcValor: [
-        this.mercanciaFormState.cantidadUmcValor,
-        Validators.required,
+this.obtenerValor('cantidadUmcValor'),
+        [Validators.required,
+          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ],
       ],
-      cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+      cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
+      presentacion: [this.obtenerValor('presentacion'), Validators.required],
       numeroRegistroSanitario: [
-        this.mercanciaFormState.numeroRegistroSanitario,
+       this.obtenerValor('numeroRegistroSanitario'),
         Validators.required,
       ],
-      fechaCaducidad: [this.mercanciaFormState.fechaCaducidad],
+      fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
-        this.mercanciaFormState.paisDeOriginDatos || [],
+      this.obtenerValor('paisDeOriginDatos') || [],
         Validators.required,
       ],
       paisDeProcedenciaDatos: [
-        this.mercanciaFormState.paisDeProcedenciaDatos || [],
+         this.obtenerValor('paisDeProcedenciaDatos') || [],
         Validators.required,
       ],
       usoEspecifico: [
-        this.mercanciaFormState.usoEspecifico || [],
+         this.obtenerValor('usoEspecifico') || [],
         Validators.required,
       ],
     });
@@ -607,15 +620,22 @@ export class DatosMercanciaComponent implements OnInit {
           this.mercanciaForm.addControl(
             NOMBRE_DEL_CONTROL,
             new FormControl(
-              this.mercanciaFormState[
-                NOMBRE_DEL_CONTROL as keyof MercanciaForm
-              ],
+             this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
               { validators: [Validators.required] }
             )
           );
         }
       }
     }
+  }
+
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaForm): string | number | undefined | string[] {
+    return this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaForm];
   }
 
   /**
