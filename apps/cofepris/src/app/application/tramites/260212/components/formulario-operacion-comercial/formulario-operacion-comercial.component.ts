@@ -8,8 +8,8 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject } from 'rxjs';
-
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente FormularioOperacionComercialComponent
  * Este componente gestiona el formulario relacionado con la operación comercial.
@@ -26,6 +26,10 @@ import { Observable, Subject } from 'rxjs';
   styleUrl: './formulario-operacion-comercial.component.scss',
 })
 export class FormularioOperacionComercialComponent implements OnInit, OnDestroy {
+
+  esFormularioSoloLectura: boolean = true;
+  private subscription: Subscription = new Subscription();
+
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
@@ -59,9 +63,18 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
 
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Se puede agregar lógica de inicialización aquí si es necesario
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -70,10 +83,44 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
  * - Recupera las claves del catálogo mediante el servicio.
  */
   ngOnInit(): void {
+this.formularioOperacionInitial()
+}
 
-    this.formularioOperacionInitial()
+  /**
+   * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
+   */
+  formularioOperacionInitial(): void {
+    this.formularioOperacionForm = this.fb.group({
+      noLicenciaSanitaria: [''],
+      regimen: ['', Validators.required],
+      entradas: []
 
-    this.solicitudService.getClave().subscribe((data) => {
+    })
+  }
+
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      //this.inicializarFormulario();
+      this.actualizarEstado();
+    }  
+  }
+
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.formularioOperacionForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formularioOperacionForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+  actualizarEstado(): void {
+this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     }
     );
@@ -87,18 +134,6 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
         this.formularioOperacionForm.get('entradas')?.setValue(entradas);
       }
     });
-  }
-
-  /**
-   * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
-   */
-  formularioOperacionInitial(): void {
-    this.formularioOperacionForm = this.fb.group({
-      noLicenciaSanitaria: [''],
-      regimen: ['', Validators.required],
-      entradas: []
-
-    })
   }
 
   /**

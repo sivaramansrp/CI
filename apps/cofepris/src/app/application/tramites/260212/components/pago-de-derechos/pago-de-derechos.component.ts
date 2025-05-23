@@ -18,7 +18,9 @@ import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -37,13 +39,15 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./pago-de-derechos.component.scss',],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
+ esFormularioSoloLectura: boolean = true;
+   private subscription: Subscription = new Subscription();
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
   selectedBanco$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedBanco$;
   /** Catálogo de estados cargado desde un archivo JSON */
+  pagoDerechos!: FormGroup;
 
   claveDeReferncia$ = this.tramite260212Query.selectedClaveDeReferncia$
   cadenaDeLaDependencia$ = this.tramite260212Query.selectedCadenaDeLaDependencia$
@@ -72,47 +76,64 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
     // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly;
+        // this.esFormularioSoloLectura = true;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+   }
 
-  /**
-   * Formulario reactivos para el pago de derechos.
-   * Cada campo es obligatorio.
-   */
-  public pagoDerechos: FormGroup = this.fb.group({
-    /**
-     * Clave de referencia.
-     */
-    claveDeReferncia: ['', [Validators.required]],
-    /**
-     * Cadena de la dependencia.
-     */
-    cadenaDeLaDependencia: ['', [Validators.required]],
-    /**
-     * Banco seleccionado.
-     */
-    banco: ['', [Validators.required]],
-    /**
-     * Llave de pago.
-     */
-    llaveDePago: ['', [Validators.required]],
-    /**
-     * Fecha de pago.
-     */
-    fechaDePago: ['', [Validators.required]],
-    /**
-     * Importe del pago.
-     */
-    importeDePago: ['', [Validators.required]],
-  });
-
-  /**
+ /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para el selector de opciones desde el servicio.
    */
   ngOnInit(): void {
-    this.pagoDeDerechosService.getData().subscribe((data) => {
+    this.pagoDerechos= this.fb.group({
+      claveDeReferncia: ['', [Validators.required]],
+      cadenaDeLaDependencia: ['', [Validators.required]],
+      banco: ['', [Validators.required]],
+      llaveDePago: ['', [Validators.required]],
+      fechaDePago: ['', [Validators.required]],
+      importeDePago: ['', [Validators.required]],
+    });
+   
+  this.inicializarEstadoFormulario();
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      //this.inicializarFormulario();
+      this.actualizarEstado();
+    }  
+  }
+
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechos.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.pagoDerechos.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+
+  actualizarEstado(): void {
+
+ this.pagoDeDerechosService.getData().subscribe((data) => {
       this.dropdownData = data;
     });
 
@@ -149,7 +170,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.pagoDerechos.get('importeDePago')?.setValue(importeDePago);
       }
     });
-
   }
   /**
    * Actualiza el valor de claveDeReferncia en el tramite260212Store.
@@ -225,5 +245,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }

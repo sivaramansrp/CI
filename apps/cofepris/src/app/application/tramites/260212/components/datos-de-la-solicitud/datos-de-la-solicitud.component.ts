@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CatalogoResponse, ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -19,7 +19,7 @@ import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancia
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -47,7 +47,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
+esFormularioSoloLectura: boolean = true;
+private subscription: Subscription = new Subscription();
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
@@ -142,11 +143,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // La lógica de inicialización se puede agregar aquí si es necesario.
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
+  
   /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
  * - Inicializa el formulario de datos del establecimiento.
@@ -155,8 +166,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Actualiza el campo `estado` del formulario con el estado seleccionado desde el observable.
  */
   ngOnInit(): void {
-    this.fomInitialize()
-    this.solicitudService.getSolicitudes().subscribe((data) => {
+    this.fomInitialize();
+    this.inicializarEstadoFormulario();
+  }
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      //this.inicializarFormulario();
+      this.actualizarEstado();
+    }  
+  }
+
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.datosEstablecimientoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.datosEstablecimientoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+   actualizarEstado(): void {
+this.solicitudService.getSolicitudes().subscribe((data) => {
       this.solicitudData = data;
     });
 
@@ -220,7 +255,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosEstablecimientoForm.get('codigoPostal')?.setValue(codigoPostal);
       }
     });
-  }
+   }
+
 
   /**
  * Configuración de la tabla para mostrar las claves S.C.I.A.N.
@@ -403,6 +439,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 
 }

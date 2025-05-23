@@ -11,8 +11,10 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject } from 'rxjs';
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -32,6 +34,9 @@ import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.componen
   styleUrl: './mercancias-table-form.component.scss',
 })
 export class MercanciasTableFormComponent implements OnInit, OnDestroy {
+
+  esFormularioSoloLectura: boolean = true;
+    private subscription: Subscription = new Subscription();
   /**
    * Evento de salida que emite una acción de Cancelaración.
    */
@@ -88,9 +93,18 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+      private consultaioQuery: ConsultaioQuery
   ) {
-    // Se puede agregar lógica de inicialización aquí si es necesario
+     this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe()
   }
 
   /**
@@ -99,24 +113,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
     this.datosMercanciaFormInitial();
-
-    this.solicitudService.getClave().subscribe((data) => {
-      this.especificarClasificacion = data;
-    });
-
-    this.solicitudService.getClasificacionProducto().subscribe((data) => {
-      this.clasificacionProducto = data;
-    });
-
-    this.solicitudService.getTestadoFisico().subscribe((data) => {
-      this.estadoFisico = data;
-    });
-
-    this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
-      if (selectedDespecificarClasificacion) {
-        this.datosMercanciaForm.get('especificarClasificacion')?.setValue(selectedDespecificarClasificacion);
-      }
-    });
+    this.inicializarEstadoFormulario()
   }
 
   /**
@@ -141,6 +138,47 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     });
   }
 
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.actualizarEstado();
+    }  
+  }
+
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.datosMercanciaForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.datosMercanciaForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+  actualizarEstado(): void {
+this.solicitudService.getClave().subscribe((data) => {
+      this.especificarClasificacion = data;
+    });
+
+    this.solicitudService.getClasificacionProducto().subscribe((data) => {
+      this.clasificacionProducto = data;
+    });
+
+    this.solicitudService.getTestadoFisico().subscribe((data) => {
+      this.estadoFisico = data;
+    });
+
+    this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
+      if (selectedDespecificarClasificacion) {
+        this.datosMercanciaForm.get('especificarClasificacion')?.setValue(selectedDespecificarClasificacion);
+      }
+    });
+  }
+
+
   /**
    * Obtiene el valor de 'especificarClasificacion' del formulario y lo establece en el store.
    */
@@ -156,5 +194,6 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }

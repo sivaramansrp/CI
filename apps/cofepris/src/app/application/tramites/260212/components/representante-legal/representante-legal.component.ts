@@ -8,6 +8,10 @@ import { HttpClient } from '@angular/common/http';
 import { OpcionesPublicacion } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
+
 /**
  * Componente RepresentanteLegalComponent
  * Este componente gestiona el formulario de datos del representante legal.
@@ -24,6 +28,10 @@ import { SolicitudService } from '../../services/solicitud.service';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit {
+
+   esFormularioSoloLectura: boolean = true;
+    private subscription: Subscription = new Subscription();
+    private destroy$ = new Subject<void>();
 
   /**
    * Formulario reactivo para los datos del representante legal.
@@ -49,7 +57,18 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   constructor(private http: HttpClient,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService) { }
+    private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService,
+  private consultaioQuery: ConsultaioQuery) {
+    this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe()
+   }
 
   /**
    * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -65,6 +84,31 @@ export class RepresentanteLegalComponent implements OnInit {
       segundoApellido: [{ value: '', disabled: true }],
     });
 
+
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      //this.inicializarFormulario();
+      this.actualizarEstado();
+    }  
+  }
+
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.personaForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.personaForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+  actualizarEstado(): void {
 
   }
 
@@ -85,6 +129,10 @@ export class RepresentanteLegalComponent implements OnInit {
       this.losDatos = data;
     });
   }
-
+ ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.subscription.unsubscribe();
+  }
 
 }
