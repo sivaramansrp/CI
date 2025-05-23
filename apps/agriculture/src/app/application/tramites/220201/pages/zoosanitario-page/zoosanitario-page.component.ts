@@ -4,7 +4,11 @@ import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-
 
 import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
@@ -17,6 +21,8 @@ import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
+  standalone:true,
+  imports: [WizardComponent,CommonModule,PasoDosComponent,PasoUnoComponent,PasoTresComponent,BtnContinuarComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
