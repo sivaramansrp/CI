@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Adquiriente, AlertComponent, Complementaria,  CONFIGURACION_ACCIONISTAS_TABLA, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { Adquiriente, AlertComponent, Complementaria,  CONFIGURACION_ACCIONISTAS_TABLA, ConsultaioQuery, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -23,9 +23,9 @@ import { TableComponent } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
+import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
 
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { Subject } from 'rxjs';
@@ -33,7 +33,7 @@ import { Subject } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
-import { Tramite120501Store } from '../../estados/tramites/tramite120501.store';
+import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 
 import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
 
@@ -123,11 +123,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el recuento total de filas.
    */
-  formForTotalCount: FormGroup;
+  formForTotalCount!: FormGroup;
   /**
    * Formulario principal.
    */
-  formulario: FormGroup;
+  formulario!: FormGroup;
   /**
    * Formulario para el detalle de la licitación.
    */
@@ -135,7 +135,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el adquiriente.
    */
-  adquiriente:FormGroup;
+  adquiriente!:FormGroup;
   /**
    * Catálogo de entidades federativas.
    */
@@ -177,21 +177,21 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
      * LicitacionesVigentesComponent
      * 
      */
-  entidadFederativa$: Observable<Catalogo | null> = this.tramite120501Query.entidadFederativa$;
+  //entidadFederativa$: Observable<Catalogo | null> = this.tramite120501Query.entidadFederativa$;
 
   /**
    * Observable para la representación federal.
    * LicitacionesVigentesComponent
    * 
    */
-  representacionFederal$: Observable<Catalogo | null> = this.tramite120501Query.representacionFederal$;
+  //representacionFederal$: Observable<Catalogo | null> = this.tramite120501Query.representacionFederal$;
 
   /**
    * Observable para el monto a recibir.
    * LicitacionesVigentesComponent
    * 
    */
-  montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
+  //montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
   
   
   /**
@@ -203,6 +203,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Indica si se muestra la selección de participante.
    */
   showSeleccionarParticipante: boolean = false;
+  esFormularioSoloLectura: boolean = false;
+
+   private seccionState!: Solicitud120501State;
   /**
    * Constructor del componente.
    *
@@ -211,82 +214,122 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,
     private tramite120501Store: Tramite120501Store, 
-    private tramite120501Query: Tramite120501Query) {
-    this.formForTotalCount = this.fb.group({})
-    this.formulario = this.fb.group({
-      entidadFederativa: ["", Validators.required],
-      representacionFederal: ["", Validators.required],
-    });
-    this.detalledelaLicitacionForm = this.fb.group({
-      numeraDelicitacion: ["", Validators.required],
-      fechaDelEventoDelicitacion: ["", Validators.required],
-      descripcionDelProducto:["", Validators.required],
-      unidadTarifaria:["", Validators.required],
-      regimenAduanero: ["", Validators.required],
-      fraccionArancelaria: ["", Validators.required],
-      fechaDeiniciodeVigenciadelCupo: ["", Validators.required],
-      fechaDefindeVigenciadelCupo:["", Validators.required],
-      obserVaciones: ["", Validators.required],
-      bloqueComercial: ["", Validators.required],
-      paises: ["", Validators.required],
-      montoadJudicado: ["", Validators.required],
-      montoDisponible: ["", Validators.required],
-      montoMaximo: ["", Validators.required],
-    })
-    this.adquiriente = this.fb.group({
-      rfc: ["", Validators.required],
-      adquirienteMontoDisponible: [""],
-      montoRecibir: ["", Validators.required],
-      rfc1: [""],
-    })
+    private tramite120501Query: Tramite120501Query,
+    private consultaioQuery: ConsultaioQuery,) {
+     
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
   }
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.formularioTotalCount();
-    this.actualizarRecuentoTotalDeFilas();
+    this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Solicitud120501State) => {
+        this.seccionState = data;
+      });
+      this.inicializarEstadoFormulario();
+
+    console.log('ngOnInit');
+   // this.formularioTotalCount();
+    //this.actualizarRecuentoTotalDeFilas();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
-    this.getDetallesDelalicitacion();
-    this.getAdquiriente();
+    //this.getDetallesDelalicitacion();
+    //this.getAdquiriente();
     this.obtenerDatosDeTabla();
 
-    this.montoRecibir$.subscribe((montoRecibir) => {
-      if(montoRecibir){
-        this.adquiriente.get('montoRecibir')?.setValue(montoRecibir);
-      }
-    });
+    // this.montoRecibir$.subscribe((montoRecibir) => {
+    //   if(montoRecibir){
+    //     this.adquiriente.get('montoRecibir')?.setValue(montoRecibir);
+    //   }
+    // });
 
-    this.entidadFederativa$.subscribe((entidadFederativa) => {
-      if (entidadFederativa) {
-        this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
-      }
-    });
+    // this.entidadFederativa$.subscribe((entidadFederativa) => {
+    //   if (entidadFederativa) {
+    //     this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
+    //   }
+    // });
 
-    this.representacionFederal$.subscribe((representacionFederal) => {
-      if (representacionFederal) {
-        this.formulario.get('representacionFederal')?.setValue(representacionFederal);
-      }
-    });
+    // this.representacionFederal$.subscribe((representacionFederal) => {
+    //   if (representacionFederal) {
+    //     this.formulario.get('representacionFederal')?.setValue(representacionFederal);
+    //   }
+    // });
   }
+  inicializarFormulario(): void {
+    this.formForTotalCount = this.fb.group({
+      recuentoTotalDeFilas: [{ value: '', disabled: true }],
+    })
+    this.formulario = this.fb.group({
+      entidadFederativa: [this.seccionState?.entidadFederativa, Validators.required],
+      representacionFederal: [this.seccionState?.representacionFederal, Validators.required],
+    });
+    this.detalledelaLicitacionForm = this.fb.group({
+      numeraDelicitacion: [this.seccionState?.numeraDelicitacion, Validators.required],
+      fechaDelEventoDelicitacion: [this.seccionState?.fechaDelEventoDelicitacion, Validators.required],
+      descripcionDelProducto:[this.seccionState?.descripcionDelProducto, Validators.required],
+      unidadTarifaria:[this.seccionState?.unidadTarifaria, Validators.required],
+      regimenAduanero: [this.seccionState?.regimenAduanero, Validators.required],
+      fraccionArancelaria: [this.seccionState?.fraccionArancelaria, Validators.required],
+      fechaDeiniciodeVigenciadelCupo: [this.seccionState?.fechaDeiniciodeVigenciadelCupo, Validators.required],
+      fechaDefindeVigenciadelCupo:[this.seccionState?.fechaDefindeVigenciadelCupo, Validators.required],
+      obserVaciones: [this.seccionState?.obserVaciones, Validators.required],
+      bloqueComercial: [this.seccionState?.bloqueComercial, Validators.required],
+      paises: [this.seccionState?.paises, Validators.required],
+      montoadJudicado: [this.seccionState?.montoadJudicado, Validators.required],
+      montoDisponible: [this.seccionState?.montoDisponible, Validators.required],
+      montoMaximo: [this.seccionState?.montoMaximo, Validators.required],
+    })
+    this.adquiriente = this.fb.group({
+      rfc: [this.seccionState?.rfc, Validators.required],
+      adquirienteMontoDisponible: [this.seccionState?.adquirienteMontoDisponible],
+      montoRecibir: [this.seccionState?.montoRecibir, Validators.required],
+      rfc1: [this.seccionState?.rfc1],
+    })
+  } 
+
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.adquiriente.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.adquiriente.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
   /**
    * Inicializa el formulario para el recuento total de filas.
    */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
-      recuentoTotalDeFilas: [{ value: '', disabled: true }],
-    });
-  }
+  // formularioTotalCount(): void {
+  //   this.formForTotalCount = this.fb.group({
+  //     recuentoTotalDeFilas: [{ value: '', disabled: true }],
+  //   });
+  // }
   /**
    * Actualiza el recuento total de filas en el formulario.
    */
-  public actualizarRecuentoTotalDeFilas(): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const totalRowCount = this.tableBodyData.length;
-    this.formForTotalCount.patchValue({ recuentoTotalDeFilas: totalRowCount });
-  }
+  // public actualizarRecuentoTotalDeFilas(): void {
+  //   // eslint-disable-next-line @typescript-eslint/naming-convention
+  //   const totalRowCount = this.tableBodyData.length;
+  //   this.formForTotalCount.patchValue({ recuentoTotalDeFilas: totalRowCount });
+  // }
   /**
    * Obtiene la lista de entidades federativas.
    */
@@ -358,27 +401,27 @@ getValorIndice(e: AccionBoton):void{
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
-getDetallesDelalicitacion():void{
-  this.service.getDetallesDelalicitacion().subscribe(
-    (data:DetallesLicitacion)=>{
-      this.detalledelaLicitacionForm.patchValue({
-        numeraDelicitacion:data.numeraDelicitacion,
-        fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
-        descripcionDelProducto:data.descripcionDelProducto,
-        unidadTarifaria:data.unidadTarifaria,
-        regimenAduanero:data.regimenAduanero,
-        fraccionArancelaria:data.fraccionArancelaria,
-        fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
-        fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
-        obserVaciones:data.obserVaciones,
-        bloqueComercial:data.bloqueComercial,
-        paises:data.paises,
-        montoadJudicado:data.montoadJudicado,
-        montoDisponible:data.montoDisponible,
-        montoMaximo:data.montoMaximo
-      })
-    })
-}
+// getDetallesDelalicitacion():void{
+//   this.service.getDetallesDelalicitacion().subscribe(
+//     (data:DetallesLicitacion)=>{
+//       this.detalledelaLicitacionForm.patchValue({
+//         numeraDelicitacion:data.numeraDelicitacion,
+//         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
+//         descripcionDelProducto:data.descripcionDelProducto,
+//         unidadTarifaria:data.unidadTarifaria,
+//         regimenAduanero:data.regimenAduanero,
+//         fraccionArancelaria:data.fraccionArancelaria,
+//         fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
+//         fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
+//         obserVaciones:data.obserVaciones,
+//         bloqueComercial:data.bloqueComercial,
+//         paises:data.paises,
+//         montoadJudicado:data.montoadJudicado,
+//         montoDisponible:data.montoDisponible,
+//         montoMaximo:data.montoMaximo
+//       })
+//     })
+// }
    /**
      * Obtiene los datos de la tabla desde el servicio.
      *
@@ -397,16 +440,16 @@ getDetallesDelalicitacion():void{
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
-getAdquiriente():void{
-  this.service.getAdquiriente().subscribe(
-    (data:Adquiriente)=>{
-      this.adquiriente.patchValue({
-        rfc:data.rfc,
-        adquirienteMontoDisponible:data.adquirienteMontoDisponible,
-      })
-    })
+// getAdquiriente():void{
+//   this.service.getAdquiriente().subscribe(
+//     (data:Adquiriente)=>{
+//       this.adquiriente.patchValue({
+//         rfc:data.rfc,
+//         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
+//       })
+//     })
   
-}
+// }
 /**
      * Establece los valores en el store del trámite 120501.
      *

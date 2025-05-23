@@ -3,7 +3,10 @@
  *  Componente para manejar el paso del solicitante en el proceso de transferencia de cupos.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
 
 /**
  * 
@@ -15,13 +18,18 @@ import { Component } from '@angular/core';
   selector: 'app-paso-solicitante',
   templateUrl: './paso-solicitante.component.html',
 })
-export class PasoSolicitanteComponent {
+export class PasoSolicitanteComponent implements OnInit, OnDestroy{
   /**
    * {number} indice
    *  Índice actual del tab seleccionado.
    */
   indice: number = 1;
-
+  private destroyed$ = new Subject<void>();
+  public esDatosRespuesta: boolean = false;
+  update = true;
+  constructor(private service:LicitacionesDisponiblesService,private consultaQuery: ConsultaioQuery){
+  //constructor
+  }
   /**
    *  seleccionaTab
    *  Método para seleccionar un tab específico.
@@ -30,4 +38,30 @@ export class PasoSolicitanteComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  ngOnInit(): void {
+  //  this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+  //         this.consultaState = seccionState;
+  //     })).subscribe();
+    
+    if(this.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+   guardarDatosFormulario(): void {
+    this.service.getLicitationesVigentesData().pipe(
+        takeUntil(this.destroyed$)).subscribe((resp) => {
+        console.log("Response from json",resp);
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+  this.destroyed$.next();
+  this.destroyed$.complete();
+}
 }

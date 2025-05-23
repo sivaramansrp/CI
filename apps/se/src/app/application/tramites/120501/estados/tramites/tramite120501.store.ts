@@ -9,17 +9,51 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  * @returns Solicitud120501
  */
 export interface Solicitud120501State {
-  montoRecibir:string;
   entidadFederativa: Catalogo | null;
   representacionFederal: Catalogo | null;
+  numeraDelicitacion: string;
+  fechaDelEventoDelicitacion: string;
+  descripcionDelProducto: string;
+  unidadTarifaria: string;
+  regimenAduanero: string;
+  fraccionArancelaria: string;
+  fechaDeiniciodeVigenciadelCupo:string,
+  fechaDefindeVigenciadelCupo:string,
+  obserVaciones:string,
+  bloqueComercial:string,
+  paises:string,
+  montoadJudicado:string,
+  montoDisponible:string,
+  montoMaximo:string,
+  rfc:string,
+  adquirienteMontoDisponible:string,
+  montoRecibir:string,
+  rfc1:string,
 }
 
 export function createInitialState(): Solicitud120501State {
   return{
-      montoRecibir:'1000',
+      
       entidadFederativa:null,
-      representacionFederal:null
-
+      representacionFederal:null,
+      numeraDelicitacion: '',
+      fechaDelEventoDelicitacion: '',
+      descripcionDelProducto: '', 
+      unidadTarifaria: '',
+      regimenAduanero: '',
+      fraccionArancelaria: '',
+      fechaDeiniciodeVigenciadelCupo:'',
+      fechaDefindeVigenciadelCupo:'',
+      obserVaciones:'',
+      bloqueComercial:'',
+      paises:'',
+      montoadJudicado:'',
+      montoDisponible:'',
+      montoMaximo:'',
+      rfc:'',
+      adquirienteMontoDisponible:'',
+      montoRecibir:'',
+      rfc1:''
   }
 }
 
