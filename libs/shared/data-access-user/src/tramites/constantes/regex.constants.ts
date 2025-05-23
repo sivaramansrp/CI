@@ -3,8 +3,16 @@ import exp from "constants";
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
-  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/ //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/, // Hasta 12 enteros y 2 decimales
+  SOLO_NUMEROS_Y_PUNTO: /^[0-9.]+$/, // Permite solo números y puntos
+  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/ // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
 };
+
+/**
+ * Expresión regular que valida que la cadena no contenga los caracteres <, >, / o \.
+ */
+export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>\/\\]+$/;
 
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
@@ -307,7 +315,7 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
  * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
  * @constant
  */
-export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
  * Expresión regular para validar una llave de pago.
@@ -337,6 +345,11 @@ export const REGEX_SIN_DIGITOS = /\D/g;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
+
+/**
+ * Expresión regular para validar un número de teléfono de 10 dígitos.
+ */
+export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -408,6 +421,19 @@ export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().
  * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
  */
 export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+
+/**
+ * Expresión regular que valida una llave de pago de derecho.
+ * 
+ * Esta expresión regular asegura que el valor ingresado contenga 
+ * únicamente caracteres alfanuméricos (letras mayúsculas, minúsculas y números).
+ * 
+ * Ejemplo de uso:
+ * - Válido: "abc123", "ABCDEF", "123456"
+ * - Inválido: "abc-123", "abc_123", "abc 123"
+ */
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
+
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  * 
@@ -421,8 +447,8 @@ export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
  * - "1234567890123456" (más de 15 dígitos enteros)
  * - "abc" (no es un número)
  */
-export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  * 
@@ -438,6 +464,128 @@ export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
+/**
+ * Expresión regular para validar un número de teléfono de 10 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 10 dígitos numéricos.
+ * 
+ * Ejemplos válidos:
+ * - "1234567890"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789" (menos de 10 dígitos)
+ * - "12345678901" (más de 10 dígitos)
+ * - "12345678a0" (contiene caracteres no numéricos)
+ */
+export const REGEX_VALID_UMT=/^\d{1,12}(\.\d{1,5})?$/
+
+/**
+ * Expresión regular para validar un número de UMC (Unidad de Medida y Costo).
+ * 
+ * Esta expresión regular asegura que la entrada contenga hasta 12 dígitos enteros
+ * y opcionalmente hasta 10 dígitos decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123456789012"
+ * - "123456789012.1234567890"
+ * 
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos enteros)
+ * - "123456789012.12345678901" (más de 10 dígitos decimales)
+ */
+export const REGEX_VALID_UMC=/^\d{1,12}(\.\d{1,10})?$/
+
+/**
+ * Expresión regular para validar un número decimal.
+ * 
+ * Esta expresión regular asegura que la entrada contenga dígitos enteros
+ * y opcionalmente una parte decimal.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123." (falta un decimal después del punto)
+ * - "123.456" (más de 2 decimales)
+ * - "abc" (contiene caracteres no numéricos)
+ */
+export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
+
+/* Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45612"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012.4567" (más de 3 decimales)
+ * - "1234567890123" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_12_ENTEROS_5_DECIMALES = /^\d{1,12}(\.\d{1,5})?$/;
+
+/**
+ * Expresión regular para validar números con hasta 11 dígitos enteros y 3 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.456"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_11_ENTEROS_3_DECIMALES = /^\d{1,11}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar números con hasta 11 dígitos enteros y 2 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.456" (más de 2 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
+
+/**
+ * Expresión regular para validar números con hasta 11 dígitos enteros y 2 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.45"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.456" (más de 2 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+
+/**
+ * Expresión regular para validar números con hasta 11 dígitos enteros y 3 decimales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "123.456"
+ * - "0.5"
+ * 
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - "1234567890123456" (más de 15 dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
  * - Dígitos (0-9)

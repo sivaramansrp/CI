@@ -7,10 +7,11 @@
     <div>
       <h6>Licitaciones disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configTableArray"
-      [datos] = "datos"></app-tabla-dinamica>
+      [datos] = "datos" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
 
+      <div class="container" *ngIf="showRepresentacionFederal">
       <!-- Representación federal  -->
-      <div class="container">
+      <div>
         <ng-titulo titulo="Representación federal" />
         <form [formGroup]="formulario">
           <div class="row">
@@ -27,7 +28,7 @@
       </div>
     
       <!-- Detalle de la licitación y monto adjudicado  -->
-      <div class="container">
+      <div>
         <ng-titulo titulo="Detalle de la licitación y monto adjudicado" />
           <form [formGroup]="detalledelaLicitacionForm">
           <div class="row">
@@ -97,7 +98,7 @@
       
       </div>
       <!-- Adquiriente  -->
-      <div class="container">
+      <div>
         <ng-titulo titulo="Adquiriente" />
         <form [formGroup]="adquiriente">
           <div class="row">
@@ -110,10 +111,27 @@
               <input type="text" class="form-control" id="adquirienteMontoDisponible" formControlName="adquirienteMontoDisponible" readonly>
             </div>
             <div class="col-md-4">
-              <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3">
+              <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="seleccionarParticipante()">
                 Seleccionar participante 
             </button>
             </div>
+            <div class="row rfc1" *ngIf="showSeleccionarParticipante">
+              <div class="col-md-4">
+                <label class="form-label" for="rfc1">RFC:</label>
+                <input type="text" class="form-control bg-white" id="rfc1" formControlName="rfc1">
+              </div>
+              <div class="col-md-4 mt-5">
+                <button type="button" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
+              </div>
+             <div class="row d-flex justify-content-center mt-5">
+              <div class="col-md-4">
+                <label class="form-label" for="participantes">Participantes</label>
+                <app-tabla-dinamica [configuracionTabla]="configTableArray1"
+                [datos] = "datos1" (filaClic)="moverRFC1($event)"></app-tabla-dinamica>
+                </div>
+              </div>
+            </div>
+             
             <div class="col-md-4">
               <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
               <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
@@ -126,9 +144,10 @@
           </form>
           
       </div>
-    </div>
+   
     <div class="row mt-5">
       <ng-alert [CONTENIDO]="texto"></ng-alert>
   </div>
+   </div>
   </div>
 </div>

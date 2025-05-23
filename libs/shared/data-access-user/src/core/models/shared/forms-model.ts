@@ -40,7 +40,7 @@ export interface ModeloDeFormaDinamica {
   soloLectura?: boolean; // readonly
   validadores?: Validadores[]; // validators
   marcadorDePosicion?: string; // placeholder
-  valorPredeterminado?: string; // default value
+  valorPredeterminado?: string | boolean | number; // default value
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   opciones?: any[]; // opciones for select dropdown, radio
   marginTop?: number; // margin-top
@@ -49,6 +49,8 @@ export interface ModeloDeFormaDinamica {
   mostrar?: boolean; // show or hide the field
   habilitado?: boolean; // enable or disable the field
   row?: number; // row number for the corresponding control
+  tooltipQuestionCircle?: boolean; // tooltip icon
+  gridLayout?: boolean; // grid layout for radio
 }
 
 export interface Validadores {

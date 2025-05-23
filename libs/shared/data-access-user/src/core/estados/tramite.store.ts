@@ -2,11 +2,33 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Estado para el número de trámite
+ * Estado para almacenar datos generales inherentes al trámite.
  */
 export interface TramiteState {
-  idTramite: string | null;
-  firma: string | null;
+  /**
+   * El id del trámite 
+   */
+  idTramite: string;
+  /**
+   * El número de folio asignado a la solicitud cuando aún no se ha finalizado
+   * la captura de la información requerida.
+   */
+  numeroTemporal: string;
+  /**
+   * El número de folio asignado a la solicitud cuando se ha proporcionado toda la información
+   * correspondiente al trámite.
+   */
+  folioTramiteOficial: string;
+  /**
+   * Bandera para saber si el trámite se está iniciando desde una solicitud nueva o
+   * desde alguna bandeja 
+   */ 
+  origenPeticion: string;
+  /**
+   * Firma enviada para finalizar el trámite
+   */
+
+  firma: string;
 }
 
 /**
@@ -15,8 +37,11 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
   return {
-    idTramite: null,
-    firma: null,
+    idTramite: '',
+    origenPeticion: '',
+    numeroTemporal: '',
+    folioTramiteOficial: '',
+    firma: '',
   };
 }
 
@@ -39,6 +64,42 @@ export class TramiteStore extends Store<TramiteState> {
       ...state,
       idTramite,
       firma,
+    }));
+  }
+
+  /**
+   * Guarda el origen de la petición en el state
+   *
+   * @param origenPeticion
+   */
+  public establecerOrigenPeticion(origenPeticion: string): void {
+    this.update((state) => ({
+      ...state,
+      origenPeticion
+    }));
+  }
+
+  /**
+   * Guarda el número de trámite en el state
+   *
+   * @param idTramite
+   */
+  public establecerNumeroTemporal(numeroTemporal: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroTemporal
+    }));
+  }
+
+  /**
+   * Guarda el número de trámite en el state
+   *
+   * @param folioTramiteOficial
+   */
+  public establecerFolioTramiteOficial(folioTramiteOficial: string): void {
+    this.update((state) => ({
+      ...state,
+      folioTramiteOficial
     }));
   }
 

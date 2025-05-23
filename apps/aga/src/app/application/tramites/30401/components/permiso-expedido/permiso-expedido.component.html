@@ -20,11 +20,16 @@
           <div *ngIf="esInvalido('numeroFolioPermiso')" class="text-danger">
             <small
             *ngIf="
-              inicializarFormulario.controls['calle'].hasError('maxlength')
+              inicializarFormulario.controls['numeroFolioPermiso'].hasError('maxlength')
             "
           >
             La calle no puede exceder los 20 caracteres.</small
           >
+          <small
+          *ngIf="inicializarFormulario.controls['numeroFolioPermiso'].hasError('pattern')"
+        >
+          Solo se permiten números.
+        </small>
           </div>
         </div>
       </div>

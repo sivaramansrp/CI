@@ -23,11 +23,14 @@
               </div>
             </td>
             @for (item of headerTabla; track $index) {
-            <td>{{row[item.llave]}}</td>
+            @if ( esBooleano(row[item.llave]) ) {
+            <td>{{ row[item.llave] | booleanoSiNo }}</td>
+            } @else {
+            <td>{{ row[item.llave] }}</td>
+            }
             }
           </tr>
           }
-
         </tbody>
       </table>
     </div>
@@ -37,12 +40,16 @@
 
 <div class="row">
   <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="abrirModal()">Agregar</button>
+    <button type="button" class="btn btn-primary me-2" (click)="abrirModal()">Agregar</button>
+    <button type="button" class="btn btn-default me-2" *ngIf="bodyTabla.length > 0"
+      (click)="limpiarFormulario()">Modificar</button>
+    <button type="button" class="btn btn-danger" *ngIf="bodyTabla.length > 0"
+      (click)="eliminarElementoTabla()">Eliminar</button>
   </div>
 
 </div>
 
-<!-- Modal error -->
+<!-- Modal Agrega transporte -->
 <div class="modal modal-lg fade" #agregarTransporte id="agregarTransporte" tabindex="-1" tabindex="-1"
   aria-labelledby="modalAgregarTransporte" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
@@ -75,7 +82,7 @@
             }
 
             <div class="form-group">
-              <label class="form-label" for="observaciones">Observaciones</label>
+              <label class="form-label" for="observaciones">Observaciones:</label>
               <textarea class="form-control h-25" rows="3" [formControl]="observaciones" id="observaciones"></textarea>
             </div>
           </div>
@@ -134,7 +141,7 @@
     </div>
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="contenedorTransporte">Contenedor(es)</label>
+        <label class="form-label" for="contenedorTransporte">Contenedor(es):</label>
         <textarea class="form-control h-25" id="contenedorTransporte" rows="3"
           formControlName="contenedorTransporte"></textarea>
       </div>
@@ -147,14 +154,22 @@
   <div class="row" [formGroup]="ferroviarioForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroBL">Npumero de BL:</label>
-        <input class="form-control" id="numeroBL" placeholder="" type="text" formControlName="numeroBL">
+        <label class="form-label" for="numeroBL">Número de BL:</label>
+        <div class="input-group">
+          <input class="form-control" id="numeroBL" placeholder="" type="text" formControlName="numeroBL">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+            (click)="postValidarNumeroBL()">Buscar</button>
+        </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="tipoEquipo">Tipo de equipo:</label>
-        <input class="form-control" id="tipoEquipo" placeholder="" type="text" formControlName="tipoEquipo">
+        <select class="form-control" name="tipoEquipo" id="tipoEquipo" class="form-control"
+          formControlName="tipoEquipo">
+          <option value="-1">Seleccione una opción</option>
+          <option *ngFor="let item of tipoEquipoCatalogo" [value]="item.clave">{{ item.descripcion }}</option>
+        </select>
       </div>
     </div>
     <div class="col-md-6">
@@ -271,8 +286,14 @@
     </div>
 
     <div class="col-md-6 d-flex align-items-end">
-      <lib-input-check [id]="'guiaValida'" [label]="'Guía válida'" [required]="false" 
-        formControlName="guiaValida" [isDisabled]="true"></lib-input-check>
+      <lib-input-check [id]="'guiaValida'" [label]="'Guía válida'" [required]="false" formControlName="guiaValida"
+        [isDisabled]="true"></lib-input-check>
+    </div>
+
+    <div class="col-md-12 mt-3 mb-3 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="postValidarGuiaAerea()">
+        Validar guía
+      </button>
     </div>
   </div>
 </ng-template>
@@ -300,3 +321,10 @@
     </div>
   </div>
 </ng-template>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
