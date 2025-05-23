@@ -675,6 +675,14 @@ const ROUTES: Routes = [
         (m) => m.ProcesoRequerimientoComponent
       ),
   },
+  {
+    path: 'registro-solicitud-immex-modalidad',
+    loadChildren: () =>
+      import('./tramites/80103/modalidad-albergue.module').then(
+        (m) => m.ModalidadAlbergueModule
+      ),
+  },
+
 ];
 
 @NgModule({
