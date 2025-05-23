@@ -1,0 +1,82 @@
+<div class="container">
+  <form [formGroup]="proveedorXtranjForm">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <ng-titulo [titulo]="ProveedoresTitulo"></ng-titulo>
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <div class="form-check">
+              Descargue la plantilla para la carga masiva de su(s) proceso(s)
+              productivo(s)
+              <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
+                >Aquí</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-8">
+            <input
+              type="file"
+              accept=".xlsx"
+              (change)="onFileSelected($event)"
+              class="form-control sfile"
+              name="archivoExtranjero"
+              id="archivoExtranjero"
+              title="Examinar"
+              formControlName="archivoExtranjero"
+            />
+          </div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              name="cargaArchivoProcesos"
+              id="cargaArchivoProcesos"
+              class="btn btn-primary me-md-3"
+            >
+              Anexar
+            </button>
+            <button
+              type="button"
+              name="vistaPreviaProcesos"
+              id="vistaPreviaProcesos"
+              class="btn btn-primary"
+            >
+              Vista previa
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5">
+            <label
+              for="agace.seccionProveedores.existentes"
+              id="labelProveedor"
+            >
+              {{ seccionProveedoresExistentes }}
+            </label>
+          </div>
+          <div class="col-md-1">
+            <input
+              type="text"
+              class="form-control"
+              name="registrosProveedoresExtranjeros"
+              id="registrosProveedoresExtranjeros"
+              formControlName="registrosProveedoresExtranjeros"
+            />
+          </div>
+          <div class="col-md-2">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
+

@@ -129,7 +129,7 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    * Obtiene los valores de las mercancías desde el store y los asigna al formulario.
    */
   getMercanciasValor(): void {
-    this.tramite110209Query.selectTramite110102$.pipe(
+    this.tramite110209Query.selectTramite110209$.pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
@@ -151,18 +151,15 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
 
 
     /**
-     * Establece el valor en Tramite110209Store si el campo especificado del formulario es válido.
-     *
+     * Establece el valor en Tramite110209Store para el campo especificado del formulario.
+     * 
      * @param {FormGroup} form - El grupo de formularios que contiene el campo.
-     * @param {string} campo - El nombre del campo a verificar y del cual obtener el valor.
-     * @param {keyof Tramite110209Store} metodoNombre - El nombre del método en Tramite110209Store a llamar con el valor del campo.
+     * @param {string} campo - El nombre del campo a obtener y guardar en el store.
      * @returns {void}
      */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
-      if(form.get(campo)?.valid){
+    setValoresStore(form: FormGroup, campo: string): void {
       const VALOR = form.get(campo)?.value;
-      (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
-      }
+      this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
   
 

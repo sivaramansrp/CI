@@ -1,61 +1,203 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
+import { of } from 'rxjs';
+import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
-  let fixture: ComponentFixture<SolicitudComponent>;
-  
-  beforeEach(async () => {    
-    await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
-      imports: [HttpClientTestingModule],
-      providers: [
-        FormBuilder,
-        { 
-          provide: SolicitudPantallasService
-        }
-      ]
-    }).compileComponents();
+  let solicitudService: jest.Mocked<SolicitudPantallasService>;
 
-    fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    solicitudService = {
+      getData: jest.fn()
+    } as unknown as jest.Mocked<SolicitudPantallasService>;
+
+    TestBed.configureTestingModule({
+      providers: [FormBuilder, { provide: SolicitudPantallasService, useValue: solicitudService }]
+    });
+
+    component = new SolicitudComponent(TestBed.inject(FormBuilder), solicitudService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  test('should create component', () => {
+    expect(component).toBeDefined();
   });
 
-  it('should create the form on initialization', () => {
-    expect(component.form).toBeDefined();
-  });
-  
-  it('should call cargarDatosIniciales on ngOnInit', () => {
-    spyOn(component, 'cargarDatosIniciales');
-    component.ngOnInit();
-    expect(component.cargarDatosIniciales).toHaveBeenCalled();
-  });
-  
-  it('should create the form in crearFormulario', () => {
+  test('should initialize the form correctly', () => {
     component.crearFormulario();
     expect(component.form).toBeDefined();
   });
 
-  it('should handle transporteSeleccionado event', () => {
-    component.onTransporteSeleccionado(true);
-    expect(component.mostrarSeccion).toBe(true);
-
-    component.onTransporteSeleccionado(false);
-    expect(component.mostrarSeccion).toBe(false);
+  test('should call cargarDatosIniciales on ngOnInit', () => {
+    const mockData: CargarDatosIniciales = {
+      hHistorialinspeccion: [
+        'Número parcialidad/remesa',
+        'Fracción arancelaria',
+        'Nico',
+        'Cantidad total en UMT',
+        'Cantidad parcial en UTM',
+        'Saldo pendiente',
+        'Fecha de ingreso',
+      ],
+      dHistorialInspecciones: [
+        {
+          numeroPartidaMercancia: '12345',
+          fraccionArancelaria: '0101.21.00',
+          nico: 'Si',
+          cantidadUmt: '1000',
+          cantidadInspeccion: '500',
+          saldoPendiente: '500',
+          fechaInspeccionString: '2023-10-01',
+        },
+      ],
+      dCarrosDeFerrocarril: [
+        {
+          idInspeccionFisica: 1,
+          numeroAutorizacion: '12345',
+          numeroPartidaMercancia: 'P001',
+          numeroTotalCarros: 10,
+        },
+      ],
+      hCarroFerrocarril: [
+        'Número de parcialidad/remesa',
+        'Cantidad de carros de ferrocarril',
+      ],
+      hSolicitud: ['Fecha Creación', 'Mercancía', 'Cantidad', 'Proovedor'],
+      dSolicitud: [
+        {
+          fechaCreacion: '2025-02-02 19:50:08:0',
+          mercancia: 'descripcion',
+          cantidad: '1000000',
+          proovedor: 'erick',
+        },
+      ],
+      hMerchandise: ['Description', 'Quantity', 'Value'],
+      dMercancia: [
+        {
+          fraccionArancelaria: '1001.10.10',
+          descripcionFraccion: 'Trigo duro',
+          nico: 'Sí',
+          nicoDescripcion: 'Trigo para molienda',
+          cantidadSolicitadaUMT: 50,
+          unidadMedidaUMT: 'kg',
+          cantidadTotalUMT: 500,
+          saldoPendiente: 100,
+        },
+      ],
+      medioDeTransporte:
+        {
+          labelNombre: 'Medio de transporte',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: [
+            { id: 1, descripcion: 'transporte 1' },
+            { id: 2, descripcion: 'transporte 2' },
+            { id: 3, descripcion: 'transporte 3' }
+          ]
+        } as CatalogosSelect
+    };
+    
+    jest.spyOn(component, 'cargarDatosIniciales');
+    solicitudService.getData.mockReturnValue(of(mockData));
+    component.ngOnInit();
+    expect(component.cargarDatosIniciales).toHaveBeenCalled();
   });
-  
-  it('should set mostrarSeccion when onTransporteSeleccionado is called', () => {
-    component.onTransporteSeleccionado(true);
-    expect(component.mostrarSeccion).toBe(true);
+
+  test('should toggle mostrarSeccion correctly', () => {
     component.onTransporteSeleccionado(false);
     expect(component.mostrarSeccion).toBe(false);
-  });  
+
+    component.onTransporteSeleccionado(true);
+    expect(component.mostrarSeccion).toBe(true);
+  });
+
+  test('should populate data correctly when cargarDatosIniciales is called', () => {
+    const mockData: CargarDatosIniciales = {
+      hHistorialinspeccion: [
+        'Número parcialidad/remesa',
+        'Fracción arancelaria',
+        'Nico',
+        'Cantidad total en UMT',
+        'Cantidad parcial en UTM',
+        'Saldo pendiente',
+        'Fecha de ingreso',
+      ],
+      dHistorialInspecciones: [
+        {
+          numeroPartidaMercancia: '12345',
+          fraccionArancelaria: '0101.21.00',
+          nico: 'Si',
+          cantidadUmt: '1000',
+          cantidadInspeccion: '500',
+          saldoPendiente: '500',
+          fechaInspeccionString: '2023-10-01',
+        },
+      ],
+      dCarrosDeFerrocarril: [
+        {
+          idInspeccionFisica: 1,
+          numeroAutorizacion: '12345',
+          numeroPartidaMercancia: 'P001',
+          numeroTotalCarros: 10,
+        },
+      ],
+      hCarroFerrocarril: [
+        'Número de parcialidad/remesa',
+        'Cantidad de carros de ferrocarril',
+      ],
+      hSolicitud: ['Fecha Creación', 'Mercancía', 'Cantidad', 'Proovedor'],
+      dSolicitud: [
+        {
+          fechaCreacion: '2025-02-02 19:50:08:0',
+          mercancia: 'descripcion',
+          cantidad: '1000000',
+          proovedor: 'erick',
+        },
+      ],
+      hMerchandise: ['Description', 'Quantity', 'Value'],
+      dMercancia: [
+        {
+          fraccionArancelaria: '1001.10.10',
+          descripcionFraccion: 'Trigo duro',
+          nico: 'Sí',
+          nicoDescripcion: 'Trigo para molienda',
+          cantidadSolicitadaUMT: 50,
+          unidadMedidaUMT: 'kg',
+          cantidadTotalUMT: 500,
+          saldoPendiente: 100,
+        },
+      ],
+      medioDeTransporte:
+        {
+          labelNombre: 'Medio de transporte',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: [
+            { id: 1, descripcion: 'transporte 1' },
+            { id: 2, descripcion: 'transporte 2' },
+            { id: 3, descripcion: 'transporte 3' }
+          ]
+        } as CatalogosSelect
+    };
+
+    solicitudService.getData.mockReturnValue(of(mockData));
+    component.cargarDatosIniciales();
+
+    expect(component.hHistorialinspeccion).toEqual(mockData.hHistorialinspeccion);
+    expect(component.hCarroFerrocarril).toEqual(mockData.hCarroFerrocarril);
+    expect(component.hSolicitud).toEqual(mockData.hSolicitud);
+  });
+
+  test('should clean up subscriptions on ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component['destroyed$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
 });

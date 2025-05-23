@@ -1,0 +1,153 @@
+<div class="custom-table-wrapper">
+  <div class="container mt-2">
+    <div class="header">
+      <span
+        class="plus-icon"
+        tabindex="0"
+        (click)="toggleContent()"
+        (keyup.enter)="toggleContent()"
+        (keyup.space)="toggleContent()"
+        >+</span
+      >
+    </div>
+
+    <div *ngIf="mostrarContenido" class="content">
+      <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ms-3">Cargar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" [formGroup]="datosSolicitudForm">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="form-label" for="justificacion">Justificación*:</label>
+        <textarea
+          class="form-control custom-textarea"
+          id="justificacion"
+          formControlName="justificacion"
+          style="height: 90px"
+          (change)="setValoresStore('justificacion', 'setJustificacion')"
+          [class.is-invalid]="datosSolicitudForm.get('justificacion')?.touched && datosSolicitudForm.get('justificacion')?.invalid"
+        ></textarea>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            datosSolicitudForm.get('justificacion')?.touched &&
+            datosSolicitudForm.get('justificacion')?.invalid
+          "
+        >
+          <span
+            *ngIf="
+              datosSolicitudForm.get('justificacion')?.hasError('required')
+            "
+            >Este campo es obligatorio.</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-titulo titulo="Datos del trámite a realizar" />
+
+  <div class="row" style="padding-bottom: 20px">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="form-label" for="aduana">Aduana de ingreso*:</label>
+        <input
+          class="form-control"
+          id="aduana"
+          formControlName="aduana"
+          type="text"
+          (change)="setValoresStore('aduana', 'setAduana')"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="form-label" for="oficina"
+          >Oficina de inspección de Sanidad Agropecuaria*:</label
+        >
+        <input
+          class="form-control"
+          id="oficina"
+          formControlName="oficina"
+          type="text"
+          (change)="setValoresStore('oficina', 'setOficina')"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="form-label" for="punto">Punto de inspección*:</label>
+        <input
+          class="form-control"
+          id="punto"
+          formControlName="punto"
+          type="text"
+          (change)="setValoresStore('punto', 'setPunto')"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="guia">Número de guía:</label>
+        <input
+          class="form-control"
+          id="guia"
+          formControlName="guia"
+          type="number"
+          (change)="setValoresStore('guia', 'setGuia')"
+        />
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group">
+        <app-catalogo-select
+          [catalogo]="sanidadService.regimen"
+          [label]="'Régimen'"
+          [required]="true"
+          name="regimen"
+          formControlName="regimen"
+          (change)="setValoresStore('regimen', 'setRegimen')"
+        >
+        </app-catalogo-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 50px">
+    <h6>Mercancías</h6>
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTabla"
+      [datos]="sanidadService.mercancia"
+      [tipoSeleccionTabla]="checkbox"
+    ></app-tabla-dinamica>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end">
+    <button type="button" class="btn btn-default">Modificar</button>
+    <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+    <button type="button" class="btn btn-primary ms-3">Agregar</button>
+  </div>
+</div>
