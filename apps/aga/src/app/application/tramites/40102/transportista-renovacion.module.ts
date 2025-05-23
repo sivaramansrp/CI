@@ -1,6 +1,6 @@
 import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
+import { TransportistaTerrestreRoutingModule } from './transportista-renovacion-routing.module';
 import { RouterModule } from '@angular/router';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { ChoferesComponent } from './components/choferes/choferes.component';
@@ -70,4 +70,4 @@ import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/serv
   ],
   providers: [ToastrService, CatalogosService, Tramite40102Service, InicioSesionService, SubirDocumentoService],
 })
-export class TransportistaTerrestreModule {}
+export class TransportistaRenovacionModule {}
