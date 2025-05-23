@@ -619,14 +619,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$)
       );
 
-    const CATALOGO_PAISES$ = this.paisesService
-      .getListaPaises()
-      .pipe(
-        map((resp) => {
-          this.paisesOrigen = resp.datos;
-          this.paisesProcedencia = resp.datos;
-        })
-      );
+    const CATALOGO_PAISES$ = this.paisesService.getListaPaises().pipe(
+      map((resp) => {
+        this.paisesOrigen = resp.datos;
+        this.paisesProcedencia = resp.datos;
+      })
+    );
 
     const CATALOGO_ADUANAS$ = this.aduanaService.getListaAduanas().pipe(
       map((resp) => {
@@ -1244,7 +1242,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = MSJ_ERROR_FECHA;
-      this.abrirModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_ADUANA_PEDIMENTO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
@@ -1285,7 +1292,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-    
+
   /**
    * Abre el modal para eliminar un documento.
    * @param {number} i - El índice del documento.

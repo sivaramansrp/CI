@@ -60,8 +60,13 @@ export const HEADER_TABLA_FERROVIARIO: ItemTransporte[] = [
 
 export const HEADER_TABLA_PEATONAL: ItemTransporte[] = [
     {
-        llave: 'rfcEmpresa',
+        llave: 'empTransportista',
         valor: 'Empresa transportista'
+    },
+
+    {
+        llave: 'rfcEmpresa',
+        valor: 'RFC empresa responsable'
     },
     {
         llave: 'nombreTransportista',

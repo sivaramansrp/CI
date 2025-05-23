@@ -101,6 +101,8 @@ export const EMPRESAS_CERTIFICADAS = [
 
 export const TIPO_TRAMITE: number = 5701;
 
+export const MSG_INTERVALO_FECHA_NO_VALIDO = 'La fecha no es válida para la solicitud seleccionada.';
+
 // TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
 export const CVE_UNIDAD_ADMIN = 'CV1';
 
