@@ -49,6 +49,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.seccionStore.establecerSeccion([true])
   }
   ngOnInit(): void {
+    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      if(data.sampleData.update){
     this.httpServicios.get<ApiSolicitud>('../../../../../assets/json/220201/capturarSolicitud.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
 if(data){
    this.certificadoZoosanitarioServices.updatePagoDeDerechos(data?.pagoDeDerechos || {} as PagoDeDerechos);
@@ -56,6 +58,8 @@ if(data){
    this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(data?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
 }
        });
+      }
+      });
   }
 
   /**
