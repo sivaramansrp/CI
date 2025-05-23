@@ -1,3 +1,8 @@
+/**
+ * @desc Configuración de los campos para la sección "Trámite a realizar".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_TRAMITE_REALIZAR = [
     {
         labelNombre: 'Tipo de Certificado',
@@ -52,6 +57,11 @@ export const DATOS_TRAMITE_REALIZAR = [
     },
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Combinación requerida".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_COMBINACION_REQUERIDA = [
     {
         labelNombre: 'Especie:',
@@ -80,6 +90,11 @@ export const DATOS_COMBINACION_REQUERIDA = [
     }
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Transporte".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_TRANSPORTE = [
     {
         labelNombre: 'Medio de transporte:',
@@ -118,6 +133,11 @@ export const DATOS_TRANSPORTE = [
     },
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Pago de derechos".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_PAGO_DERECHOS = [
     {
         labelNombre: 'Clave de referencia:',

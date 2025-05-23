@@ -24,89 +24,109 @@ import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 import { Transporte } from '../../models/acuicola.module';
 
+/**
+ * @component
+ * @name TransporteComponent
+ * @description
+ * Componente encargado de gestionar el formulario y la lógica relacionada con la sección de transporte en el trámite acuícola.
+ * Permite la captura, validación y gestión de los datos de transporte, así como la interacción con los servicios y el estado global de la aplicación.
+ * 
+ * @author Equipo VUCEM
+ * @since 2025
+ */
 @Component({
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
   styleUrl: './transporte.component.css',
 })
 export class TransporteComponent implements OnInit, OnDestroy {
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
- * Representa los datos de transporte seleccionados en el formulario.
- */
-transporte!: Transporte;
+   * Notificador para la destrucción de suscripciones.
+   * @access private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
-/**
- * Configuración de los campos del formulario para la sección de transporte.
- * Define los tipos de entrada y sus propiedades correspondientes.
- */
-configuracion: InputConfig[] = [
-  {
-    title: 'Transporte',
-    formGroupName: 'transporte',
-    menu: [
-      {
-        inputType: InputTypes.SELECT,
-        props: DATOS_TRANSPORTE[0] as unknown as Props,
-        class: 'col-md-4',
-      },
-      {
-        inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[1] as unknown as Props,
-        class: 'col-md-4',
-      },
-      {
-        inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[2] as unknown as Props,
-        class: 'col-md-4',
-      },
-      {
-        inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[3] as unknown as Props,
-        class: 'col-md-4',
-      },
-      {
-        inputType: InputTypes.TEXT,
-        props: DATOS_TRANSPORTE[4] as unknown as Props,
-        class: 'col-md-4',
-      },
-    ],
-  },
-];
+  /**
+   * Representa los datos de transporte seleccionados en el formulario.
+   */
+  transporte!: Transporte;
 
-/**
- * Arreglo que almacena la configuración de los formularios dinámicos para información fiscal.
- */
-fiscal: FormularioDinamico[] = [];
+  /**
+   * Configuración de los campos del formulario para la sección de transporte.
+   * Define los tipos de entrada y sus propiedades correspondientes.
+   */
+  configuracion: InputConfig[] = [
+    {
+      title: 'Transporte',
+      formGroupName: 'transporte',
+      menu: [
+        {
+          inputType: InputTypes.SELECT,
+          props: DATOS_TRANSPORTE[0] as unknown as Props,
+          class: 'col-md-4',
+        },
+        {
+          inputType: InputTypes.TEXT,
+          props: DATOS_TRANSPORTE[1] as unknown as Props,
+          class: 'col-md-4',
+        },
+        {
+          inputType: InputTypes.TEXT,
+          props: DATOS_TRANSPORTE[2] as unknown as Props,
+          class: 'col-md-4',
+        },
+        {
+          inputType: InputTypes.TEXT,
+          props: DATOS_TRANSPORTE[3] as unknown as Props,
+          class: 'col-md-4',
+        },
+        {
+          inputType: InputTypes.TEXT,
+          props: DATOS_TRANSPORTE[4] as unknown as Props,
+          class: 'col-md-4',
+        },
+      ],
+    },
+  ];
 
-/**
- * Formulario reactivo que almacena los datos ingresados por el usuario.
- */
-formulario!: FormGroup;
+  /**
+   * Arreglo que almacena la configuración de los formularios dinámicos para información fiscal.
+   */
+  fiscal: FormularioDinamico[] = [];
 
-/**
- * Objeto utilizado para capturar eventos del formulario.
- */
-evento = {};
+  /**
+   * Formulario reactivo que almacena los datos ingresados por el usuario.
+   */
+  formulario!: FormGroup;
 
-/**
- * Tipos de entrada disponibles en el formulario.
- */
-inputTypes = InputTypes;
+  /**
+   * Objeto utilizado para capturar eventos del formulario.
+   */
+  evento = {};
 
-/**
- * @private
- * @property {SeccionLibState} seccionState - Estado de la sección utilizado para gestionar 
- * la lógica interna del componente de transporte.
- * 
- * @remarks
- * Esta propiedad almacena el estado relacionado con la sección actual y se utiliza 
- * para coordinar las operaciones específicas del componente.
- * 
- * @see SeccionLibState
- */
-private seccionState!: SeccionLibState;
+  /**
+   * Tipos de entrada disponibles en el formulario.
+   */
+  inputTypes = InputTypes;
 
+  /**
+   * Estado de la sección utilizado para gestionar la lógica interna del componente de transporte.
+   * @access private
+   */
+  private seccionState!: SeccionLibState;
+
+  /**
+   * Constructor del componente TransporteComponent.
+   * Inicializa los servicios y dependencias necesarias para el funcionamiento del componente.
+   * 
+   * @param fb Servicio FormBuilder para la creación de formularios reactivos.
+   * @param catalogosServicios Servicio para la obtención de catálogos.
+   * @param exportaccionAcuicolaServcios Servicio para operaciones relacionadas con exportación acuícola.
+   * @param tramite220403Query Query para el estado del trámite 220403.
+   * @param tramite220403store Store para el estado del trámite 220403.
+   * @param seccionQuery Query para el estado de la sección.
+   * @param seccionStore Store para el estado de la sección.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
@@ -119,6 +139,10 @@ private seccionState!: SeccionLibState;
     this.crearFormulario();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura los formularios y suscriptores.
+   */
   ngOnInit(): void {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
@@ -141,8 +165,8 @@ private seccionState!: SeccionLibState;
       )
       .subscribe();
 
-      this.formulario.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+    this.formulario.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Asegura la desuscripción al destruir el componente
       .subscribe(
         () => {
     if (this.formulario.get('transporte')?.valid) {
@@ -169,9 +193,9 @@ private seccionState!: SeccionLibState;
 
   /**
    * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
-   * @param configuracion - La configuración para los controles del formulario.
-   * @param nombreGrupo - El nombre del grupo de formularios.
-   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   * @param configuracion La configuración para los controles del formulario.
+   * @param nombreGrupo El nombre del grupo de formularios.
+   * @param indiceGrupo El índice del grupo en la matriz de configuración.
    */
   inicializarFormGroup(
     configuracion: MenuConfig[],
@@ -198,24 +222,26 @@ private seccionState!: SeccionLibState;
   }
 
   /**
-   * Obtenga las opciones de entrada de radio del servicio
-   * @param fileName - Este es el nombre del archivo json que necesitamos para las opciones
-   * @param callback - Función de devolución de llamada donde se establece la opción en el menú
+   * Obtiene las opciones de entrada de radio del servicio.
+   * @param fileName Nombre del archivo JSON que contiene las opciones.
+   * @param callback Función de devolución de llamada donde se establece la opción en el menú.
    */
   getRadioData(
     fileName: string,
     callback: (data: LabelValueDatos[]) => void
   ): void {
-    this.exportaccionAcuicolaServcios.getDatos(fileName).subscribe((data) => {
+    this.exportaccionAcuicolaServcios.getDatos(fileName)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data) => {
       callback(data);
     });
   }
 
   /**
    * Obtiene los valores del catálogo y actualiza la configuración.
-   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
-   * @param indiceMenu - El índice del menú en el grupo.
-   * @param clave - La clave para obtener los valores del catálogo.
+   * @param indiceGrupo El índice del grupo en la matriz de configuración.
+   * @param indiceMenu El índice del menú en el grupo.
+   * @param clave La clave para obtener los valores del catálogo.
    */
   obtenerValoresCatalogo(
     indiceGrupo: number,
@@ -238,7 +264,7 @@ private seccionState!: SeccionLibState;
 
   /**
    * Genera una matriz de validadores de formularios basada en los patrones proporcionados.
-   * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
+   * @param validadores Una matriz de patrones regex que se utilizarán para la validación.
    * @returns Una matriz de validadores de formularios.
    */
   static getValidators(validadores: string[]): ValidatorFn[] {
@@ -259,7 +285,7 @@ private seccionState!: SeccionLibState;
 
   /**
    * Maneja el evento de cambio para la entrada de fecha.
-   * @param evento - El nuevo valor de la fecha como cadena.
+   * @param evento El nuevo valor de la fecha como cadena.
    */
   fechaCambiado(evento: string): void {
     // Manejar cambio de fecha
@@ -268,8 +294,8 @@ private seccionState!: SeccionLibState;
 
   /**
    * Maneja el evento de selección para un catálogo.
-   * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
-   * @param evento - El valor seleccionado del catálogo.
+   * @param nombreControlFormulario El nombre del control del formulario a actualizar.
+   * @param evento El valor seleccionado del catálogo.
    */
   seleccionCatalogo(nombreControlFormulario: string, evento: Event): void {
     this.formulario.get(nombreControlFormulario)?.setValue(evento);
@@ -277,8 +303,10 @@ private seccionState!: SeccionLibState;
 
   /**
    * Maneja el evento de cambio para una entrada de radio.
-   * @param claveRadio - La clave de la entrada de radio.
-   * @param evento - El nuevo valor de la entrada de radio.
+   * @param claveRadio La clave de la entrada de radio.
+   * @param groupIndex Índice del grupo en la configuración.
+   * @param menuIndex Índice del menú en el grupo.
+   * @param evento El nuevo valor de la entrada de radio.
    */
   cambioValorRadio(
     claveRadio: string,
@@ -290,6 +318,10 @@ private seccionState!: SeccionLibState;
       evento;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

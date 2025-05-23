@@ -522,7 +522,7 @@ private seccionState!: SeccionLibState
   /**
    * @description Muestra o esconde la sección colapsable.
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 }
