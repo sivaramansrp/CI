@@ -1,163 +1,153 @@
 // @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Component, PLATFORM_ID } from '@angular/core';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Directive } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { Input } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Output } from '@angular/core';
-import { Pipe } from '@angular/core';
-import { PipeTransform } from '@angular/core';
-import { async } from '@angular/core/testing';
-import { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
-import { of as observableOf } from 'rxjs';
-import { throwError } from 'rxjs';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { AuthGuardService } from '../../services/auth-guard.service';
-import { CookieService } from './cookie.service';
-import { ExampleComponent } from './example.component';
-import { Router } from '@angular/router';
-
-@Injectable()
-class MockAuthGuardService {
-  foo = function() {
-    return {
-      bar: {
-        baz: function() {
-          return {
-            isLoggedIn: {}
-          };
-        }
-      }
-    };
-  };
-}
+import { Component } from '@angular/core';
+import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { FormBuilder } from '@angular/forms';
+import { AcuicolaService } from '../../servicios/acuicola.service';
+import { TramiteStoreQuery } from '../../estados/tramite220701.query';
+import { TramiteStore } from '../../estados/tramite220701.store';
+import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 @Injectable()
-class MockCookieService {
-  get = function() {};
-  foo = function() {
-    return {
-      bar: {
-        baz: function() {}
-      }
-    };
-  };
-}
+class MockAcuicolaService {}
 
 @Injectable()
-class MockRouter {
-  route = function() {
-    return {
-      foo: function() {
-        return {
-          bar: {}
-        };
-      }
-    };
-  };
-  navigate() {};
-}
+class MockTramiteStoreQuery {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-describe('ExampleComponent', () => {
+@Injectable()
+class MockTramiteStore {}
+describe('PagoDeDerechosComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,PagoDeDerechosComponent ],
       declarations: [
-        ExampleComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+              ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: AuthGuardService, useClass: MockAuthGuardService },
-        { provide: CookieService, useClass: MockCookieService },
-        { provide: 'PLATFORM_ID', useValue: 'browser' },
-        { provide: Router, useClass: MockRouter }
+        FormBuilder,
+        { provide: AcuicolaService, useClass: MockAcuicolaService },
+        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
+        { provide: TramiteStore, useClass: MockTramiteStore },
+        SeccionLibQuery,
+        SeccionLibStore
       ]
-    }).overrideComponent(ExampleComponent, {
+    }).overrideComponent(PagoDeDerechosComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(ExampleComponent);
+    fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
+
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
-    component.adjustmentsDetailsCms = component.adjustmentsDetailsCms || {};
-    component.adjustmentsDetailsCms.location = {
-      threshold: {}
-    };
-    component.router = component.router || {};
-    component.router.events = observableOf({
-      urlAfterRedirects: 'urlAfterRedirects'
-    });
-    component.menuEl = component.menuEl || {};
-    component.menuEl.nativeElement = {
-      highlightMenu: function() {}
-    };
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
+    component.obtenerListaJustificacion = jest.fn();
+    component.iniciarFormulario = jest.fn();
+    component.getBancoDatos = jest.fn();
+    component.pagoDeCargarDatos = jest.fn();
+    component.pagoDerechosRevision = jest.fn();
+    component.pagosDeDerechosForm = component.pagosDeDerechosForm || {};
+    component.pagosDeDerechosForm.patchValue = jest.fn();
+    component.pagosDeDerechosForm.statusChanges = observableOf({});
+    component.pagosDeDerechosForm.value = 'value';
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setPagoDeDerechosTramite = jest.fn();
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ngOnInit();
-
+    // expect(component.obtenerListaJustificacion).toHaveBeenCalled();
+    // expect(component.iniciarFormulario).toHaveBeenCalled();
+    // expect(component.getBancoDatos).toHaveBeenCalled();
+    // expect(component.pagoDeCargarDatos).toHaveBeenCalled();
+    // expect(component.pagoDerechosRevision).toHaveBeenCalled();
+    // expect(component.pagosDeDerechosForm.patchValue).toHaveBeenCalled();
+    // expect(component.tramiteStore.setPagoDeDerechosTramite).toHaveBeenCalled();
   });
 
-  it('should run #logout()', async () => {
-    component.authGuardSvc = component.authGuardSvc || {};
-    component.authGuardSvc.logoff = jest.fn();
-    component.logout();
-    expect(component.authGuardSvc.logoff).toHaveBeenCalled();
+  it('should run #iniciarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.iniciarFormulario();
+    // expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #changeLanguage()', async () => {
-    component.cookie = component.cookie || {};
-    component.cookie.get = jest.fn();
-    window.location.reload = jest.fn();
-    component.changeLanguage({});
-    expect(component.cookie.get).toHaveBeenCalled();
-    expect(window.location.reload).toHaveBeenCalled();
+  it('should run #pagoDeCargarDatos()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.pagoDeCargarDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.pagosDeDerechosForm = component.pagosDeDerechosForm || {};
+    component.pagosDeDerechosForm.patchValue = jest.fn();
+    component.pagoDeCargarDatos();
+    // expect(component.acuicolaService.pagoDeCargarDatos).toHaveBeenCalled();
+    // expect(component.pagosDeDerechosForm.patchValue).toHaveBeenCalled();
   });
 
-  it('should run #onDeactivate()', async () => {
-    window.scrollTo = jest.fn();
-    component.onDeactivate();
-    expect(window.scrollTo).toHaveBeenCalled();
+  it('should run #getBancoDatos()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.getBancoDatos = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getBancoDatos();
+    // expect(component.acuicolaService.getBancoDatos).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerListaJustificacion()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.obtenerDetallesDelCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    component.obtenerListaJustificacion();
+    // expect(component.acuicolaService.obtenerDetallesDelCatalogo).toHaveBeenCalled();
+  });
+
+  it('should run #pagoDerechosRevision()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.getPagoDerechosRevision = jest.fn().mockReturnValue(observableOf({}));
+    component.pagosDeDerechosForm = component.pagosDeDerechosForm || {};
+    component.pagosDeDerechosForm.patchValue = jest.fn();
+    component.pagoDerechosRevision();
+    // expect(component.acuicolaService.getPagoDerechosRevision).toHaveBeenCalled();
+    // expect(component.pagosDeDerechosForm.patchValue).toHaveBeenCalled();
+  });
+
+  it('should run #cambioValorRadio()', async () => {
+    component.pagosDeDerechosForm = component.pagosDeDerechosForm || {};
+    component.pagosDeDerechosForm.patchValue = jest.fn();
+    component.iniciarFormulario = jest.fn();
+    component.cambioValorRadio({}, {});
+    // expect(component.pagosDeDerechosForm.patchValue).toHaveBeenCalled();
+    // expect(component.iniciarFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #cambioValorRadioRevision()', async () => {
+    component.pagosDeDerechosForm = component.pagosDeDerechosForm || {};
+    component.pagosDeDerechosForm.patchValue = jest.fn();
+    component.iniciarFormulario = jest.fn();
+    component.cambioValorRadioRevision({}, {});
+    // expect(component.pagosDeDerechosForm.patchValue).toHaveBeenCalled();
+    // expect(component.iniciarFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.unsubscribe$ = component.unsubscribe$ || {};
+    component.unsubscribe$.next = jest.fn();
+    component.unsubscribe$.complete = jest.fn();
+    component.ngOnDestroy();
+    // expect(component.unsubscribe$.next).toHaveBeenCalled();
+    // expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
 
 });

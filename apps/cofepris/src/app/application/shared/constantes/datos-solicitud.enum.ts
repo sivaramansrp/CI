@@ -508,6 +508,9 @@ export const REPRESENTANTE_LEGAL = [260208];
  */
 export const BANCO = [260208, 260209, 260207, 260201, 260219,260302, 260304,260103];
 
+export const REQUIRED_BANCO = [260902];
+
+
 /**
  * @const DATOS_MERCANCIA_CAMPO
  * @description Arreglo que contiene los identificadores de los campos relacionados con los datos de mercancía.

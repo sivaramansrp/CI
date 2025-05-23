@@ -225,8 +225,8 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
   */
   public establecerCambioDeValor(event: { campo: string; valor: { id: number; descripcion: string } }): void {
     if (event.campo === 'solicitud_mercancia' && event.valor.descripcion !== '') {
-      this.ninoFormGroup.get('criterio_de_dictamen')?.setValue(event.valor.descripcion);
-      this.tramite130103Store.setDynamicFieldValue('criterio_de_dictamen', event.valor.descripcion);
+      this.ninoFormGroup.get('criterio_de_dictamen')?.setValue(event.valor);
+      this.tramite130103Store.setDynamicFieldValue('criterio_de_dictamen', event.valor);
     }
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
