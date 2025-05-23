@@ -155,10 +155,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
-    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
-    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
+    { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
   ];
 
   /**
@@ -169,10 +171,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
-    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
-    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
+    { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
   ];
 
   /**
@@ -406,6 +410,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       field
     );
     return VALIDATIONRESULT === null ? false : VALIDATIONRESULT;
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean | undefined {
+    const CONTROL = this.solicitudForm.get(id);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
   }
 
   /**
