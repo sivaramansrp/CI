@@ -25,9 +25,15 @@ export class ExportadorAutorizadoService {
   }
 
   setRegistro(_registro: Tramite110102State):void {
-
-    (Object.keys(_registro) as Array<keyof Tramite110102State>).forEach(field => {
-      this.tramite110102Store.establecerDatos({ [field]: _registro[field] });
-    });
+    this.tramite110102Store.setCveRegistroProductor(_registro.cveRegistroProductor);
+    this.tramite110102Store.setUnidadAdministrativaClave(_registro.unidadAdministrativaClave);
+    this.tramite110102Store.setSolicitudEntidadFederativaEntidadClave(_registro.solicitudEntidadFederativaEntidadClave);
+    this.tramite110102Store.setProtestoDecirVerdad(_registro.protestoDecirVerdad);
+    this.tramite110102Store.setSolicitaSeparacionContable(_registro.solicitaSeparacionContable);
+    this.tramite110102Store.setSolicitaExportadorAutorizado(_registro.solicitaExportadorAutorizado);
+    this.tramite110102Store.setCondicionExportador(_registro.condicionExportador);
+    this.tramite110102Store.setSolicitaExportadorAutorizadoJPN(_registro.solicitaExportadorAutorizadoJPN);
+    this.tramite110102Store.setCondicionExportadorJPN(_registro.condicionExportadorJPN);
+    
   }
 }

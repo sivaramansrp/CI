@@ -15,6 +15,7 @@ import {CatalogoSelectComponent, ConsultaioQuery, RepresentacionfederalService, 
 import { Catalogo} from '@ng-mf/data-access-user';
 
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 
 /**
@@ -35,7 +36,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * FormGroup que contiene los datos del formulario de representación federal.
    * @type {FormGroup}
    */
-  formularioRepresentacionFederalForm: FormGroup;
+  formularioRepresentacionFederalForm!: FormGroup;
 
   /**
    * Arreglo de objetos Catalogo que representa las entidades fronterizas.
@@ -55,8 +56,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
-
-
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de la representación federal.
@@ -68,33 +67,34 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, 
     private consultaQuery: ConsultaioQuery,
     private service: RepresentacionfederalService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
+    
+    
+  }
+
+
+  /**
+   * Inicializa el formulario de representación federal.
+   */
+  initializarFormulario(): void {
+   
     this.formularioRepresentacionFederalForm = this.fb.group({
       solicitudEntidadFederativaEntidadClave: ['', Validators.required],
       unidadAdministrativaClave: ['', Validators.required],
       protestoDecirVerdad: [false]
     });
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
-      this.procedureState = seccionState.readonly;
-    });
-  }
-
+     this.getValorsStore();
+     this.enableDisableControl();
+    }
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    * Carga las entidades de frontera y recupera la representación federal si es necesario.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+      this.procedureState = seccionState.readonly;
+      this.initializarFormulario();
+    });
     this.cargarEntidadesFrontera();
-    this.getValorsStore();
-
-    const ENTIDAD = this.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value;
-    const REPRESENTACIONFEDERAL = this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value;
-    if (ENTIDAD !== "") {
-      this.recuperarRepresentacionFederalSE(ENTIDAD);
-      this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.setValue(REPRESENTACIONFEDERAL);
-    } else {
-      this.representacionFederalOptions = [];
-    }
-    this.enableDisableControl();
   }
 
   /**
@@ -173,6 +173,15 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    const ENTIDAD = this.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value;
+    const REPRESENTACIONFEDERAL = this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value;
+    if (ENTIDAD !== "") {
+      this.recuperarRepresentacionFederalSE(ENTIDAD);
+      this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.setValue(REPRESENTACIONFEDERAL);
+    } else {
+      this.representacionFederalOptions = [];
+    }
   }
 
   /**

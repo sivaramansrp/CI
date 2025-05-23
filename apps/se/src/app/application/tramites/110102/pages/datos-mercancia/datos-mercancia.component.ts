@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Tramite110102State } from '../../estados/store/tramite110102.store';
 
 import { ExportadorAutorizadoService } from '../../service/exportador-autorizado.service';
@@ -43,11 +43,13 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-      
-    if(this.consultaState.readonly) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.consultaState = seccionState;
+        console.log('Consulta State:', this.consultaState);
+      });
+
+    if(this.consultaState.update) {
       this.getBandejaSolicitudesDatos();
     } else {
       this.esDatosRespuesta = true;
@@ -61,6 +63,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         if(response) {
           this.esDatosRespuesta = true;
           this.exportadorAutorizadoService.setRegistro(response);
+          
         }
       });
   }

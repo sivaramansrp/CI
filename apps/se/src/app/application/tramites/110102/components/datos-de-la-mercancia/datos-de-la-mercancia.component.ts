@@ -5,12 +5,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, Notificacion, NotificacionesComponent, REG_X,TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 
 import { Tramite110102State, Tramite110102Store } from '../../estados/store/tramite110102.store';
+
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -53,9 +54,7 @@ seccionState!:Tramite110102State
   constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store,
     private consultaQuery: ConsultaioQuery,
      private tramite110102Query: Tramite110102Query) {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
-        this.procedureState = seccionState.readonly;
-      });
+      
 
   }
 
@@ -64,14 +63,16 @@ seccionState!:Tramite110102State
    * Obtiene los valores del store y los asigna al formulario.
    */
   ngOnInit(): void {
-    this.getValoresStore();
-    this.initializarFormulario();
-    this.enableDisableControl();
 
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+        this.procedureState = seccionState.readonly;
+        this.initializarFormulario();
+      });
   }
 
 
   initializarFormulario(): void {
+    this.getValoresStore();
     this.datosDeLamercanciaFrom = this.fb.group({
       cveRegistroProductor: [this.seccionState.cveRegistroProductor, [Validators.required,Validators.pattern(REG_X.SOLO_NUMEROS)]],
       solicitud: this.fb.group({
@@ -79,6 +80,7 @@ seccionState!:Tramite110102State
         idSolicitudProductor: [''],
       })
     });
+    this.enableDisableControl();
   }
   /**
    * Establece los valores en el store.
@@ -94,10 +96,13 @@ seccionState!:Tramite110102State
 
   enableDisableControl(): void {
     if (this.procedureState) {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
+      this.datosDeLamercanciaFrom.disable();
     } 
+    else if (!this.procedureState) {
+      this.datosDeLamercanciaFrom.enable();
+    }
     else {
-      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
+      // No se requiere ninguna acción en el formulario
     }
   }
   /**
@@ -106,12 +111,10 @@ seccionState!:Tramite110102State
   getValoresStore(): void {
     this.tramite110102Query.selectTramite110102$
       .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-         this.seccionState=seccionState
-        })
-      )
-      .subscribe();
+        takeUntil(this.destroyed$))
+      .subscribe((seccionState) => {
+        this.seccionState = seccionState;
+      });
   }
 
   /**

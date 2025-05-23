@@ -13,6 +13,7 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 import { Subject, takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+
 /**
  * Este componente maneja el registro de exportadores autorizados.
  */
@@ -77,9 +78,7 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
     private consultaQuery: ConsultaioQuery,
      private service: ExportadorAutorizadoService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
     // Lógica del constructor puede ser añadida aquí si es necesario
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
-      this.procedureState = seccionState.readonly;
-    });
+   
   }
 
   /**
@@ -87,6 +86,18 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
    * Inicializa el formulario y establece los valores iniciales de los controles.
    */
   ngOnInit(): void {
+
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
+      this.procedureState = seccionState.readonly;
+      this.initializarFormulario();
+    });
+    this.getExportadorAutorizado();
+    this.getExportadorAutorizadoJPN();
+    
+  }
+
+   initializarFormulario(): void {
+
     this.registroExportadorForm = this.fb.group({
       solicitaSeparacionContable: [false],
       solicitaExportadorAutorizado: [false],
@@ -94,12 +105,7 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
       solicitaExportadorAutorizadoJPN: [false],
       condicionExportadorJPN: ['']
     });
-    this.getExportadorAutorizado();
-    this.getExportadorAutorizadoJPN();
     this.getValorsStore();
-
-    this.showDivExportador = this.registroExportadorForm.get('solicitaExportadorAutorizado')?.value;
-    this.showDivExportadorJPN = this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value;
     this.enableDisableControl();
   }
 
@@ -195,6 +201,9 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
         })
       )
       .subscribe();
+
+    this.showDivExportador = this.registroExportadorForm.get('solicitaExportadorAutorizado')?.value;
+    this.showDivExportadorJPN = this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value;
   }
 
   /**
