@@ -319,6 +319,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       : false;
   }
 
+  /**
+   * @description Habilita o deshabilita los controles del formulario según el valor del campo 'tipoPersona'.
+   * Si 'tipoPersona' está vacío, desactiva todos los campos excepto 'tipoPersona'.
+   * En caso contrario, habilita todos los campos y marca el desplegable como habilitado.
+   */
   changeNacionalidad(): void {
     if (this.agregarProveedorForm?.value?.tipoPersona === '') {
       Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
