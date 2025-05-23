@@ -421,8 +421,8 @@ export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
  * - "1234567890123456" (más de 15 dígitos enteros)
  * - "abc" (no es un número)
  */
-export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
+export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  * 

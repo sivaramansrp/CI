@@ -232,6 +232,14 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'equipo-e-instrumentos-musicales',
+    loadChildren: () =>
+      import('./tramites/630104/equipo-e-instrumentos-musicales.module').then((m)=>
+        m.EquipoEInstrumentosMusicalesModule)
+  
+  },
+  {
+  
     path: 'cancelacion-donaciones',
     loadChildren: () =>
       import('./tramites/11106/cancelacion-donaciones.module').then(
