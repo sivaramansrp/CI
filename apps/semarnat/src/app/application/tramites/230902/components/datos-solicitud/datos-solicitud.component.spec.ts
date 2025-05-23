@@ -1,47 +1,55 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
+
 import { PermisoCitesService } from '../../services/permiso-cites.service';
 import { Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
-import { of } from 'rxjs';
-import { ConfiguracionItem } from '../../enum/mercancia.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, CrosslistComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
   let permisoCitesServiceMock: any;
-  let tramite230902StoreMock: any;
-  let tramite230902QueryMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
 
   beforeEach(async () => {
     permisoCitesServiceMock = {
       inicializaDatosSolicitudDatosCatalogos: jest.fn(),
+      inicializaMercanciaDatosCatalogos: jest.fn(),
       loadTablaDatos: jest.fn().mockReturnValue(of([])),
-      fraccionArancelariaDescripcion: [],
+      fraccionArancelaria: [{ id: '1', descripcion: '0101.21.01' }],
+      fraccionArancelariaDescripcion: [{ id: '0101.21.01', descripcion: 'Caballos pura sangre' }],
+      clasificacionTaxonomica: [{ descripcion: 'Mamífero' }],
+      nombreCientifico: [{ descripcion: 'Equus ferus caballus' }],
+      nombreComun: [{ descripcion: 'Caballo' }],
+      unidadMedida: [{ descripcion: 'Cabeza' }],
+      paisOrigen: [{ descripcion: 'México' }],
+      paisProcedencia: [{ descripcion: 'México' }],
     };
 
-    tramite230902StoreMock = {
-      setTipoDeMovimiento: jest.fn(),
+    tramiteStoreMock = {
+      establecerDatos: jest.fn(),
       setMercanciaTablaDatos: jest.fn(),
     };
 
-    tramite230902QueryMock = {
+    tramiteQueryMock = {
       selectSolicitud$: of({
         tipodeMovimiento: '1',
-        tipoRegimen: 'Importación',
+        tipoRegimen: 'A',
       }),
     };
 
     await TestBed.configureTestingModule({
       declarations: [DatosSolicitudComponent],
-      imports: [ReactiveFormsModule],
+       imports: [ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CrosslistComponent],
       providers: [
         FormBuilder,
         { provide: PermisoCitesService, useValue: permisoCitesServiceMock },
-        { provide: Tramite230902Store, useValue: tramite230902StoreMock },
-        { provide: Tramite230902Query, useValue: tramite230902QueryMock },
+        { provide: Tramite230902Store, useValue: tramiteStoreMock },
+        { provide: Tramite230902Query, useValue: tramiteQueryMock },
       ],
     }).compileComponents();
 
@@ -54,161 +62,121 @@ describe('DatosSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the component and load data catalogs', () => {
-    component.ngOnInit();
-    expect(permisoCitesServiceMock.inicializaDatosSolicitudDatosCatalogos).toHaveBeenCalled();
-    expect(component.solicitud230902State).toEqual({ tipodeMovimiento: '1', tipoRegimen: 'Importación' });
+  it('should initialize formSolicitud with values from state', () => {
+    expect(component.formSolicitud.get('tipodeMovimiento')?.value).toBe('1');
+    expect(component.formSolicitud.get('tipoRegimen')?.value).toBe('A');
   });
 
-  it('should create the solicitud form with default values', () => {
-    component.crearFormularioSolicitud();
-    expect(component.formSolicitud).toBeDefined();
-    expect(component.formSolicitud.get('tipodeMovimiento')?.value).toEqual('1');
-    expect(component.formSolicitud.get('tipoRegimen')?.value).toEqual('Importación');
+  it('should toggle modal visibility', () => {
+    component.showDatosMercanciaModal = false;
+    component.alternarVisibilidadModalMercancia();
+    expect(component.showDatosMercanciaModal).toBe(true);
   });
 
-  it('should handle tipoMovimiento change and update aduanasBotons', () => {
-    component.crearFormularioSolicitud();
-    component.formSolicitud.get('tipodeMovimiento')?.setValue('2');
-    component.cambiarTipoDeMovimiento();
-    expect(tramite230902StoreMock.setTipoDeMovimiento).toHaveBeenCalledWith('2');
-    expect(component.tipoMovimientoSeleccionada).toEqual(2);
-    expect(component.aduanasBotons).toEqual(component.crossListBotons);
-  });
-
-  it('should handle tipoRegimen change and update store', () => {
-    component.crearFormularioSolicitud();
-    component.formSolicitud.get('tipoRegimen')?.setValue('Exportación');
-    component.onTipoRegimenChange();
-    expect(tramite230902StoreMock.setTipoDeRegimen).toHaveBeenCalledWith('Exportación');
-  });
-
-  it('should handle row selection and enable buttons', () => {
-    const row: ConfiguracionItem = {
-      id: 1,
-      fraccionArancelaria: '',
-      otraFraccion: false,
-      descripcion: '',
-      clasificacionTaxonomica: '',
-      rendimientoProducto: '',
-      nombreCientifico: '',
-      nombreComun: '',
-      unidadMedida: '',
-      paisOrigen: '',
-      paisProcedencia: '',
-      marca: '',
-      cantidad: '0',
-      fraccionDescripcion: ''
-    };
-    component.hadleFilaSeleccionada([row]);
-    expect(component.filaSeleccionada).toEqual(row);
-    expect(component.enableModficarBoton).toBeTruthy();
-    expect(component.enableEliminarBoton).toBeTruthy();
-  });
-
-  it('should disable buttons when no row is selected', () => {
-    component.hadleFilaSeleccionada([]);
-    expect(component.enableModficarBoton).toBeFalsy();
-    expect(component.enableEliminarBoton).toBeFalsy();
-  });
-
-  it('should open modal for modifying a single row', () => {
-    const row: ConfiguracionItem = {
-      id: 1,
-      fraccionArancelaria: 'Test',
-      otraFraccion: false,
-      descripcion: 'Description',
-      clasificacionTaxonomica: 'Taxonomy',
-      rendimientoProducto: '',
-      nombreCientifico: 'Scientific Name',
-      nombreComun: 'Common Name',
-      unidadMedida: 'Unit',
-      paisOrigen: 'Origin',
-      paisProcedencia: 'Procedence',
-      marca: 'Brand',
-      cantidad: '10',
-      fraccionDescripcion: 'Test Description'
-    };
-    component.listaFilaSeleccionadaMercancia = [row];
-    component.modficarMercanciaItem();
-    expect(component.esOperacionDeActualizacion).toBeTruthy();
-    expect(component.showDatosMercanciaModal).toBeTruthy();
-  });
-
-  it('should close multiple selection popup', () => {
-    component.multipleSeleccionPopupAbierto = true;
-    component.cerrarMultipleSeleccionPopup();
-    expect(component.multipleSeleccionPopupAbierto).toBeFalsy();
-  });
-
-it('should close confirmation popup for deleting rows', () => {
-    component.confirmEliminarPopupAbierto = true;
-    component.cerrarEliminarConfirmationPopup();
-    expect(component.confirmEliminarPopupAbierto).toBeFalsy();
-  });
-
- it('should handle fraccionArancelaria change and update description', () => {
-    const catalogo: Catalogo = { id: 1, descripcion: 'Test Description' };
-    permisoCitesServiceMock.fraccionArancelariaDescripcion = [catalogo];
-    component.manejarCambioFraccionArancelaria(catalogo);
-    expect(component.formMercancia.get('fraccionDescripcion')?.value).toEqual('Test Description');
-  });
-
-  it('should validate form control as invalid', () => {
+  it('should create a new empty mercancia form', () => {
     component.crearNuevoFormularioMercancia();
-    component.formMercancia.get('descripcion')?.setValue('');
-    component.formMercancia.get('descripcion')?.markAsTouched();
-    expect(component.esInvalido('descripcion')).toBeTruthy();
+    expect(component.formMercancia).toBeDefined();
+    expect(component.formMercancia.valid).toBe(false);
   });
 
-  it('should validate form control as valid', () => {
+  it('should not submit if mercancia form is invalid', () => {
     component.crearNuevoFormularioMercancia();
-    component.formMercancia.get('descripcion')?.setValue('Valid Description');
-    expect(component.esInvalido('descripcion')).toBeFalsy();
-  });
-
-  it('should submit mercancia form and add new row to table', () => {
-    component.crearNuevoFormularioMercancia();
-    component.formMercancia.get('descripcion')?.setValue('New Description');
-    component.formMercancia.get('cantidad')?.setValue('5');
-    component.formMercancia.get('unidadMedida')?.setValue('1');
-    component.formMercancia.get('paisOrigen')?.setValue('1');
-    component.formMercancia.get('paisProcedencia')?.setValue('1');
     component.enviarFormularioMercancia();
-    expect(component.tablaDatos.length).toEqual(1);
-    expect(component.tablaDatos[0].descripcion).toEqual('New Description');
+    expect(component.tablaDatos.length).toBe(0);
   });
 
-  it('should update existing row in table on mercancia form submission', () => {
-    const row: ConfiguracionItem = {
+  it('should add a new mercancia item if form is valid', () => {
+    component.crearNuevoFormularioMercancia();
+    component.formMercancia.patchValue({
+      fraccionArancelaria: '1',
+      descripcion: 'Caballo reproductor',
+      clasificacionTaxonomica: '1',
+      nombreCientifico: '1',
+      nombreComun: '1',
+      marca: 'No aplica',
+      cantidad: '2',
+      unidadMedida: '1',
+      paisOrigen: '1',
+      paisProcedencia: '1',
+    });
+
+    component.enviarFormularioMercancia();
+    expect(component.tablaDatos.length).toBe(1);
+  });
+
+  it('should handle selection and enable modification', () => {
+    const row = {
       id: 1,
-      fraccionArancelaria: 'Test',
+      fraccionArancelaria: '0101.21.01',
+      fraccionDescripcion: '',
       otraFraccion: false,
-      descripcion: 'Old Description',
-      clasificacionTaxonomica: '',
+      descripcion: 'Animal',
       rendimientoProducto: '',
-      nombreCientifico: '',
-      nombreComun: '',
-      unidadMedida: '',
-      paisOrigen: '',
-      paisProcedencia: '',
-      marca: '',
-      cantidad: '10',
-      fraccionDescripcion: ''
+      clasificacionTaxonomica: 'Mamífero',
+      nombreCientifico: 'Equus ferus caballus',
+      nombreComun: 'Caballo',
+      marca: 'MarcaX',
+      cantidad: '1',
+      unidadMedida: 'Cabeza',
+      paisOrigen: 'México',
+      paisProcedencia: 'México',
     };
     component.tablaDatos = [row];
-    component.crearNuevoFormularioMercancia(row);
-    component.formMercancia.get('descripcion')?.setValue('Updated Description');
-    component.enviarFormularioMercancia();
-    expect(component.tablaDatos.length).toEqual(1);
-    expect(component.tablaDatos[0].descripcion).toEqual('Updated Description');
+    component.hadleFilaSeleccionada([row]);
+    expect(component.enableModficarBoton).toBe(true);
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('should modify a selected mercancia item', () => {
+    const row = {
+      id: 1,
+      fraccionArancelaria: '0101.21.01',
+      fraccionDescripcion: '',
+      otraFraccion: false,
+      descripcion: 'Animal',
+      rendimientoProducto: '',
+      clasificacionTaxonomica: 'Mamífero',
+      nombreCientifico: 'Equus ferus caballus',
+      nombreComun: 'Caballo',
+      marca: 'MarcaX',
+      cantidad: '1',
+      unidadMedida: 'Cabeza',
+      paisOrigen: 'México',
+      paisProcedencia: 'México',
+    };
+    component.tablaDatos = [row];
+    component.listaFilaSeleccionadaMercancia = [row];
+    component.filaSeleccionada = row;
+    component.modficarMercanciaItem();
+    expect(component.formMercancia).toBeDefined();
+    expect(component.esOperacionDeActualizacion).toBe(true);
+  });
+
+  it('should delete selected mercancia items', () => {
+    const row = {
+      id: 1,
+      fraccionArancelaria: '0101.21.01',
+      fraccionDescripcion: '',
+      otraFraccion: false,
+      descripcion: '',
+      rendimientoProducto: '',
+      clasificacionTaxonomica: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: '',
+    };
+    component.tablaDatos = [row];
+    component.listaFilaSeleccionadaMercancia = [row];
+    component.eliminarMercanciaItem();
+    expect(component.tablaDatos.length).toBe(0);
+  });
+
+  it('should set value in store from form', () => {
+    component.formSolicitud.get('tipoRegimen')?.setValue('B');
+    component.setValoresStore(component.formSolicitud, 'tipoRegimen');
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ tipoRegimen: 'B' });
   });
 });

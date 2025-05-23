@@ -246,10 +246,18 @@ export class AgregarDestinatarioCustomComponent
       entidadFederativa: '',
       estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
       codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
+      tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
+      denominacionRazon: this.agregarDestinatarioFinal.value.denominacionRazon,
+      nombres: this.agregarDestinatarioFinal.value.nombres,
+      primerApellido: this.agregarDestinatarioFinal.value.primerApellido,
+      segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
+      estado: this.agregarDestinatarioFinal.value.estado,
     };
-
     this.destinatarios.push(NUEVO_DESTINATARIO);
-    if(this.destinatarioFinalTablaDatos.length > 0) {
+    if(this.formaDatos) {
+      if ('tableindex' in this.formaDatos) {
+        this.destinatarios[0].tableindex = (this.formaDatos as DestinoFinal).tableindex;
+      }
       this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
     }
     else{
@@ -270,6 +278,7 @@ export class AgregarDestinatarioCustomComponent
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+      this.agregarDestinatarioFinal.enable(); 
     }
     if(this.destinatarioFinalTablaDatos.length > 0) {
       this.agregarDestinatarioFinal.patchValue(this.destinatarioFinalTablaDatos[0]);

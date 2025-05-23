@@ -2,6 +2,7 @@ import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from './chofer40103.store';
+import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -50,7 +51,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
    * Obtiene la lista de choferes nacionales.
    * @returns La lista de choferes nacionales.
    */
-  getChoferes(): string[] {
+  getChoferes(): Chofer[] {
     return this.getValue().choferes;
   }
 
@@ -58,7 +59,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
    * Obtiene la lista de choferes extranjeros.
    * @returns La lista de choferes extranjeros.
    */
-  getchoferesextranjero(): string[] {
+  getchoferesextranjero(): Chofer[] {
     return this.getValue().choferesExtranjero;
   }
 

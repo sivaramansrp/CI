@@ -98,29 +98,13 @@
 
         <div class="row mt-5">
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="regresar()">
-              Regresar
-            </button>
             <button
+              *ngFor="let btn of botonesAcciones"
               type="button"
-              class="btn btn-danger ms-2"
-              (click)="solicitarCancelacion()"
+              [class]="btn.clase"
+              (click)="alHacerClickEnBoton(btn.urlAccion)"
             >
-              Solicitar cancelación
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger ms-2"
-              (click)="solicitarModificacion()"
-            >
-              Solicitar modificación
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary ms-2"
-              (click)="desistir()"
-            >
-              Desistir
+              {{ btn.etiqueta }}
             </button>
           </div>
         </div>

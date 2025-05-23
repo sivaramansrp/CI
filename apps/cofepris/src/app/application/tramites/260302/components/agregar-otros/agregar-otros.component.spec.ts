@@ -23,6 +23,9 @@ class MockDatosSolicitudService {
 @Injectable()
 class MockTramite260302Store {
   updateOtrosTablaDatos() {}
+  updateSeleccionadoOtrosDatos() {}
+  select = jest.fn().mockReturnValue(observableOf({}));
+  _select = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Injectable()

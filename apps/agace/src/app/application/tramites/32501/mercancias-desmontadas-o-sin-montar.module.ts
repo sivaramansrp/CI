@@ -32,14 +32,7 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
-  declarations: [
-    PasoUnoComponent,
-    SolicitudPageComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    DatosSolicitudComponent,
-    ModalOperacionComponent,
-  ],
+  declarations: [],
   imports: [
     FirmaElectronicaComponent,
     CommonModule,
@@ -64,10 +57,15 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    PasoUnoComponent,
+    SolicitudPageComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    DatosSolicitudComponent,
+    ModalOperacionComponent,
   ],
-  exports: [
-  ],
-  providers: [MercanciasDesmontadasOSinMontarService,ToastrService],
+  exports: [],
+  providers: [MercanciasDesmontadasOSinMontarService, ToastrService],
 })
 export class MercanciasDesmontadasOSinMontarModule {}

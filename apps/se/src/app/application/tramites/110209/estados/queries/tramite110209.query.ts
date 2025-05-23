@@ -15,7 +15,7 @@ export class Tramite110209Query extends Query<Tramite110209State> {
   /**
    * Observable que selecciona el estado completo del trámite 110209.
    */
-  selectTramite110102$ = this.select((state) => {
+  selectTramite110209$ = this.select((state) => {
     return state;
   });
 

@@ -139,7 +139,7 @@ export class InvocarPageComponent implements OnInit, OnDestroy {
   buscar(): void {
     this.folioFormulario.markAllAsTouched();
     if (this.folioFormulario.valid) {
-      this.router.navigate(['/pago/modificacion-descripcion/solicitante']);
+      this.router.navigate([this.router.url.replace('invocar-modulo', 'solicitante')]);
     }
   }
 

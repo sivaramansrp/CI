@@ -4,7 +4,7 @@ import {
   InputRadioComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
@@ -26,7 +26,7 @@ import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
-export class DatosDelTramiteComponent {
+export class DatosDelTramiteComponent implements OnInit{
   /**
    * @description El grupo de formulario reactivo que contiene los datos del trámite.
    * Este formulario se utiliza para capturar y validar la información del usuario.
@@ -66,6 +66,34 @@ export class DatosDelTramiteComponent {
     form: FormGroup;
     campo: string;
   }>();
+
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * 
+ * Este método verifica si existen al menos dos campos en el arreglo `inputFields` y si ambos controles
+ * están presentes en el formulario reactivo. Si se cumplen estas condiciones, se suscribe a los cambios
+ * de valor del primer control. Cuando el valor del primer control cambia, el segundo control se reinicia
+ * (se limpia su valor), se marca como "prístino" y "no tocado" para evitar mostrar mensajes de error
+ * prematuramente. Finalmente, se emite un evento para actualizar el almacén (store) con el nuevo estado
+ * del formulario y el nombre del campo que fue reiniciado.
+ *
+ * @returns {void}
+ */
+  ngOnInit(): void {
+  if (
+    this.inputFields.length > 1 &&
+    this.form.get(this.inputFields[0].controlName) &&
+    this.form.get(this.inputFields[1].controlName)
+  ) {
+    this.form.get(this.inputFields[0].controlName)!.valueChanges.subscribe(() => {
+      const SEGUNDO_CONTROL = this.form.get(this.inputFields[1].controlName)!;
+      SEGUNDO_CONTROL.reset();
+      SEGUNDO_CONTROL.markAsPristine();
+      SEGUNDO_CONTROL.markAsUntouched();
+       this.setValoresStore(this.form, this.inputFields[1].controlName);
+    });
+  }
+}
 
   /**
    * @description Verifica si un control del formulario es inválido.

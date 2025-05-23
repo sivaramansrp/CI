@@ -1,0 +1,108 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md p-2">
+            <h2>{{titulo}}</h2>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div [ngClass]="{'col-md-5': tieneBandeja, 'col-md-8': !tieneBandeja}">
+            <div class="d-flex align-items-baseline">
+                @if(tieneBandeja) {
+                    <label class="form-label" for="solicitante">Funcionario:</label>
+                    <span class="mt-3 ms-2">Establecimiento vsg</span>
+                } @else {
+                    <label class="form-label" for="solicitante">Solicitante:</label>
+                    <span class="mt-3 ms-2">4354543</span>
+                }
+            </div>
+        </div>
+        <div [ngClass]="{'col-md-7': tieneBandeja, 'col-md-4': !tieneBandeja}">
+            <div class="d-flex align-items-baseline">
+                <label class="form-label" for="rfc">RFC:</label>
+                <span class="mt-3 ms-2">1242143432322</span>
+            </div>
+        </div>
+    </div>
+    @if(tieneBandeja) {
+        <div class="panel-group ficha-collapse" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading d-flex justify-content-end" (click)="mostrarColapsable(1)">
+                <h4 class="panel-title text-end me-5">
+                  <a>Búsqueda</a>
+                </h4>
+                @if(paisDeOriginColapsable) {
+                    <i class="bi bi-chevron-up"></i>
+                } @else {
+                    <i class="bi bi-chevron-down"></i>
+                }
+              </div>
+              @if(paisDeOriginColapsable){
+              <div class="panel-collapse collapse in" id="panel-01">
+                <div class="panel-body pb-0">
+                    <form [formGroup]="dinamicasBandejaForma">
+                        <div class="row mb-3">  
+                            <formas-dinamicas 
+                                [forma]="bandejaSolicitudeFormGroup" 
+                                [formularioDatos]="bandejaSolicitudeDatos"
+                                (emitirCambioDeValor)="obtenerDepartamento($event)"
+                                >
+                            </formas-dinamicas>
+                        </div>
+                    </form>
+                </div>
+                <div class="d-flex justify-content-end m-5">
+                    <button type="button" class="btn btn-primary me-2">Borar</button>
+                    <button type="button" class="btn btn-primary" (click)="filterDatos()">Ingresar</button>
+                </div>
+              </div>
+              }
+            </div>
+        </div>
+    } @else {    
+    <div class="row mt-2">
+        <form [formGroup]="dinamicasBandejaForma">
+            <div class="row mb-3">  
+                <formas-dinamicas 
+                    [forma]="bandejaSolicitudeFormGroup" 
+                    [formularioDatos]="bandejaSolicitudeDatos"
+                    >
+                </formas-dinamicas>
+            </div>
+        </form>
+        <div class="d-flex justify-content-end mt-2">
+            <button type="button" class="btn btn-primary" (click)="enviarDatos()">Buscar</button>
+        </div>
+    </div>
+}
+
+    @if(hasValidForm && tieneConfiguracionTablaDatos) {
+        <div class="row mt-2">
+            <div class="col-md">
+              <h4 class="mb-4">{{tablaTitulo}}</h4>
+              <app-tabla-dinamica
+                [configuracionTabla]="configuracionTabla"
+                [datos]="configuracionTablaDatos"
+                [acciones]="tablaAcciones"
+                (filaClic)="onFilaClic($event)"
+              >
+              </app-tabla-dinamica>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <app-table-pagination
+              [totalItems]="totalItems"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="currentPage"
+              (pageChange)="onPageChange($event)"
+              (itemsPerPageChange)="onItemsPerPageChange($event)"
+            >
+            </app-table-pagination>
+        </div>
+    } @else if(hasValidForm && !tieneConfiguracionTablaDatos) {
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h4 class="mb-4 text-center">No se encontraron datos</h4>
+            </div>
+        </div>
+    }
+</div>
