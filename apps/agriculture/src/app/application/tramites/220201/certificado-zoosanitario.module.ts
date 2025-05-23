@@ -1,4 +1,5 @@
 
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CertificadoZoosanitario } from './certificado-zoosanitario-routing.module';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
@@ -10,13 +11,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-
 
 @NgModule({
   declarations: [
- 
-   
   
   ],
   imports: [
