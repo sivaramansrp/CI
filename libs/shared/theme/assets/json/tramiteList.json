@@ -912,7 +912,7 @@
   {
     "id": 131,
     "tramite": 40301,
-    "linkDashboard": "/aga/pago/registro-caat-naviero/caat-naviero",
+    "linkDashboard": "/aga/registro-caat-naviero/caat-naviero",
     "linkDepartment": "/pago/registro-caat-naviero/caat-naviero",
     "department": "aga"
   },
@@ -926,7 +926,7 @@
   {
     "id": 133,
     "tramite": 40402,
-    "linkDashboard": "/aga/pago/codigo-transportista",
+    "linkDashboard": "/aga/codigo-transportista",
     "linkDepartment": "/pago/codigo-transportista",
     "department": "aga"
   },
