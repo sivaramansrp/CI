@@ -3,7 +3,7 @@ name: CI/CD - Microfront Dashboard
 on:
   workflow_dispatch:
   push:
-    branches: [ develop ]
+    branches: [ QA ]
     paths:
       - 'apps/**'
       - 'libs/**'
