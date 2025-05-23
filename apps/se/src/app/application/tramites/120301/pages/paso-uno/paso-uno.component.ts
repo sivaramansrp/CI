@@ -19,6 +19,10 @@ export class PasoUnoComponent {
    */
   indice: number = 1;
 
+ /**
+   * @property {boolean} mostrarOtraPestana - Controla si se muestran las pestañas adicionales.
+   */
+  mostrarOtraPestana: boolean = false;
   /**
    * @method seleccionaTab
    * @description Selecciona una pestaña y actualiza el índice.
@@ -26,5 +30,16 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+   /**
+   * @method onMostrarTabs
+   * @description Maneja el evento emitido por el componente hijo para mostrar las pestañas adicionales.
+   * @param {boolean} value - Valor emitido por el componente hijo.
+   */
+  onMostrarTabs(value: boolean): void {
+    if (value) {
+      this.mostrarOtraPestana = true;
+    }
   }
 }
