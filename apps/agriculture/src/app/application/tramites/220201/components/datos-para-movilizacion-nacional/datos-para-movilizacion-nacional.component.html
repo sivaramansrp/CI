@@ -25,6 +25,7 @@
             [label]="'Medio de transporte'"
             [required]="true"
             name="medio"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -48,6 +49,7 @@
             [label]="'Punto de verificación federal'"
             [required]="false"
             name="punto"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -58,6 +60,7 @@
             [label]="'Nombre de la empresa transportista'"
             [required]="true"
             name="nombre"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>

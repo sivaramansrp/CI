@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -41,7 +41,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
           CatalogoSelectComponent,
             InputRadioComponent,]
 })
-export class PagoDeDerechosComponent implements OnDestroy, OnInit {
+export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit {
 
   /**
    * Configuración para el input de fecha de pago.
@@ -54,6 +54,10 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
    * @property {CatalogosSelect} justificacionSelector
    */
   justificacionSelector: Catalogo[] = [];
+  esFormularioSoloLectura:boolean = false;
+
+   
+  fechaPagoDate: string = '15/03/2025';
 
   /**
    * Configuración para el selector de banco.
@@ -124,6 +128,26 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+    this.esFormularioSoloLectura = seccionState?.sampleData?.readonly;
+      if(this.esFormularioSoloLectura){
+        this.pagoForm.disable();
+      }
+    });
+  }
+
+  
+  /**
+   * @description Actualiza la fecha de pago en el formulario.
+   * @param {string} nuevoValor Nueva fecha de pago.
+   */
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagoForm.patchValue({
+      fechaPago: nuevoValor,
+    });
+    this.fechaPagoDate = nuevoValor;
+  }
 
   /**
    * Obtiene los detalles de las listas de opciones (banco y justificación).

@@ -38,6 +38,7 @@
             [label]="'Aduana de ingreso'"
             [required]="true"
             name="aduanaIngreso"
+             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -48,6 +49,7 @@
             [label]="'Oficina de inspección de sanidad Agropecuaria'"
             [required]="true"
             name="oficinaInspeccion"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -58,6 +60,7 @@
             [label]="'Punto de inspección'"
             [required]="true"
             name="puntoInspeccion"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -88,6 +91,7 @@
             [label]="'Establecimiento TIF'"
             [required]="false"
             name="establecimientoTIFs"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -98,6 +102,7 @@
             [label]="'Nombre del médico veterinario'"
             [required]="false"
             name="nombreVeterinario"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -122,6 +127,7 @@
             [label]="'Régimen'"
             [required]="true"
             name="regimen"
+             [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
@@ -139,6 +145,7 @@
             [layout]="'vertical'"
             name="tipoMercancia"
             formControlName="tipoMercancia"
+
                (change)="setValoresStore()"
           ></app-input-radio>
         </div>

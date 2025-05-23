@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
@@ -43,7 +43,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
              AlertComponent,
         TablaDinamicaComponent]
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -140,6 +140,8 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   ];
 
   private destroyNotifier$ = new Subject<void>();
+
+  esFormularioSoloLectura:boolean = false;
   /**
    * Constructor del componente.
    * @constructor
@@ -182,6 +184,14 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     this.obtenerListasDesplegables();
   }
 
+   ngAfterViewInit(): void {
+    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+    this.esFormularioSoloLectura = seccionState?.sampleData?.readonly;
+      if(this.esFormularioSoloLectura){
+    this.datosDelaSolicitud.disable();
+      }
+    });
+  }
   /**
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild

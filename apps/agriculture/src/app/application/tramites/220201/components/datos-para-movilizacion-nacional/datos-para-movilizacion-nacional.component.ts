@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Catalogo, CatalogoSelectComponent, RespuestaCatalogos, SharedModule, TituloComponent } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {Subject,skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -32,7 +32,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
             CatalogoSelectComponent,
             ]
 })
-export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
+export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * Grupo de formularios para la movilización nacional.
@@ -58,6 +58,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   nombreDeLaEmpresaTransportista: Catalogo[] = [];
 
+  esFormularioSoloLectura:boolean = false;
   /**
    * Configuración para el selector de punto de verificación federal.
    * @property {CatalogosSelect} puntoDeVerificacionFederal
@@ -102,6 +103,15 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       }
     });
     this.obtenerListasDesplegables();
+  }
+
+  ngAfterViewInit(): void {
+    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+    this.esFormularioSoloLectura = seccionState?.sampleData?.readonly;
+      if(this.esFormularioSoloLectura){
+        this.movilizacionForm.disable();
+      }
+    });
   }
 
   /**

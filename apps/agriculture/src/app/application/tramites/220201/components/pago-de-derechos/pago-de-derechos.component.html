@@ -22,6 +22,7 @@
             formControlName="justificacion"
             [label]="'Justificación'"
             [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
             name="justificacion"
                (change)="setValoresStore()"
           ></app-catalogo-select>
@@ -37,7 +38,6 @@
               id="nombreImportExport"
               placeholder=""
               type="text"
-              [disabled]="true"
               name="claveReferencia"
               formControlName="claveReferencia"
                  (change)="setValoresStore()"
@@ -55,7 +55,6 @@
               placeholder=""
               type="text"
               libUppercase
-              [disabled]="true"
               name="cadenaDependencia"
               formControlName="cadenaDependencia"
                  (change)="setValoresStore()"
@@ -68,7 +67,7 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="true"
-            [isDisabled]="true"
+             [isDisabled]="esFormularioSoloLectura"
             name="banco"
                (change)="setValoresStore()"
           ></app-catalogo-select>
@@ -84,7 +83,6 @@
               placeholder=""
               type="text"
               libUppercase
-              [disabled]="true"
               name="llavePago"
               formControlName="llavePago"
                  (change)="setValoresStore()"
@@ -93,7 +91,12 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <input-fecha [datos]="fechaInicioInput"></input-fecha>
+                <input-fecha
+            [datos]="fechaInicioInput"
+            (valorCambiado)="cambioFechaFinal($event)"
+            name="fechaPago"
+            [setFecha]="fechaPagoDate" 
+          ></input-fecha>
           </div>
         </div>
         <div class="col-md-4">
@@ -106,7 +109,6 @@
               id="nombreImportExport"
               placeholder=""
               type="text"
-              [disabled]="true"
               name="importePago"
               formControlName="importePago"
                  (change)="setValoresStore()"
