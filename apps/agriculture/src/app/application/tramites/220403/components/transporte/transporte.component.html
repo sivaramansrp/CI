@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+  <form [formGroup]="formulario">
     @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex)
     {
     <div class="form" [formGroupName]="fieldGroup.formGroupName">
@@ -16,6 +16,7 @@
               [label]="item.props.labelNombre"
               [required]="true"
               name="tipoSolicitud"
+              [formControlName]="item.props.campo"
               (change)="seleccionCatalogo(item.props.labelNombre, $event)"
             ></app-catalogo-select>
             } @case(inputTypes.TEXT) { @if((!item.props.availableRadioOptions)

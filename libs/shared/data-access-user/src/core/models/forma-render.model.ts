@@ -12,6 +12,7 @@ export interface MenuConfig {
   class: string,
   visibility?: string,
   radioConfig?: string[],
+  value?: string | number,
 }
   
 export interface ListaPasosWizard {
