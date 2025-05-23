@@ -4,8 +4,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Solicitud230902State, Tramite230902Store } from '../estados/tramite230902.store';
 
 import { ConfiguracionItem } from '../enum/mercancia.enum';
+
 
 /**
  * Servicio para gestionar las operaciones relacionadas con los permisos CITES.
@@ -101,7 +103,7 @@ export class PermisoCitesService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private Tramite230902Store: Tramite230902Store) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -174,5 +176,25 @@ export class PermisoCitesService {
   loadTablaDatos(): Observable<ConfiguracionItem[]> {
     return this.http.get<ConfiguracionItem[]>(this.jsonUrl);
   }
-
+ actualizarEstadoFormulario(DATOS: Solicitud230902State): void {
+    this.Tramite230902Store.setTipoDeMovimiento(DATOS.tipodeMovimiento);
+    this.Tramite230902Store.setTipoDeRegimen(DATOS.tipoRegimen);
+    this.Tramite230902Store.setEntidadFederativa(DATOS.entidadFederativa);
+    this.Tramite230902Store.setlclaveDeReferencia(DATOS.claveDeReferencia);
+    this.Tramite230902Store.setcadenaPagoDependencia(DATOS.cadenaPagoDependencia);
+    this.Tramite230902Store.setbancoseleccionado(DATOS.bancoseleccionado);
+    this.Tramite230902Store.setllaveDePago(DATOS.llaveDePago);
+    this.Tramite230902Store.setfecPago(DATOS.fecPago);
+   
+    this.Tramite230902Store.setIsPopupOpen(DATOS.popupAbierto);
+    this.Tramite230902Store.setIsPopupClose(DATOS.popupCerrado);
+    this.Tramite230902Store.setMercanciaTablaDatos(DATOS.mercanciaTablaDatos);
+    if (DATOS.impPago !== null) {
+      this.Tramite230902Store.setimpPago(DATOS.impPago);
+    }
+  }
+   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud230902State> {
+    return this.http.get<Solicitud230902State>('assets/json/230902/registro_toma_muestras_mercancias.json');
+  }
 }
+ 

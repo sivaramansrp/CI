@@ -282,6 +282,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.cargarDatosTabla();
   }
 
+  setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof Tramite230902Store
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      (this.tramite230902Store[metodoNombre] as (value: any) => void)(VALOR);
+    }
   /**
    * Crea y configura el formulario para los datos de la solicitud.
    * Define los campos y validaciones necesarias.
@@ -379,7 +387,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   cambiarTipoDeMovimiento(): void {
     const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodeMovimiento')?.value;
-    this.tramite230902Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
+    
     if (TIPO_DE_MOVIMIENTO === '1') {
       this.aduanasBotons = this.crossListBotons.slice(1);
     } else {

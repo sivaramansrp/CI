@@ -5,7 +5,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipodeMovimiento" formControlName="tipodeMovimiento"
           [label]="'Tipo de movimiento'" [required]="true" name="tipodeMovimiento"
-          (change)="cambiarTipoDeMovimiento()"></app-catalogo-select>
+          (change)="cambiarTipoDeMovimiento(); setValoresStore(formSolicitud, 'tipodeMovimiento', 'setTipoDeMovimiento')"></app-catalogo-select>
       </div>
     </div>
     
