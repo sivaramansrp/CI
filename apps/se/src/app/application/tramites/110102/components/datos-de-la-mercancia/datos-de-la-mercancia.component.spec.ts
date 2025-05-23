@@ -14,7 +14,8 @@ describe('DatosDeLaMercanciaComponent', () => {
 
   beforeEach(async () => {
     storeMock = {
-      setCveRegistroProductor: jest.fn()
+      setCveRegistroProductor: jest.fn(),
+      establecerDatos: jest.fn()
     };
 
     queryMock = {
@@ -35,9 +36,7 @@ describe('DatosDeLaMercanciaComponent', () => {
         { provide: Tramite110102Query, useValue: queryMock }
       ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -56,8 +55,8 @@ describe('DatosDeLaMercanciaComponent', () => {
 
   it('debe establecer valores en el store al llamar setValoresStore', () => {
     component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('654321');
-    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor', 'setCveRegistroProductor');
-    expect(storeMock.setCveRegistroProductor).toHaveBeenCalledWith('654321');
+    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor');
+    expect(storeMock.establecerDatos).toHaveBeenCalledWith({ cveRegistroProductor: '654321' });
   });
 
   it('debe obtener valores del store y asignarlos al formulario', () => {
@@ -81,12 +80,14 @@ describe('DatosDeLaMercanciaComponent', () => {
 
   it('debe habilitar cveRegistroProductor si idSolicitud es null', () => {
     component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(null);
+    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     component.actualizaGridComercializadoresProductos();
     expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enabled).toBe(true);
   });
 
   it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
     component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(1);
+    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
     component.actualizaGridComercializadoresProductos();
     expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disabled).toBe(true);
   });
