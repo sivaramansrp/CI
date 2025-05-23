@@ -16,7 +16,7 @@ export const appRoutes: Route[] = [
         remoteEntry: `${ENVIRONMENT.REMOTE_APPS.login}/remoteAppEntry.js`,
         remoteName: 'login',
         exposedModule: './Module',
-      }).then((m) => m.RemoteEntryModule),
+      }).then((m) => m.AppLoginModule),
   },
   {
     path: '',
