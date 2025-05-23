@@ -5,11 +5,13 @@
             <div class="col-md-4">
                 <app-catalogo-select (change)="onEntidadFederativaChange($event)" [catalogo]="entidadesFrontera"
                     [label]="'Entidad federativa'" [required]="true"
+                    [isDisabled]="procedureState"
                     formControlName="solicitudEntidadFederativaEntidadClave"></app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="representacionFederalOptions" [label]="'Representación federal'"
                     [required]="true" formControlName="unidadAdministrativaClave"
+                    [isDisabled]="procedureState"
                     (change)="setValoresStore(formularioRepresentacionFederalForm,'unidadAdministrativaClave','setUnidadAdministrativaClave')">
                 </app-catalogo-select>
             </div>

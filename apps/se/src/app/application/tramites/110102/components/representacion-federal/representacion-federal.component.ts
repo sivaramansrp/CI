@@ -2,8 +2,9 @@
 /**
  * Este componente maneja la representación federal.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+
+import { CommonModule, } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -27,6 +28,8 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
   styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+
+ @Input() public procedureState!: boolean;
 
   /**
    * FormGroup que contiene los datos del formulario de representación federal.

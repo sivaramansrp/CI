@@ -6,6 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ExportadorAutorizadoService {
+  getRegistro() {
+    throw new Error('Method not implemented.');
+  }
+  setRegistro(response: any) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private http: HttpCoreService) { 
     // Lógica de inicialización si es necesario

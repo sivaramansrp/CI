@@ -101,4 +101,11 @@ public setUnidadAdministrativaClave(unidadAdministrativaClave: string):void {
     }));
   }
 
+    public establecerDatos(datos: Partial<Tramite110102State>): void {
+    this.update((state) => ({
+      ...state,
+      ...datos,
+    }));
+  }
+
 }

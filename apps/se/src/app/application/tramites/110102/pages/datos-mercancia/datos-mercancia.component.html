@@ -14,18 +14,19 @@
                                                 role="button" tabindex="2">Datos de la Mercancía</a>
                                 </li>
                         </ul>
-
                         <ng-container>
                                 @switch (indice) {
                                 @case (1) {
                                 <solicitante [tabindex]="1"></solicitante>
                                 }
                                 @case (2) {
-                                <app-datos-de-la-mercancia></app-datos-de-la-mercancia>
+                                @if(esDatosRespuesta){
+                                <app-datos-de-la-mercancia [procedureState]="tieneConsulta.readonly"></app-datos-de-la-mercancia>
                                 <app-registro-mercancia-comercializador></app-registro-mercancia-comercializador>
                                 <app-datos-tratados-acuerdos></app-datos-tratados-acuerdos>
                                 <app-registro-exportador-autorizado></app-registro-exportador-autorizado>
-                                <app-representacion-federal></app-representacion-federal>
+                                <app-representacion-federal [procedureState]="tieneConsulta.readonly"></app-representacion-federal>
+                                }
                                 }
                                 }
                         </ng-container>

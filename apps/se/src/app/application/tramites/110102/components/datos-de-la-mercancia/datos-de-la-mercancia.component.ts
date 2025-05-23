@@ -1,7 +1,7 @@
 /**
  * Este componente maneja los datos de la mercancía.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { Notificacion, NotificacionesComponent, REG_X,TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
-import { Tramite110102Store } from '../../estados/store/tramite110102.store';
+
+import { Tramite110102State, Tramite110102Store } from '../../estados/store/tramite110102.store';
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -22,19 +23,22 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+
+
+ @Input() public procedureState!: boolean;
   /**
    * Formulario para el registro de la mercancía del comercializador.
    * @type {FormGroup}
    */
-  datosDeLamercanciaFrom: FormGroup;
-
+  datosDeLamercanciaFrom!: FormGroup;
+esFormularioSoloLectura!: boolean;
   /**
    * Subject que emite un evento cuando el componente es destruido,
    * permitiendo la desuscripción de observables.
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
-
+seccionState!:Tramite110102State
 
   /**
    * Notificación para mostrar alertas al usuario.
@@ -49,13 +53,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
    */
   constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
-    this.datosDeLamercanciaFrom = this.fb.group({
-      cveRegistroProductor: ['', [Validators.required,Validators.pattern(REG_X.SOLO_NUMEROS)]],
-      solicitud: this.fb.group({
-        idSolicitud: [null],
-        idSolicitudProductor: [''],
-      })
-    });
+    
   }
 
   /**
@@ -64,8 +62,21 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValoresStore();
+    this.initializarFormulario();
+    this.enableDisableControl();
+
   }
 
+
+  initializarFormulario(): void {
+    this.datosDeLamercanciaFrom = this.fb.group({
+      cveRegistroProductor: [this.seccionState.cveRegistroProductor, [Validators.required,Validators.pattern(REG_X.SOLO_NUMEROS)]],
+      solicitud: this.fb.group({
+        idSolicitud: [null],
+        idSolicitudProductor: [''],
+      })
+    });
+  }
   /**
    * Establece los valores en el store.
    * @param {FormGroup} form - El formulario del cual se obtienen los valores.
@@ -77,6 +88,15 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+
+  enableDisableControl(): void {
+    if (this.procedureState===false) {
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
+    } 
+    else {
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
+    }
+  }
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
@@ -85,9 +105,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.datosDeLamercanciaFrom.patchValue({
-            cveRegistroProductor: seccionState.cveRegistroProductor
-          });
+         this.seccionState=seccionState
         })
       )
       .subscribe();
@@ -109,13 +127,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-    const IDSOLICITUD = this.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value;
-    const REGISTRO_PRODUCTOR = this.datosDeLamercanciaFrom.get('cveRegistroProductor');
-    if (IDSOLICITUD === null) {
-      REGISTRO_PRODUCTOR?.enable();
-    } else {
-      REGISTRO_PRODUCTOR?.disable();
-    }
+    const REGISTRO_PRODUCTOR = this.datosDeLamercanciaFrom.get('cveRegistroProductor')
 
     if (REGISTRO_PRODUCTOR?.value !== '') {
       if (REGISTRO_PRODUCTOR?.hasError('pattern') === true) {
