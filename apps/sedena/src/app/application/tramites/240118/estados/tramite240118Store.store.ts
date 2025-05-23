@@ -187,27 +187,6 @@ export class Tramite240118Store extends Store<Tramite240118State> {
     }
 
   /**
-   * Actualiza un elemento específico en el arreglo `merccancialTablaDatos` según el índice proporcionado.
-   *
-   * @param updatedMercancia Los nuevos datos de la mercancía que se desean actualizar.
-   * @param index El índice del elemento en el arreglo que será actualizado.
-   *
-   * @returns void
-   *
-   * @description
-   * Esta función busca el elemento en la posición `index` dentro del arreglo `merccancialTablaDatos` del estado
-   * y lo actualiza con las propiedades de `updatedMercancia`. Los demás elementos permanecen sin cambios.
-   */
-    public updateMercanciaTablaDatosByIndex(updatedMercancia: MercanciaDetalle, index: number): void {
-      this.update((state) => ({
-        ...state,
-        merccancialTablaDatos: state.merccancialTablaDatos.map((item, i) => {
-        return i === index ? { ...item, ...updatedMercancia } : item;
-        })
-      }));
-    }
-
-  /**
    * Actualiza los datos de un destinatario final específico.
    *
    * @method actualizarDatosDestinatario
@@ -281,26 +260,4 @@ export class Tramite240118Store extends Store<Tramite240118State> {
         };
       });
     }
-    /**
-   * Elimina múltiples mercancías de la lista merccancialTablaDatos comparando los objetos.
-   *
-   * @param {MercanciaDetalle[]} mercancias - Array de mercancías a eliminar.
-   * @returns {void}
-   */
-  public eliminarMultiplesPorComparacion(mercancias: MercanciaDetalle[]): void {
-    this.update(state => {
-      const FILTERED_ARRAY = state.merccancialTablaDatos.filter(itemState =>
-        !mercancias.some(itemToDelete =>
-          Object.keys(itemToDelete).every(
-            key => itemToDelete[key as keyof MercanciaDetalle] === itemState[key as keyof MercanciaDetalle]
-          )
-        )
-      );
-      return {
-        ...state,
-        merccancialTablaDatos: FILTERED_ARRAY,
-      };
-    });
-  }
-    
 }

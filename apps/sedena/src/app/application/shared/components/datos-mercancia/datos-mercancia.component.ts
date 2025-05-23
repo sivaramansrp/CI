@@ -146,7 +146,6 @@ export class DatosMercanciaComponent implements OnInit {
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
   ) {}
-  
   /**
    * Carga los catálogos necesarios para llenar los selectores del formulario.
    * @method cargarDatos

@@ -39,16 +39,4 @@ export class DatosMercanciaContenedoraComponent {
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
   }
-
-    /**
-   * Actualiza un elemento específico de la tabla de mercancía en el store.
-   *
-   * @method editUpdateMercanciaDetalle
-   * @param {MercanciaDetalle} data - Objeto con los datos actualizados de la mercancía.
-   * @param {number} index - Índice del elemento a actualizar en la tabla.
-   * @returns {void}
-   */
-  editUpdateMercanciaDetalle(data: MercanciaDetalle, index: number): void {
-    this.tramiteStore.updateMercanciaTablaDatosByIndex(data, index);
-  }
 }

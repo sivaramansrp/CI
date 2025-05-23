@@ -131,12 +131,4 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
-
-  /**
-   * Maneja el evento emitido al eliminar una mercancía final desde el componente hijo.
-   * @param {MercanciaDetalle} mercancia - La mercancía eliminada.
-   */
-  onEliminarMercanciaFinal(mercancias: MercanciaDetalle[]): void {
-    this.tramiteStore.eliminarMultiplesPorComparacion(mercancias);
-  }
 }
