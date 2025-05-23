@@ -5,7 +5,7 @@
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-12 offset-md-6">
-        <label class="form-label">Tipo persona*:</label>
+        <label class="form-label">Tipo persona * :</label>
         <div class="d-flex flex-column">
           <div class="form-check">
             <input
@@ -54,7 +54,7 @@
           <label
             class="form-label mt-3 mover-izquierda fs-2"
             for="denominacionRazon"
-            >Denominación/razón social*:</label
+            >Denominación/razón social * :</label
           >
           <input
             class="form-control"
@@ -80,7 +80,7 @@
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
+        <label class="form-label">Nombre(s) * :</label>
         <input type="text" class="form-control" formControlName="nombres" maxlength="200" [ngClass]="esInvalido('nombres') ? 'required' : ''"  />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['nombres'].errors?.['required']">
@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido * :</label>
         <input
           type="text"
           class="form-control"
@@ -140,7 +140,7 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado*:</label>
+        <label class="form-label">Estado * :</label>
         <input type="text" class="form-control" formControlName="estado" [ngClass]="esInvalido('estado') ? 'required' : ''" />
         <div *ngIf="esInvalido('estado')" class="text-danger">
           <small *ngIf="agregarFacturadorForm.controls['estado'].errors?.['required']">
@@ -165,9 +165,9 @@
         <input type="text" class="form-control" maxlength="100" formControlName="colonia" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Calle*:</label>
+        <label class="form-label">Calle * :</label>
         <span
-          class="bi bi-question-circle-fill"
+          class="bi bi-question-circle-fill mx-1"
           title="Domicilio, calle, número interior, número exterior, lote"
           data-bs-toggle="tooltip"
         ></span>
@@ -179,7 +179,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior*:</label>
+        <label class="form-label">Número exterior * :</label>
         <input
           type="text"
           class="form-control"
@@ -222,7 +222,7 @@
         <label class="form-label"
           >Correo electrónico:
           <span
-            class="bi bi-question-circle-fill"
+            class="bi bi-question-circle-fill mx-1"
             title="ejemplo@dominio.com"
             data-bs-toggle="tooltip"
           ></span>
