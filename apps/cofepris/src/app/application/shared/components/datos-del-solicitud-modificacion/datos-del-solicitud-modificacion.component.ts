@@ -7,21 +7,12 @@
  * También incluye funcionalidades para manejar modales, tablas dinámicas y listas cruzadas.
  */
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import {
+  ALERT,
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  CrossListLable,
   CrosslistComponent,
   InputCheckComponent,
   InputFecha,
@@ -36,6 +27,17 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 
 import {
   CROSLISTA_DE_PAISES,
@@ -44,6 +46,9 @@ import {
   SCIAN_TABLE_CONFIG,
   TEXTOS,
 } from '../../constantes/aviso-de-funcionamiento.enum';
+import { CommonModule } from '@angular/common';
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import {
   FormBuilder,
@@ -53,22 +58,23 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { MENSAJE_DE_VALIDACI0N } from '../../../shared/constantes/aviso-de-funcionamiento.enum';
+
+import { Modal } from 'bootstrap';
+
 import {
   MercanciasInfo,
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+import { ScianData } from '../../../shared/models/datos-modificacion.model';
+
+import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
-import { MENSAJE_DE_VALIDACI0N } from '../../../shared/constantes/aviso-de-funcionamiento.enum';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
-
-import { Modal } from 'bootstrap';
+import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -901,13 +907,8 @@ export class DatosDelSolicitudModificacionComponent
 
   /**
    * Método para crear el formulario.
-   * * @remarks
-   * Se desactiva la regla de ESLint `class-methods-use-this` para este método
-   * ya que el uso de `this` no es necesario y reduciría su reutilización.
    */
-  // eslint-disable-next-line class-methods-use-this
-  hasError(form: FormGroup, controlName: string, error: string): boolean | undefined {
-    // 
+  hasError(form: FormGroup, controlName: string, error: string) {
     return (
       form.get(controlName)?.touched && form.get(controlName)?.hasError(error)
     );
