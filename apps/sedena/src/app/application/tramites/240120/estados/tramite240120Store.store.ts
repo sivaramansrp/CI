@@ -199,22 +199,63 @@ export class Tramite240120Store extends Store<Tramite240120State> {
    * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
    * @returns void
    */
-    eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
-      this.update(state => {
-        const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele => 
-          Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
-        );
+  eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+    this.update(state => {
+      const DESTINATARIOS_ACTUALIZADOS = state.destinatarioFinalTablaDatos.filter(ele =>
+        !Object.keys(destinatarioFinal).every(
+          key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal]
+        )
+      );
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: DESTINATARIOS_ACTUALIZADOS,
+      };
+    });
+  }
     
-        if (INDICE_A_ELIMINAR !== -1) {
-          state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
-        }
-    
-        return {
-          ...state,
-          destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
-        };
+
+  /**
+   * Elimina uno o varios destinatarios de la tabla de datos de destinatarios finales.
+   *
+   * @param destinatarioFinal - Un destinatario o un arreglo de destinatarios a eliminar.
+   *
+   * @returns void
+   *
+   * @memberof NombreDeLaClase
+   *
+   * @description
+   * Busca y elimina los destinatarios especificados del estado actual. La comparación se realiza
+   * preferentemente por la propiedad `tableindex` si está disponible, de lo contrario se comparan todas las claves del objeto.
+   */
+  eliminarDestinatarioMultiple(destinatarioFinal: DestinoFinal[] | DestinoFinal): void {
+    this.update(state => {
+      const TO_DELETE_ARRAY: DestinoFinal[] = Array.isArray(destinatarioFinal) ? destinatarioFinal : [destinatarioFinal];
+      const UPDATEDDESTINARIOS = state.destinatarioFinalTablaDatos.filter(itemState => {
+        // Try to find a match in toDeleteArray
+        const MATCH = TO_DELETE_ARRAY.find(itemToDelete => {
+          // Prefer tableindex if available
+          if (
+            itemToDelete.tableindex !== undefined &&
+            itemState.tableindex !== undefined
+          ) {
+            return itemToDelete.tableindex === itemState.tableindex;
+          }
+          // Fallback: compare all keys
+          return Object.keys(itemToDelete).every(
+            key =>
+              itemToDelete[key as keyof DestinoFinal] ===
+              itemState[key as keyof DestinoFinal]
+          );
+        });
+        // Keep if not matched for deletion
+        return !MATCH;
       });
-    }
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: UPDATEDDESTINARIOS,
+      };
+    });
+  }
 
      /**
    * Elimina un Proveedor de la tabla de Proveedor.
@@ -259,5 +300,55 @@ export class Tramite240120Store extends Store<Tramite240120State> {
         merccancialTablaDatos: FILTERED_ARRAY,
       };
     });
+  }
+  /**
+   * @method actualizaExistenteEnDestinatarioDatos
+   * @description
+   * Actualiza un destinatario existente en la lista de destinatarios finales, reemplazando el elemento que coincide con el `tableindex` del nuevo destinatario proporcionado.
+   * Después de la actualización, restablece el estado de modificación del destinatario a `null`.
+   *
+   * @param {DestinoFinal[]} newDestinatarios - Arreglo que contiene el destinatario actualizado. Se utiliza el primer elemento para realizar la comparación y actualización.
+   *
+   * @returns {void}
+   */
+  public actualizaExistenteEnDestinatarioDatos(
+    newDestinatarios: DestinoFinal[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioFinalTablaDatos: state.destinatarioFinalTablaDatos.map(
+        (item) => item.tableindex === newDestinatarios[0].tableindex
+      ? newDestinatarios[0]
+      : item
+      ),
+    }));
+    this.setModificarDestinarioDatos(null);
+  }
+
+  /**
+   * Reemplaza la lista completa de destinatarios finales en el estado.
+   *
+   * @method setDestinatarioFinalTablaDatos
+   * @param {DestinoFinal[]} destinatarios - Nueva lista de destinatarios finales.
+   * @returns {void}
+   */
+  public setDestinatarioFinalTablaDatos(destinatarios: DestinoFinal[]): void {
+    this.update(state => ({
+      ...state,
+      destinatarioFinalTablaDatos: [...destinatarios],
+    }));
+  }
+
+  /**
+   * Establece el valor de modificarDestinarioDatos en el estado.
+   *
+   * @param {DestinoFinal | null} destinatario - El destinatario a establecer o null.
+   * @returns {void}
+   */
+  public setModificarDestinarioDatos(destinatario: DestinoFinal | null): void {
+    this.update(state => ({
+      ...state,
+      modificarDestinarioDatos: destinatario,
+    }));
   }
 }

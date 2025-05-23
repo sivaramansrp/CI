@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -44,6 +45,13 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * @property {number} idProcedimiento
+   * Identificador del procedimiento actual.
+   */
+  public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240120;
+
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -54,8 +62,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   constructor(
     private tramiteStore: Tramite240120Store,
     private tramiteQuery: Tramite240120Query,
-        private router: Router,
-        private activatedRoute: ActivatedRoute
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -70,7 +78,21 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.destinatarioFinalTablaDatos = data;
+        let necesitaActualizar = false;
+        const DATOS_ACTUALIZADOS = data.map((item, index) => {
+          if (Object.prototype.hasOwnProperty.call(item, 'tableindex')) {
+            return item;
+          }
+          necesitaActualizar = true;
+          return {
+            ...item,
+            tableindex: index
+          };
+        });
+        this.destinatarioFinalTablaDatos = DATOS_ACTUALIZADOS;
+        if (necesitaActualizar) {
+          this.tramiteStore.setDestinatarioFinalTablaDatos(DATOS_ACTUALIZADOS);
+        }
       });
 
     this.tramiteQuery.getProveedorTablaDatos$

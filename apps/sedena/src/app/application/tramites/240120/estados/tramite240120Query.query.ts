@@ -77,4 +77,16 @@ export class Tramite240120Query extends Query<Tramite240120State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+    /**
+     * @compoc getmodificarDestinarioDatos$
+     * 
+     * Devuelve un observable que emite los datos del destinatario modificados desde el estado de la aplicación.
+     * 
+     * @returns Observable con los datos modificados del destinatario.
+     */
+    public getmodificarDestinarioDatos$ = this.select(
+    (state) => state.modificarDestinarioDatos
+  );
+
 }
