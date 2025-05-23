@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "agace"
   },
   {
@@ -269,7 +269,7 @@
     "id": 39,
     "tramite": 110201,
     "linkDashboard": "/se/registro/solicitud",
-    "linkDepartment": "/se/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "se"
   },
   {
@@ -339,7 +339,7 @@
     "id": 49,
     "tramite": 110219,
     "linkDashboard": "/se/certificado/solicitud",
-    "linkDepartment": "/se/certificado/solicitud",
+    "linkDepartment": "/pago/certificado/solicitud",
     "department": "se"
   },
   {
@@ -933,8 +933,8 @@
   {
     "id": 134,
     "tramite": 570102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-solicitud/solicitud",
+    "linkDepartment": "/pago/registro-solicitud/solicitud",
     "department": "aga"
   },
   {
@@ -955,7 +955,7 @@
     "id": 137,
     "tramite": 31802,
     "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/agace/registro-solicitud/solicitud",
+    "linkDepartment": "/pago/registro-solicitud/solicitud",
     "department": "agace"
   },
   {
@@ -1234,8 +1234,8 @@
   {
     "id": 177,
     "tramite": 260704,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/consulta/solicitud",
+    "linkDepartment": "/pago/consulta/solicitud",
     "department": "cofepris"
   },
   {
@@ -4200,28 +4200,28 @@
     "department": "semarnat"
   },
   {
-     "id": 602,
+     "id": 603,
     "tramite": 120403,
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
   {
-    "id": 603,
+    "id": 604,
     "tramite": 32514,
     "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
     "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
     "department": "agace"
   },
   {
-    "id": 604,
+    "id": 605,
     "tramite": 103,
     "linkDashboard": "/aga/autorizacion/mercancia-donada",
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
   },
  {
-    "id": 605,
+    "id": 606,
     "tramite": 140205,
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
