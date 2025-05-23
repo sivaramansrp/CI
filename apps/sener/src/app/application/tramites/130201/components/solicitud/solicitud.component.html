@@ -8,7 +8,7 @@
 
 <app-partidas-de-la-mercancia [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount" [tableHeaderData]="tableHeaderData" [tableBodyData]="tableBodyData"
-  [mostrarTabla]="mostrarTabla" (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  [mostrarTabla]="mostrarTabla" (eliminarTablaEvent)="alClicEnEliminar()" [formularioEnviado]="formularioEnviado" (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)"></app-partidas-de-la-mercancia>

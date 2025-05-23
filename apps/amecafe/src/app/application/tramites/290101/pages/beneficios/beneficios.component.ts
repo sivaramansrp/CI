@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { BeneficiosFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
@@ -95,6 +96,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private activateRoute: ActivatedRoute,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -104,7 +106,23 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+    const BENEFICIOS_DATOS = {
+      TABLA_Columna_1:this.beneficiosForm.value.razonSocial,
+      TABLA_Columna_2:this.beneficiosForm.value.propAlquil,
+      TABLA_Columna_3:this.beneficiosForm.value.calle,
+      TABLA_Columna_4:this.beneficiosForm.value.numeroExterior,
+      TABLA_Columna_5:this.beneficiosForm.value.numeroInterior,
+      TABLA_Columna_6:this.beneficiosForm.value.colonia,
+      TABLA_Columna_7:this.beneficiosForm.value.estado,
+      TABLA_Columna_8:this.beneficiosForm.value.codigoPostal,
+      TABLA_Columna_9:this.beneficiosForm.value.capacidadAlmacenaje,
+      TABLA_Columna_10:this.beneficiosForm.value.volumenAlmacenaje,
+      estatus: true,
+    };
+    this.tramiteStore.setBeneficiosTabla([BENEFICIOS_DATOS]);
+
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+    relativeTo: this.activateRoute });
   }
 
   /**
@@ -224,16 +242,18 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Resetea el formulario de beneficios.
+   * Cancela la operación actual y restablece el formulario.
    */
   cancelarBodega(): void {
     this.beneficiosForm.reset();
   }
 
-  /**
-   * Método de limpieza al destruir el componente.
-   * Libera los recursos y cancela las suscripciones.
-   */
+ /**
+ * @method ngOnDestroy
+ * @description Hook del ciclo de vida que se llama cuando el componente es destruido.
+ * Garantiza la limpieza adecuada emitiendo un valor al subject `destroyNotifier$` 
+ * y completándolo para liberar recursos y prevenir fugas de memoria.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

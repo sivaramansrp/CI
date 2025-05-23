@@ -232,6 +232,14 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'equipo-e-instrumentos-musicales',
+    loadChildren: () =>
+      import('./tramites/630104/equipo-e-instrumentos-musicales.module').then((m)=>
+        m.EquipoEInstrumentosMusicalesModule)
+  
+  },
+  {
+  
     path: 'cancelacion-donaciones',
     loadChildren: () =>
       import('./tramites/11106/cancelacion-donaciones.module').then(
@@ -385,6 +393,12 @@ const ROUTES: Routes = [
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule
       ),
+  },
+  {
+     path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
   },
   {
     path: 'renovacion-iva-ieps/mod-a',
