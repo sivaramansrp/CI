@@ -1,6 +1,6 @@
-import { AlertComponent,AnexarDocumentosComponent, FirmaElectronicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 
 /**
@@ -14,8 +14,7 @@ import { Component } from '@angular/core';
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrls: ['./paso-tres.component.scss'],standalone: true,
-  imports: [CommonModule,TituloComponent, AlertComponent
-    , AnexarDocumentosComponent, FirmaElectronicaComponent]
+  imports: [CommonModule, FirmaElectronicaComponent]
 })
 export class PasoTresComponent {
 

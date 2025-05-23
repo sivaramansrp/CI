@@ -75,7 +75,7 @@ export class ZoosanitarioPageComponent {
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

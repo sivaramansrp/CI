@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
 
