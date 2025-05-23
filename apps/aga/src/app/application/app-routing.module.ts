@@ -449,15 +449,12 @@ const ROUTES: Routes = [
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       ),
   },
-        (m) => m.RenewalVatIepsModAAAModule),
-       
-  },
   {
-  path: 'retorno-importacion-temporal',
-  loadChildren: () => 
-    import('./tramites/630303/retorno-importacion-temporal.module').then(
-      (m) => m.RetornoImportacionTemporalModule 
-    )
+    path: 'retorno-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630303/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      ),
   }
 ];
 
