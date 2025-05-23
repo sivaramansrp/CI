@@ -8,6 +8,25 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+      loadComponent: () =>
+        import('./proceso-requerimiento/proceso-requerimiento.component').then(
+          (m) => m.ProcesoRequerimientoComponent
+        ),
+    },
 ];
 
 @NgModule({

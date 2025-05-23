@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
 import { Component } from '@angular/core';
@@ -31,6 +32,8 @@ export class RegionesComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   regionForm!: FormGroup;
+
+
 
   /**
    * Estado del formulario de regiones.
@@ -103,6 +106,7 @@ export class RegionesComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private activateRoute: ActivatedRoute,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -113,8 +117,23 @@ export class RegionesComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+     const REGIONES_DATOS= {
+      TABLA_Columna_1: this.regionForm.value.estado,
+      TABLA_Columna_2: this.regionForm.value.productoCafe,
+      TABLA_Columna_3: this.regionForm.value.descRegionCompra,
+      TABLA_Columna_4: this.regionForm.value.descripTipoCafe,
+      TABLA_Columna_5: this.regionForm.value.volumen,
+      estatus: true, 
+       
+    };
+    this.tramiteStore.setRegionesTabla([REGIONES_DATOS]);
+
+
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index } ,
+      relativeTo: this.activateRoute });
+
   }
+  
 
   /**
    * Método de inicialización del componente.

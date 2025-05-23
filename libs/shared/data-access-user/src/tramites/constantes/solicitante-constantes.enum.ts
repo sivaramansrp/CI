@@ -354,3 +354,33 @@ export const DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA = [
     placeholder: '',
   },
 ];
+
+export const FOLIO_DEL_TRAMITE= [
+  {
+    labelNombre: 'Folio del trámite',
+    campo: 'folioDelTramite',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: [],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Fecha de inicio',
+    campo: 'fechaDeInicio',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: [],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Estado del trámite',
+    campo: 'estadoDelTramite',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: [],
+    placeholder: '',
+  },
+];

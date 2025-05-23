@@ -76,7 +76,7 @@ export class ConsultaioStore extends Store<ConsultaioState> {
  * 
  * @param {ConsultaioSolicitante} consultaioSolicitante - Objeto que contiene la información del solicitante.
  */
-  public solicitanteConsultaio(consultaioSolicitante: ConsultaioSolicitante): void {
+  public solicitanteConsultaio(consultaioSolicitante: ConsultaioSolicitante | null): void {
     this.update(state => ({
       ...state, consultaioSolicitante
     }));
