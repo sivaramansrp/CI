@@ -23,6 +23,9 @@ import { Location } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 
+import { ActivatedRoute } from '@angular/router';
+import { Tramite260103Query } from '../../estados/tramite260103Query.query';
+
 @Component({
   selector: 'app-agregar-otros',
   standalone: true,
@@ -74,6 +77,9 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    */
   tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
+
+  id?:number
+
   /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
@@ -89,12 +95,13 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260103Store,
-    private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService
+    private tramiteQuery: Tramite260103Query,
+    private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService,
+    private route: ActivatedRoute
   ) {
     this.crearFormulario();
     this.changeNacionalidad();
   }
-
   /**
    * Crea y inicializa el formulario con los campos y validaciones necesarios.
    * Este formulario incluye información personal y de contacto.
@@ -103,11 +110,12 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
+      id:[Math.floor(100000 + Math.random() * 900000)],
       curp: [''],
       rfc: [''],
       nombreDescripcion: [''],
       nacionalidad: ['true'],
-      tipoPersona: ['', Validators.required],
+      tipoPersona: ['Fisica', Validators.required],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
@@ -132,6 +140,25 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
+ this.route.paramMap.subscribe(params => {
+    const ID_PARAM = params.get('id');
+
+    if (ID_PARAM) {
+      const ID = Number(ID_PARAM); // convert to number
+this.id=ID;
+      this.tramiteQuery.getFabricanteTablaDatos$
+        .pipe(takeUntil(this.unsubscribe$)) // take the latest value only once
+        .subscribe((dataArray) => {
+          const MATCHING_ITEM: Fabricante | undefined = dataArray.find(item => item.id === ID);
+          if (MATCHING_ITEM) {
+            this.agregarDatosForm.patchValue({
+              ...MATCHING_ITEM,
+              id: ID,
+            });
+          }
+        });
+    }
+  });
     this.cargarDatos();
   }
 
@@ -195,9 +222,17 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    * Actualiza el estado de los datos en el store y realiza una acción de retroceso en la ubicación.
    */
   guardar(): void {
-    this.tramiteStore.updateFabricanteTablaDatos([
+   if (this.id !== undefined) {
+  this.tramiteStore.updateFabricanteTablaDatos(
+    [this.obtenerNuevoValorFormulario()],
+    Number(this.id)
+  );
+}
+  else{
+ this.tramiteStore.updateFabricanteTablaDatos([
       this.obtenerNuevoValorFormulario(),
     ]);
+  }
     this.ubicaccion.back();
   }
 
@@ -212,10 +247,15 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
     } else {
       this.agregarDatosForm.disable();
       this.agregarDatosForm.get('nacionalidad')?.enable();
+      this.agregarDatosForm.get('nacionalidad')?.setValidators([Validators.required])
       this.agregarDatosForm.get('tipoPersona')?.enable();
+           this.agregarDatosForm.get('tipoPersona')?.setValidators([Validators.required])
       this.agregarDatosForm.get('nombreDescripcion')?.enable();
+           this.agregarDatosForm.get('nombreDescripcion')?.setValidators([Validators.required])
       this.agregarDatosForm.get('rfc')?.enable();
+            this.agregarDatosForm.get('rfc')?.setValidators([Validators.required])
       this.agregarDatosForm.get('curp')?.enable();
+            this.agregarDatosForm.get('curp')?.setValidators([Validators.required])
 
       if (
         this.agregarDatosForm.value.tipoPersona !==
@@ -224,6 +264,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
         this.agregarDatosForm.get('curp')?.disable();
       } else {
         this.agregarDatosForm.get('curp')?.enable();
+        this.agregarDatosForm.get('curp')?.setValidators([Validators.required])
         this.agregarDatosForm.get('rfc')?.disable();
       }
     }
@@ -238,8 +279,34 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.agregarDatosForm.patchValue(data);
+        
+        const DATOS_CON_ID = {
+        ...data,
+      };
+      
+
+        this.agregarDatosForm.patchValue({
+  curp: DATOS_CON_ID.curp || '',
+  nombreDescripcion: DATOS_CON_ID.nombreDescripcion || '',
+  nacionalidad: 'true',
+  nombres: DATOS_CON_ID.nombres || '',
+  primerApellido: DATOS_CON_ID.primerApellido || '',
+  segundoApellido: DATOS_CON_ID.segundoApellido || '',
+  pais: DATOS_CON_ID.pais || '',
+  estado: DATOS_CON_ID.estado || '',
+  codigoPostal: DATOS_CON_ID.codigoPostal || '',
+  colonia: DATOS_CON_ID.colonia || '',
+  calle: DATOS_CON_ID.calle || '',
+  numeroExterior: DATOS_CON_ID.numeroExterior || '',
+  numeroInterior: DATOS_CON_ID.numeroInterior || '',
+  lada: DATOS_CON_ID.lada || '',
+  telefono: DATOS_CON_ID.telefono || '',
+  correoElectronico: DATOS_CON_ID.correoElectronico || '',
+  localidad: DATOS_CON_ID.localidad || '',
+  municipioAlcaldia: DATOS_CON_ID.municipioAlcaldia || '',
+  denominacionRazon: DATOS_CON_ID.denominacionRazon || '',         
       });
+    });
   }
 
   /**
