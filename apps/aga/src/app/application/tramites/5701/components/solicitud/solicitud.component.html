@@ -657,7 +657,11 @@
   @if (individual()) {
   <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
-  <div formGroupName="vehiculo">
+  <lib-transporte [catalogoTransporte]="tipoVehiculo" [tipoTransporteSeleccionado]="solicitudState.tipoTransporte" [tablaTransporte]="solicitudState.transporte"></lib-transporte>
+
+
+
+  <!-- <div formGroupName="vehiculo">
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
@@ -710,7 +714,7 @@
       ></lib-agregar-transporte>
     </div>
     }
-  </div>
+  </div> -->
   }
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
