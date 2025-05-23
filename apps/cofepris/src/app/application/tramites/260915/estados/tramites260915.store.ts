@@ -165,6 +165,9 @@ estadoFisico: string;
 
 /** Presentación farmacéutica del producto. */
 presentacionFarmaceutica: string;
+
+/** Tipo Operacion del producto. */
+tipoOperacion: string;
 }
 
 /**
@@ -335,6 +338,9 @@ export function createInitialSolicitudState(): Solicitud260915State {
 
   /** Presentación farmacéutica del producto. */
    presentacionFarmaceutica: '',
+
+     /** Tipo Operacion del producto. */
+   tipoOperacion: '',
   };
 }
 /**
@@ -354,7 +360,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la clave de referencia en el estado.
    * @param clavedereferencia Clave de referencia a establecer.
    */
-  public setClaveDeReferencia(clavedereferencia: string) {
+  public setClaveDeReferencia(clavedereferencia: string): void {
     this.update((state) => ({
       ...state,
       clavedereferencia,
@@ -365,7 +371,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la cadena de la dependencia en el estado.
    * @param cadenadeladependencia Cadena de la dependencia a establecer.
    */
-  public setCadenaDelaDependencia(cadenadeladependencia: string) {
+  public setCadenaDelaDependencia(cadenadeladependencia: string): void {
     this.update((state) => ({
       ...state,
       cadenadeladependencia,
@@ -376,7 +382,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el banco en el estado.
    * @param banco Banco a establecer.
    */
-  public setBanco(banco: string) {
+  public setBanco(banco: string): void {
     this.update((state) => ({
       ...state,
       banco,
@@ -387,7 +393,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la llave de pago en el estado.
    * @param llavedepago Llave de pago a establecer.
    */
-  public setLlavedoPago(llavedepago: string) {
+  public setLlavedoPago(llavedepago: string): void {
     this.update((state) => ({
       ...state,
       llavedepago,
@@ -398,7 +404,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la fecha de pago en el estado.
    * @param fechadepago Fecha de pago a establecer.
    */
-  public setFechadePago(fechadepago: string) {
+  public setFechadePago(fechadepago: string): void {
     this.update((state) => ({
       ...state,
       fechadepago,
@@ -409,7 +415,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el importe de pago en el estado.
    * @param importedepago Importe de pago a establecer.
    */
-  public setImportedePago(importedepago: string) {
+  public setImportedePago(importedepago: string): void {
     this.update((state) => ({
       ...state,
       importedepago,
@@ -420,7 +426,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el tipo de persona en el estado.
    * @param tipoPersona Tipo de persona a establecer.
    */
-  public setTipoPersona(tipoPersona: string) {
+  public setTipoPersona(tipoPersona: string): void {
     this.update((state) => ({
       ...state,
       tipoPersona,
@@ -431,7 +437,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el nombre en el estado.
    * @param nombre Nombre a establecer.
    */
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre,
@@ -442,7 +448,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el primer apellido en el estado.
    * @param primerApellido Primer apellido a establecer.
    */
-  public setPrimerApellido(primerApellido: string) {
+  public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
       ...state,
       primerApellido,
@@ -453,7 +459,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el segundo apellido en el estado.
    * @param segundoApellido Segundo apellido a establecer.
    */
-  public setSegundoApellido(segundoApellido: string) {
+  public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
       segundoApellido,
@@ -464,7 +470,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la denominación en el estado.
    * @param denominacion Denominación a establecer.
    */
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion,
@@ -475,7 +481,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el correo electrónico en el estado.
    * @param correoElectronico Correo electrónico a establecer.
    */
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
@@ -486,7 +492,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el país en el estado.
    * @param pais País a establecer.
    */
-  public setPais(pais: string) {
+  public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais,
@@ -497,7 +503,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el domicilio en el estado.
    * @param domicilio Domicilio a establecer.
    */
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
       ...state,
       domicilio,
@@ -508,7 +514,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el estado en el estado.
    * @param estado Estado a establecer.
    */
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
@@ -519,7 +525,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el código postal en el estado.
    * @param codigopostal Código postal a establecer.
    */
-  public setCodigoPostal(codigopostal: string) {
+  public setCodigoPostal(codigopostal: string): void {
     this.update((state) => ({
       ...state,
       codigopostal,
@@ -530,7 +536,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la calle en el estado.
    * @param calle Calle a establecer.
    */
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
@@ -541,7 +547,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el número exterior en el estado.
    * @param numeroExterior Número exterior a establecer.
    */
-  public setNumeroExterior(numeroExterior: string) {
+  public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
       numeroExterior,
@@ -552,7 +558,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el número interior en el estado.
    * @param numeroInterior Número interior a establecer.
    */
-  public setNumeroInterior(numeroInterior: string) {
+  public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
       numeroInterior,
@@ -563,7 +569,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la lada en el estado.
    * @param lada Lada a establecer.
    */
-  public setLada(lada: number) {
+  public setLada(lada: number): void {
     this.update((state) => ({
       ...state,
       lada,
@@ -574,7 +580,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el teléfono en el estado.
    * @param telefono Teléfono a establecer.
    */
-  public setTelefono(telefono: string) {
+  public setTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono,
@@ -585,7 +591,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la justificación en el estado.
    * @param justification Justificación a establecer.
    */
-  public setJustification(justification: string) {
+  public setJustification(justification: string): void {
     this.update((state) => ({
       ...state,
       justification,
@@ -596,7 +602,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el municipio o alcaldía en el estado.
    * @param municipoyalcaldia Municipio o alcaldía a establecer.
    */
-  public setMunicipoyalcaldia(municipoyalcaldia: string) {
+  public setMunicipoyalcaldia(municipoyalcaldia: string): void {
     this.update((state) => ({
       ...state,
       municipoyalcaldia,
@@ -607,7 +613,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la localidad en el estado.
    * @param localidad Localidad a establecer.
    */
-  public setLocalidad(localidad: string) {
+  public setLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
       localidad,
@@ -618,7 +624,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la colonia en el estado.
    * @param colonia Colonia a establecer.
    */
-  public setColonia(colonia: string) {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia,
@@ -629,7 +635,7 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar el aviso de funcionamiento en el estado.
    * @param avisoDeFuncionamiento Aviso de funcionamiento a establecer.
    */
-  public setAvisoDeFuncionamiento(avisoDeFuncionamiento: boolean) {
+  public setAvisoDeFuncionamiento(avisoDeFuncionamiento: boolean): void {
     this.update((state) => ({
       ...state,
       avisoDeFuncionamiento,
@@ -920,6 +926,16 @@ public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
   this.update((state) => ({
     ...state,
     presentacionFarmaceutica,
+  }));
+}
+/**
+ * Actualiza el tipo de operación en el estado.
+ * @param tipoOperacion Tipo de operación a establecer.
+ */
+public setTipoOperacion(tipoOperacion: string): void {
+  this.update((state) => ({
+    ...state,
+    tipoOperacion,
   }));
 }
 }

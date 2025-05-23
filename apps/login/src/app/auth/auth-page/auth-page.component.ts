@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import * as uuid from 'uuid';
 import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
-import { Rol } from  '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
+import { Rol } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router'; 
 import { TipoPersona } from '@ng-mf/data-access-user';
-import * as uuid from 'uuid';
+import { UsuarioStore } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
-import { UsuarioStore } from './../../estados/usuario.store';
 @Component({
   selector : 'auth-page',
   templateUrl: './auth-page.component.html',
   styleUrl: './auth-page.component.scss',
   host: { 'hostID': uuid.v4().toString() }
 })
-export class AuthPageComponent {
+export class AuthPageComponent implements OnInit {
   indice: number = 1;
   public ruta: string = '';
   
@@ -22,7 +22,6 @@ export class AuthPageComponent {
   ) {
 
   }
-
 
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
@@ -39,19 +38,19 @@ export class AuthPageComponent {
 
   validarEFirma(login: boolean) {
     if ( login ) {
-      const roles: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
-      const perfilUsuario: PerfilUsuario = {
+      const ROLES: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
+      const PERFIL_USUARIO: PerfilUsuario = {
         nombre: '',
         apellidoPaterno: '',
         apellidoMaterno: '',
         nombreCompleto: '',
-        rfc: '',
+        rfc: 'SAAA980822LP1',
         correoElectronico: '',
         tipoPersona: TipoPersona.FISICA
       }
-      this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
+      this.usuarioStore.establecerUsuario('LEQI', PERFIL_USUARIO, ROLES, '');
 
-      window.location.href = '/seleccion-tramite';
+      window.location.href = '/bandeja-de-tareas-pendientes';
     }
   }
 }
