@@ -143,14 +143,14 @@
     "id": 21,
     "tramite": 40101,
     "linkDashboard": "/aga/transportista-terrestre/solicitante",
-    "linkDepartment": "/aga/transportista-terrestre/solicitante",
+    "linkDepartment": "/pago/transportista-terrestre/solicitante",
     "department": "aga"
   },
   {
     "id": 22,
     "tramite": 40102,
-    "linkDashboard": "/aga/transportista-terrestre/solicitante",
-    "linkDepartment": "/aga/transportista-terrestre/solicitante",
+    "linkDashboard": "/aga/transportista-renovacion/solicitante",
+    "linkDepartment": "/pago/transportista-renovacion/solicitante",
     "department": "aga"
   },
   {

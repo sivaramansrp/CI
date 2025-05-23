@@ -96,10 +96,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'transportista-terrestre',
+    path: 'transportista-renovacion',
     loadChildren: () =>
-      import('./tramites/40102/transportista-terrestre.module').then(
-        (m) => m.TransportistaTerrestreModule
+      import('./tramites/40102/transportista-renovacion.module').then(
+        (m) => m.TransportistaRenovacionModule
       ),
   },
   {
