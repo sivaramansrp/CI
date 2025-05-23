@@ -2,8 +2,8 @@ import {
   ConfiguracionColumna,
   TipoPersona,
 } from '@ng-mf/data-access-user';
+import { Otros, TipoPersonaModel } from '../models/exporticon-estupefacientes.model';
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
-import { Otros } from '../models/exporticon-estupefacientes.model';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
 /**
@@ -180,7 +180,7 @@ export const OTROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Otros>[] =
  * Se utiliza para identificar el tipo de tabla que se está utilizando.
  */
 export enum TIPO_TABLA_DATOS {
-  DESTINATARIO = 'Destinatario(Destino final)',
+  DESTINATARIO = 'Destinatario (Destino final)',
   OTROS = 'Otros',
 }
 export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
@@ -294,7 +294,7 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
  */
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
-  { label: 'Extranjero', value: 'false' },
+  { label: 'Extranjero', value: 'false'},
 ];
 
 
@@ -310,9 +310,9 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
  * Este arreglo se utiliza para renderizar opciones de radio button en la interfaz de usuario,
  * permitiendo al usuario seleccionar entre una persona física o moral.
  */
-export const TERCEROS_PERSONA_RADIO_OPCIONS = [
-  { label: 'Física', value: TipoPersona.FISICA },
-  { label: 'Moral', value: TipoPersona.MORAL }
+export const TERCEROS_PERSONA_RADIO_OPCIONS : TipoPersonaModel[]= [
+  { label: 'Física', value: TipoPersona.FISICA ,hint:'Física'},
+  { label: 'Moral', value: TipoPersona.MORAL,hint:'Moral' }
 ];
 
 /**

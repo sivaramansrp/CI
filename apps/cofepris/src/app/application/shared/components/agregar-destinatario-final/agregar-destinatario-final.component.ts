@@ -1,4 +1,4 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
@@ -153,6 +153,18 @@ export class AgregarDestinatarioFinalComponent
    */
   public elementosRequeridos: string[] = [];
 
+  /**
+   * Controla si el desplegable de nacionalidad está deshabilitado.
+   * @property {boolean} estaDeshabilitadoDesplegable
+   */
+  public estaDeshabilitadoDesplegable: boolean = true;
+
+
+    /**
+   * @property {Destinatario | undefined} datoSeleccionado
+   * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
+   */
+  @Input() datoSeleccionado: Destinatario[] | undefined;
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -216,7 +228,12 @@ export class AgregarDestinatarioFinalComponent
       entidadFederativa: '',
       estadoLocalidad: VALOR_FORMULARIO.estado,
       codigoPostal: VALOR_FORMULARIO.codigoPostal,
-      coloniaEquivalente: VALOR_FORMULARIO.codigoPostal,
+      coloniaEquivalente: VALOR_FORMULARIO.coloniaEquivalente,
+      nombres: VALOR_FORMULARIO.nombres,
+      primerApellido: VALOR_FORMULARIO.primerApellido,
+      segundoApellido: VALOR_FORMULARIO.segundoApellido,
+      razonSocial: VALOR_FORMULARIO.razonSocial,
+      lada: VALOR_FORMULARIO.lada,
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -233,6 +250,7 @@ export class AgregarDestinatarioFinalComponent
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
+    this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
@@ -299,90 +317,101 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
-        '',
+         this.obtenerValor('rfc'),
         [
           Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(13),
+          Validators.pattern(REGEX_NOMBRE)
         ],
-      ],
+      ],      
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
             ? 'EUROFOODZDEMEXICO'
-            : '',
+            : this.obtenerValor('nombres'),
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
-        [Validators.required, Validators.maxLength(200)],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
       ],
-      denominacionRazon: ['', Validators.required],
+      denominacionRazon: [this.obtenerValor('razonSocial'), Validators.required, Validators.pattern(REGEX_NOMBRE)],
       primerApellido: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? 'GONZALES'
-            : '',
+            ? ''
+            : this.obtenerValor('primerApellido'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        [Validators.required],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       segundoApellido: [
         {
           value: this.elementosDeshabilitados.includes('segundoApellido')
             ? 'PINAL'
-            : '',
+            : this.obtenerValor('segundoApellido'),
           disabled: this.elementosDeshabilitados.includes('segundoApellido'),
         },
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [
         {
-          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
         Validators.required,
       ],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
+      municipio: [this.obtenerValor('municipioAlcaldia'), Validators.required],
+      localidad: [this.obtenerValor('localidad'), Validators.required],
+      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
       colonia: [
-        '',
+        this.obtenerValor('colonia'),
         !this.elementosNoRequeridos.includes('colonia')
           ? [Validators.required]
           : [],
       ],
       calle: [
-        '',
+         this.obtenerValor('calle'),
         this.elementosRequeridos.includes('calle')
           ? [Validators.required]
           : [],
       ],
       numeroExterior: [
-        '',
+         this.obtenerValor('numeroExterior'),
         this.elementosRequeridos.includes('numeroExterior')
           ? [Validators.required]
           : [],
       ],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
+      numeroInterior: [this.obtenerValor('numeroInterior')],
+      lada: [this.obtenerValor('lada')],
       telefono: [
         {
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
-            : '',
+            : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
+        [Validators.pattern(TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {
           value: this.elementosDeshabilitados.includes('correoElectronico')
             ? 'abc@njk.com'
-            : '',
+            : this.obtenerValor('correoElectronico'),
           disabled: this.elementosDeshabilitados.includes('correoElectronico'),
         },
-        [Validators.required, Validators.email],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
   }
+
+  
+       /**
+       * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+       * @param {keyof Destinatario } field - Nombre del campo a obtener.
+       * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+       */
+      public obtenerValor(field: keyof Destinatario): string | number | undefined {
+        return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
+      }
 
   /**
    * Valida elementos según el `idProcedimiento` y establece
@@ -398,17 +427,9 @@ export class AgregarDestinatarioFinalComponent
         this.elementosNoRequeridos = ['colonia'];
         break;
       case 260201:
-        this.elementosDeshabilitados = [
-          'pais',
-          'estado',
-          'municipio',
-          'telefono',
-          'correoElectronico',
-          'nombres',
-          'primerApellido',
-          'segundoApellido',
-        ];
+        this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
         break;
         case 260219:
           this.elementosRequeridos = ['calle', 'numeroExterior'];
@@ -439,6 +460,42 @@ export class AgregarDestinatarioFinalComponent
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.agregarDestinatarioFinal.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Habilita o deshabilita los controles del formulario según el valor de 'tipoPersona'.
+   * 
+   * Si 'tipoPersona' está vacío, deshabilita todos los controles excepto 'tipoPersona'.
+   * Si 'tipoPersona' tiene un valor, habilita todos los controles y activa el desplegable.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  changeNacionalidad(): void {
+    if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
+        this.agregarDestinatarioFinal.get(controlName)?.disable();
+        if (controlName === 'tipoPersona') {
+          this.agregarDestinatarioFinal.get(controlName)?.enable();
+        }
+      });
+    } else {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
+        this.agregarDestinatarioFinal.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
+    }
   }
 
   /**

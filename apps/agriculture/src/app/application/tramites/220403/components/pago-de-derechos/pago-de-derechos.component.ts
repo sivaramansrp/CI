@@ -6,6 +6,9 @@ import {
   LabelValueDatos,
   MenuConfig,
   Props,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -21,14 +24,36 @@ import { PagoDerechos } from '../../models/acuicola.module';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 
+/**
+ * @component
+ * @name PagoDeDerechosComponent
+ * @description
+ * Componente encargado de gestionar el formulario y la lógica relacionada con el pago de derechos en el trámite acuícola.
+ * Permite la captura, validación y gestión de los datos de pago, así como la interacción con los servicios y el estado global de la aplicación.
+ * 
+ * @author Equipo VUCEM
+ * @since 2025
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  /**
+   * Notificador para la destrucción de suscripciones.
+   * @access private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Modelo de datos para el pago de derechos.
+   */
   pagoDecheros!: PagoDerechos;
+
+  /**
+   * Configuración de los campos del formulario de pago de derechos.
+   */
   configuracion: InputConfig[] = [
     {
       title: 'Pago de derechos',
@@ -45,7 +70,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           class: 'col-md-4',
         },
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.SELECT,
           props: DATOS_PAGO_DERECHOS[2] as unknown as Props,
           class: 'col-md-4',
         },
@@ -67,17 +92,60 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
     },
   ];
+
+  /**
+   * Configuración fiscal adicional.
+   */
   fiscal: FormularioDinamico[] = [];
+
+  /**
+   * Formulario reactivo principal.
+   */
   formulario!: FormGroup;
+
+  /**
+   * Objeto para eventos personalizados.
+   */
   evento = {};
+
+  /**
+   * Tipos de input disponibles.
+   */
   inputTypes = InputTypes;
 
+  /**
+   * Estado de la sección utilizado para manejar el estado actual de la sección.
+   * @access private
+   */
+  private seccionState!: SeccionLibState;
+
+  /**
+   * Fecha de pago seleccionada.
+   * @type {string}
+   * @default '15/05/2025'
+   */
+  fechaPagoDate: string = '15/05/2025';
+
+  /**
+   * Constructor del componente PagoDeDerechosComponent.
+   * Inicializa los servicios y dependencias necesarias para el funcionamiento del componente.
+   * 
+   * @param fb Servicio FormBuilder para la creación de formularios reactivos.
+   * @param catalogosServicios Servicio para la obtención de catálogos.
+   * @param exportaccionAcuicolaServcios Servicio para operaciones relacionadas con exportación acuícola.
+   * @param tramite220403Query Query para el estado del trámite 220403.
+   * @param tramite220403store Store para el estado del trámite 220403.
+   * @param seccionQuery Query para el estado de la sección.
+   * @param seccionStore Store para el estado de la sección.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
     private exportaccionAcuicolaServcios: ExportaccionAcuicolaService,
     private tramite220403Query: Tramite220403Query,
     private tramite220403store: Tramite220403Store,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
   ) {
     this.crearFormulario();
   }
@@ -91,11 +159,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Inicializa el componente, configura los formularios y suscriptores.
+   */
   ngOnInit(): void {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
 
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    
     this.tramite220403Query.setPagoDerechos$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -104,13 +184,29 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    this.formulario.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Asegura la desuscripción al destruir el componente
+      .subscribe(
+        () => {
+    if( (this.formulario.get('pagoDerechos')?.valid) ){
+      this.tramite220403store.setPagoDerechos(this.formulario.get('pagoDerechos')?.value);
+      const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
+      this.tramite220403store.setPagoDerechosValidada(VALIDA);
+      this.exportaccionAcuicolaServcios.actualizarFormaValida();
+    }
+    else{
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([false]);
+    }
+  });
   }
 
   /**
    * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
-   * @param configuracion - La configuración para los controles del formulario.
-   * @param nombreGrupo - El nombre del grupo de formularios.
-   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   * @param configuracion La configuración para los controles del formulario.
+   * @param nombreGrupo El nombre del grupo de formularios.
+   * @param indiceGrupo El índice del grupo en la matriz de configuración.
    */
   inicializarFormGroup(
     configuracion: MenuConfig[],
@@ -121,7 +217,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
       const VALIDATORS = campo.props.validators
         ? PagoDeDerechosComponent.getValidators(campo.props.validators)
-        : [Validators.required];
+        : [];
       const CONTROL_NAME = campo.props.campo;
       GRUPO.addControl(
         CONTROL_NAME,
@@ -144,9 +240,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtenga las opciones de entrada de radio del servicio
-   * @param fileName - Este es el nombre del archivo json que necesitamos para las opciones
-   * @param callback - Función de devolución de llamada donde se establece la opción en el menú
+   * Obtiene las opciones de entrada de radio del servicio.
+   * @param fileName Nombre del archivo JSON que contiene las opciones.
+   * @param callback Función de devolución de llamada donde se establece la opción en el menú.
    */
   getRadioData(
     fileName: string,
@@ -159,17 +255,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene los valores del catálogo y actualiza la configuración.
-   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
-   * @param indiceMenu - El índice del menú en el grupo.
-   * @param clave - La clave para obtener los valores del catálogo.
+   * @param indiceGrupo El índice del grupo en la matriz de configuración.
+   * @param indiceMenu El índice del menú en el grupo.
+   * @param clave La clave para obtener los valores del catálogo.
    */
   obtenerValoresCatalogo(
     indiceGrupo: number,
     indiceMenu: number,
     clave: string
   ): void {
-    this.catalogosServicios
-      .getCatalogo(clave)
+    this.exportaccionAcuicolaServcios
+      .obtenerMenuDesplegable(clave)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((resp) => {
@@ -184,7 +280,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Genera una matriz de validadores de formularios basada en los patrones proporcionados.
-   * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
+   * @param validadores Una matriz de patrones regex que se utilizarán para la validación.
    * @returns Una matriz de validadores de formularios.
    */
   static getValidators(validadores: string[]): ValidatorFn[] {
@@ -205,17 +301,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento de cambio para la entrada de fecha.
-   * @param evento - El nuevo valor de la fecha como cadena.
+   * @param evento El nuevo valor de la fecha como cadena.
    */
   fechaCambiado(evento: string): void {
-    // Manejar cambio de fecha
-    this.evento = evento;
+    this.formulario.get('pagoDerechos')?.patchValue({
+      fechaPago: evento,
+    });
+    this.fechaPagoDate = evento;
   }
 
   /**
    * Maneja el evento de selección para un catálogo.
-   * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
-   * @param evento - El valor seleccionado del catálogo.
+   * @param nombreControlFormulario El nombre del control del formulario a actualizar.
+   * @param evento El valor seleccionado del catálogo.
    */
   seleccionCatalogo(nombreControlFormulario: string, evento: Event): void {
     this.formulario.get(nombreControlFormulario)?.setValue(evento);
@@ -223,8 +321,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento de cambio para una entrada de radio.
-   * @param claveRadio - La clave de la entrada de radio.
-   * @param evento - El nuevo valor de la entrada de radio.
+   * @param claveRadio La clave de la entrada de radio.
+   * @param groupIndex Índice del grupo en la configuración.
+   * @param menuIndex Índice del menú en el grupo.
+   * @param evento El nuevo valor de la entrada de radio.
    */
   cambioValorRadio(
     claveRadio: string,
@@ -236,10 +336,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       evento;
   }
 
-  onSubmit(): void {
-    this.tramite220403store.setDatosRealizar(this.formulario.value.datosRealizar);
-  }
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

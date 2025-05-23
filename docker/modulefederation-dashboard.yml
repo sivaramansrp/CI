@@ -1,10 +1,10 @@
 services:
 #----------------------------------------------------------------
   modulefederation-dashboard:
-    image: modulefederation-dashboard:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/dashboard/Dockerfile
+      dockerfile: apps/dashboard/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-dashboard

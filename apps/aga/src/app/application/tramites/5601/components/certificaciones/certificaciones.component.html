@@ -1,0 +1,18 @@
+
+<form [formGroup]="forma">
+  <div class="row mb-3">
+    <formas-dinamicas
+      formularioTitulo="Certificación de la empresa"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="certificacionEmpresa"
+      [estado]="certificacionState"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"
+    ></formas-dinamicas>
+  </div>
+</form>
+
+<lib-notificaciones 
+  *ngIf="confirmEliminarPopupAbierto"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="cerrarModal()">
+</lib-notificaciones>

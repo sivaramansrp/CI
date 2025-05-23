@@ -1,0 +1,30 @@
+<div class="container-fluid ps-3">
+    <ng-titulo [titulo]="'Manifiesto'"></ng-titulo>
+    <form [formGroup]="manifiestoFormulario">
+                <div class="alert alert-info">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <div class="col-md-1">
+                            <lib-input-check
+                                [id]="'declaracion'"
+                                [label]="'*'"
+                                [required]="true"
+                                [isDisabled]="false"
+                                formControlName="declaracion"
+                                (change)="setValorStore(manifiestoFormulario, 'declaracion')">
+                            </lib-input-check>
+                        </div>
+                        
+                        <div class="col-md-10">
+                            <p class="text-justify">
+                                Declaro bajo protesta de decir
+                                verdad que retornaré oportunamente al
+                                extranjero la mercancía importada temporalmente
+                                a los Estados Unidos Mexicanos y a no realizar actos
+                                u omisiones que configuren delitos o infracciones por
+                                el indebido uso o destino de las mismas
+                            </p>
+                        </div>
+                    </div>
+                </div>
+    </form>
+</div>

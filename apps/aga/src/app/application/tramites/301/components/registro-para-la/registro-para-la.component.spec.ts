@@ -1,73 +1,70 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { RegistroParaLaComponent } from './registro-para-la.component';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { of } from 'rxjs'; // If you use observables
+import { Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
+import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
 describe('RegistroParaLaComponent', () => {
   let component: RegistroParaLaComponent;
   let fixture: ComponentFixture<RegistroParaLaComponent>;
+  let store: Tramite301Store;
+  let query: Tramite301Query;
+
+  const mockSolicitudState = {
+    registro: 1,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RegistroParaLaComponent,
-        CatalogoSelectComponent,
-        BtnContinuarComponent,
-        AlertComponent,
-        TituloComponent,
-      ]
-    })
-    .compileComponents();
+      imports: [RegistroParaLaComponent, ReactiveFormsModule],
+      providers: [
+        FormBuilder,
+        {
+          provide: Tramite301Store,
+          useValue: {
+            setRegistro: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite301Query,
+          useValue: {
+            selectSolicitud$: of(mockSolicitudState),
+          },
+        },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RegistroParaLaComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // Detect changes to initialize component
+    fixture.detectChanges(); 
   });
 
   it('should create the component', () => {
-    expect(component).toBeTruthy(); // Check if component is created successfully
+    expect(component).toBeTruthy(); 
   });
 
   it('should initialize the component and set default values', () => {
     expect(component.indice).toBe(1);
-    expect(component.registro).toEqual([
+    expect(component.registroOptions).toEqual([
       { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' }
+      { id: 2, descripcion: 'No' },
     ]);
     expect(component.pasos).toEqual([]);
-    expect(component.datosPasos.nroPasos).toBe(0); // Default nroPasos should be 0 initially
+    expect(component.datosPasos.nroPasos).toBe(0); 
   });
 
   it('should call getRegistro() during ngOnInit()', () => {
-    spyOn(component, 'getRegistro');
-    component.ngOnInit(); // Call ngOnInit() method
-    expect(component.getRegistro).toHaveBeenCalled(); // Ensure getRegistro was called
-  });
-
-  it('should populate registro and pasos correctly in getRegistro()', () => {
-    component.getRegistro();
-    expect(component.registro).toEqual([
-      { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' }
-    ]);
-    expect(component.pasos).toEqual([]); // Assuming pasos is empty for now
-    expect(component.datosPasos.nroPasos).toBe(0);
-  });
-
-
-  it('should define the method registroSeleccion()', () => {
-    expect(component.registroSeleccion).toBeDefined(); // Ensure the method exists
+    const spy = jest.spyOn(component, 'getRegistro');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should set TEXTOS and ADVERTENCIA constants correctly', () => {
-    expect(component.TEXTOS).toBeTruthy(); // Should not be null/undefined
-    expect(component.ADVERTENCIA).toBeTruthy(); // Should not be null/undefined
+    expect(component.TEXTOS).toBeTruthy(); 
+    expect(component.ADVERTENCIA).toBeTruthy(); 
   });
 
-  // Add more tests based on UI interaction and user flows if necessary
 });

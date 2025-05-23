@@ -1,10 +1,40 @@
-import { Component, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, OnInit, Output, output, SimpleChanges } from '@angular/core';
-import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
-import { ERR_VALIDACION_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Notificacion, NotificacionesComponent, SoloNumerosDirective, } from '@ng-mf/data-access-user';
-import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  DatosComponentePedimento,
+  Pedimento,
+} from '../../../../core/models/5701/tramite5701.model';
+import {
+  ERR_VALIDACION_PEDIMENTO,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_NRO_PEDIMENTO,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Notificacion,
+  NotificacionesComponent,
+  SoloNumerosDirective,
+} from '@ng-mf/data-access-user';
+import {
+  Solicitud5701State,
+  Tramite5701Store,
+} from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
@@ -14,12 +44,15 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => SoloNumerosDirective), NotificacionesComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    forwardRef(() => SoloNumerosDirective),
+    NotificacionesComponent,
+  ],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
-  providers: [
-    ToastrService,
-  ]
+  providers: [ToastrService],
 })
 export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
@@ -88,7 +121,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
-  pedimentos: Array<Pedimento> = [];
+  pedimentos: Pedimento[] = [];
 
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -98,8 +131,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
-    private estadoPedimentoService: EstadoPedimentoService,
-  ) { }
+    private estadoPedimentoService: EstadoPedimentoService
+  ) {}
 
   ngOnInit(): void {
     this.tramite5701Query.selectSolicitud$
@@ -108,14 +141,15 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         map((solicitudState) => {
           this.solicitudState = solicitudState;
         })
-      ).subscribe();
+      )
+      .subscribe();
   }
 
   /**
    * Verifica si el formulario de pedimento es válido.
-   * 
-   * @returns {boolean | null} - Devuelve `true` si el formulario tiene errores y ha sido tocado, 
-   *                             `false` si no tiene errores o no ha sido tocado, 
+   *
+   * @returns {boolean | null} - Devuelve `true` si el formulario tiene errores y ha sido tocado,
+   *                             `false` si no tiene errores o no ha sido tocado,
    *                             o `null` si no se puede determinar.
    */
   get isValid(): boolean | null {
@@ -143,9 +177,9 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Agrega un nuevo pedimento.
-   * 
+   *
    * Esta función emite un evento para validar los campos y luego ejecuta las acciones correspondientes.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
@@ -157,7 +191,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Realiza las acciones necesarias para validar y agregar un pedimento.
-   * 
+   *
    * - Si `this.validacion` es verdadero:
    *   - Obtiene el número de pedimento desde el formulario.
    *   - Si el número de pedimento es diferente de 0:
@@ -172,14 +206,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       const NUMERO_PEDIMENTO = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
         : 0;
-      switch (NUMERO_PEDIMENTO) {
-        case 0:
-
-          break;
-
-        default:
-          break;
-      }
 
       switch (NUMERO_PEDIMENTO) {
         case 0:
@@ -192,7 +218,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
             cerrar: false,
             txtBtnAceptar: 'Aceptar',
             txtBtnCancelar: '',
-          }
+          };
           break;
 
         default: {
@@ -200,45 +226,50 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
             aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
             patente: 23424,
             pedimento: parseInt(this.pedimentoForm.value, 10),
-          }
+          };
 
-          this.estadoPedimentoService.postEstadoPedimento(BODY).pipe(
-            takeUntil(this.destroyNotifier$),
-            map((response) => {
-              switch (response.codigo) {
-                case '00': {
-                  const PEDIMENTO = {
-                    patente: response.datos.patente,
-                    pedimento: response.datos.pedimento,
-                    aduana: response.datos.aduana,
-                    estadoPedimento: response.datos.estado_pedimento,
-                    subEstadoPedimento: response.datos.sub_estado_pedimento,
-                    idTipoPedimento: 0,
-                    descTipoPedimento: 'Por evaluar',
-                    numero: '',
-                    comprobanteValor: '',
-                    pedimentoValidado: response.datos.pedimento_valido,
-                  };
-                  this.pedimentos.push(PEDIMENTO);
-                  this.pedimentoForm.reset();
-                  this.datosTablaPedimento.emit(this.pedimentos);
+          this.estadoPedimentoService
+            .postEstadoPedimento(BODY)
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((response) => {
+                switch (response.codigo) {
+                  case '00':
+                    {
+                      const PEDIMENTO: Pedimento = {
+                        idPedimento: 0,
+                        patente: response.datos.patente,
+                        pedimento: response.datos.pedimento,
+                        aduana: response.datos.aduana,
+                        tipoPedimento: 0,
+                        estadoPedimento: response.datos.estado_pedimento,
+                        subEstadoPedimento: response.datos.sub_estado_pedimento,
+                        descTipoPedimento: 'Por evaluar',
+                        numero: '',
+                        comprobanteValor: '',
+                        pedimentoValidado: response.datos.pedimento_valido,
+                      };
+                      this.pedimentos.push(PEDIMENTO);
+                      this.pedimentoForm.reset();
+                      this.datosTablaPedimento.emit(this.pedimentos);
+                    }
+                    break;
+                  default:
+                    this.nuevaNotificacion = {
+                      tipoNotificacion: 'alert',
+                      categoria: 'danger',
+                      modo: 'action',
+                      titulo: 'Avisos',
+                      mensaje: ERR_VALIDACION_PEDIMENTO,
+                      cerrar: false,
+                      txtBtnAceptar: 'Aceptar',
+                      txtBtnCancelar: '',
+                    };
+                    break;
                 }
-                  break;
-                default:
-                  this.nuevaNotificacion = {
-                    tipoNotificacion: 'alert',
-                    categoria: 'danger',
-                    modo: 'action',
-                    titulo: 'Avisos',
-                    mensaje: ERR_VALIDACION_PEDIMENTO,
-                    cerrar: false,
-                    txtBtnAceptar: 'Aceptar',
-                    txtBtnCancelar: '',
-                  }
-                  break;
-              }
-            })
-          ).subscribe();
+              })
+            )
+            .subscribe();
           break;
         }
       }
@@ -247,9 +278,9 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Elimina un elemento de la lista de pedimentos en la posición especificada.
-   * 
+   *
    * @param {number} i - El índice del elemento a eliminar.
-   * 
+   *
    * @remarks
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
@@ -266,7 +297,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       cerrar: false,
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
@@ -276,16 +307,20 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @param metodoNombre - Nombre del método en el store que se utilizará para establecer el valor.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite5701Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**
- * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
- * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
- * @returns {void}
- */
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

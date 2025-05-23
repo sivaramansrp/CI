@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosAdicionalesComponent } from './datos-adicionales.component';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 fdescribe('DatosAdicionalesComponent', () => {
   let component: DatosAdicionalesComponent;
@@ -55,12 +55,12 @@ fdescribe('DatosAdicionalesComponent', () => {
   it('should validate required fields', () => {
     component.formulario.controls['entidad'].setValue('');
     component.formulario.controls['representacion'].setValue('');
-    expect(component.formulario.valid).toBeFalse();
+    expect(component.formulario.valid).toBeFalsy();
   });
 
   it('should set valid values in the form', () => {
     component.formulario.controls['entidad'].setValue('SINALOA');
     component.formulario.controls['representacion'].setValue('CULIACAN');
-    expect(component.formulario.valid).toBeTrue();
+    expect(component.formulario.valid).toBeTruthy();
   });
 });

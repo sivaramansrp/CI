@@ -36,7 +36,7 @@
         "sort-imports": [
           "error",
           {
-            "ignoreCase": true,
+            "ignoreCase": false,
             "ignoreDeclarationSort": false,
             "ignoreMemberSort": false,
             "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],

@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs';
 import { PermisosCancelar } from '../models/permisos-cancelar.model';
 
 @Injectable({
@@ -10,7 +12,11 @@ export class PermisosCancelarService {
 
   constructor(private http: HttpClient,
   ) { }
-  getPermisosCancelar() {
+  /**
+   * Obtiene la lista de permisos para cancelar.
+   * @returns {Observable<PermisosCancelar[]>} : Retorna un observable con la lista de permisos a cancelar.
+   */
+  getPermisosCancelar(): Observable<PermisosCancelar[]> {
     return this.http.get<PermisosCancelar[]>('assets/json/140112/permisos-cancelar.json');
   }
 
@@ -22,7 +28,7 @@ export class PermisosCancelarService {
    * @param {string} campo  : si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
    */
-  public isValid(control: AbstractControl, campo?: string): boolean | null {
+  public static isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       return control?.controls[campo]?.errors && control?.controls[campo]?.touched;
     }

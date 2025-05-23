@@ -10,6 +10,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
+  standalone: false,
 })
 export class PasoDosComponent implements OnInit {
   /**

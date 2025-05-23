@@ -1,2 +1,2 @@
-<app-datos-del-solicitante></app-datos-del-solicitante>
-<app-datos-solicitud></app-datos-solicitud>
+<app-datos-del-solicitante (pasarTipoOperacion)="buscarTipoOperacionSeleccionado($event)"></app-datos-del-solicitante>
+<app-datos-solicitud [tipoOperacionSeleccionado]="obtenerTipoOperacionSeleccionado"></app-datos-solicitud>

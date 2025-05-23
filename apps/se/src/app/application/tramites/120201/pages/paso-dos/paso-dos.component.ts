@@ -10,8 +10,7 @@ import { TramiteStore } from '../../../../estados/tramite.store';
  */
 @Component({
   selector: 'app-paso-dos',
-  templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css'
+  templateUrl: './paso-dos.component.html'
 })
 export class PasoDosComponent implements OnDestroy {
 
