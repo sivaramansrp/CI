@@ -27,6 +27,6 @@ export class SeleccionTramiteComponent implements OnInit {
     } else {
       this.ruta = AMBIENTES.DESARROLLO
     }
-    this.tramiteData = tramiteDetailsData.filter((v) => v.department === "agriculture") ;
+    this.tramiteData = tramiteDetailsData.filter((v) => v.department === "agricultura") ;
   }
 }

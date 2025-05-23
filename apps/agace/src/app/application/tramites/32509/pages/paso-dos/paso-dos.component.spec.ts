@@ -1,21 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
 
-describe('PasoDuoComponent', () => {
+describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new PasoDosComponent();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have TEXTOS property defined', () => {
+    expect(component.TEXTOS).toBeDefined();
+  });
+
+  it('should have TEXTOS property equal to imported TEXTOS', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
   });
 });

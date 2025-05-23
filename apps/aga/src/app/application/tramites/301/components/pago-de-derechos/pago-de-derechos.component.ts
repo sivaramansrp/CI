@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,6 +13,8 @@ import {
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -32,9 +34,10 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
@@ -59,6 +62,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente `PagoDeDerechosComponent`.
    *
    * Inicializa la instancia de `FormBuilder` para crear formularios reactivos.
@@ -68,18 +77,54 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
-  ) {}
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * Método del ciclo de vida `ngOnInit()`.
-   * Este método se ejecuta cuando el componente se inicializa y realiza las siguientes acciones:
-   * - Inicializa el formulario reactivo `FormSolicitud` con dos campos: `linea` y `monto`.
-   * - Llama al método `updateformfied()` para configurar el campo 'monto', deshabilitándolo y estableciendo un valor predeterminado.
-   *
-   * @memberof PagoDeDerechosComponent
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.
+   * Llama a la función para inicializar el estado del formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     // Inicializa el formulario con validaciones requeridas
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
@@ -99,10 +144,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         lineaCheckbox: [this.solicitudState?.lineaCheckbox],
       }),
     });
-
     // Llama al método para actualizar el campo 'monto'
     this.updateformfied();
   }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.FormSolicitud.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.FormSolicitud.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
    * Método `updateformfied()`.
@@ -145,5 +208,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
