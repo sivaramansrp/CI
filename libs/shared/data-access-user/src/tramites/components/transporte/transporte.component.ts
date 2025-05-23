@@ -94,6 +94,9 @@ export class TransporteComponent implements OnInit, OnChanges {
     )[]
   >();
 
+  @Output() seleccionTipoTransporte: EventEmitter<string> =
+    new EventEmitter<string>();
+
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
   @ViewChild('carretero') carretero!: TemplateRef<void>;
@@ -238,7 +241,6 @@ export class TransporteComponent implements OnInit, OnChanges {
   }
 
   onChangeTipoTransporte(): void {
-    this.tipoTransporte = this.tipoTransporteForma.get('tipoTransporte')?.value;
     if (this.bodyTabla.length > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -256,6 +258,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.tipoTransporteForma.get('tipoTransporte')?.value,
       10
     );
+    this.seleccionTipoTransporte.emit(TIPO_TRANSPORTE.toString());
     this.headerTabla = this.tipoTabla(TIPO_TRANSPORTE);
   }
 
@@ -698,7 +701,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     } else {
       this.tipoTransporteForma
         .get('tipoTransporte')
-        ?.setValue(this.tipoTransporte);
+        ?.setValue(this.tipoTransporteSeleccionado);
     }
   }
 }

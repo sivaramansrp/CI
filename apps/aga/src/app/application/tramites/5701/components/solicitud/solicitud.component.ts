@@ -2049,4 +2049,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'setDescripcionTipoDespacho'
     );
   }
+
+  changeSeleccionTipoTransporte(tipoTransporte: string): void {
+    this.vehiculo.get('tipoTransporte')?.setValue(tipoTransporte);
+    this.setValoresStore(this.vehiculo, 'tipoTransporte', 'setTipoTransporte');
+  }
 }

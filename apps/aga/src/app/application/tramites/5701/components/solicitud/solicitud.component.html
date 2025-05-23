@@ -657,9 +657,13 @@
   @if (individual()) {
   <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
-  <lib-transporte [catalogoTransporte]="tipoVehiculo" [tipoTransporteSeleccionado]="solicitudState.tipoTransporte" [tablaTransporte]="solicitudState.transporte"></lib-transporte>
-
-
+  <lib-transporte
+    [catalogoTransporte]="tipoVehiculo"
+    [tipoTransporteSeleccionado]="solicitudState.tipoTransporte"
+    [tablaTransporte]="solicitudState.transporte"
+    (seleccionTipoTransporte)="changeSeleccionTipoTransporte($event)"
+    (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
+  ></lib-transporte>
 
   <!-- <div formGroupName="vehiculo">
     <div class="row">
