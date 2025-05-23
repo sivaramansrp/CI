@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "agace"
   },
   {
@@ -318,7 +318,7 @@
     "id": 46,
     "tramite": 110216,
     "linkDashboard": "/se/inicialmente-certificado-origen/solicitante",
-    "linkDepartment": "/se/inicialmente-certificado-origen/solicitante",
+    "linkDepartment": "/pago/inicialmente-certificado-origen/solicitante",
     "department": "se"
   },
   {
@@ -968,7 +968,7 @@
   {
     "id": 139,
     "tramite": 32503,
-    "linkDashboard": "/pago/aviso-traslado/solicitante",
+    "linkDashboard": "/agace/aviso-traslado/solicitante",
     "linkDepartment": "/pago/aviso-traslado/solicitante",
     "department": "agace"
   },
@@ -1753,7 +1753,7 @@
     "id": 251,
     "tramite": 130401,
     "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
-    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/pago/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
