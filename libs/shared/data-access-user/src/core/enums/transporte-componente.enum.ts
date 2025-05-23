@@ -65,7 +65,7 @@ export const HEADER_TABLA_PEATONAL: ItemTransporte[] = [
     },
     {
         llave: 'rfcEmpresa',
-        valor: 'RFC empresa transportista'
+        valor: 'RFC empresa responsable'
     },
     {
         llave: 'nombreTransportista',
