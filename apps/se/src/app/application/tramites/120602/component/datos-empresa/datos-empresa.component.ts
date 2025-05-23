@@ -8,6 +8,7 @@ import {
   BtnContinuarComponent,
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   DatosPasos,
   InputRadioComponent,
   ListaPasosWizard,
@@ -67,12 +68,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   public federalEstatal!: Catalogo[];
 
   /**
-   * Valor seleccionado Nacionalidad en el formulario.
-   */
-
-  public valorSeleccionadoNacionalidad: string = '';
-
-  /**
   * Valor seleccionado Persona en el formulario.
   */
   public valorSeleccionadoPersona: string = '';
@@ -128,6 +123,12 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
   * Constructor de la clase.
   * @param fb - Instancia de FormBuilder para construir formularios reactivos.
@@ -135,17 +136,64 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private tramite120602Store: Tramite120602Store,
-    private tramite120602Query: Tramite120602Query
-  ) { }
+    private tramite120602Query: Tramite120602Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+   }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
     this.obtenerFederalEstatal();
-    this.llenarValoresPredeterminados();
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioEmpresa.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioEmpresa.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
   * Inicializa el formulario reactivo de la empresa.
@@ -161,7 +209,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     .subscribe((data) => {
     });
     this.formularioEmpresa = this.fb.group({
-      estado: [this.solicitudState.estado],
+      estado: [{value: this.solicitudState.estado, disabled: true}],
       representacionFederal: [this.solicitudState.representacionFederal, Validators.required],
       tipoEmpresa: [this.solicitudState.tipoEmpresa],
       especifique: [{ value: this.solicitudState?.especifique || '', disabled: true }, Validators.maxLength(20)],
@@ -194,19 +242,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       datosEstado: [this.solicitudState.datosEstado],
       correoElectronico: [this.solicitudState.correoElectronico],
     });
-  }
-
-  /**
-   * Llena los valores predeterminados del formulario.
-   */
-  llenarValoresPredeterminados(): void {
-    this.formularioEmpresa.get('pais')?.setValue('ESTADOS UNIDOS MEXICANOS');
-    this.formularioEmpresa.get('codigoPostal')?.setValue('32679');
-    this.formularioEmpresa.get('estado')?.setValue('CHIHUAHUA');
-    this.formularioEmpresa.get('municipioAlcaldia')?.setValue('JUAREZ');
-    this.formularioEmpresa.get('colonia')?.setValue('PARQUE INDUSTRIAL AZTECA');
-    this.formularioEmpresa.get('calle')?.setValue('AV PARQUE INDUSTRIAL AZTECAS');
-    this.formularioEmpresa.get('numeroExterior')?.setValue('1550');
   }
 
   /**
@@ -264,6 +299,44 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar', // Texto para el botón de siguiente
   };
 
+  /**
+   * @method cambioDeRadio
+   * @description
+   * Maneja el cambio de valor en un control tipo radio button dentro del formulario de empresa.
+   * 
+   * Detalles:
+   * - Actualiza el valor del campo correspondiente en el formulario reactivo `formularioEmpresa`.
+   * - Llama al método `setValoresStore` para actualizar el valor en el store, asegurando que el estado global refleje el cambio.
+   * 
+   * @param {number | string} event - Valor seleccionado del radio button.
+   * @param {string} campo - Nombre del campo del formulario que se va a actualizar.
+   * @param {keyof Tramite120602Store} metodoNombre - Nombre del método del store que se debe invocar para actualizar el valor.
+   * 
+   * @example
+   * this.cambioDeRadio('opcion1', 'tipoEmpresa', 'setTipoEmpresa');
+   * // Actualiza el campo 'tipoEmpresa' en el formulario y en el store con el valor 'opcion1'.
+   */
+  cambioDeRadio(event: number| string, campo: string, metodoNombre: keyof Tramite120602Store): void {
+    this.formularioEmpresa.get(campo)?.setValue(event);
+    this.setValoresStore(this.formularioEmpresa, campo, metodoNombre);
+  }
+  /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el valor de un campo en el store `Tramite120602Store` a partir del valor actual en el formulario reactivo.
+   * 
+   * Detalles:
+   * - Obtiene el valor del campo especificado desde el formulario `form`.
+   * - Invoca el método correspondiente del store (`metodoNombre`) para actualizar el estado global con el nuevo valor.
+   * 
+   * @param {FormGroup} form - Formulario reactivo que contiene el campo a actualizar.
+   * @param {string} campo - Nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {keyof Tramite120602Store} metodoNombre - Nombre del método del store que se debe invocar para actualizar el valor.
+   * 
+   * @example
+   * this.setValoresStore(this.formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa');
+   * // Actualiza el valor de 'tipoEmpresa' en el store con el valor actual del formulario.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120602Store): void {
     const valor = form.get(campo)?.value;
     (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
