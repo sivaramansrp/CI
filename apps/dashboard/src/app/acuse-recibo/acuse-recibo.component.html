@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row mt-5">
+    <ng-titulo [titulo]="'Acuse de recibo'"></ng-titulo>
+  </div>
+  <div class="row">
+    <app-tabla-dinamica
+      [configuracionTabla]="acuseReciboTablaConfiguracion.configuracionTabla"
+      [datos]="acuseReciboTablaDatos"
+      [acciones]="acuseReciboTablaConfiguracion.acciones"
+    >
+    </app-tabla-dinamica>
+  </div>
+</div>

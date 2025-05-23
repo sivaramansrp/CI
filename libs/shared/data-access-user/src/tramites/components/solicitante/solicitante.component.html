@@ -1,5 +1,20 @@
 <!-- Formulario dinamico de tipo de personas -->
 <form [formGroup]="form">
+  @if (guardarDatos.consultaioSolicitante) {
+    <div class="form mt-5" formGroupName="datosTramite">
+      <div class="row">
+        @for (item of datosTramite; track $index) {
+        <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
+          <div class="form-group">
+            <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
+            <input class="form-control" [type]="item.tipo_input" title="{{item.labelNombre}}" [id]="item.campo"
+              [placeholder]="item.placeholder" [formControlName]="item.campo" libUppercase>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
   <div class="form" formGroupName="datosGenerales">
     <ng-titulo titulo="Datos generales del solicitante" />
 
