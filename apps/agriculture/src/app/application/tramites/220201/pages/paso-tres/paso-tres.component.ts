@@ -1,4 +1,8 @@
+import { AlertComponent,AnexarDocumentosComponent, FirmaElectronicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+
+
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoTresComponent
@@ -9,7 +13,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrls: ['./paso-tres.component.scss']
+  styleUrls: ['./paso-tres.component.scss'],standalone: true,
+  imports: [CommonModule,TituloComponent, AlertComponent
+    , AnexarDocumentosComponent, FirmaElectronicaComponent]
 })
 export class PasoTresComponent {
 

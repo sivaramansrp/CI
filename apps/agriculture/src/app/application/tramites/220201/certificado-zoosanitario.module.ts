@@ -35,8 +35,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    PasoDosComponent,
-    PasoTresComponent,
     PasoUnoComponent,
     ZoosanitarioPageComponent,
   
@@ -65,6 +63,9 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ToastrModule.forRoot(),
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
+        PasoTresComponent,
+        PasoDosComponent,
+        
   ],
   providers: [
     ToastrService
