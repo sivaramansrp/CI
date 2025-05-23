@@ -2,22 +2,20 @@
  * Importaciones necesarias para el funcionamiento del componente.
  */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { FECHA_PAGO, MAXLENGTH , PAGO } from '../../constantes/permiso-importacion-biologica.enum';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
 import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
 
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO, PAGO , MAXLENGTH } from '../../constantes/permiso-importacion-biologica.enum';
 import { REQUIRED_BANCO } from '../../constantes/datos-solicitud.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
