@@ -344,6 +344,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @description
+   * Objeto que representa una nueva notificación de eliminación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+
+  /**
+   * @description
    * Arreglo que almacena los pedimentos asociados al establecimiento.
    * Cada pedimento contiene información relevante para el trámite.
    */
@@ -672,10 +679,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * de la configuración SCIAN.
    */
   eliminarScian(): void {
-    if (!this.scianLista.length) {
-      this.mostrarAlerta = true;
-      return;
-    }
     this.scianConfig.datos = this.scianConfig.datos.filter(
       (idx: TablaScianConfig) => {
         return !this.scianLista.some(
@@ -923,7 +926,49 @@ if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
 
     this.elementoParaEliminar = i;
   }
+  
+  /**
+   * Método que maneja la lógica para mostrar un modal de confirmación
+   * antes de eliminar registros marcados. Si no hay elementos en la lista
+   * `scianLista`, muestra una alerta y detiene la ejecución.
+   * 
+   * @remarks
+   * Este método configura una notificación de tipo alerta con un mensaje
+   * de confirmación para la eliminación de registros. La notificación incluye
+   * opciones para aceptar o cancelar la acción.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarModal(): void {
+    if (!this.scianLista.length) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.nuevaNotificacionEliminar = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
 
+  /**
+   * Método que se llama cuando se elimina un registro de SCIAN.
+   * @param {boolean} borrar - Indica si se debe eliminar el registro de SCIAN.
+   * Si es verdadero, se llama al método `eliminarScian`.
+   */
+  getEliminarScianModal(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarScian();
+      this.nuevaNotificacion.cerrar = false;
+    }
+  }
 
   /**
    * Método que verifica si un campo debe ser habilitado o deshabilitado

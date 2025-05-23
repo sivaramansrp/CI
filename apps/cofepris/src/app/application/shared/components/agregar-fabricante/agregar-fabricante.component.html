@@ -62,8 +62,7 @@
       </div>
     </div>
 
-    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr || 
-        agregarFabricanteForm.get('nacionalidad')?.untouched){
+    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.*:</label>
@@ -72,7 +71,7 @@
         title="Registro Federal de Contribuyente"
         data-bs-toggle="tooltip"
       ></span>
-        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" />
+        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" [ngClass]="esInvalido('rfc') ? 'required' : ''"/>
         <div *ngIf="esInvalido('rfc')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['required']">
             Este campo es obligatorio
@@ -85,7 +84,7 @@
       @if (!estaOculto) {
       <div class="col-md-4">
         <label class="form-label">C.U.R.P.*:</label>
-        <input type="text" class="form-control" formControlName="curp" />
+        <input type="text" class="form-control" formControlName="curp" [ngClass]="esInvalido('curp') ? 'required' : ''" />
         <div *ngIf="esInvalido('curp')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']">
             Este campo es obligatorio
@@ -102,7 +101,7 @@
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
-        <input type="text" [maxlength]="200" class="form-control" formControlName="nombres" />
+        <input type="text" [maxlength]="200" class="form-control" formControlName="nombres" [ngClass]="esInvalido('rfc') ? 'required' : ''" />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['required']">
             Este campo es obligatorio
@@ -119,6 +118,7 @@
           class="form-control"
           formControlName="primerApellido"
           [maxlength]="200"
+          [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('primerApellido')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['required']">
@@ -148,7 +148,7 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label">Denominación/razón social*:</label>
-        <input type="text" class="form-control" [maxlength]="250" formControlName="razonSocial" />
+        <input type="text" class="form-control" [maxlength]="250" formControlName="razonSocial" [ngClass]="esInvalido('razonSocial') ? 'required' : ''" />
         <div *ngIf="esInvalido('razonSocial')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required']">
             Este campo es obligatorio
@@ -260,7 +260,7 @@
     <div class="row mt-3">
       <div class="col-md-4 mx-auto">
         <label class="form-label">Colonia o equivalente:</label>
-        <input type="text" class="form-control" formControlName="coloniaOEquivalente" />
+        <input type="text" class="form-control" [maxlength]="100" formControlName="coloniaOEquivalente" />
       </div>
       </div>
     }
@@ -273,7 +273,7 @@
         title="Domicilio, calle, número interior, número exterior, lote"
         data-bs-toggle="tooltip"
       ></span>
-        <input type="text" [maxlength]="100" class="form-control" formControlName="calle" />
+        <input type="text" [maxlength]="100" class="form-control" formControlName="calle" [ngClass]="esInvalido('calle') ? 'required' : ''" />
         <div *ngIf="esInvalido('calle')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['calle'].errors?.['required']">
             Este campo es obligatorio
@@ -287,6 +287,7 @@
           class="form-control"
           formControlName="numeroExterior"
           [maxlength]="55"
+          [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['numeroExterior'].errors?.['required']">
@@ -303,6 +304,7 @@
           type="text"
           class="form-control"
           formControlName="numeroInterior"
+          [maxlength]="55"
         />
       </div>
       <div class="col-md-1">
@@ -311,7 +313,7 @@
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" [maxlength]="25" formControlName="telefono" />
+        <input type="text" class="form-control" [maxlength]="24" formControlName="telefono" />
         <div *ngIf="esInvalido('telefono')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['telefono'].errors?.['pattern']">
             Existen datos incorrectos que no cumplen con el formato esperado

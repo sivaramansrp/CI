@@ -705,6 +705,12 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  */
 export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103];
 
+/**
+ * Enumera los tipos de actualización que se pueden realizar.
+ * 
+ * - `AGREGAR`: Representa la acción de agregar un nuevo elemento.
+ * - `ELIMINAR`: Representa la acción de eliminar un elemento existente.
+ */
 export enum TIPO_ACTUALIZACION {
   AGREGAR = 'Agregar',
   ELIMINAR ='Eliminar',
