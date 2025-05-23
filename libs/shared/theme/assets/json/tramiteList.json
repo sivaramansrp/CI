@@ -11,7 +11,7 @@
     "tramite": 301,
     "linkDashboard": "/aga/importante/datosdelasolicitud",
     "linkDepartment": "/aga/importante/datosdelasolicitud",
-    "department": "aga "
+    "department": "aga"
   },
   {
     "id": 3,
@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDepartment": "/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
     "department": "agace"
   },
   {
@@ -143,14 +143,14 @@
     "id": 21,
     "tramite": 40101,
     "linkDashboard": "/aga/transportista-terrestre/solicitante",
-    "linkDepartment": "/aga/transportista-terrestre/solicitante",
+    "linkDepartment": "/pago/transportista-terrestre/solicitante",
     "department": "aga"
   },
   {
     "id": 22,
     "tramite": 40102,
-    "linkDashboard": "/aga/transportista-terrestre/solicitante",
-    "linkDepartment": "/aga/transportista-terrestre/solicitante",
+    "linkDashboard": "/aga/transportista-renovacion/solicitante",
+    "linkDepartment": "/pago/transportista-renovacion/solicitante",
     "department": "aga"
   },
   {
@@ -170,7 +170,7 @@
   {
     "id": 25,
     "tramite": 80101,
-    "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
+    "linkDashboard": "/se/nuevo-programa-industrial/action",
     "linkDepartment": "/pago/nuevo-programa-industrial/action",
     "department": "se"
   },
@@ -178,7 +178,7 @@
     "id": 26,
     "tramite": 80102,
     "linkDashboard": "/se/autorizacion-programa-nuevo/solicitud",
-    "linkDepartment": "/se/autorizacion-programa-nuevo/solicitud",
+    "linkDepartment": "/pago/autorizacion-programa-nuevo/solicitud",
     "department": "se"
   },
   {
@@ -212,8 +212,8 @@
   {
     "id": 31,
     "tramite": 80208,
-    "linkDashboard": "/se/pago/solicitud-modalidad/modalidad",
-    "linkDepartment": "/se/pago/solicitud-modalidad/modalidad",
+    "linkDashboard": "/se/solicitud-modalidad/modalidad",
+    "linkDepartment": "/pago/solicitud-modalidad/modalidad",
     "department": "se"
   },
   {
@@ -262,14 +262,14 @@
     "id": 38,
     "tramite": 110102,
     "linkDashboard": "/se/exportador-autorizado/registrar-solicitud",
-    "linkDepartment": "/se/exportador-autorizado/registrar-solicitud",
+    "linkDepartment": "/pago/exportador-autorizado/registrar-solicitud",
     "department": "se"
   },
   {
     "id": 39,
     "tramite": 110201,
     "linkDashboard": "/se/registro/solicitud",
-    "linkDepartment": "/se/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "se"
   },
   {
@@ -318,7 +318,7 @@
     "id": 46,
     "tramite": 110216,
     "linkDashboard": "/se/inicialmente-certificado-origen/solicitante",
-    "linkDepartment": "/se/inicialmente-certificado-origen/solicitante",
+    "linkDepartment": "/pago/inicialmente-certificado-origen/solicitante",
     "department": "se"
   },
   {
@@ -339,7 +339,7 @@
     "id": 49,
     "tramite": 110219,
     "linkDashboard": "/se/certificado/solicitud",
-    "linkDepartment": "/se/certificado/solicitud",
+    "linkDepartment": "/pago/certificado/solicitud",
     "department": "se"
   },
   {
@@ -360,7 +360,7 @@
     "id": 52,
     "tramite": 120301,
     "linkDashboard": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
-    "linkDepartment": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
+    "linkDepartment": "/pago/elegibilidad-de-textiles/elegibilidad-textiles",
     "department": "se"
   },
   {
@@ -527,8 +527,8 @@
   {
     "id": 76,
     "tramite": 220404,
-    "linkDashboard": "/agriculture/pago/desistimiento/desistimiento-page",
-    "linkDepartment": "/agriculture/pago/desistimiento/desistimiento-page",
+    "linkDashboard": "/agriculture/desistimiento/desistimiento-page",
+    "linkDepartment": "/pago/desistimiento/desistimiento-page",
     "department": "agriculture"
   },
   {
@@ -730,8 +730,8 @@
   {
     "id": 105,
     "tramite": 570101,
-    "linkDashboard": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
-    "linkDepartment": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+    "linkDashboard": "/aga/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+    "linkDepartment": "/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
     "department": "aga"
   },
   {
@@ -884,7 +884,7 @@
   {
     "id": 127,
     "tramite": 130110,
-    "linkDashboard": "/se/pago/importacion/neumaticos-comercializar",
+    "linkDashboard": "/se/importacion/neumaticos-comercializar",
     "linkDepartment": "/pago/importacion/neumaticos-comercializar",
     "department": "se"
   },
@@ -912,7 +912,7 @@
   {
     "id": 131,
     "tramite": 40301,
-    "linkDashboard": "/aga/pago/registro-caat-naviero/caat-naviero",
+    "linkDashboard": "/aga/registro-caat-naviero/caat-naviero",
     "linkDepartment": "/pago/registro-caat-naviero/caat-naviero",
     "department": "aga"
   },
@@ -926,15 +926,15 @@
   {
     "id": 133,
     "tramite": 40402,
-    "linkDashboard": "/aga/pago/codigo-transportista",
+    "linkDashboard": "/aga/codigo-transportista",
     "linkDepartment": "/pago/codigo-transportista",
     "department": "aga"
   },
   {
     "id": 134,
     "tramite": 570102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-solicitud/solicitud",
+    "linkDepartment": "/pago/registro-solicitud/solicitud",
     "department": "aga"
   },
   {
@@ -955,7 +955,7 @@
     "id": 137,
     "tramite": 31802,
     "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/agace/registro-solicitud/solicitud",
+    "linkDepartment": "/pago/registro-solicitud/solicitud",
     "department": "agace"
   },
   {
@@ -968,7 +968,7 @@
   {
     "id": 139,
     "tramite": 32503,
-    "linkDashboard": "/pago/aviso-traslado/solicitante",
+    "linkDashboard": "/agace/aviso-traslado/solicitante",
     "linkDepartment": "/pago/aviso-traslado/solicitante",
     "department": "agace"
   },
@@ -1003,21 +1003,21 @@
   {
     "id": 144,
     "tramite": 220403,
-    "linkDashboard": "/pago/certificado-exportacion/acuicola",
+    "linkDashboard": "/agriculture/certificado-exportacion/acuicola",
     "linkDepartment": "/pago/certificado-exportacion/acuicola",
     "department": "agriculture"
   },
   {
     "id": 145,
     "tramite": 260102,
-    "linkDashboard": "/pago/consumo-personal/solicitud",
+    "linkDashboard": "/cofepris/consumo-personal/solicitud",
     "linkDepartment": "/pago/consumo-personal/solicitud",
     "department": "cofepris"
   },
   {
     "id": 146,
     "tramite": 260206,
-    "linkDashboard": "/pago/maquila-materias-primas/solicitud",
+    "linkDashboard": "/cofepris/maquila-materias-primas/solicitud",
     "linkDepartment": "/pago/maquila-materias-primas/solicitud",
     "department": "cofepris"
   },
@@ -1038,7 +1038,7 @@
   {
     "id": 149,
     "tramite": 260218,
-    "linkDashboard": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+    "linkDashboard": "/cofepris/dispositivos-medicos-laboratorio/contenedor-de-pasos",
     "linkDepartment": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
     "department": "cofepris"
   },
@@ -1234,8 +1234,8 @@
   {
     "id": 177,
     "tramite": 260704,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/consulta/solicitud",
+    "linkDepartment": "/pago/consulta/solicitud",
     "department": "cofepris"
   },
   {
@@ -1248,8 +1248,8 @@
   {
     "id": 179,
     "tramite": 260910,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
+    "linkDashboard": "/cofepris/modificacion-al-permiso-sanitario/solicitante",
+    "linkDepartment": "/pago/modificacion-al-permiso-sanitario/solicitante",
     "department": "cofepris"
   },
   {
@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-    "id": 191,
-    "tramite": 30503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "aga"
-  },
+        "id": 191,
+        "tramite": 30505,
+        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+        "department": "aga"
+    },
   {
     "id": 192,
     "tramite": 31202,
@@ -1360,15 +1360,15 @@
   {
     "id": 195,
     "tramite": 630104,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/equipo-e-instrumentos-musicales/equipo-e-instrumentos-musicales",
+    "linkDepartment": "/pago/equipo-e-instrumentos-musicales/equipo-e-instrumentos-musicales",
     "department": "aga"
   },
   {
     "id": 196,
     "tramite": 630303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/retorno-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/retorno-importacion-temporal/solicitud",
     "department": "aga"
   },
   {
@@ -1445,14 +1445,14 @@
     "id": 207,
     "tramite": 32201,
     "linkDashboard": "/agace/anexo-veintiocho/solicitud",
-    "linkDepartment": "/agace/anexo-veintiocho/solicitud",
+    "linkDepartment": "/pago/anexo-veintiocho/solicitud",
     "department": "agace"
   },
   {
     "id": 208,
     "tramite": 221603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agriculture/sanidad/solicitante",
+    "linkDepartment": "/pago/sanidad/solicitante",
     "department": "agricultura"
   },
   {
@@ -1753,7 +1753,7 @@
     "id": 251,
     "tramite": 130401,
     "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
-    "linkDepartment": "/se/modificacion-descripcion/invocar-modulo",
+    "linkDepartment": "/pago/modificacion-descripcion/invocar-modulo",
     "department": "se"
   },
   {
@@ -1989,9 +1989,9 @@
   },
   {
     "id": 285,
-    "tramite": 80103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+     "tramite": 80103,
+    "linkDashboard": "/se/registro-solicitud-immex-modalidad/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad/action",
     "department": "se"
   },
   {
@@ -2223,13 +2223,6 @@
     "tramite": 140102,
     "linkDashboard": "/se/registro-solicitudModule/pantallas",
     "linkDepartment": "/pago/registro-solicitudModule/pantallas",
-    "department": "se"
-  },
-  {
-    "id": 319,
-    "tramite": 150103,
-   "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
-    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
@@ -3138,9 +3131,9 @@
   {
     "id": 450,
     "tramite": 220103,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agriculture/sanidad-acuicola-importacion/solicitud",
+    "linkDepartment": "/pago/sanidad-acuicola-importacion/solicitud",
+    "department": "agriculture"
   },
   {
     "id": 451,
@@ -3432,8 +3425,8 @@
   {
     "id": 492,
     "tramite": 250103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/profepa/embalaje-de-madera/solictud",
+    "linkDepartment": "/pago/embalaje-de-madera/solictud",
     "department": "profepa"
   },
   {
@@ -4207,28 +4200,28 @@
     "department": "semarnat"
   },
   {
-     "id": 602,
+     "id": 603,
     "tramite": 120403,
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
   {
-    "id": 603,
+    "id": 604,
     "tramite": 32514,
     "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
     "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
     "department": "agace"
   },
   {
-    "id": 604,
+    "id": 605,
     "tramite": 103,
     "linkDashboard": "/aga/autorizacion/mercancia-donada",
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
   },
  {
-    "id": 605,
+    "id": 606,
     "tramite": 140205,
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",

@@ -122,6 +122,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionBuilder();
+
+    this.campoObligatorioChange();
+
+    this.seccionStore.establecerSeccion([false]);
+
+    this.avisoForm.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        () => {
+          if(this.avisoForm.valid) {
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([true])
+        }
+      }
+      );
   }
 
   /**
@@ -166,6 +181,62 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       caboDestruccionFecha: [{ value: this.destruccionState.caboDestruccionFecha || '', disabled: true }, Validators.required],
     });
   }
+
+  /**
+   * @description Cambia los campos obligatorios del formulario según el tipo de aviso seleccionado.
+   * Este método ajusta los validadores de los campos relacionados con la destrucción dependiendo
+   * del valor actual del tipo de aviso. Si el tipo de aviso es 'deposito_fiscal', los campos se
+   * marcan como requeridos; en caso contrario, se eliminan los validadores requeridos.
+   * Se actualiza la validez de los controles afectados.
+   * @returns {void}
+   */
+  campoObligatorioChange(): void {
+      const DESTRUCCIONENTIDADFEDERATIVA = this.avisoForm.get('destruccionEntidadFederativa');
+      const DESTRUCCIONALCALDIAMUNICIPO = this.avisoForm.get('destruccionAlcaldiaMunicipo');
+      const DESTRUCCIONCOLONIA = this.avisoForm.get('destruccionColonia');
+      const DESTRUCCIONCALLE = this.avisoForm.get('destruccionCalle');
+      const DESTRUCCIONNUMEROEXTERIOR = this.avisoForm.get('destruccionNumeroExterior');
+      const DESTRUCCIONNUMEROINTERIOR = this.avisoForm.get('destruccionNumeroInterior');
+      const DESTRUCCIONCODIGOPOSTAL = this.avisoForm.get('destruccionCodigoPostal');
+      const DESTRUCCIONHORA = this.avisoForm.get('destruccionHora');
+      const DESTRUCCIONPROCESO = this.avisoForm.get('desturccionProceso');
+      const CASOFORTUITO = this.avisoForm.get('casofortuito');
+      if(this.destruccionState.tipoDeAviso === 'deposito_fiscal') {
+        DESTRUCCIONENTIDADFEDERATIVA?.setValidators([Validators.required]);
+        DESTRUCCIONALCALDIAMUNICIPO?.setValidators([Validators.required]);
+        DESTRUCCIONCOLONIA?.setValidators([Validators.required]);
+        DESTRUCCIONCALLE?.setValidators([Validators.required]);
+        DESTRUCCIONNUMEROEXTERIOR?.setValidators([Validators.required]);
+        DESTRUCCIONNUMEROINTERIOR?.setValidators([Validators.required]);
+        DESTRUCCIONCODIGOPOSTAL?.setValidators([Validators.required]);
+        DESTRUCCIONHORA?.setValidators([Validators.required]);
+        DESTRUCCIONPROCESO?.setValidators([Validators.required]);
+        CASOFORTUITO?.setValidators([Validators.required]);
+      }
+      else{
+        DESTRUCCIONENTIDADFEDERATIVA?.clearValidators();
+        DESTRUCCIONALCALDIAMUNICIPO?.clearValidators();
+        DESTRUCCIONCOLONIA?.clearValidators();
+        DESTRUCCIONCALLE?.clearValidators();
+        DESTRUCCIONNUMEROEXTERIOR?.clearValidators();
+        DESTRUCCIONNUMEROINTERIOR?.clearValidators();
+        DESTRUCCIONCODIGOPOSTAL?.clearValidators();
+        DESTRUCCIONHORA?.clearValidators();
+        DESTRUCCIONPROCESO?.clearValidators();
+        CASOFORTUITO?.clearValidators();
+      }
+      DESTRUCCIONENTIDADFEDERATIVA?.updateValueAndValidity();
+      DESTRUCCIONALCALDIAMUNICIPO?.updateValueAndValidity();
+      DESTRUCCIONCOLONIA?.updateValueAndValidity();
+      DESTRUCCIONCALLE?.updateValueAndValidity();
+      DESTRUCCIONNUMEROEXTERIOR?.updateValueAndValidity();
+      DESTRUCCIONNUMEROINTERIOR?.updateValueAndValidity();
+      DESTRUCCIONCODIGOPOSTAL?.updateValueAndValidity();
+      DESTRUCCIONHORA?.updateValueAndValidity();
+      DESTRUCCIONPROCESO?.updateValueAndValidity();
+      CASOFORTUITO?.updateValueAndValidity();
+    }
+
 
   /**
    * @description Actualiza la fecha de destrucción en el formulario.

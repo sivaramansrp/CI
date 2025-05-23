@@ -94,8 +94,28 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public representacion: Catalogo[] = [];
 
+    /**
+   * @property {Catalogo[]} allRepresentaciones
+   * @description
+   * Almacena todas las opciones de representaciones federales disponibles.
+   * Se utiliza para filtrar y mostrar las representaciones según la entidad seleccionada.
+   */
+  public allRepresentaciones: Catalogo[] = [];
+
+  /**
+   * @property {Observable<Catalogo | null>} entidad$
+   * @description
+   * Observable que expone la entidad federativa seleccionada desde el store.
+   * Permite reaccionar a los cambios de la entidad en el formulario.
+   */
   entidad$: Observable<Catalogo | null> = this.tramite120402Query.entidad$;
 
+  /**
+   * @property {Observable<Catalogo | null>} representacion$
+   * @description
+   * Observable que expone la representación federal seleccionada desde el store.
+   * Permite reaccionar a los cambios de la representación en el formulario.
+   */
   representacion$: Observable<Catalogo | null> =
     this.tramite120402Query.representacion$;
 
@@ -116,32 +136,45 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     // Constructor
   }
 
-  /**
+    /**
    * @method ngOnInit
    * @description
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama a `initializeForm()` para configurar el formulario.
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el formulario reactivo, carga las entidades y representaciones federales,
+   * y suscribe a los cambios en la selección de entidad para actualizar las opciones de representación.
+   * Además, sincroniza los valores del formulario con los observables del store para mantener el estado actualizado.
+   *
+   * - Inicializa el formulario y carga los catálogos de entidad y representación.
+   * - Escucha los cambios en el campo 'entidad' para filtrar las representaciones disponibles.
+   * - Sincroniza los valores seleccionados desde el store con el formulario.
    *
    * @returns {void}
-   * @access public
    */
-  public ngOnInit(): void {
+
+ public ngOnInit(): void {
     this.initializeForm();
     this.loadEntidad();
     this.loadRepresentacion();
-
+    this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
+      this.updateRepresentacionOptions(entidad);
+      this.representacionForm.get('representacion')?.setValue(''); // Reset representacion
+    });
+ 
     this.entidad$.subscribe((entidad) => {
-      if (entidad) {
-        this.representacionForm.get('entidad')?.setValue(entidad);
-      }
-    });
-
-    this.representacion$.subscribe((representacion) => {
-      if (representacion) {
-        this.representacionForm.get('representacion')?.setValue(representacion);
-      }
-    });
+  if (entidad) {
+    this.representacionForm.get('entidad')?.setValue(entidad);
   }
+});
+
+this.representacion$.subscribe((representacion) => {
+  if (representacion) {
+    this.representacionForm.get('representacion')?.setValue(representacion);
+  }
+});
+
+  }
+ 
+ 
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -180,46 +213,129 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Carga la información de la entidad desde el servicio y la asigna al formulario.
+ /**
+   * @method loadEntidad
+   * @description
+   * Carga la información de las entidades federativas desde el servicio correspondiente
+   * y la asigna a la propiedad local `entidad` para poblar el select en el formulario.
+   * Utiliza un observable para manejar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void}
    */
   loadEntidad(): void {
     this.service
       .getEntidad()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
+      .subscribe((data: Catalogo[]) => {
         this.entidad = data;
-      });
+       
+       });
   }
 
-  /**
-   * Carga la información de la representacion desde el servicio y la asigna al formulario.
+   /**
+   * @method loadRepresentacion
+   * @description
+   * Carga la información de las representaciones federales desde el servicio correspondiente
+   * y la asigna a la propiedad local `allRepresentaciones` para mantener todas las opciones disponibles.
+   * Posteriormente, actualiza las opciones de representación mostradas según la entidad seleccionada en el formulario.
+   * Utiliza un observable para manejar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void}
    */
   loadRepresentacion(): void {
     this.service
-      .getEntidad()
+      .getRepresentacion()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.representacion = data;
+      .subscribe((data: Catalogo[]) => {
+        this.allRepresentaciones = data; // Store all options
+      this.updateRepresentacionOptions(this.representacionForm.get('entidad')?.value);
       });
   }
-
-  /**
-   * Obtiene el valor seleccionado del campo de entidad federativa y lo establece en el store.
+ 
+    /**
+   * @method updateRepresentacionOptions
+   * @description
+   * Filtra y actualiza la lista de representaciones federales disponibles según la entidad seleccionada.
+   * Si hay una entidad seleccionada, se muestran solo las representaciones relacionadas con dicha entidad.
+   * Si no hay entidad seleccionada, la lista de representaciones se vacía.
+   *
+   * @param {Catalogo | null} selectedEntidad - Entidad federativa seleccionada en el formulario.
+   * @returns {void}
    */
-  getEntidad(): void {
-    const SELECTED_ENTIDAD = this.representacionForm.get('entidad')?.value;
-    this.tramite120402Store.setEntidad(SELECTED_ENTIDAD);
+  public updateRepresentacionOptions(selectedEntidad: Catalogo | null): void {
+    if (selectedEntidad) {
+      this.representacion = this.allRepresentaciones.filter(
+        (e => e.relacionadaUmtId === Number(selectedEntidad))
+      );
+    } else {
+      this.representacion = [];
+    }
   }
+ 
+ 
+ 
+  
+ 
+ 
 
   /**
-   * Obtiene el valor seleccionado del campo de representación federal y lo establece en el store.
+   * @method getEntidad
+   * @description
+   * Establece la entidad seleccionada en el store y actualiza el valor del formulario.
+   * Se utiliza para sincronizar el estado del formulario con el store.
+   *
+   * @param {Catalogo} selectedEntidad - Entidad federativa seleccionada.
+   * @returns {void}
    */
-  getRepresentacion(): void {
-    const SELECTED_REPRESENTACION =
-      this.representacionForm.get('representacion')?.value;
-    this.tramite120402Store.setRepresentacion(SELECTED_REPRESENTACION);
+  getEntidad(selectedEntidad: Catalogo): void {
+    this.tramite120402Store.setEntidad(selectedEntidad);
+    this.representacionForm.get('entidad')?.setValue(selectedEntidad.id.toString(), { emitEvent: false });
+    this.updateRepresentacionOptions(selectedEntidad);
+   }
+
+    /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el valor de un campo específico en el store utilizando el método correspondiente.
+   * Obtiene el valor del campo del formulario y lo envía al método indicado del store para mantener sincronizado el estado global.
+   *
+   * @param {FormGroup} form - Formulario reactivo del cual se obtiene el valor.
+   * @param {string} campo - Nombre del campo del formulario cuyo valor se actualizará en el store.
+   * @param {keyof Tramite120402Store} metodoNombre - Nombre del método del store que se debe invocar para actualizar el valor.
+   * @returns {void}
+   */
+   setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite120402Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite120402Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+ 
+  /**
+   * @method getRepresentacion
+   * @description
+   * Establece la representación federal seleccionada en el store y actualiza el valor del formulario.
+   * Se utiliza para sincronizar el estado del formulario con el store.
+   *
+   * @param {Catalogo} selectedRepresentacion - Representación federal seleccionada.
+   * @returns {void}
+   */
+  getRepresentacion(selectedRepresentacion: Catalogo): void {
+    this.tramite120402Store.setRepresentacion(selectedRepresentacion);
+    this.representacionForm.get('representacion')?.setValue(selectedRepresentacion.id.toString(), { emitEvent: false });  
+  }
+ 
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param nombreControl - Nombre del control a verificar.
+   * @returns True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.representacionForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 }

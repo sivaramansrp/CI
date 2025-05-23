@@ -1,9 +1,6 @@
 <div class="form-group">
-  <label for="input_fecha" class="form-label">{{datos.labelNombre}} {{datos.required ? '*' : ''}}:
-    @if(tooltipQuestionCircle) {
-    <span class="bi bi-question-circle-fill font-size-large" title="{{label}}" data-bs-toggle="tooltip"></span>
-    }
-  </label>
+  <label for="input_fecha" class="form-label" >{{datos.labelNombre}} {{datos.required ? '*' : ''}}: @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{datos.labelNombre}}"
+        data-bs-toggle="tooltip"></span>}</label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
     <div class="input-group-text" id="input_fecha">
       <div class="fecha">

@@ -3,15 +3,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Aviso,
+  ConsultaioQuery,
   Importante,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import {
   Solicitud301State,
   Tramite301Store,
@@ -21,6 +23,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -40,6 +43,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './registro-para-la.component.html',
   styleUrls: ['./registro-para-la.component.scss'], // Corregido de styleUrl a styleUrls
   imports: [
+    CommonModule,
     AlertComponent,
     TituloComponent,
     CatalogoSelectComponent,
@@ -49,6 +53,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   standalone: true,
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
+
+
   /**
    * Formulario principal del componente.
    * Este formulario contiene el campo de registro de importaciones/exportaciones.
@@ -135,6 +141,12 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente `RegistroParaLaComponent`.
    *
    * Inicializa la instancia de `Tramite301Store` y `Tramite301Query` para manejar el estado de la aplicación.
@@ -144,8 +156,25 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
-  ) {}
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -155,6 +184,16 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+
+ /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
+  inicializarFormulario(): void {
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
         .pipe(
@@ -167,9 +206,22 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     );
     this.getRegistro(); // Llama al método para obtener los datos de registro
 
+    /**
+     * Crea un formulario reactivo (`FormGroup`) con el campo `registro`,
+     * inicializado con el valor obtenido desde `solicitudState`.
+     * El campo es requerido.
+     */
     this.registroParaLaForm = this.fb.group({
-      registro: [this.solicitudState?.registro, Validators.required],
+      registro: [{value: this.solicitudState?.registro, disable: false}, Validators.required],
     });
+
+    /**
+     * Si el procedimiento está en modo solo lectura (`readonly`),
+     * se desactiva el campo `registro` para evitar modificaciones por parte del usuario.
+     */
+    if(this.esFormularioSoloLectura) {
+        this.registroParaLaForm.get('registro')?.disable();
+    }
   }
 
   /**
@@ -216,5 +268,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

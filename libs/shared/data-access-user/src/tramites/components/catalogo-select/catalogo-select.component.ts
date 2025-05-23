@@ -42,6 +42,7 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   @Input() isInline: boolean = false;
+  @Input() questionCircleTooltip?: string = '';
 
   formSelect: FormGroup;
   value: string = '';
@@ -50,6 +51,16 @@ export class CatalogoSelectComponent
     this.formSelect = this.fb.group({
       selectControl: [-1],
     });
+  }
+
+  
+  /**
+   * Devuelve la etiqueta formateada para el campo select, agregando un asterisco si es requerido.
+   * @returns {string} Etiqueta formateada.
+   */
+  get formattedLabel(): string {
+    const LABEL = this.label?.trim() || '';
+    return this.required ? `${LABEL} * :` : `${LABEL}:`;
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
