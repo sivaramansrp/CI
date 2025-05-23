@@ -1367,8 +1367,8 @@
   {
     "id": 196,
     "tramite": 630303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/retorno-importacion-temporal/solicitud",
+    "linkDepartment": "/pago/retorno-importacion-temporal/solicitud",
     "department": "aga"
   },
   {
@@ -3131,7 +3131,7 @@
   {
     "id": 450,
     "tramite": 220103,
-    "linkDashboard": "/agricultura/sanidad-acuicola-importacion/solicitud",
+    "linkDashboard": "/agriculture/sanidad-acuicola-importacion/solicitud",
     "linkDepartment": "/pago/sanidad-acuicola-importacion/solicitud",
     "department": "agriculture"
   },
