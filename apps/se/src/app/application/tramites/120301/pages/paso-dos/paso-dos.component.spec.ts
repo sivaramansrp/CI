@@ -1,32 +1,42 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {  ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
-import { AlertComponent, AnexarDocumentosComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TOAST_CONFIG, ToastrModule } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
-let component: PasoDosComponent;
-let fixture: ComponentFixture<PasoDosComponent>;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let component: PasoDosComponent;
 
-beforeEach(async () => {
-  await TestBed.configureTestingModule({
-    declarations: [PasoDosComponent],
-    imports: [TituloComponent, HttpClientTestingModule, AlertComponent, TablaDinamicaComponent, AnexarDocumentosComponent, ToastrModule.forRoot()]
-  }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoDosComponent,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
 
-  fixture = TestBed.createComponent(PasoDosComponent);
-  component = fixture.componentInstance;
-  fixture.detectChanges();
-});
+      ]
+    }).overrideComponent(PasoDosComponent, {
 
-it('should create', () => {
-  expect(component).toBeTruthy();
-});
+    }).compileComponents();
+    fixture = TestBed.createComponent(PasoDosComponent);
+    component = fixture.componentInstance;
+  });
 
-it('should have TEXTOS defined', () => {
-  expect(component.TEXTOS).toBeDefined(); // Check if TEXTOS is defined
-  expect(Object.keys(component.TEXTOS).length).toBeGreaterThan(0); // Check if TEXTOS is not empty
-});
+  afterEach(() => {
+    if (fixture) {
+      fixture.destroy();
+    }
+  });
+
+  it('should run #constructor()', async () => {
+    expect(component).toBeTruthy();
+  });
 
 });

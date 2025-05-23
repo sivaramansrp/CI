@@ -22,10 +22,10 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-import { Subject, takeUntil } from 'rxjs';
-import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
+import TipoPersonaBtn from 'libs/shared/theme/assets/json/260402/tipoPersonaBtn.json';
 
-import TipoPersonaBtn from '@libs/shared/theme/assets/json/260402/tipoPersonaBtn.json';
+import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-generales',

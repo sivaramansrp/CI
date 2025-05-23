@@ -88,6 +88,10 @@ export class DatosMercanciaComponent implements OnInit {
    */
   @Input() public mercanciaFormState!: MercanciaForm;
 
+  /**
+   * @property {TablaMercanciasDatos} datoSeleccionado
+   * Dato seleccionado de la tabla de mercancías recibido como entrada desde el componente padre.
+   */
   @Input() public datoSeleccionado!:TablaMercanciasDatos;
 
   /**
