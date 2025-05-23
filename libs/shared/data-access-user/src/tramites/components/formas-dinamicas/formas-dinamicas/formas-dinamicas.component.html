@@ -191,6 +191,7 @@
                           [setFecha]="forma.get(item.campo)?.value"
                           [datos]="obtenerInformacionDeFecha(item)"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           (valorCambiado)="eventoDeCambioDeValor($event, item.campo)"
                         ></input-fecha>
 

@@ -104,6 +104,12 @@ const ROUTES: Routes = [
         (m) => m.FitosanitarioModule
       ),
   },
+  { path: 'sanidad',
+    loadChildren: () =>
+      import('./tramites/221603/sanidad.module').then(
+        (m) => m.SanidadModule
+      ),
+  },  
   {
     path: 'zoosanitario',
     loadChildren: () =>
@@ -119,9 +125,17 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path:'sanidad-acuicola-importacion',
+    loadChildren: () =>
+      import('./tramites/220103/sanidad-acuicola-importacion.module').then(
+        (m) => m.SanidadAcuicolaImportacionModule
+      ),
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
-      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent
+      ),
   },
   {
     path: 'autorizar',

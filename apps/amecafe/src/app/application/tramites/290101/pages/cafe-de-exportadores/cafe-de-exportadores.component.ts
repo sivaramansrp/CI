@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { CafExportFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
@@ -82,6 +83,7 @@ export class CafeDeExportadoresComponent implements OnInit {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private activatedRoute: ActivatedRoute
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -91,7 +93,16 @@ export class CafeDeExportadoresComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
     seleccionaTab(index: number): void {
-      this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+      const CAFE_EXPORTADORES={
+        TABLA_Columna_1: this.cafeExportForm.value.descripcionMercancia,
+        TABLA_Columna_2: this.cafeExportForm.value.clasificacion,
+        TABLA_Columna_3: this.cafeExportForm.value.porcentajeConcentracion,
+        estatus:true,
+      }
+      this.tramiteStore.setCafeExportacionTabla([CAFE_EXPORTADORES]);
+
+      this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+        relativeTo: this.activatedRoute,});
     }
   
   ngOnInit(): void {
@@ -162,6 +173,10 @@ export class CafeDeExportadoresComponent implements OnInit {
       porcentajeConcentracion: ['', Validators.required],
     });
   }
+  /**
+   * Carga la clasificación o tipo de café desde el servicio de catálogos.
+   * Se suscribe a los cambios y actualiza el catálogo en el formulario.
+   */
 
   cargarClasificacion(): void {
     this.catalogosService.cargarClasificacion()
@@ -180,6 +195,9 @@ export class CafeDeExportadoresComponent implements OnInit {
   }
 
   
+  /**
+   * Cancela la operación actual y restablece el formulario.
+   */
   cancelarBodega(): void {
     takeUntil(this.destroyNotifier$)
     this.cafeExportForm.reset();

@@ -23,9 +23,18 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'embalaje-de-madera',
+    loadChildren: () =>
+      import('./tramites/250103/embalaje-de-madera.module').then(
+        (m) => m.EmbalajeDeMaderaModule
+     ),
+  },
+  {
     path: 'evaluar',
     loadComponent: () =>
-      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+      import('./evaluar/evaluar.component').then(
+        (m) => m.EvaluarComponent
+     ),
   },
   {
     path: 'autorizar',
