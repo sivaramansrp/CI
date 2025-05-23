@@ -11,7 +11,7 @@
     "tramite": 301,
     "linkDashboard": "/aga/importante/datosdelasolicitud",
     "linkDepartment": "/aga/importante/datosdelasolicitud",
-    "department": "aga "
+    "department": "aga"
   },
   {
     "id": 3,
@@ -25,7 +25,7 @@
     "tramite": 701,
     "linkDashboard": "/aga/registro-digitalizar-documentos/solicitud",
     "linkDepartment": "/pago/registro-digitalizar-documentos/solicitud",
-    "department": "agadig"
+    "department": "aga"
   },
   {
     "id": 5,
@@ -178,7 +178,7 @@
     "id": 26,
     "tramite": 80102,
     "linkDashboard": "/se/autorizacion-programa-nuevo/solicitud",
-    "linkDepartment": "/se/autorizacion-programa-nuevo/solicitud",
+    "linkDepartment": "/pago/autorizacion-programa-nuevo/solicitud",
     "department": "se"
   },
   {
@@ -248,7 +248,7 @@
     "id": 36,
     "tramite": 90305,
     "linkDashboard": "/se/prosec-modificacion/solicitante",
-    "linkDepartment": "/se/prosec-modificacion/solicitante",
+    "linkDepartment": "/pago/prosec-modificacion/solicitante",
     "department": "se"
   },
   {
@@ -332,7 +332,7 @@
     "id": 48,
     "tramite": 110218,
     "linkDashboard": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
-    "linkDepartment": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+    "linkDepartment": "/pago/certificado-tecnico-japon/validar-certificado-tecnico-japon",
     "department": "se"
   },
   {
@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-    "id": 191,
-    "tramite": 30503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "aga"
-  },
+        "id": 191,
+        "tramite": 30505,
+        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+        "department": "aga"
+    },
   {
     "id": 192,
     "tramite": 31202,
@@ -1346,8 +1346,8 @@
   {
     "id": 193,
     "tramite": 31203,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/renovacion-iva-ieps/mod-aaa",
+    "linkDepartment": "/pago/renovacion-iva-ieps/mod-aaa",
     "department": "aga"
   },
   {
@@ -1360,8 +1360,8 @@
   {
     "id": 195,
     "tramite": 630104,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/equipo-e-instrumentos-musicales/equipo-e-instrumentos-musicales",
+    "linkDepartment": "/pago/equipo-e-instrumentos-musicales/equipo-e-instrumentos-musicales",
     "department": "aga"
   },
   {
@@ -1451,8 +1451,8 @@
   {
     "id": 208,
     "tramite": 221603,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agriculture/sanidad/solicitante",
+    "linkDepartment": "/pago/sanidad/solicitante",
     "department": "agricultura"
   },
   {
@@ -1989,9 +1989,9 @@
   },
   {
     "id": 285,
-    "tramite": 80103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+     "tramite": 80103,
+    "linkDashboard": "/se/registro-solicitud-immex-modalidad/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad/action",
     "department": "se"
   },
   {
@@ -2081,8 +2081,8 @@
   {
     "id": 298,
     "tramite": 140218,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/renuncia-de-permiso/solicitud",
+    "linkDepartment": "/pago/renuncia-de-permiso/solicitud",
     "department": "sener"
   },
   {
@@ -2109,8 +2109,8 @@
   {
     "id": 302,
     "tramite": 6502,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-poblacional/solicitud",
+    "linkDepartment": "/pago/registro-poblacional/solicitud",
     "department": "aga"
   },
   {
@@ -3138,9 +3138,9 @@
   {
     "id": 450,
     "tramite": 220103,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
+    "linkDashboard": "/agricultura/sanidad-acuicola-importacion/solicitud",
+    "linkDepartment": "/pago/sanidad-acuicola-importacion/solicitud",
+    "department": "agriculture"
   },
   {
     "id": 451,
@@ -3432,8 +3432,8 @@
   {
     "id": 492,
     "tramite": 250103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/profepa/embalaje-de-madera/solictud",
+    "linkDepartment": "/pago/embalaje-de-madera/solictud",
     "department": "profepa"
   },
   {
@@ -4226,5 +4226,12 @@
     "linkDashboard": "/aga/autorizacion/mercancia-donada",
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
-  }
+  },
+ {
+    "id": 605,
+    "tramite": 140205,
+    "linkDashboard": "/se/cancelaciones-certificado/solicitud",
+    "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
+    "department": "se"
+ }
 ]

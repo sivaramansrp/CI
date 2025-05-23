@@ -58,7 +58,9 @@ describe('TipoDeAvisoComponent', () => {
         caboDestruccionFecha: '',
       }),
     };
-    mockSeccionLibStore = {};
+    mockSeccionLibStore = {
+      establecerSeccion: jest.fn(),
+    };
     mockSeccionLibQuery = {
       selectSeccionState$: of({
         seccion: [true, false], // Adjusted to match the expected boolean[] type

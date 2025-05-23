@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,8 +16,24 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HEADER_TABLA_AEREO, HEADER_TABLA_CARRETERO, HEADER_TABLA_FERROVIARIO, HEADER_TABLA_MARITIMO, HEADER_TABLA_OTRO, HEADER_TABLA_PEATONAL, LABEL_HORA_ARRIBO, } from '../../../core/enums/transporte-componente.enums';
-import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-trasnporte.model';
+import {
+  HEADER_TABLA_AEREO,
+  HEADER_TABLA_CARRETERO,
+  HEADER_TABLA_FERROVIARIO,
+  HEADER_TABLA_MARITIMO,
+  HEADER_TABLA_OTRO,
+  HEADER_TABLA_PEATONAL,
+  LABEL_HORA_ARRIBO,
+} from '../../../core/enums/transporte-componente.enums';
+import {
+  ItemTransporte,
+  TransporteAereo,
+  TransporteCarretero,
+  TransporteFerroviario,
+  TransporteMaritimo,
+  TransporteOtro,
+  TransportePeatonal,
+} from '../../../core/models/shared/agregar-trasnporte.model';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { BodyValidaFerro } from '../../../core/models/shared/validaciones-transporte.model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
@@ -20,7 +46,10 @@ import { Modal } from 'bootstrap';
 import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
 import { ValidaTransporteService } from '../../../core/services/shared/api-validaciones/valida-transporte.service';
 
-import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
+import {
+  Notificacion,
+  NotificacionesComponent,
+} from '../notificaciones/notificaciones.component';
 import { BooleanoSiNoPipe } from '../../pipes/booleanoSiNo/booleano-si-no.pipe';
 import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
 
@@ -34,13 +63,12 @@ import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
     ReactiveFormsModule,
     InputHoraComponent,
     NotificacionesComponent,
-    BooleanoSiNoPipe
+    BooleanoSiNoPipe,
   ],
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
 export class AgregarTransporteComponent implements OnChanges, OnInit {
-
   /**
    * Tipo de trasnporte seleccionado.
    * @type {string}
@@ -58,7 +86,16 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    * Emisor de eventos para enviar los datos de la tabla.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<(TransporteAereo | TransporteCarretero | TransporteFerroviario | TransporteMaritimo | TransporteOtro | TransportePeatonal)[]>();
+  @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<
+    (
+      | TransporteAereo
+      | TransporteCarretero
+      | TransporteFerroviario
+      | TransporteMaritimo
+      | TransporteOtro
+      | TransportePeatonal
+    )[]
+  >();
 
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
@@ -66,7 +103,8 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Cabecera de la tabla para el transporte ferroviario.
    */
-  readonly HEADER_TABLA_FERROVIARIO: ItemTransporte[] = HEADER_TABLA_FERROVIARIO;
+  readonly HEADER_TABLA_FERROVIARIO: ItemTransporte[] =
+    HEADER_TABLA_FERROVIARIO;
 
   /**
    * Cabecera de la tabla para el transporte carretero.
@@ -76,7 +114,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Cabecera de la tabla para el transporte peatonal.
    */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL
+  readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL;
 
   /**
    * Cabecera de la tabla para el transporte otro.
@@ -152,7 +190,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Control para las observaciones.
    */
-  public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
+  public observaciones: FormControl = new FormControl('', [
+    Validators.maxLength(500),
+  ]);
   anios!: Catalogo[];
 
   /**
@@ -166,12 +206,11 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
     private validaTransporteService: ValidaTransporteService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getTipoEquipo();
@@ -179,7 +218,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
 
   /**
    * Detecta y maneja los cambios en las propiedades de entrada del componente.
-   * 
+   *
    * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
    *                  'tipo': Actualiza el encabezado de la tabla según el tipo.
    *                  'tablaTransporte': Actualiza el cuerpo de la tabla con los datos proporcionados.
@@ -213,24 +252,27 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   }
 
   /**
- * Crea y configura el formulario reactivo para los datos del transporte carretero.
- * Define los campos con sus valores iniciales y validaciones correspondientes.
- * @returns void
- */
+   * Crea y configura el formulario reactivo para los datos del transporte carretero.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
+   */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
       numeroBL: ['', [Validators.maxLength(25)]],
       tipoEquipo: [{ value: '-1', disabled: true }],
-      inicialesEquipo: [{ value: '', disabled: true }, [Validators.maxLength(10)]],
+      inicialesEquipo: [
+        { value: '', disabled: true },
+        [Validators.maxLength(10)],
+      ],
       numeroEquipo: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
     });
   }
 
   /**
- * Crea y configura el formulario reactivo para los datos del transporte peatonal.
- * Define los campos con sus valores iniciales y validaciones correspondientes.
- * @returns void
- */
+   * Crea y configura el formulario reactivo para los datos del transporte peatonal.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
+   */
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
       rfcEmpresa: ['', [Validators.maxLength(13)]],
@@ -241,10 +283,10 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   }
 
   /**
- * Crea y configura el formulario reactivo para los datos del transporte otro.
- * Define los campos con sus valores iniciales y validaciones correspondientes.
- * @returns void
- */
+   * Crea y configura el formulario reactivo para los datos del transporte otro.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
+   */
   crearOtroForm(): void {
     this.otroForma = this.fb.group({
       tipoTransporteDes: ['', [Validators.maxLength(100)]],
@@ -254,10 +296,10 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   }
 
   /**
- * Crea y configura el formulario reactivo para los datos del transporte áereo.
- * Define los campos con sus valores iniciales y validaciones correspondientes.
- * @returns void
- */
+   * Crea y configura el formulario reactivo para los datos del transporte áereo.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
+   */
   crearAereoForm(): void {
     this.aereoForma = this.fb.group({
       arriboPendienteAereo: [''],
@@ -270,10 +312,10 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   }
 
   /**
- * Crea y configura el formulario reactivo para los datos del transporte marítimo.
- * Define los campos con sus valores iniciales y validaciones correspondientes.
- * @returns void
- */
+   * Crea y configura el formulario reactivo para los datos del transporte marítimo.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
+   */
   crearMaritimoForm(): void {
     this.maritimoForma = this.fb.group({
       guiaBLMaritimo: ['', [Validators.maxLength(15)]],
@@ -283,10 +325,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     });
   }
 
-
   /**
    * Determina el tipo de tabla y configura el formulario correspondiente según el tipo de transporte.
-   * 
+   *
    * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
   tipoTabla(): ItemTransporte[] {
@@ -313,23 +354,22 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
       default:
         this.crearOtroForm();
         return this.HEADER_TABLA_OTRO;
-
     }
   }
 
   /**
-  * Abre el modal para agregar un documento.
-  * @returns {void}
-  */
+   * Abre el modal para agregar un documento.
+   * @returns {void}
+   */
   abrirModal(): void {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
   }
 
   /**
-  * Cierra el modal.
-  * @returns {void}
-  */
+   * Cierra el modal.
+   * @returns {void}
+   */
   cerrarModal(): void {
     this.btnCerrarModal.nativeElement.click();
     this.tituloModal = '';
@@ -341,13 +381,23 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   limpiarFormulario(): void {
-    this.carreteroForma.reset();
-  }
+    const FORMULARIOS = [
+      this.carreteroForma,
+      this.ferroviarioForma,
+      this.peatonalForma,
+      this.otroForma,
+      this.aereoForma,
+      this.maritimoForma,
+    ];
 
+    FORMULARIOS.forEach((form) => form?.reset());
+
+    this.observaciones.setValue('');
+  }
 
   /**
    * Agrega un tipo de transporte a la tabla según el tipo seleccionado.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   agregarTipoTransporte(): void {
@@ -361,8 +411,10 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
       }
 
       case 2: {
-        const TRANSPORTE: TransporteFerroviario = this.ferroviarioForma.getRawValue();
-        TRANSPORTE.tipoEquipo = TRANSPORTE.tipoEquipo === '-1' ? '' : TRANSPORTE.tipoEquipo;
+        const TRANSPORTE: TransporteFerroviario =
+          this.ferroviarioForma.getRawValue();
+        TRANSPORTE.tipoEquipo =
+          TRANSPORTE.tipoEquipo === '-1' ? '' : TRANSPORTE.tipoEquipo;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.ferroviarioForma.reset();
@@ -401,7 +453,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
       }
     }
 
-    this.enviarTransporteTabla()
+    this.enviarTransporteTabla();
     this.cerrarModal();
   }
 
@@ -415,7 +467,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   seleccionarTodos(event: Event): void {
     const CHECKBOXES = document.querySelectorAll('.check-transporte');
     CHECKBOXES.forEach((checkbox) => {
-      (checkbox as HTMLInputElement).checked = (event.target as HTMLInputElement).checked;
+      (checkbox as HTMLInputElement).checked = (
+        event.target as HTMLInputElement
+      ).checked;
     });
   }
 
@@ -430,7 +484,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
       const ANIO: Catalogo = {
         id: i,
         descripcion: i.toString(),
-      }
+      };
 
       ANIOS.push(ANIO);
     }
@@ -438,10 +492,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     return ANIOS;
   }
 
-
   /**
    * Emite los datos de transporte a la tabla.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   enviarTransporteTabla(): void {
@@ -455,15 +508,17 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    * return {void} No retorna ningún valor.
    */
   getTipoEquipo(): void {
-    this.tipoEquipoServicio.getTipoEquipo()
+    this.tipoEquipoServicio
+      .getTipoEquipo()
       .pipe(
         tap((response) => {
           if (response) {
             this.tipoEquipoCatalogo = response.datos;
           }
         }),
-        takeUntil(this.destroyNotifier$),
-      ).subscribe();
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
   }
 
   /**
@@ -471,32 +526,44 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    * @returns {void} No retorna ningún valor.
    */
   postValidarNumeroBL(): void {
-    const NUMERO_BL = parseInt(this.ferroviarioForma.get('numeroBL')?.value, 10);
+    const NUMERO_BL = parseInt(
+      this.ferroviarioForma.get('numeroBL')?.value,
+      10
+    );
     if (NUMERO_BL) {
-      this.validaTransporteService.getValidaTransporte(TIPO_TRANSPORTE.FERRO, {
-        numeroBL: NUMERO_BL,
-      }).pipe(
-        tap((response) => {
-          if (response.codigo === '00') {
-            const DATOS = response.datos;
-            this.agregarValorCampoDisabled('tipoEquipo', DATOS.tipoEquipo);
-            this.agregarValorCampoDisabled('inicialesEquipo', DATOS.inicialesEquipo);
-            this.agregarValorCampoDisabled('numeroEquipo', DATOS.numeroEquipo);
-          } else {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: '',
-              modo: 'action',
-              titulo: 'Aviso',
-              mensaje: 'Número BL es inválido.',
-              cerrar: false,
-              txtBtnAceptar: 'Cerrar',
-              txtBtnCancelar: '',
+      this.validaTransporteService
+        .getValidaTransporte(TIPO_TRANSPORTE.FERRO, {
+          numeroBL: NUMERO_BL,
+        })
+        .pipe(
+          tap((response) => {
+            if (response.codigo === '00') {
+              const DATOS = response.datos;
+              this.agregarValorCampoDisabled('tipoEquipo', DATOS.tipoEquipo);
+              this.agregarValorCampoDisabled(
+                'inicialesEquipo',
+                DATOS.inicialesEquipo
+              );
+              this.agregarValorCampoDisabled(
+                'numeroEquipo',
+                DATOS.numeroEquipo
+              );
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: '',
+                modo: 'action',
+                titulo: 'Aviso',
+                mensaje: 'Número BL es inválido.',
+                cerrar: false,
+                txtBtnAceptar: 'Cerrar',
+                txtBtnCancelar: '',
+              };
             }
-          }
-        }),
-        takeUntil(this.destroyNotifier$),
-      ).subscribe();
+          }),
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe();
     } else {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -507,7 +574,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
     }
   }
 
@@ -529,7 +596,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
       return;
     }
 
@@ -543,19 +610,22 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
       return;
     }
 
     const GUIA = GUIA_MASTER ? GUIA_MASTER : GUIA_HOUSE;
-    this.validaTransporteService.getValidaTransporte(TIPO_TRANSPORTE.AEREO, { guiaHouseAereo: GUIA }).pipe(
-      tap((response) => {
-        if (response.codigo === '00') {
-          this.aereoForma.get('guiaValida')?.setValue(true);
-        }
-      }),
-      takeUntil(this.destroyNotifier$),
-    ).subscribe();
+    this.validaTransporteService
+      .getValidaTransporte(TIPO_TRANSPORTE.AEREO, { guiaHouseAereo: GUIA })
+      .pipe(
+        tap((response) => {
+          if (response.codigo === '00') {
+            this.aereoForma.get('guiaValida')?.setValue(true);
+          }
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
   }
 
   /**
@@ -571,7 +641,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
 
   /**
    * Verifica si el valor proporcionado es un booleano.
-   * 
+   *
    * @param valor - Valor a verificar.
    * @returns {boolean} `true` si el valor es un booleano, de lo contrario `false`.
    */
@@ -581,7 +651,5 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     return typeof valor === 'boolean';
   }
 
-  eliminarElementoTabla(): void {
-
-  }
+  eliminarElementoTabla(): void {}
 }

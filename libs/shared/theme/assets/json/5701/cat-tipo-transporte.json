@@ -1,29 +1,29 @@
 {
   "code": 200,
-  "data": [
+  "datos": [
     {
       "id": 1,
-      "value": "Carretero"
+      "descripcion": "Carretero"
     },
     {
       "id": 2,
-      "value": "Ferroviario"
+      "descripcion": "Ferroviario"
     },
     {
       "id": 3,
-      "value": "Aéreo"
+      "descripcion": "Aéreo"
     },
     {
       "id": 4,
-      "value": "Marítimo"
+      "descripcion": "Marítimo"
     },
     {
       "id": 5,
-      "value": "Peatonal"
+      "descripcion": "Peatonal"
     },
     {
       "id": 6,
-      "value": "Otro"
+      "descripcion": "Otro"
     }
   ],
   "message": "Consulta exitosa"

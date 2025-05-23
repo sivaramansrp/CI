@@ -1,4 +1,4 @@
-import { Catalogo, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CrosslistComponent, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -139,12 +139,12 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Eliminar',
@@ -214,11 +214,11 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         ],
         numeroExterior: [
           this.seccionState?.numeroExterior,
-          [Validators.required, Validators.maxLength(55)],
+          [Validators.required, Validators.maxLength(55), Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         numeroInterior: [
           this.seccionState?.numeroInterior,
-          [Validators.maxLength(55)],
+          [Validators.maxLength(55),Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         entidadFederativa: [
           this.seccionState?.entidadFederativa,
@@ -236,12 +236,19 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         ],
       }),
       empresasCapitalSocial: this.fb.group({
-        capitalSocial: [this.seccionState?.capitalSocial, Validators.required],
+        capitalSocial: [
+          this.seccionState?.capitalSocial, 
+          [
+            Validators.required,
+            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.maxLength(20)
+          ]
+        ],
       }),
       permiso: this.fb.group({
         numeroFolioPermiso: [
           this.seccionState?.numeroFolioPermiso,
-          [Validators.required, Validators.maxLength(20)],
+          [Validators.required, Validators.maxLength(20),Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         fechaExpedicion: [
           this.seccionState?.fechaExpedicion,
