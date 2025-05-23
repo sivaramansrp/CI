@@ -188,7 +188,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    */
   initActionFormBuild() { 
     this.datosDelaSolicitud = this.fb.group({
-      tipoMercancia: ['yes', Validators.required],
+      tipoMercancia: ['no', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
