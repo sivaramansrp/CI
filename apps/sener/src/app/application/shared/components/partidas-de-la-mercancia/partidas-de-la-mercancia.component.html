@@ -5,47 +5,42 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="cantidadModificar">Cantidad*:</label>
+            <label class="form-label" for="cantidadModificar">Cantidad:</label>
             <input class="form-control" type="text" id="cantidadModificar" formControlName="cantidadModificar"
               appUppercase aria-labelledby="cantidad" maxlength="18"
               (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadModificar')" />
-            <div *ngIf="esInvalido('cantidadModificar')" class="text-danger">
-              <small
-                *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('required')">Cantidad
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['cantidadModificar'].invalid" class="text-danger">
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('required')">Cantidad
                 es obligatoria.</small>
-              <small
-                *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('pattern')">Solo se
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('pattern')">Solo se
                 permiten números.</small>
-              <small
-                *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')">Máximo
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('maxlength')">Máximo
                 18 caracteres.</small>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="descripcion">Descripción*:</label>
+            <label class="form-label" for="descripcion">Descripción:</label>
             <textarea class="form-control height" cols="55" rows="2" id="descripcion"
               formControlName="descripcionModificar" aria-labelledby="descripcion"
               (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionModificar')"></textarea>
-            <div *ngIf="esInvalido('descripcionModificar')" class="text-danger">
-              <small
-                *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('required')">Descripción
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['descripcionModificar'].invalid" class="text-danger">
+              <small *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('required')">Descripción
                 es obligatoria.</small>
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('maxlength')">Máximo
-                255 caracteres.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('maxlength')">La descripción no puede ser mayor de 1000 caracteres.</small>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+            <label class="form-label" for="valorPartidaUSD">Valor partida USD:</label>
             <input class="form-control" type="number" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
                 setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
               " />
-            <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+            <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].invalid" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
                 campo es obligatorio.</small>
@@ -117,7 +112,7 @@
   <div class="row">
     <div>
       <h6>Partidas</h6>
-      <div *ngIf="mostrarTabla">
+      <div>
         <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
           [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
         </app-tabla-dinamica>
@@ -145,19 +140,18 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group btn-gap">
-              <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()"
-                data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
-                Modificar partidas mercancia
+              <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()">
+                Modificar partidas mercancía
               </button>
-              <button class="btn btn-primary me-2" type="button">
-                Elimina Partida
+              <button class="btn btn-danger me-2" type="button" (click)="onclickEliminar()">
+                Eliminar partida
               </button>
             </div>
           </div>
         </div>
       </form>
 
-      <div #modalRef class="modal fade test-modal" id="modalModificarPartida" tabindex="-1">
+      <div #modalModificarPartidaRef class="modal fade test-modal" id="modalModificarPartida" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen">
           <div class="modal-content">
             <div class="modal-body">
@@ -168,9 +162,9 @@
                     <div class="row">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="cantidad">Cantidad*:</label>
-                          <input class="form-control" type="text" id="cantidad"
-                            formControlName="cantidadModificar" appUppercase aria-labelledby="cantidad" />
+                          <label class="form-label" for="cantidad">Cantidad:</label>
+                          <input class="form-control" type="text" id="cantidad" formControlName="cantidadModificar"
+                            appUppercase aria-labelledby="cantidad" />
                           <div *ngIf="esInvalido('cantidadModificar')" class="text-danger">
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['cantidadModificar'].hasError('required')">Cantidad
@@ -188,7 +182,7 @@
                     <div class="row">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="descripcion">Descripción*:</label>
+                          <label class="form-label" for="descripcion">Descripción:</label>
                           <textarea class="form-control height" rows="3" id="descripcion"
                             formControlName="descripcionModificar" aria-labelledby="descripcion"></textarea>
                           <div *ngIf="esInvalido('descripcionModificar')" class="text-danger">
@@ -196,52 +190,51 @@
                               *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('required')">Descripción
                               es obligatoria.</small>
                             <small
-                              *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('maxlength')">Máximo
-                              255 caracteres.</small>
+                              *ngIf="partidasDelaMercanciaForm.controls['descripcionModificar'].hasError('maxlength')">La descripción no puede ser mayor de 1000 caracteres.</small>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-8">
-                      <div class="form-group">
-                        <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
-                        <input class="form-control" type="number" id="valorPartidaUSD"
-                          formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
-                        <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
-                            campo es obligatorio.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
-                            un número válido.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
-                            valor debe ser mayor o igual a 0.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
-                            20 caracteres permitidos.</small>
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label class="form-label" for="valorPartidaUSD">Valor USD partida:</label>
+                          <input class="form-control" type="number" id="valorPartidaUSD"
+                            formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
+                          <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
+                              campo es obligatorio.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
+                              un número válido.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                              valor debe ser mayor o igual a 0.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              20 caracteres permitidos.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-5">
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8 d-flex align-items-end">
+                        <div class="btn-group buttons-container">
+                          <button type="button" class="btn btn-primary" (click)="onModificarPartida()">Modificar</button>
+                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                            data-bs-dismiss="modal">
+                            Cancelar
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
-                    <div class="row mt-5">
-                    </div>
-                  </div>
                 </form>
               </div>
-              <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-4 d-flex align-items-end"> 
-                  <div class="btn-group buttons-container">
-                    <button type="button" class="btn btn-primary ms-2">Modificar</button>
-                    <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                      data-bs-dismiss="modal">
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
