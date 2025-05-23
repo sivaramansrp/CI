@@ -1,6 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page/auth-page.component';
-import { CambioContrasenaComponent } from '../application/components/cambio-contrasena/cambio-contrasena.component';
+import { CambioContrasenaComponent } from '../components/cambio-contrasena/cambio-contrasena.component';
 import { NgModule } from '@angular/core';
 
 export const ROUTES_AUTH: Routes = [
