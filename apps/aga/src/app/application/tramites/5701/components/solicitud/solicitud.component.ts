@@ -1537,6 +1537,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   verificarDatosExistentesStore(): void {
+    // Verifica si existe tipo de solicitud
+    if (this.solicitudState.tipoSolicitud !== -1) {
+      this.tipoSolicitudSeleccionada = parseInt(
+        this.FormSolicitud.get('tipoSolicitud')?.value,
+        10
+      );
+    }
     //Verifica si programa fomento esta habilitado y si tiene valor.
     if (this.solicitudState.programa) {
       const DATOS_PROGRAMA: DatosCheckInputText = {
@@ -2050,8 +2057,27 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
+  /**
+   * Cambia el tipo de transporte y actualiza el store correspondiente.
+   * @param tipoTransporte {string} - El tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
   changeSeleccionTipoTransporte(tipoTransporte: string): void {
     this.vehiculo.get('tipoTransporte')?.setValue(tipoTransporte);
     this.setValoresStore(this.vehiculo, 'tipoTransporte', 'setTipoTransporte');
+  }
+
+  /**
+   * Cambia el tipo de transporte y actualiza el store correspondiente.
+   * @param tipoTransporte {string} - El tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeSeleccionTipoVehiculo(tipoTransporte: string): void {
+    this.transporteArriboSalida.get('tipoTransporte')?.setValue(tipoTransporte);
+    this.setValoresStore(
+      this.transporteArriboSalida,
+      'tipoTransporteArriboSalida',
+      'setTipoTransporteArriboSalida'
+    );
   }
 }

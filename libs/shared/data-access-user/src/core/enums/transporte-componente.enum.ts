@@ -60,8 +60,12 @@ export const HEADER_TABLA_FERROVIARIO: ItemTransporte[] = [
 
 export const HEADER_TABLA_PEATONAL: ItemTransporte[] = [
     {
-        llave: 'rfcEmpresa',
+        llave: 'empTransportista',
         valor: 'Empresa transportista'
+    },
+    {
+        llave: 'rfcEmpresa',
+        valor: 'RFC empresa transportista'
     },
     {
         llave: 'nombreTransportista',
@@ -151,3 +155,34 @@ export const HEADER_TABLA_AEREO: ItemTransporte[] = [
 ]
 
 export const LABEL_HORA_ARRIBO = 'Hora llegada (aprox)';
+
+export const DESCRIPCION_TIPO_TRANSPORTE = '{tipoTransporte}';
+export const MSG_CAMBIO_TIPO_TRANSPORTE = 'Los datos capturados serán borrados, estás de acuerdo (SI/NO)';
+export const MSG_AGREGA_TRANSPORTE_EXITOSAMENTE = `El ${DESCRIPCION_TIPO_TRANSPORTE} fue agregado correctamente.`;
+
+export const LISTA_TIPO_TRANSPORTE = [
+    {
+        id: 1,
+        nombre: 'Carretero'
+    },
+    {
+        id: 2,
+        nombre: 'Ferroviario'
+    },
+    {
+        id: 3,
+        nombre: 'Peatonal'
+    },
+    {
+        id: 4,
+        nombre: 'Marítimo'
+    },
+    {
+        id: 5,
+        nombre: 'Aéreo'
+    },
+    {
+        id: 6,
+        nombre: 'Otro'
+    }
+]

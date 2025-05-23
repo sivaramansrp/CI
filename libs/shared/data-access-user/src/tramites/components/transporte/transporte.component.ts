@@ -23,8 +23,12 @@ import {
   HEADER_TABLA_FERROVIARIO,
   HEADER_TABLA_MARITIMO,
   HEADER_TABLA_OTRO,
+  HEADER_TABLA_PEATONAL,
   LABEL_HORA_ARRIBO,
-} from '../../../core/enums/transporte-componente.enums';
+  LISTA_TIPO_TRANSPORTE,
+  MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
+  MSG_CAMBIO_TIPO_TRANSPORTE,
+} from '../../../core/enums/transporte-componente.enum';
 import {
   ItemTransporte,
   TransporteAereo,
@@ -43,7 +47,6 @@ import { BooleanoSiNoPipe } from '../../pipes/booleanoSiNo/booleano-si-no.pipe';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { HEADER_TABLA_PEATONAL } from '../../../core/enums/transporte-componente.enum';
 import { ICatalogo } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
@@ -68,6 +71,10 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
   ],
 })
 export class TransporteComponent implements OnInit, OnChanges {
+  /**
+   * Datos de entrada del catalogo de transporte.
+   * @type {Catalogo[]}
+   */
   @Input({ required: true }) catalogoTransporte!: Catalogo[];
 
   /**
@@ -77,6 +84,10 @@ export class TransporteComponent implements OnInit, OnChanges {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() tablaTransporte!: any[];
 
+  /**
+   * Tipo de transporte seleccionado.
+   * @type {string}
+   */
   @Input() tipoTransporteSeleccionado!: string;
 
   /**
@@ -94,17 +105,16 @@ export class TransporteComponent implements OnInit, OnChanges {
     )[]
   >();
 
-  @Output() seleccionTipoTransporte: EventEmitter<string> =
-    new EventEmitter<string>();
-
+  /** */
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
-  @ViewChild('carretero') carretero!: TemplateRef<void>;
-  @ViewChild('ferroviario') ferroviario!: TemplateRef<void>;
-  @ViewChild('aereo') aereo!: TemplateRef<void>;
-  @ViewChild('maritimo') maritimo!: TemplateRef<void>;
-  @ViewChild('peatonal') peatonal!: TemplateRef<void>;
-  @ViewChild('otro') otro!: TemplateRef<void>;
+
+  /**
+   * Emisor de eventos para enviar el tipo de transporte seleccionado.
+   * @type {EventEmitter<string>}
+   */
+  @Output() seleccionTipoTransporte: EventEmitter<string> =
+    new EventEmitter<string>();
 
   /**
    * Cabecera de la tabla para el transporte ferroviario.
@@ -201,17 +211,49 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Lista del catalogo tipo de equipo
+   * @type {ICatalogo[]}
+   */
   public tipoEquipoCatalogo: ICatalogo[] = [];
 
+  /**
+   *  @description Lista de modelos de carros respecto al año.
+   *  @type {Catalogo[]}
+   */
   anios!: Catalogo[];
 
+  /**
+   * @description Formulario para seleccionar el tipo de transporte.
+   * @type {FormGroup}
+   */
   tipoTransporteForma: FormGroup = this.fb.group({
     tipoTransporte: [-1],
   });
 
+  /**
+   * @description Titulo del modal.
+   * @type {string}
+   */
   tituloModal!: string;
+
+  /**
+   * @description Mensaje del modal.
+   * @type {string}
+   */
   mensajeModal!: string;
+
+  /**
+   * @description Tipo de transporte seleccionado.
+   * @type {string}
+   */
   tipoTransporte: string = '';
+
+  /**
+   * @description Lista que contiene los tipos de transporte.
+   * @type {ICatalogo[]}
+   */
+  readonly LISTA_TIPO_TRANSPORTE = LISTA_TIPO_TRANSPORTE;
 
   constructor(
     private fb: FormBuilder,
@@ -236,7 +278,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.tipoTransporteForma
         .get('tipoTransporte')
         ?.setValue(this.tipoTransporteSeleccionado);
-      this.onChangeTipoTransporte();
+
+      this.creaTablaTransporte();
     }
   }
 
@@ -247,13 +290,22 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Se borraran los datos de la tabla.',
+        mensaje: MSG_CAMBIO_TIPO_TRANSPORTE,
         cerrar: false,
         txtBtnAceptar: 'Sí',
         txtBtnCancelar: 'No',
       };
       return;
     }
+
+    this.creaTablaTransporte();
+  }
+
+  /**
+   * Crea la tabla de transporte según el tipo seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
+  creaTablaTransporte(): void {
     const TIPO_TRANSPORTE = parseInt(
       this.tipoTransporteForma.get('tipoTransporte')?.value,
       10
@@ -484,6 +536,9 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.observaciones.setValue('');
   }
 
+  /**
+   * Elimina un elemento de la tabla.
+   */
   eliminarElementoTabla(): void {}
 
   /**
@@ -557,6 +612,24 @@ export class TransporteComponent implements OnInit, OnChanges {
         break;
       }
     }
+
+    const DESCRIPCION_TIPO_TRANSPORTE =
+      this.LISTA_TIPO_TRANSPORTE.find((item) => item.id === TIPO_TRANSPORTE)
+        ?.nombre ?? '';
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: 'Aviso',
+      mensaje: MSG_AGREGA_TRANSPORTE_EXITOSAMENTE.replace(
+        '{tipoTransporte}',
+        DESCRIPCION_TIPO_TRANSPORTE
+      ),
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
 
     this.enviarTransporteTabla();
     this.cerrarModal();
@@ -689,8 +762,12 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.ferroviarioForma.get(campo)?.disable();
   }
 
+  /**
+   * Metodo para manejar la confirmación del modal.
+   * @param aceptar {boolean} - Indica si se acepta la acción.
+   */
   confirmacionModal(aceptar: boolean): void {
-    if (aceptar) {
+    if (aceptar && this.nuevaNotificacion.txtBtnCancelar !== '') {
       this.bodyTabla = [];
       this.datosTabla.emit(this.bodyTabla);
       const TIPO_TRANSPORTE = parseInt(

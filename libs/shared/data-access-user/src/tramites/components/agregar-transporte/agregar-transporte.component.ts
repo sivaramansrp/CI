@@ -24,7 +24,7 @@ import {
   HEADER_TABLA_OTRO,
   HEADER_TABLA_PEATONAL,
   LABEL_HORA_ARRIBO,
-} from '../../../core/enums/transporte-componente.enums';
+} from '../../../core/enums/transporte-componente.enum';
 import {
   ItemTransporte,
   TransporteAereo,
