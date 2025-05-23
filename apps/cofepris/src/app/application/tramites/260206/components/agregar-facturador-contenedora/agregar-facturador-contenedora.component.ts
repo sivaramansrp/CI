@@ -27,6 +27,12 @@ export class AgregarFacturadorContenedoraComponent implements OnInit, OnDestroy 
    */
   public tramiteState!: Tramite260206State;
 
+    /**
+     * Constructor de la clase AgregarFacturadorContenedoraComponent.
+     * 
+     * @param tramiteStore - Proporciona acceso al estado y métodos del store relacionado con el trámite 260206.
+     * @param tramite260206Query - Proporciona acceso a las consultas relacionadas con el trámite 260206.
+     */
     constructor(
         public tramiteStore: Tramite260206Store,
         public tramite260206Query: Tramite260206Query){

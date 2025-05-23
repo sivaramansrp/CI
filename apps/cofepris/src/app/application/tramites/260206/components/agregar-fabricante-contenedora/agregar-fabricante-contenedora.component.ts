@@ -27,6 +27,12 @@ export class AgregarFabricanteContenedoraComponent implements OnInit, OnDestroy 
  */
     private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Constructor de la clase AgregarFabricanteContenedoraComponent.
+     * 
+     * @param tramiteStore - Proporciona acceso al estado y acciones relacionadas con el trámite 260206.
+     * @param tramite260206Query - Proporciona métodos para consultar el estado del trámite 260206.
+     */
     constructor(
         public tramiteStore: Tramite260206Store,
         public tramite260206Query: Tramite260206Query){
