@@ -327,6 +327,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.campoObligatorioChange();
     if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
+      this.agregarProveedorForm.enable(); 
     }
     if(this.proveedorTablaDatos.length > 0) {
       this.agregarProveedorForm.patchValue(this.proveedorTablaDatos[0]);
@@ -414,7 +415,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    if(this.proveedorTablaDatos.length > 0) {
+    if(this.formaDatos) {
+      if ('tableindex' in this.formaDatos) {
+        this.proveedores[0].tableIndex = (this.formaDatos as Proveedor).tableIndex;
+      }
       this.actualizaExistenteEnProveedorDatos.emit(this.proveedores);
     }
     else{
@@ -515,6 +519,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
     const ESTADO = this.agregarProveedorForm.get('estado');
     const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+    const CURP = this.agregarProveedorForm.get('curp');
 
     if (this.campoObligatorioProveedor) {
       NOMBRES?.setValidators([Validators.required]);
@@ -546,6 +551,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     NUMEROEXTERIOR?.updateValueAndValidity();
     ESTADO?.updateValueAndValidity();
     CODIGOPOSTAL?.updateValueAndValidity();
+    if (!this.esCURP) {
+      CURP?.clearValidators();
+    }
+    CURP?.updateValueAndValidity();
   }
 
 

@@ -136,6 +136,7 @@ export interface Proveedor {
   entidadFederativa: string;
   estadoLocalidad: string;
   codigoPostal: string;
+  tableIndex?: number;
 }
 
 /**
