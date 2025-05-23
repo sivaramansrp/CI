@@ -34,7 +34,7 @@ export const PASOS = [
 export const SECCIONES_TRAMITE_260206 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
+      VALIDACION_SECCION_2: false,
       VALIDACION_SECCION_3: false,
       VALIDACION_SECCION_4: false,
     },
@@ -45,3 +45,14 @@ export const SECCIONES_TRAMITE_260206 = {
       requiereValidacion: true,
     },
   };
+
+  /**
+   * Constante que define los elementos requeridos para el proceso de tramitación.
+   * 
+   * Contiene un arreglo de cadenas que representan los campos obligatorios
+   * necesarios para completar el trámite. Estos elementos incluyen:
+   * - `denominacionRazon`: Representa la denominación o razón social.
+   * - `correoElectronico`: Correo electrónico de contacto.
+   * - `scian`: Código SCIAN relacionado con la actividad económica.
+   */
+  export const DATOS_ELEMENTOS_REQUERIDOS = ['denominacionRazon', 'correoElectronico', 'scian'];

@@ -88,6 +88,10 @@ export class DatosMercanciaComponent implements OnInit {
    */
   @Input() public mercanciaFormState!: MercanciaForm;
 
+  /**
+   * @property {TablaMercanciasDatos} datoSeleccionado
+   * Dato seleccionado de la tabla de mercancías recibido como entrada desde el componente padre.
+   */
   @Input() public datoSeleccionado!:TablaMercanciasDatos;
 
   /**
@@ -166,6 +170,12 @@ export class DatosMercanciaComponent implements OnInit {
    * Controla la visibilidad del listado de uso específico.
    */
   public usoEspesificoColapsable = false;
+
+  /**
+   * @property {string[]} elementosRequirdos
+   * Lista de elementos requeridos para el formulario.
+   */
+  public elementosRequirdos: string[] = [];
 
   /** Etiquetas personalizadas para los crosslists */
   public paisDeOriginLabel: CrossListLable = {
@@ -301,7 +311,7 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.validarElementos();
     this.crearMercanciaForm();
-
+    this.crossListRequirdos();
   }
 
   /**
@@ -339,6 +349,18 @@ export class DatosMercanciaComponent implements OnInit {
    * Lista de registros Clave seleccionados.
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
+
+  /**
+   * @method crossListRequirdos
+   * @description Actualiza las etiquetas de los crosslists según los elementos requeridos.
+   * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
+   */
+  crossListRequirdos(): void {
+    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+  }
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -382,6 +404,11 @@ export class DatosMercanciaComponent implements OnInit {
         break;
       case 260201:
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        this.elementosRequirdos = [
+          'paisDeOrigen',
+          'paisDeProcedencia',
+          'usoEspecífico'
+        ]
         break
       default:
         if (this.detalleMercancia) {

@@ -53,9 +53,9 @@
 
     <div class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label">R.F.C*:</label>
+        <label class="form-label">R.F.C * :</label>
         <span
-        class="bi bi-question-circle-fill"
+        class="bi bi-question-circle-fill mx-1"
         title="Registro Federal de Contribuyente"
         data-bs-toggle="tooltip"
       ></span>
@@ -79,7 +79,7 @@
         <label
           class="form-label row mt-3 mover-izquierda fs-2"
           for="denominacionRazon"
-          >Denominación/razón social*:</label
+          >Denominación/razón social * :</label
         >
         <input
           class="form-control"
@@ -104,7 +104,7 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
+        <label class="form-label">Nombre(s) * :</label>
         <input type="text" class="form-control" [maxlength]="200" formControlName="nombres" [ngClass]="esInvalido('nombres') ? 'required' : ''" />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['nombres'].errors?.['required']">
@@ -116,7 +116,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido * :</label>
         <input
           type="text"
           class="form-control"
@@ -248,10 +248,10 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label">Calle</label>
-        <span class="form-label" *ngIf="elementosRequeridos.includes('calle')">*</span>
+        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('calle')">*</span>
         <span class="form-label">:</span>
         <span
-        class="bi bi-question-circle-fill"
+        class="bi bi-question-circle-fill mx-1"
         title="Domicilio, calle, número interior, número exterior, lote"
         data-bs-toggle="tooltip"
       ></span>
@@ -264,14 +264,14 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label" *ngIf="elementosRequeridos.includes('numeroExterior')">*</span>
+        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('numeroExterior')">*</span>
         <span class="form-label">:</span>
         <input
           type="text"
           class="form-control"
           formControlName="numeroExterior"
           [maxlength]="55"
-          [ngClass]="esInvalido('calle') ? 'required' : ''"
+          [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
           <small *ngIf="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']">
@@ -307,7 +307,7 @@
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:</label>
         <span
-        class="bi bi-question-circle-fill"
+        class="bi bi-question-circle-fill mx-1"
         title="ejemplo@dominio.com"
         data-bs-toggle="tooltip"
       ></span>
@@ -345,7 +345,7 @@
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
           >
-            Limpar
+          Limpiar
           </button>
           <button
             type="button"
