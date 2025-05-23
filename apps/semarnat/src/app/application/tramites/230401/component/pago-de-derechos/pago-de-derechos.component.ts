@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   delay,
@@ -9,7 +10,6 @@ import {
 } from 'rxjs';
 import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
@@ -21,16 +21,45 @@ import { Tramite230401Store } from '../../estados/tramite230401.store';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss'
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit , OnDestroy {
+  /**
+   * Formulario reactivo que contiene los campos de datos del importador/exportador.
+   * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
+   *
+   * @type {FormGroup}
+   */
   public pagoDerechos!: FormGroup;
+
+  /**
+   * Suscripción a los cambios en el formulario reactivo.
+   */
   public clasificacion: string = '';
+
+  /**
+   * Estado de la solicitud de la sección 230401.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la solicitud de la sección 230401.
+   */
   public pagoDerechosState!: PagoDerechosState;
+
+  /**
+   * Estado de la sección de la solicitud.
+   */
   private seccion!: SeccionLibState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   constructor(public pantallasService: PantallasActionService, private fb: FormBuilder,
     public tramite230401Store:Tramite230401Store, public solicitud230401Query: Solicitud230401Query,
-    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore
+    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore,
+    private consultaQuery: ConsultaioQuery,
   ) {
     this.pantallasService.inicializaPagoDerechosCatalogo();
   }
@@ -41,6 +70,16 @@ export class PagoDeDerechosComponent implements OnInit {
    * Los campos 'banco' y 'fecha' son obligatorios.
    */
   ngOnInit(): void {
+
+        this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
      this.solicitud230401Query.seletPagoDerechosState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -78,6 +117,19 @@ export class PagoDeDerechosComponent implements OnInit {
       )
       .subscribe();
   }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+    inicializarEstadoFormulario(): void {
+      this.createPagoDerechos();
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechos.disable();
+      } else {
+        this.pagoDerechos.enable();
+      }
+    }
+
   /**
    * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
    * y sus respectivas validaciones. Algunos campos están deshabilitados y tienen valores
@@ -115,4 +167,16 @@ export class PagoDeDerechosComponent implements OnInit {
     this.tramite230401Store.setPagoDerechosStateProperty('banco', this.clasificacion);
   }
 
+    /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

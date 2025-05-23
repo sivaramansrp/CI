@@ -2,6 +2,7 @@ import {
   ALERTA_DE_MATERIAL,
   Catalogo,
   CatalogoPaises,
+  ConsultaioQuery,
   CrossListLable,
   SeccionLibQuery,
   ValidacionesFormularioService,
@@ -225,17 +226,35 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       funcion: () => this.quitarTres(CONTINUAR),
     },
   ];
+  /**
+   * Estado de la solicitud de la sección 230401.
+   */
   private seccion!: SeccionLibState;
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   constructor(public pantallasActionService:PantallasActionService,
     public validacionesService:ValidacionesFormularioService,
     public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
-  public solicitud230401Query: Solicitud230401Query,
+  public solicitud230401Query: Solicitud230401Query, private consultaQuery: ConsultaioQuery,
     private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore) {
     // do nothing
   }
 
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
     this.solicitud230401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -274,6 +293,18 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+     /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      this.creatFormSolicitud();
+      if (this.esFormularioSoloLectura) {
+        this.FormSolicitud.disable();
+      } else {
+        this.FormSolicitud.enable();
+      }
+    }
+    
   /**
    * Verifica si el formulario es válido.
    * 
@@ -286,11 +317,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    
     for (const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
-      const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
-      if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-        return false;
+      if (Object.prototype.hasOwnProperty.call(this.FormSolicitud.controls, NOMBRE_DEL_CONTROL)) {
+        const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
+        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+          return false;
+        }
       }
     }
     return true;

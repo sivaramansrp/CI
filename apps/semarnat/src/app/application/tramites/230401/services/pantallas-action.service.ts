@@ -16,6 +16,8 @@
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Solicitud230401State } from '../estados/tramite230401.store';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,9 @@ export class PantallasActionService {
   // Las siguientes variables se utilizan en el componente pago de derechos
   listoBanco: Catalogo[] = [];
 
-  constructor(public httpServicios: HttpClient) {
+  constructor(public httpServicios: HttpClient,
+    public tramite230401Store: Solicitud230401State
+  ) {
         // do nothing.
   }
 
@@ -101,5 +105,13 @@ export class PantallasActionService {
         self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+  actualizarEstadoFormulario(DATOS: Solicitud230401State): void {
+    this.tramite230401Store.setTipoSolicitud(DATOS.tipoSolicitud);
+  }
+
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud230401State> {
+    return this.httpServicios.get<Solicitud230401State>('assets/json/301/registro_toma_muestras_mercancias.json');
   }
 }
