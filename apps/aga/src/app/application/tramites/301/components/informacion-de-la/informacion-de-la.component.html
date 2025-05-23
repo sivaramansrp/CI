@@ -1,12 +1,13 @@
 <div class="container mt-4 mb-4">
   <ng-titulo titulo="Información de la mercancía" />
-  <form [formGroup]="informacionDeLaform">
+  <form *ngIf="informacionDeLaform" [formGroup]="informacionDeLaform">
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="fraccionArancelariaOptions"
           formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'"
+          [isDisabled]="esFormularioSoloLectura"
           [required]="true"
           name="fraccionArancelaria"
           (change)="
@@ -43,6 +44,7 @@
         <app-catalogo-select
           [catalogo]="nicoOptions"
           formControlName="nico"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="'Nico'"
           [required]="true"
           name="nico"
@@ -129,6 +131,7 @@
         <app-catalogo-select
           [catalogo]="estadoFisicoOptions"
           formControlName="estadoFisico"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="'Estado Fisico'"
           [required]="true"
           name="estadoFisico"
@@ -166,8 +169,4 @@
       </div>
     </div>
   </form>
-
-  <div class="row my-5">
-    <btn-continuar [datos]="datosPasos"></btn-continuar>
-  </div>
 </div>
