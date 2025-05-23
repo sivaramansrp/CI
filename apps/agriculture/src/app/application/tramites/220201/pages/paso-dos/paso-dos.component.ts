@@ -14,7 +14,7 @@ import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enu
   templateUrl: './paso-dos.component.html',
   styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
-  imports:[TituloComponent, AlertComponent, TablaDinamicaComponent, AnexarDocumentosComponent]
+  imports:[TituloComponent, AlertComponent, AnexarDocumentosComponent]
 })
 export class PasoDosComponent {
 

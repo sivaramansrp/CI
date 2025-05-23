@@ -2,13 +2,17 @@ import { HttpClient } from '@angular/common/http';
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 
 /**
  * Componente para el asistente de solicitud.
@@ -21,7 +25,10 @@ import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos } from '../../models/2
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrls: ['./paso-uno.component.scss']
+  styleUrls: ['./paso-uno.component.scss'],
+  standalone: true,
+  imports:[SolicitanteComponent,DatosDeLaSolicitudComponent,
+      DatosParaMovilizacionNacionalComponent,PagoDeDerechosComponent,TercerosComponent,CommonModule]
 })
 export class PasoUnoComponent implements OnInit,OnDestroy {
     private destroyNotifier$ = new Subject<void>();
