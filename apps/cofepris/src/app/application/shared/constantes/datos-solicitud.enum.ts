@@ -334,6 +334,16 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+/**
+ * Lista de formas farmacéuticas utilizadas en el sistema.
+ * 
+ * Esta constante contiene un arreglo de cadenas que representan
+ * diferentes formas farmacéuticas, como aerosoles, cápsulas, 
+ * comprimidos, cremas y emulsiones.
+ * 
+ * @const
+ * @type {string[]}
+ */
 export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
   'AEROSOL',
   'CAPSULAS',
