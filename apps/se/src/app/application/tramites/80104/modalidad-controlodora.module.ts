@@ -32,11 +32,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ComplementosSeccionComponent } from '../../shared/components/complementos-seccion/complementos-seccion.component';
 
-import { AnexoUnoSeccionComponent } from '../../shared/components/anexo-uno-seccion/anexo-uno-seccion.component';
-
 import { AnexoTresComponent } from '../../shared/components/anexo-tres/anexo-tres.component';
-import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-routing.module';
+import { AnexoUnoSeccionComponent } from '../../shared/components/anexo-uno-seccion/anexo-uno-seccion.component';
 import { EmpresasControladasComponent } from './component/empresas-controladas/empresas-controladas.component';
+
+import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-routing.module';
+
 @NgModule({
   declarations: [
     PasoCapturarSolicitudComponent,

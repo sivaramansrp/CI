@@ -1,11 +1,12 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FraccionArancelariaDescripcion } from '../../../shared/models/empresas.model';
 import {
   DatosCatalago,
   DatosEmpresaExtranjera,
   Servicio,
   ServicioInmex,
 } from '../models/nuevo-programa-industrial.model';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FraccionArancelariaDescripcion } from '../../../shared/models/empresas.model';
+
 
 /**
  * @const PASOS
