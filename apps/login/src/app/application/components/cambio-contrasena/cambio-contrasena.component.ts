@@ -75,17 +75,7 @@ export class CambioContrasenaComponent implements OnInit {
     };
     this.tramiteService.cambioContrasena(MODELO_CAMBIO_CONTRASENA).subscribe({
       next: (respuesta) => {
-           this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'success',
-          modo: 'action',
-          titulo: 'Avisos',
-          mensaje: 'Contraseña cambiada exitosamente',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        }
+         
         // Aquí podrías mostrar un mensaje al usuario o redirigir
       },
       error: (err) => {
