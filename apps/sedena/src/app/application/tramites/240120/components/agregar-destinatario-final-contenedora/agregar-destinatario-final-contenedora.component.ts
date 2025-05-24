@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
+import { OnDestroy } from '@angular/core';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 
@@ -20,7 +21,7 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnDestroy {
   /**
    * Constructor del componente.
    *
@@ -87,4 +88,15 @@ export class AgregarDestinatarioFinalContenedoraComponent {
     this.tramiteStore.actualizaExistenteEnDestinatarioDatos(event);
   }
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Emite y completa el observable `destroyNotifier$` para limpiar suscripciones activas
+ * y prevenir fugas de memoria.
+ *
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

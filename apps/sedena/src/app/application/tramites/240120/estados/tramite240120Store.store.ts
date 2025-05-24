@@ -59,7 +59,20 @@ export function createInitialState(): Tramite240120State {
 
 /**
  * Store que maneja el estado del trámite 240120.
- * Utiliza Akita para el control reactivo del estado.
+ * Utiliza Akita para el control reactivo del estado y proporciona métodos para actualizar,
+ * eliminar y modificar los datos de destinatarios finales, proveedores, mercancías y formularios asociados al trámite.
+ *
+ * Este store permite:
+ * - Cambiar la pestaña seleccionada.
+ * - Actualizar los datos generales del trámite y del pago de derechos.
+ * - Agregar, actualizar y eliminar destinatarios finales y proveedores.
+ * - Agregar y eliminar mercancías.
+ * - Gestionar la edición de destinatarios y proveedores mediante propiedades auxiliares.
+ * - Reemplazar listas completas de destinatarios o proveedores.
+ *
+ * @export
+ * @class Tramite240120Store
+ * @extends {Store<Tramite240120State>}
  */
 @Injectable({
   providedIn: 'root',
@@ -72,10 +85,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Cambia la pestaña actualmente seleccionada.
-   *
-   * @method updateTabSeleccionado
    * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
-   * @returns {void}
    */
   public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
@@ -86,10 +96,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Actualiza los datos generales del formulario de trámite.
-   *
-   * @method updateDatosDelTramiteFormState
    * @param {DatosDelTramiteFormState} datosDelTramiteFormState - Estado actualizado del formulario.
-   * @returns {void}
    */
   public updateDatosDelTramiteFormState(
     datosDelTramiteFormState: DatosDelTramiteFormState
@@ -102,10 +109,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Actualiza los datos del formulario de pago de derechos.
-   *
-   * @method updatePagoDerechosFormState
    * @param {PagoDerechosFormState} pagoDerechosFormState - Estado actualizado del formulario de pago.
-   * @returns {void}
    */
   public updatePagoDerechosFormState(
     pagoDerechosFormState: PagoDerechosFormState
@@ -118,10 +122,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Agrega nuevos registros a la tabla de destinatarios finales.
-   *
-   * @method updateDestinatarioFinalTablaDatos
    * @param {DestinoFinal[]} newDestinatarios - Nuevos destinatarios a agregar.
-   * @returns {void}
    */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: DestinoFinal[]
@@ -137,10 +138,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Agrega nuevos registros a la tabla de proveedores.
-   *
-   * @method updateProveedorTablaDatos
    * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar.
-   * @returns {void}
    */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
@@ -151,10 +149,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Agrega nuevos registros a la tabla de mercancías.
-   *
-   * @method updateMercanciaTablaDatos
    * @param {MercanciaDetalle[]} newMercancia - Nuevas mercancías a agregar.
-   * @returns {void}
    */
   public updateMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
     this.update((state) => ({
@@ -164,11 +159,9 @@ export class Tramite240120Store extends Store<Tramite240120State> {
   }
 
   /**
-   * Actualiza los datos de un destinatario final específico.
-   *
-   * @method actualizarDatosDestinatario
+   * Actualiza los datos de un destinatario final específico para su edición.
+   * También limpia el estado de edición de proveedor.
    * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
-   * @returns {void}
    */
   public actualizarDatosDestinatario(datos: DestinoFinal): void {
     this.update((state) => ({
@@ -179,11 +172,9 @@ export class Tramite240120Store extends Store<Tramite240120State> {
   }
 
   /**
-   * Actualiza los datos de un proveedor específico.
-   *
-   * @method actualizarDatosProveedor
+   * Actualiza los datos de un proveedor específico para su edición.
+   * También limpia el estado de edición de destinatario.
    * @param {Proveedor} datos - Datos del proveedor a modificar.
-   * @returns {void}
    */
   public actualizarDatosProveedor(datos: Proveedor): void {
     this.update((state) => ({
@@ -195,9 +186,7 @@ export class Tramite240120Store extends Store<Tramite240120State> {
 
   /**
    * Elimina un destinatario de la tabla de destinatarios.
-   *
-   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
-   * @returns void
+   * @param {DestinoFinal} destinatarioFinal - El destinatario que se eliminará.
    */
   eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
     this.update(state => {
@@ -215,17 +204,9 @@ export class Tramite240120Store extends Store<Tramite240120State> {
     
 
   /**
-   * Elimina uno o varios destinatarios de la tabla de datos de destinatarios finales.
-   *
-   * @param destinatarioFinal - Un destinatario o un arreglo de destinatarios a eliminar.
-   *
-   * @returns void
-   *
-   * @memberof NombreDeLaClase
-   *
-   * @description
-   * Busca y elimina los destinatarios especificados del estado actual. La comparación se realiza
-   * preferentemente por la propiedad `tableindex` si está disponible, de lo contrario se comparan todas las claves del objeto.
+   * Elimina uno o varios destinatarios de la tabla de destinatarios finales.
+   * La comparación se realiza por `tableindex` si está disponible, o por todas las claves del objeto.
+   * @param {DestinoFinal[] | DestinoFinal} destinatarioFinal - Destinatario(s) a eliminar.
    */
   eliminarDestinatarioMultiple(destinatarioFinal: DestinoFinal[] | DestinoFinal): void {
     this.update(state => {
@@ -263,21 +244,18 @@ export class Tramite240120Store extends Store<Tramite240120State> {
    * @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
    * @returns void
    */
-     eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
-      this.update(state => {
-        const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele => 
-          Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
-        );
-    
-        if (INDICE_A_ELIMINAR !== -1) {
-          state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
-        }
-    
-        return {
-          ...state,
-          proveedorTablaDatos: [...state.proveedorTablaDatos],
-        };
-      });
+    eliminarProveedorFinal(proveedorFinal: Proveedor): void {
+    this.update(state => {
+      const PROVEEDORES_ACTUALIZADOS = state.proveedorTablaDatos.filter(ele =>
+        !Object.keys(proveedorFinal).every(
+          key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor]
+        )
+      );
+      return {
+        ...state,
+        proveedorTablaDatos: PROVEEDORES_ACTUALIZADOS,
+      };
+    });
     }
 
     /**
@@ -324,6 +302,19 @@ export class Tramite240120Store extends Store<Tramite240120State> {
     }));
     this.setModificarDestinarioDatos(null);
   }
+  public actualizaExistenteEnProveedorDatos(
+    newProveedor: Proveedor[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaDatos: state.proveedorTablaDatos.map(
+        (item) => item.tableIndex === newProveedor[0].tableIndex
+      ? newProveedor[0]
+      : item
+      ),
+    }));
+    this.setModificarProveedorDatos(null);
+  }
 
   /**
    * Reemplaza la lista completa de destinatarios finales en el estado.
@@ -340,6 +331,19 @@ export class Tramite240120Store extends Store<Tramite240120State> {
   }
 
   /**
+   * Reemplaza la lista completa de proveedores en el estado.
+   *
+   * @method setProveedorTablaDatos
+   * @param {Proveedor[]} proveedor - Nueva lista de proveedores.
+   * @returns {void}
+   */
+  public setProveedorTablaDatos(proveedor: Proveedor[]): void {
+  this.update(state => ({
+    ...state,
+    proveedorTablaDatos: [...proveedor],
+  }));
+  }
+  /**
    * Establece el valor de modificarDestinarioDatos en el estado.
    *
    * @param {DestinoFinal | null} destinatario - El destinatario a establecer o null.
@@ -349,6 +353,19 @@ export class Tramite240120Store extends Store<Tramite240120State> {
     this.update(state => ({
       ...state,
       modificarDestinarioDatos: destinatario,
+    }));
+  }
+
+    /**
+   * Establece el valor de modificarProveedorDatos en el estado.
+   *
+   * @param {Proveedor | null} proveedor - El proveedor a establecer o null.
+   * @returns {void}
+   */
+    public setModificarProveedorDatos(proveedor: Proveedor | null): void {
+    this.update(state => ({
+      ...state,
+      modificarProveedorDatos: proveedor,
     }));
   }
 }
