@@ -83,6 +83,9 @@
                                 <div *ngIf="isInvalid('numeroContenedor')" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
+                                <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']" class="mensaje-error">
+                                    Por favor, no escribas menos de 6 caracteres
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -92,7 +95,7 @@
                         <div class="form-group pull-right">
                             <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
                             <button type="button" class="btn btn-primary ms-2" (click)="datosCapturaModal()"
-                                data-bs-toggle="modal" data-bs-target="#modalAgregarConstanciaTransferencia">Buscar</button>
+                                data-bs-toggle="modal">Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -124,6 +127,9 @@
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
                             <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)"></input-fecha>
+                            <div *ngIf="isInvalid('fechaIngreso')" class="mensaje-error">
+                                La fecha de vigencia debe ser mayor que la fecha de ingreso
+                            </div>
                         </div>
                     </div>
                     <br />
@@ -209,7 +215,7 @@
     </form>
 
     <div class="modal fade" id="modalAgregarConstanciaTransferencia" tabindex="-1" role="dialog"
-        aria-labelledby="modalAgregarConstanciaTransferenciaLabel" aria-hidden="true">
+        aria-labelledby="modalAgregarConstanciaTransferenciaLabel" aria-hidden="true" #modalAgregarConstanciaTransferencia>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

@@ -228,7 +228,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.contenedores = {
       catalogos: [],
-      labelNombre: 'Tipo de Documento',
+      labelNombre: 'Tipo de equipos',
       primerOpcion: 'Seleccione un valor',
     };
   }
@@ -275,7 +275,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
       inicialesContenedor: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
-      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
+      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required,Validators.minLength(6), Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
       aduanaMenuDesplegable: [
@@ -391,12 +391,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar modal de captura de datos.
    */
   datosCapturaModal(): void {
-    this.solicitudForm.markAllAsTouched();
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-    this.mostrarButtons = false;
+    // if (this.solicitudForm.invalid) {
+    //   this.solicitudForm.markAllAsTouched();
+    // } else {
+      this.solicitudForm.markAllAsTouched();
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+      }
+      this.mostrarButtons = false;
+    // }
   }
 
   /**
