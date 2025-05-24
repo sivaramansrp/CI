@@ -27,11 +27,9 @@ export class TramiteService {
         if (rfc) {
             params = params.set('rfc', rfc);
         }
-
         if (curp) {
             params = params.set('curp', curp);
         }
-        return this.http.get<ConsultaRegistro>(`/assets/json/funcionario/consulta-registro.json`, { params });
+        return this.http.get<ConsultaRegistro>(`/assets/json/login/consulta-registro.json`, { params });
     }
-
 }

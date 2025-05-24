@@ -40,35 +40,5 @@
                 </div>
             </form>
         </div>
-        <div class="row mt-4" *ngIf="personasNotificaciones.length > 0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th></th>
-                            <th>RFC</th>
-                            <th>NOMBRE</th>
-                            <th>APELLIDO PATERNO</th>
-                            <th>APELLIDO MATERNO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let persona of personasNotificaciones">
-                            <input type="checkbox" [(ngModel)]="persona.seleccionado" />
-                            <td>{{ persona.rfc }}</td>
-                            <td>{{ persona.nombre }}</td>
-                            <td>{{ persona.apellidoPaterno }}</td>
-                            <td>{{ persona.apellidoMaterno }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div *ngIf="visualizarTabla" class="row">
-            <div class="d-flex justify-content-lg-end h1">
-                <button class="btn btn-primary ms-2" type="button" (click)="enviarFirma()">Firmar</button>
-                <button class="btn btn-default ms-2" type="button" (click)="eliminarSeleccionados()">Eliminar</button>
-            </div>
-        </div>
     </div>
 </div>
