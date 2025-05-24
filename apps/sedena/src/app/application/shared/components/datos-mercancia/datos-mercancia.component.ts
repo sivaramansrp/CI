@@ -70,6 +70,37 @@ export class DatosMercanciaComponent implements OnInit {
  */
   @Input() public idProcedimiento!: number;
 
+
+  /**
+   * Datos de la mercancía que se reciben desde el componente padre para ser editados o visualizados.
+   * Puede ser un objeto de tipo `MercanciaDetalle`, `null` o `undefined`.
+   * 
+   * @type {MercanciaDetalle | null | undefined}
+   * @memberof DatosMercanciaComponent
+   * @input
+   */
+  @Input() formaDatos!: MercanciaDetalle | null | undefined;
+
+  /**
+   * Evento que se emite cuando se actualiza una mercancía existente en la lista.
+   * Envía un arreglo de objetos `MercanciaDetalle` al componente padre.
+   *
+   * @type {EventEmitter<MercanciaDetalle[]>}
+   * @memberof DatosMercanciaComponent
+   * @output
+   */
+  @Output() actualizaExistenteEnDatosMercancias = new EventEmitter<MercanciaDetalle[]>();
+
+  /**
+   * Evento que se emite cuando el usuario cancela la operación.
+   * Envía un valor booleano al componente padre para indicar la acción de cancelación.
+   *
+   * @type {EventEmitter<boolean>}
+   * @memberof DatosMercanciaComponent
+   * @output
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+
   /**
    * Indica si se puede mostrar la lista cruzada.
    * Esta propiedad controla la visibilidad de la lista cruzada
@@ -223,7 +254,15 @@ export class DatosMercanciaComponent implements OnInit {
     };
 
     this.datosMercancias.push(DATOS_MERCANCIA);
-    this.updateMercanciaDetalle.emit(this.datosMercancias);
+    if(this.formaDatos) {
+      if ('tableIndex' in this.formaDatos) {
+        this.datosMercancias[0].tableIndex = (this.formaDatos as MercanciaDetalle).tableIndex;
+      }
+      this.actualizaExistenteEnDatosMercancias.emit(this.datosMercancias);
+    }
+    else {
+      this.updateMercanciaDetalle.emit(this.datosMercancias);
+    }
     this.datosMercancia.reset();
     this.ubicaccion.back();
   }
@@ -259,6 +298,10 @@ export class DatosMercanciaComponent implements OnInit {
         this.datosMercancia.get('umt')?.disable();
       }
     });
+    if (this.formaDatos) {
+      this.datosMercancia.patchValue(this.formaDatos);
+      this.datosMercancia.enable();
+    }
   }
 
   /**
@@ -329,6 +372,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   cancelar(): void {
+    this.cancelarEventListener.emit(true);
     this.ubicaccion.back();
   }
 }
