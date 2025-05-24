@@ -13,7 +13,14 @@
           id="claveReferencia"
           class="form-control"
           formControlName="claveReferencia"
+          maxlength="9"
+           [ngClass]="esInvalido('claveReferencia') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('claveReferencia')" class="text-danger">
+          <small *ngIf="pagoDerechosForm.controls['claveReferencia'].errors?.['required']">
+            Todos los campos de pago son requeridos
+          </small>
+          </div>
       </div>
 
       <!-- Cadena de la dependencia -->
@@ -26,7 +33,14 @@
           id="cadenaDependencia"
           class="form-control"
           formControlName="cadenaDependencia"
+          maxlength="14"
+          [ngClass]="esInvalido('cadenaDependencia') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('cadenaDependencia')" class="text-danger">
+          <small *ngIf="pagoDerechosForm.controls['claveReferencia'].errors?.['required']">
+            Todos los campos de pago son requeridos
+          </small>
+          </div>
       </div>
 
       @if(mostrarBanco) {
@@ -61,7 +75,17 @@
           id="llavePago"
           class="form-control"
           formControlName="llavePago"
+          maxlength="30"
+          [ngClass]="esInvalido('llavePago') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('llavePago')" class="text-danger">
+          <small *ngIf="pagoDerechosForm.controls['llavePago'].errors?.['required']">
+            Todos los campos de pago son requeridos
+          </small>
+          <small *ngIf="pagoDerechosForm.controls['llavePago'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+          </div>
       </div>
 
       <!-- Fecha de pago -->
@@ -71,6 +95,12 @@
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
         ></input-fecha>
+
+        <div *ngIf="esInvalido('fechaPago')" class="text-danger">
+          <small *ngIf="pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada']">
+            La fecha de pago debe ser menor o igual a la fecha actual
+          </small>
+          </div>
       </div>
 
       <!-- Importe de pago -->
@@ -81,7 +111,17 @@
           id="importePago"
           class="form-control"
           formControlName="importePago"
+          maxlength="16"
+          [ngClass]="esInvalido('importePago') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('importePago')" class="text-danger">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['required']">
+            Todos los campos de pago son requeridos
+          </small>
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['pattern']">
+            Este campo solo permite números hasta dos decimales
+          </small>
+          </div>
       </div>
     </div>
 
@@ -92,7 +132,7 @@
             type="button"
             name="agregarMercancias"
             class="btn btn-primary ms-2"
-            (click)="onReset()"
+            (click)="alReiniciar()"
           >
             Borrar datos del pago
           </button>
