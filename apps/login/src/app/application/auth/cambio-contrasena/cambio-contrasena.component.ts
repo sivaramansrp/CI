@@ -24,11 +24,11 @@ export class CambioContrasenaComponent implements OnInit {
    */
   public FormCambioContrasena!: FormGroup;
 
-    /** 
-   * Configuración para la notificación actual.
-   */
-    public nuevaNotificacion: Notificacion | null = null;
-    
+  /** 
+ * Configuración para la notificación actual.
+ */
+  public nuevaNotificacion: Notificacion | null = null;
+
   /**
    * Constructor. Inyecta FormBuilder y TramiteService.
    * @param fb FormBuilder para construir el formulario reactivo.
@@ -65,7 +65,7 @@ export class CambioContrasenaComponent implements OnInit {
    */
   onSubmit(): void {
     if (this.FormCambioContrasena.invalid) {
-      this.FormCambioContrasena.markAllAsTouched(); 
+      this.FormCambioContrasena.markAllAsTouched();
       return;
     }
     const MODELO_CAMBIO_CONTRASENA: CambioContrasena = {
@@ -75,17 +75,6 @@ export class CambioContrasenaComponent implements OnInit {
     };
     this.tramiteService.cambioContrasena(MODELO_CAMBIO_CONTRASENA).subscribe({
       next: (respuesta) => {
-           this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'success',
-          modo: 'action',
-          titulo: 'Avisos',
-          mensaje: 'Contraseña cambiada exitosamente',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        }
         // Aquí podrías mostrar un mensaje al usuario o redirigir
       },
       error: (err) => {
