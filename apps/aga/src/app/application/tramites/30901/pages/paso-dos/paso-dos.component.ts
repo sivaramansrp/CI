@@ -4,10 +4,13 @@ import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente PasoDosComponent que representa el segundo paso del trámite 30901.
@@ -20,15 +23,15 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './paso-dos.component.scss',
 })
 /**  Componente PasoDosComponent que representa el segundo paso del trámite 30901. */
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * @description Constante que contiene los textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Array to store catalog documents.
-   * Each document is of type `Catalogo`, representing an item in the catalog.
+   * Arreglo para almacenar los documentos del catálogo.
+   * Cada documento es de tipo `Catalogo`, que representa un elemento del catálogo.
    */
   catalogoDocumentos: Catalogo[] = [];
 
@@ -37,6 +40,12 @@ export class PasoDosComponent implements OnInit {
    *
    * @param renovacionesService - Servicio para manejar las renovaciones de muestras de mercancías.
    */
+
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
   constructor(
     public renovacionesService: RenovacionesMuestrasMercanciasService,
     private catalogosServices: CatalogosService
@@ -60,6 +69,7 @@ export class PasoDosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -67,5 +77,10 @@ export class PasoDosComponent implements OnInit {
           }
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

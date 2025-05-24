@@ -59,12 +59,6 @@ export class RenovacionesComponent {
     '<div class="error-container"><style>.error-container {text-align: center;font-family: Arial, sans-serif;}.error-title {font-weight: bold;margin-bottom: 1rem;}.error-item {display: flex;justify-content: center;align-items: center;gap: 0.5rem;}.error-index {text-align: left;min-width: 20px;position: absolute;left: 15px;}.error-text {color: #b40606;}</style><p class="error-title">Corrija los siguientes errores:</p><p class="error-item"><span class="error-index">1.</span><span class="error-text">(Pago) es un campo requerido</span></p></div>';
 
   /**
-   * Mensaje de error general para mostrar que el formulario contiene errores
-   * y debe ser revisado por el usuario.
-   */
-  error = '<p>Error en el formulario, favor de verificar</p>';
-
-  /**
    * Mensaje de error a mostrar.
    */
   esValido = true;
@@ -115,8 +109,8 @@ export class RenovacionesComponent {
       }
 
       if (!this.esValido) {
-          this.errorMessage =
-    '<div class="error-container"><style>.error-container {text-align: center;font-family: Arial, sans-serif;}.error-title {font-weight: bold;margin-bottom: 1rem;}.error-item {display: flex;justify-content: center;align-items: center;gap: 0.5rem;}.error-index {text-align: left;min-width: 20px;position: absolute;left: 15px;}.error-text {color: #b40606;}</style><p class="error-title">Corrija los siguientes errores:</p><p class="error-item"><span class="error-index">1.</span><span class="error-text">(Pago) es un campo requerido</span></p></div>';
+        this.errorMessage =
+          '<div class="error-container"><style>.error-container {text-align: center;font-family: Arial, sans-serif;}.error-title {font-weight: bold;margin-bottom: 1rem;}.error-item {display: flex;justify-content: center;align-items: center;gap: 0.5rem;}.error-index {text-align: left;min-width: 20px;position: absolute;left: 15px;}.error-text {color: #b40606;}</style><p class="error-title">Corrija los siguientes errores:</p><p class="error-item"><span class="error-index">1.</span><span class="error-text">(Pago) es un campo requerido</span></p></div>';
 
         this.datosPasos.indice = 1;
         return;

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { GENERAR_LINEA_CAPTURA_URL } from '@libs/shared/data-access-user/src/tramites/constantes/30901/pago-line-de-capture.enums';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
@@ -110,6 +111,10 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Lista de líneas de captura seleccionadas por el usuario.
+   * Se inicializa como un arreglo vacío del tipo PagoDerechosLista.
+   */
   seleccionadaLineaCapturaLista: PagoDerechosLista[] =
     [] as PagoDerechosLista[];
 
@@ -123,6 +128,12 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
    */
   pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
+
+  /**
+   * URL utilizada para generar la línea de captura.
+   * Esta constante apunta al endpoint definido por GENERAR_LINEA_CAPTURA_URL.
+   */
+  generarLineaCapturaURL: string = GENERAR_LINEA_CAPTURA_URL;
 
   /**
    * Constructor de la clase PagoLcComponent.
@@ -164,17 +175,6 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.formPagoLC.get('lineaCaptura')?.valueChanges.subscribe((value) => {
-      if (value) {
-        const CLEANED = value.replace(REGEX_REEMPLAZAR, '').toUpperCase();
-        if (value !== CLEANED) {
-          this.formPagoLC
-            .get('lineaCaptura')
-            ?.setValue(CLEANED, { emitEvent: false });
-        }
-      }
-    });
-
     this.solicitud30901Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -194,9 +194,15 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el valor de la línea de captura en el estado.
    */
-  setLineaCaptura(): void {
-    const VALUE = this.formPagoLC.get('lineaCaptura')?.value;
-    this.solicitud30901Store.setLineaCaptura(VALUE);
+  setLineaCaptura(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '').toUpperCase();
+
+    this.formPagoLC.patchValue({
+      lineaCaptura: CLEANED,
+    });
+
+    this.solicitud30901Store.setLineaCaptura(CLEANED);
   }
 
   /**
