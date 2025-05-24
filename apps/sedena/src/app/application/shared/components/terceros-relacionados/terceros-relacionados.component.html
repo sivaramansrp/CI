@@ -18,26 +18,28 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarDestinatario()"
-          [disabled]="destinarioTablaSeleccionada.length !== 1"
-        >
-          Modificar
-        </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-          (click)="eliminarDestinatarioFinal()"
-          [disabled]="destinarioTablaSeleccionada.length === 0"
-        >
-          Eliminar
-        </button>
+        <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){ -->
+         @if(destinarioTablaSeleccionada.length > 0 && destinatarioFinalTablaDatos.length > 0) {
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            (click)="modificarDestinatario()"
+            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+          >
+            Modificar
+          </button>
+          <button
+            type="button"
+            name="eliminarMercancias"
+            class="btn btn-danger ms-2"
+            (click)="eliminarDestinatarioFinal()"
+            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+          >
+            Eliminar
+          </button>
       }
+        <!-- } -->
         <button
           type="button"
           name="agregarMercancias"
@@ -63,7 +65,9 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-       @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){
+       <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){ -->
+         @if(proveedorTablaSeleccionada.length > 0 && proveedorTablaDatos.length > 0) {
+
         <button
           type="button"
           name="modificarMercancias"
@@ -78,11 +82,12 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedorFinal()"
-          [disabled]="proveedorTablaSeleccionada.length === 0"
+          [disabled]="proveedorTablaSeleccionada.length !== 1"
         >
           Eliminar
         </button>
       }
+    <!-- } -->
       @if(!tercerosNacionalidad){
         <button
           type="button"
