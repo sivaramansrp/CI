@@ -76,7 +76,21 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.datosMercanciaTabla = data;
+      let necesitaActualizar = false;
+      const DATOS_ACTUALIZADOS = data.map((item, index) => {
+        if (Object.prototype.hasOwnProperty.call(item, 'tableIndex')) {
+        return item;
+        }
+        necesitaActualizar = true;
+        return {
+        ...item,
+        tableIndex: index
+        };
+      });
+      this.datosMercanciaTabla = DATOS_ACTUALIZADOS;
+      if (necesitaActualizar) {
+        this.tramiteStore.setMercanciasDatosTabla(DATOS_ACTUALIZADOS);
+      }
       });
 
     this.tramiteQuery.getDatosDelTramite$
@@ -97,6 +111,24 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.tramiteStore.actualizarMercancias(datos);
         this.irAAcciones();
       }
+
+      /**
+       * Elimina los datos de una mercancía específica del trámite actual.
+       *
+       * @param datos - Objeto de tipo `MercanciaDetalle` que contiene la información de la mercancía a eliminar.
+       *
+       * @remarks
+       * Este método verifica si el objeto `datos` es válido y, en caso afirmativo,
+       * llama al método `eliminarMercancias` del store para eliminar la mercancía correspondiente.
+       *
+       * @see TramiteStore.eliminarMercancias
+       */
+      eliminarMercanciasDatos(datos: MercanciaDetalle): void {
+        if (datos) {
+          this.tramiteStore.eliminarMercancias(datos);
+        }
+      }
+
     /**
      * Navega a una ruta relativa dentro del flujo actual.
      * @method irAAcciones
@@ -104,7 +136,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     irAAcciones(): void {
-      this.router.navigate(['../agregar-destino-final'], {
+      this.router.navigate(['../agregar-datos-mercancia'], {
         relativeTo: this.activatedRoute,
       });
     }
