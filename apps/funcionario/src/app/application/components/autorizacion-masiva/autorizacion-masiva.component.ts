@@ -34,8 +34,9 @@ export class AutorizacionMasivaComponent implements OnInit, OnDestroy {
   public FormBusqueda!: FormGroup;
   /** Lista de trámites cargados masivamente */
   listaCargaMasiva!: Tramites[];
-  /** Configuración de los inputs de fecha */
+  /** Configuración de los inputs de fecha inicio*/
   public fechaInicioInput: InputFecha = this.FECHA_INICIO;
+  /** Configuración de los inputs de fecha fin*/
   public fechaFinalInput: InputFecha = this.FECHA_FINAL;
   /** Cabecera de la tabla de carga masiva */
   public cargaMasivaTableHeaderData: string[] = [];
