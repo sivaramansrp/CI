@@ -21,7 +21,7 @@ import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
   templateUrl: './certificado-disponibles.component.html',
   styleUrl: './certificado-disponibles.component.scss',
 })
-export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
+export class CertificadoDisponiblesComponent<T> implements OnInit, OnDestroy {
 
   /**
    * Configuración de la tabla que se utilizará en el componente.
@@ -39,8 +39,7 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public datosTabla!:any;
+  public datosTabla!:T[];
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
@@ -65,8 +64,8 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: unknown) => {
-        this.datosTabla = data;
+      (data) => {
+        this.datosTabla = data as T[];
       }
     );
   }

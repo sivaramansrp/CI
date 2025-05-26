@@ -20,9 +20,9 @@ export class CertificadoDisponiblesService {
   /**
    * @method getData
    *  Obtiene los datos de tratados y acuerdos desde un archivo JSON.
-   * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<T[]>} Un observable que emite los datos obtenidos.
    */
-  getData(): Observable<unknown> {
-    return this.http.get('./assets/json/110210/certificado-disponibles.json');
+  getData<T>(): Observable<T[]> {
+    return this.http.get<T[]>('./assets/json/110210/certificado-disponibles.json');
   }
 }
