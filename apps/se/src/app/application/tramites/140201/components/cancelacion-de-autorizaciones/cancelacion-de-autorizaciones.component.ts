@@ -53,7 +53,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroy$),
       map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.esFormularioSoloLectura = true; //seccionState.readonly; 
         this.inicializarEstadoFormulario();
       })
     )
@@ -123,9 +123,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     });
 
     this.getCancelacioneServiceData();
-    //this.actualizarEstado();
     this.inicializarEstadoFormulario();
-
   }
 
    /**
@@ -136,36 +134,9 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      //this.inicializarFormulario();
       this.actualizarEstado();
     }  
   }
-
-    /**
-   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
-   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
-   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
-   * con el valor inicial obtenido del store.
-   */
-
-  //inicializarFormulario(): void {
-    // this.subscription.add(
-    //   this.tramite301Query.selectSolicitud$
-    //     .pipe(
-    //       takeUntil(this.destroyNotifier$),
-    //       map((seccionState) => {
-    //         this.solicitudState = seccionState;
-    //       })
-    //     )
-    //     .subscribe()
-    // );
-    // this.Informaciondela = this.fb.group({
-    //   datosImportadorExportador: this.fb.group({
-    //     folio: [this.solicitudState?.folio, Validators.required],
-    //     mercancia: [this.solicitudState?.mercancia, Validators.required],
-    //   }),
-    // });
-  //}
 
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,10 +9,11 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 /**
  * @description
  * Componente para manejar la entidad externa en el trámite 140201.
@@ -63,15 +64,34 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    * Observable para el correo del solicitante IPC.
    */
   correoSolicitanteIPC$ = this.cancelacionesQuery.correoSolicitanteIPC$;
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
+  /**
+     * Suscripción a los cambios en el formulario react
+     */
+    private subscription: Subscription = new Subscription();
+    
   /**
    * @ignore
    */
   constructor(private fb: FormBuilder,
     private cancelacionesStore: CancelacionesStore,
-    private cancelacionesQuery: CancelacionesQuery
+    private cancelacionesQuery: CancelacionesQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+      this.esFormularioSoloLectura = true; //seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -87,7 +107,34 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
       fechaSolicitudIPC: [{ value: '', disabled: true }, [Validators.maxLength(20)]],
       correoSolicitanteIPC: ['', [Validators.maxLength(255)]]
     });
+     this.inicializarEstadoFormulario();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
     this.updateState();
+    }  
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+   this.updateState();
+      if (this.esFormularioSoloLectura) {
+        this.entidadForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.entidadForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
@@ -171,5 +218,6 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+      this.subscription.unsubscribe();
   }
 }

@@ -2,8 +2,8 @@
  * DireccionDeNotificacionesComponent
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
   Catalogo,
@@ -18,7 +18,7 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,Subscription, map,takeUntil } from 'rxjs';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 /**
@@ -101,15 +101,35 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    */
   municipioAlcaldia: Catalogo[] = [];
 
+   /**
+     * Suscripción a los cambios en el formulario react
+     */
+    private subscription: Subscription = new Subscription();
+    
+     /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+    esFormularioSoloLectura: boolean = false; 
+    
   /**
    * Constructor */
   constructor(
     private fb: FormBuilder,
     private cancelacionService: CancelacionesService,
     private cancelacionesStore: CancelacionesStore,
-    private cancelacionesQuery: CancelacionesQuery
+    private cancelacionesQuery: CancelacionesQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+          this.esFormularioSoloLectura = true; //seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -142,8 +162,35 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
       telefono: ['', [Validators.maxLength(15)]],
       localidad: [null],
     });
-    this.updateState();
+     this.inicializarEstadoFormulario();
   }
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.updateState();
+    }  
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.updateState();
+      if (this.esFormularioSoloLectura) {
+        this.direccionNotificacionesForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.direccionNotificacionesForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
 
   /**
    * Método updateState
@@ -151,7 +198,7 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    * Actualiza el estado del formulario suscribiéndose a los observables de entidad federativa,
    * colonia, localidad, municipio, país, número interior, código postal y teléfono.
    */
-  updateState() {
+  updateState() : void {
     this.entidadFederativa$
       .pipe(takeUntil(this.destroy$))
       .subscribe((entidadFederativa) => {
