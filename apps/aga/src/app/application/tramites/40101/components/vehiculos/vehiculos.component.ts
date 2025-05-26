@@ -204,17 +204,21 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     });
 
     this.vehiculosList$ = this.tramite40101Query.getvehiculos$;
-    this.tramite40101Query.getvehiculos$.subscribe((vehiculos: any) => {
-      this.vehiculos = vehiculos;
-    });
+    this.tramite40101Query.getvehiculos$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((vehiculos: unknown[]) => {
+        this.vehiculos = vehiculos;
+      });
     this.unidadesdearrastreList$ =
       this.tramite40101Query.getUnidadesdeArrastre$;
     this.unidadDeArrastre();
-    this.tramite40101Query.getUnidadesdeArrastre$.subscribe(
-      (unidadesdearrastre: any) => {
+    this.tramite40101Query.getUnidadesdeArrastre$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+      (unidadesdearrastre: unknown[]) => {
         this.unidadesdearrastre = unidadesdearrastre;
-      }
-    );
+      });
+
     this.conVehiculoArrastre();
     this.anioVehiculoveh();
     this.solicitudVehiculoColor();
@@ -229,7 +233,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     } else {
       this.toastr.error('La instancia modal no está inicializada!');
     }
-    const newVehiculo = {
+    const NEW_VEHICULO = {
       id: (this.vehiculos?.length || 0) + 1,
       solicitudVehiculoVin2:
         this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
@@ -263,11 +267,11 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     };
 
     // Comprueba si el VIN ya existe en el estado de Akita
-    const vinExists = this.vehiculos?.some(
-      (item) => item.solicitudVehiculoVin2 === newVehiculo.solicitudVehiculoVin2
+    const VIN_EXISTS = this.vehiculos?.some(
+      (item) => item.solicitudVehiculoVin2 === NEW_VEHICULO.solicitudVehiculoVin2
     );
 
-    if (vinExists) {
+    if (VIN_EXISTS) {
       this.toastr.error('⚠️ Esta VIN ya existe!');
       return;
     }
@@ -278,7 +282,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     }
 
     // Actualizar el estado de Akita
-    this.tramite40101Store.setVehiculos([...this.vehiculos, newVehiculo]);
+    this.tramite40101Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
     this.formVehiculo.reset();
     this.toastr.success('🚗 Vehiculo agregado exitosamente!');
     this.closeModal();
@@ -286,9 +290,9 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   unidadDeArrastre() {
     if (this.formVehiculo.valid) {
-      const newUnidad = this.formVehiculo.value;
-      const currentData = this.tramite40101Query.getunidadesdearrastre();
-      this.tramite40101Store.setUnidadesdeArrastre([...currentData, newUnidad]);
+      const NEW_UNIDAD = this.formVehiculo.value;
+      const CURRENT_DATA = this.tramite40101Query.getunidadesdearrastre();
+      this.tramite40101Store.setUnidadesdeArrastre([...CURRENT_DATA, NEW_UNIDAD]);
       this.unidadesdearrastreList$ =
         this.tramite40101Query.getUnidadesdeArrastre$;
     }
@@ -340,6 +344,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   get getFormValues() {
     return this.formVehiculo.controls;
   }
+  
   eliminarRegistroSelec(tablaId: string): void {}
   /**
    * Método del ciclo de vida de Angular que se llama después de que la vista del componente ha sido completamente inicializada.
@@ -444,8 +449,8 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
    * @returns {void}
    */
   solicitudVehiculoPaisEmisor2daPlaca(): void {
-    const solicitudVehiculo = this.formVehiculo.get('solicitudVehiculo')?.value;
-    this.tramite40101Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
+    const SOLICITUD_VEHICULO = this.formVehiculo.get('solicitudVehiculo')?.value;
+    this.tramite40101Store.VehiculoPaisEmisor2daPlaca(SOLICITUD_VEHICULO);
     this.tramite40101Service
       .getPaisEmisor2daPlaca()
       .pipe(takeUntil(this.destroyed$))
