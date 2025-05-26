@@ -134,7 +134,7 @@
               formControlName="tipoDeRequisito"
               [label]="'Tipo de requisito'"
               [required]="true"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoDeRequisito"
               (change)="setValoresStore(forma, 'tipoDeRequisito')"
             ></app-catalogo-select>

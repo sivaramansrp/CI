@@ -8,7 +8,7 @@ import { DatosDeFila, DatosForma, FilaSolicitud } from '../../models/220202/fito
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -158,7 +158,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   cuerpoTabla: FilaSolicitud[] = [];
   private destroyNotifier$ = new Subject<void>();
 
-  esFormularioSoloLectura: boolean = false; 
+  esFormularioSoloLectura: boolean = true; 
 
 
   /**
@@ -180,7 +180,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
+   
       })
     )
     .subscribe()
@@ -195,7 +195,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
     this.createFromFields();
     this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
@@ -208,24 +207,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   }
 
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.createFromFields();
-    }  
-  }
-
-  guardarDatosFormulario(): void {
-      this.createFromFields();
-      if (this.esFormularioSoloLectura) {
-        this.forma.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.forma.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
-  }
 
   /**
    * @description Crea los campos del formulario y los agrupa en un `FormGroup`.
@@ -245,7 +226,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns Un objeto con los campos del formulario.
    */
   inicializarCamposFormulario() {
-
     return {
       ...this.crearCamposRequeridos(),
       ...this.crearCamposOpcionales(),
@@ -260,23 +240,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearCamposRequeridos() {
     const FORMULARIO = this.formulariodataStore;
     return {
-      aduanaDeIngreso: [FORMULARIO.aduanaDeIngreso || '', Validators.required],
-      oficinaDeInspeccion: [FORMULARIO.oficinaDeInspeccion || '', Validators.required],
-      puntoDeInspeccion: [FORMULARIO.puntoDeInspeccion || '', Validators.required],
-      regimen: [FORMULARIO.regimen || '', Validators.required],
-      numeroDeGuia: [FORMULARIO.numeroDeGuia || ''],
-      numeroDeCarro: [FORMULARIO.numeroDeCarro || ''],
-      tipoDeRequisito: [FORMULARIO.tipoDeRequisito || '', Validators.required],
-      fraccionArancelaria: [FORMULARIO.fraccionArancelaria || '', Validators.required],
-      nico: [FORMULARIO.nico || '', Validators.required],
-      cantidadUMT: [FORMULARIO.cantidadUMT || '', Validators.required],
-      umt: [FORMULARIO.umt || '', Validators.required],
-      cantidadUMC: [FORMULARIO.cantidadUMC || '', Validators.required],
-      umc: [FORMULARIO.umc || '', Validators.required],
-      uso: [FORMULARIO.uso || '', Validators.required],
-      tipoDeProducto: [FORMULARIO.tipoDeProducto || '', Validators.required],
-    };
+    aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
+    numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
+    tipoDeRequisito: [{ value: FORMULARIO.tipoDeRequisito || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    fraccionArancelaria: [{ value: FORMULARIO.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    nico: [{ value: FORMULARIO.nico || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    cantidadUMT: [{ value: FORMULARIO.cantidadUMT || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    umt: [{ value: FORMULARIO.umt || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    cantidadUMC: [{ value: FORMULARIO.cantidadUMC || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    umc: [{ value: FORMULARIO.umc || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    uso: [{ value: FORMULARIO.uso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    tipoDeProducto: [{ value: FORMULARIO.tipoDeProducto || '', disabled: this.esFormularioSoloLectura }, Validators.required],
   }
+    }
   /**
    * Método para crear campos opcionales del formulario.
    * @param FORMULARIO Datos de formulariodataStore.
