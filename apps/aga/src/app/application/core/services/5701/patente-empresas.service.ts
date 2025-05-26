@@ -1,6 +1,6 @@
 import { API_GET_EMPRESA, TIPO_PATENTE_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { CLAVE_PATENTE_QUERY, enviroment } from '@libs/shared/data-access-user/src';
+import { CLAVE_PATENTE_QUERY, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { EmpresaResponse } from '../../models/5701/empresa.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -16,7 +16,7 @@ export class PatenteEmpresaService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

@@ -45,6 +45,11 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
   public datosTablaRequerimientos: BodyTablaRequerimiento[] = [];
 
   /**
+   * Método para abrir el detalle del requerimiento.
+   */
+  public verDetalleRequerimiento = ConsultarequerimientosComponent.verDetalleRequerimiento;
+
+  /**
    * Constructor de la clase ConsultarequerimientosComponent.
    * @param router Router para navegar a la vista de detalle de requerimiento.
    * @param folioQuery Consulta del folio desde el store.
@@ -79,7 +84,7 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
    * @param {number} id - El id del requerimiento para visualizar el detalle.
    * @returns {void}
    */
-  verDetalleRequerimiento(id: number): void {
+  static verDetalleRequerimiento(id: number): void {
     /**
      * Aquí puedes implementar la lógica para abrir el detalle en una nueva pestaña.
      */
