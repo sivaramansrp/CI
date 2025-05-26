@@ -4,19 +4,7 @@
     "data":[
         {
             "id": 1,
-            "descripcion": "QAS 10 Voltios 10 Amperios"
-        },
-        {
-            "id": 2,
-            "descripcion": "QAS 10 Voltios 20 Amperios"
-        },
-        {
-            "id": 3,
-            "descripcion": "QAS 20 Voltios 30 Amperios"
-        },
-        {
-            "id": 4, 
-            "descripcion": "QAS 20 Voltios 40 Amperios"
+            "descripcion": "1-QAS-QAS-10-Voltios-10-Amperios"
         }
     ]
 }

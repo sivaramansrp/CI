@@ -5,16 +5,21 @@
   <p class="fw-bold m-0">{{formularioSubtitulo}}</p>
 }
 <form [formGroup]="forma">
-    @for (item of formularioDatos; track item.campo; let i = $index) {
-            @switch(item.tipoInput) {
-                @case ('text') {
-                  @if (item.mostrar !== false) {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
-                      <div class="form-group">
-                        <label class="form-label" [for]="item.id" *ngIf="item.labelNombre">
-                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}:
-                        </label>
-
+  @for (row of obtenerFilas(); track $index) {
+    <div class="row">
+      @for (item of obtenerControlsPorFilas(row); track item.campo; let i = $index) {
+        @switch(item.tipoInput) {
+            @case ('text') {
+              @if (item.mostrar !== false) {
+                <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
+                  <div class="form-group">
+                    @if (item.labelNombre) {
+                          <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            @if(item.tooltipQuestionCircle) {
+                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                            }
+                          </label>
+                          }
 
                         <input
                           class="form-control"
@@ -40,9 +45,13 @@
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
-                        <label class="form-label" [for]="item.id">{{
-                          item.labelNombre
-                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                        @if (item.labelNombre) {
+                          <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            @if(item.tooltipQuestionCircle) {
+                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                            }
+                          </label>
+                          }
 
                         <input
                           class="form-control"
@@ -66,7 +75,13 @@
                 } @case ('textarea') {
                   @if (item.mostrar !== false) {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
-                      <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                      @if (item.labelNombre) {
+                      <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                        @if(item.tooltipQuestionCircle) {
+                          <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                        }
+                      </label>
+                      }
 
                       <textarea
                         class="form-control"
@@ -99,6 +114,7 @@
                           [required]="seRequiere(item.campo)"
                           [placeholder]="item.marcadorDePosicion || ''" 
                           [isDisabled]="item.desactivado"
+                          [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           name=""
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-catalogo-select>
@@ -125,7 +141,7 @@
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         <label class="form-label" [for]="item.id" style="margin-left: 10px;" *ngIf="item.labelNombre">
-                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}:
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*:' : ':' }}:
                         </label>
 
                       </div>
@@ -149,9 +165,13 @@
                     @if (item.mostrar !== false) {
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
-                          <label class="form-label" [for]="item.id">{{
-                            item.labelNombre
-                          }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                          @if (item.labelNombre) {
+                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                              @if(item.tooltipQuestionCircle) {
+                                <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                              }
+                            </label>
+                          }
                           <app-input-radio
                             [radioOptions]="item.opciones || []"
                             id="{{item.id}}"
@@ -171,6 +191,7 @@
                           [setFecha]="forma.get(item.campo)?.value"
                           [datos]="obtenerInformacionDeFecha(item)"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           (valorCambiado)="eventoDeCambioDeValor($event, item.campo)"
                         ></input-fecha>
 
@@ -187,4 +208,6 @@
                   }
             }
     }
+    </div>
+  }
   </form>

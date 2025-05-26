@@ -2,6 +2,7 @@
   <div class="form-check">
     <label class="form-check-label" [for]="id">
       {{ label }}
+      <ng-content></ng-content>
     </label>
     <input class="form-check-input" type="checkbox" title="Checkbox" value="" [id]="id" formControlName="check" (change)="handleChange($event)">   
   </div>

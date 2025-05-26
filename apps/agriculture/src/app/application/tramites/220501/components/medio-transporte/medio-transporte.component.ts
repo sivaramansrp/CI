@@ -1,25 +1,28 @@
-import { CATALOGOS_ID } from '../../constantes/constantes';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
 import { Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { merge } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -28,7 +31,17 @@ import { takeUntil } from 'rxjs';
   selector: 'app-medio-transporte',
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule, CatalogoSelectComponent,
+    InputRadioComponent, AlertComponent, TableComponent, AgregarMercanciaComponent
+  ],
 })
+/**
+ * Componente que permite seleccionar el medio de transporte para una solicitud.
+ * Utiliza Reactive Forms para la gestión del formulario y RxJS para la gestión de datos asíncronos.
+ * 
+ * @class MedioTransporteComponent
+ */
 export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Evento emitido cuando se selecciona un medio de transporte.
@@ -53,7 +66,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Indica si es una solicitud de ferrocarril.
    */
-  esSolicitudFerrosValor! : number | string;
+  esSolicitudFerrosValor!: number | string;
 
   /**
    * Constantes de texto.
@@ -76,6 +89,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   public mercanciaBodyData = [
     {
+      /**
+       * Datos de la mercancía en formato de tabla.
+       * @type {string[]}
+       */
       tbodyData: [] as string[],
     },
   ];
@@ -98,12 +115,11 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
- 
-    /** 
-     * Variable que almacena las opciones disponibles para el botón de radio. 
-     */
-    opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
-    
+  /** 
+   * Variable que almacena las opciones disponibles para el botón de radio. 
+   */
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
@@ -113,10 +129,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private sagarpaService: SagarpaService,
-    public solicitud220501Store:Solicitud220501Store,
+    public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query
   ) {
-    //
+    // Constructor vacío
   }
 
   /**
@@ -131,24 +147,29 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-      this.solicitud220501Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((data: Solicitud220501State) => {
-            this.solicitud220501State = data;
-            this.medioTransporteForm.patchValue({
-              medioDeTransporte: this.solicitud220501State.medioDeTransporte,
-              identificacionTransporte: this.solicitud220501State.identificacionTransporte,
-              esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
-              totalGuias: this.solicitud220501State.totalGuias,
-            });
-            if(this.solicitud220501State.esSolicitudFerros === '1'){
-              this.esSolicitudFerrosValor = '1';
-              this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
+    this.solicitud220501Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: Solicitud220501State) => {
+          this.solicitud220501State = data;
+          this.medioTransporteForm.patchValue({
+            medioDeTransporte: this.solicitud220501State.medioDeTransporte,
+            identificacionTransporte: this.solicitud220501State.identificacionTransporte,
+            esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
+            totalGuias: this.solicitud220501State.totalGuias,
+          });
+          this.mercanciaBodyData = [
+            {
+              tbodyData: this.solicitud220501State.mercanciaTablaDatos,
             }
-          })
-        )
-        .subscribe();
+          ]
+          if (this.solicitud220501State.esSolicitudFerros === '1') {
+            this.esSolicitudFerrosValor = '1';
+            this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
+          }
+        })
+      )
+      .subscribe();
     this.inicializaCatalogos();
     this.obtenerMercancia();
   }
@@ -170,8 +191,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   private inicializaCatalogos(): void {
     const MEDIODETRANSPORTE$ = this.sagarpaService
-      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
+      .getMediodetransporte()
       .pipe(
+        takeUntil(this.destroyed$),
         map((resp) => {
           this.medioDeTransporte = resp.data;
         })
@@ -189,7 +211,30 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+    if (this.solicitud220501State.mercanciaTablaDatos.length <= 0) {
+      this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+    }
+    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
+  }
+
+  /**
+   * Método para actualizar los datos de la mercancía en la tabla.
+   * 
+   * @param datos Datos de la mercancía a actualizar.
+   */
+  actualizarMercanciaEnTabla(datos: MercanciaTabla): void {
+    this.mercanciaBodyData[0].tbodyData = [
+      datos.fraccionArancelaria,
+      datos.descripcionFraccion,
+      datos.nico,
+      datos.descripcion,
+      datos.saldoACapturar,
+      datos.unidaddeMedidaDeUMT,
+      datos.cantidadTotalUMT,
+      datos.saldoPendiente
+    ];
+    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
+    this.mostrarAgregarMercancia = false;
   }
 
   /**
@@ -204,11 +249,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * @param e Evento de cambio del input.
    */
   estableceSeleccionSolicitudFerro(value: number | string): void {
-    // const TARGET = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = value;
     if (this.esSolicitudFerrosValor === '1') {
       this.transporteSeleccionado.emit(true);
-    } else if(this.esSolicitudFerrosValor === '0'){
+    } else if (this.esSolicitudFerrosValor === '0') {
       this.transporteSeleccionado.emit(false);
     }
     this.mostrarAgregarMercancia = false;
@@ -217,8 +261,8 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Método para modificar los saldos de mercancía.
- */
+   * Método para modificar los saldos de mercancía.
+   */
   modificarSaldosMercancia(): void {
     this.obtenerMercancia();
     this.mostrarAgregarMercancia = true;
@@ -226,9 +270,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Método para manejar el evento de agregar mercancía.
- * @param e Valor booleano que indica si se debe mostrar el componente de agregar mercancía.
- */
+   * Método para manejar el evento de agregar mercancía.
+   * @param e Valor booleano que indica si se debe mostrar el componente de agregar mercancía.
+   */
   obtenerAgregarMercanciaEvent(e: boolean): void {
     this.mostrarAgregarMercancia = e;
     this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
@@ -252,14 +296,13 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     this.solicitud220501Store.setTotalGuias(VALUE);
   }
 
-
-      /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Desuscribe el componente de todos los observables.
-   * @returns {void}
-   * */
-      ngOnDestroy(): void {
-        this.destroyed$.next();
-        this.destroyed$.complete();
-      }
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+  * Desuscribe el componente de todos los observables.
+  * @returns {void}
+  */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

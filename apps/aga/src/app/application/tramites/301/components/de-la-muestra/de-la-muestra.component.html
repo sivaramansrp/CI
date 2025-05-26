@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Información de la muestra en despacho" />
-  <form [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
+  <form *ngIf="Informaciondela" [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
     <div formGroupName="datosImportadorExportador">
       <div class="row">
         <div class="col-md-8">
@@ -11,6 +11,7 @@
               [label]="
                 '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?'
               "
+              [isDisabled]="esFormularioSoloLectura"
               [required]="true"
               name="mercancia"
               (change)="

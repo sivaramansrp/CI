@@ -63,12 +63,11 @@ describe('DetosDelTramiteComponent', () => {
     const testCampo = 'testCampo';
     const testMetodoNombre = 'testMetodoNombre';
   
-    component.setValoresStore(testForm, testCampo, testMetodoNombre);
+    component.setValoresStore(testForm, testCampo);
   
     expect(emitSpy).toHaveBeenCalledWith({
       form: testForm,
-      campo: testCampo,
-      metodoNombre: testMetodoNombre,
+      campo: testCampo
     });
   });
   

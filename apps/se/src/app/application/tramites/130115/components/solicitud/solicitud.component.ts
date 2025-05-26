@@ -340,7 +340,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130115Store.updateState({
+          this.tramite130115Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
           });
@@ -355,7 +355,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.tramite130115Store.updateState({
+          this.tramite130115Store.actualizarEstado({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
@@ -475,75 +475,14 @@ enCambioDeBloque(bloqueId: number): void {
   this.fetchPaisesPorBloque(bloqueId);
 }
   /**
-   * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
-   * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
+   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
+   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
    */
-  // eslint-disable-next-line complexity
-  setValoresStore(event: { form: FormGroup;campo: string;metodoNombre: string;}): void {
-    const VALOR = event.form.get(event.campo)?.value;
-    switch (event.metodoNombre) {
-      case 'updateSolicitud':
-        this.tramite130115Store.updateSolicitud(VALOR);
-        break;
-      case 'setDescripcionPartidasDeLaMercancia':
-        this.tramite130115Store.setDescripcionPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setCantidadPartidasDeLaMercancia':
-        this.tramite130115Store.setCantidadPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setValorPartidaUSDPartidasDeLaMercancia':
-        this.tramite130115Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setregimen':
-        this.tramite130115Store.setregimen(VALOR);
-        break;
-      case 'setclasificacion':
-        this.tramite130115Store.setclasificacion(VALOR);
-        break;
-      case 'setProducto':
-        this.tramite130115Store.setProducto(VALOR);
-        break;
-      case 'setDescripcion':
-        this.tramite130115Store.setDescripcion(VALOR);
-        break;
-      case 'setCantidad':
-        this.tramite130115Store.setCantidad(VALOR);
-        break;
-      case 'setValorPartidaUSD':
-        this.tramite130115Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
-        break;
-      case 'setUnidadMedida':
-        this.tramite130115Store.setUnidadMedida(VALOR);
-        break;
-        case 'setBloque':
-        this.tramite130115Store.setBloque(VALOR);
-        break;
-      case 'setUsoEspecifico':
-        this.tramite130115Store.setUsoEspecifico(VALOR);
-        break;
-      case 'setJustificacionImportacionExportacion':
-        this.tramite130115Store.setJustificacionImportacionExportacion(VALOR);
-        break;
-      case 'setObservaciones':
-        this.tramite130115Store.setObservaciones(VALOR);
-        break;
-      case 'setEntidad':
-        this.tramite130115Store.setEntidad(VALOR);
-        break;
-      case 'setRepresentacion':
-        this.tramite130115Store.setRepresentacion(VALOR);
-        break;
-      case 'setFraccion':
-        this.tramite130115Store.setFraccion(VALOR);
-        this.tramite130115Store.setUnidadMedida("1");
-        break;
-      case 'setValorFacturaUSD':
-        this.tramite130115Store.setValorFacturaUSD(VALOR);
-        break;
-      default:
-        console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130115Store`
-        );
+  setValoresStore($event: { form: FormGroup; campo: string }): void {
+    const VALOR = $event.form.get($event.campo)?.value;
+    this.tramite130115Store.actualizarEstado({ [$event.campo]: VALOR });
+    if($event.campo === 'fraccion'){
+      this.tramite130115Store.actualizarEstado({'unidadMedida': '1'});
     }
   }
  

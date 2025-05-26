@@ -1,79 +1,103 @@
-/* eslint-disable dot-notation */
-import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-
+import { TestBed } from '@angular/core/testing';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionfederalService } from '@ng-mf/data-access-user';
+import { Tramite110102Store } from '../../estados/store/tramite110102.store';
+import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+import { of } from 'rxjs';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;
-  let fixture: ComponentFixture<RepresentacionFederalComponent>;
-  let service: RepresentacionfederalService;
+  let mockService: any;
+  let mockStore: any;
+  let mockQuery: any;
 
   beforeEach(async () => {
-    const SERVICE_MOCK = {
-      getEntidadFederativa: jasmine.createSpy('getEntidadFederativa').and.returnValue(of([
-        { id: '1', nombre: 'Entidad 1' },
-        { id: '2', nombre: 'Entidad 2' }
-      ])),
-      getRepresentacionfederal: jasmine.createSpy('getRepresentacionfederal').and.returnValue(of([
-        { id: '1', nombre: 'Representacion 1' },
-        { id: '2', nombre: 'Representacion 2' }
-      ]))
+    mockService = {
+      getEntidadFederativa: jest.fn().mockReturnValue(of([{ id: '01', nombre: 'Entidad 1' }])),
+      getRepresentacionfederal: jest.fn().mockReturnValue(of([{ id: 'RF1', nombre: 'Representación 1' }]))
     };
+    mockStore = { establecerDatos: jest.fn() };
+    mockQuery = { selectTramite110102$: of({
+      solicitudEntidadFederativaEntidadClave: '01',
+      unidadAdministrativaClave: 'RF1',
+      protestoDecirVerdad: true
+    }) };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [RepresentacionFederalComponent,CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule,RepresentacionFederalComponent],
       providers: [
-        { provide: RepresentacionfederalService, useValue: SERVICE_MOCK }
+        FormBuilder,
+        { provide: RepresentacionfederalService, useValue: mockService },
+        { provide: Tramite110102Store, useValue: mockStore },
+        { provide: Tramite110102Query, useValue: mockQuery }
       ]
     }).compileComponents();
 
-    service = TestBed.inject(RepresentacionfederalService);
+    const FIXTURE = TestBed.createComponent(RepresentacionFederalComponent);
+    component = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RepresentacionFederalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.formularioRepresentacionFederalForm).toBeDefined();
-    expect(component.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value).toBe('');
-    expect(component.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value).toBe('');
-  });
-
-  it('should fetch and set entidades de frontera on init', () => {
+  it('ngOnInit debe cargar entidades de frontera y valores del store', () => {
+    const SPY_ENTIDADES = jest.spyOn(component, 'cargarEntidadesFrontera');
+    const SPY_VALORES = jest.spyOn(component, 'getValorsStore');
     component.ngOnInit();
-    expect(service.getEntidadFederativa).toHaveBeenCalled();
-    expect(component.entidadesFrontera.length).toBe(2);
+    expect(SPY_ENTIDADES).toHaveBeenCalled();
+    expect(SPY_VALORES).toHaveBeenCalled();
   });
 
-  it('should fetch and set representacion federal options when entidad federativa changes', () => {
-    component.onEntidadFederativaChange({ id: '1' });
-    expect(service.getRepresentacionfederal).toHaveBeenCalledWith('1');
-    expect(component.representacionFederalOptions.length).toBe(2);
+  it('cargarEntidadesFrontera debe llenar entidadesFrontera', () => {
+    component.cargarEntidadesFrontera();
+    expect(component.entidadesFrontera).toEqual([{ id: '01', nombre: 'Entidad 1' }]);
   });
 
-  it('should clear representacion federal options when entidad federativa is -1', () => {
+  it('onEntidadFederativaChange debe llamar a recuperarRepresentacionFederalSE y setValoresStore si valor es distinto de -1', () => {
+    const SPY_RECUPERAR = jest.spyOn(component, 'recuperarRepresentacionFederalSE');
+    const SPY_SET_VALORES = jest.spyOn(component, 'setValoresStore');
+    component.onEntidadFederativaChange({ id: '01' });
+    expect(SPY_RECUPERAR).toHaveBeenCalledWith('01');
+    expect(SPY_SET_VALORES).toHaveBeenCalledWith(component.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave');
+  });
+
+  it('onEntidadFederativaChange debe limpiar representacionFederalOptions si valor es -1', () => {
+    component.representacionFederalOptions = [{ id: 1, descripcion: 'Representación 1' }];
     component.onEntidadFederativaChange('-1');
-    expect(component.representacionFederalOptions.length).toBe(0);
+    expect(component.representacionFederalOptions).toEqual([]);
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
-    spyOn(component['destroyed$'], 'next');
-    spyOn(component['destroyed$'], 'complete');
+  it('recuperarRepresentacionFederalSE debe llenar representacionFederalOptions', () => {
+    component.recuperarRepresentacionFederalSE('01');
+    expect(component.representacionFederalOptions).toEqual([{ id: 'RF1', nombre: 'Representación 1' }]);
+  });
+
+  it('setValoresStore debe llamar a establecerDatos en el store', () => {
+    component.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.setValue('01');
+    component.setValoresStore(component.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ solicitudEntidadFederativaEntidadClave: '01' });
+  });
+
+  it('getValorsStore debe actualizar el formulario con valores del store', () => {
+    component.formularioRepresentacionFederalForm.patchValue({
+      solicitudEntidadFederativaEntidadClave: '',
+      unidadAdministrativaClave: '',
+      protestoDecirVerdad: false
+    });
+    component.getValorsStore();
+    expect(component.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value).toBe('01');
+    expect(component.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value).toBe('RF1');
+    expect(component.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.value).toBe(true);
+  });
+
+  it('ngOnDestroy debe completar el subject destroyed$', () => {
+    const SPY_NEXT = jest.spyOn((component as any).destroyed$, 'next');
+    const SPY_COMPLETE = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(component['destroyed$'].next).toHaveBeenCalled();
-    expect(component['destroyed$'].complete).toHaveBeenCalled();
+    expect(SPY_NEXT).toHaveBeenCalled();
+    expect(SPY_COMPLETE).toHaveBeenCalled();
   });
 });

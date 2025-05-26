@@ -1,18 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CantidadSolicitadaComponent } from './cantidad-solicitada.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
 describe('CantidadSolicitadaComponent', () => {
   let component: CantidadSolicitadaComponent;
   let fixture: ComponentFixture<CantidadSolicitadaComponent>;
+  let mockStore: any;
+  let mockQuery: any;
+
+  const mockCantidad = '500';
 
   beforeEach(async () => {
+    mockStore = {
+      setCantidadSolicitada: jest.fn(),
+    };
+
+    mockQuery = {
+      cantidadSolicitada$: of(mockCantidad),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [CantidadSolicitadaComponent],
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent],
-      providers: [FormBuilder]
+      imports: [ReactiveFormsModule,CantidadSolicitadaComponent],
+      declarations: [],
+      providers: [
+        FormBuilder,
+        { provide: Tramite120402Store, useValue: mockStore },
+        { provide: Tramite120402Query, useValue: mockQuery },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CantidadSolicitadaComponent);
@@ -24,47 +41,46 @@ describe('CantidadSolicitadaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create the form on initialization', () => {
+  it('should initialize the form with empty value', () => {
     expect(component.form).toBeDefined();
-    expect(component.form.get('cantidadSolicitada')).toBeDefined();
+    expect(component.form.get('cantidadSolicitada')).toBeTruthy();
   });
 
-  it('should have the default value of cantidadSolicitada as 100', () => {
-    expect(component.form.get('cantidadSolicitada')?.value).toBe('100');
+  it('should patch the form value from observable', () => {
+    expect(component.form.get('cantidadSolicitada')?.value).toBe(mockCantidad);
   });
 
-  it('should mark the form as invalid when cantidadSolicitada is empty', () => {
+  it('should mark form as touched if invalid on submit', () => {
+    const markAllAsTouchedSpy = jest.spyOn(component.form, 'markAllAsTouched');
     component.form.get('cantidadSolicitada')?.setValue('');
-    expect(component.form.invalid).toBe(true);
+    component.validarYEnviarFormulario();
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
   });
 
-  it('should mark the form as valid when cantidadSolicitada is filled', () => {
-    component.form.get('cantidadSolicitada')?.setValue('200');
-    expect(component.form.valid).toBe(true);
-  });
-
-  it('should return true when esInvalido is called on an invalid control', () => {
-    component.form.get('cantidadSolicitada')?.setValue('');
-    component.form.get('cantidadSolicitada')?.markAsTouched();
+  it('should return true when control is invalid and touched', () => {
+    const control = component.form.get('cantidadSolicitada');
+    control?.markAsTouched();
+    control?.setValue('');
     expect(component.esInvalido('cantidadSolicitada')).toBe(true);
   });
 
-  it('should return false when esInvalido is called on a valid control', () => {
-    component.form.get('cantidadSolicitada')?.setValue('300');
+  it('should return false when control is valid', () => {
+    component.form.get('cantidadSolicitada')?.setValue('100');
     expect(component.esInvalido('cantidadSolicitada')).toBe(false);
   });
 
-  it('should log error message if form is invalid on validarYEnviarFormulario call', () => {
-    spyOn(console, 'log');
-    component.form.get('cantidadSolicitada')?.setValue('');
-    component.validarYEnviarFormulario();
-    expect(console.log).toHaveBeenCalledWith('El formulario tiene errores. Corríjalos antes de continuar.');
+  it('should call store method with correct value', () => {
+    const value = '300';
+    component.form.get('cantidadSolicitada')?.setValue(value);
+    component.getCantidadSolicitada();
+    expect(mockStore.setCantidadSolicitada).toHaveBeenCalledWith(value);
   });
 
-  it('should log success message if form is valid on validarYEnviarFormulario call', () => {
-    spyOn(console, 'log');
-    component.form.get('cantidadSolicitada')?.setValue('500');
-    component.validarYEnviarFormulario();
-    expect(console.log).toHaveBeenCalledWith('Formulario enviado con éxito', { cantidadSolicitada: '500' });
+  it('should clean up on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

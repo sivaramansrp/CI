@@ -3,28 +3,19 @@
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
-          <div
-            class="panel-heading"
-            (click)="mostrarColapsable()"
-            (keyup.enter)="mostrarColapsable()"
-            tabindex="0"
-          >
+          <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
             <h4 class="panel-title">
-              <a aria-label="Repeat"
-                ><i class="bi bi-copy" aria-hidden="true"></i>Opciones de
-                pre-llenado de Solicitud</a
-              >
+              <a aria-label="Repeat"><i class="bi bi-copy" aria-hidden="true"></i>Opciones de
+                pre-llenado de Solicitud</a>
             </h4>
-            <button
-              type="button"
-              class="collpase-button collapsed"
-              (keydown)="mostrarColapsable()"
-            ></button>
+            <button type="button" class="collpase-button " [class.collapsed]="!colapsable1"
+              (keydown)="mostrarColapsable()"></button>
           </div>
           @if(colapsable1){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
               <ng-alert [CONTENIDO]="TEXTOS1.TEXTOS_SOLICITUD"></ng-alert>
+              @if(mostrarBotonCopiarDatos){
               <div class="row">
                 <div class="d-flex justify-content-end">
                   <button type="button" class="btn btn-primary">
@@ -32,6 +23,7 @@
                   </button>
                 </div>
               </div>
+              }
             </div>
           </div>
           }
@@ -46,19 +38,13 @@
           Seleccione el tipo de operación que desea realizar*:
         </label>
 
-        <app-input-radio
-          [radioOptions]="genericOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          formControlName="ideGenerica1"
-          (change)="
+        <app-input-radio [radioOptions]="genericOptions" [isRequired]="true" [layout]="'horizontal'"
+          formControlName="ideGenerica1" (change)="
             enCambioDeControl('domicilioEstablecimiento', 'ideGenerica1')
-          "
-        ></app-input-radio>
+          "></app-input-radio>
         <div
           *ngIf="domicilioEstablecimiento.get('ideGenerica1')?.touched && domicilioEstablecimiento.get('ideGenerica1')?.errors?.['required']"
-          class="text-danger"
-        >
+          class="text-danger">
           Seleccione el tipo de operación.
         </div>
       </div>
@@ -66,33 +52,19 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <div>
-            <label for="observaciones"> Justificacion</label>
-            <span class="require">*</span>
+            <label for="observaciones"> Justificacion*:</label>
           </div>
           <div>
-            <textarea
-              cols="70"
-              rows="5"
-              id="observacionesId"
-              class="form-control"
-              formControlName="observaciones"
-              placeholder="Justificación"
-              (change)="
+            <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
+              placeholder="Justificación" (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'observaciones')
-              "
-            ></textarea>
+              "></textarea>
           </div>
           <div *ngIf="domicilioEstablecimiento.get('observaciones')?.touched">
-            <div
-              *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['required']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['required']" class="text-danger">
               La justificación es obligatoria.
             </div>
-            <div
-              *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['maxlength']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['maxlength']" class="text-danger">
               La justificación no debe exceder los 2000 caracteres.
             </div>
           </div>
@@ -106,23 +78,16 @@
             <label class="form-label" for="establecimientoRazonSocial">
               Denominación o razón social*:
             </label>
-            <input
-              class="form-control"
-              id="establecimientoRazonSocialId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoRazonSocial"
-              (change)="
+            <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
+              formControlName="establecimientoRazonSocial" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRazonSocial'
                 )
-              "
-            />
+              " />
             <div
               *ngIf="domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched && domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required']"
-              class="text-danger"
-            >
+              class="text-danger">
               La razón social es obligatoria.
             </div>
           </div>
@@ -132,43 +97,30 @@
           <div class="form-group">
             <label class="form-label" for="establecimientoCorreoElectronico">
               Correo electrónico*:
-              <span
-                class="bi bi-question-circle-fill"
-                title="Correo electrónico"
-                data-bs-toggle="tooltip"
-              ></span>
+              <span class="bi bi-question-circle-fill" title="Correo electrónico" data-bs-toggle="tooltip"></span>
             </label>
-            <input
-              class="form-control"
-              id="establecimientoCorreoElectronicoId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoCorreoElectronico"
-              (change)="
+            <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
+              formControlName="establecimientoCorreoElectronico" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoCorreoElectronico'
                 )
-              "
-            />
+              " />
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               domicilioEstablecimiento.get('establecimientoCorreoElectronico')
                 ?.touched
-            "
-          >
-            <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
-              class="text-danger"
-            >
+            ">
+            <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
+              class="text-danger">
               El correo electrónico es obligatorio.
             </div>
             <div
               *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
               class="text-danger"
             >
-              Ingrese un correo electrónico válido.
+              El valor Ingresado no es una dirección válida de correo
+              electrónico
             </div>
           </div>
         </div>
@@ -185,55 +137,36 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label
-              class="form-label"
-              for="establecimientoRFCResponsableSanitario"
-              >RFC del responsable sanitario:</label
-            >
-            <input
-              class="form-control"
-              id="establecimientoRFCResponsableSanitarioId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoRFCResponsableSanitario"
-              (change)="
+            <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
+              sanitario*:</label>
+            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text"
+              formControlName="establecimientoRFCResponsableSanitario" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRFCResponsableSanitario'
                 )
-              "
-            />
+              " />
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern']"
-            class="text-danger"
-          >
+            class="text-danger">
             El RFC no tiene un formato válido.
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="establecimientoRazonSocial"
-              >Denominación o razón social*:</label
-            >
-            <input
-              class="form-control"
-              id="establecimientoRazonSocialId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoRazonSocial"
-              (change)="
+            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
+            <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
+              formControlName="establecimientoRazonSocial" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRazonSocial'
                 )
-              "
-            />
+              " />
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched && domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required']"
-            class="text-danger"
-          >
+            class="text-danger">
             La razón social es obligatoria.
           </div>
         </div>
@@ -241,45 +174,31 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico"
-              >Correo electrónico*:
-              <span
-                class="bi bi-question-circle-fill"
-                title="Correo electrónico"
-                data-bs-toggle="tooltip"
-              ></span
-            ></label>
-            <input
-              class="form-control"
-              id="establecimientoCorreoElectronicoId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoCorreoElectronico"
-              (change)="
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:
+              <span class="bi bi-question-circle-fill" title="Correo electrónico"
+                data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
+              formControlName="establecimientoCorreoElectronico" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoCorreoElectronico'
                 )
-              "
-            />
+              " />
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               domicilioEstablecimiento.get('establecimientoCorreoElectronico')
                 ?.touched
-            "
-          >
-            <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
-              class="text-danger"
-            >
+            ">
+            <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
+              class="text-danger">
               El correo electrónico es obligatorio.
             </div>
             <div
               *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
               class="text-danger"
             >
-              Ingrese un correo electrónico válido.
+              El valor Ingresado no es una dirección válida de correo
+              electrónico.
             </div>
           </div>
         </div>
@@ -297,20 +216,24 @@
               type="text"
               id="establecimientoDomicilioCodigoPostalId"
               appUppercase
+               maxlength="12"
               formControlName="establecimientoDomicilioCodigoPostal"
               (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoDomicilioCodigoPostal'
                 )
-              "
-            />
-            <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched && 
+              " />
+            <div *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched && 
                    domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']"
+              class="text-danger">
+              El código postal es obligatorio.
+            </div>
+            <div
+              *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['maxlength']"
               class="text-danger"
             >
-              El código postal es obligatorio.
+              El código postal no debe exceder los 12 caracteres.
             </div>
           </div>
         </div>
@@ -319,7 +242,7 @@
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               formControlName="establecimientoEstados"
@@ -328,48 +251,35 @@
                   'domicilioEstablecimiento',
                   'establecimientoEstados'
                 )
-              "
-            >
+              ">
             </app-catalogo-select>
           </div>
-          <div
-            *ngIf="domicilioEstablecimiento.get('establecimientoEstados')?.touched && 
-               domicilioEstablecimiento.get('establecimientoEstados')?.errors?.['required']"
-            class="text-danger"
-          >
+          <div *ngIf="domicilioEstablecimiento.get('establecimientoEstados')?.touched && 
+               domicilioEstablecimiento.get('establecimientoEstados')?.errors?.['required']" class="text-danger">
             Seleccione un estado.
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="descripcionMunicipio"
-              >Municipio o alcaldía*:</label
-            >
-            <input
-              class="form-control"
-              type="text"
-              id="descripcionMunicipioId"
-              appUppercase
-              formControlName="descripcionMunicipio"
-              (change)="
+            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía*:</label>
+            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase
+              formControlName="descripcionMunicipio" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'descripcionMunicipio'
                 )
-              "
-            />
+              " />
             <div
               *ngIf="domicilioEstablecimiento.get('descripcionMunicipio')?.touched && domicilioEstablecimiento.get('descripcionMunicipio')?.errors?.['required']"
-              class="text-danger"
-            >
+              class="text-danger">
               El municipio es obligatorio.
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="mostrarAlerta">
         <ng-alert
           [CONTENIDO]="TEXTOS1.ALERTA"
           [CUSTOMECLASS]="class"
@@ -380,20 +290,11 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="localidad">Localidad:</label>
-            <input
-              class="form-control"
-              type="text"
-              id="localidad"
-              formControlName="localidad"
-              (change)="
+            <input class="form-control" type="text" id="localidad" formControlName="localidad" (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'localidad')
-              "
-            />
-            <div
-              *ngIf="domicilioEstablecimiento.get('localidad')?.touched && 
-                   domicilioEstablecimiento.get('localidad')?.errors?.['required']"
-              class="text-danger"
-            >
+              " />
+            <div *ngIf="domicilioEstablecimiento.get('localidad')?.touched && 
+                   domicilioEstablecimiento.get('localidad')?.errors?.['required']" class="text-danger">
               La localidad es obligatoria.
             </div>
           </div>
@@ -402,7 +303,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establishomentoColonias"
-              >Colonias:</label
+              >Colonia:</label
             >
             <input
               class="form-control"
@@ -414,13 +315,9 @@
                   'domicilioEstablecimiento',
                   'establishomentoColonias'
                 )
-              "
-            />
-            <div
-              *ngIf="domicilioEstablecimiento.get('establishomentoColonias')?.touched && 
-                   domicilioEstablecimiento.get('establishomentoColonias')?.errors?.['required']"
-              class="text-danger"
-            >
+              " />
+            <div *ngIf="domicilioEstablecimiento.get('establishomentoColonias')?.touched && 
+                   domicilioEstablecimiento.get('establishomentoColonias')?.errors?.['required']" class="text-danger">
               La colonia es obligatoria.
             </div>
           </div>
@@ -430,27 +327,14 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle"
-              >Calle*:
-              <span
-                class="bi bi-question-circle-fill"
-                title="Calle"
-                data-bs-toggle="tooltip"
-              ></span
-            ></label>
-            <input
-              class="form-control"
-              type="text"
-              id="calle"
-              appUppercase
-              formControlName="calle"
-              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')"
-            />
+            <label class="form-label" for="calle">Calle*:
+              <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
+              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')" />
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('calle')?.touched && domicilioEstablecimiento.get('calle')?.errors?.['required']"
-            class="text-danger"
-          >
+            class="text-danger">
             La calle es obligatoria.
           </div>
         </div>
@@ -460,26 +344,14 @@
         <div class="col-md-1">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input
-              class="form-control"
-              type="text"
-              id="lada"
-              appUppercase
-              formControlName="lada"
-              (change)="enCambioDeControl('domicilioEstablecimiento', 'lada')"
-            />
+            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada"
+              (change)="enCambioDeControl('domicilioEstablecimiento', 'lada')" />
           </div>
           <div *ngIf="domicilioEstablecimiento.get('lada')?.touched">
-            <div
-              *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['maxlength']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['maxlength']" class="text-danger">
               La lada no debe tener más de 5 dígitos.
             </div>
-            <div
-              *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['pattern']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['pattern']" class="text-danger">
               La lada debe contener solo números.
             </div>
           </div>
@@ -492,23 +364,17 @@
               type="text"
               id="telefono"
               appUppercase
+              maxlength="30"  
               formControlName="telefono"
               (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'telefono')
-              "
-            />
+              " />
           </div>
           <div *ngIf="domicilioEstablecimiento.get('telefono')?.touched">
-            <div
-              *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="text-danger">
               El número de teléfono es obligatorio.
             </div>
-            <div
-              *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern']"
-              class="text-danger"
-            >
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern']" class="text-danger">
               El teléfono debe contener solo números.
             </div>
           </div>
@@ -519,121 +385,88 @@
     <div class="row" class="mt-5">
       <div class="form-group">
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
-        <app-tabla-dinamica
-          [configuracionTabla]="configuracionTabla"
-          [datos]="personaparas"
-          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
-          formcontrolname="scian"
-        >
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas"
+          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
         </app-tabla-dinamica>
-        <div
-          *ngIf="hasError(scianForm, 'scian', 'required')"
-          class="text-danger mt-1"
-        >
+        <div *ngIf="hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
           La clave S.C.I.A.N. es obligatoria.
         </div>
       </div>
-      <div
-        *ngIf="domicilioEstablecimiento.get('scian')?.touched && 
-             domicilioEstablecimiento.get('scian')?.errors?.['required']"
-        class="text-danger"
-      >
+      <div *ngIf="domicilioEstablecimiento.get('scian')?.touched && 
+             domicilioEstablecimiento.get('scian')?.errors?.['required']" class="text-danger">
         Seleccione al menos una actividad económica (S.C.I.A.N.).
       </div>
     </div>
 
-    <div class="d-flex justify-content-end">
+    @if (mostrarScianBotones) {
+      <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-default btn-space me-2">
         Eliminar
       </button>
-      <button
-        type="button"
-        class="btn btn-primary btn-space"
-        data-bs-toggle="modal"
-        data-bs-target="#modalClave"
-        (click)="mostrarModeloClave()"
-      >
+      <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
+        (click)="mostrarModeloClave()">
         Agregar
       </button>
     </div>
+    }
   </form>
 
   <form [formGroup]="solicitudEstablecimientoForm">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
         <lib-input-check
-          [label]="'Aviso de funcionamiento'"
+          [label]="'Aviso de funcionamiento:'"
           [id]="'avisoCheckbox'"
           [required]="true"
           formControlName="avisoCheckbox"
           (change)="
             toggleNoLicenciaSanitaria($event);
             enCambioDeControl('solicitudEstablecimientoForm', 'avisoCheckbox')
-          "
-        ></lib-input-check>
+          "></lib-input-check>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria"
-            >No. de licencia sanitaria:
-            <span
-              class="bi bi-question-circle-fill"
-              title="No. de licencia sanitaria"
-              data-bs-toggle="tooltip"
-            ></span
-          ></label>
-          <input
-            class="form-control"
-            id="licenciaSanitaria"
-            placeholder=""
-            type="text"
-            formControlName="noLicenciaSanitaria"
-            (change)="
+          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
+            <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"></span></label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+            formControlName="noLicenciaSanitaria" (change)="
               enCambioDeControl(
                 'solicitudEstablecimientoForm',
                 'noLicenciaSanitaria'
               )
-            "
-          />
+            " />
         </div>
+        @if(solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].invalid && solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].touched) {
+          <div class="d-grid">
+            @if(solicitudEstablecimientoForm.controls['noLicenciaSanitaria'].errors?.['maxlength']) {
+              <span class="mensaje-error">No puede tener más de 20 caracteres</span>
+            }          
+          </div>
+        }
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="estado"
-          [label]="'Régimen'"
-          [required]="true"
-          name="regimen"
-          [tooltipQuestionCircle]="true"
-          formControlName="regimen"
-          (change)="
+        <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
+          [tooltipQuestionCircle]="true" formControlName="regimen" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'regimen')
-          "
-        ></app-catalogo-select>
+          "></app-catalogo-select>
         <div
           *ngIf="solicitudEstablecimientoForm.get('regimen')?.touched && solicitudEstablecimientoForm.get('regimen')?.errors?.['required']"
-          class="text-danger mt-1"
-        >
+          class="text-danger mt-1">
           El régimen es obligatorio.
         </div>
       </div>
       <div class="col-md-8">
-        <app-catalogo-select
-          [catalogo]="estado"
-          [label]="'Aduanas de entradas'"
-          [required]="true"
-          name="aduanasEntradas"
-          formControlName="aduanasEntradas"
-          (change)="
+        <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
+          name="aduanasEntradas" formControlName="aduanasEntradas" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'aduanasEntradas')
-          "
-        ></app-catalogo-select>
+          "></app-catalogo-select>
         <div
           *ngIf="solicitudEstablecimientoForm.get('aduanasEntradas')?.touched && solicitudEstablecimientoForm.get('aduanasEntradas')?.errors?.['required']"
-          class="text-danger mt-1"
-        >
+          class="text-danger mt-1">
           Las aduanas de entrada son obligatorias.
         </div>
       </div>
@@ -642,14 +475,20 @@
       <div class="col-md-6"></div>
       <div class="col-md-6">
         <lib-input-check
-          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'"
+          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [id]="'aifaCheckbox'"
           [required]="true"
           formControlName="aifaCheckbox"
           (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'aifaCheckbox')
           "
-        ></lib-input-check>
+        ><span
+        class="bi bi-question-circle-fill"
+        title="No. de licencia sanitaria"
+        data-bs-toggle="tooltip"
+      ></span> </lib-input-check>
+       
+   
       </div>
     </div>
     <div class="row">
@@ -658,46 +497,30 @@
       </div>
     </div>
     <div class="row mt-5">
-      <app-tabla-dinamica
-        [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-        [configuracionTabla]="mercanciasTabla"
-        [datos]="mercanciasTablaDatos"
-      ></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Eliminar</button>
         <button class="btn btn-default me-2">Modificar</button>
-        <button
-          class="btn btn-primary me-2"
-          data-bs-toggle="modal"
-          (click)="abrirModalMercancia()"
-        >
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()">
           Agregar
         </button>
       </div>
     </div>
 
     <app-manifiestos-representante-seccion
-      [showRepresentanteLegal]="hideRepresentanteLegal"
-    ></app-manifiestos-representante-seccion>
+      [showRepresentanteLegal]="hideRepresentanteLegal"></app-manifiestos-representante-seccion>
   </form>
 </div>
 @if (nuevaNotificacion) {
 <section>
-  <lib-notificaciones
-    [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="eliminarPedimento($event)"
-  >
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
   </lib-notificaciones>
 </section>
 }
 
-<div
-  class="modal fade"
-  #establecimientoModal
-  tabindex="-1"
-  aria-labelledby="establecimientoModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" #establecimientoModal tabindex="-1" aria-labelledby="establecimientoModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">
@@ -705,44 +528,27 @@
           <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
           <div class="row">
             <div class="col-md-8">
-              <app-catalogo-select
-                [catalogo]="scianJson"
-                [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'"
-                formControlName="scian"
-                (change)="enCambioDeControl('scianForm', 'scian')"
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'" formControlName="scian"
+                (change)="enCambioDeControl('scianForm', 'scian')"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-8">
               <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
-              <input
-                type="text"
-                id="descripcionScianId"
-                formControlName="descripcionScian"
-                class="form-control"
-                (change)="enCambioDeControl('scianForm', 'descripcionScian')"
-              />
+              <input type="text" id="descripcionScianId" formControlName="descripcionScian" class="form-control"
+                (change)="enCambioDeControl('scianForm', 'descripcionScian')" />
             </div>
           </div>
         </div>
         <div class="modal-footer mt-5">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="limpiarScianForm()"
-          >
+          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()">
             Limpiar
           </button>
           <button type="button" class="btn btn-primary" (click)="cerrarModal()">
             Cancelar
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="guardarScian()"
-          >
+          <button type="button" class="btn btn-primary" (click)="guardarScian()">
             Guardar
           </button>
         </div>
@@ -751,21 +557,16 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  #modalAddAgentMercancias
-  tabindex="-1"
-  aria-labelledby="modalAddAgentMercanciasLabel"
-  aria-hidden="true"
->
+<div class="modal fade" #modalAddAgentMercancias tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Datos mercancías</h4>
+        <h4 class="modal-title">Datos mercancía</h4>
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
-          <div class="form-group">
+          <div class="form-group pt-3">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="clasificacion"
@@ -777,7 +578,7 @@
               {{ getErrorMessage('clasificacion') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="especificarClasificacionProducto"
@@ -785,53 +586,52 @@
               [required]="true"
               name="especificarClasificacionProducto"
             ></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('especificarClasificacionProducto')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('especificarClasificacionProducto')"
+            >
               {{ getErrorMessage('especificarClasificacionProducto') }}
             </div>
           </div>
           <div class="form-group">
-            <label for="denominacionEspecifica"
-              >Denominación específica del producto*:</label
-            >
-            <input
-              type="text"
-              id="denominacionEspecifica"
-              formControlName="denominacionEspecifica"
-              class="form-control"
-            />
+            <label for="denominacionEspecifica">Denominación específica del producto*:</label>
+            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica"
+              class="form-control" />
             <div class="text-danger" *ngIf="getErrorMessage('denominacionEspecifica')">
               {{ getErrorMessage('denominacionEspecifica') }}
             </div>
           </div>
           <div class="form-group">
-            <label for="denominacionDistintiva"
-              >Denominación distintiva*:</label
-            >
-            <input
-              type="text"
-              id="denominacionDistintiva"
-              formControlName="denominacionDistintiva"
-              class="form-control"
-            />
+            <label for="denominacionDistintiva">Denominación distintiva*:</label>
+            <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva"
+              class="form-control" />
             <div class="text-danger" *ngIf="getErrorMessage('denominacionDistintiva')">
               {{ getErrorMessage('denominacionDistintiva') }}
             </div>
           </div>
           <div class="form-group">
-            <label for="denominacionComun"
-              >Denominación o nombre científico*:</label
-            >
+            <label for="denominacionComun">
+              Denominación o nombre científico*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input
               type="text"
               id="denominacionComun"
               formControlName="denominacionComun"
               class="form-control"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('denominacionComun')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('denominacionComun')"
+            >
               {{ getErrorMessage('denominacionComun') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="tipoDeProducto"
@@ -844,18 +644,13 @@
             </div>
           </div>
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="estado"
-              formControlName="estadoFormaFarmaceutica"
-              [label]="'Forma farmacéutica'"
-              [required]="true"
-              name="estadoFormaFarmaceutica"
-            ></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="estadoFormaFarmaceutica"
+              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('estadoFormaFarmaceutica')">
               {{ getErrorMessage('estadoFormaFarmaceutica') }}
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group pt-1">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="estadoFisico"
@@ -868,20 +663,30 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria">Fracción arancelaria*:
+              <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input
               type="text"
               id="fraccionArancelaria"
               formControlName="fraccionArancelaria"
               class="form-control"
+              maxlength="8"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('fraccionArancelaria')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('fraccionArancelaria')"
+            >
               {{ getErrorMessage('fraccionArancelaria') }}
             </div>
           </div>
           <div class="form-group">
             <label for="descripcionFraccion"
-              >Descripción de la fracción*:</label
+              >Descripción de la fracción arancelaria*:</label
             >
             <input
               type="text"
@@ -889,7 +694,10 @@
               formControlName="descripcionFraccion"
               class="form-control"
             />
-            <div class="text-danger" *ngIf="getErrorMessage('descripcionFraccion')">
+            <div
+              class="text-danger"
+              *ngIf="getErrorMessage('descripcionFraccion')"
+            >
               {{ getErrorMessage('descripcionFraccion') }}
             </div>
           </div>
@@ -897,12 +705,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMT">Cantidad UMT*:</label>
-                <input
-                  type="text"
-                  id="cantidadUMT"
-                  formControlName="cantidadUMT"
-                  class="form-control"
-                />
+                <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('cantidadUMT')">
                   {{ getErrorMessage('cantidadUMT') }}
                 </div>
@@ -910,7 +713,13 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="UMT">UMT*:</label>
+                <label for="UMT">UMT*:
+                  <span
+                   class="bi bi-question-circle-fill"
+                   title="UMT"
+                  data-bs-toggle="tooltip"
+                  ></span>
+                </label>
                 <input
                   type="text"
                   id="UMT"
@@ -927,12 +736,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMC">Cantidad UMC*:</label>
-                <input
-                  type="text"
-                  id="cantidadUMC"
-                  formControlName="cantidadUMC"
-                  class="form-control"
-                />
+                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('cantidadUMC')">
                   {{ getErrorMessage('cantidadUMC') }}
                 </div>
@@ -946,6 +750,7 @@
                   [label]="'UMC'"
                   [required]="true"
                   name="UMC"
+                  [tooltipQuestionCircle]="true"
                 ></app-catalogo-select>
                 <div class="text-danger" *ngIf="getErrorMessage('UMC')">
                   {{ getErrorMessage('UMC') }}
@@ -955,31 +760,18 @@
           </div>
 
           <div class="form-group">
-            <label for="presentacion"
-              >Presentación farmacéutica o tipo de envase*:</label
-            >
-            <input
-              type="text"
-              id="presentacion"
-              formControlName="presentacion"
-              class="form-control"
-            />
+            <label for="presentacion">Presentación farmacéutica o tipo de envase*:</label>
+            <input type="text" id="presentacion" formControlName="presentacion" class="form-control" />
             <div class="text-danger" *ngIf="getErrorMessage('presentacion')">
               {{ getErrorMessage('presentacion') }}
             </div>
           </div>
-          <div class="row">
+          @if (mostrarNumeroYFecha) {
+            <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="numeroRegistro"
-                  >Número de registro sanitario*:</label
-                >
-                <input
-                  type="text"
-                  id="numeroRegistro"
-                  formControlName="numeroRegistro"
-                  class="form-control"
-                />
+                <label for="numeroRegistro">Número de registro sanitario*:</label>
+                <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('numeroRegistro')">
                   {{ getErrorMessage('numeroRegistro') }}
                 </div>
@@ -987,37 +779,25 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <input-fecha
-                  [datos]="fechaCaducidadInput"
-                  [setFecha]="formMercancias.get('fechaCaducidad')?.value"
-                  (valorCambiado)="cambioFechaFinal($event)"
-                ></input-fecha>
+                <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value"
+                  (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
               </div>
             </div>
           </div>
+          }
 
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsable()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de orígen</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPais"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotons"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotons"></crosslist>
                   </div>
                 </div>
                 }
@@ -1028,25 +808,15 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableDos()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsableDos()" tabindex="0">
                   <p class="panel-title">País de procedencia</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if(colapsableDos){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisDos"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonsDos"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDos" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonsDos"></crosslist>
                   </div>
                 </div>
                 }
@@ -1057,25 +827,15 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableTres()"
-                  tabindex="0"
-                >
+                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">Uso específico</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
+                  <button type="button" class="collpase-button collapsed"></button>
                 </div>
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisTres"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonsTres"
-                    ></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonsTres"></crosslist>
                   </div>
                 </div>
                 }
@@ -1091,11 +851,7 @@
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="guardarMarcancia()"
-        >
+        <button type="button" class="btn btn-primary" (click)="guardarMarcancia()">
           Agregar
         </button>
       </div>
