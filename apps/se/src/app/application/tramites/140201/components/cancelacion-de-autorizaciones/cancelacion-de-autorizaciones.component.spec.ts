@@ -8,6 +8,7 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 jest.mock('../../services/cancelaciones.service');
 jest.mock('../../estados/cancelaciones.store');
@@ -19,6 +20,9 @@ describe('CancelacionDeAutorizacionesComponent', () => {
   let cancelacionesService: jest.Mocked<CancelacionesService>;
   let cancelacionesStore: jest.Mocked<CancelacionesStore>;
   let cancelacionesQuery: jest.Mocked<CancelacionesQuery>;
+ const consultaioQueryMock = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
 
   beforeEach(async () => {
     // Properly mock CancelacionesQuery
@@ -44,6 +48,8 @@ describe('CancelacionDeAutorizacionesComponent', () => {
         { provide: CancelacionesService, useValue: cancelacionesService },
         { provide: CancelacionesStore, useValue: cancelacionesStore },
         { provide: CancelacionesQuery, useValue: cancelacionesQuery },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+
       ],
     }).compileComponents();
 
@@ -107,4 +113,53 @@ describe('CancelacionDeAutorizacionesComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const disableSpy = jest.spyOn(component.cancelacionForm, 'disable');
+    const enableSpy = jest.spyOn(component.cancelacionForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.actualizarEstado).toHaveBeenCalled();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const disableSpy = jest.spyOn(component.cancelacionForm, 'disable');
+    const enableSpy = jest.spyOn(component.cancelacionForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.actualizarEstado).toHaveBeenCalled();
+    expect(enableSpy).toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'actualizarEstado');
+
+    component.inicializarEstadoFormulario();
+
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(updateSpy).not.toHaveBeenCalledTimes(2); 
+  });
+
+  it('should only call actualizarEstado when readonly is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'actualizarEstado');
+
+    component.inicializarEstadoFormulario();
+
+    expect(updateSpy).toHaveBeenCalled();
+    expect(guardarSpy).not.toHaveBeenCalled();
+  }); 
 });

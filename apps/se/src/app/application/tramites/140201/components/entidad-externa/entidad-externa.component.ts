@@ -128,7 +128,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
    this.updateState();
-      if (this.esFormularioSoloLectura) {
+      if ( this.entidadForm && this.esFormularioSoloLectura) {
         this.entidadForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.entidadForm.enable();

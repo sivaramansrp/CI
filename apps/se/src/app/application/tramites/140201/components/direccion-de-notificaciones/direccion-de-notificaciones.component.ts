@@ -182,7 +182,7 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.updateState();
-      if (this.esFormularioSoloLectura) {
+      if (this.direccionNotificacionesForm && this.esFormularioSoloLectura) {
         this.direccionNotificacionesForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.direccionNotificacionesForm.enable();

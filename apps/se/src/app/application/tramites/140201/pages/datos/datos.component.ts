@@ -35,6 +35,7 @@ export class DatosComponent implements AfterViewInit , OnInit , OnDestroy {
       })).subscribe();
     if(this.consultaState.update) { 
       this.guardarDatosFormulario();
+      
     } else {
       this.esDatosRespuesta = true;
     }

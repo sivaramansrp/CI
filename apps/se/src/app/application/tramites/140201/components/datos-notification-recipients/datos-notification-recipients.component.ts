@@ -122,7 +122,7 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
      this.updateState();
-      if (this.esFormularioSoloLectura) {
+      if ( this.formularioDeNotificacionesForm && this.esFormularioSoloLectura) {
         this.formularioDeNotificacionesForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.formularioDeNotificacionesForm.enable();

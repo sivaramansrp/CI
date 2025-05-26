@@ -144,7 +144,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
-      if (this.esFormularioSoloLectura) {
+      if (this.cancelacionForm && this.esFormularioSoloLectura) {
         this.cancelacionForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.cancelacionForm.enable();
@@ -174,7 +174,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    * Actualiza el RFC ingresado en el almacén.
    */
   updateRfcIngresado() {
-    const RFCINGRESADO = this.cancelacionForm.get('rfcIngresado')?.value;
+    const RFCINGRESADO = this.cancelacionForm?.get('rfcIngresado')?.value;
     this.cancelacionesStore.setRfcIngresado(RFCINGRESADO);
   }
 
@@ -182,7 +182,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    * Actualiza el motivo de cancelación en el almacén.
    */
   updateMotivoCancelacion() {
-    const MOTIVOCANCELACION = this.cancelacionForm.get('motivoCancelacion')?.value;
+    const MOTIVOCANCELACION = this.cancelacionForm?.get('motivoCancelacion')?.value;
     this.cancelacionesStore.setMotivoCancelacion(MOTIVOCANCELACION);
   }
 
