@@ -34,33 +34,19 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Estado de la solicitud de registro.
    */
   public registroState!: RegistroStore;
-
-  /**
-   * Indica si la tabla de datos debe visualizarse.
-   */
-  visualizarTabla: boolean = false;
-
-  /**
-   * Lista de personas consultadas para notificaciones.
-   */
-  personasNotificaciones: ConsultaRegistro[] = [];
-
-  /**
-   * Indica si la persona está seleccionada para alguna acción.
-   */
-  seleccionado?: boolean;
+  public registrarDatos: boolean = false;
+  public modelNotificador!: ConsultaRegistro;
 
   /**
    * Constructor. Inyecta dependencias necesarias para el funcionamiento del componente.
    * @param fb FormBuilder para construir el formulario reactivo.
-   * @param registroStates Estado global de registros.
    * @param registroQuery Query para obtener el estado de la solicitud.
    * @param tramiteService Servicio para consultar datos por RFC o CURP.
    * @param router Servicio de enrutamiento de Angular.
    */
   constructor(
     private fb: FormBuilder,
-    private registroStates: RegistroStates,
+    private registroStore: RegistroStates,
     private registroQuery: BusquedaRFCQuery,
     private tramiteService: TramiteService,
     private router: Router
@@ -82,7 +68,6 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
       .subscribe();
     this.consultaDatos(this.registroState.rfc);
     this.crearFormRequerimiento();
-    this.personasNotificaciones = this.registroState.personasNotificaciones;
   }
 
   /**
@@ -93,6 +78,8 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
     this.tramiteService.consultaDatosPorRFCoCURP(rfc)
       .pipe(
         map((data) => {
+          this.modelNotificador = data;
+          this.registroStore.setModeloNotificador(this.modelNotificador);
           this.formConsulta.get('nombre')?.setValue(data.nombre);
           this.formConsulta.get('apellidoPaterno')?.setValue(data.apellidoPaterno);
           this.formConsulta.get('apellidoMaterno')?.setValue(data.apellidoMaterno);
@@ -128,42 +115,18 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Confirma los datos consultados y muestra la tabla de información.
-   * Agrega la persona consultada a la lista de notificaciones y actualiza el estado global.
-   */
-  confirmarDatos() {
-    if (this.personasNotificaciones.length === 0) {
-      this.personasNotificaciones = [];
-    }
-    const NUEVA_PERSONA = {
-      ...this.formConsulta.value,
-      seleccionado: false
-    };
-    this.personasNotificaciones.push({ ...NUEVA_PERSONA });
-    this.visualizarTabla = true;
-    this.registroStates.setListaNotificadores(this.personasNotificaciones);
-  }
-
-  /**
-   * Navega a la pantalla de firma electrónica.
-   */
-  enviarFirma() {
-    this.router.navigate(['funcionario/firma-electronica']);
-  }
-
-  /**
-   * Elimina de la lista las personas seleccionadas.
-   * Actualiza el estado global de notificaciones.
-   */
-  eliminarSeleccionados() {
-    this.personasNotificaciones = this.personasNotificaciones.filter(p => !p['seleccionado']);
-    this.registroStates.setListaNotificadores(this.personasNotificaciones);
-  }
-
-  /**
    * Cancela la operación y navega a la pantalla de registro de notificaciones.
    */
   cancelarDatos() {
-    this.router.navigate(['funcionario/registro-notificaciones']);
+    this.registroStore.setValorRegistro(this.registrarDatos = false);
+    this.router.navigate(['login/registro-notificaciones']);
+  }
+/**
+ * Método para confirmar datos y enviar datos a tabla 
+ */
+  confirmarDatos() {
+    this.registrarDatos = true;
+    this.registroStore.setValorRegistro(this.registrarDatos);
+    this.router.navigate(['login/registro-notificaciones']);
   }
 }

@@ -1,0 +1,56 @@
+<div class="page page-color">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="fw-bold my-5 titulo-tasks">Registro de persona para oír y recibir notificaciones</h2>
+                <div class="bg-primary"></div>
+            </div>
+        </div>
+        <form [formGroup]="FormNotificaciones">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="rfc" class="form-label text-title">Registro Federal de Contribuyentes</label>
+                    <input type="text" id="rfc" formControlName="rfc" class="form-control font-weight-titulo text-title"
+                        placeholder="Registro Federal de Contribuyentes"
+                        (change)="setValoresStore(FormNotificaciones,'rfc', 'setValorRFC')" />
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="d-flex justify-content-lg-end h1">
+                <button type="submit" class="btn btn-primary me-2"
+                    (click)="AgregarPersonaParaOirRecibirNotificaciones()">Agregar</button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th></th>
+                            <th>RFC</th>
+                            <th>NOMBRE</th>
+                            <th>APELLIDO PATERNO</th>
+                            <th>APELLIDO MATERNO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let persona of personasNotificaciones">
+                            <input type="checkbox" [(ngModel)]="persona.seleccionado" />
+                            <td>{{ persona.rfc }}</td>
+                            <td>{{ persona.nombre }}</td>
+                            <td>{{ persona.apellidoPaterno }}</td>
+                            <td>{{ persona.apellidoMaterno }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="visualizarTabla" class="row">
+            <div class="d-flex justify-content-lg-end h1">
+                <button class="btn btn-primary ms-2" type="button" (click)="enviarFirma()">Firmar</button>
+                <button class="btn btn-default ms-2" type="button" (click)="eliminarSeleccionados()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

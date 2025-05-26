@@ -11,6 +11,12 @@ export interface RegistroStore {
     rfc: string;
     /** Lista de personas que recibirán notificaciones */
     personasNotificaciones: ConsultaRegistro[];
+    /** Persona notificador actualmente seleccionada o consultada */
+    personaNotifcador: ConsultaRegistro;
+    /** Indica si los datos han sido confirmados para registro */
+    regustrarDatos: boolean;
+    /** Indica si la tabla de personas notificadoras debe mostrarse en la UI */
+    visualizarTabla: boolean;
 }
 
 /**
@@ -20,7 +26,16 @@ export interface RegistroStore {
 export function createInitialState(): RegistroStore {
     return {
         rfc: '',
-        personasNotificaciones: []
+        personasNotificaciones: [],
+        personaNotifcador: {
+            idUsuario: 0,
+            nombre: '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
+            rfc: '',
+        },
+        regustrarDatos: false,
+        visualizarTabla: false
     };
 }
 
@@ -64,6 +79,39 @@ export class RegistroStates extends Store<RegistroStore> {
         this.update((state) => ({
             ...state,
             personasNotificaciones,
+        }));
+    }
+
+    /**
+     * Actualiza la persona notificador actualmente seleccionada o consultada en el estado global.
+     * @param personaNotifcador Objeto de tipo ConsultaRegistro a establecer como notificador actual.
+     */
+    public setModeloNotificador(personaNotifcador: ConsultaRegistro): void {
+        this.update((state) => ({
+            ...state,
+            personaNotifcador,
+        }));
+    }
+
+    /**
+     * Actualiza el valor que indica si los datos han sido confirmados para registro.
+     * @param regustrarDatos Valor booleano que indica si los datos están confirmados.
+     */
+    public setValorRegistro(regustrarDatos: boolean): void {
+        this.update((state) => ({
+            ...state,
+            regustrarDatos,
+        }));
+    }
+
+    /**
+     * Actualiza el valor que indica si la tabla de personas notificadoras debe mostrarse en la UI.
+     * @param visualizarTabla Valor booleano para mostrar u ocultar la tabla.
+     */
+    public setValorVisualizarTabla(visualizarTabla: boolean): void {
+        this.update((state) => ({
+            ...state,
+            visualizarTabla,
         }));
     }
 }

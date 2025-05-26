@@ -1,29 +1,25 @@
+
 import { RegistroStates, RegistroStore } from '../estados/registro.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * BusquedaRFCQuery
- * 
- * Esta clase extiende de Akita Query y permite consultar el estado de RegistroStore.
- * Provee un observable `selectSolicitud$` para suscribirse a los cambios del estado completo.
- * 
- * @example
- *   this.busquedaRFCQuery.selectSolicitud$.subscribe(state => { ... });
+ * Query para consultar el estado del registro de personas y notificaciones.
+ * Permite seleccionar el estado completo del store de registro.
  */
 @Injectable({ providedIn: 'root' })
 export class BusquedaRFCQuery extends Query<RegistroStore> {
 
   /**
-   * Observable que emite el estado completo de RegistroStore.
+   * Observable que emite el estado completo del registro.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
 
   /**
-   * Constructor que recibe el store de estados de registro.
-   * @param store Instancia de RegistroStates
+   * Constructor. Inyecta el store de registro.
+   * @param store Instancia del store de registro.
    */
   constructor(
     protected override store: RegistroStates) {
