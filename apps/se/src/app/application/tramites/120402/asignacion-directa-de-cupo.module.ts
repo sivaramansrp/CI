@@ -13,7 +13,7 @@ import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/selec
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { NotificacionesComponent, WizardComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
@@ -37,6 +37,7 @@ import { ToastrService } from 'ngx-toastr';
     FormsModule,
     ReactiveFormsModule,
     AsignacionDirectaDeCupoRoutingModule,
+    NotificacionesComponent,
     WizardComponent,
     RepresentacionFederalComponent,
     SeleccionDelCupoComponent,

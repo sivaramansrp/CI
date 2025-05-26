@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  TablaAcciones,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -21,7 +22,6 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
-
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -49,6 +49,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    */
   public idProcedimiento!: number;
+
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -67,11 +68,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
 
-    /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
-   * Configuración de columnas para la tabla de facturadores.
+  /**
+   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaFabricante
+   * Configuración de columnas para la tabla de fabricantes.
    */
-    configuracionTablaFabricante: ConfiguracionColumna<Fabricante>[] =FABRICANTE_ENCABEZADO_DE_TABLA;
+  configuracionTablaFabricante: ConfiguracionColumna<Fabricante>[] = FABRICANTE_ENCABEZADO_DE_TABLA;
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -90,16 +91,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
    */
   public habilitarFacturador = true;
+
   /**
-   * @property {Destinatario[]}destinatarioTablaDatos
-   * Datos de la tabla de fabricantes.
+   * @property {Observable<Destinatario[]>} destinatarioTablaDatos$
+   * Observable que expone los datos de la tabla de destinatarios.
    */
- destinatarioTablaDatos$!: Observable<Destinatario[]>;
-
+  destinatarioTablaDatos$!: Observable<Destinatario[]>;
 
   /**
-   * @property {Facturador[]} facturadorTablaDatos
-   * Datos de la tabla de Fabricante.
+   * @property {Observable<Fabricante[]>} fabricanteTablaDatos$
+   * Observable que expone los datos de la tabla de fabricantes.
    */
   fabricanteTablaDatos$!: Observable<Fabricante[]>;
 
@@ -111,17 +112,37 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
+   * @property {TablaAcciones[]} accionesServcios
+   * Acciones disponibles para las tablas (por ejemplo, ver, editar, eliminar).
+   */
+  public accionesServcios: TablaAcciones[] = [];
+
+  /**
+   * @property {any} tipoTablaDatos
    * Asigna el valor de `TIPO_TABLA_DATOS` a la variable `tipoTablaDatos`.
    * `TIPO_TABLA_DATOS` es un objeto o constante que define los tipos de datos para las tablas.
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
   /**
+   * @property {Destinatario[]} listaDeTablasSeleccionadasDestinatario
+   * Lista de destinatarios seleccionados en la tabla.
+   */
+  listaDeTablasSeleccionadasDestinatario: Destinatario[] = [];
+
+  /**
+   * @property {Fabricante[]} listaDeTablasSeleccionadasFabricante
+   * Lista de fabricantes seleccionados en la tabla.
+   */
+  listaDeTablasSeleccionadasFabricante: Fabricante[] = [];
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
-   * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param router - Servicio de enrutamiento de Angular.
+   * @param activatedROute - Ruta activada actual.
    */
   constructor(
     private tramiteQuery: Tramite260103Query,
@@ -135,18 +156,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe los observables para mostrar los datos en la vista.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
-
+    this.accionesServcios = [TablaAcciones.VER];
     this.fabricanteTablaDatos$ = this.tramiteQuery.getFabricanteTablaDatos$;
   }
 
   /**
-   * Navega a la ruta 'agregar-datos-generales' con el parámetro `tipo` pasado en la URL.
+   * @method navigate
+   * @description Navega a la ruta 'agregar-datos-generales' con el parámetro `tipo` pasado en la URL.
    * La navegación se realiza de manera relativa a la ruta activada actual.
-   *
-   * @param tipo - El tipo de datos que se pasará en la URL.
+   * @param {string} tipo - El tipo de datos que se pasará en la URL.
+   * @returns {void}
    */
   navigate(tipo: string): void {
     this.router.navigate(['..', 'agregar-datos-generales', tipo], {
@@ -155,21 +178,74 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navega a la ruta 'agregar-fabricante' de manera relativa a la ruta activada actual.
+   * @method navigateFabricante
+   * @description Navega a la ruta 'agregar-fabricante'. Si se pasa 'edit' como parámetro,
+   * navega a la edición del fabricante seleccionado.
+   * @param {string} [functionName] - Nombre de la función, si es 'edit' navega a la edición.
+   * @returns {void}
    */
-  navigateFabricante(): void {
-    this.router.navigate(['..', 'agregar-fabricante'], {
-      relativeTo: this.activatedROute,
-    });
+  navigateFabricante(functionName?: string): void {
+    if (functionName === 'edit') {
+      this.router.navigate(['..', 'agregar-fabricante', this.listaDeTablasSeleccionadasFabricante[0]?.id], {
+        relativeTo: this.activatedROute,
+      });
+    } else {
+      this.router.navigate(['..', 'agregar-fabricante'], {
+        relativeTo: this.activatedROute,
+      });
+    }
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * @method onListaDeFilaSeleccionada
+   * @description Actualiza la lista de filas seleccionadas según la tabla (destinatario o fabricante).
+   * @param {Destinatario[] | Fabricante[]} filasSeleccionadas - Filas seleccionadas en la tabla.
+   * @param {string} tableName - Nombre de la tabla ('destinatario' o 'fabricante').
+   * @returns {void}
+   */
+  onListaDeFilaSeleccionada(
+    filasSeleccionadas: Destinatario[] | Fabricante[],
+    tableName: string
+  ): void {
+    if (tableName === 'destinatario') {
+      this.listaDeTablasSeleccionadasDestinatario = filasSeleccionadas as Destinatario[];
+    } else if (tableName === 'fabricante') {
+      this.listaDeTablasSeleccionadasFabricante = filasSeleccionadas as Fabricante[];
+    }
+  }
+
+  /**
+   * @method eliminarFabricante
+   * @description Elimina el fabricante seleccionado de la lista y actualiza el observable de la tabla.
+   * @returns {void}
+   */
+  eliminarFabricante(): void {
+    const FABRICANTE_ID = this.listaDeTablasSeleccionadasFabricante[0]?.id;
+    if (FABRICANTE_ID !== undefined) {
+      this.tramiteQuery.eliminarFabricantePorId(FABRICANTE_ID);
+      this.fabricanteTablaDatos$ = this.tramiteQuery.getFabricanteTablaDatos$;
+    }
+  }
+
+  /**
+   * @method eliminarDestinatario
+   * @description Elimina el destinatario seleccionado de la lista y actualiza el observable de la tabla.
+   * @returns {void}
+   */
+  eliminarDestinatario(): void {
+    const DESTINATARIO_ID = this.listaDeTablasSeleccionadasDestinatario[0]?.id;
+    if (DESTINATARIO_ID !== undefined) {
+      this.tramiteQuery.eliminarDestinatarioPorId(DESTINATARIO_ID);
+      this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
+    }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Este método emite un valor a través del observable `destroy$` para notificar a los suscriptores
    * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroy$.next();
