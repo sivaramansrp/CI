@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PagoDerechosState, dateLessThanOrEqualToday } from '../../models/tramies230401.models';
-import { REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import {
   delay,
   map,
   takeUntil,
   tap,
 } from 'rxjs';
+import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';

@@ -3,9 +3,11 @@ import {
   Catalogo,
   CatalogoPaises,
   CrossListLable,
+  MaxDigitsValidator,
+  REGEX_SOLO_DIGITOS,
   SeccionLibQuery,
   TablaSeleccion,
-  ValidacionesFormularioService,
+  ValidacionesFormularioService
 } from '@ng-mf/data-access-user';
 import {
   CONFIGURACION_SUSTANCIAS_SENSIBLES,
@@ -36,7 +38,6 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 import { SustanciaSensible } from '../../models/tramies230401.models';
-import { maxDigitsValidator } from '../../models/tramies230401.models';
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
@@ -628,7 +629,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       unNumero: [
         this.solicitudState?.unNumero,
-        [Validators.required, Validators.maxLength(50), Validators.pattern(/^\d+$/)],
+        [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       datosNombreComercial: [
         this.solicitudState?.datosNombreComercial,
@@ -662,7 +663,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       cantidad: [
         this.solicitudState?.cantidad,
-        [Validators.required, Validators.min(1), Validators.max(999999999999.999), maxDigitsValidator()],
+        [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
       ],
       cantidadLetra: [
         { value: this.solicitudState?.cantidadLetra, disabled: true },
