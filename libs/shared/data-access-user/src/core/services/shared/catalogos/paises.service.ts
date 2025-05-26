@@ -1,9 +1,9 @@
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_GET_PAISES } from '../../../constants/api-constants';
 import { CatalogoPaisesResponse } from '../../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../../enviroments/enviroment';
-import { API_GET_PAISES } from '../../../constants/api-constants';
 
 @Injectable({
   providedIn: 'root',

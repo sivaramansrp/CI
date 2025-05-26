@@ -1,5 +1,8 @@
 import { ItemTransporte } from "../models/shared/agregar-transporte.model";
 
+/**
+ * @description Enum para definir los tipos de transporte disponibles en el sistema.
+ */
 export const HEADER_TABLA_CARRETERO: ItemTransporte[] = [
     {
         llave: 'empTransportista',
@@ -154,12 +157,31 @@ export const HEADER_TABLA_AEREO: ItemTransporte[] = [
     }
 ]
 
+/**
+ * @description Constante para el manejo de la etiqueta de la hora de arribo en el componente de transporte.
+ */
 export const LABEL_HORA_ARRIBO = 'Hora llegada (aprox)';
 
+/**
+ * @description Constante para el manejo de la descripcion del tipo de transporte en el componente de transporte.
+ */
 export const DESCRIPCION_TIPO_TRANSPORTE = '{tipoTransporte}';
+
+/**
+ * @description Constante para el manejo del mensaje de error al cambiar el tipo de transporte.
+ */
 export const MSG_CAMBIO_TIPO_TRANSPORTE = 'Los datos capturados serán borrados, estás de acuerdo (SI/NO)';
+
+/**
+ * @description Constante para el manejo del mensaje de éxito al agregar un tipo de transporte a la tabla.
+ */
 export const MSG_AGREGA_TRANSPORTE_EXITOSAMENTE = `El ${DESCRIPCION_TIPO_TRANSPORTE} fue agregado correctamente.`;
 
+/**
+ * @description Lista de tipos de transporte disponibles en el sistema.
+ * @param id: Identificador único del tipo de transporte.   
+ * @param nombre: Nombre del tipo de transporte.
+ */
 export const LISTA_TIPO_TRANSPORTE = [
     {
         id: 1,

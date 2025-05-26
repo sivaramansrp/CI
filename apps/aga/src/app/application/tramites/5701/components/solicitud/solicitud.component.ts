@@ -43,6 +43,7 @@ import {
   MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA,
   PATENTES_ID,
+  SIN_VALOR,
   TRANSPORTE,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
@@ -1538,7 +1539,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   verificarDatosExistentesStore(): void {
     // Verifica si existe tipo de solicitud
-    if (this.solicitudState.tipoSolicitud !== -1) {
+    if (this.solicitudState.tipoSolicitud !== SIN_VALOR) {
       this.tipoSolicitudSeleccionada = parseInt(
         this.FormSolicitud.get('tipoSolicitud')?.value,
         10
@@ -1610,7 +1611,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public changeAduana(): void {
     const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
     if (ADUANA) {
-      this.despacho.get('idSeccionDespacho')?.setValue(-1);
+      this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
 
       this.seccionAduanaService
         .getListaSeccionesAduanas('CV2')
@@ -1950,16 +1951,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   limpiaCamposDdaLda(): void {
-    this.despacho.get('idAduanaDespacho')?.setValue(-1);
+    this.despacho.get('idAduanaDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('aduanaDespacho')?.setValue('');
-    this.despacho.get('idSeccionDespacho')?.setValue(-1);
+    this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('seccionAduanera')?.setValue('');
-    this.despacho.get('nombreRecinto')?.setValue(-1);
+    this.despacho.get('nombreRecinto')?.setValue(SIN_VALOR);
     this.despacho.get('tipoOperacion')?.setValue('');
     this.despacho.get('relacionSociedad')?.setValue(false);
     this.despacho.get('encargoConferido')?.setValue(false);
     this.despacho.get('domicilioDespacho')?.setValue('');
-    this.despacho.get('tipoDespacho')?.setValue(-1);
+    this.despacho.get('tipoDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('tipoDespachoDescripcion')?.setValue('');
 
     this.setValoresStore(
@@ -2015,9 +2016,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   validaCampoRecintoEspecifique(): boolean {
     const RECINTO = this.despacho.get('nombreRecinto')?.value
       ? parseInt(this.despacho.get('nombreRecinto')?.value, 10)
-      : -1;
+      : SIN_VALOR;
     const ESPECIFIQUE = this.despacho.get('recintoEspecifique')?.value;
-    if (RECINTO !== -1 || ESPECIFIQUE !== '') {
+    if (RECINTO !== SIN_VALOR || ESPECIFIQUE !== '') {
       return true;
     }
     return false;

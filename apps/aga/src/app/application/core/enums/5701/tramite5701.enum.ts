@@ -1,16 +1,26 @@
+/**
+ * @description Constantes para el manejo de los campos de fecha de inicio y fecha final
+ * en la aplicación.
+ */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
 
+/**
+ * @description Constantes para el manejo de los campos de fecha de inicio y fecha final
+ * en la aplicación.
+ */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,
   habilitado: true,
 };
 
-// Mensajes de error en el modal
+/**
+ * @description Constantes para el manejo de mensajes y títulos en la aplicación * 
+ */
 export const MSG_CAMBIO_TIPO_SOLICITUD = ''
 export const TITULO_MODAL = 'Aviso';
 export const ERR_CAMPOS_OBLIGATORIOS = 'Debes capturar todos los datos marcados como obligatorios.';
@@ -99,9 +109,20 @@ export const EMPRESAS_CERTIFICADAS = [
   }
 ]
 
+/**
+ * @description Constante para el manejo del tipo de tramite 5701
+ */
 export const TIPO_TRAMITE: number = 5701;
 
+/**
+ * @description Constante para el manejo de error de intervalo de fechas.
+ */
 export const MSG_INTERVALO_FECHA_NO_VALIDO = 'La fecha no es válida para la solicitud seleccionada.';
+
+/**
+ * @description Constante para el manejo del valor sin valor en el select.
+ */
+export const SIN_VALOR = -1;
 
 // TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
 export const CVE_UNIDAD_ADMIN = 'CV1';
