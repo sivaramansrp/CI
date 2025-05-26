@@ -26,4 +26,18 @@ export class TramiteQuery extends Query<TramiteState> {
   getTramite(): string {
     return this.getValue()?.idTramite ?? '';
   }
+
+  /**
+   * Observable que emite el estado actual de la solicitud desde el store.
+   * 
+   * @remarks
+   * Este selector retorna todo el estado tal cual. Se puede suscribir para recibir actualizaciones
+   * en tiempo real cada vez que el estado cambie.
+   *
+   * @readonly
+   * @type Observable<StateType>
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  }); 
 }

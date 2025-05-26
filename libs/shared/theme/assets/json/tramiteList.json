@@ -10,7 +10,7 @@
     "id": 2,
     "tramite": 301,
     "linkDashboard": "/aga/importante/datosdelasolicitud",
-    "linkDepartment": "/aga/importante/datosdelasolicitud",
+    "linkDepartment": "/pago/importante/datosdelasolicitud",
     "department": "aga"
   },
   {

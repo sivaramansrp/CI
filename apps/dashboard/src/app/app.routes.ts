@@ -1,13 +1,16 @@
+import { loadRemoteModule } from '@angular-architects/module-federation';
+
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
-import { Route } from '@angular/router';
+import { MenuConsultaTramiteComponent } from './consulta-tramite/menu-consulta-tramite.component';
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
-import { loadRemoteModule } from '@angular-architects/module-federation';
-
-import { ENVIRONMENT } from './environments/environment';
 import { SubsecuentesComponent } from './subsecuentes/subsecuentes.component';
 
+import { ENVIRONMENT } from './environments/environment';
+import { Route } from '@angular/router';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const appRoutes: Route[] = [
   {
     path: 'login',
@@ -181,5 +184,9 @@ export const appRoutes: Route[] = [
   {
     path: 'subsecuentes',
     component: SubsecuentesComponent,
+  },
+  {
+    path: 'consulta-tramite',
+    component: MenuConsultaTramiteComponent,
   },
 ];
