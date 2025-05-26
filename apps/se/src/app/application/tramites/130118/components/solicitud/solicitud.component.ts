@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, FECHA_SALIDA, InputFecha, PeximService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
@@ -219,7 +219,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.valueTA,
           [
             Validators.required,
-            Validators.maxLength(1000)
+            Validators.maxLength(1000),
+            Validators.pattern(/^[^~`^]*$/)
           ],
         ],
         fraccionArancelaria: [
@@ -238,20 +239,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.cantidadTarifaria,
           [
             Validators.required,
-            Validators.maxLength(17),
             Validators.min(0),
-            Validators.max(parseFloat('99999999999999.99')),
-            Validators.pattern(/^(\d{1,14})(\.\d{1,2})?$/)
+            Validators.max(999999999.99),
+            Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)
           ]
         ],
         valorFacturaUSD: [
           this.solicitudState?.valorFacturaUSD,
           [
             Validators.required,
-            Validators.maxLength(17),
             Validators.min(0),
-            Validators.max(parseFloat('99999999999999.99')),
-            Validators.pattern(/^(\d{1,14})(\.\d{1,2})?$/)
+            Validators.max(999999999.999),
+            Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)
           ]
         ],
         precioUnitarioUSD: [

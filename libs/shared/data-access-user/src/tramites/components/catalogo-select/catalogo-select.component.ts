@@ -42,6 +42,7 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   @Input() isInline: boolean = false;
+  @Input() questionCircleTooltip?: string = '';
 
   formSelect: FormGroup;
   value: string = '';
