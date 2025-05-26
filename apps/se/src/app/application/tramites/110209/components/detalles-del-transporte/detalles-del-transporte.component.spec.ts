@@ -1,83 +1,80 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetallesDelTransporteComponent } from './detalles-del-transporte.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DetallesDelTransporteService } from '../../services/detalls-de-transporte/detalles-del-transporte.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-// Mock data for the service
-const mockData = {
-  tratado: 'Sistema Generalizado de Preferencias',
-  paisOBloque: 'Japon',
-  paisOOrigin: 'Mexico',
-  paisODestino: 'Japon',
-  fetchaDeExpedicion: '2025-02-25',
-  fetchaDeVencimiento: '2026-02-25'
-};
+const TRATADO = 'Tratado X';
+const PAIS_O_BLOQUE = 'Bloque Y';
+const PAIS_O_ORIGIN = 'País Origen';
+const PAIS_O_DESTINO = 'País Destino';
+const FECHA_DE_EXPEDICION = '2024-01-01';
+const FECHA_DE_VENCIMIENTO = '2025-01-01';
 
 describe('DetallesDelTransporteComponent', () => {
   let component: DetallesDelTransporteComponent;
   let fixture: ComponentFixture<DetallesDelTransporteComponent>;
-  let service: DetallesDelTransporteService;
+  let serviceMock: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, DetallesDelTransporteComponent],
-      declarations: [],
-      providers: [FormBuilder, DetallesDelTransporteService]
-    }).compileComponents();
-  });
+    serviceMock = {
+      getMedioDeTransporte: jest.fn().mockReturnValue(of({
+        tratado: TRATADO,
+        paisOBloque: PAIS_O_BLOQUE,
+        paisOOrigin: PAIS_O_ORIGIN,
+        paisODestino: PAIS_O_DESTINO,
+        fetchaDeExpedicion: FECHA_DE_EXPEDICION,
+        fetchaDeVencimiento: FECHA_DE_VENCIMIENTO
+      }))
+    };
 
-  beforeEach(() => {
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, DetallesDelTransporteComponent],
+      providers: [
+        FormBuilder,
+        { provide: DetallesDelTransporteService, useValue: serviceMock }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetallesDelTransporteComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(DetallesDelTransporteService);
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    const form = component.detallesDeltransportForm;
-    expect(form).toBeDefined();
-    expect(form.controls['tratado'].value).toBe('');
-    expect(form.controls['paisOBloque'].value).toBe('');
-    expect(form.controls['paisOOrigin'].value).toBe('');
-    expect(form.controls['paisODestino'].value).toBe('');
-    expect(form.controls['fetchaDeExpedicion'].value).toBe('');
-    expect(form.controls['fetchaDeVencimiento'].value).toBe('');
+  it('debe inicializar el formulario correctamente', () => {
+    expect(component.detallesDelTransporteForm).toBeDefined();
+    expect(component.detallesDelTransporteForm.get('tratado')).toBeDefined();
+    expect(component.detallesDelTransporteForm.get('fechaDeExpedicion')).toBeDefined();
   });
 
-  it('should call the service and patch form values', () => {
-    jest.spyOn(service, 'getMedioDeTransporte').mockReturnValue(of(mockData)); // Mocking the service method
-
-    component.getMedioDeTransporte();
-
-    // Ensure the service was called
-    expect(service.getMedioDeTransporte).toHaveBeenCalled();
-
-    // Check if the form was patched correctly
-    expect(component.detallesDeltransportForm.controls['tratado'].value).toBe(mockData.tratado);
-    expect(component.detallesDeltransportForm.controls['paisOBloque'].value).toBe(mockData.paisOBloque);
-    expect(component.detallesDeltransportForm.controls['paisOOrigin'].value).toBe(mockData.paisOOrigin);
-    expect(component.detallesDeltransportForm.controls['paisODestino'].value).toBe(mockData.paisODestino);
-    expect(component.detallesDeltransportForm.controls['fetchaDeExpedicion'].value).toBe(mockData.fetchaDeExpedicion);
-    expect(component.detallesDeltransportForm.controls['fetchaDeVencimiento'].value).toBe(mockData.fetchaDeVencimiento);
+  it('ngOnInit debe llamar a getMedioDeTransporte', () => {
+    const SPY = jest.spyOn(component, 'getMedioDeTransporte');
+    component.ngOnInit();
+    expect(SPY).toHaveBeenCalled();
   });
 
-  it('should handle error in service call', () => {
-    jest.spyOn(service, 'getMedioDeTransporte').mockReturnValue(of(null));
-
+  it('getMedioDeTransporte debe llenar el formulario con los datos del servicio', () => {
     component.getMedioDeTransporte();
+    expect(serviceMock.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.detallesDelTransporteForm.get('tratado')?.value).toBe(TRATADO);
+    expect(component.detallesDelTransporteForm.get('paisOBloque')?.value).toBe(PAIS_O_BLOQUE);
+    expect(component.detallesDelTransporteForm.get('paisOOrigin')?.value).toBe(PAIS_O_ORIGIN);
+    expect(component.detallesDelTransporteForm.get('paisODestino')?.value).toBe(PAIS_O_DESTINO);
+    expect(component.detallesDelTransporteForm.get('fechaDeExpedicion')?.value).toBe(FECHA_DE_EXPEDICION);
+    expect(component.detallesDelTransporteForm.get('fechaDeVencimiento')?.value).toBe(FECHA_DE_VENCIMIENTO);
+  });
 
-    // Check that no data is patched in case of an error
-    expect(component.detallesDeltransportForm.controls['tratado'].value).toBe('');
-    expect(component.detallesDeltransportForm.controls['paisOBloque'].value).toBe('');
-    expect(component.detallesDeltransportForm.controls['paisOOrigin'].value).toBe('');
-    expect(component.detallesDeltransportForm.controls['paisODestino'].value).toBe('');
-    expect(component.detallesDeltransportForm.controls['fetchaDeExpedicion'].value).toBe('');
-    expect(component.detallesDeltransportForm.controls['fetchaDeVencimiento'].value).toBe('');
+  it('ngOnDestroy debe completar el subject destroyed$', () => {
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

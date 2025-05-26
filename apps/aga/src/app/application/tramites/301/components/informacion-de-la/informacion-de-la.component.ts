@@ -4,8 +4,9 @@
 /**
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
- */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+*/
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -42,6 +43,7 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
   standalone: true,
 })
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
+
   /**
    * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
@@ -91,21 +93,67 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * @param {FormBuilder} formbuilt - Instancia de FormBuilder para crear formularios.
    */
   constructor(
     private formbuilt: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
-  ) {}
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * @method ngOnInit
-   * @description Inicializa el componente y configura el formulario con reglas de validación.
-   * @memberof InformacionDeLaComponent
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.  
+   * Llama a la función que determina cómo inicializar el formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
         .pipe(
@@ -141,7 +189,24 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+    this.valorSeleccionadoFraccion(); // enable descripcionFraccion if fraccionArancelaria has value
+    this.valorSeleccionadoNico(); // enable descripcionNico if nico has value
   }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.informacionDeLaform.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.informacionDeLaform.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
    * @method valorSeleccionadoFraccion
@@ -192,5 +257,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

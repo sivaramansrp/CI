@@ -26,6 +26,16 @@ export class AcuicolaService {
 
   }
 
+  /**
+   * @description Obtiene los detalles de un catálogo desde un archivo JSON.
+   * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
+   * @returns Observable con la respuesta del catálogo.
+   */
+  obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
+    const BASEURL: string = this.apiUrl + nombreDelArchivo; 
+    return this.http.get<RespuestaCatalogos>(BASEURL);
+  }
+
   obtenerDatosCertificados(): Observable<DatosDelTramite> {
     return this.http.get<DatosDelTramite>(`${this.apiUrl}datos-certificados.json`).pipe(
       map((res: any) => res.data),

@@ -151,39 +151,86 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   crearFormulario(): void {
-    this.agregarDatosForm = this.fb.group({
-      rfc: ['', Validators.required],
-      nombreRazonSocial: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
-      ],
-      denominacionRazon:['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: [
-        {
-          value: '1',
-          disabled: true,
-        },
-      ],
-      municipioAlcaldia: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      estado: [''],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: [''],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      tipoPersona: ['', Validators.required],
-    });
+   this.agregarDatosForm = this.fb.group({
+  id: [
+    Math.floor(100000 + Math.random() * 900000),
+    Validators.required,
+  ],
+  rfc: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(15),
+    ],
+  ],
+  nombreRazonSocial: [
+    '',
+    [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(150),
+    ],
+  ],
+  denominacionRazon: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(254),
+    ],
+  ],
+  nombres: ['', Validators.required],
+  primerApellido: ['', Validators.required],
+  segundoApellido: [''],
+  pais: [
+    { value: '1', disabled: true },
+    Validators.required,
+  ],
+  municipioAlcaldia: ['', Validators.required],
+  localidad: ['', Validators.required],
+  codigoPostal: ['', Validators.required],
+  estado: ['', Validators.required],
+  colonia: ['', Validators.required],
+  calle: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(100),
+    ],
+  ],
+  numeroExterior: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(55),
+    ],
+  ],
+  numeroInterior: [
+    '',
+    Validators.maxLength(55),
+  ],
+  lada: [
+    '',
+    Validators.maxLength(5),
+  ],
+  telefono: [
+    '',
+    [
+    Validators.maxLength(24),
+    Validators.pattern(/^[0-9]*$/)
+  ]
+  
+  ],
+  correoElectronico: [
+    '',
+    [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(320),
+    ],
+  ],
+  tipoPersona: ['', Validators.required ]
+});
+
   }
 
   /**

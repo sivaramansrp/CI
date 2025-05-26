@@ -3,15 +3,19 @@
  */
 import {
   CatalogosService,
+  ConfiguracionColumna,
   FormularioDinamico,
   InputConfig,
   InputTypes,
   LabelValueDatos,
   MenuConfig,
   Props,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
-import { ColumnasTabla, DatosRealizar } from '../../models/acuicola.module';
+import { ColumnasTabla, CombinacionRequerida, DatosRealizar } from '../../models/acuicola.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DATOS_COMBINACION_REQUERIDA, DATOS_TRAMITE_REALIZAR } from '../../constants/input-datos-config';
 import {
@@ -22,9 +26,17 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
+import { MENSAJE_DOBLE_CLIC } from '../../constants/acuicola.module';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 
+
+interface FilaSolicitud {
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -40,6 +52,43 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Datos del trámite a realizar.
    */
   datosRealizar!: DatosRealizar;
+
+  /**
+   * @property {CombinacionRequerida} combinacionRequerida
+   * @description Propiedad que representa la combinación requerida para el trámite.
+   * @memberof DatosDeLaSolicitudComponent
+   * @compodoc
+   */
+  combinacionRequerida!: CombinacionRequerida;
+
+   /**
+   * @description Indica si la sección es colapsable.
+   * @type {boolean}
+   */
+  colapsable: boolean = false;
+
+  /**
+   * @description Mensaje que se muestra en una alerta al hacer doble clic.
+   * @type {string}
+   */
+  alertMessage: string = MENSAJE_DOBLE_CLIC;
+
+  /**
+   * @description Tipo de selección para la tabla de solicitudes.
+   * @type {TablaSeleccion}
+   */
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+
+  /**
+   * @description Configuración de columnas para la tabla de solicitudes.
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
+  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 3 },
+    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 4 },
+  ];
   
   /**
    * Configuración de los inputs del formulario.
@@ -53,6 +102,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           inputType: InputTypes.RADIO,
           props: DATOS_TRAMITE_REALIZAR[0] as unknown as Props,
           class: 'col-md-8',
+          value:'animal'
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
@@ -128,8 +178,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         {
           inputType: InputTypes.SELECT,
           props: DATOS_COMBINACION_REQUERIDA[2] as unknown as Props,
-          class: 'col-md-8',
+          class: 'col-md-10',
         },
+        {
+          inputType: InputTypes.BUTTON,
+          props: DATOS_COMBINACION_REQUERIDA[3] as unknown as Props,
+          class: 'col-md-2',
+        }
       ],
     },
   ];
@@ -241,6 +296,14 @@ evento = {};
  */
 inputTypes = InputTypes;
 
+/**
+ * @private
+ * @property {SeccionLibState} seccionState
+ * @description Estado de la sección utilizado para manejar el estado interno del componente.
+ * @see SeccionLibState
+ */
+private seccionState!: SeccionLibState
+
 
   constructor(
     private fb: FormBuilder,
@@ -248,20 +311,33 @@ inputTypes = InputTypes;
     private exportaccionAcuicolaServcios: ExportaccionAcuicolaService,
     private tramite220403Query: Tramite220403Query,
     private tramite220403store: Tramite220403Store,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) {
     this.crearFormulario();
+    this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
+      this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
+    });
   }
 
   ngOnInit(): void {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.tramite220403Query.setDatosRealizar$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
-          this.formulario.get('datosRealizar')?.patchValue(state);
+            this.formulario.get('datosRealizar')?.patchValue(state);
         })
       )
       .subscribe();
@@ -274,7 +350,25 @@ inputTypes = InputTypes;
         })
       )
       .subscribe();
+    this.formulario.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+      .subscribe(
+        () => {
+    if( (this.formulario.get('datosRealizar')?.valid) && (this.formulario.get('combinacionRequerida')?.valid) ){
+      this.tramite220403store.setDatosRealizar(this.formulario.get('datosRealizar')?.value);
+      this.tramite220403store.setCombinacionRequerida(this.formulario.get('combinacionRequerida')?.value);
+      const VALIDA = this.formulario.get('datosRealizar')?.valid ? true : false;
+      this.tramite220403store.setDatosRealizarValidada(VALIDA);
+      this.tramite220403store.setCombinacionRequeridaValidada(VALIDA);
+      this.exportaccionAcuicolaServcios.actualizarFormaValida();
+    }
+    else{
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([false]);
+    }
+        })
   }
+  
 
   /**
    * Crea el formulario principal e inicializa los subgrupos.
@@ -282,6 +376,7 @@ inputTypes = InputTypes;
   crearFormulario(): void {
     this.formulario = this.fb.group({
       datosRealizar: this.fb.group({}),
+      combinacionRequerida: this.fb.group({}),
     });
   }
 
@@ -298,14 +393,17 @@ inputTypes = InputTypes;
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
+      if( (campo.inputType !== InputTypes.BREAK_CONTENT) &&
+        (campo.inputType !== InputTypes.BUTTON)
+      ) {
       const VALIDATORS = campo.props.validators
         ? DatosDeLaSolicitudComponent.getValidators(campo.props.validators)
-        : [Validators.required];
+        : [];
       const CONTROL_NAME = campo.props.campo;
       GRUPO.addControl(
         CONTROL_NAME,
         this.fb.control(
-          { value: '', disabled: campo.props.disabled },
+          { value: campo?.value || '', disabled: campo.props.disabled },
           VALIDATORS
         )
       );
@@ -314,11 +412,12 @@ inputTypes = InputTypes;
       }
       if (campo.inputType === InputTypes.RADIO) {
         this.getRadioData(campo.props.jsonDataFileName, (data) => {
-          this.configuracion[1].menu[0].props.radioOptions = data;
-          this.configuracion[1].menu[0].props.radioSelectedValue =
+          this.configuracion[0].menu[0].props.radioOptions = data;
+          this.configuracion[0].menu[0].props.radioSelectedValue =
             data[0].value;
         });
       }
+    }
     });
   }
 
@@ -347,8 +446,8 @@ inputTypes = InputTypes;
     indiceMenu: number,
     clave: string
   ): void {
-    this.catalogosServicios
-      .getCatalogo(clave)
+    this.exportaccionAcuicolaServcios
+      .obtenerMenuDesplegable(clave)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((resp) => {
@@ -415,12 +514,15 @@ inputTypes = InputTypes;
       evento;
   }
 
-  onSubmit(): void {
-    this.tramite220403store.setDatosRealizar(this.formulario.value);
-  }
-
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @description Muestra o esconde la sección colapsable.
+   */
+  mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
   }
 }

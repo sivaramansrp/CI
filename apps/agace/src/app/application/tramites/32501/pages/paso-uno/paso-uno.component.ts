@@ -1,10 +1,8 @@
-import { AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 
 /**
@@ -12,13 +10,15 @@ import { ViewChild } from '@angular/core';
  */
 @Component({
   selector: 'paso-uno',
+  standalone: true,
+  imports: [CommonModule, SolicitanteComponent, DatosSolicitudComponent],
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
 })
 /**
  * Componente correspondiente al paso uno del proceso.
  */
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent {
   /** Referencia al componente de solicitante */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
@@ -33,18 +33,6 @@ export class PasoUnoComponent implements AfterViewInit {
 
   /** Índice de la pestaña seleccionada */
   indice: number = 1;
-
-  /**
-   * Método que se ejecuta después de que la vista ha sido inicializada.
-   */
-  ngAfterViewInit(): void {
-    // Asigna los datos correspondientes a persona y domicilio fiscal
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-
-    // Obtiene el tipo de persona seleccionado
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
 
   /**
    * Cambia el índice de la pestaña seleccionada.
