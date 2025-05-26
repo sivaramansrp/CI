@@ -4,15 +4,18 @@
     <div class="row">
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="pais"
-                [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"></app-catalogo-select>
+                [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"
+                (change)="setValoresStore(formularioTratados,'pais', 'setPais')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="tratado"
-                [label]="'Tratado o Acuerdo'" [required]="true" name="Tratado o Acuerdo"></app-catalogo-select>
+                [label]="'Tratado o Acuerdo'" [required]="true" name="Tratado o Acuerdo"
+                (change)="setValoresStore(formularioTratados,'tratado', 'setTratado')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="origen"
-                [label]="'Criterio de origen'" [required]="true" name="Criterio de origen"></app-catalogo-select>
+                [label]="'Criterio de origen'" [required]="true" name="Criterio de origen"
+                (change)="setValoresStore(formularioTratados,'origen', 'setOrigen')"></app-catalogo-select>
         </div>
     </div>
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">

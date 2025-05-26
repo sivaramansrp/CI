@@ -1,18 +1,17 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 
+import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
+import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { TratadosQuery } from '../../estados/queries/tratados110101.query';
-import { TratadosStore } from '../../estados/tramites/tratados110101.store';
-import tratadosDropdown from 'libs/shared/theme/assets/json/110101/tratdos-dropdown.json';
-import tratadosTable from 'libs/shared/theme/assets/json/110101/tratados-table.json';
+import tratadosDropdown from '@libs/shared/theme/assets/json/110101/tratdos-dropdown.json';
+import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
 /**
  * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
@@ -51,14 +50,30 @@ export class TratadosComponent implements OnInit, OnDestroy {
   * suscripciones activas, evitando posibles fugas de memoria en el componente.
   */
   private destroy$ = new Subject<void>();
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  public solicitudeState!: Solicitante110101State;
 
 
-  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
-    private tratadosStore: TratadosStore,
-    private tratadosQuery: TratadosQuery
-    // eslint-disable-next-line no-empty-function
-  ) { }
+    private tramite110101Store: Tramite110101Store,
+    private solicitanteQuery: Solicitante110101Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarFormularioTratados();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -68,11 +83,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+        this.solicitudeState = seccionState;
+    })).subscribe();
     this.inicializarFormularioTratados();
-    this.restaurarValoresFormulario();
-    this.formularioTratados.valueChanges
-      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(() => this.actualizarEstado());
   }
 
   /**
@@ -84,11 +98,19 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioTratados
    */
 
-  inicializarFormularioTratados(): void {
+  public inicializarFormularioTratados(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  public inicializarFormulario(): void {
     this.formularioTratados = this.fb.group({
-      pais: ['', Validators.required],
-      tratado: ['', Validators.required],
-      origen: ['', Validators.required]
+      pais: [this.solicitudeState.pais, Validators.required],
+      tratado: [this.solicitudeState.tratado, Validators.required],
+      origen: [this.solicitudeState.origen, Validators.required]
     });
   }
 
@@ -144,9 +166,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cuerpoTabla: any[] = tratadosTable.tableBody;
 
-
-  // eslint-disable-next-line class-methods-use-this
-  /**
+    /**
    * Agrega un nuevo tratado a la tabla.
    * 
    * Este método verifica si el formulario es válido, y si lo es, agrega el nuevo tratado
@@ -160,40 +180,29 @@ export class TratadosComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
-   * **Restaura los valores del formulario a partir del estado de la tienda**
-   * 
-   * Suscribe a `selectTratados$` para actualizar la tabla y el formulario con el último tratado almacenado.
-   * - Si hay tratados en el estado, se asigna el último al formulario.
-   * - Si no hay tratados, se restablece el formulario.
-   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  private restaurarValoresFormulario(): void {
-    this.tratadosQuery.selectTratados$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((tratados) => {
-        this.cuerpoTabla = tratados;
-
-        if (tratados.length > 0) {
-          const ULTIMOTRATADO = tratados[tratados.length - 1];
-          this.formularioTratados.patchValue(ULTIMOTRATADO, { emitEvent: false });
-        } else {
-          this.formularioTratados.reset();
-        }
-      });
+  public guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioTratados.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioTratados.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
-
-
   /**
-   * **Actualiza el estado de la tienda con los valores del formulario**
-   * 
-   * Obtiene los valores actuales del formulario y actualiza el último tratado en la tienda de estado.
-   * Esto permite reflejar los cambios en tiempo real sin necesidad de validar el formulario completo.
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  private actualizarEstado(): void {
-    const NUEVOTRATADO = this.formularioTratados.value;
-    this.tratadosStore.updateTratado(NUEVOTRATADO);
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
 

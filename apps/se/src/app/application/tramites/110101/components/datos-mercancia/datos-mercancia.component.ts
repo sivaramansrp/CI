@@ -1,19 +1,17 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-/* eslint-disable sort-imports */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { DatosMercanciaStore } from '../../estados/tramites/datos-mercancia110101.store';
-import { DatosMercanciaQuery } from '../../estados/queries/datos-mercancia110101.query';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { ELVALORALERTA, REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ELVALORALERTA, REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { INTRODUZCA_NUMERO, REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
+import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { INTRODUZCA_NUMERO, REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
-import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
-import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
+
 
 /**
 * Este componente se utiliza para mostrar la forma del datosdelamercancia. - 110101
@@ -54,10 +52,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Se usa comúnmente en el operador `takeUntil` dentro de los observables.
    */
   private destroy$ = new Subject<void>();
-
-
-  /** Adición de color de fondo dinámico al área de texto */
-  public booleanVariable = '#cccccc';
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
   /**
    * Una constante que contiene la cadena de mensaje requerida.
    * Este mensaje se utiliza para indicar que un campo es obligatorio.
@@ -73,6 +72,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * apiDatosDeRespuesta se utiliza para obtener datos del nombre de archivo JSON ficticio como mercancia.json
    */
   public apiDatosDeRespuesta = mercancia;
+  public solicitudeState!: Solicitante110101State;
 
   /**
  * constructor de la clase
@@ -83,10 +83,19 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
  */
   constructor(private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private datosDeLaStore: DatosMercanciaStore,
-    private datosDeLaQuery: DatosMercanciaQuery
+    private tramite110101Store: Tramite110101Store,
+    private solicitanteQuery: Solicitante110101Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    this.createFormMercancia();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.createFormMercancia();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -95,11 +104,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
+     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+        this.solicitudeState = seccionState;
+      })).subscribe();
+    this.createFormMercancia();
     this.getFormDatosDeMercancia();
-    this.obtenerDatosFormularioDesdeStore();
-    this.formMercancia.valueChanges
-      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(() => this.actualizarStore());
   }
 
   /**
@@ -111,14 +120,37 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     * - valorTransaccion: Un campo de texto con una longitud máxima de 20 caracteres.
     */
   public createFormMercancia(): void {
-    this.formMercancia = this.fb.group({
-      nombreComercial: ['', Validators.required],
-      nombreIngles: ['', Validators.required],
-      fraccionArancelaria: ['', [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      descripcion: [''],
-      valorTransaccion: ['', Validators.maxLength(20)]
-    });
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
 
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  public guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formMercancia.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formMercancia.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
+
+  public inicializarFormulario(): void {
+    this.formMercancia = this.fb.group({
+      nombreComercial: [this.solicitudeState.nombreComercial, Validators.required],
+      nombreIngles: [this.solicitudeState.nombreIngles, Validators.required],
+      fraccionArancelaria: [this.solicitudeState.fraccionArancelaria, [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      descripcion: [{value: this.solicitudeState.descripcion, disabled: true}],
+      valorTransaccion: [this.solicitudeState.valorTransaccion, Validators.maxLength(20)]
+    });
   }
 
   /**
@@ -136,40 +168,23 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
  * Metodo para saber si el campo del formulario es valido.
  * @param field El nombre del campo del formulario que se va a validar.
  * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
  */
   isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.formMercancia, field);
-  }
-
-  /**
-   * **Obtiene los valores del formulario desde el store y los aplica al formulario**
-   * 
-   * - Se suscribe a `formValues$` de `datosDeLaQuery` para recibir los valores almacenados en el estado.
-   * - Si existen valores, los asigna al formulario `formMercancia` sin disparar eventos (`emitEvent: false`).
-   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
-   */
-  private obtenerDatosFormularioDesdeStore(): void {
-    this.datosDeLaQuery.formValues$
-      .pipe(takeUntil(this.destroy$)) // Cleanup on destroy
-      .subscribe((formValues) => {
-        if (formValues) {
-          this.formMercancia.patchValue(formValues, { emitEvent: false }); // Prevents triggering valueChanges
-        }
-      });
-  }
-  /**
-   * **Actualiza el estado del store con los valores actuales del formulario**
-   * 
-   * - Obtiene los valores actuales del formulario `formMercancia`.
-   * - Llama al método `updateFormValues` del store para actualizar el estado.
-   * - Centraliza la lógica de actualización en el store, manteniendo el componente más limpio.
-   */
-  private actualizarStore(): void {
-    const NEWVALUES = this.formMercancia.value;
-    this.datosDeLaStore.actualizarValoresFormulario(NEWVALUES);
   }
 
   /**
