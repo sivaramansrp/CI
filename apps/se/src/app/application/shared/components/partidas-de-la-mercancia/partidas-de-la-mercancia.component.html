@@ -25,6 +25,9 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+            <span class="bi bi-question-circle-fill"
+        title="En caso de no contar con valor factura proporciona el valor estimado"
+        data-bs-toggle="tooltip"></span>
             <input class="form-control" type="number" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
                 setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')

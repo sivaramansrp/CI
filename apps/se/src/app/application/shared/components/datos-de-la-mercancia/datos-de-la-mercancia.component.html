@@ -19,7 +19,6 @@
         <textarea
           id="descripcion"
           class="form-control mb-5"
-          placeholder="Descripción de la mercancía"
           rows="8"
           formControlName="descripcion"
           (change)="setValoresStore(form, 'descripcion')"
@@ -42,7 +41,7 @@
         [catalogo]="fraccionCatalogo"
         [label]="'Fracción arancelaria'"
         [required]="true"
-        [placeholder]="'Seleccione un documento'"
+        [placeholder]="'Seleccione un valor'"
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
       ></app-catalogo-select>
@@ -77,6 +76,9 @@
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require">*</span>:</label>
+        <span class="bi bi-question-circle-fill"
+        title="En caso de no contar con valor factura proporciona el valor estimado"
+        data-bs-toggle="tooltip"></span>
         <input
           class="form-control"
           id="valorFacturaUSD"
@@ -104,6 +106,7 @@
           [required]="true"
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
+          [tooltipQuestionCircle]="true"
           (change)="setValoresStore(form, 'unidadMedida')"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
