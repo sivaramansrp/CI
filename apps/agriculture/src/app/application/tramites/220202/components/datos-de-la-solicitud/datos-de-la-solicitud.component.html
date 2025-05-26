@@ -46,7 +46,7 @@
             formControlName="aduanaDeIngreso"
             [label]="'Aduana de ingreso'"
             [required]="true"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             name="aduanaDeIngreso"
             (change)="setValoresStore(forma, 'aduanaDeIngreso')"
           ></app-catalogo-select>
@@ -57,7 +57,7 @@
             formControlName="oficinaDeInspeccion"
             [label]="'Oficina de inspección de Sanidad Agropecuaria'"
             [required]="true"
-            [isDisabled]="false"
+               [isDisabled]="esFormularioSoloLectura"
             name="oficinaDeInspeccion"
             (change)="setValoresStore(forma, 'oficinaDeInspeccion')"
           ></app-catalogo-select>
@@ -68,7 +68,7 @@
             formControlName="puntoDeInspeccion"
             [label]="'Punto de inspección'"
             [required]="true"
-            [isDisabled]="false"
+             [isDisabled]="esFormularioSoloLectura"
             name="puntoDeInspeccion"
             (change)="setValoresStore(forma, 'puntoDeInspeccion')"
           ></app-catalogo-select>
@@ -83,8 +83,8 @@
             class="form-control"
             id="numeroDeGuia"
             type="text"
-            formControlName="numeroDeGuia"
             name = "numeroDeGuia"
+            formControlName="numeroDeGuia"
             (change)="setValoresStore(forma, 'numeroDeGuia')"
           />
         </div>
@@ -94,7 +94,7 @@
             formControlName="regimen"
             [label]="'Régimen'"
             [required]="true"
-            [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
             name="regimen"
             (change)="setValoresStore(forma, 'regimen')"
           ></app-catalogo-select>
@@ -134,7 +134,7 @@
               formControlName="tipoDeRequisito"
               [label]="'Tipo de requisito'"
               [required]="true"
-              [isDisabled]="esFormularioSoloLectura"
+                   [isDisabled]="esFormularioSoloLectura"
               name="tipoDeRequisito"
               (change)="setValoresStore(forma, 'tipoDeRequisito')"
             ></app-catalogo-select>
@@ -170,7 +170,7 @@
               formControlName="fraccionArancelaria"
               [label]="'Fracción arancelaria'"
               [required]="true"
-              [isDisabled]="false"
+                   [isDisabled]="esFormularioSoloLectura"
               name="fraccionArancelaria"
               (change)="setValoresStore(forma, 'fraccionArancelaria')"
             ></app-catalogo-select>
@@ -195,7 +195,7 @@
               formControlName="nico"
               [label]="'Nico'"
               [required]="true"
-              [isDisabled]="false"
+                  [isDisabled]="esFormularioSoloLectura"
               name="nico"
               (change)="setValoresStore(forma, 'nico')"
             ></app-catalogo-select>
@@ -246,7 +246,7 @@
               formControlName="umc"
               [label]="'UMC'"
               [required]="true"
-              [isDisabled]="false"
+               [isDisabled]="esFormularioSoloLectura"
               name="umc"
               (change)="setValoresStore(forma, 'umc')"
             ></app-catalogo-select>
@@ -257,7 +257,7 @@
               formControlName="uso"
               [label]="'Uso'"
               [required]="true"
-              [isDisabled]="false"
+               [isDisabled]="esFormularioSoloLectura"
               name="uso"
               (change)="setValoresStore(forma, 'uso')"
             ></app-catalogo-select>
@@ -268,7 +268,7 @@
               formControlName="tipoDeProducto"
               [label]="'Tipo de producto'"
               [required]="true"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoDeProducto"
               (change)="setValoresStore(forma, 'tipoDeProducto')"
             ></app-catalogo-select>
