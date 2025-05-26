@@ -74,7 +74,7 @@ export class ConsultaTramiteComponent implements OnInit {
    *  Método para buscar el trámite 
    */
   buscarTramite(): void {
-    this.router.navigate(['funcionario/datos-generales-tramite']);
+    this.router.navigate(['datos-generales-tramite']);
   }
 
   /**

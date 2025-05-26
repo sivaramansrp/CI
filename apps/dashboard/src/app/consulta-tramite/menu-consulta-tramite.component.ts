@@ -15,7 +15,6 @@ import { ConsultaTramiteComponent, TituloComponent } from '@libs/shared/data-acc
       ConsultaTramiteComponent,
     ],
   templateUrl: './menu-consulta-tramite.component.html',
-  styleUrls: ['./menu-consulta-tramite.component.css']
 })
 export class MenuConsultaTramiteComponent {
 

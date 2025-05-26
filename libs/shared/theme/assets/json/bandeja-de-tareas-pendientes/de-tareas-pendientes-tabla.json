@@ -1207,7 +1207,7 @@
     "estadoDeTramite": "Completado",
     "departamento": "aga",
     "numeroDeProcedimiento": "301",
-    "origin": "READ_PROCEDURE"
+    "origin": "READ_PROCEDURE_VERIFICAR_DICTAMEN"
   }
 ]
 

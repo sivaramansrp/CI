@@ -115,7 +115,7 @@ export class TramiteStore extends Store<TramiteState> {
      * Guarda el id de tramite seleccionado
      * @param idTramite parametro del id de tramite
      */
-    settramiteValue(idTramite: string): void {
+    setTramiteValue(idTramite: string): void {
       this.update(state => ({ ...state, idTramite }));
     }
 }

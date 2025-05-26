@@ -7,8 +7,11 @@ import { MenuConsultaTramiteComponent } from './consulta-tramite/menu-consulta-t
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 import { SubsecuentesComponent } from './subsecuentes/subsecuentes.component';
 
-import { ENVIRONMENT } from './environments/environment';
 import { Route } from '@angular/router';
+// eslint-disable-next-line sort-imports
+import { DatosGeneralesTramiteComponent } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from './environments/environment';
+import { VerificarDictamenComponent } from './verificar-dictamen/verificar-dictamen.component';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const appRoutes: Route[] = [
@@ -188,5 +191,13 @@ export const appRoutes: Route[] = [
   {
     path: 'consulta-tramite',
     component: MenuConsultaTramiteComponent,
+  },
+  {
+    path: 'datos-generales-tramite',
+    component: DatosGeneralesTramiteComponent,
+  },
+  {
+    path: 'verificar-dictamen',
+    component: VerificarDictamenComponent,
   },
 ];
