@@ -237,24 +237,31 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Constructor de la clase DatosSolicitudComponent.
+   * 
+   * @param pantallasActionService - Servicio para manejar acciones relacionadas con las pantallas.
+   * @param validacionesService - Servicio para realizar validaciones en los formularios.
+   * @param tramite230401Store - Almacén para gestionar el estado del trámite 230401.
+   * @param fb - Constructor para crear instancias de formularios reactivos.
+   * @param solicitud230401Query - Consulta para obtener datos relacionados con la solicitud 230401.
+   * @param consultaQuery - Consulta para manejar datos relacionados con consultas generales.
+   * @param seccionQuery - Consulta para manejar datos relacionados con secciones.
+   * @param seccionStore - Almacén para gestionar el estado de las secciones.
+   * 
+   * Este constructor inicializa los datos de catálogos necesarios para el paso uno
+   * utilizando el servicio `pantallasActionService`.
+   */
   constructor(public pantallasActionService:PantallasActionService,
     public validacionesService:ValidacionesFormularioService,
     public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
   public solicitud230401Query: Solicitud230401Query, private consultaQuery: ConsultaioQuery,
     private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore) {
-    // do nothing
-  }
+      this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
+    }
 
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroyNotifier$),
-              map((seccionState) => {
-                this.esFormularioSoloLectura = seccionState.readonly;
-                this.inicializarEstadoFormulario();
-              })
-            )
-            .subscribe();
+
     this.solicitud230401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -262,8 +269,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       ).subscribe();
-    this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
-    this.creatFormSolicitud();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -297,9 +313,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    */
      inicializarEstadoFormulario(): void {
-      this.creatFormSolicitud();
+      if(!this.FormSolicitud){
+        this.creatFormSolicitud();
+      }
       if (this.esFormularioSoloLectura) {
-        this.FormSolicitud.disable();
+          this.FormSolicitud.disable();
       } else {
         this.FormSolicitud.enable();
       }

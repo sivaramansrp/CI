@@ -70,16 +70,15 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
    * Los campos 'banco' y 'fecha' son obligatorios.
    */
   ngOnInit(): void {
-
-        this.consultaQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
      this.solicitud230401Query.seletPagoDerechosState$
         .pipe(
           takeUntil(this.destroyNotifier$),

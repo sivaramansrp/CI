@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
       </div>
     </div>
 
@@ -26,7 +26,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.noDePermisocoferprise" formControlName="noDePermisocoferprise"
-          [label]="'No. de permiso COFERPRIS'" [required]="true" name="noDePermisocoferprise"
+          [label]="'No. de permiso COFERPRIS'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="noDePermisocoferprise"
           (change)="noDePermisocoferpriseSeleccion()"></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
-          [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria"
+          [label]="'Fracción arancelaria'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="fraccionArancelaria"
           (change)="seleccioneAutorizacion()"></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -69,7 +69,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.numeroCas" formControlName="numeroCas" [label]="'Número C.A.S.'"
-          [required]="true" name="numeroCas" (change)="numeroCasSeleccione()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="numeroCas" (change)="numeroCasSeleccione()"></app-catalogo-select>
       </div>
     </div>
 
@@ -155,19 +155,19 @@
     <div class="row">
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="pantallasActionService.clasificacion" formControlName="clasificacion"
-          [label]="'Clasificación toxicológica'" [required]="true" name="clasificacion"
+          [label]="'Clasificación toxicológica'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="clasificacion"
           (change)="clasificacionSeleccione()"></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="pantallasActionService.estadoFisico" formControlName="estadoFisico" [label]="'Estado Físico'"
-          [required]="true" name="estadoFisico" (change)="estadoFisicoSeleccione()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="estadoFisico" (change)="estadoFisicoSeleccione()"></app-catalogo-select>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="pantallasActionService.datosObjecto" formControlName="datosObjecto"
-          [label]="'Objeto de la importación'" [required]="true" name="datosObjecto"
+          [label]="'Objeto de la importación'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="datosObjecto"
           (change)="datosObjectoSeleccione()"></app-catalogo-select>
       </div>
       <div class="col-md-6">
@@ -230,7 +230,7 @@
     <div class="row">
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="pantallasActionService.unidadDeMedida" formControlName="unidadDeMedida" [label]="'Unidad de medida'"
-          [required]="true" name="unidadDeMedida" (change)="unidadDeMedidaSeleccione()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="unidadDeMedida" (change)="unidadDeMedidaSeleccione()"></app-catalogo-select>
       </div>
     </div>
     <div class="mt-5">

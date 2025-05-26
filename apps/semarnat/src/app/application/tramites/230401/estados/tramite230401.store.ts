@@ -57,7 +57,8 @@ export interface Solicitud230401State {
   cantidad: number;
   cantidadLetra: string;
   unidadDeMedida: string;
-  pagoDerechosState: PagoDerechosState
+  pagoDerechosState: PagoDerechosState,
+  readonly: boolean
 }
 
 /**
@@ -98,7 +99,8 @@ export function initializeSolicitud230401State(): Solicitud230401State {
       llavePago: '12345LLPCI',
       fecha: '',
       importePago: '1842'
-    }
+    },
+    readonly: true
   }
 }
 
