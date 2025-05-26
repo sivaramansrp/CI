@@ -15,7 +15,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipoRegimen" formControlName="tipoRegimen"
           [label]="'Tipo de régimen'" [required]="true" name="tipoRegimen"
-          (change)="onTipoRegimenChange()"></app-catalogo-select>
+          (change)="setValoresStore(formSolicitud, 'tipoRegimen')"></app-catalogo-select>
       </div>
     </div>
     <ng-titulo [titulo]="
