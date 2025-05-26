@@ -1,9 +1,9 @@
 import { API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../constants/api-constants";
 import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
 import { Observable, catchError, map, throwError } from "rxjs";
+import { ENVIRONMENT } from "../../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { enviroment } from "../../../../enviroments/enviroment";
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +14,7 @@ export class CatalogoDocumentosService {
     constructor(
         private http: HttpClient,
     ) {
-        this.host = `${enviroment.API_HOST}/api`;
+        this.host = `${ENVIRONMENT.API_HOST}/api`;
     }
 
     getDocumentosObligatorios(tramite: string, params: ParametrosGetDocumentos): Observable<CatalogoDocumentosResponse> {

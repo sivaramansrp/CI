@@ -66,7 +66,7 @@ export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: string[]) => {
+      (data: object) => {
         this.datosTabla = data;
       }
     );

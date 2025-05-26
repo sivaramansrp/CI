@@ -5,7 +5,7 @@ import {
   JSONResponse,
   RespuestaCatalogos,
 } from '../../models/shared/catalogos.model';
-import { enviroment } from '../../../enviroments/enviroment';
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
 
@@ -13,7 +13,7 @@ import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
   providedIn: 'root',
 })
 export class ServiciosPantallaService {
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario
@@ -24,7 +24,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreUnoCatalogo(catalogo: string) {
+  getBimestreUnoCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-one.json'
     );
@@ -35,7 +35,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreDosCatalogo(catalogo: string) {
+  getBimestreDosCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-two.json'
     );
