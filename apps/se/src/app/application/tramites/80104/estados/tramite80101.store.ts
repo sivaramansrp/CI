@@ -594,7 +594,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Este método actualiza el estado actual añadiendo un nuevo elemento a la lista
    * `tablaDatosComplimentos`. Utiliza `crypto.randomUUID()` para generar un identificador único.
    */
-  aggregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
+  agregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
     this.update((state) => {
       const DATOS = {
         ...datos,
@@ -640,7 +640,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * `tablaDatosComplimentosExtranjera`. El identificador único se genera utilizando 
    * `crypto.randomUUID()`.
    */
-  aggregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
+  agregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
     this.update((state) => {
       const DATOS = {
         ...datos,

@@ -9,7 +9,7 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { AggregarComplimentosComponent } from './component/aggregar-complimentos/aggregar-complimentos.component';
+import { AgregarComplimentosComponent } from './component/agregar-complimentos/agregar-complimentos.component';
 import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres/anexo-vista-dos-y-tres.component';
 import { AnexoVistaUnoComponent } from './component/anexo-vista-uno/anexo-vista-uno.component';
 import { CommonModule } from '@angular/common';
@@ -68,7 +68,7 @@ import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-rou
     MontosDeInversionComponent,
     EmpleadosComponent,
     CapacidadInstaladaComponent,
-    AggregarComplimentosComponent,
+    AgregarComplimentosComponent,
     EmpresasSubfabricanteComponent,
     ComplementosSeccionComponent,
     AnexoUnoSeccionComponent,

@@ -157,7 +157,7 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
  * Este arreglo puede ser utilizado para generar dinámicamente tablas o formularios
  * que muestren información de empresas extranjeras.
  */
-export const CONFIGURACION_EMPRESA_ECTRANJERA = [
+export const CONFIGURACION_EMPRESA_EXTRANJERA = [
   {
     encabezado: 'Tax ID',
     clave: (ele: DatosEmpresaExtranjera): string | undefined =>
@@ -201,7 +201,7 @@ export const CONFIGURACION_EMPRESA_ECTRANJERA = [
  * Esta constante es utilizada para generar dinámicamente el formulario de captura
  * de datos de una empresa extranjera.
  */
-export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
+export const FORMA_EMPRESA_EXTRANJERA: DatosCatalago[] = [
   {
     labelNombre: 'Tax ID',
     campo: 'taxIdEmpresaExt',
@@ -211,7 +211,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     orden: 1,
   },
   {
-    labelNombre: 'Nombre del empresa',
+    labelNombre: 'Nombre de la empresa',
     campo: 'nombreEmpresaExt',
     class: 'col-md-4 col-sm-10',
     tipo_input: 'text',

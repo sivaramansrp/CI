@@ -41,25 +41,25 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   */
 
 @Component({
-  selector: 'app-aggregar-complimentos',
+  selector: 'app-agregar-complimentos',
   standalone: true,
   imports: [CommonModule, ComplimentosComponent],
-  templateUrl: './aggregar-complimentos.component.html',
-  styleUrl: './aggregar-complimentos.component.scss',
+  templateUrl: './agregar-complimentos.component.html',
+  styleUrl: './agregar-complimentos.component.scss',
 })
-export class AggregarComplimentosComponent implements OnDestroy {
+export class AgregarComplimentosComponent implements OnDestroy {
   /**
    * Almacena los datos de los cumplimentos.
    * 
    * @type {DatosComplimentos}
-   * @memberof AggregarComplimentosComponent
+   * @memberof AgregarComplimentosComponent
    */
   datosComplimentos!: DatosComplimentos;
   /**
    * Notificador para destruir el componente y liberar recursos.
    * 
    * @type {Subject<void>}
-   * @memberof AggregarComplimentosComponent
+   * @memberof AgregarComplimentosComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
@@ -117,9 +117,9 @@ constructor(
    */
   accionistasAgregados(datos: SociaoAccionistas): void {
     if (datos.rfc) {
-      this.store.aggregarTablaDatosComplimentos(datos);
+      this.store.agregarTablaDatosComplimentos(datos);
     } else {
-      this.store.aggregarTablaDatosComplimentosExtranjera(datos);
+      this.store.agregarTablaDatosComplimentosExtranjera(datos);
     }
   }
 
