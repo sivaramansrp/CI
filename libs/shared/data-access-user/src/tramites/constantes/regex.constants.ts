@@ -10,7 +10,7 @@ export const REG_X = {
 /**
  * Expresión regular que valida que la cadena no contenga los caracteres <, >, / o \.
  */
-export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>\/\\]+$/;
+export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>/\\]+$/;
 
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
