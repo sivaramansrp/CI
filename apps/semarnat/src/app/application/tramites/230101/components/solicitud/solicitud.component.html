@@ -13,10 +13,11 @@
     <ng-container formGroupName="tipoRegimen">
       <div class="row">
         <div class="col-md-12">
+          <label class="form-label" for="claveDeReferencia">Número del registro ambiental*:</label>
           <div class="form-check">
             <input class="form-check-input me-2" type="radio" name="regimen" formControlName="regimen"
               value="definitivos" id="definitivos"
-              (change)="setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
+              (change)="cambiarTipoRegimen();setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
             <label class="form-check-label" for="definitivos">Definitivos</label>
           </div>
         </div>
@@ -25,9 +26,8 @@
         <div class="col-md-12">
           <div class="form-check">
             <input class="form-check-input me-2" type="radio" name="regimen" formControlName="regimen"
-              value="temporales" id="temporales"
-              (change)="setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
-            <label class="form-check-label" for="temporales">Reexportación</label>
+              value="temporales" id="temporales" (change)="cambiarTipoRegimen();setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
+            <label class="form-check-label" for="temporales">Temporales</label>
           </div>
         </div>
       </div>
@@ -38,8 +38,8 @@
       <div class="row">
         <div class="col-md-12">
           <label class="form-label">Aduanas de entradas (M&aacute;ximo 3 aduanas)</label>
-        <crosslist [fechas]="selectRangoDias" [label]="aduanaLabel" >
-        </crosslist>
+          <crosslist [fechas]="selectRangoDias" [label]="aduanaLabel">
+          </crosslist>
         </div>
       </div>
       <div class="row mt-5">
@@ -52,8 +52,8 @@
 
       <div class="row mt-5">
         <div class="col-md-12">
-          <label class="form-label">Pa&iacute;s Origen</label>
-          <crosslist [fechas]="selectRangoDias" [label]="paisLabel" >
+          <label class="form-label">Pa&iacute;s origen</label>
+          <crosslist [fechas]="selectRangoDias" [label]="paisLabel">
           </crosslist>
         </div>
       </div>
@@ -68,18 +68,21 @@
 
       <div class="row mt-5">
         <div class="col-md-12">
-          <label class="form-label">Destino dentro del Pa&iacute;s (Entidad federativa)</label>
-          <crosslist [fechas]="selectRangoDias" [label]="destinoLabel" >
+          <label class="form-label">Destino dentro del país (Entidad federativa)</label>
+          <crosslist [fechas]="selectRangoDias" [label]="destinoLabel">
           </crosslist>
         </div>
       </div>
 
       <div class="row mt-5">
         <div class="col-md-12" *ngFor="let option of disponsibleAduanaCheckboxes; let i = index">
+          @if(!option.hide) {
           <label>
-            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="cambiar($event, i)" [disabled]="option.disabled" />
+            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="cambiar($event, i)"
+              [disabled]="option.disabled" />
             {{ option.name }}
           </label>
+          }
         </div>
       </div>
 
@@ -88,12 +91,6 @@
           <app-catalogo-select [catalogo]="options" formControlName="clasificacionMercancia"
             [label]="'Clasificaci&oacute;n mercanc&iacute;as'" [required]="true"
             (change)="setValoresStore(aduanasSalida,'clasificacionMercancia', 'setClasificacionMercancia');"></app-catalogo-select>
-        </div>
-      </div>
-
-      <div class="row mt-5">
-        <div class="col-md-12">
-          <ng-alert [CONTENIDO]="TEXTOS.MERCANCIAS"></ng-alert>
         </div>
       </div>
 
@@ -109,7 +106,7 @@
         </div>
         <div class="col-md-5">
           <div class="form-group">
-            <label class="form-label" for="descFraccionArancelaria">Decripción de la fracción arancelaria*:</label>
+            <label class="form-label" for="descFraccionArancelaria">Descripción de la fracción arancelaria*:</label>
             <input class="form-control" id="descFraccionArancelaria" placeholder="Decripción Fraccion Arancelaria"
               type="text" formControlName="descFraccionArancelaria"
               [ngClass]="isValid(mercancia,'descFraccionArancelaria') ? 'required' : ''"
@@ -138,7 +135,7 @@
           </div>
         </div>
       </div>
-      
+
     </ng-container>
 
     <ng-titulo titulo="Detalle" />
@@ -154,18 +151,17 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="nombreComun" [label]="'Nombre com&uacute;n'"
-            [required]="true"
-            (change)="setValoresStore(detalle,'nombreComun', 'setNombreComun')"></app-catalogo-select>
+            [required]="true" (change)="setValoresStore(detalle,'nombreComun', 'setNombreComun')"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-md-12 d-flex justify-content-end align-items-end">
           <div class="btn-group">
-            <button class="btn btn-default ms-3" type="button" name="aceptar" id="agregarAduana">
-              Eliminar Detalle
+            <button class="btn btn-danger ms-3" type="button" name="aceptar" id="agregarAduana">
+              Eliminar detalle
             </button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
-              Agregar Detalle
+              Agregar detalle
             </button>
           </div>
         </div>
@@ -196,8 +192,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label mb-5" for="">Mercancías</label>
-          <ng-table [commonTableHeader]="mercanicias.tableHeader"
-            [commonTableBody]="mercanicias.tableBody"></ng-table>
+          <ng-table [commonTableHeader]="mercanicias.tableHeader" [commonTableBody]="mercanicias.tableBody"></ng-table>
         </div>
       </div>
       <div class="row mt-5">
@@ -207,7 +202,7 @@
               data-bs-target="#modalAgregarMercancias">
               Modificar
             </button>
-            <button class="btn btn-default ms-3" type="button" name="aceptar" id="agregarAduana">
+            <button class="btn btn-danger ms-3" type="button" name="aceptar" id="agregarAduana">
               Eliminar
             </button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
@@ -219,27 +214,28 @@
 
       <div class="row">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="options" formControlName="descripcionProducto" [label]="'Descripción del producto'" [required]="true"
+          <app-catalogo-select [catalogo]="options" formControlName="descripcionProducto"
+            [label]="'Descripción del producto'" [required]="true"
             (change)="setValoresStore(detalle,'descripcionProducto', 'setDescripcionProducto')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="cantidadUMC" [label]="'Unidad de medida'" [required]="true"
-            (change)="setValoresStore(detalle,'cantidadUMC', 'setCantidadUMC')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="cantidadUMC" [label]="'Unidad de medida'"
+            [required]="true" (change)="setValoresStore(detalle,'cantidadUMC', 'setCantidadUMC')"></app-catalogo-select>
         </div>
       </div>
     </ng-container>
     <ng-titulo titulo="Manifiestos y declaraciones" />
     <ng-container formGroupName="manifiestosForm">
-    <div class="row">
-      <div class="col-md-12">
-        <span class="checkbox-align">
-          <input class="form-check-input me-3" type="checkbox" value="" id="manifiestosYdesc"
-            formControlName="manifiestosYdesc"
-            (change)="setValoresStore(manifiestosForm,'manifiestosYdesc', 'setManifiestosYdesc')">
-        </span>
-        <ng-alert [CONTENIDO]="'Protesto decir verdad*'"></ng-alert>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="checkbox-align">
+            <input class="form-check-input me-3" type="checkbox" value="" id="manifiestosYdesc"
+              formControlName="manifiestosYdesc"
+              (change)="setValoresStore(manifiestosForm,'manifiestosYdesc', 'setManifiestosYdesc')">
+          </span>
+          <ng-alert [CONTENIDO]="'Protesto decir verdad*'"></ng-alert>
+        </div>
       </div>
-    </div>
     </ng-container>
   </form>
 </div>

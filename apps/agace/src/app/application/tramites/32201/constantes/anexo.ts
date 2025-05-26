@@ -14,5 +14,15 @@ export const SOLICITUD_32201_ENUM = {
    * Este texto se utiliza para confirmar que los datos proporcionados son ciertos y que las facultades
    * otorgadas al representante no han sido modificadas o revocadas.
    */
-  TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE: `Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas`,
+  TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE: ` * Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas`,
+
+  /**
+   * Texto de alerta para terceros.
+   */
+  TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202768169 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
+
+  /**
+   * Texto de button.
+   */
+  ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo'
 };

@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AcuicolaComponent } from './acuicola.component';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AcuicolaComponent', () => {
   let component: AcuicolaComponent;
@@ -7,7 +11,9 @@ describe('AcuicolaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AcuicolaComponent],
+      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent, HttpClientModule],
+      declarations: [AcuicolaComponent, PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcuicolaComponent);

@@ -80,7 +80,7 @@ export class AuthPageComponent implements OnInit {
             }
             this.usuarioStore.establecerUsuario('LEQI', PERFIL_USUARIO, ROLES, '');
 
-            window.location.href = '/seleccion-tramite';
+            window.location.href = '/bandeja-de-tareas-pendientes';
         }
     }
 }

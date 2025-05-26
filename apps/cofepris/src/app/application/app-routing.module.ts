@@ -196,7 +196,7 @@ const ROUTES: Routes = [
   },
 
   {
-    path: 'modificacion-permiso-sanitario',
+    path: 'modificacion-al-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260910/permiso-sanitario.module').then(
         (m) => m.PermisoSanitarioModule
