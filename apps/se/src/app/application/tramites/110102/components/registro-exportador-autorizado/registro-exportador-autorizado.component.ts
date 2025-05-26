@@ -133,7 +133,7 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
   onSolicitaExportadorAutorizadoChange(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     this.showDivExportador = INPUT.checked;
-    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizado', 'setSolicitaExportadorAutorizado');
+    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizado');
   }
 
   /**
@@ -143,7 +143,7 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
   onSolicitaExportadorAutorizadoJPNChange(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     this.showDivExportadorJPN = INPUT.checked;
-    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizadoJPN', 'setSolicitaExportadorAutorizadoJPN');
+    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizadoJPN');
   }
 
   /**
@@ -174,13 +174,13 @@ export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy 
 
   /**
    * Establece los valores en el store.
-   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
-   * @param {string} campo - El nombre del campo del formulario.
-   * @param {keyof Tramite110102Store} metodoNombre - El nombre del método del store.
+   * Actualiza el estado del store con el valor del campo especificado del formulario.
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario a actualizar en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite110102Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

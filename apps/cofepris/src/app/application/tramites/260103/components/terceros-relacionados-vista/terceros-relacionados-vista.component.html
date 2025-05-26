@@ -8,23 +8,27 @@
     ></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Destinatario(Destino final)*:</h6>
+    <h6>Destinatario (destino final)*:</h6>
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [acciones]="accionesServcios"
+      (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event,'destinatario')"
     ></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
-      <div class="pull-right">
+      <div class="pull-right" *ngIf="(destinatarioTablaDatos$ | async) as datos">
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+           *ngIf= "datos.length !== 0"
+           [disabled]="listaDeTablasSeleccionadasDestinatario.length !== 1"
         >
           Modificar
         </button>
@@ -32,6 +36,9 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+         *ngIf= "datos.length !== 0"
+         [disabled]="listaDeTablasSeleccionadasDestinatario.length !== 1"
+         (click)="eliminarDestinatario()"
         >
           Eliminar
         </button>
@@ -54,16 +61,21 @@
       [configuracionTabla]="configuracionTablaFabricante"
       [datos]="(fabricanteTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [acciones]="accionesServcios"
+      (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event,'fabricante')"
     ></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
-      <div class="pull-right">
+      <div class="pull-right" *ngIf="(fabricanteTablaDatos$ | async) as datos">
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+           *ngIf= "datos.length !== 0"
+            [disabled]="listaDeTablasSeleccionadasFabricante.length !== 1"
+             (click)="navigateFabricante('edit')"
         >
           Modificar
         </button>
@@ -71,6 +83,9 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          *ngIf= "datos.length !== 0"
+          [disabled]="listaDeTablasSeleccionadasFabricante.length !== 1"
+          (click)="eliminarFabricante()"
         >
           Eliminar
         </button>

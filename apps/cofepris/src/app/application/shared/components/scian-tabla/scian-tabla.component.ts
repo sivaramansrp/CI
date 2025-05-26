@@ -91,7 +91,7 @@ export class ScianTablaComponent implements OnInit {
   claveSelecionada(event: Catalogo): void {
     this.scianNinoLista = this.scianLista.filter((ele) => ele.id === event.id);
     this.scianForm.patchValue({
-      scianNino: `${this.scianNinoLista[0].descripcion} Descripción for Test`
+      scianNino: this.scianNinoLista[0].id
     })
   }
 
@@ -105,6 +105,9 @@ export class ScianTablaComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   agregarScian(): void {
+    if (this.scianForm.invalid) {
+      return;
+    }
     const SCIAN_IDX: TablaScianConfig = {
       clave: this.scianNinoLista[0].descripcion,
       descripcion: this.scianForm.get('scianNino')?.value
