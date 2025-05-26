@@ -511,11 +511,6 @@ export class TransporteComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Elimina un elemento de la tabla.
-   */
-  eliminarElementoTabla(): void {}
-
-  /**
    * Cierra el modal.
    * @returns {void}
    */
