@@ -147,6 +147,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public Vigencia: InputFecha = VIGENCIA;
 
+  radioContenedor:boolean = false;
+  radioArchivoCsv:boolean = false;
+
   /**
    * Configuración de las columnas de la tabla.
    */
@@ -358,9 +361,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       case 'Contenedor':
         this.mostrarSeccionContenedor = true;
         this.mostrarSeccionAduanaaFecha = true;
+        this.radioContenedor = false;
+        this.radioArchivoCsv = true;
         break;
       case 'Archivo CSV':
         this.mostrarSeccionArchivoCsv = true;
+        this.radioArchivoCsv = false;
+        this.radioContenedor = true;
         break;
       default:
         break;
@@ -372,6 +379,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
+    this.radioContenedor = false;
+    this.radioArchivoCsv = false;
     this.mostrarSeccionArchivoCsv = false;
     this.mostrarSeccionAduanaaFecha = false;
     this.mostrarSeccionContenedor = false;
@@ -391,16 +400,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar modal de captura de datos.
    */
   datosCapturaModal(): void {
-    // if (this.solicitudForm.invalid) {
-    //   this.solicitudForm.markAllAsTouched();
-    // } else {
-      this.solicitudForm.markAllAsTouched();
+    if (this.solicitudForm.value.aduana && this.solicitudForm.value.inicialesContenedor && this.solicitudForm.value.numeroContenedor) {
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
+        this.mostrarButtons = false;
+        this.solicitudForm.reset();
       }
-      this.mostrarButtons = false;
-    // }
+    } else {
+      this.solicitudForm.markAllAsTouched();
+    }
+  }
+
+  hideModal(): void {
+    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+    MODAL_INSTANCE.hide();
+    this.mostrarButtons = true;
   }
 
   /**
@@ -527,6 +542,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             numeroContenedor: '',
             contenedores: ''
           });
+          this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
         }
