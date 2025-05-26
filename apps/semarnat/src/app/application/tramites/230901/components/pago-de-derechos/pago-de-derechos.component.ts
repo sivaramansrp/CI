@@ -91,11 +91,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * están deshabilitados porque no deben ser editados por el usuario.
    */
   crearformularioPagoDerechos(): void {
-
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.referenciaClave),
       cadenaPagoDependencia: new FormControl(this.dependenciaCadenaPago),
-      banco: new FormControl(this.estadoSolicitud230901.bancoseleccionado, Validators.required),
+      banco: new FormControl(this.estadoSolicitud230901.banco, Validators.required),
       llaveDePago: new FormControl(this.estadoSolicitud230901.llaveDePago, Validators.required),
       fecPago: new FormControl(this.estadoSolicitud230901.fecPago, Validators.required),
       impPago: new FormControl(this.impPago),
@@ -107,36 +106,38 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección del banco en el formulario.
-   * Actualiza el estado del almacén con el banco seleccionado.
-   */
-  manejarSeleccionBanco(): void {
-    this.tramite230901Store.setbancoseleccionado(
-      this.formularioPagoDerechos.get('banco')?.value
-    );
-  }
-
-  /**
    * Maneja los cambios en el campo "Llave de Pago".
    * Actualiza el estado del almacén con la llave de pago proporcionada.
    */
   manejarCambioLlavePago(): void {
-    const CAPITALIZED_VALUE = this.formularioPagoDerechos.get('llaveDePago')?.value.toUpperCase();
+    const CAPITALIZED_VALUE = this.formularioPagoDerechos
+      .get('llaveDePago')
+      ?.value.toUpperCase();
     this.formularioPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
-    this.tramite230901Store.setLlaveDePago(
-      CAPITALIZED_VALUE
-    );
   }
 
   /**
    * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.formularioPagoDerechos.patchValue({
       fecPago: nuevo_valor,
     });
     this.tramite230901Store.setfecPago(nuevo_valor);
+  }
+
+  /**
+   * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Parámetros:
+   *   - form: Formulario reactivo que contiene los datos.
+   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
+   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230901Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**
