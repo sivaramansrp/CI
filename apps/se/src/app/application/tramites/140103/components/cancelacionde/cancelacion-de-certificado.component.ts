@@ -1,10 +1,21 @@
-import { Catalogo ,CatalogoSelectComponent,TituloComponent } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Cupo } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import cancelacions from 'libs/shared/theme/assets/json/140103/cancelacion.json';
@@ -14,7 +25,10 @@ import { Tramite140103Query } from '../../../../estados/queries/tramite140103.qu
 
 import { map, Subject, takeUntil } from 'rxjs';
 
-import { Solicitud140103State, Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
+import {
+  Solicitud140103State,
+  Tramite140103Store,
+} from '../../../../estados/tramites/tramite140103.store';
 interface Cupos {
   cupo: number;
   nombreProducto: string;
@@ -25,40 +39,40 @@ interface Cupos {
 
 /**
  * Componente `CancelacionDeCertificateComponent`
- * 
+ *
  * Este componente es responsable de gestionar la cancelación de certificados en una interfaz de usuario dinámica.
  * Utiliza una serie de catálogos y tablas dinámicas para permitir al usuario interactuar con la información relacionada con
  * los cupos, productos, subproductos y mecanismos de asignación en el contexto de la cancelación de certificados.
- * 
+ *
  * **Objetivos principales:**
  * - Proveer al usuario la posibilidad de visualizar y gestionar los cupos asociados a la cancelación de certificados.
  * - Permitir la selección dinámica de regímenes, mecanismos, tratados, y otros atributos importantes para la cancelación de los certificados.
  * - Utilizar catálogos para manejar la selección de productos, subproductos y otros datos relacionados.
  * - Visualizar la información relevante en una tabla dinámica con las columnas configuradas según los datos de cancelación.
- * 
+ *
  * **Estructura del componente:**
  * - **Catálogos cargados desde JSON**: La información de los catálogos, como los regímenes, mecanismos, tratados, productos y otros, es cargada desde archivos JSON externos.
  * - **Tabla dinámica**: Se configura una tabla dinámica para mostrar los datos de los cupos, donde cada fila de la tabla representa un cupo y muestra las propiedades relevantes como el nombre del producto, subproducto, mecanismo de asignación y tipo de cupo.
  * - **Formulario de entrada de datos**: En el futuro, se podrían agregar formularios para permitir la modificación de los datos relacionados con la cancelación de los certificados.
- * 
+ *
  * **Propiedades importantes:**
  * - `cancelation`: Contiene la lista de objetos `Cupo`, representando los cupos que se van a gestionar en el proceso de cancelación de certificados.
  * - `regime`, `mecanismo`, `tratado`, `nombrede`, `nombredel`, `representacion`: Son listas de catálogos cargadas desde el archivo JSON, que contienen las opciones disponibles para los diferentes atributos relacionados con la cancelación de certificados.
  * - `configuracionTabla`: Configura la tabla dinámica que muestra los datos de los cupos en columnas específicas, ordenadas de acuerdo con la configuración definida.
- * 
+ *
  * **Dependencias externas**:
  * - `@ng-mf/data-access-user`: Se utilizan componentes y servicios de esta librería para la gestión de catálogos y tablas dinámicas.
  * - Archivos JSON: Se cargan datos de archivos JSON externos (`cancelations.json`, `cancelcatalog.json`) para obtener la información necesaria para la cancelación de los certificados.
- * 
+ *
  * **Eventos y métodos**:
  * - El componente no define explícitamente métodos adicionales en este fragmento, pero la implementación de `ngOnInit()` y otras funciones de manipulación de datos se pueden agregar conforme se expanda la funcionalidad.
- * 
+ *
  * **Estilos y diseño**:
  * - Los estilos del componente se gestionan a través del archivo CSS asociado (`cancelacion-de-certificate.component.css`), donde se puede definir el diseño y apariencia del componente.
- * 
+ *
  * **Uso en la aplicación**:
  * Este componente puede ser usado en el flujo de trabajo de cancelación de certificados, permitiendo a los usuarios visualizar y gestionar la información relacionada con el cupo y sus atributos.
- * 
+ *
  * @file `cancelacion-de-certificate.component.ts`
  * @author [Tu Nombre]
  * @date [Fecha]
@@ -67,7 +81,15 @@ interface Cupos {
 @Component({
   selector: 'app-cancelacion-de-certificado',
   standalone: true,
-   imports: [CommonModule,TituloComponent,OficioComponent,TablaDinamicaComponent,CatalogoSelectComponent,FormsModule,ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    OficioComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
 })
@@ -76,17 +98,17 @@ interface Cupos {
  * los datos relacionados con el cupo de productos, mecanismos de asignación, tratados y otros atributos relevantes para la cancelación
  * de certificados. Utiliza tablas dinámicas para mostrar de manera ordenada los detalles y permite gestionar la información a través de
  * catálogos y formularios interactivos.
- * 
+ *
  * @class
  * @example
  * <app-cancelacion-de-certificate></app-cancelacion-de-certificate>
- * 
+ *
  * @constructor
  * Este componente se inicializa con datos cargados desde archivos JSON, los cuales contienen la información relacionada con los
  * cupos, mecanismos, productos, subproductos, regímenes y otros elementos importantes para el proceso de cancelación. Los datos
  * son utilizados para configurar la tabla dinámica y para llenar los campos de los catálogos, permitiendo la selección de opciones
  * durante la gestión de la cancelación de certificados.
- * 
+ *
  * @property {Cupo[]} cancelation - Lista de objetos `Cupo` que contienen los datos específicos de cada cancelación de certificado.
  * @property {Catalogo[]} regime - Lista de catálogos que contiene las opciones de regímenes aplicables a la cancelación de certificados.
  * @property {Catalogo[]} mecanismo - Lista de catálogos que contiene los mecanismos de asignación utilizados en el proceso de cancelación.
@@ -96,128 +118,186 @@ interface Cupos {
  * @property {Catalogo[]} representacion - Lista de catálogos que contiene las representaciones de los productos o subproductos que se gestionan.
  * @property {ConfiguracionColumna<any>[]} configuracionTabla - Configuración para las columnas de la tabla dinámica, definiendo el encabezado,
  *     la clave de acceso a los datos y el orden de visualización de cada columna.
- * 
+ *
  * @method
- * 
+ *
  * - **ngOnInit()**: Inicializa el componente con los valores predeterminados, y también se carga la información de los catálogos desde archivos JSON.
  *   Este método se utiliza para configurar las propiedades y preparar el componente para su uso interactivo.
  * - **configuracionTabla**: Configura las columnas de la tabla dinámica para visualizar correctamente los datos, incluyendo las propiedades
  *   de cada `Cupo` como el nombre del producto, el subproducto, el mecanismo de asignación y el tipo de cupo.
- * 
+ *
  * @example
  * Este componente incluye varias tablas dinámicas que se configuran con los catálogos cargados, y su visualización depende de los datos
  * disponibles para cada cupo, junto con los detalles como el mecanismo de asignación, tipo de cupo, y nombres de productos y subproductos.
- * 
+ *
  * @method updateformfied()
  * - Se puede incluir en el futuro, si se decide agregar la funcionalidad de actualización de campos del formulario.
  */
 export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
-  
   /**
    * Lista de cupos que contiene los datos necesarios para realizar la cancelación de certificados. Esta propiedad se carga
    * a partir de un archivo JSON, lo que permite a la aplicación manejar múltiples cupos con facilidad.
-   * 
+   *
    * @type {Cupo[]}
    */
   Cancelacion: Cupo[] = cancelacions;
   CancelacionForm!: FormGroup;
-  
+
   /**
    * Lista de catálogos para el régimen que se utiliza en la cancelación de certificados. Esta propiedad permite acceder
    * a las opciones del régimen desde un archivo JSON cargado.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public regimen: Catalogo[] = cancelcatalog.regimen;
-  
+
   /**
    * Lista de catálogos para el mecanismo de asignación, utilizado en el proceso de cancelación de certificados.
    * Esta lista permite seleccionar el mecanismo apropiado desde los datos cargados.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public mecanismo: Catalogo[] = cancelcatalog.mecanismo;
-  
+
   /**
    * Lista de catálogos para los tratados relacionados con los productos o subproductos que se están gestionando
    * en el proceso de cancelación.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public tratado: Catalogo[] = cancelcatalog.tratado;
-  
+
   /**
    * Lista de catálogos con los nombres de productos involucrados en el proceso de cancelación de certificados.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public producto: Catalogo[] = cancelcatalog.producto;
-  
+
   /**
    * Lista de catálogos con los nombres de subproductos que se gestionan durante el proceso de cancelación de certificados.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public subproducto: Catalogo[] = cancelcatalog.subproducto;
-  
+
   /**
    * Lista de catálogos para representar diferentes representaciones o categorías asociadas a los productos o subproductos.
-   * 
+   *
    * @type {Catalogo[]}
    */
   public representacion: Catalogo[] = cancelcatalog.representacion;
   public solicitudState!: Solicitud140103State;
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Configuración de las columnas para la tabla dinámica donde se visualizan los detalles de cada cupo. Cada columna
    * se configura con un encabezado, una clave que accede a los datos específicos de cada objeto de tipo `Cupo` y un orden
    * que determina la disposición de las columnas en la tabla.
-   * 
+   *
    * @type {ConfiguracionColumna<any>[]}
    */
   configuracionTabla: ConfiguracionColumna<Cupos>[] = [
     { encabezado: 'Cupo', clave: (item: Cupos) => item.cupo, orden: 1 },
-    { encabezado: 'Nombre de Producto', clave: (item: Cupos) => item.nombreProducto, orden: 2 },
-    { encabezado: 'Nombre del Subproducto', clave: (item: Cupos) => item.nombreSubproducto, orden: 3 },
-    { encabezado: 'Mecanismo de Asignación', clave: (item: Cupos) => item.mecanismoAsignacion, orden: 4 },
-    { encabezado: 'Tipo Cupo', clave: (item: Cupos) => item.tipoCupo, orden: 5 }
+    {
+      encabezado: 'Nombre de Producto',
+      clave: (item: Cupos) => item.nombreProducto,
+      orden: 2,
+    },
+    {
+      encabezado: 'Nombre del Subproducto',
+      clave: (item: Cupos) => item.nombreSubproducto,
+      orden: 3,
+    },
+    {
+      encabezado: 'Mecanismo de Asignación',
+      clave: (item: Cupos) => item.mecanismoAsignacion,
+      orden: 4,
+    },
+    {
+      encabezado: 'Tipo Cupo',
+      clave: (item: Cupos) => item.tipoCupo,
+      orden: 5,
+    },
   ];
 
-  /**
-   *
-   */
- 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private tramite140103Store: Tramite140103Store,
-    private tramite140103Query: Tramite140103Query
-  ) { }
-
-    
-  
-   
-  ngOnInit(): void {
-    this.inicializarFormulario();
-    // Load your catalog data here if necessary (e.g., from an API or JSON file)
+    private tramite140103Query: Tramite140103Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
- 
+  ngOnInit(): void {
+    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
+  }
 
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140103Store): void {
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite140103Store
+  ): void {
     const valor = form.get(campo)?.value;
     (this.tramite140103Store[metodoNombre] as (value: any) => void)(valor);
   }
 
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.CancelacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.CancelacionForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente. Este método crea el formulario reactivo
+   * y configura los controles necesarios con las validaciones requeridas.
+   */
   private inicializarFormulario(): void {
     this.tramite140103Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState as Solicitud140103State;
-      })
-    )
-    .subscribe((data) => {
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Solicitud140103State;
+        })
+      )
+      .subscribe((data) => {});
 
     this.CancelacionForm = this.fb.group({
       regimen: [this.solicitudState.regimen, Validators.required],
@@ -233,5 +313,4 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
