@@ -5,7 +5,7 @@
       <ng-titulo titulo="Pago de derechos" />
       <div class="row">
         <div class="col-md-8 form-group">
-          <label class="form-label" for="coordenadas">Exento de pago * :</label>
+          <label class="form-label" for="coordenadas">Exento de pago*:</label>
           <app-input-radio [radioOptions]="exentoPagoRadio" [selectedValue]="exentoPagoValor" [isRequired]="true"
             [layout]="'horizontal'" formControlName="exentoPago" [required]="true"
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"></app-input-radio>
@@ -26,13 +26,13 @@
       </div>
       <div class="row">
         <div class="col-md-4 form-group">
-          <label class="form-label" for="claveDeReferencia">Clave de referencia * :</label>
+          <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
           <input type="text" id="claveDeReferencia" class="form-control" formControlName="claveDeReferencia"
             [required]="true" />
         </div>
 
         <div class="col-md-4 form-group">
-          <label class="form-label" for="cadenaDependencia">Cadena de la dependencia * :</label>
+          <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
           <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
             [required]="true" />
         </div>
@@ -47,7 +47,7 @@
 
       <div class="row">
         <div class="col-md-4 form-group">
-          <label class="form-label" for="llaveDePago">Llave de pago * :</label>
+          <label class="form-label" for="llaveDePago">Llave de pago*:</label>
           <input type="text" id="llaveDePago" class="form-control" formControlName="llaveDePago" [required]="true" />
         </div>
 
@@ -56,7 +56,7 @@
         </div>
 
         <div class="col-md-4 form-group">
-          <label class="form-label" for="importeDePago">Importe de pago * :</label>
+          <label class="form-label" for="importeDePago">Importe de pago*:</label>
           <input type="text" id="importeDePago" class="form-control" formControlName="importeDePago"
             [required]="true" />
         </div>
@@ -76,7 +76,7 @@
       <ng-titulo titulo="Pago de derechos revisión documental" />
       <div class="row">
         <div class="col-md-8 form-group">
-          <label class="form-label" for="coordenadas">Exento de pago * :</label>
+          <label class="form-label" for="coordenadas">Exento de pago*:</label>
           <app-input-radio [radioOptions]="exentoPagoRevisionRadio" [selectedValue]="exentoPagoRevisionValor"
             [isRequired]="true" [layout]="'horizontal'" formControlName="exentoPagoRevision" [required]="true"
             (valueChange)="cambioValorRadioRevision('exentoPagoRevision', $event.toString())"></app-input-radio>
