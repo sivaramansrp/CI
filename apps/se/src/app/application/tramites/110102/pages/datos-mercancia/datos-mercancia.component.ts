@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite110102State } from '../../estados/store/tramite110102.store';
@@ -62,8 +61,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       .subscribe((response: Tramite110102State) => {
         if(response) {
           this.esDatosRespuesta = true;
-          this.exportadorAutorizadoService.setRegistro(response);
-          
+          this.exportadorAutorizadoService.setRegistro(response);   
         }
       });
   }
@@ -82,3 +80,4 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 }
+

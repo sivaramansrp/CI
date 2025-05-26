@@ -1,194 +1,208 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Este componente maneja la representación federal.
+ * @description
+ * Este componente maneja la representación federal, incluyendo la interacción con el estado global y la validación de formularios.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { CommonModule, } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import {CatalogoSelectComponent, ConsultaioQuery, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
+import { ConsultaioQuery, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
-
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 
 /**
- * Este componente maneja la representación federal.
+ * @description
+ * Componente que gestiona la representación federal, incluyendo la selección de entidades federativas y unidades administrativas.
  */
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './representacion-federal.component.html',
-  styleUrl: './representacion-federal.component.scss',
+  styleUrls: ['./representacion-federal.component.scss'],
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
-
- procedureState!: boolean;
-
   /**
-   * FormGroup que contiene los datos del formulario de representación federal.
-   * @type {FormGroup}
+   * @description
+   * Indica si el formulario está en modo de solo lectura.
    */
-  formularioRepresentacionFederalForm!: FormGroup;
+  esSoloLectura!: boolean;
 
   /**
-   * Arreglo de objetos Catalogo que representa las entidades fronterizas.
-   * @type {Catalogo[]}
+   * @description
+   * Formulario reactivo para gestionar los datos de la representación federal.
    */
-  entidadesFrontera: Catalogo[] = [];
+  formularioRepresentacionFederal!: FormGroup;
 
   /**
-   * Arreglo de objetos Catalogo que representa las opciones de representación federal.
-   * @type {Catalogo[]}
+   * @description
+   * Lista de entidades federativas disponibles.
    */
-  representacionFederalOptions: Catalogo[] = [];
+  entidadesFederativas: Catalogo[] = [];
 
   /**
-   * Subject que emite un evento cuando el componente es destruido,
-   * permitiendo la desuscripción de observables.
-   * @type {Subject<void>}
+   * @description
+   * Lista de opciones de representación federal disponibles.
    */
-  private destroyed$ = new Subject<void>();
+  opcionesRepresentacionFederal: Catalogo[] = [];
+
   /**
+   * @description
+   * Subject que emite un evento cuando el componente es destruido, permitiendo la desuscripción de observables.
+   */
+  private destruido$ = new Subject<void>();
+
+  /**
+   * @description
    * Constructor del componente.
-   * Servicio para la creación de formularios reactivos y para obtener datos de la representación federal.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {RepresentacionfederalService} service - Servicio para obtener datos de la representación federal.
-   * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
-   * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
+   * @param {FormBuilder} formBuilder - Servicio para la creación de formularios reactivos.
+   * @param {RepresentacionfederalService} servicioRepresentacionFederal - Servicio para obtener datos de la representación federal.
+   * @param {Tramite110102Store} estadoTramite - Servicio para manejar el estado del trámite.
+   * @param {Tramite110102Query} consultaTramite - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, 
+  constructor(
+    private formBuilder: FormBuilder,
     private consultaQuery: ConsultaioQuery,
-    private service: RepresentacionfederalService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
-    
-    
-  }
-
+    private servicioRepresentacionFederal: RepresentacionfederalService,
+    private estadoTramite: Tramite110102Store,
+    private consultaTramite: Tramite110102Query
+  ) {}
 
   /**
-   * Inicializa el formulario de representación federal.
-   */
-  initializarFormulario(): void {
-   
-    this.formularioRepresentacionFederalForm = this.fb.group({
-      solicitudEntidadFederativaEntidadClave: ['', Validators.required],
-      unidadAdministrativaClave: ['', Validators.required],
-      protestoDecirVerdad: [false]
-    });
-     this.getValorsStore();
-     this.enableDisableControl();
-    }
-  /**
+   * @description
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
-   * Carga las entidades de frontera y recupera la representación federal si es necesario.
+   * Inicializa el formulario y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$)).subscribe((seccionState) => {
-      this.procedureState = seccionState.readonly;
-      this.initializarFormulario();
-    });
-    this.cargarEntidadesFrontera();
+    this.inicializarFormulario();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estadoSeccion) => {
+        this.esSoloLectura = estadoSeccion.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
   }
 
   /**
-   * Carga las entidades de frontera desde el servicio.
+   * @description
+   * Inicializa el formulario con los valores predeterminados y obtiene datos del estado global.
    */
-  cargarEntidadesFrontera(): void {
-    this.service.getEntidadFederativa().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.entidadesFrontera = data;
-      }
-    );
+  inicializarFormulario(): void {
+    this.formularioRepresentacionFederal = this.formBuilder.group({
+      claveEntidadFederativa: ['', Validators.required],
+      claveUnidadAdministrativa: ['', Validators.required],
+      protestoDecirVerdad: [false],
+    });
+    this.obtenerValoresDelEstado();
+    this.cargarEntidadesFederativas();
   }
 
-
-  enableDisableControl(): void {  
-
-    if (this.procedureState) {
-      this.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.disable();
+  /**
+   * @description
+   * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.formularioRepresentacionFederal.disable();
     } else {
-      this.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.enable();
+      this.formularioRepresentacionFederal.enable();
     }
   }
+
   /**
-   * Maneja el cambio de la entidad federativa.
+   * @description
+   * Carga las entidades federativas desde el servicio.
+   */
+  cargarEntidadesFederativas(): void {
+    this.servicioRepresentacionFederal.getEntidadFederativa()
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((datos) => {
+        this.entidadesFederativas = datos;
+      });
+  }
+
+  /**
+   * @description
+   * Maneja el cambio de la entidad federativa seleccionada.
    * @param {any} valor - El valor de la entidad federativa seleccionada.
    */
-  onEntidadFederativaChange(valor: any): void {
-    if (valor !== '-1') {
-      this.recuperarRepresentacionFederalSE(valor.id);
+  alCambiarEntidadFederativa(valor: Event): void {
+    const TARGET = valor.target as HTMLSelectElement;
+    const ID = TARGET.value;
+    if (ID !== '-1') {
+      this.obtenerRepresentacionFederal(ID);
     } else {
-      this.representacionFederalOptions = [];
+      this.opcionesRepresentacionFederal = [];
     }
-    this.setValoresStore(this.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave');
+    this.establecerValoresEnEstado(this.formularioRepresentacionFederal, 'claveEntidadFederativa');
   }
 
   /**
-   * Recupera la representación federal desde el servicio.
-   * @param {string} entidadFederativa - La entidad federativa para la cual se obtienen los datos.
+   * @description
+   * Obtiene las opciones de representación federal desde el servicio.
+   * @param {string} claveEntidadFederativa - La clave de la entidad federativa seleccionada.
    */
-  recuperarRepresentacionFederalSE(entidadFederativa: string): void {
-    this.service.getRepresentacionfederal(entidadFederativa).pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.representacionFederalOptions = data;
-      }
-    );
+  obtenerRepresentacionFederal(claveEntidadFederativa: string): void {
+    this.servicioRepresentacionFederal.getRepresentacionfederal(claveEntidadFederativa)
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((datos) => {
+        this.opcionesRepresentacionFederal = datos;
+      });
   }
 
   /**
-   * Establece los valores en el store a partir del formulario.
-   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
+   * @description
+   * Establece los valores en el estado global a partir del formulario.
+   * @param {FormGroup} formulario - El formulario del cual se obtienen los valores.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a guardar.
    */
-  setValoresStore(form: FormGroup, campo: string): void {
-    const VALOR = form.get(campo)?.value;
-    this.tramite110102Store.establecerDatos({ [campo]: VALOR });
+  establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
+    const VALOR = formulario.get(campo)?.value;
+    this.estadoTramite.establecerDatos({ [campo]: VALOR });
   }
 
   /**
-   * Obtiene los valores del store y los asigna al formulario.
+   * @description
+   * Obtiene los valores del estado global y los asigna al formulario.
    */
-  getValorsStore(): void {
-    this.tramite110102Query.selectTramite110102$
+  obtenerValoresDelEstado(): void {
+    this.consultaTramite.selectTramite110102$
       .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.formularioRepresentacionFederalForm.patchValue({
-            solicitudEntidadFederativaEntidadClave: seccionState.solicitudEntidadFederativaEntidadClave,
-            unidadAdministrativaClave: seccionState.unidadAdministrativaClave,
-            protestoDecirVerdad: seccionState.protestoDecirVerdad
+        takeUntil(this.destruido$),
+        map((estadoSeccion) => {
+          this.formularioRepresentacionFederal.patchValue({
+            claveEntidadFederativa: estadoSeccion.solicitudEntidadFederativaEntidadClave || '',
+            claveUnidadAdministrativa: estadoSeccion.unidadAdministrativaClave || '',
+            protestoDecirVerdad: estadoSeccion.protestoDecirVerdad || false,
           });
         })
       )
       .subscribe();
 
-    const ENTIDAD = this.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value;
-    const REPRESENTACIONFEDERAL = this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value;
-    if (ENTIDAD !== "") {
-      this.recuperarRepresentacionFederalSE(ENTIDAD);
-      this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.setValue(REPRESENTACIONFEDERAL);
+    const ENTIDAD = this.formularioRepresentacionFederal.get('claveEntidadFederativa')?.value;
+    const UNIDAD_ADMINISTRATIVA = this.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.value;
+    if (ENTIDAD !== '') {
+      this.obtenerRepresentacionFederal(ENTIDAD);
+      this.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.setValue(UNIDAD_ADMINISTRATIVA);
     } else {
-      this.representacionFederalOptions = [];
+      this.opcionesRepresentacionFederal = [];
     }
   }
 
   /**
+   * @description
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
-   * Completa el subject destroyed$ para desuscribirse de todos los observables.
+   * Completa el subject `destruido$` para desuscribirse de todos los observables.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.destruido$.next();
+    this.destruido$.complete();
   }
 }
