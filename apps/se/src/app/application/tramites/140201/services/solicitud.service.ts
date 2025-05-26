@@ -41,10 +41,10 @@ export class SolicitudService {
     this.cancelacionesStore.setRfcIngresado(DATOS.rfcIngresado);
     this.cancelacionesStore.setMotivoCancelacion(DATOS.motivoCancelacion);
     this.cancelacionesStore.setEntidadExterna(DATOS.entidadExterna);
-   this.cancelacionesStore.setNombreSolicitanteIPC(DATOS.nombreSolicitanteIPC);
-   this.cancelacionesStore.setCargoSolicitanteIPC(DATOS.cargoSolicitanteIPC);
-   this.cancelacionesStore.setFolioOficioSolicitudIPC(DATOS.folioOficioSolicitudIPC);
-   this.cancelacionesStore.setCorreoSolicitanteIPC(DATOS.correoSolicitanteIPC);
+    this.cancelacionesStore.setNombreSolicitanteIPC(DATOS.nombreSolicitanteIPC);
+    this.cancelacionesStore.setCargoSolicitanteIPC(DATOS.cargoSolicitanteIPC);
+    this.cancelacionesStore.setFolioOficioSolicitudIPC(DATOS.folioOficioSolicitudIPC);
+    this.cancelacionesStore.setCorreoSolicitanteIPC(DATOS.correoSolicitanteIPC);
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<CancelacionesState> {
