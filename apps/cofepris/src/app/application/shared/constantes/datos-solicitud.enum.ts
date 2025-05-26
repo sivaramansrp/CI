@@ -335,15 +335,13 @@ export const CROSLISTA_DE_PAISES: string[] = [
 ];
 
 /**
- * Lista de formas farmacéuticas utilizadas en el sistema.
- * 
- * Esta constante contiene un arreglo de cadenas que representan
- * diferentes formas farmacéuticas, como aerosoles, cápsulas, 
- * comprimidos, cremas y emulsiones.
- * 
- * @const
+ * @const CROSLISTA_DE_FORMAS_FARMACEUTICAS
+ * @description Lista de países representados como cadenas de texto.
+ * Esta constante contiene nombres de países con sus respectivas denominaciones oficiales.
+ *
  * @type {string[]}
  */
+
 export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
   'AEROSOL',
   'CAPSULAS',
@@ -705,7 +703,7 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201];
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
