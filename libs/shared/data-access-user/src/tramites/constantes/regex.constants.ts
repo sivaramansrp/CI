@@ -1,5 +1,3 @@
-import exp from "constants";
-
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
@@ -384,7 +382,6 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  * ```
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
-
 
 /**
  * Expresión regular para validar nombres.
