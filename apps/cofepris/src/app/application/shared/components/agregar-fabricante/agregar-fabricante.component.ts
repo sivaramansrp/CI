@@ -349,7 +349,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     let nombreRazonSocial: string;
 
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.razonSocial; // <-- yahan sahi karo
+      nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
       nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
         VALOR_FORMULARIO.primerApellido
