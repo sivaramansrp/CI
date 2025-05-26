@@ -2,6 +2,7 @@
  * Componente que representa un formulario para solicitar una cantidad específica.
  * Gestiona la validación y el envío del formulario.
  */
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -10,16 +11,15 @@ import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 
-import { Observable } from 'rxjs';
 
-import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 
 import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
 
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
 /**
  * Componente que representa un formulario para solicitar una cantidad específica.
@@ -33,6 +33,29 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
   styleUrl: './cantidad-solicitada.component.scss',
 })
 export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
+
+  /**
+   * Suscripción a los cambios en el formulario react
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+* Subject para notificar la destrucción del componente.
+*/
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * Estado de la solicitud de la sección 120402.
+  */
+  public solicitudState!: Tramite120402State;
+
+
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Formulario reactivo para la solicitud de cantidad.
    */
@@ -53,17 +76,60 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query
+    private tramite120402Query: Tramite120402Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.  
+* Además, obtiene la información del catálogo de mercancía.
+*/
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+    //this.getMercancia();
+  }
+
+  /**
+* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+* Luego reinicializa el formulario con los valores actualizados desde el store.
+*/
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.form.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
     this.crearFormulario();
-
+    this.inicializarEstadoFormulario();
     this.cantidadSolicitada$.subscribe((cantidadSolicitada) => {
       if (cantidadSolicitada) {
         this.form.get('cantidadSolicitada')?.setValue(cantidadSolicitada);
@@ -83,8 +149,18 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * Crea e inicializa el formulario con validaciones.
    */
   crearFormulario(): void {
+    this.subscription.add(
+      this.tramite120402Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.form = this.fb.group({
-      cantidadSolicitada: ['', [Validators.required]],
+      cantidadSolicitada: [this.solicitudState?.cantidadSolicitada, [Validators.required]],
     });
   }
 
@@ -108,7 +184,7 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
     }
   }
-  
+
   /**
    * Obtiene el valor seleccionado del campo de cantidad solicitada y lo establece en el store.
    */

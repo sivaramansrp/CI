@@ -2,7 +2,6 @@ import { AlertComponent, TablaDinamicaComponent } from '@libs/shared/data-access
 import { CLASE_TEXTO_CENTRADO, CONFIGURACION_COLUMNAS_CUPO_CONST, NOTA} from '../../constantes/definiciones.enum';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   CategoriaMensaje,
   ConfiguracionColumna,
   Notificacion,
@@ -12,7 +11,13 @@ import {
   TipoNotificacionEnum,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+ 
 import { CommonModule, NgIf } from '@angular/common';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -20,11 +25,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import {Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+
+import {Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
 import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
 import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+
  
 /**
  * Interfaz para los datos de cupo recibidos del servicio
@@ -98,6 +105,54 @@ interface RespuestaTratado {
  * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
  */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
+
+   
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;  
+
+    /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * Suscripción a los cambios en el formulario react
+   */
+  private subscription: Subscription = new Subscription();
+
+    /**
+   * Estado de la solicitud de la sección 120402.
+   */
+  public solicitudState!: Tramite120402State;
+
+  /**
+   * Datos del catálogo relacionados con la mercancía.
+   *
+   * @type {Catalogo[]}
+   */
+  public mercancia!: Catalogo[];
+
+
+   /**
+   * Método que inicializa el objeto `mercancia` con datos predeterminados.
+   * Estos datos se utilizan para llenar el catálogo de opciones disponibles para el usuario,
+   * que incluyen "Sí" y "No" como posibles respuestas a una pregunta sobre el registro de muestras.
+   *
+   * @returns {void} No retorna nada, ya que solo inicializa el objeto `mercancia`.
+   *
+   * @example
+   * component.getMercancia();
+   */
+  // public getMercancia(): void {
+  //   this.mercancia = [
+  //     { id: 1, descripcion: 'Si' },
+  //     { id: 2, descripcion: 'No' },
+  //   ];
+  // }
+  
   /**
    * Enum de acciones disponibles en la tabla dinámica.
    */
@@ -207,8 +262,54 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: SeleccionDelCupoService,
     private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query
-  ) {}
+    private tramite120402Query: Tramite120402Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initializeForm();
+    }  
+    //this.getMercancia();
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.initializeForm();
+      if (this.esFormularioSoloLectura) {
+        this.seleccionForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.seleccionForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
  
   /**
    * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es inicializado.
@@ -219,6 +320,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
+    this.inicializarEstadoFormulario();
  
     this.regimen$.subscribe((regimen) => {
       if (regimen) {
@@ -243,6 +345,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         this.seleccionForm.get('subproducto')?.setValue(subproducto);
       }
     });
+ 
   }
  
   /**
@@ -258,6 +361,16 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de selección del cupo con validaciones requeridas.
    */
   private initializeForm(): void {
+    this.subscription.add(
+      this.tramite120402Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.seleccionForm = this.fb.group({
       regimen: ['', Validators.required],
       tratado: ['', Validators.required],

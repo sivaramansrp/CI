@@ -8,6 +8,8 @@
             [label]="'Entidad Federativa'"
             [required]="true"
             name="entidad"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="entidad"
             (selectionChange)="getEntidad($event)"
             >
@@ -19,6 +21,8 @@
             [label]="'Representación federal'"
             [required]="true"
             name="representacion"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="representacion"
            (selectionChange)="getRepresentacion($event)"
            >

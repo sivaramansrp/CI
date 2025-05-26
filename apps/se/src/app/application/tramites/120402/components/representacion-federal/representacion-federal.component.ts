@@ -21,6 +21,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -33,13 +34,18 @@ import {
 
 import {
   Catalogo,
-  CatalogoSelectComponent,
   RepresentacionFederalService,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Observable, Subject, takeUntil } from 'rxjs';
+
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
 import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+
 
 /**
  * @class RepresentacionFederalComponent
@@ -59,6 +65,29 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
   styleUrls: ['./representacion-federal.component.scss'],
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+    esFormularioSoloLectura: boolean = false;  
+  
+      /**
+     * Subject para notificar la destrucción del componente.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+  
+     /**
+     * Suscripción a los cambios en el formulario react
+     */
+    private subscription: Subscription = new Subscription();
+  
+      /**
+     * Estado de la solicitud de la sección 301.
+     */
+    public solicitudState!: Tramite120402State;
+  
+    
   /**
    * @property {FormGroup} representacionForm
    * @description
@@ -131,11 +160,54 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: RepresentacionFederalService,
     private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query
+    private tramite120402Query: Tramite120402Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+   /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initializeForm();
+    }  
+    //this.getMercancia();
+  }
+
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.initializeForm();
+      if (this.esFormularioSoloLectura) {
+        this.representacionForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.representacionForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
     /**
    * @method ngOnInit
    * @description
@@ -155,6 +227,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.loadEntidad();
     this.loadRepresentacion();
+     this.inicializarEstadoFormulario();
     this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
       this.updateRepresentacionOptions(entidad);
       this.representacionForm.get('representacion')?.setValue(''); // Reset representacion
@@ -194,6 +267,16 @@ this.representacion$.subscribe((representacion) => {
    * @access private
    */
   private initializeForm(): void {
+    this.subscription.add(
+      this.tramite120402Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.representacionForm = this.fb.group({
       /**
        * @property {string} entidad
