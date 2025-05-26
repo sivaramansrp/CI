@@ -120,12 +120,12 @@ export const REGISTRO_VEHICULOS = [
     orden: 6,
   },
   {
-    encabezado: 'Nombre de contacto en la Corre circunscripci de la aduana',
+    encabezado: 'Nombre de contacto en la circunscripci de la aduana',
     clave: (item: RegistroVehiculos): string => item.persona.nombre,
     orden: 7,
   },
   {
-    encabezado: 'Corre electrór',
+    encabezado: 'Correo electrónico',
     clave: (item: RegistroVehiculos): string => item.persona.apellidoPaterno,
     orden: 8,
   },
