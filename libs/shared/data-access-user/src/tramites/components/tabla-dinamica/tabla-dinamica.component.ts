@@ -110,7 +110,7 @@ export class TablaDinamicaComponent<T> {
    * 
    * @event
    */
-  @Output() alternarValor: EventEmitter<T> = new EventEmitter();
+  @Output() alternarValor = new EventEmitter<{ row: T; column: string }>();
 
 
   /**
@@ -228,7 +228,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @param row - La fila cuyos valores se desean cambiar.
    */
-  cambiarValor(row: T): void {
+  cambiarValor(row: { row: T; column: string; }): void {
     this.alternarValor.emit(row);
   }
 
