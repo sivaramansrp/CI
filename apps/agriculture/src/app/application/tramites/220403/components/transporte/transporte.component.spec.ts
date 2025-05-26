@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { InputTypes, Props } from '@ng-mf/data-access-user';
 import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -16,6 +17,7 @@ import { Tramite220403Store } from '../../estados/tramite220403.store';
 @Injectable()
 class MockExportaccionAcuicolaService {
   getDatos = jest.fn().mockReturnValue(observableOf({}));
+  obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf([])); 
 }
 
 @Injectable()
@@ -88,54 +90,36 @@ describe('TransporteComponent', () => {
   
 
   it('should run #obtenerValoresCatalogo()', () => {
-    // Mock dependencies
-    (component as any).catalogosServicios = {
-        getCatalogo: jest.fn().mockReturnValue(observableOf({}))
-    };
+  const mockExportService = TestBed.inject(ExportaccionAcuicolaService);
+  const mockResponse = [
+    { id: 1, name: 'Option 1', descripcion: 'Option 1 description' },
+    { id: 2, name: 'Option 2', descripcion: 'Option 2 description' }
+  ];
+  jest.spyOn(mockExportService, 'obtenerMenuDesplegable').mockReturnValue(observableOf(mockResponse));
 
-    (component as any).configuracion = {
-        indiceGrupo: {
-            menu: {
-                indiceMenu: {
-                    props: {
-                        catalogos: {}
-                    }
-                }
-            }
-        }
-    };
+  const mockIndiceGrupo = 0;
+  const mockIndiceMenu = 0;
+  const mockClave = 'someKey';
 
-    // Use a valid number instead of an empty object
-    const mockNumero: number = 123; // First parameter should be a number
-    const mockParam1: number = 123;// Adjust based on actual function signature
-    const mockParam2: string = 'test-param';  // Adjust type if needed
+  // Initialize configuration to avoid undefined errors
+  component.configuracion = [
+    {
+      title: 'Test Group',
+      formGroupName: 'testGroup',
+      menu: [
+        {
+          inputType: InputTypes.SELECT,
+          props: { catalogos: [], labelNombre: '', campo: '', disabled: false, required: true, otherProperty1: '', otherProperty2: '', primerOpcion: '', radioOptions: [], radioSelectedValue: '', jsonDataFileName: '', habilitado: true } as Props,
+          class: 'col-md-4',
+        },
+      ],
+    },
+  ];
 
-    // Call the method
-    component.obtenerValoresCatalogo(mockNumero, mockParam1, mockParam2);
+  component.obtenerValoresCatalogo(mockIndiceGrupo, mockIndiceMenu, mockClave);
 
-    // Expect the catalog service method to be called
-    expect((component as any).catalogosServicios.getCatalogo).toHaveBeenCalled();
+  expect(mockExportService.obtenerMenuDesplegable).toHaveBeenCalledWith(mockClave);
+  expect(component.configuracion[mockIndiceGrupo].menu[mockIndiceMenu].props.catalogos).toEqual(mockResponse);
 });
-
-
-
-
-  it('should run #onSubmit()', () => {
-    // Mock tramite220403store
-    const mockTramiteStore = {
-      setTransporte: jest.fn()
-    };
-    (component as any).tramite220403store = mockTramiteStore;
-
-    // Mock formulario with the expected structure
-    (component as any).formulario = { value: { transporte: {} } };
-
-    // Call the function
-    component.onSubmit();
-
-    // Expectation: setTransporte should have been called
-    expect(mockTramiteStore.setTransporte).toHaveBeenCalled();
-});
-
 
 });

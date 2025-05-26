@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+    <form [formGroup]="formulario">
       @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex) {
       <div class="form" [formGroupName]="fieldGroup.formGroupName">
         <ng-titulo [titulo]="fieldGroup.title" />
@@ -9,8 +9,8 @@
           <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
             <div class="form-group">
               @switch (item.inputType) { @case(inputTypes.SELECT) {
-              <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre"
-              [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre" [formControlName]="item.props.campo"
+                [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
               } @case(inputTypes.TEXT) {
                 @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
                   <label class="form-label" [for]="item.props.campo">{{
@@ -31,6 +31,8 @@
               <input-fecha
                 [datos]="item.props"
                 (valorCambiado)="fechaCambiado($event)"
+                name="item.props.campo"
+                [setFecha]="fechaPagoDate" 
               ></input-fecha>
               } @case (inputTypes.RADIO) {
               <label class="form-label" [for]="item.props.campo">{{
@@ -51,4 +53,9 @@
       </div>
       }
     </form>
+    <div class="row mt-5 mb-5">
+    <div class="col-md-12 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary"> Borrar datos del pago </button>
+    </div>
+  </div>
   </div>
