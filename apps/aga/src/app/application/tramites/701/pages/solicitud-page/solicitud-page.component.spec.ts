@@ -1,15 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
-/* eslint-disable max-classes-per-file */
-/* eslint-disable require-await */
-// @ts-nocheck
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, NO_ERRORS_SCHEMA, Output, Pipe, PipeTransform } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,35 +8,36 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { SeccionQuery } from '@ng-mf/data-access-user';
-import { SeccionStore } from '../../../../estados/seccion.store';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionStore } from '../../../../core/estados/seccion.store';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
 @Injectable()
 class MockSeccionStore {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
 @Pipe({name: 'translate'})
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 @Pipe({name: 'phoneNumber'})
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 @Pipe({name: 'safeHtml'})
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
+  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; asignarSecciones: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; seleccionaTab: (arg0: {}) => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; seccionStore: { establecerSeccion?: any; establecerFormaValida?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -82,7 +73,7 @@ describe('SolicitudPageComponent', () => {
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.asignarSecciones = jest.fn();
     component.ngOnInit();
-    // expect(component.asignarSecciones).toHaveBeenCalled();
+    expect(component.asignarSecciones).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {
@@ -99,8 +90,8 @@ describe('SolicitudPageComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should run #asignarSecciones()', async () => {
@@ -108,8 +99,8 @@ describe('SolicitudPageComponent', () => {
     component.seccionStore.establecerSeccion = jest.fn();
     component.seccionStore.establecerFormaValida = jest.fn();
     component.asignarSecciones();
-    // expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
+    expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
+    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
   });
 
 });

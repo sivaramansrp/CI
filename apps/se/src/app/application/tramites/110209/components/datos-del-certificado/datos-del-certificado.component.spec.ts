@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { DatosDelCertificadoComponent } from './datos-del-certificado.component';
 import { TituloComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Router } from '@angular/router';
 
 describe('DatosDelCertificadoComponent', () => {
   let component: DatosDelCertificadoComponent;
@@ -14,38 +15,49 @@ describe('DatosDelCertificadoComponent', () => {
   let service: MercanciasService;
   let store: Tramite110209Store;
   let query: Tramite110209Query;
+  let router: Router;
 
   beforeEach(async () => {
-    const serviceMock = {
-      getMercancias: jest.fn().mockReturnValue(of(['Mercancia 1', 'Mercancia 2']))
+    const SERVICE_MOCK = {
+      getMercancias: jest.fn().mockReturnValue(of([
+        { id: 1, fraccionArancelaria: 'Mercancia 1', nombreComercial: 'Comercial 1' },
+        { id: 2, fraccionArancelaria: 'Mercancia 2', nombreComercial: 'Comercial 2' }
+      ]))
     };
 
-    const storeMock = {
-      setObservaciones: jest.fn()
+    const STORE_MOCK = {
+      setTramite110209: jest.fn()
     };
 
-    const queryMock = {
-      selectTramite110102$: of({
-        medioDeTransporte: '1',
-        rutaCompleta: 'Ruta 1',
-        puertoDeEmbarque: 'Puerto 1',
-        puertoDeDesembarque: 'Puerto 2'
+    const QUERY_MOCK = {
+      selectTramite110209$: of({
+        observaciones: 'Observación inicial'
       })
     };
 
+    const ROUTER_MOCK = { navigate: jest.fn() };
+
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [CommonModule,DatosDelCertificadoComponent, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
+      imports: [
+        CommonModule,
+        DatosDelCertificadoComponent,
+        ReactiveFormsModule,
+        TituloComponent,
+        TablaDinamicaComponent
+      ],
       providers: [
-        { provide: MercanciasService, useValue: serviceMock },
-        { provide: Tramite110209Store, useValue: storeMock },
-        { provide: Tramite110209Query, useValue: queryMock }
+        FormBuilder,
+        { provide: MercanciasService, useValue: SERVICE_MOCK },
+        { provide: Tramite110209Store, useValue: STORE_MOCK },
+        { provide: Tramite110209Query, useValue: QUERY_MOCK },
+        { provide: Router, useValue: ROUTER_MOCK }
       ]
     }).compileComponents();
 
     service = TestBed.inject(MercanciasService);
     store = TestBed.inject(Tramite110209Store);
     query = TestBed.inject(Tramite110209Query);
+    router = TestBed.inject(Router);
   });
 
   beforeEach(() => {
@@ -54,41 +66,76 @@ describe('DatosDelCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con valores del store', () => {
     expect(component.datosDelCertificadoForm).toBeDefined();
-    expect(component.datosDelCertificadoForm.get('observaciones')?.value).toBe('');
+    expect(component.datosDelCertificadoForm.get('observaciones')?.value).toBe('Observación inicial');
   });
 
-  it('should fetch and set mercancias on init', () => {
+  it('debe obtener y asignar mercancías al inicializar', () => {
     component.ngOnInit();
     expect(service.getMercancias).toHaveBeenCalled();
     expect(component.datosTabla.length).toBe(2);
-    expect(component.datosTabla).toEqual(['Mercancia 1', 'Mercancia 2']);
+    expect(component.datosTabla[0].fraccionArancelaria).toBe('Mercancia 1');
+    expect(component.datosTabla[1].nombreComercial).toBe('Comercial 2');
   });
 
-  it('should fetch and set form values from store on init', () => {
+  it('debe obtener y asignar valores del store al formulario al inicializar', () => {
     component.ngOnInit();
-    expect(component.datosDelCertificadoForm.get('medioDeTransporte')?.value).toBe('1');
-    expect(component.datosDelCertificadoForm.get('rutaCompleta')?.value).toBe('Ruta 1');
-    expect(component.datosDelCertificadoForm.get('puertoDeEmbarque')?.value).toBe('Puerto 1');
-    expect(component.datosDelCertificadoForm.get('puertoDeDesembarque')?.value).toBe('Puerto 2');
+    expect(component.datosDelCertificadoForm.get('observaciones')?.value).toBe('Observación inicial');
   });
 
-  it('should set values in store when form values change', () => {
+  it('debe actualizar el store cuando cambian los valores del formulario', () => {
     component.datosDelCertificadoForm.get('observaciones')?.setValue('Nueva observación');
-    component.setValoresStore(component.datosDelCertificadoForm, 'observaciones', 'setObservaciones');
-    expect(store.setObservaciones).toHaveBeenCalledWith('Nueva observación');
+    component.setValoresStore(component.datosDelCertificadoForm, 'observaciones');
+    expect(store.setTramite110209).toHaveBeenCalledWith({ observaciones: 'Nueva observación' });
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('debe completar el subject destroyed$ al destruir el componente', () => {
+    const NEXT_SPY= jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
+  });
+
+  it('debe asignar la mercancía seleccionada al llamar getMercanciasSeleccionadas', () => {
+    const MERCANCIA = {
+      id: 1,
+      nombre: 'Mercancia 1',
+      numeroDeOrden: '1',
+      fraccionArancelaria: '1234.56.78',
+      nombreTecnico: 'Tecnico 1',
+      nombreComercial: 'Comercial 1',
+      cantidad: 10,
+      unidad: 'kg',
+      nombreIngles: 'Merchandise 1',
+      numeroDeRegistro: 'REG123'
+    };
+    component.getMercanciasSeleccionadas(MERCANCIA);
+    expect(component.mercanciasSeleccionadas).toBe(MERCANCIA);
+  });
+
+  it('debe guardar la mercancía seleccionada en el store y emitir el evento al navegar', () => {
+    const MERCANCIA = {
+      id: 1,
+      nombre: 'Mercancia 1',
+      numeroDeOrden: '1',
+      fraccionArancelaria: '1234.56.78',
+      nombreTecnico: 'Tecnico 1',
+      nombreComercial: 'Comercial 1',
+      cantidad: 10,
+      unidad: 'kg',
+      nombreIngles: 'Merchandise 1',
+      numeroDeRegistro: 'REG123'
+    };
+    component.mercanciasSeleccionadas = MERCANCIA;
+    const EMIT_SPY = jest.spyOn(component.modificarEventCertificado, 'emit');
+    component.navegar();
+    expect(store.setTramite110209).toHaveBeenCalledWith({ mercanciasSeleccionadas: MERCANCIA });
+    expect(EMIT_SPY).toHaveBeenCalledWith(true);
   });
 });

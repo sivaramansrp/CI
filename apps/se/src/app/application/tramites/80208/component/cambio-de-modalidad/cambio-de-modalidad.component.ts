@@ -34,11 +34,10 @@ import { CambioModalidadStore } from '../../estados/tramite80208.store';
 
 
 /**
- * Componente para gestionar el cambio de modalidad.
- * 
- * @export
- * @class CombioDeModalidadComponent
- * @implements {OnInit, OnDestroy}
+ * @component CambioDeModalidadComponent
+ * @description
+ * Componente para gestionar el cambio de modalidad en el trámite IMMEX.
+ * Permite la selección de modalidades, servicios y la configuración de datos relacionados.
  */
 @Component({
   selector: 'app-cambio-de-modalidad',
@@ -53,22 +52,28 @@ import { CambioModalidadStore } from '../../estados/tramite80208.store';
     TituloComponent
   ]
 })
+
+/**
+ * @class CambioDeModalidadComponent
+ * @description
+ * Clase que implementa la lógica para gestionar el cambio de modalidad.
+ */
 export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   /**
-   * Tipo de selección de la tabla.
-   * @type {TablaSeleccion}
+   * @property {TablaSeleccion} tablaSeleccion
+   * @description Tipo de selección de la tabla (Radio o Checkbox).
    */
   tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
 
   /**
-   * Configuración de las columnas de la tabla.
-   * @type {ConfiguracionColumna<ServicioInfo>[]}
+   * @property {ConfiguracionColumna<ServicioInfo>[]} configuracionTabla
+   * @description Configuración de las columnas de la tabla para los servicios.
    */
   configuracionTabla: ConfiguracionColumna<ServicioInfo>[] = CONFIGURACION_SERVICIO;
 
   /**
-   * Datos de los servicios.
-   * @type {ServicioInfo[]}
+   * @property {ServicioInfo[]} ServiciosDatos
+   * @description Datos de los servicios disponibles.
    */
   ServiciosDatos: ServicioInfo[] = [
     {
@@ -79,8 +84,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Datos de los servicios autorizados.
-   * @type {ServicioInfo[]}
+   * @property {ServicioInfo[]} autorizadosDatos
+   * @description Datos de los servicios autorizados.
    */
   autorizadosDatos: ServicioInfo[] = [
     {
@@ -91,72 +96,80 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
+   * @property {Subject<void>} unsubscribe$
+   * @description Subject para manejar la desuscripción de observables.
    */
   public unsubscribe$ = new Subject<void>();
 
   /**
-   * Formulario para el cambio de modalidad.
-   * @type {FormGroup}
+   * @property {FormGroup} cambioDeModalidadForm
+   * @description Formulario para el cambio de modalidad.
    */
   cambioDeModalidadForm!: FormGroup;
 
   /**
-   * Formulario para los servicios IMMX.
-   * @type {FormGroup}
+   * @property {FormGroup} serviciosImmxForm
+   * @description Formulario para los servicios IMMX.
    */
   serviciosImmxForm!: FormGroup;
 
   /**
-   * @propiedad cambioModalidadState
-   * @tipo string
+   * @property {string} cambioModalidadState
+   * @description Estado actual del cambio de modalidad.
    */
   cambioModalidadState!: string;
 
   /**
-   * @propiedad cambioDeModalidadState
-   * @tipo CambioDeModalidadForm
+   * @property {CambioDeModalidadForm} cambioDeModalidadState
+   * @description Estado del formulario de cambio de modalidad.
    */
   cambioDeModalidadState!: CambioDeModalidadForm;
 
   /**
-   * @propiedad serviciosImmxState
-   * @tipo string
+   * @property {string} serviciosImmxState
+   * @description Estado actual de los servicios IMMX.
    */
   serviciosImmxState!: string;
 
   /**
-   * Lista de servicios IMMX disponibles.
-   * @type {Catalogo[]}
+   * @property {Catalogo[]} serviciosImmx
+   * @description Lista de servicios IMMX disponibles.
    */
   serviciosImmx!: Catalogo[];
 
   /**
-   * Lista de cambios de modalidad disponibles.
-   * @type {CambioModalidad[]}
+   * @property {CambioModalidad[]} cambioDeModalidad
+   * @description Lista de cambios de modalidad disponibles.
    */
   cambioDeModalidad!: CambioModalidad[];
 
   /**
-   * Indica si se deben mostrar los servicios IMMX.
-   * @type {boolean}
+   * @property {boolean} espectaculoServiciosImmx
+   * @description Indica si se deben mostrar los servicios IMMX.
    */
   espectaculoServiciosImmx: boolean = false;
 
   /**
-   * @propiedad destroyNotifier$
-   * @tipo Subject<void>
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject para manejar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {SeccionLibState} seccion
+   * @description Estado de la sección actual.
+   */
   private seccion!: SeccionLibState;
 
   /**
-   * Constructor del componente.
-   * 
+   * @constructor
+   * @description Constructor del componente que inicializa los servicios y dependencias necesarias.
    * @param {FormBuilder} fb - Constructor de formularios.
    * @param {CambioModalidadService} modalidadService - Servicio para gestionar los cambios de modalidad.
+   * @param {CambioModalidadQuery} cambioModalidadQuery - Consulta para obtener el estado del cambio de modalidad.
+   * @param {CambioModalidadStore} cambioModalidadStore - Store para manejar el estado del cambio de modalidad.
+   * @param {SeccionLibQuery} seccionQuery - Consulta para obtener el estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    */
 
   constructor(
@@ -171,9 +184,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método de inicialización del componente.
-   * 
-   * @returns {void}
+   * @method ngOnInit
+   * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
 
@@ -220,9 +232,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa los formularios del componente.
-   * 
-   * @returns {void}
+   * @method inicializarForm
+   * @description Inicializa los formularios del componente.
    */
   inicializarForm(): void {
     this.cambioDeModalidadForm = this.fb.group({
@@ -239,9 +250,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga los datos simulados en el formulario de cambio de modalidad.
-   * 
-   * @returns {void}
+   * @method getCargarDatos
+   * @description Carga los datos simulados en el formulario de cambio de modalidad.
    */
   getCargarDatos(): void {
     this.modalidadService.getDatosSimulados()
@@ -252,9 +262,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los servicios IMMX disponibles.
-   * 
-   * @returns {void}
+   * @method getServiciosImmx
+   * @description Obtiene los servicios IMMX disponibles.
    */
   getServiciosImmx(): void {
     this.modalidadService.getServiciosImmx().subscribe((data) => {
@@ -264,9 +273,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los cambios de modalidad disponibles.
-   * 
-   * @returns {void}
+   * @method getCambioDeModalidad
+   * @description Obtiene los cambios de modalidad disponibles.
    */
   getCambioDeModalidad(): void {
     this.modalidadService.getCambioDeModalidad().subscribe((data) => {
@@ -279,9 +287,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Deshabilita los controles del formulario de cambio de modalidad.
-   * 
-   * @returns {void}
+   * @method disableFormControls
+   * @description Deshabilita los controles del formulario de cambio de modalidad.
    */
   disableFormControls(): void {
     this.cambioDeModalidadForm.get('seleccionaLaModalidad')?.disable();
@@ -291,10 +298,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna la visibilidad de los servicios IMMX según la modalidad seleccionada.
-   * 
+   * @method toggleServiciosImmx
+   * @description Alterna la visibilidad de los servicios IMMX según la modalidad seleccionada.
    * @param {number} SELECCIONADAID - ID de la modalidad seleccionada.
-   * @returns {void}
    */
   toggleServiciosImmx(SELECCIONADAID: any): void {
     if (!SELECCIONADAID || !this.cambioDeModalidad.length) {
@@ -307,10 +313,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el evento de selección del dropdown.
-   *  
+   * @method onDropdownSelect
+   * @description Maneja el evento de selección del dropdown.
    * @param {any} event - Evento de selección del dropdown.
-   * @returns {void}
    */
   onDropdownSelect(event: any): void {
     if (event?.id) {
@@ -319,9 +324,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta cuando el componente se destruye.
-   * 
-   * @returns {void}
+   * @method ngOnDestroy
+   * @description Método que se ejecuta cuando el componente se destruye.
+   * Libera los recursos y completa los observables para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();

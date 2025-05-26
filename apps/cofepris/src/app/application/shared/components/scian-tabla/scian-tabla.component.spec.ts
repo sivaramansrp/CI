@@ -40,20 +40,21 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
       component.claveSelecionada(mockCatalogo);
 
       expect(component.scianNinoLista).toEqual([mockCatalogo]);
-      expect(component.scianForm.get('scianNino')?.value).toBe('Test Description Descripción for Test');
+      expect(component.scianForm.get('scianNino')?.value).toBe(1);
     });
 
     it('should emit scianSeleccionado and navigate back when agregarScian is called', () => {
       const mockCatalogo = { id: 1, descripcion: 'Test Description' };
+      component.scianLista = [mockCatalogo];
       component.scianNinoLista = [mockCatalogo];
-      component.scianForm.patchValue({ scianNino: 'Test Description Descripción for Test' });
+      component.scianForm.patchValue({ clave: mockCatalogo.descripcion, scianNino: mockCatalogo.id });
 
       const emitSpy = jest.spyOn(component.scianSeleccionado, 'emit');
       component.agregarScian();
 
       expect(emitSpy).toHaveBeenCalledWith({
         clave: 'Test Description',
-        descripcion: 'Test Description Descripción for Test',
+        descripcion: 1,
       });
     });
 
@@ -61,8 +62,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
       component.scianForm.patchValue({ clave: 'test', scianNino: 'test' });
       component.limpiarScian();
 
-      expect(component.scianForm.get('clave')?.value).toBeNull();
-      expect(component.scianForm.get('scianNino')?.value).toBeNull();
+      expect(component.scianForm.get('clave')?.value).toBe('');
+      expect(component.scianForm.get('scianNino')?.value).toBe('');
     });
 
     it('should navigate back when cancelar is called', () => {

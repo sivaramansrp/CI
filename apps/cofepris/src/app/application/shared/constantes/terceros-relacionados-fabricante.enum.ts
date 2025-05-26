@@ -23,7 +23,7 @@ export const FABRICANTE_TABLA = [
     { encabezado: 'Localidad', clave: 'localidad' },
     { encabezado: 'Entidad federativa', clave: 'entidadFederativa' },
     { encabezado: 'Estado/Localidad', clave: 'estado' },
-    { encabezado: 'Código postal.', clave: 'cp' },
+    { encabezado: 'Código postal', clave: 'cp' },
   ];
 
 
@@ -59,5 +59,5 @@ export const OTROS_TABLA = [
   { encabezado: 'Localidad', clave: 'localidad' },
   { encabezado: 'Entidad federativa', clave: 'entidadFederativa' },
   { encabezado: 'Estado/Localidad', clave: 'estado' },
-  { encabezado: 'Código postal.', clave: 'cp' },
+  { encabezado: 'Código postal', clave: 'cp' },
 ];

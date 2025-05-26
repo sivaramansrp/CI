@@ -12,14 +12,19 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
+
 import { Subject, map, takeUntil } from 'rxjs';
+
 import { BancoList } from '../../modelos/pago-de-derechos.model';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { Tramite260904Query } from '../../estados/tramite260904.query';
+
 
 /**
  * Selector del componente
@@ -48,6 +53,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public destroyed$ = new Subject<void>();
 
+   /**
+         * Estado seleccionado del trámite 260911.
+         */
+        estadoSeleccionado!: Tramite260904State;
+
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
@@ -74,6 +84,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearForm();
+    this.getValorStore();
     this.enPatchStoredFormData();
     this.getBancoList();
   }
@@ -167,20 +178,6 @@ public validarFechaFutura(fecPago:string): void {
       });
   }
 
-  /**
-   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
-   */
-  public setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite260904Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite260904Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
 
   /**
    * Actualiza el formulario con datos obtenidos desde la tienda.
@@ -214,6 +211,35 @@ public validarFechaFutura(fecPago:string): void {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   * @param metodoNombre - El método en la tienda para actualizar el estado.
+   */
+  public setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite260904Store.setTramite260904State({
+      [campo]: VALOR
+    });
+  }
+  
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite260904Query.selectTramite260904$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
+  }
+
+
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.

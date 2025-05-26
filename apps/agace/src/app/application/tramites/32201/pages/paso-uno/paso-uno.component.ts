@@ -1,37 +1,17 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
   BtnContinuarComponent,
-  DatosPasos,
   FormularioDinamico,
-  ListaPasosWizard,
-  PASOS,
   SolicitanteComponent,
   TituloComponent,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-
-/**
- * Interfaz que representa una AccionBoton.
- * Utilizamos esta interfaz para definir la estructura de los datos de una AccionBoton.
- */
-interface AccionBoton {
-  /**
-   * La acción que se realizará (por ejemplo, "cont" para continuar o "atras" para retroceder).
-   */
-  accion: string;
-
-  /**
-   * El valor asociado a la acción (por ejemplo, el índice del paso).
-   */
-  valor: number;
-}
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -77,41 +57,6 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
-   * Evento de salida que emite cuando se hace clic en el botón continuar.
-   */
-  @Output() continuarEvento = new EventEmitter<string>();
-
-  /**
-   * Bandera de validación.
-   */
-  validacion: boolean = false;
-
-  /**
-   * Arreglo que contiene los pasos del wizard.
-   */
-  pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Datos del número de pedimento.
-   */
-  @Input() datosNroPedimento!: unknown;
-
-  /**
-   * Referencia al componente Wizard.
-   */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * Datos de los pasos del wizard.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
-
-  /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
   ngAfterViewInit(): void {
@@ -127,25 +72,4 @@ export class PasoUnoComponent implements AfterViewInit {
     this.indice = i;
   }
 
-  /**
-   * Emite el evento continuar.
-   */
-  continuar(): void {
-    this.continuarEvento.emit('');
-  }
-
-  /**
-   * Obtiene el valor del índice y navega en el wizard.
-   * @param e El evento de acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
 }

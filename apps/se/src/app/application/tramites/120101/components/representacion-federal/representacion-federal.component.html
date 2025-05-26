@@ -1,0 +1,12 @@
+<form [formGroup]="forma">
+    <div class="row">
+      <formas-dinamicas
+        formularioTitulo="Representación federal"
+        [forma]="ninoFormGroup"
+        [formularioDatos]="representacionFederalFormData"
+        [estado]="solicitudDeRegistroState"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"
+      ></formas-dinamicas>
+    </div>
+  </form>
+  

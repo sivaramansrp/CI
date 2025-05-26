@@ -12,12 +12,13 @@
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
       (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
+      
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if(!ocultarBotones){
+        @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!=0)){
         <button
           type="button"
           name="modificarMercancias"
@@ -60,7 +61,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if(!ocultarBotones){
+       @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!=0)){
         <button
           type="button"
           name="modificarMercancias"
@@ -79,6 +80,7 @@
           Eliminar
         </button>
       }
+      @if(!tercerosNacionalidad){
         <button
           type="button"
           name="agregarMercancias"
@@ -87,6 +89,7 @@
         >
           Agregar
         </button>
+      }
       </div>
     </div>
   </div>

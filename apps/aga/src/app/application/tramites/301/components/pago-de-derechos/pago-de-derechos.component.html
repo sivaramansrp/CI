@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Importante" />
-  <form [formGroup]="FormSolicitud">
+  <form *ngIf="FormSolicitud" [formGroup]="FormSolicitud">
     <div formGroupName="pagodederechos">
       <div class="row" style="padding-bottom: 20px">
         <div class="col-md-4">

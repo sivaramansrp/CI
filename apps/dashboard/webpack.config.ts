@@ -13,8 +13,9 @@ function getPublicPath() {
   if (process.env.NODE_ENV === 'production') {
     return 'https://front.v30.ultrasist.net/';
   } else {
-    return 'http://localhost:4200/';
+    return '/';
   }
+  
 }
 
 module.exports = {
@@ -49,6 +50,12 @@ module.exports = {
           singleton: true,
           strictVersion: true,
           requiredVersion: 'auto'
+        },
+        "@ng-mf/data-access-user": {
+            "singleton": false,
+            strictVersion: false,
+            requiredVersion: false,
+            "import": "libs/shared/data-access-user/src/index.ts",
         },
         ...sharedMappings.getDescriptors()
       })
