@@ -1,21 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosMercanciaComponent } from './datos-mercancia.component';
 
-describe('DataosMercanciaComponent', () => {
+describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
-  let fixture: ComponentFixture<DatosMercanciaComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DatosMercanciaComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(DatosMercanciaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new DatosMercanciaComponent();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debe inicializar el índice en 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('seleccionaTab debe cambiar el índice', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+    component.seleccionaTab(1);
+    expect(component.indice).toBe(1);
   });
 });
