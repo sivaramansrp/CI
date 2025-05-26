@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+
+import { map, takeUntil } from 'rxjs';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { Subject } from 'rxjs';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -24,7 +29,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
   styleUrls: ['./paso-uno.component.scss']
 })
 
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit,OnDestroy {
 
   /**
    * @description Índice de la pestaña/paso actual.
@@ -33,6 +38,12 @@ export class PasoUnoComponent {
    * @default 1
    */
   indice: number = 1;
+
+  public esDatosRespuesta: boolean = false;
+
+  public consultaState!:ConsultaioState;
+
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @description 
@@ -57,12 +68,40 @@ export class PasoUnoComponent {
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(private readonly seccionStore: SeccionLibStore) {
+  constructor(private readonly seccionStore: SeccionLibStore, 
+    private agriculturaApiService: AgriculturaApiService,
+    private consultaQuery: ConsultaioQuery) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([true]);
+    
   }
+
+  
+  ngOnInit(): void {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+            this.consultaState = seccionState;
+        })).subscribe();
+      if(this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+  }
+  
+    guardarDatosFormulario(): void {
+      this.agriculturaApiService
+        .getDatosDeLaSolicitudData().pipe(
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe((resp) => {
+          if(resp){
+          this.esDatosRespuesta = true;
+          this.agriculturaApiService.actualizarEstadoFormulario(resp);
+          }
+        });
+    }
 
   /**
    * @description 
@@ -76,5 +115,10 @@ export class PasoUnoComponent {
    */
   seleccionaPestana(i: number): void {
     this.indice = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

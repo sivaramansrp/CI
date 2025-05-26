@@ -20,13 +20,21 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) {
+      @if(esDatosRespuesta){
       <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+      }
       } @case (3) {
+      @if(esDatosRespuesta){
       <app-datos-para-movilizacion-nacional></app-datos-para-movilizacion-nacional>
+      }
       } @case (4) {
+      @if(esDatosRespuesta){
       <lib-terceros [tabindex]="4"></lib-terceros>
+      }
       } @case (5) {
+      @if(esDatosRespuesta){
       <app-pago-de-derechos></app-pago-de-derechos>
+      }
       } }
     </ng-container>
   </div>

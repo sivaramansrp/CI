@@ -1,0 +1,42 @@
+{
+    "datos": {
+        "aduanaDeIngreso": "Aduana de Manzanillo",
+        "oficinaDeInspeccion": "Oficina Central",
+        "puntoDeInspeccion": "Punto 12",
+        "numeroDeGuia": "GUIA123456",
+        "regimen": "Importación",
+        "numeroDeCarro": "CARRO7890",
+        "tipoDeRequisito": "Sanitario",
+        "requisito": "Certificado Zoosanitario",
+        "numeroCertificadoInternacional": "CERTINTL2024",
+        "fraccionArancelaria": "0101.21.01",
+        "descripcionFraccion": "Caballos de raza pura",
+        "nico": "01",
+        "descripcionNico": "Caballos para carreras",
+        "descripcion": "Importación de caballos de carreras",
+        "cantidadUMT": "5",
+        "umt": "Cabezas",
+        "cantidadUMC": "5",
+        "umc": "Unidades",
+        "uso": "Competencia",
+        "tipoDeProducto": "Animal vivo"
+    },
+    "movilizacion": {
+        "transporte": "Terrestre",
+        "guiaIdentificacion": "IDTRANS123",
+        "empresaTransportista": "Transportes Nacionales SA",
+        "medioTransporte": "Camión"
+    },
+    "pago": {
+        "exentoPago": "No",
+        "justificacion": "abc",
+        "claveReferencia": "REFPAGO2024",
+        "cadenaDependencia": "CADENA123",
+        "banco": "Banco Nacional",
+        "llavePago": "LLAVE9876",
+        "importePago": "15000.00",
+        "fechaDePago": "2024-06-15",
+        "fechaInicioInput": "2024-06-10",
+        "fechaPago": "2024-06-15"
+    }
+}

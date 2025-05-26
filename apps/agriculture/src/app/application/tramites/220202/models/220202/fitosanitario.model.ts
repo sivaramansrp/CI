@@ -213,6 +213,13 @@ export interface FilaSolicitud {
     descripcionFraccion: string;
     nico: string;
 }
+
+export interface ConsultaioSolicitante {
+  folioDelTramite: string;
+  fechaDeInicio: string;
+  estadoDelTramite: string;
+}
+
 /**
  * @function getDefaultValue
  * @description Función auxiliar para retornar el valor por defecto de cada propiedad.

@@ -8,9 +8,9 @@ import { DatosDeFila, DatosForma, FilaSolicitud } from '../../models/220202/fito
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -158,6 +158,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   cuerpoTabla: FilaSolicitud[] = [];
   private destroyNotifier$ = new Subject<void>();
 
+  esFormularioSoloLectura: boolean = false; 
+
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
@@ -165,11 +168,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly agriculturaApiService: AgriculturaApiService
+    private readonly agriculturaApiService: AgriculturaApiService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formulariodataStore = datos.datos;
     })
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
 
   }
 
@@ -181,6 +195,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.createFromFields();
     this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
@@ -190,6 +205,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     })
     this.obtenerTodosLosDatosDeLaLista();
+
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.createFromFields();
+    }  
+  }
+
+  guardarDatosFormulario(): void {
+      this.createFromFields();
+      if (this.esFormularioSoloLectura) {
+        this.forma.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.forma.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**

@@ -95,6 +95,16 @@ export class AgriculturaApiService {
     );
   }
 
+  actualizarEstadoFormulario(DATOS: ListaDeDatosFinal): void {
+    this.fitosanitarioStore.actualizarDatosForma(DATOS.datos);
+    this.fitosanitarioStore.actualizarMovilizacion(DATOS.movilizacion);
+    this.fitosanitarioStore.actualizarPago(DATOS.pago);
+  }
+
+  getDatosDeLaSolicitudData(): Observable<ListaDeDatosFinal> {
+    return this.http.get<ListaDeDatosFinal>('assets/json/220202/datos-de-la-solicitud.json');
+  }
+
 
 
 }
