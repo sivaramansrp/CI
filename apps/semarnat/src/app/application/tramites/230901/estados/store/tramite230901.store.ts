@@ -35,19 +35,34 @@ export interface Solicitud230901State {
   entidadFederativa: string;
 
   /**
-   * Banco seleccionado para el pago de derechos.
-   */
-  bancoseleccionado: string;
+  * Clave de referencia asociada al trámite.
+    */
+  claveDeReferencia: string;
 
   /**
-   * Llave de pago proporcionada para el trámite.
+   * Cadena de pago proporcionada por la dependencia.
    */
-  llaveDePago: string;
+  cadenaPagoDependencia: string;
 
   /**
-   * Fecha de pago registrada en el trámite.
+   * Importe del pago realizado.
+   */
+  impPago: number;
+
+  /**
+   * Fecha en la que se realizó el pago.
    */
   fecPago: string;
+
+  /**
+   * Banco donde se efectuó el pago.
+   */
+  banco: string;
+
+  /**
+   * Llave única asociada al pago.
+   */
+  llaveDePago: string;
 }
 
 /**
@@ -64,9 +79,12 @@ export function createInitialState(): Solicitud230901State {
     entidadFederativa: '',
     terecerosPopupState: false,
     mercanciaTablaDatos: [],
-    bancoseleccionado: '',
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
     llaveDePago: '',
     fecPago: '',
+    banco: '',
+    impPago: 0,
   };
 }
 
@@ -89,42 +107,19 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
     super(createInitialState());
   }
 
+ 
   /**
+   * @método
+   * @nombre establecerDatos
+   * @descripción
+   * Actualiza el estado con los valores proporcionados.
    * 
-   * Actualiza el estado con el tipo de movimiento seleccionado.
-   *
-   * {string} tipoDeMovimiento - El tipo de movimiento seleccionado.
+   * @param {Partial<Tramites30401State>} datos - Valores parciales para actualizar el estado.
    */
-  public setTipoDeMovimiento(tipoDeMovimiento: string): void {
+  public establecerDatos(datos: Partial<Solicitud230901State>): void {    
     this.update((state) => ({
       ...state,
-      tipoDeMovimiento,
-    }));
-  }
-
-  /**
-   *
-   * Actualiza el estado con el tipo de régimen seleccionado.
-   *
-   * {string} tipoDeRegimen - El tipo de régimen seleccionado.
-   */
-  public setTipoDeRegimen(tipoDeRegimen: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoDeRegimen,
-    }));
-  }
-
-  /**
-   * 
-   * Actualiza el estado con la entidad federativa seleccionada.
-   *
-   * {string} entidadFederativa - La entidad federativa seleccionada.
-   */
-  public setEntidadFederativa(entidadFederativa: string): void {
-    this.update((state) => ({
-      ...state,
-      entidadFederativa,
+      ...datos,
     }));
   }
 
@@ -140,33 +135,7 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
       ...state,
       tercerosPopupState,
     }));
-  }
-  
-  /**
-   * 
-   * Actualiza el estado con el banco seleccionado.
-   *
-   * {string} bancoseleccionado - El banco seleccionado.
-   */
-  public setbancoseleccionado(bancoseleccionado: string): void {
-    this.update((state) => ({
-      ...state,
-      bancoseleccionado,
-    }));
-  }
-
-  /**
-   * 
-   * Actualiza el estado con la llave de pago proporcionada.
-   *
-   * {string} llaveDePago - La llave de pago.
-   */
-  public setLlaveDePago(llaveDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      llaveDePago,
-    }));
-  }
+  } 
 
   /**
    * 
@@ -181,7 +150,6 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
     }));
   }
 
-
   /**
    * 
    * Actualiza el estado con los datos de la tabla de mercancía proporcionados.
@@ -193,5 +161,5 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
       ...state,
       mercanciaTablaDatos,
     }));
-  }
+  } 
 }
