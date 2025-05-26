@@ -26,17 +26,17 @@ describe('TransporteService', () => {
   });
 
   it('should fetch medio de transporte from JSON file', () => {
-    const mockMedioDeTransporte = [
+    const MOCK_MEDIO_DE_TRANSPORTE = [
       { id: '1', nombre: 'Aéreo' },
       { id: '2', nombre: 'Marítimo' }
     ];
 
     service.getMedioDeTransporte().subscribe((medioDeTransporte) => {
-      expect(medioDeTransporte).toEqual(mockMedioDeTransporte);
+      expect(medioDeTransporte).toEqual(MOCK_MEDIO_DE_TRANSPORTE);
     });
 
-    const req = httpMock.expectOne('assets/json/110209/transporte.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockMedioDeTransporte);
+    const REQ = httpMock.expectOne('assets/json/110209/transporte.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_MEDIO_DE_TRANSPORTE);
   });
 });

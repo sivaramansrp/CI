@@ -1,10 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { APPINJECT } from './app.inject';
 import { APP_ROUTES } from './app.routes';
+import { ENVIRONMENT } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { ENVIRONMENT } from './environments/environment';
-
-import { APPINJECT } from './app.inject';
 
 /**
  * Esta es la configuración principal de la aplicación Agace.

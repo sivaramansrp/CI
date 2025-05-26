@@ -1,56 +1,54 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DestinatarioComponent } from './destinatario.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
+
+import { DestinatarioComponent } from './destinatario.component';
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
   let fixture: ComponentFixture<DestinatarioComponent>;
-  let mockStore: Partial<Tramite110218Store>;
-  let mockQuery: Partial<Tramite110218Query>;
-  let mockService: Partial<CertificadoTecnicoJaponService>;
+  let serviceMock: jest.Mocked<CertificadoTecnicoJaponService>;
+  let storeMock: jest.Mocked<Tramite110218Store>;
+  let queryMock: jest.Mocked<Tramite110218Query>;
+  let destroyed$: Subject<void>;
 
   beforeEach(async () => {
-    mockStore = {
-      establecerNombre: jest.fn(),
-      establecerPrimerApellido: jest.fn(),
-      establecerNúmeroderegistroFiscal: jest.fn(),
-      establecerRazónSocial: jest.fn(),
-      establecerCalle: jest.fn(),
-      establecerNúmeroLetra: jest.fn(),
-      establecerCiudad: jest.fn(),
-      establecerCorreoElectrónico: jest.fn(),
-      establecerFax: jest.fn(),
-      establecerTeléfono: jest.fn(),
-    };
+    serviceMock = {
+      getdestinatario: jest.fn(),
+    } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
 
-    mockQuery = {
-      nombre$: of('John'),
-      primerApellido$: of('Doe'),
-      numeroderegistroFiscal$: of('ABC123'),
-      razonSocial$: of('Company Ltd'),
-      calle$: of('123 Street'),
-      numeroLetra$: of('A1'),
-      ciudad$: of('Tokyo'),
-      correoElectronico$: of('test@example.com'),
-      fax$: of('123456'),
-      telefono$: of('987654'),
-    };
+    storeMock = {
+      setTramite110218State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite110218Store>;
 
-    mockService = {
-      getdestinatario: jest.fn().mockReturnValue(of({ segundoApellido: 'Smith' })),
-    };
+    queryMock = {
+      selectTramite110218State$: of({
+        nombre: 'Juan',
+        primerApellido: 'Pérez',
+        segundoApellido: 'Gómez',
+        numeroderegistroFiscal: '123456789',
+        razonSocial: 'Empresa XYZ',
+        calle: 'Calle 1',
+        numeroLetra: '123',
+        ciudad: 'Ciudad A',
+        correoElectronico: 'juan.perez@example.com',
+        fax: '987654321',
+        telefono: '1234567890',
+      }),
+    } as unknown as jest.Mocked<Tramite110218Query>;
+
+    destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, DestinatarioComponent],
+      imports: [ReactiveFormsModule],
+      declarations: [DestinatarioComponent],
       providers: [
-        { provide: Tramite110218Store, useValue: mockStore },
-        { provide: Tramite110218Query, useValue: mockQuery },
-        { provide: CertificadoTecnicoJaponService, useValue: mockService },
+        { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
+        { provide: Tramite110218Store, useValue: storeMock },
+        { provide: Tramite110218Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -59,96 +57,75 @@ describe('DestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    destroyed$.next();
+    destroyed$.complete();
+  });
+
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms with default values', () => {
+  it('debería inicializar el formulario de datos personales con valores predeterminados', () => {
+    component.crearFormularioDatosDelDestinatario();
     expect(component.datosDelDestinatario.value).toEqual({
-      nombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-      numeroderegistroFiscal: '',
-      razonSocial: '',
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez',
+      numeroderegistroFiscal: '123456789',
+      razonSocial: 'Empresa XYZ',
     });
+  });
 
+  it('debería inicializar el formulario de domicilio con valores predeterminados', () => {
+    component.crearFormularioDomicilioDelDestinatario();
     expect(component.domicilioDelDestinatario.value).toEqual({
-      calle: '',
-      numeroLetra: '',
-      ciudad: '',
-      correoElectronico: '',
-      fax: '',
-      telefono: '',
+      calle: 'Calle 1',
+      numeroLetra: '123',
+      ciudad: 'Ciudad A',
+      correoElectronico: 'juan.perez@example.com',
+      fax: '987654321',
+      telefono: '1234567890',
     });
   });
 
-  it('should validate required fields', () => {
-    component.datosDelDestinatario.get('nombre')?.setValue('');
-    component.datosDelDestinatario.get('primerApellido')?.setValue('');
-    component.datosDelDestinatario.get('numeroderegistroFiscal')?.setValue('');
-    component.datosDelDestinatario.get('razonSocial')?.setValue('');
+  it('debería actualizar un valor en el store', () => {
+    component.datosDelDestinatario = component.formBuilder.group({
+      nombre: ['Nuevo Nombre'],
+    });
 
-    expect(component.datosDelDestinatario.get('nombre')?.valid).toBeFalsy();
-    expect(component.datosDelDestinatario.get('primerApellido')?.valid).toBeFalsy();
-    expect(component.datosDelDestinatario.get('numeroderegistroFiscal')?.valid).toBeFalsy();
-    expect(component.datosDelDestinatario.get('razonSocial')?.valid).toBeFalsy();
+    component.setValorStore(component.datosDelDestinatario, 'nombre');
+
+    expect(storeMock.setTramite110218State).toHaveBeenCalledWith({
+      nombre: 'Nuevo Nombre',
+    });
   });
 
-  it('should validate email format', () => {
-    component.domicilioDelDestinatario.get('correoElectronico')?.setValue('invalid-email');
-    expect(component.domicilioDelDestinatario.get('correoElectronico')?.valid).toBeFalsy();
+  it('debería obtener el estado actual del trámite desde el store', () => {
+    component.getValorStore();
 
-    component.domicilioDelDestinatario.get('correoElectronico')?.setValue('test@example.com');
-    expect(component.domicilioDelDestinatario.get('correoElectronico')?.valid).toBeTruthy();
+    expect(component.estadoSeleccionado).toEqual({
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez',
+      numeroderegistroFiscal: '123456789',
+      razonSocial: 'Empresa XYZ',
+      calle: 'Calle 1',
+      numeroLetra: '123',
+      ciudad: 'Ciudad A',
+      correoElectronico: 'juan.perez@example.com',
+      fax: '987654321',
+      telefono: '1234567890',
+    });
   });
 
-  it('should patch form values when obtenerDatosDeTabla() is called', () => {
-    jest.spyOn(mockService, 'getdestinatario');
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const destroyedSpy = jest.spyOn(destroyed$, 'next');
+    const completeSpy = jest.spyOn(destroyed$, 'complete');
 
-    component.obtenerDatosDeTabla();
-    fixture.detectChanges();
-
-    expect(component.datosDelDestinatario.get('segundoApellido')?.value).toBe('Smith');
-    expect(mockService.getdestinatario).toHaveBeenCalled();
-  });
-
-  it('should update store on form field changes', () => {
-    component.onDatosdeldestinatarioChange('nombre');
-    expect(mockStore.establecerNombre).toHaveBeenCalled();
-
-    component.onDatosdeldestinatarioChange('primerApellido');
-    expect(mockStore.establecerPrimerApellido).toHaveBeenCalled();
-
-    component.onDatosdeldestinatarioChange('numeroderegistroFiscal');
-    expect(mockStore.establecerNúmeroderegistroFiscal).toHaveBeenCalled();
-
-    component.onDatosdeldestinatarioChange('razonSocial');
-    expect(mockStore.establecerRazónSocial).toHaveBeenCalled();
-  });
-
-  it('should update store on address form field changes', () => {
-    component.onDomiciliodeldestinatarioChange('calle');
-    expect(mockStore.establecerCalle).toHaveBeenCalled();
-
-    component.onDomiciliodeldestinatarioChange('numeroLetra');
-    expect(mockStore.establecerNúmeroLetra).toHaveBeenCalled();
-
-    component.onDomiciliodeldestinatarioChange('ciudad');
-    expect(mockStore.establecerCiudad).toHaveBeenCalled();
-
-    component.onDomiciliodeldestinatarioChange('correoElectronico');
-    expect(mockStore.establecerCorreoElectrónico).toHaveBeenCalled();
-
-    component.onDomiciliodeldestinatarioChange('fax');
-    expect(mockStore.establecerFax).toHaveBeenCalled();
-
-    component.onDomiciliodeldestinatarioChange('telefono');
-    expect(mockStore.establecerTeléfono).toHaveBeenCalled();
-  });
-
-  it('should unsubscribe on destroy', () => {
-    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -10,7 +10,7 @@
             <label class="form-label" for="cantidadPartidasDeLaMercancia">Cantidad*:</label>
             <input class="form-control" type="text" id="cantidad" formControlName="cantidadPartidasDeLaMercancia"
               appUppercase aria-labelledby="cantidad"
-              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia', 'setCantidadPartidasDeLaMercancia')" />
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
             <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
@@ -29,7 +29,7 @@
             <label class="form-label" for="fraccionTigiePartidasDeLaMercancia">Fracción arancelaria TIGIE*:</label>
             <input class="form-control" type="text" id="fraccionTigie"
               formControlName="fraccionTigiePartidasDeLaMercancia" appUppercase aria-labelledby="fraccionTigie"
-              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia', 'setFraccionTigiePartidasDeLaMercancia')" />
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia')" />
             <div *ngIf="esInvalido('fraccionTigiePartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('required')">Fracción
@@ -47,7 +47,7 @@
           <div class="form-group">
             <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
               formControlName="fraccionDescripcionPartidasDeLaMercancia"
-              (valueChange)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia','setFraccionDescripcionPartidasDeLaMercancia' )"></app-catalogo-select>
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia')"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
             <label class="form-label" for="descripcion">Descripción*:</label>
             <textarea class="form-control height" rows="3" id="descripcion"
               formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"
-              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia', 'setDescripcionPartidasDeLaMercancia')"></textarea>
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia')"></textarea>
             <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
@@ -73,7 +73,7 @@
             <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
             <input class="form-control" type="number" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
-                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia', 'setValorPartidaUSDPartidasDeLaMercancia')
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
               " />
             <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
               <small
@@ -243,7 +243,7 @@
                           <label class="form-label" for="fraccionTigiePartidasDeLaMercancia">Fracción arancelaria TIGIE*:</label>
                           <input class="form-control" type="text" id="fraccionTigie"
                             formControlName="fraccionTigiePartidasDeLaMercancia" appUppercase aria-labelledby="fraccionTigie"
-                            (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia', 'setFraccionTigiePartidasDeLaMercancia')" />
+                            (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia')" />
                           <div *ngIf="esInvalido('fraccionTigiePartidasDeLaMercancia')" class="text-danger">
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['fraccionTigiePartidasDeLaMercancia'].hasError('required')">Fracción
@@ -261,7 +261,7 @@
                         <div class="form-group">
                           <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
                             formControlName="fraccionDescripcionPartidasDeLaMercancia"
-                            (valueChange)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia','setFraccionDescripcionPartidasDeLaMercancia' )"></app-catalogo-select>
+                            (valueChange)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia')"></app-catalogo-select>
                         </div>
                       </div>
                     </div>

@@ -395,16 +395,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion',
     loadChildren: () =>
-      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
-        (m) => m.ImportacionNeumaticosComercializarModule
-      ),
+      import(
+        './tramites/130110/importacion-neumaticos-comercializar.module'
+      ).then((m) => m.ImportacionNeumaticosComercializarModule),
   },
   {
     path: 'importacion',
     loadChildren: () =>
-      import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
-        (m) => m.ImportacionEquipoAnticontaminanteModule
-      ),
+      import(
+        './tramites/130113/importacion-equipo-anticontaminante.module'
+      ).then((m) => m.ImportacionEquipoAnticontaminanteModule),
   },
   {
     path: 'importacion-de',
@@ -430,9 +430,9 @@ const ROUTES: Routes = [
   {
     path: 'importacion-otros-vehiculos-usados',
     loadChildren: () =>
-      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
-        (m) => m.ImportacionOtrosVehiculosUsadosModule
-      )
+      import(
+        './tramites/130104/importacion-otros-vehiculos-usados.module'
+      ).then((m) => m.ImportacionOtrosVehiculosUsadosModule),
   },
   {
     path: 'modalidad-ampliacion',
@@ -441,11 +441,17 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  {path: 'reportes',
-    loadChildren:() =>
-      import('./tramites/110207/reportes.module').then(
-        (m) => m.ReportesModule
-      )
+  {
+    path: 'reportes',
+    loadChildren: () =>
+      import('./tramites/110207/reportes.module').then((m) => m.ReportesModule),
+  },
+  {
+    path: 'expedicion-certificados-frontera',
+    loadChildren: () =>
+      import('./tramites/120702/expedicion-certificados-frontera.module').then(
+        (m) => m.ExpedicionCertificadosFronteraModule
+      ),
   },
   {
     path: 'catalogos',
@@ -454,33 +460,40 @@ const ROUTES: Routes = [
         (m) => m.CatalogosModule
       ),
   },
-{  
+  {
     path: 'expedicion-certificados-asignacion-directa',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
       ),
-  },  
+  },
+  {
+    path: 'autorizacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90102/autorizacion-prosec-productor.module').then(
+        (m) => m.AutorizacionProsecProductorModule
+      ),
+  },
   {
     path: 'immex-modificacion',
     loadChildren: () =>
       import('./tramites/80306/immexModification.module').then(
         (m) => m.ImmexModificationModule
-      ),  
-   },
-   {
+      ),
+  },
+  {
     path: 'registro-solicitud-immex',
     loadChildren: () =>
       import('./tramites/80210/registro-solicitud-immex.module').then(
         (m) => m.registroSolicitudImmexModule
       ),
-   },
+  },
   {
-    path:'registro-expansion',
+    path: 'registro-expansion',
     loadChildren: () =>
       import('./tramites/80211/registro-expansion.module').then(
         (m) => m.RegistroExpansionModule
-      ),    
+      ),
   },
   {
     path: 'validar-inicialmente-certificado',
@@ -490,7 +503,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-modificacion', 
+    path: 'registro-modificacion',
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
         (m) => m.RegistroModificacionModule
@@ -515,23 +528,26 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110212/validacion-posteriori.module').then(
         (m) => m.ValidacionPosterioriModuleModule
-      )
+      ),
   },
   {
     path: 'modificaciones-immex-prosec',
     loadChildren: () =>
-      import('./tramites/90304/prosec.module').then(
-        (m) => m.ProsecModule
+      import('./tramites/90304/prosec.module').then((m) => m.ProsecModule),
+  },
+  {
+    path: 'ampliacion-prosec-productor',
+    loadChildren: () =>
+      import('./tramites/90202/ampliacion-prosec-productor.module').then(
+        (m) => m.AmpliacionProsecProductorModule
       ),
   },
   {
     path: 'cupos',
     loadChildren: () =>
-      import('./tramites/120403/cupos.module').then(
-        (m) => m.CuposModule
-      ),
+      import('./tramites/120403/cupos.module').then((m) => m.CuposModule),
   },
-{
+  {
     path: 'informe-anual-programa',
     loadChildren: () =>
       import('./tramites/150103/informe-anual-programa.module').then(
@@ -539,7 +555,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-
     path: 'registro-como-expresa',
     loadChildren: () =>
       import('./tramites/120603/registro-como-empresa.module').then(
@@ -554,11 +569,11 @@ const ROUTES: Routes = [
       ).then((m) => m.ModificacionProgramaImmexBajaSubmanufactureraModule),
   },
   {
-        path: 'programa-prosec',
-        loadChildren: () =>
-          import('./tramites/90302/programa-prosec.module').then(
-            (m) => m.ProgramaProsecModule
-          ),
+    path: 'programa-prosec',
+    loadChildren: () =>
+      import('./tramites/90302/programa-prosec.module').then(
+        (m) => m.ProgramaProsecModule
+      ),
   },
 
   {
@@ -574,6 +589,98 @@ const ROUTES: Routes = [
       import(
         './tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module'
       ).then((m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule),
+  },
+  {
+    path: 'immex-modificacion-cambio-de-sector',
+    loadChildren: () =>
+      import(
+        './tramites/80314/immex-modificacion-cambio-de-sector.module'
+      ).then((m) => m.ImmexModificacionCambioDeSectorModule),
+  },
+  {
+    path: 'validar-certificado-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
+
+  {
+    path: 'solicitud-de-registro-tpl',
+    loadChildren: () =>
+      import('./tramites/120101/solicitud-de-registro-tpl.module').then(
+        (m) => m.SolicitudDeRegistroTplModule
+      ),
+  },
+  {
+    path: 'registro-solicitudModule',
+    loadChildren: () =>
+      import('./tramites/140102/registro-de-solicitud.module').then(
+        (m) => m.RegistroDeSolicitudModule
+      ),
+  },
+  {
+    path: 'modalidad-terciarización',
+    loadChildren: () =>
+      import('./tramites/80105/modalidad-terciarización.module').then(
+        (m) => m.ModalidadTerciarizaciónModule
+      ),
+  },
+  {
+    path: 'importaciones-agropecuarias',
+    loadChildren: () =>
+      import(
+        './tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module'
+      ).then((m) => m.ImportacionesAgropecuariasModule),
+  },
+  {
+    path: 'modificaciones-immex-prosec',
+    loadChildren: () =>
+      import('./tramites/80316/modificaciones-immex-prosec.module').then(
+        (m) => m.ModificacionesImmexProsecModule
+      ),
+  },
+  {
+    path: 'cancelaciones-certificado',
+    loadChildren: () =>
+      import('./tramites/140205/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
+  {
+    path: 'registro-solicitud-immex-modalidad',
+    loadChildren: () =>
+      import('./tramites/80103/modalidad-albergue.module').then(
+        (m) => m.ModalidadAlbergueModule
+      ),
   },
 
 ];

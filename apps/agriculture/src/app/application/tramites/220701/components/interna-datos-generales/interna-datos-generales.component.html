@@ -96,7 +96,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                              <label class="form-label" for="numeroGuia">Número de guia</label>
+                              <label class="form-label" for="numeroGuia">Número de guia:</label>
                               <input
                                 class="form-control"
                                 id="numeroGuia"
@@ -120,27 +120,27 @@
                     <div class="row">
                       <ng-titulo titulo="Tipo de Mercancía" />
                       <div class="col-md-12">
-                        <label for="capturaMercancia">Captura de datos de mercancía*:</label>
+                        <label for="capturaMercancia">Captura de datos de mercancía * :</label>
                       </div>
                       <div class="col-md-12">
                         <input
                           class="form-check-input me-3"
                           type="radio"
-                          name="capturaMercancia"
-                          formControlName="capturaMercancia"
+                          name="tipoMercancia"
+                          formControlName="tipoMercancia"
                           [required]="true"
-                          value="a"
+                          value="animales"
                           id="certficacion_a"
                         />
-                        <label class="form-label" for="animalesVivos">Animales Vivos:</label>
+                        <label class="form-label" for="animalesVivos">Animales Vivos</label>
                       </div>
                       <div class="col-md-12">
                         <input
                           class="form-check-input me-3"
                           type="radio"
-                          name="animalesVivos"
-                          formControlName="animalesVivos"
-                          value="aa"
+                          name="tipoMercancia"
+                          formControlName="tipoMercancia"
+                          value="subproductos"
                           id="certficacion_aa"
                         />
                         <label class="form-label" for="animalesVivos"
@@ -184,7 +184,7 @@
                                 [catalogo]="movilizacionNacional.catalogos"
                                 [label]="movilizacionNacional.labelNombre"
                                 [placeholder]="movilizacionNacional.primerOpcion"
-                                [isDisabled]="false"
+                                [isDisabled]="true"
                                 formControlName="movilizacionNacional"
                               ></app-catalogo-select>
                             </div>
@@ -197,7 +197,7 @@
                                 id="identificacionTransporte"
                                 readonly
                                 placeholder=""
-                                type="text"
+                                type="text" value="1aasdsdsdsas23@#"
                                 formControlName="identTransporte"
                               />
                             </div>
@@ -206,7 +206,7 @@
                                 [catalogo]="puntoVerificacion.catalogos"
                                 [label]="puntoVerificacion.labelNombre"
                                 [placeholder]="puntoVerificacion.primerOpcion"
-                                [isDisabled]="false"
+                                [isDisabled]="true"
                                 formControlName="puntoVerificacion"
                               ></app-catalogo-select>
                             </div>

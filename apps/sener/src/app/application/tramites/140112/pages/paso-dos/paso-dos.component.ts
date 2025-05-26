@@ -1,7 +1,6 @@
-import { AlertComponent } from "libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { AnexarDocumentosComponent } from "libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
+import { AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent} from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({

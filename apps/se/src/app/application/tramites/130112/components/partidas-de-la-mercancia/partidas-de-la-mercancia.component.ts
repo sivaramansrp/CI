@@ -10,11 +10,11 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { UppercaseDirective } from '@ng-mf/data-access-user';
 
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
-import { TableComponent } from '@ng-mf/data-access-user';
-import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { TableComponent } from '@ng-mf/data-access-user';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -106,7 +106,7 @@ export class PartidasDeLaMercanciaComponent {
    * Nombre del campo que se está actualizando.
    * Nombre del método que realiza la actualización.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; }>();
 
   /**
    * Tipo de selección de la tabla dinámica (checkbox).
@@ -156,7 +156,7 @@ export class PartidasDeLaMercanciaComponent {
   /**
    * Emite un evento para almacenar valores en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo});
   }
 }
