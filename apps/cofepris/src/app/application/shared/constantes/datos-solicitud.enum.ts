@@ -334,6 +334,14 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+/**
+ * @const CROSLISTA_DE_FORMAS_FARMACEUTICAS
+ * @description Lista de países representados como cadenas de texto.
+ * Esta constante contiene nombres de países con sus respectivas denominaciones oficiales.
+ *
+ * @type {string[]}
+ */
+
 export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
   'AEROSOL',
   'CAPSULAS',
@@ -695,8 +703,14 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201];
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103];
 
+/**
+ * Enumera los tipos de actualización que se pueden realizar.
+ * 
+ * - `AGREGAR`: Representa la acción de agregar un nuevo elemento.
+ * - `ELIMINAR`: Representa la acción de eliminar un elemento existente.
+ */
 export enum TIPO_ACTUALIZACION {
   AGREGAR = 'Agregar',
   ELIMINAR ='Eliminar',

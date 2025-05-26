@@ -7,6 +7,7 @@ import {
   TablaScianConfig,
   TablaSeleccion,
 } from '../../../../shared/models/datos-solicitud.model';
+import { ELEMENTOS_REQUERIDOS, ID_PROCEDIMIENTO } from '../../constants/psicotropicos-poretorno.enum';
 import {
   OPCION_TABLA,
   PRODUCTO_TABLA,
@@ -19,7 +20,6 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { ID_PROCEDIMIENTO } from '../../constants/psicotropicos-poretorno.enum';
 import { Subject } from 'rxjs';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 
@@ -132,6 +132,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Identificador del procedimiento.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * @constructor

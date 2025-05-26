@@ -1,6 +1,7 @@
 import {
   CatalogoSelectComponent,
   InputRadioComponent,
+  REG_X,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -84,6 +85,17 @@ export class DatosDeLaMercanciaComponent {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+/**
+ * Checks if the value of the specified control is a valid integer or decimal number.
+ * Uses REG_X.NUMERO_DECIMAL_OPCIONAL for validation.
+ * @param controlName The name of the control to validate.
+ * @returns {boolean} True if the value is a valid number, false otherwise.
+ */
+esValorNumerico(controlName: string): boolean {
+  const VALUE = this.form?.controls[controlName]?.value;
+  return typeof VALUE === 'string' && REG_X.NUMERO_DECIMAL_OPCIONAL.test(VALUE);
+}
 
   /**
    * @method setValoresStore

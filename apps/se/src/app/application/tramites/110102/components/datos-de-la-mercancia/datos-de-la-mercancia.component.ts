@@ -67,14 +67,13 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store.
-   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
-   * @param {string} campo - El nombre del campo del formulario.
-   * @param {keyof Tramite110102Store} metodoNombre - El nombre del método del store.
+   * Establece los valores en el store a partir de un campo específico del formulario.
+   * @param {FormGroup} form - El formulario reactivo del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se establecerá en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite110102Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

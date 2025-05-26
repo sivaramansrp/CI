@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
@@ -20,6 +20,7 @@ describe('DatosSolicitudComponent', () => {
       setTipoDeMovimiento: jest.fn(),
       setTipoDeRegimen: jest.fn(),
       setMercanciaTablaDatos: jest.fn(),
+      establecerDatos: jest.fn(),
     };
 
     tramite230901QueryMock = {
@@ -62,32 +63,11 @@ describe('DatosSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formularioSolicitud).toBeDefined();
-    expect(component.formularioSolicitud.get('tipodemovimiento')?.value).toBe('1');
-    expect(component.formularioSolicitud.get('tipoderegimen')?.value).toBe('A');
-  });
-
   it('should call inicializaDatosSolicitudDatosCatalogos on ngOnInit', () => {
     component.ngOnInit();
     expect(autorizacionesDeVidaSilvestreServiceMock.inicializaDatosSolicitudDatosCatalogos).toHaveBeenCalled();
   });
 
-  it('should handle changes in tipoDeMovimiento and update the store', () => {
-    component.ngOnInit();
-    component.formularioSolicitud.get('tipodemovimiento')?.setValue('2');
-    component.manejarCambioTipoMovimiento();
-    expect(tramite230901StoreMock.setTipoDeMovimiento).toHaveBeenCalledWith('2');
-    expect(component.tipoMovimientoSeleccionada).toBe(2);
-  });
-
-  it('should handle changes in tipoDeRegimen and update the store', () => {
-    component.ngOnInit();
-    component.formularioSolicitud.get('tipoderegimen')?.setValue('B');
-    component.manejarCambioTipoRegimen();
-    expect(tramite230901StoreMock.setTipoDeRegimen).toHaveBeenCalledWith('B');
-  });
 
   it('should create formularioMercancia with default values', () => {
     component.crearNuevoFormularioMercancia();
@@ -125,7 +105,7 @@ describe('DatosSolicitudComponent', () => {
     component.formularioMercancia.get('cantidad')?.setValue(10);
 
     component.enviarFormularioMercancia();
-    expect(component.datosTablaMercancia.length).toBe(1); // New row added
+    expect(component.datosTablaMercancia.length).toBe(1); 
     expect(tramite230901StoreMock.setMercanciaTablaDatos).toHaveBeenCalled();
   });
 

@@ -97,9 +97,9 @@ export const SECCIONES_TRAMITE_230401 = {
  * @type {string[]}
  */
 export const DISPONSIBLE_ADUANA_CHECKBOXES = [
-  { id: 'regionFronteriza', name: 'Región fronteriza', checked: false, disabled: true },
-  { id: 'franjaFronteriza', name: 'Franja fronteriza', checked: false, disabled: true },
-  { id: 'todoTerritorio', name: 'Todo el territorio', checked: false, disabled: false }
+  { id: 'regionFronteriza', name: 'Región fronteriza', checked: false, disabled: true, hide: true },
+  { id: 'franjaFronteriza', name: 'Franja fronteriza', checked: false, disabled: true, hide: true },
+  { id: 'todoTerritorio', name: 'Todo el territorio', checked: false, disabled: false, hide: false }
 ];
 
 /**

@@ -1,7 +1,7 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
 
 /**
  * Servicio AutorizacionDeRayosXService
