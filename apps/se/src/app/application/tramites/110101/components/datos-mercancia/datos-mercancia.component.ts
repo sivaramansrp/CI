@@ -72,6 +72,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * apiDatosDeRespuesta se utiliza para obtener datos del nombre de archivo JSON ficticio como mercancia.json
    */
   public apiDatosDeRespuesta = mercancia;
+  /**
+   * Representa el estado actual de la solicitud para el trámite 110101.
+   * Esta propiedad contiene toda la información relevante sobre la solicitud del solicitante,
+   * encapsulada en la interfaz `Solicitante110101State`.
+   */
   public solicitudeState!: Solicitante110101State;
 
   /**
@@ -143,6 +148,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     }
 }
 
+  /**
+   * Inicializa el formulario reactivo `formMercancia` con los valores predeterminados de `solicitudeState`.
+   * Configura los controles del formulario para nombre comercial, nombre en inglés, fracción arancelaria, descripción y valor de transacción,
+   * aplicando los validadores apropiados como campos requeridos, longitud máxima y coincidencia de patrones.
+   * El campo descripción se inicializa como deshabilitado.
+   */
   public inicializarFormulario(): void {
     this.formMercancia = this.fb.group({
       nombreComercial: [this.solicitudeState.nombreComercial, Validators.required],

@@ -76,6 +76,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     */
 
   TEXTOS = PROTESTA;
+  /**
+   * Representa el estado actual del solicitante para el trámite 110101.
+   * Esta propiedad contiene toda la información relevante y el estado del solicitante.
+   */
   public solicitudeState!: Solicitante110101State;
   /**
    * constructor de la clase
@@ -125,6 +129,12 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo del componente con los valores por defecto
+   * del estado actual `solicitudeState`. El formulario contiene los controles
+   * 'entidad' y 'representacion', ambos marcados como requeridos.
+   * Este método debe llamarse para configurar el formulario antes de la interacción del usuario.
+   */
   public inicializarFormulario(): void {
     this.formulario = this.fb.group({
       entidad: [this.solicitudeState.entidad, Validators.required],

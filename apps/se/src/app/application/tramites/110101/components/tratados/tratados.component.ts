@@ -56,9 +56,25 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+    /**
+     * Representa el estado actual del solicitante (Solicitante) para el trámite 110101.
+     * Esta propiedad contiene toda la información relevante sobre los datos y el estado
+     * del solicitante dentro del contexto del trámite.
+     */
   public solicitudeState!: Solicitante110101State;
 
 
+    /**
+     * Inicializa el TratadosComponent.
+     * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
+     * @param tramite110101Store - Servicio store para gestionar el estado del Trámite 110101.
+     * @param solicitanteQuery - Servicio query para acceder al estado del solicitante.
+     * @param consultaioQuery - Servicio query para acceder al estado de consultaio.
+     * 
+     * Se suscribe al observable `selectConsultaioState$` para actualizar la propiedad `esFormularioSoloLectura`
+     * e inicializar el formulario de tratados cada vez que cambia el estado de consultaio. La suscripción se
+     * cancela automáticamente cuando el componente es destruido.
+     */
   constructor(private fb: FormBuilder,
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
@@ -106,6 +122,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
     }
   }
 
+    /**
+     * Inicializa el formulario `formularioTratados` con valores predeterminados de `solicitudeState`.
+     * El formulario incluye los siguientes controles requeridos: `pais`, `tratado` y `origen`.
+     * Cada control se prellena con el valor correspondiente de `solicitudeState`.
+     * @remarks
+     * Este método debe llamarse para configurar el formulario antes de la interacción del usuario.
+     */
   public inicializarFormulario(): void {
     this.formularioTratados = this.fb.group({
       pais: [this.solicitudeState.pais, Validators.required],
