@@ -59,17 +59,17 @@ describe('ExporticonMercanciaEstupefacientesComponent', () => {
       formaFarmaceutica: '',
       estadoFisico: '',
       fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUMT: '',
-      cantidadUMC: '',
+      cantidadUMT: null,
+      cantidadUMC: null,
       numeroCAS: '',
       cantidadDeLotes: '',
       paisDeDestino: '101',
       presentacion: '',
       usoEspecifico: '',
       paisDeProcedencia: '',
-      unidadMedidaComercializacion: '',
-      unidadMedidaTarifa: '',
+      unidadMedidaComercializacion: null,
+      especifique: null,
+      especifiqueObligatorio: null,
     });
   });
 

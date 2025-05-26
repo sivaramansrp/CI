@@ -483,7 +483,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.medioDeTransporte = {
-            labelNombre: 'Medio de transporte*',
+            labelNombre: 'Medio de transporte',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

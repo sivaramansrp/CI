@@ -2,20 +2,28 @@ import {
   DatosSolicitudFormState,
   MercanciaFormEstupefacientes,
 } from '../../../shared/models/datos-solicitud.model';
-import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
+import {
+  Destinatario,
+  Fabricante,
+  Facturador,
+  Proveedor,
+} from '../../../shared/models/terceros-relacionados.model';
+import {
+  TABLA_OPCION_DATA,
+  TIPO_ACTUALIZACION,
+} from '../../../shared/constantes/datos-solicitud.enum';
 import { Injectable } from '@angular/core';
 import { Otros } from '../models/exporticon-estupefacientes.model';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
 /**
  * Estado que representa los datos de un trámite 260302, incluyendo tablas de datos, formularios y configuraciones.
- * 
+ *
  * @interface Tramite260302State
  * @property {Destinatario[]} certificadoTablaDatos - Datos de destinatarios para la tabla de certificados.
  * @property {Facturador[]} destinatarioTableDatos - Datos de facturadores para la tabla de facturadores.
@@ -49,6 +57,8 @@ export interface Tramite260302State {
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
   tabSeleccionado?: number;
+  seleccionadoDestinatarioDatos?: Destinatario[];
+  seleccionadoOtrosDatos?: Otros[];
 }
 
 /**
@@ -60,7 +70,7 @@ export interface Tramite260302State {
  */
 export function createInitialState(): Tramite260302State {
   return {
-    otrosTablaDatos:[],
+    otrosTablaDatos: [],
     destinatarioTableDatos: [],
     datosSolicitudFormState: {
       rfcSanitario: '',
@@ -104,15 +114,15 @@ export function createInitialState(): Tramite260302State {
       numeroCAS: '',
       cantidadDeLotes: '',
       kgPorLote: '',
-      paisDeDestino:'',
+      paisDeDestino: '',
       paisDeProcedencia: '',
-      detallarUsoEspecifico:'',
-      numeroDePiezasAFabricar:'',
-      descripcionNumeroDePiezas:'',
+      detallarUsoEspecifico: '',
+      numeroDePiezasAFabricar: '',
+      descripcionNumeroDePiezas: '',
       presentacion: '',
       numeroRegistroSanitario: '',
       usoEspecifico: '',
-      paisOrigen:''
+      paisOrigen: '',
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [],
@@ -121,6 +131,8 @@ export function createInitialState(): Tramite260302State {
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
     opcionesColapsableState: false,
+    seleccionadoDestinatarioDatos: [],
+    seleccionadoOtrosDatos: [],
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
@@ -169,11 +181,23 @@ export class Tramite260302Store extends Store<Tramite260302State> {
    * @description Agrega nuevos fabricantes a la lista existente.
    * @param {Destinatario[]} newFabricantes - Lista de nuevos fabricantes.
    */
-  public updateDestinatarioTablaDatos(newDestinatario: Destinatario[]): void {
-    this.update((state) => ({
-      ...state,
-      destinatarioTableDatos: [...state.destinatarioTableDatos, ...newDestinatario],
-    }));
+
+  public updateDestinatarioTablaDatos(
+    newDestinatarios: Destinatario[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        destinatarioTableDatos: Tramite260302Store.actualizarLista(
+          state.destinatarioTableDatos,
+          newDestinatarios,
+          'nombreRazonSocial',
+          tipoActualizacion
+        ),
+        seleccionadoDestinatarioDatos: [],
+      };
+    });
   }
 
   /**
@@ -181,11 +205,29 @@ export class Tramite260302Store extends Store<Tramite260302State> {
    * @description Agrega nuevos facturadores a la lista existente.
    * @param {Otros[]} otrosTablaDatos - Lista de nuevos Otros.
    */
-  public updateOtrosTablaDatos(otrosTablaDatos: Otros[]): void {
-    this.update((state) => ({
-      ...state,
-      otrosTablaDatos: [...state.otrosTablaDatos, ...otrosTablaDatos],
-    }));
+  // public updateOtrosTablaDatos(otrosTablaDatos: Otros[]): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     otrosTablaDatos: [...state.otrosTablaDatos, ...otrosTablaDatos],
+  //   }));
+  // }
+
+  public updateOtrosTablaDatos(
+    newOtros: Otros[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        otrosTablaDatos: Tramite260302Store.actualizarLista(
+          state.otrosTablaDatos,
+          newOtros,
+          'rfc',
+          tipoActualizacion
+        ),
+        seleccionadoOtrosDatos: [],
+      };
+    });
   }
 
   /**
@@ -224,7 +266,8 @@ export class Tramite260302Store extends Store<Tramite260302State> {
   ): void {
     this.update((state) => ({
       ...state,
-      tablaMercanciasConfigDatos,
+      tablaMercanciasConfigDatos: tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: [],
     }));
   }
   /**
@@ -249,5 +292,70 @@ export class Tramite260302Store extends Store<Tramite260302State> {
       ...state,
       tabSeleccionado: tabSeleccionado,
     }));
+  }
+
+  /**
+   * @method updateSeleccionadoDestinatarioDatos
+   * @description Actualiza los datos del destinatario seleccionado.
+   */
+  public updateSeleccionadoDestinatarioDatos(
+    neuvoDestinatario: Destinatario[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoDestinatarioDatos: neuvoDestinatario,
+    }));
+  }
+
+  /**
+   * @method updateSeleccionadoOtrosDatos
+   * @description Actualiza los datos de otros seleccionados.
+   */
+  public updateSeleccionadoOtrosDatos(neuvoOtros: Otros[]): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoOtrosDatos: neuvoOtros,
+    }));
+  }
+
+  /**
+   * @method updateMercanciaForm
+   * @description Actualiza el formulario de mercancía.
+   */
+  public static actualizarLista<
+    T extends Fabricante | Destinatario | Proveedor | Facturador | Otros
+  >(
+    listaOriginal: T[],
+    nuevosLista: T[],
+    clave: keyof T,
+    tipoActualizacion?: string
+  ): T[] {
+    if (tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR) {
+      let listaActualizada = [...listaOriginal];
+      listaActualizada = listaActualizada.filter(
+        (item: Fabricante | Destinatario | Proveedor | Facturador | Otros) => {
+          return !nuevosLista.some(
+            (
+              nuevo: Fabricante | Destinatario | Proveedor | Facturador | Otros
+            ) =>
+              nuevo[clave as keyof typeof nuevo] ===
+              item[clave as keyof typeof item]
+          );
+        }
+      );
+      return listaActualizada;
+    }
+    const LISTA_ACTUALIZADA = [...listaOriginal];
+    const INDICE_ENCONTRADO = LISTA_ACTUALIZADA.findIndex(
+      (item) => item?.[clave] === nuevosLista?.[0]?.[clave]
+    );
+
+    if (INDICE_ENCONTRADO !== -1) {
+      LISTA_ACTUALIZADA.splice(INDICE_ENCONTRADO, 1, nuevosLista[0]);
+    } else {
+      LISTA_ACTUALIZADA.push(...nuevosLista);
+    }
+
+    return LISTA_ACTUALIZADA;
   }
 }

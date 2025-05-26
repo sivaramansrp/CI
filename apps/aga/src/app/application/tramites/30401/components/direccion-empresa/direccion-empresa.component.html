@@ -67,6 +67,15 @@
           >
             El número interior no puede exceder los 55 caracteres.</small
           >
+          <small
+            *ngIf="
+              inicializarFormulario.controls['numeroExterior'].hasError(
+                'pattern'
+              )
+            "
+          >
+            Solo se permiten números.
+          </small>
         </div>
       </div>
     </div>
@@ -95,6 +104,15 @@
             "
             >El número interior no puede exceder los 55 caracteres.</small
           >
+          <small
+            *ngIf="
+              inicializarFormulario.controls['numeroInterior'].hasError(
+                'pattern'
+              )
+            "
+          >
+            Solo se permiten números.
+          </small>
         </div>
       </div>
     </div>
