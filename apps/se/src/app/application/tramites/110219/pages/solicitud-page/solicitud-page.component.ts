@@ -50,7 +50,6 @@ export class SolicitudPageComponent implements OnInit {
    * Lista de pasos del asistente.
    */
  pasos: ListaPasosWizard[] = PASOS;
-
  /**
   * Índice del paso actual.
   */

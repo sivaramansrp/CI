@@ -68,7 +68,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     { encabezado: 'Complemento descripción', clave: (ele: MercanciaCertificado) => ele.complementoDescripcion, orden: 6 },
     { encabezado: 'Número de certificado', clave: (ele: MercanciaCertificado) => ele.numeroCertificado, orden: 7 },
     { encabezado: 'Pais/Bloque', clave: (ele: MercanciaCertificado) => ele.pais, orden: 8 },
-    { encabezado: 'Tratado/Acuerdo', clave: (ele: MercanciaCertificado) => ele.tratado, orden: 9 },
+    { encabezado: 'Tratado / Acuerdo', clave: (ele: MercanciaCertificado) => ele.tratado, orden: 9 },
     { encabezado: 'Fecha expedición', clave: (ele: MercanciaCertificado) => ele.fechaExpedicion, orden: 10 },
     { encabezado: 'Fecha vencimíento', clave: (ele: MercanciaCertificado) => ele.fechaVencimiento, orden: 11 },
   ];
@@ -104,7 +104,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /** Inicializa el componente. */
   ngOnInit(): void {
     this.cancelacionForm = new FormGroup({
-      motivoCancelacion: new FormControl('', Validators.required),
+      motivoCancelacion: new FormControl(''),
     });
     this.getMercanciaCertificadoTabla();
 
@@ -117,6 +117,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+
   }
 
   /** Valida el formulario del destinatario. */

@@ -3,16 +3,18 @@
     <ng-titulo titulo="Motivo de cancelación del certificado de origen" />
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Motivo de cancelación <span
-            [ngClass]="{'error-star': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid }">*</span>:
-        </label>
         <div class="col-md-12 align-text-area">
-          <textarea cols="60" rows="5" formControlName="motivoCancelacion" required
-            [ngClass]="{'error-border': cancelacionForm.get( 'validacionForm.motivoCancelacion' )?.invalid }"
+        <label>Motivo de cancelación<span
+            [ngClass]="{'error-star': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid }">*</span>:
+        </label></div>
+        <div class="col-md-12 align-text-area">
+          <textarea cols="60" rows="5" formControlName="motivoCancelacion" 
+            [ngClass]="{'error-border': cancelacionForm.get( 'validacionForm.motivoCancelacion' )?.invalid  }"
             (change)=" setValoresStore(validacionForm, 'motivoCancelacion', 'setMotivoCancelacion' )"></textarea>
-        </div>
+        
         <div *ngIf=" cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid " class="error-msg"> Este campo es
           obligatorio. </div>
+          </div>
       </div>
     </div>
     <ng-titulo titulo="Datos del certificado" />
@@ -34,7 +36,7 @@
         <input type="text" required="true" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-6">
-        <label>Tratado/Acuerdo:</label>
+        <label>Tratado / Acuerdo:</label>
         <input type="text" required="true" class="form-control gris-color" readonly />
       </div>
     </div>
@@ -101,14 +103,14 @@
         <input type="text" class="form-control gris-color" readonly />
       </div>
     </div>
-    <div class="row mt-5">
+    <div class="row mt-5" style="text-align: center;">
       <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS"></ng-alert>
     </div>
     <div class="table-container mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="encabezadosMercancias"
         [datos]="mercanciaCertificadoTablaDatos"></app-tabla-dinamica>
     </div>
-    <div class="row mt-5">
+    <div class="row mt-5" style="text-align: center;">
       <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_PRODUCTORES"></ng-alert>
     </div>
     <div class="table-container mt-5">

@@ -339,7 +339,7 @@
     "id": 49,
     "tramite": 110219,
     "linkDashboard": "/se/certificado/solicitud",
-    "linkDepartment": "/se/certificado/solicitud",
+    "linkDepartment": "/pago/certificado/solicitud",
     "department": "se"
   },
   {

@@ -12,10 +12,10 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {ColumnasTabla,FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
+import { ColumnasTabla, FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject,map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CertificadoService } from '../../services/certificado.service';
@@ -77,10 +77,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Selección de la tabla. */
   TablaSeleccion = TablaSeleccion;
-
-  /** Indica si se está realizando una búsqueda. */
-  estaBuscando: boolean = false;
-
+  /** Indica si se deben mostrar errores en el formulario. */
+  mostrarErrores: boolean = false;
+  /** Indica si se está buscando un certificado. */
+  estaBuscando: boolean = true;
   /** Catálogo de tratados. */
   tratado!: CatalogosSelect;
 
@@ -89,6 +89,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Índice del paso actual. */
   indice: number = 1;
+  /** Mensaje de error a mostrar. */
+  mensajeError: string = '';
 
   /** Datos de los pasos del asistente. */
   datosPasos: DatosPasos = {
@@ -100,7 +102,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Configuración del catálogo de tratados. */
   public tratadoCatalogo: CatalogosSelect = {
-    labelNombre: 'Tratado/Acuerdo:',
+    labelNombre: 'Tratado / Acuerdo:',
     required: false,
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
@@ -153,7 +155,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     { encabezado: 'Número de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },
     { encabezado: 'Pais/Bloque', clave: (ele: ColumnasTabla) => ele.pais, orden: 2 },
-    { encabezado: 'Tratado/Acuerdo', clave: (ele: ColumnasTabla) => ele.tratado, orden: 3 },
+    { encabezado: 'Tratado / Acuerdo', clave: (ele: ColumnasTabla) => ele.tratado, orden: 3 },
     { encabezado: 'Fecha expedición', clave: (ele: ColumnasTabla) => ele.fechaExpedicion, orden: 4 },
     { encabezado: 'Fecha vencimíento', clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5 },
   ];
@@ -194,7 +196,45 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Activa el estado de búsqueda. */
   alBuscarClic(): void {
-    this.estaBuscando = true;
+    
+    const control = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
+    if (!control) {
+      this.mostrarErrores = true;
+      this.mensajeError = 'Ocurrió un error interno. Intente de nuevo.';
+      return;
+    } else if(control){
+      this.estaBuscando = false;
+          this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value)
+
+    }   
+  
+    control.markAsTouched();
+    control.updateValueAndValidity();
+
+    if (control.invalid) {
+      this.mostrarErrores = true;
+      this.mensajeError = '1.(Número de certificado) es un campo requerido';
+      return;
+    }
+
+    const certificadoExiste = this.buscarCertificado(control.value);
+
+    if (!certificadoExiste) {
+      this.mostrarErrores = false;
+      this.mensajeError = 'El certificado de origen no existe';
+      return;
+    }
+
+    this.mostrarErrores = false;
+    this.mensajeError = '';
+  }
+  /**
+   * Busca un certificado en la tabla de certificados disponibles.
+   * @param numeroCertificado Número de certificado a buscar.
+   * @returns `true` si el certificado existe, de lo contrario `false`.
+   */
+  buscarCertificado(numero: string): boolean {
+    return false;
   }
 
   /** Obtiene los datos del catálogo de tratados. */
@@ -258,7 +298,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
-        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required]],
+        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(new RegExp('^-?\\d+(\\.\\d+)?$'))]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required]],
