@@ -5,7 +5,7 @@
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-12 offset-md-6">
-        <label class="form-label">Tipo persona:</label>
+        <label class="form-label">Tipo persona * :</label>
         <div class="d-flex flex-column">
           <div class="form-check">
             <input
@@ -14,12 +14,13 @@
               formControlName="tipoPersona"
               [value]="tipoPersona.FISICA"
               id="personaFisica"
+              (change)="changeNacionalidad()"
             />
             <label class="form-check-label" for="personaFisica"
               >Física
               <span
                 class="bi bi-question-circle-fill"
-                title="Física"
+                title="Una persona física es entendida como toda persona con una actividad específica"
                 data-bs-toggle="tooltip"
               ></span>
             </label>
@@ -31,12 +32,13 @@
               formControlName="tipoPersona"
               [value]="tipoPersona.MORAL"
               id="personaMoral"
+              (change)="changeNacionalidad()"
             />
             <label class="form-check-label" for="personaMoral"
               >Moral
               <span
                 class="bi bi-question-circle-fill"
-                title="Moral"
+                title="Una persona moral es entendida como una empresa con una actividad específica"
                 data-bs-toggle="tooltip"
               ></span>
             </label>
@@ -47,38 +49,65 @@
 
     @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
-      <div class="form-group">
-        <label
-          class="form-label row mt-3 mover-izquierda fs-2"
-          for="denominacionRazon"
-          >Denominación/razón social*:</label
-        >
-        <input
-          class="form-control col-md-4"
-          id="denominacionRazon"
-          type="text"
-          formControlName="denominacionRazon"
-        />
+      <div class="col-md-8">
+        <div class="form-group">
+          <label
+            class="form-label mt-3 mover-izquierda fs-2"
+            for="denominacionRazon"
+            >Denominación/razón social * :</label
+          >
+          <input
+            class="form-control"
+            id="denominacionRazon"
+            type="text"
+            formControlName="denominacionRazon"
+            maxlength="250"
+            [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''"
+          />
+          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
+            <small *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+          </div>
+        </div>
       </div>
     </div>
     }
 
     <!-- Datos Personales -->
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA)
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA )
     {
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control" formControlName="nombres" />
+        <label class="form-label">Nombre(s) * :</label>
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200" [ngClass]="esInvalido('nombres') ? 'required' : ''"  />
+        <div *ngIf="esInvalido('nombres')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['nombres'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+          <small *ngIf="agregarFacturadorForm.controls['nombres'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido * :</label>
         <input
           type="text"
           class="form-control"
           formControlName="primerApellido"
+          maxlength="200"
+          [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('primerApellido')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['primerApellido'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+          <small *ngIf="agregarFacturadorForm.controls['primerApellido'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Segundo apellido:</label>
@@ -86,7 +115,13 @@
           type="text"
           class="form-control"
           formControlName="segundoApellido"
+          maxlength="200"
         />
+        <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['segundoApellido'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
     </div>
     }
@@ -100,11 +135,18 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [placeholder]="'Selecciona un valor'"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado*:</label>
-        <input type="text" class="form-control" formControlName="estado" />
+        <label class="form-label">Estado * :</label>
+        <input type="text" class="form-control" formControlName="estado" [ngClass]="esInvalido('estado') ? 'required' : ''" />
+        <div *ngIf="esInvalido('estado')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['estado'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente:</label>
@@ -112,6 +154,7 @@
           type="text"
           class="form-control"
           formControlName="codigoPostal"
+          maxlength="100"
         />
       </div>
     </div>
@@ -119,24 +162,36 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Colonia o equivalente:</label>
-        <input type="text" class="form-control" formControlName="colonia" />
+        <input type="text" class="form-control" maxlength="100" formControlName="colonia" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Calle*:</label>
+        <label class="form-label">Calle * :</label>
         <span
-          class="bi bi-question-circle-fill"
-          title="Calle"
+          class="bi bi-question-circle-fill mx-1"
+          title="Domicilio, calle, número interior, número exterior, lote"
           data-bs-toggle="tooltip"
         ></span>
-        <input type="text" class="form-control" formControlName="calle" />
+        <input type="text" class="form-control" formControlName="calle" maxlength="100" [ngClass]="esInvalido('calle') ? 'required' : ''" />
+        <div *ngIf="esInvalido('calle')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['calle'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior*:</label>
+        <label class="form-label">Número exterior * :</label>
         <input
           type="text"
           class="form-control"
           formControlName="numeroExterior"
+          maxlength="55"
+          [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['numeroExterior'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
     </div>
 
@@ -147,22 +202,28 @@
           type="text"
           class="form-control"
           formControlName="numeroInterior"
+          maxlength="55"
         />
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" />
+        <input type="text" class="form-control" maxlength="5" formControlName="lada" />
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" formControlName="telefono" />
+        <input type="text" class="form-control" maxlength="24" formControlName="telefono" />
+        <div *ngIf="esInvalido('telefono')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['telefono'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label"
           >Correo electrónico:
           <span
-            class="bi bi-question-circle-fill"
-            title="Correo electrónico"
+            class="bi bi-question-circle-fill mx-1"
+            title="ejemplo@dominio.com"
             data-bs-toggle="tooltip"
           ></span>
         </label>
@@ -171,11 +232,19 @@
           class="form-control"
           formControlName="correoElectronico"
         />
+        <div *ngIf="esInvalido('correoElectronico')" class="text-danger">
+          <small *ngIf="agregarFacturadorForm.controls['correoElectronico'].errors?.['pattern']">
+           Por favor, escribe una dirección de correo válida
+          </small>
+        </div>
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class="col-md-12">
+    <div class="row my-5">
+      <div class="col-md-6">
+          <p>* Campos obligatorios</p>
+      </div>
+      <div class="col-md-6 mb-5">
         <div class="pull-right">
           <button
             type="button"
@@ -191,7 +260,7 @@
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
           >
-            Limpar
+          Limpiar
           </button>
           <button
             type="button"
