@@ -11,12 +11,13 @@
       },
       {
         "id": 3,
-        "descripcion": "Lodoso"
+        "descripcion": "Otro (especifique)"
       },
       {
         "id": 4,
-        "descripcion": "Otro (especifique)"
+        "descripcion": "Lodoso"
       },
+    
       {
         "id": 5,
         "descripcion": "Solido"
@@ -35,7 +36,7 @@
       },
       {
         "id": 9,
-        "descripcion": "Otros"
+        "descripcion": "Otro"
       }
     ],
     "message": "Estado Físico"

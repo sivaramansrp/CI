@@ -420,7 +420,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   cambiarTipoDeMovimiento(): void {
     const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodeMovimiento')?.value;
-    this.tramite230902Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
+    this.tramite230902Store.establecerDatos({ tipodeMovimiento: TIPO_DE_MOVIMIENTO });
     if (TIPO_DE_MOVIMIENTO === '1') {
       this.aduanasBotons = this.crossListBotons.slice(1);
     } else {
@@ -456,14 +456,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
-  }
-
-  /**
-   * Maneja el cambio en el tipo de régimen seleccionado.
-   * Actualiza el estado relacionado con el régimen.
-   */
-  onTipoRegimenChange(): void {
-    this.tramite230902Store.setTipoDeRegimen(this.formSolicitud.get('tipoRegimen')?.value);
   }
 
   /**
@@ -725,6 +717,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.alternarVisibilidadModalMercancia();
   }
  
+  /**
+   * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Parámetros:
+   *   - form: Formulario reactivo que contiene los datos.
+   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
+   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   */
+    setValoresStore(form: FormGroup, campo: string): void {
+      const VALOR = form.get(campo)?.value;
+      this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+    }
+
   /**
    * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.

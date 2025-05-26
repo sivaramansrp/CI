@@ -183,25 +183,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de un banco en el formulario.
-   * Actualiza el banco seleccionado en el almacén.
-   */
-
-  onBancoSeleccion(): void {
-    this.tramite230902Store.setbancoseleccionado(
-      this.formPagoDerechos.get('banco')?.value
-    );
-  }
-  /**
    * Maneja el cambio de la llave de pago en el formulario.
    * Actualiza la llave de pago en el almacén.
    */
-  onllavaDePagoChange(event: Event): void {
-    const INPUT_ELEMENT = event.target as HTMLInputElement;
-    const CAPITALIZED_VALUE = INPUT_ELEMENT.value.toUpperCase();
-    INPUT_ELEMENT.value = CAPITALIZED_VALUE; // Update the input field value to uppercase
-    this.tramite230902Store.setllaveDePago(CAPITALIZED_VALUE); // Update the store with the uppercase value
+   onllavaDePagoChange(): void {
+    const CAPITALIZED_VALUE = this.formPagoDerechos
+    .get('llaveDePago')
+    ?.value.toUpperCase();
+    this.formPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
   }
+
+  /**
+   * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Parámetros:
+   *   - form: Formulario reactivo que contiene los datos.
+   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
+   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   */
+    setValoresStore(form: FormGroup, campo: string): void {
+      const VALOR = form.get(campo)?.value;
+      this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+    }
 
   /**
    * Limpia las suscripciones cuando el componente se destruye.
