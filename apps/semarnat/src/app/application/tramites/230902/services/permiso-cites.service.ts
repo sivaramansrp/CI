@@ -182,7 +182,7 @@ export class PermisoCitesService {
     this.Tramite230902Store.setEntidadFederativa(DATOS.entidadFederativa);
     this.Tramite230902Store.setlclaveDeReferencia(DATOS.claveDeReferencia);
     this.Tramite230902Store.setcadenaPagoDependencia(DATOS.cadenaPagoDependencia);
-    this.Tramite230902Store.setbancoseleccionado(DATOS.bancoseleccionado);
+    this.Tramite230902Store.setbancoseleccionado(DATOS.banco);
     this.Tramite230902Store.setllaveDePago(DATOS.llaveDePago);
     this.Tramite230902Store.setfecPago(DATOS.fecPago);
    

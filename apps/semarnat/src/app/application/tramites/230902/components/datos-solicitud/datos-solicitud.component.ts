@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
 import { AQUANDAS_LABEL } from '../../enum/adnuana-botons.enum';
 import { CROSSLIST_BOTONS } from '../../enum/crossList-botons.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { Subject, takeUntil } from 'rxjs';
 import { CONFIGURACION_TABLA_MERCANCIA } from '../../enum/mercancia.enum';
 import { ConfiguracionItem } from '../../enum/mercancia.enum';
 
@@ -14,6 +15,8 @@ import { MOVIMIENTO_LABEL } from '../../enum/movimiento.enum';
 import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 
 import { PermisoCitesService } from '../../services/permiso-cites.service';
+import { Subject } from 'rxjs';
+import { Subscription, } from 'rxjs';
 
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
@@ -248,6 +251,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   tituloModal!: string;
   mensajeModal!: string;
   public nuevaNotificacion!: Notificacion;
+
+  esFormularioSoloLectura: boolean = false; 
+  private subscription: Subscription = new Subscription();
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
@@ -256,17 +262,43 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
     private tramite230902Query: Tramite230902Query,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Initialize any required properties or call necessary methods here
-    // Removed console.log to avoid unexpected console statement error
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+           this.esFormularioSoloLectura = seccionState.readonly;
+           this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this. crearFormularioSolicitud();
+    }
+  }
+   guardarDatosFormulario(): void {
+    this. crearFormularioSolicitud();
+    if (this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formSolicitud.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
    * Inicializa el componente.
    * Configura los formularios, datos iniciales y suscripciones necesarias.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario()
     this.permisoCitesService.inicializaDatosSolicitudDatosCatalogos();
     this.crossListBotons = CROSSLIST_BOTONS(this.crosslistComponent);
     this.movimientoBotons = this.crossListBotons;
@@ -277,24 +309,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud230902State = state;
       });
 
-    this.crearFormularioSolicitud();
     this.cambiarTipoDeMovimiento();
     this.cargarDatosTabla();
   }
 
-  setValoresStore(
-      form: FormGroup,
-      campo: string,
-      metodoNombre: keyof Tramite230902Store
-    ): void {
-      const VALOR = form.get(campo)?.value;
-      (this.tramite230902Store[metodoNombre] as (value: any) => void)(VALOR);
-    }
   /**
    * Crea y configura el formulario para los datos de la solicitud.
    * Define los campos y validaciones necesarias.
    */
   crearFormularioSolicitud(): void {
+     this.subscription.add(
+        this.tramite230902Query.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this. solicitud230902State = seccionState;
+            })
+          )
+          .subscribe()
+      );
     this.formSolicitud = this.formBuilder.group({
       tipodeMovimiento: [this.solicitud230902State.tipodeMovimiento, Validators.required],
       tipoRegimen: [this.solicitud230902State.tipoRegimen, Validators.required],
@@ -387,7 +420,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   cambiarTipoDeMovimiento(): void {
     const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodeMovimiento')?.value;
-    
+    this.tramite230902Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
     if (TIPO_DE_MOVIMIENTO === '1') {
       this.aduanasBotons = this.crossListBotons.slice(1);
     } else {

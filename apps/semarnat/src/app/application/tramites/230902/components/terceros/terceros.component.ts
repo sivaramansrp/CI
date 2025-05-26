@@ -11,19 +11,23 @@
  * - onEntidadFederativaChange: Maneja los cambios en la entidad federativa y actualiza los datos de la tabla.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CategoriaMensaje, ConfiguracionColumna, Notificacion, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map,takeUntil } from 'rxjs';
 
 import { ConfiguracionItem, DESTINARIO_TABLE_ENTRY, TERCEROS_CONFIGURACION_TABLA } from '../../enum/tereceors.enum';
-
+import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PermisoCitesService } from '../../services/permiso-cites.service';
 
-import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
+import { Subject } from 'rxjs';
+import { Subscription, } from 'rxjs';
+
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 
 /**
@@ -114,6 +118,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Configura los datos de la notificación que se muestra en el popup.
    */
   public nuevaNotificacion!: Notificacion;
+  esFormularioSoloLectura: boolean = false; 
+  private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente.
@@ -123,24 +129,44 @@ export class TercerosComponent implements OnInit, OnDestroy {
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
     private tramite230902Query: Tramite230902Query,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor vacío, no se requiere lógica adicional.
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+           this.esFormularioSoloLectura = seccionState.readonly;
+           this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.crearFormularioDestinatario();
+    }
+  }
+ guardarDatosFormulario(): void {
+    this.crearFormularioDestinatario();
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.destinatarioForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+ }
 
   /**
    * Inicializa el componente.
    * Configura los formularios, datos iniciales y suscripciones necesarias.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario()
     this.permisoCitesService.inicializaTercerosDatosCatalogos();
-    this.tramite230902Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.solicitud230902State = state;
-      });
-
-    this.crearFormularioDestinatario();
     this.onEntidadFederativaChange();
   }
 
@@ -195,6 +221,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Define los campos y validaciones necesarias.
    */
   crearFormularioDestinatario(): void {
+  this.tramite230902Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        this.solicitud230902State = state;
+      });  
+  this.subscription.add(
+      this.tramite230902Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this. solicitud230902State = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.destinatarioForm = this.formBuilder.group({
       entidadFederativa: [
         this.solicitud230902State.entidadFederativa,

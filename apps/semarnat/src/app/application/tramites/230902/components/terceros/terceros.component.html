@@ -3,7 +3,7 @@
   <form [formGroup]="destinatarioForm">
     <div class="row">
       <app-catalogo-select [catalogo]="permisoCitesService.entidadFederativa" formControlName="entidadFederativa"
-        class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
+        class="col-md-4" [label]="'Entidad federativa'" [isDisabled]="esFormularioSoloLectura" (change)="onEntidadFederativaChange()"></app-catalogo-select>
     </div>
     <label class="row mt-5">destinatarios*:</label>
     <div class="row mt-4">

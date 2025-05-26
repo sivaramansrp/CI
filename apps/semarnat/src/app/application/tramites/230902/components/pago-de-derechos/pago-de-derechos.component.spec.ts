@@ -71,12 +71,6 @@ describe('PagoDeDerechosComponent', () => {
     expect(tramite230902StoreMock.setbancoseleccionado).toHaveBeenCalledWith('nuevoBanco');
   });
 
-  it('should handle onllavaDePagoChange', () => {
-    component.formPagoDerechos.get('llaveDePago')?.setValue('nuevaLlave');
-    component.onllavaDePagoChange();
-    expect(tramite230902StoreMock.setllaveDePago).toHaveBeenCalledWith('nuevaLlave');
-  });
-
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroyed$Spy = jest.spyOn(component['destroyed$'], 'next');
     component.ngOnDestroy();

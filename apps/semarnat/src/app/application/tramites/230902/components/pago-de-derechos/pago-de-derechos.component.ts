@@ -10,6 +10,7 @@
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -20,14 +21,17 @@ import { Validators } from '@angular/forms';
 
 import { InputFecha } from '@libs/shared/data-access-user/src';
 
-import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+
 import { takeUntil } from 'rxjs';
 
 import { FECHA } from '../../enum/fetcha.enum';
 
 import { PermisoCitesService } from '../../services/permiso-cites.service';
+import { Subject } from 'rxjs';
 
 import { Solicitud230902State } from '../../estados/tramite230902.store';
+import { Subscription } from 'rxjs';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 import { Tramite230902Store } from '../../estados/tramite230902.store';
 
@@ -62,6 +66,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   private destroyed$: Subject<void> = new Subject();
 
+  esFormularioSoloLectura: boolean = false; 
+  private subscription: Subscription = new Subscription();
+ 
+
   /**
    * Crea una instancia de PagoDeDerechosComponent.
    * {PermisoCitesService} permisoCitesService - Servicio de permisos CITES.
@@ -73,25 +81,57 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
     private tramite230902Query: Tramite230902Query,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // No hacer nada
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.crearFormularioPagoDerechos();
+    }
+  }
+ guardarDatosFormulario(): void {
+    this.crearFormularioPagoDerechos();
+    if (this.esFormularioSoloLectura) {
+      this.formPagoDerechos.disable();
+       this.fechaFinalInput.habilitado = false
+       this.fechaFinalInput.required = false
+    } else if (!this.esFormularioSoloLectura) {
+      this.formPagoDerechos.enable();
+      this.fechaFinalInput.habilitado = true
+      this.fechaFinalInput.required = true
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+ }
+
+ 
   /**
    * Inicializa el componente.
    * Configura las suscripciones necesarias y prepara el formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.permisoCitesService.inicializaPagoDeDerechosDatosCatalogos();
-    this.tramite230902Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(state => { this.solicitud230902State = state });
+   
 
     /**
      * Crea el formulario de pago de derechos.
      */
-    this.crearFormularioPagoDerechos();
+   
+    
   }
 
   /**
@@ -99,10 +139,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Configura los campos del formulario con validaciones y valores iniciales.
    */
   crearFormularioPagoDerechos(): void {
+  this.tramite230902Query.selectSolicitud$
+  .pipe(takeUntil(this.destroyed$))
+  .subscribe(state => { this.solicitud230902State = state });
+   this.subscription.add(
+        this.tramite230902Query.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this. solicitud230902State = seccionState;
+            })
+          )
+          .subscribe()
+      );
+
     this.formPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.solicitud230902State.claveDeReferencia),
       cadenaPagoDependencia: new FormControl(this.solicitud230902State.cadenaPagoDependencia),
-      banco: new FormControl(this.solicitud230902State.bancoseleccionado, Validators.required),
+      banco: new FormControl(this.solicitud230902State.banco, Validators.required),
       llaveDePago: new FormControl(this.solicitud230902State.llaveDePago, Validators.required),
       fecPago: new FormControl(this.solicitud230902State.fecPago, Validators.required),
       impPago: new FormControl({ value: this.solicitud230902State.impPago, disabled: true }),
@@ -132,12 +186,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Maneja la selección de un banco en el formulario.
    * Actualiza el banco seleccionado en el almacén.
    */
+
   onBancoSeleccion(): void {
     this.tramite230902Store.setbancoseleccionado(
       this.formPagoDerechos.get('banco')?.value
     );
   }
-
   /**
    * Maneja el cambio de la llave de pago en el formulario.
    * Actualiza la llave de pago en el almacén.

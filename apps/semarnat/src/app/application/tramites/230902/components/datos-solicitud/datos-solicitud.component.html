@@ -4,8 +4,8 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipodeMovimiento" formControlName="tipodeMovimiento"
-          [label]="'Tipo de movimiento'" [required]="true" name="tipodeMovimiento"
-          (change)="cambiarTipoDeMovimiento(); setValoresStore(formSolicitud, 'tipodeMovimiento', 'setTipoDeMovimiento')"></app-catalogo-select>
+          [label]="'Tipo de movimiento'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipodeMovimiento"
+          (change)="cambiarTipoDeMovimiento()"></app-catalogo-select>
       </div>
     </div>
     
@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipoRegimen" formControlName="tipoRegimen"
-          [label]="'Tipo de régimen'" [required]="true" name="tipoRegimen"
+          [label]="'Tipo de régimen'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipoRegimen"
           (change)="onTipoRegimenChange()"></app-catalogo-select>
       </div>
     </div>
@@ -54,11 +54,12 @@
       </nav>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-default me-2" [disabled]="!enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
-          <button type="button" class="btn btn-danger me-2" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
+          <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || !enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
+          <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura || !enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
+            [disabled]="esFormularioSoloLectura"
             (click)="mostrarformMercanciaModal()"
           >
             Agregar
@@ -97,7 +98,7 @@
                 [catalogo]="
                 permisoCitesService.fraccionArancelaria
                 "
-                name="fraccionArancelaria"
+                name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
                 formControlName="fraccionArancelaria"
                 (selectionChange)="manejarCambioFraccionArancelaria($event)"
                 [label]="'Fracción arancelaria'"

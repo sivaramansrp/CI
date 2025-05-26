@@ -24,7 +24,7 @@ export interface Solicitud230902State {
   cadenaPagoDependencia: string;
 
   /** Banco seleccionado para el pago del trámite. */
-  bancoseleccionado: string;
+  banco: string;
 
   /** Llave de pago proporcionada para el trámite. */
   llaveDePago: string;
@@ -53,7 +53,7 @@ export function createInitialState(): Solicitud230902State {
     entidadFederativa: '',
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
-    bancoseleccionado: '',
+    banco: '',
     llaveDePago: '',
     fecPago: '',
     impPago: null,
@@ -138,10 +138,10 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
    * 
    * {string} bancoseleccionado - Banco seleccionado.
    */
-  public setbancoseleccionado(bancoseleccionado: string): void {
+  public setbancoseleccionado(banco: string): void {
     this.update((state) => ({
       ...state,
-      bancoseleccionado,
+      banco,
     }));
   }
 
