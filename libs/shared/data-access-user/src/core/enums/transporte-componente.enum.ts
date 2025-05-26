@@ -1,35 +1,35 @@
-import { ItemTransporte } from "../models/shared/agregar-transporte.model";
+import { ItemTransporteDespacho } from "../models/shared/agregar-transporte.model";
 
 /**
  * @description Enum para definir los tipos de transporte disponibles en el sistema.
  */
-export const HEADER_TABLA_CARRETERO: ItemTransporte[] = [
+export const HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = [
     {
-        llave: 'empTransportista',
+        llave: 'emp_transportista',
         valor: 'Empresa transportista'
     },
     {
-        llave: 'numeroPorte',
+        llave: 'numero_porte',
         valor: 'Número carta porte'
     },
     {
-        llave: 'fechaPorte',
+        llave: 'fecha_porte',
         valor: 'Fecha carta porte'
     },
     {
-        llave: 'marcaTransporte',
+        llave: 'marca_transporte',
         valor: 'Marca'
     },
     {
-        llave: 'modeloTransporte',
+        llave: 'modelo_transporte',
         valor: 'Modelo'
     },
     {
-        llave: 'placasTransporte',
+        llave: 'placas_transporte',
         valor: 'Placas'
     },
     {
-        llave: 'contenedorTransporte',
+        llave: 'contenedor_transporte',
         valor: 'Contenedor(es)'
     },
     {
@@ -38,21 +38,21 @@ export const HEADER_TABLA_CARRETERO: ItemTransporte[] = [
     }
 ];
 
-export const HEADER_TABLA_FERROVIARIO: ItemTransporte[] = [
+export const HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] = [
     {
-        llave: 'numeroBL',
+        llave: 'numero_bl',
         valor: 'Número BL'
     },
     {
-        llave: 'tipoEquipo',
+        llave: 'tipo_equipo',
         valor: 'Tipo de Equipo'
     },
     {
-        llave: 'inicialesEquipo',
+        llave: 'iniciales_equipo',
         valor: 'Iniciales Equipo'
     },
     {
-        llave: 'numeroEquipo',
+        llave: 'numero_equipo',
         valor: 'Número de Equipo'
     },
     {
@@ -61,21 +61,21 @@ export const HEADER_TABLA_FERROVIARIO: ItemTransporte[] = [
     }
 ];
 
-export const HEADER_TABLA_PEATONAL: ItemTransporte[] = [
+export const HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = [
     {
-        llave: 'empTransportista',
+        llave: 'emp_transportista',
         valor: 'Empresa transportista'
     },
     {
-        llave: 'rfcEmpresa',
+        llave: 'rfc_empresa',
         valor: 'RFC empresa responsable'
     },
     {
-        llave: 'nombreTransportista',
+        llave: 'nombre_transportista',
         valor: 'Nombre transportista'
     },
     {
-        llave: 'numGafete',
+        llave: 'num_gafete',
         valor: 'ID de gafete'
     },
     {
@@ -84,17 +84,17 @@ export const HEADER_TABLA_PEATONAL: ItemTransporte[] = [
     }
 ]
 
-export const HEADER_TABLA_OTRO: ItemTransporte[] = [
+export const HEADER_TABLA_OTRO: ItemTransporteDespacho[] = [
     {
-        llave: 'empTransportista',
+        llave: 'emp_transportista',
         valor: 'Empresa transportista'
     },
     {
-        llave: 'tipoTransporteDes',
+        llave: 'tipo_transporte_des',
         valor: 'Tipo de transporte'
     },    
     {
-        llave: 'datosTransporte',
+        llave: 'datos_transporte',
         valor: 'Datos de transporte'
     },
     {
@@ -103,21 +103,21 @@ export const HEADER_TABLA_OTRO: ItemTransporte[] = [
     }
 ]
 
-export const HEADER_TABLA_MARITIMO: ItemTransporte[] = [
+export const HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = [
     {
-        llave: 'guiaBLMaritimo',
+        llave: 'guia_bl_Maritimo',
         valor: 'Guía BL'
     },
     {
-        llave: 'guiaHouseMaritimo',
+        llave: 'guia_house_valida',
         valor: 'Guía house'
     },
     {
-        llave: 'nombreBuqueMaritimo',
+        llave: 'nombre_buque_maritimo',
         valor: 'Nombre del buque'
     },
     {
-        llave: 'contenedorMaritimo',
+        llave: 'contenedor_maritimo',
         valor: 'Contenedor(es)'
     },
     {
@@ -126,29 +126,29 @@ export const HEADER_TABLA_MARITIMO: ItemTransporte[] = [
     }
 ]
 
-export const HEADER_TABLA_AEREO: ItemTransporte[] = [
+export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
     {
-        llave: 'arriboPendienteAereo',
+        llave: 'arribo_pendiente_aereo',
         valor: 'Arribo pendiente'
     },
     {
-        llave: 'guiaMasterAereo',
+        llave: 'guia_master_aereo',
         valor: 'Guía master'
     },
     {
-        llave: 'guiaHouseAereo',
+        llave: 'guia_house_aereo',
         valor: 'Guía house'
     },
     {
-        llave: 'fechaArriboAereo',
+        llave: 'fecha_arribo_aereo',
         valor: 'Fecha de arribo'
     },
     {
-        llave: 'horaArriboAereo',
+        llave: 'hora_arribo_aereo',
         valor: 'Hora de arribo'
     },
     {
-        llave: 'guiaValida',
+        llave: 'guia_valida',
         valor: 'Guía válida'
     },
     {

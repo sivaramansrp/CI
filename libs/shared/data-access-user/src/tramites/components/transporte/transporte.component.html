@@ -45,8 +45,8 @@
               </div>
             </td>
             @for (item of headerTabla; track $index) { @if (
-            esBooleano(row[item.llave]) ) {
-            <td>{{ row[item.llave] | booleanoSiNo }}</td>
+            esBooleano(row[item.llave] ?? '') ) {
+            <td>{{ row[item.llave] }}</td>
             } @else {
             <td>{{ row[item.llave] }}</td>
             } }
@@ -168,83 +168,84 @@
   <div class="row" [formGroup]="carreteroForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="empTransportista"
+        <label class="form-label" for="emp_transportista"
           >Empresa transportista:</label
         >
         <input
           class="form-control"
-          id="empTransportista"
+          id="emp_transportista"
           placeholder=""
           type="text"
-          formControlName="empTransportista"
+          formControlName="emp_transportista"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroPorte">Número carta porte:</label>
+        <label class="form-label" for="numero_porte">Número carta porte:</label>
         <input
           class="form-control"
-          id="numeroPorte"
+          id="numero_porte"
           placeholder=""
           type="text"
-          formControlName="numeroPorte"
+          formControlName="numero_porte"
         />
       </div>
     </div>
     <div class="col-md-6">
-      <label for="fechaPorte" class="form-label">Fecha carta porte:</label>
+      <label for="fecha_porte" class="form-label">Fecha carta porte:</label>
       <input
         class="form-control"
         type="date"
-        name="fechaPorte"
-        id="fechaPorte"
-        formControlName="fechaPorte"
+        name="fecha_porte"
+        id="fecha_porte"
+        formControlName="fecha_porte"
       />
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="marcaTransporte">Marca:</label>
+        <label class="form-label" for="marca_transporte">Marca:</label>
         <input
           class="form-control"
-          id="marcaTransporte"
+          id="marca_transporte"
           placeholder=""
           type="text"
-          formControlName="marcaTransporte"
+          formControlName="marca_transporte"
         />
       </div>
     </div>
     <div class="col-md-6">
       <app-catalogo-select
         [catalogo]="anios"
-        formControlName="modeloTransporte"
+        formControlName="modelo_transporte"
+        id="modelo_transporte"
         [label]="'Modelo'"
         [required]="false"
-        name="modeloTransporte"
+        name="modelo_transporte"
       ></app-catalogo-select>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="placasTransporte">Placas:</label>
+        <label class="form-label" for="placas_transporte">Placas:</label>
         <input
           class="form-control"
-          id="placasTransporte"
+          id="placas_transporte"
           placeholder=""
           type="text"
-          formControlName="placasTransporte"
+          formControlName="placas_transporte"
         />
       </div>
     </div>
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="contenedorTransporte"
+        <label class="form-label" for="contenedor_transporte"
           >Contenedor(es):</label
         >
         <textarea
           class="form-control h-25"
-          id="contenedorTransporte"
+          id="contenedor_transporte"
           rows="3"
-          formControlName="contenedorTransporte"
+          formControlName="contenedor_transporte"
         ></textarea>
       </div>
     </div>
@@ -255,14 +256,14 @@
   <div class="row" [formGroup]="ferroviarioForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroBL">Número de BL:</label>
+        <label class="form-label" for="numero_bl">Número de BL:</label>
         <div class="input-group">
           <input
             class="form-control"
-            id="numeroBL"
+            id="numero_bl"
             placeholder=""
             type="text"
-            formControlName="numeroBL"
+            formControlName="numero_bl"
           />
           <button
             class="btn btn-outline-secondary"
@@ -277,13 +278,13 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="tipoEquipo">Tipo de equipo:</label>
+        <label class="form-label" for="tipo_equipo">Tipo de equipo:</label>
         <select
           class="form-control"
-          name="tipoEquipo"
-          id="tipoEquipo"
+          name="tipo_equipo"
+          id="tipo_equipo"
           class="form-control"
-          formControlName="tipoEquipo"
+          formControlName="tipo_equipo"
         >
           <option value="-1">Seleccione una opción</option>
           <option *ngFor="let item of tipoEquipoCatalogo" [value]="item.clave">
@@ -294,27 +295,27 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="inicialesEquipo"
+        <label class="form-label" for="iniciales_equipo"
           >Iniciales de equipo:</label
         >
         <input
           class="form-control"
-          id="inicialesEquipo"
+          id="iniciales_equipo"
           placeholder=""
           type="text"
-          formControlName="inicialesEquipo"
+          formControlName="iniciales_equipo"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroEquipo">Número de equipo:</label>
+        <label class="form-label" for="numero_equipo">Número de equipo:</label>
         <input
           class="form-control"
-          id="numeroEquipo"
+          id="numero_equipo"
           placeholder=""
           type="text"
-          formControlName="numeroEquipo"
+          formControlName="numero_equipo"
         />
       </div>
     </div>
@@ -325,55 +326,55 @@
   <div class="row" [formGroup]="peatonalForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="rfcEmpresa"
+        <label class="form-label" for="rfc_empresa"
           >RFC empresa responsable:</label
         >
         <input
           class="form-control"
-          id="rfcEmpresa"
+          id="rfc_empresa"
           placeholder=""
           type="text"
-          formControlName="rfcEmpresa"
+          formControlName="rfc_empresa"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="empTransportista"
+        <label class="form-label" for="emp_transportista"
           >Empresa transportista:</label
         >
         <input
           class="form-control"
-          id="empTransportista"
+          id="emp_transportista"
           placeholder=""
           type="text"
-          formControlName="empTransportista"
+          formControlName="emp_transportista"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="nombreTransportista"
+        <label class="form-label" for="nombre_transportista"
           >Nombre transportista:</label
         >
         <input
           class="form-control"
-          id="nombreTransportista"
+          id="nombre_transportista"
           placeholder=""
           type="text"
-          formControlName="nombreTransportista"
+          formControlName="nombre_transportista"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numGafete">ID de Gafete:</label>
+        <label class="form-label" for="num_gafete">ID de Gafete:</label>
         <input
           class="form-control"
-          id="numGafete"
+          id="num_gafete"
           placeholder=""
           type="text"
-          formControlName="numGafete"
+          formControlName="num_gafete"
         />
       </div>
     </div>
@@ -384,56 +385,55 @@
   <div class="row" [formGroup]="maritimoForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="guiaBLMaritimo">Guía-BL:</label>
+        <label class="form-label" for="guia_bl_Maritimo">Guía-BL:</label>
         <input
           class="form-control"
-          id="guiaBLMaritimo"
+          id="guia_bl_Maritimo"
           placeholder=""
           type="text"
-          formControlName="guiaBLMaritimo"
+          formControlName="guia_bl_Maritimo"
         />
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="guiaHouseMaritimo">Guía house:</label>
+        <label class="form-label" for="guia_house_maritimo">Guía house:</label>
         <input
           class="form-control"
-          id="guiaHouseMaritimo"
+          id="guia_house_maritimo"
           placeholder=""
           type="text"
-          formControlName="guiaHouseMaritimo"
+          formControlName="guia_house_maritimo"
         />
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="nombreBuqueMaritimo"
+        <label class="form-label" for="nombre_buque_maritimo"
           >Nombre del buque:</label
         >
         <input
           class="form-control"
-          id="nombreBuqueMaritimo"
+          id="nombre_buque_maritimo"
           placeholder=""
           type="text"
-          formControlName="nombreBuqueMaritimo"
+          formControlName="nombre_buque_maritimo"
         />
       </div>
     </div>
 
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="contenedorMaritimo"
+        <label class="form-label" for="contenedor_maritimo"
           >Contenedor(es):</label
         >
         <textarea
           class="form-control h-25"
-          id="contenedorMaritimo"
           rows="3"
-          formControlName="observaciones"
-          id="contenedorMaritimo"
+          formControlName="contenedor_maritimo"
+          id="contenedor_maritimo"
         ></textarea>
       </div>
     </div>
@@ -444,66 +444,66 @@
   <div class="row" [formGroup]="aereoForma">
     <div class="col-md-6 d-flex align-items-end">
       <lib-input-check
-        [id]="'arriboPendienteAereo'"
+        [id]="'arribo_pendiente_aereo'"
         [label]="'Pendiente de arribar'"
         [required]="false"
-        formControlName="arriboPendienteAereo"
+        formControlName="arribo_pendiente_aereo"
       ></lib-input-check>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="guiaMasterAereo">Guía master:</label>
+        <label class="form-label" for="guia_master_aereo">Guía master:</label>
         <input
           class="form-control"
-          id="guiaMasterAereo"
+          id="guia_master_aereo"
           placeholder=""
           type="text"
-          formControlName="guiaMasterAereo"
+          formControlName="guia_master_aereo"
         />
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="guiaHouseAereo">Guía house:</label>
+        <label class="form-label" for="guia_house_aereo">Guía house:</label>
         <input
           class="form-control"
-          id="guiaHouseAereo"
+          id="guia_house_aereo"
           placeholder=""
           type="text"
-          formControlName="guiaHouseAereo"
+          formControlName="guia_house_aereo"
         />
       </div>
     </div>
 
     <div class="col-md-6">
-      <label for="fechaArriboAereo" class="form-label"
+      <label for="fecha_arribo_aereo" class="form-label"
         >Fecha carta porte:</label
       >
       <input
         class="form-control"
         type="date"
-        name="fechaArriboAereo"
-        id="fechaArriboAereo"
-        formControlName="fechaArriboAereo"
+        name="fecha_arribo_aereo"
+        id="fecha_arribo_aereo"
+        formControlName="fecha_arribo_aereo"
       />
     </div>
 
     <div class="col-md-6">
       <input-hora
-        formControlName="horaArriboAereo"
+        formControlName="hora_arribo_aereo"
         [label]="LABEL_HORA_ARRIBO"
         [required]="true"
-        [inputId]="'horaArriboAereo'"
+        [inputId]="'hora_arribo_aereo'"
       ></input-hora>
     </div>
 
     <div class="col-md-6 d-flex align-items-end">
       <lib-input-check
-        [id]="'guiaValida'"
+        [id]="'guia_valida'"
         [label]="'Guía válida'"
         [required]="false"
-        formControlName="guiaValida"
+        formControlName="guia_valida"
         [isDisabled]="true"
       ></lib-input-check>
     </div>
@@ -524,43 +524,43 @@
   <div class="row" [formGroup]="otroForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="tipoTransporteDes"
+        <label class="form-label" for="tipo_transporte_des"
           >Tipo de transporte:</label
         >
         <input
           class="form-control"
-          id="tipoTransporteDes"
+          id="tipo_transporte_des"
           placeholder=""
           type="text"
-          formControlName="tipoTransporteDes"
+          formControlName="tipo_transporte_des"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="empTransportista"
+        <label class="form-label" for="emp_transportista"
           >Empresa transportista:</label
         >
         <input
           class="form-control"
-          id="empTransportista"
+          id="emp_transportista"
           placeholder=""
           type="text"
-          formControlName="empTransportista"
+          formControlName="emp_transportista"
         />
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="datosTransporte"
+        <label class="form-label" for="datos_transporte"
           >Datos del transporte:</label
         >
         <input
           class="form-control"
-          id="datosTransporte"
+          id="datos_transporte"
           placeholder=""
           type="text"
-          formControlName="datosTransporte"
+          formControlName="datos_transporte"
         />
       </div>
     </div>
@@ -569,7 +569,10 @@
 
 @if (nuevaNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmacionModal($event)">
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="confirmacionModal($event)"
+  >
   </lib-notificaciones>
 </section>
 }

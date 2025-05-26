@@ -30,14 +30,9 @@ import {
   MSG_CAMBIO_TIPO_TRANSPORTE,
 } from '../../../core/enums/transporte-componente.enum';
 import {
-  ItemTransporte,
-  TransporteAereo,
-  TransporteCarretero,
-  TransporteFerroviario,
-  TransporteMaritimo,
-  TransporteOtro,
-  TransportePeatonal,
-} from '../../../core/models/shared/agregar-trasnporte.model';
+  ItemTransporteDespacho,
+  TransporteDespacho,
+} from '../../../core/models/shared/agregar-transporte.model';
 import {
   Notificacion,
   NotificacionesComponent,
@@ -79,10 +74,9 @@ export class TransporteComponent implements OnInit, OnChanges {
 
   /**
    * Datos de la tabla de transporte.
-   * @type {any[]}
+   * @type {TransporteDespacho[]}
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() tablaTransporte!: any[];
+  @Input() tablaTransporte!: TransporteDespacho[];
 
   /**
    * Tipo de transporte seleccionado.
@@ -93,16 +87,8 @@ export class TransporteComponent implements OnInit, OnChanges {
   /**
    * Emisor de eventos para enviar los datos de la tabla.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<
-    (
-      | TransporteAereo
-      | TransporteCarretero
-      | TransporteFerroviario
-      | TransporteMaritimo
-      | TransporteOtro
-      | TransportePeatonal
-    )[]
+  @Output() datosTabla: EventEmitter<TransporteDespacho[]> = new EventEmitter<
+    TransporteDespacho[]
   >();
 
   /** */
@@ -119,33 +105,33 @@ export class TransporteComponent implements OnInit, OnChanges {
   /**
    * Cabecera de la tabla para el transporte ferroviario.
    */
-  readonly HEADER_TABLA_FERROVIARIO: ItemTransporte[] =
+  readonly HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] =
     HEADER_TABLA_FERROVIARIO;
 
   /**
    * Cabecera de la tabla para el transporte carretero.
    */
-  readonly HEADER_TABLA_CARRETERO: ItemTransporte[] = HEADER_TABLA_CARRETERO;
+  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = HEADER_TABLA_CARRETERO;
 
   /**
    * Cabecera de la tabla para el transporte peatonal.
    */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL;
+  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = HEADER_TABLA_PEATONAL;
 
   /**
    * Cabecera de la tabla para el transporte otro.
    */
-  readonly HEADER_TABLA_OTRO: ItemTransporte[] = HEADER_TABLA_OTRO;
+  readonly HEADER_TABLA_OTRO: ItemTransporteDespacho[] = HEADER_TABLA_OTRO;
 
   /**
    * Cabecera de la tabla para el transporte aereo.
    */
-  readonly HEADER_TABLA_AEREO: ItemTransporte[] = HEADER_TABLA_AEREO;
+  readonly HEADER_TABLA_AEREO: ItemTransporteDespacho[] = HEADER_TABLA_AEREO;
 
   /**
    * Cabecera de la tabla para el transporte maritimo.
    */
-  readonly HEADER_TABLA_MARITIMO: ItemTransporte[] = HEADER_TABLA_MARITIMO;
+  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = HEADER_TABLA_MARITIMO;
 
   /**
    * Etiqueta para la hora de arribo.
@@ -185,13 +171,12 @@ export class TransporteComponent implements OnInit, OnChanges {
   /**
    * Cabecera de la tabla.
    */
-  headerTabla!: ItemTransporte[];
+  headerTabla!: ItemTransporteDespacho[];
 
   /**
    * Contenido de la tabla.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  bodyTabla: any[] = [];
+  bodyTabla: TransporteDespacho[] = [];
 
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -334,13 +319,13 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
-      empTransportista: ['', [Validators.maxLength(80)]],
-      numeroPorte: ['', [Validators.maxLength(50)]],
-      fechaPorte: ['', [Validators.maxLength(10)]],
-      marcaTransporte: ['', [Validators.maxLength(70)]],
-      modeloTransporte: [-1],
-      placasTransporte: ['', [Validators.maxLength(150)]],
-      contenedorTransporte: ['', [Validators.maxLength(150)]],
+      emp_transportista: ['', [Validators.maxLength(80)]],
+      numero_porte: ['', [Validators.maxLength(50)]],
+      fecha_porte: ['', [Validators.maxLength(10)]],
+      marca_transporte: ['', [Validators.maxLength(70)]],
+      modelo_transporte: [-1],
+      placas_transporte: ['', [Validators.maxLength(150)]],
+      contenedor_transporte: ['', [Validators.maxLength(150)]],
     });
   }
 
@@ -351,13 +336,13 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
-      numeroBL: ['', [Validators.maxLength(25)]],
-      tipoEquipo: [{ value: '-1', disabled: true }],
-      inicialesEquipo: [
+      numero_bl: ['', [Validators.maxLength(25)]],
+      tipo_equipo: [{ value: '-1', disabled: true }],
+      iniciales_equipo: [
         { value: '', disabled: true },
         [Validators.maxLength(10)],
       ],
-      numeroEquipo: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
+      numero_equipo: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
     });
   }
 
@@ -368,10 +353,10 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
-      rfcEmpresa: ['', [Validators.maxLength(13)]],
-      empTransportista: ['', [Validators.maxLength(80)]],
-      nombreTransportista: ['', [Validators.maxLength(100)]],
-      numGafete: ['', [Validators.maxLength(20)]],
+      rfc_empresa: ['', [Validators.maxLength(13)]],
+      emp_transportista: ['', [Validators.maxLength(80)]],
+      nombre_transportista: ['', [Validators.maxLength(100)]],
+      num_gafete: ['', [Validators.maxLength(20)]],
     });
   }
 
@@ -382,9 +367,9 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearOtroForm(): void {
     this.otroForma = this.fb.group({
-      tipoTransporteDes: ['', [Validators.maxLength(100)]],
-      empTransportista: ['', [Validators.maxLength(80)]],
-      datosTransporte: ['', [Validators.maxLength(250)]],
+      tipo_transporte_des: ['', [Validators.maxLength(100)]],
+      emp_transportista: ['', [Validators.maxLength(80)]],
+      datos_transporte: ['', [Validators.maxLength(250)]],
     });
   }
 
@@ -395,12 +380,12 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearAereoForm(): void {
     this.aereoForma = this.fb.group({
-      arriboPendienteAereo: [''],
-      guiaMasterAereo: ['', [Validators.maxLength(12)]],
-      guiaHouseAereo: ['', [Validators.maxLength(25)]],
-      fechaArriboAereo: ['', [Validators.maxLength(15)]],
-      horaArriboAereo: ['', [Validators.maxLength(5)]],
-      guiaValida: [{ value: false, disabled: true }],
+      arribo_pendiente_aereo: [''],
+      guia_master_aereo: ['', [Validators.maxLength(12)]],
+      guia_house_aereo: ['', [Validators.maxLength(25)]],
+      fecha_arribo_aereo: ['', [Validators.maxLength(15)]],
+      hora_arribo_aereo: ['', [Validators.maxLength(5)]],
+      guia_valida: [{ value: false, disabled: true }],
     });
   }
 
@@ -411,10 +396,10 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearMaritimoForm(): void {
     this.maritimoForma = this.fb.group({
-      guiaBLMaritimo: ['', [Validators.maxLength(15)]],
-      guiaHouseMaritimo: ['', [Validators.maxLength(15)]],
-      nombreBuqueMaritimo: ['', [Validators.maxLength(70)]],
-      contenedorMaritimo: ['', Validators.maxLength(600)],
+      guia_bl_Maritimo: ['', [Validators.maxLength(15)]],
+      guia_house_maritimo: ['', [Validators.maxLength(15)]],
+      nombre_buque_maritimo: ['', [Validators.maxLength(70)]],
+      contenedor_maritimo: ['', Validators.maxLength(600)],
     });
   }
 
@@ -423,7 +408,7 @@ export class TransporteComponent implements OnInit, OnChanges {
    *
    * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
-  tipoTabla(tipoTransporte: number): ItemTransporte[] {
+  tipoTabla(tipoTransporte: number): ItemTransporteDespacho[] {
     switch (tipoTransporte) {
       case 1:
         this.anios = TransporteComponent.obtenerAniosModelo();
@@ -432,10 +417,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         return this.HEADER_TABLA_FERROVIARIO;
       case 3:
         return this.HEADER_TABLA_AEREO;
-        break;
       case 4:
         return this.HEADER_TABLA_MARITIMO;
-        break;
       case 5:
         return this.HEADER_TABLA_PEATONAL;
       default:
@@ -563,7 +546,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     );
     switch (TIPO_TRANSPORTE) {
       case 1: {
-        const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
+        const TRANSPORTE: TransporteDespacho = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.carreteroForma.reset();
@@ -571,10 +554,10 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       case 2: {
-        const TRANSPORTE: TransporteFerroviario =
+        const TRANSPORTE: TransporteDespacho =
           this.ferroviarioForma.getRawValue();
-        TRANSPORTE.tipoEquipo =
-          TRANSPORTE.tipoEquipo === '-1' ? '' : TRANSPORTE.tipoEquipo;
+        TRANSPORTE.tipo_equipo =
+          TRANSPORTE.tipo_equipo === '-1' ? '' : TRANSPORTE.tipo_equipo;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.ferroviarioForma.reset();
@@ -582,7 +565,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       case 3: {
-        const TRANSPORTE: TransporteAereo = this.aereoForma.getRawValue();
+        const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.aereoForma.reset();
@@ -590,14 +573,14 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       case 4: {
-        const TRANSPORTE: TransporteMaritimo = this.maritimoForma.value;
+        const TRANSPORTE: TransporteDespacho = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.maritimoForma.reset();
         break;
       }
       case 5: {
-        const TRANSPORTE: TransportePeatonal = this.peatonalForma.value;
+        const TRANSPORTE: TransporteDespacho = this.peatonalForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.peatonalForma.reset();
@@ -605,7 +588,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       default: {
-        const TRANSPORTE: TransporteOtro = this.otroForma.value;
+        const TRANSPORTE: TransporteDespacho = this.otroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         this.otroForma.reset();
@@ -650,7 +633,7 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   postValidarNumeroBL(): void {
     const NUMERO_BL = parseInt(
-      this.ferroviarioForma.get('numeroBL')?.value,
+      this.ferroviarioForma.get('numero_bl')?.value,
       10
     );
     if (NUMERO_BL) {
@@ -662,13 +645,13 @@ export class TransporteComponent implements OnInit, OnChanges {
           tap((response) => {
             if (response.codigo === '00') {
               const DATOS = response.datos;
-              this.agregarValorCampoDisabled('tipoEquipo', DATOS.tipoEquipo);
+              this.agregarValorCampoDisabled('tipo_equipo', DATOS.tipoEquipo);
               this.agregarValorCampoDisabled(
-                'inicialesEquipo',
+                'iniciales_equipo',
                 DATOS.inicialesEquipo
               );
               this.agregarValorCampoDisabled(
-                'numeroEquipo',
+                'numero_equipo',
                 DATOS.numeroEquipo
               );
             } else {
@@ -706,8 +689,8 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   postValidarGuiaAerea(): void {
-    const GUIA_MASTER = this.aereoForma.get('guiaMasterAereo')?.value;
-    const GUIA_HOUSE = this.aereoForma.get('guiaHouseAereo')?.value;
+    const GUIA_MASTER = this.aereoForma.get('guia_master_aereo')?.value;
+    const GUIA_HOUSE = this.aereoForma.get('guia_house_aereo')?.value;
 
     if (GUIA_HOUSE && GUIA_MASTER) {
       this.nuevaNotificacion = {
@@ -743,7 +726,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       .pipe(
         tap((response) => {
           if (response.codigo === '00') {
-            this.aereoForma.get('guiaValida')?.setValue(true);
+            this.aereoForma.get('guia_valida')?.setValue(true);
           }
         }),
         takeUntil(this.destroyNotifier$)
