@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -98,6 +98,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {boolean} Indica si la tabla se debe mostrar o no.
    */
   mostrarTabla = false;
+
+  /**
+ * Indica si el formulario ha sido enviado.
+ * Esta bandera se utiliza para mostrar mensajes de validación o controlar el flujo
+ * después de que el usuario intenta enviar el formulario.
+ * 
+ * @type {boolean}
+ * @default false
+ */
+  formularioEnviado = false;
 
   /**
    * Checkbox de selección de la tabla.
@@ -288,7 +298,6 @@ tituloParte = TITULO_DESTINO;
     this.inicializarFormularios();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -340,7 +349,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.maxLength(500),
+          Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS),
         ],
       ],
 
@@ -358,7 +367,8 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.cantidad,
         [
           Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
+           Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(1),
         ],
       ],
@@ -371,7 +381,8 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.valorFacturaUSD?.toString() ?? '',
         [
           Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(0.01),
         ],
       ],
@@ -423,7 +434,7 @@ tituloParte = TITULO_DESTINO;
        */
       descripcionModificar: [
         this.seccionState?.descripcionModificar,
-        [Validators.required, Validators.maxLength(255)],
+        [Validators.required, Validators.maxLength(1000)],
       ],
 
       /**
@@ -473,7 +484,7 @@ tituloParte = TITULO_DESTINO;
        * Entidad que representa al solicitante en el trámite.
        * Es un campo obligatorio.
        */
-      entidad: [this.seccionState?.entidad, Validators.required],
+      entidad: [this.seccionState?.entidad],
 
       /**
        * Representación legal o nombre del representante.
@@ -649,6 +660,19 @@ tituloParte = TITULO_DESTINO;
       });
     });
   }
+
+  /**
+ * Elimina todos los datos del cuerpo de la tabla dinámica.
+ * Este método se ejecuta cuando el usuario hace clic en el botón de eliminar,
+ * limpiando el arreglo `tableBodyData` y, por lo tanto, eliminando todas las filas mostradas en la tabla.
+ *
+ * @example
+ * this.alClicEnEliminar();
+ */
+  alClicEnEliminar(): void {
+  this.tableBodyData = [];
+  }
+
   /**
    * @description
    * Método encargado de manejar las actualizaciones del store basadas en eventos del formulario.
@@ -726,6 +750,16 @@ tituloParte = TITULO_DESTINO;
  */
   validarYEnviarFormulario(): void {
     /**
+ * Marca el formulario como enviado.
+ * Esta bandera se utiliza para activar la visualización de mensajes de validación
+ * o controlar el flujo después de que el usuario intenta enviar el formulario.
+ *
+ * @example
+ * this.formularioEnviado = true;
+ */
+  this.formularioEnviado = true;
+
+    /**
      * @description
      * Verifica si el formulario es inválido. En caso de serlo, marca todos los campos como tocados 
      * para que se muestren los mensajes de error y se oculta la tabla.
@@ -752,6 +786,17 @@ tituloParte = TITULO_DESTINO;
        * @default true
        */
       this.mostrarTabla = true;
+
+      /**
+ * Llama al método encargado de obtener los datos de la tabla dinámica.
+ * Este método actualiza la propiedad `tableBodyData` y los totales en el formulario correspondiente
+ * con los datos obtenidos del servicio de exportación de petrolíferos.
+ *
+ * @example
+ * this.obtenerTablaDatos();
+ */
+      this.obtenerTablaDatos();
+
     }
   }
 

@@ -11,13 +11,15 @@ import { Subject, takeUntil } from 'rxjs';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
 import { MercanciaasociadaService } from '@ng-mf/data-access-user';
+
+import { DatosTratadosAcuerdosComponent } from "../datos-tratados-acuerdos/datos-tratados-acuerdos.component";
 /**
  * Este componente maneja el registro de la mercancía del comercializador.
  */
 @Component({
   selector: 'app-registro-mercancia-comercializador',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, DatosTratadosAcuerdosComponent],
   templateUrl: './registro-mercancia-comercializador.component.html',
   styleUrl: './registro-mercancia-comercializador.component.scss',
 })

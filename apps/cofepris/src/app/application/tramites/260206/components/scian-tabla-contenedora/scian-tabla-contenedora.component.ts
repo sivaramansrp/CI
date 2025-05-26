@@ -12,6 +12,12 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+  /**
+ * Identificador único del procedimiento asociado a este componente.
+ * Este valor es de solo lectura y se utiliza para referenciar el procedimiento específico.
+ */
+  public readonly idProcedimiento: number = 260206;
+
   constructor(private Tramite260206Store: Tramite260206Store){}
 
   /**
@@ -29,7 +35,7 @@ export class ScianTablaContenedoraComponent {
   obtenerSeleccionado(event: TablaScianConfig): void {
      this.Tramite260206Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event]
+      scianConfigDatos: [...state.scianConfigDatos, event]
     }))
   }
 }
