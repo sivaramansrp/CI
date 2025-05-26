@@ -2,19 +2,25 @@ import { Observable, catchError, map, throwError } from 'rxjs';
 import { CatalogoPaisesResponse } from '../../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { enviroment } from '../../../../enviroments/enviroment';
+import { API_GET_PAISES } from '../../../constants/api-constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaisesService {
-  constructor(private http: HttpClient) {}
+  private readonly host: string;
+
+  constructor(private http: HttpClient) {
+    this.host = `${enviroment.API_HOST}/api/`
+  }
 
   /**
    * Obtiene el listado de los países
    * @returns Observable con la lista de respuestas del catálogo.
    */
   getListaPaises(): Observable<CatalogoPaisesResponse> {
-    const ENDPOINT = 'assets/json/5701/cat-paises.json';
+    const ENDPOINT = `${this.host}${API_GET_PAISES}`;
     return this.http.get<CatalogoPaisesResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;

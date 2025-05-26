@@ -97,7 +97,7 @@ export interface CatalogoPaises {
   /** Código ISO del país. */
   codigoIso?: string;
   /** Nombre del país. */
-  nombre: string;
+  descripcion: string;
 }
 
 /**

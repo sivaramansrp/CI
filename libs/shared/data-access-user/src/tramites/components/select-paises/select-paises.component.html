@@ -2,7 +2,7 @@
   <label for="{id}" class="form-label" *ngIf="label">{{ label }} @if (required) {*}:</label>
   <select class="form-control" [id]="id" formControlName="selectControl" title="{{label}}" (change)="handleChange($event)" [ngClass]="isInvalid() ? 'required' : ''">
       <option value="" disabled selected>Seleccione una opción</option>
-      <option *ngFor="let option of catalogosPaises" [value]="option.clave">{{ option.nombre }}</option>
+      <option *ngFor="let option of catalogosPaises" [value]="option.clave">{{ option.descripcion }}</option>
   </select>
   <div *ngIf="isInvalid()" class="mensaje-error">
       Este campo es obligatorio.
