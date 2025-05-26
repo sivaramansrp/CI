@@ -5,10 +5,11 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite260212State {
+  // selectedClave: string;
   selectedEstado: CatalogoResponse | null;
-  setClave: CatalogoResponse | null,
-  setDescripcion: CatalogoResponse | null,
-  setDespecificarClasificacion:Catalogo |null
+  selectedClave: CatalogoResponse | null,
+  selectedDescripcion: CatalogoResponse | null,
+  selecteDespecificarClasificacion:Catalogo |null
   setBanco:CatalogoResponse|null,
   setRfcDelResponsableSanitario:string,
   setDenominacionRazonSocial:string,
@@ -23,7 +24,7 @@ export interface Tramite260212State {
   setRegimen:CatalogoResponse|null,
   setEntradas:CatalogoResponse|null,
   setClaveDeReferncia:string,
-  setCadenaDeLaDependencia:string,
+  CadenaDeLaDependencia:string,
   setLlaveDePago:string,
   setFechaDePago:string,
   setImporteDePago:string
@@ -31,10 +32,11 @@ export interface Tramite260212State {
 
 export function createInitialState(): Tramite260212State {
   return {
+    // selectedClave: '',
     selectedEstado: null,
-    setClave: null,
-    setDescripcion: null,
-    setDespecificarClasificacion:null,
+    selectedClave: null,
+    selectedDescripcion: null,
+    selecteDespecificarClasificacion:null,
     setBanco:null,
     setRfcDelResponsableSanitario:'',
     setDenominacionRazonSocial:'',
@@ -49,7 +51,7 @@ export function createInitialState(): Tramite260212State {
     setRegimen:null,
     setEntradas:null,
     setClaveDeReferncia:'',
-    setCadenaDeLaDependencia:'',
+    CadenaDeLaDependencia:'',
     setLlaveDePago:'',
     setFechaDePago:'',
     setImporteDePago:''
@@ -85,10 +87,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setDespecificarClasificacion(selectedDespecificarClasificacion: CatalogoResponse): void {
+  public setDespecificarClasificacion(selecteDespecificarClasificacion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
-      selectedDespecificarClasificacion,
+      selecteDespecificarClasificacion,
     }));
   }
 
@@ -188,10 +190,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       setClaveDeReferncia,
     }));
   }
-  public setCadenaDeLaDependencia(setCadenaDeLaDependencia: string):void {
+  public setCadenaDeLaDependencia(CadenaDeLaDependencia: string):void {
     this.update((state) => ({
       ...state,
-      setCadenaDeLaDependencia,
+      CadenaDeLaDependencia,
     }));
   }
 
