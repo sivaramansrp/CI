@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -38,7 +37,6 @@ import {
   NotificacionesComponent,
 } from '../notificaciones/notificaciones.component';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { BooleanoSiNoPipe } from '../../pipes/booleanoSiNo/booleano-si-no.pipe';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -62,7 +60,6 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
     InputHoraComponent,
     NotificacionesComponent,
     ReactiveFormsModule,
-    BooleanoSiNoPipe,
   ],
 })
 export class TransporteComponent implements OnInit, OnChanges {
@@ -91,8 +88,14 @@ export class TransporteComponent implements OnInit, OnChanges {
     TransporteDespacho[]
   >();
 
-  /** */
+  /**
+   * Referencia al elemento del modal para agregar transporte.
+   */
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
 
   /**
@@ -461,18 +464,6 @@ export class TransporteComponent implements OnInit, OnChanges {
     }
 
     return ANIOS;
-  }
-
-  /**
-   * Verifica si el valor proporcionado es un booleano.
-   *
-   * @param valor - Valor a verificar.
-   * @returns {boolean} `true` si el valor es un booleano, de lo contrario `false`.
-   */
-
-  // eslint-disable-next-line class-methods-use-this
-  esBooleano(valor: string | number | boolean): boolean {
-    return typeof valor === 'boolean';
   }
 
   /**

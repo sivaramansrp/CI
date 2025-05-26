@@ -44,9 +44,9 @@
                 />
               </div>
             </td>
-            @for (item of headerTabla; track $index) { @if (
-            esBooleano(row[item.llave] ?? '') ) {
-            <td>{{ row[item.llave] }}</td>
+            @for (item of headerTabla; track $index) { @if (item.llave ===
+            'fecha_porte') {
+            <td>{{ row[item.llave] | date : 'dd/MM/yyyy' }}</td>
             } @else {
             <td>{{ row[item.llave] }}</td>
             } }
