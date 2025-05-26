@@ -1,5 +1,5 @@
 
-interface CertificadoDisponibles {
+export interface CertificadoDisponibles {
     numeroDeCertificado: number;
     fechaExpedicion: string;
     fechaVencimiento: string;

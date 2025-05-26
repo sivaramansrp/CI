@@ -1,4 +1,4 @@
-interface DomicilioTabla {
+export interface DomicilioTabla {
     numeroDeOrden: string;
     fraccionArancelaria: string;
     nombreTecnico: string;
