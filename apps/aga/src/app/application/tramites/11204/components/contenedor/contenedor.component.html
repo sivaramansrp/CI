@@ -163,19 +163,22 @@
                                 (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
+                    <div class="row align-items-cente">
+                        <div class="col-md-8">
                             <ng-titulo titulo="Adjuntar archivo" />
-                            <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
-                            <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
-                                disabled>
-                            <!-- <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
-                                required> -->
+                            <div class="d-flex align-items-center">
+                                <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
+                                <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
+                                    disabled>
+                            </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4 d-flex justify-content-end cargarbtn">
-                            <button type="button" class="btn btn-default" data-bs-target="#modalArchivoCsv" >Cargar archivo</button>
-                                <!-- (click)="adjuntarArchivo()" -->
+                            <button type="button" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#modalArchivoCsv">Cargar archivo</button>
                         </div>
+                    </div>
+                    <div class="row">
                         <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
                             <app-tabla-dinamica [configuracionTabla]="csvTabla"
                                 [datos]="datosDelCsvArchivo"></app-tabla-dinamica>
@@ -258,6 +261,23 @@
                     <button type="button" class="btn btn-danger" (click)="limpiarCampos()"
                         data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoCsv" tabindex="-1" role="dialog"
+        aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <ng-titulo titulo="Cargar archivo" />
+                <div class="modal-body justify-content-start mb-5">
+                    <label for="archivoSeleccionado" class="form-label">Archivo:</label>   
+                    <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado">
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Regresar</button>
+                    <button type="button" class="btn btn-primary" (click)="adjuntarArchivo()" data-bs-dismiss="modal">Enviar</button>
                 </div>
             </div>
         </div>

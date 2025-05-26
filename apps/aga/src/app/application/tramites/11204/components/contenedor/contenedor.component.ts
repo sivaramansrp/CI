@@ -368,6 +368,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.mostrarSeccionArchivoCsv = true;
         this.radioArchivoCsv = false;
         this.radioContenedor = true;
+        this.mostrarArchivoSeleccionadoTable = true;
         break;
       default:
         break;
