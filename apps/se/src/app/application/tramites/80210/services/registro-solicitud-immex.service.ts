@@ -2,6 +2,7 @@ import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src'
 import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-solicitud-immex.model';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite80210Store, Tramites80210State } from '../estados/tramites80210.store';
 import { HttpClient } from '@angular/common/http';
 
 /**
@@ -69,7 +70,10 @@ export class registroSolicitudImmexService implements OnDestroy {
    * 
    * @param http - Cliente HTTP inyectado para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite80210Store: Tramite80210Store,
+  ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
@@ -92,6 +96,17 @@ export class registroSolicitudImmexService implements OnDestroy {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+
+   actualizarEstadoFormulario(datos: Tramites80210State): void {
+      this.tramite80210Store.setShowPlantas(datos.showPlantas);
+      this.tramite80210Store.setPlantasDisponibles(datos.plantasDisponibles);
+      this.tramite80210Store.setPlantasSeleccionada(datos.plantasSeleccionadas);
+  }
+
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramites80210State> {
+    return this.http.get<Tramites80210State>('assets/json/80210/registro_immex_ampliacion.json');
   }
 
   /**

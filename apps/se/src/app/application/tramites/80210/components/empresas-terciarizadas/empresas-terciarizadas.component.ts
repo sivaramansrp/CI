@@ -1,14 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
+  ConsultaioQuery,
   TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
   Plantas,
 } from '../../modelos/registro-solicitud-immex.model';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import {
   Tramite80210Store,
   Tramites80210State,
@@ -81,6 +82,12 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   destoryNotification$: Subject<void> = new Subject<void>();
 
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -94,13 +101,47 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     @Inject(registroSolicitudImmexService)
     public registroSolicitudService: registroSolicitudImmexService,
     private tramite80210Store: Tramite80210Store,
-    private tramite80210Query: Tramite80210Query
-  ) {}
+    private tramite80210Query: Tramite80210Query,
+    private consultaQuery: ConsultaioQuery
+  ) {
+     /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destoryNotification$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  inicializarFormulario(): void {
     this.initializeTramite80210State();
     this.showPlantas = this.tramites80210State.showPlantas;
     this.registroSolicitudService.obtenerEstados();
@@ -119,6 +160,23 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     this.createEmpresasForm();
   }
 
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.empresasForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.empresasForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
+
+
   /**
    * Crea el formulario reactivo para las empresas.
    */
@@ -128,7 +186,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
       rfc: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
+      estado: ['-1', [Validators.required]],
     });
   }
 
@@ -153,7 +211,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       this.segregatePlantasDatos();
       this.tramite80210Store.setShowPlantas(this.showPlantas);
       this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset();
+      this.empresasForm.get('estado')?.reset("-1");
     }
   }
 
