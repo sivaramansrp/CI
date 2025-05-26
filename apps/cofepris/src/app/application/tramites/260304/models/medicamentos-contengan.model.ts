@@ -12,6 +12,17 @@ export interface Otros extends Facturador {
    */
   nombreDescripcion: string;
 }
+
+/**
+ * Representa un modelo para el tipo de persona, utilizado para seleccionar entre diferentes opciones de persona.
+ *
+ * @property label - La etiqueta descriptiva que se muestra al usuario.
+ * @property value - El valor asociado a la opción de tipo de persona.
+ * @property hint - (Opcional) Información adicional o sugerencia para la opción.
+ *
+ * @remarks
+ * Utilice este modelo para definir las opciones de tipo de persona en formularios o listas desplegables.
+ */
 export interface TipoPersonaModel{
       label: string, 
       value: string,
