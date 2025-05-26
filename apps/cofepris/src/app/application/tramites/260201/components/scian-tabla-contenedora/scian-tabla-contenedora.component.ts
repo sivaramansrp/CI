@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/psicotropicos-poretorno.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
@@ -13,6 +14,14 @@ import { Tramite260201Store } from '../../estados/tramite260201Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+    
   constructor(private tramite260201Store: Tramite260201Store){
     // Constructor vacío, se inyecta el store para su uso en el componente.
   }

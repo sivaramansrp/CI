@@ -49,7 +49,6 @@ import { forwardRef } from '@angular/core';
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),

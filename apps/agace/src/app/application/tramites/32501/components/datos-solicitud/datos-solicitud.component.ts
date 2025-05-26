@@ -1,29 +1,47 @@
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
 import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
 import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { InputHoraComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
+import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
 import { REGEX_NUMEROS_USD } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectPaisesComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -34,6 +52,28 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-datos-solicitud',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    WizardComponent,
+    BtnContinuarComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    InputHoraComponent,
+    CrosslistComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+    SelectPaisesComponent,
+    AnexarDocumentosComponent,
+    AlertComponent,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    TablaDinamicaComponent,
+    ModalOperacionComponent
+  ],
+  providers: [MercanciasDesmontadasOSinMontarService],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
@@ -234,15 +274,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       colonia: [this.solicitud32501State.colonia, [Validators.required]],
-      calle: [this.solicitud32501State.calle, [Validators.required,Validators.maxLength(250)]],
+      calle: [
+        this.solicitud32501State.calle,
+        [Validators.required, Validators.maxLength(250)],
+      ],
       numeroExterior: [
         this.solicitud32501State.numeroExterior,
-       [ Validators.required, Validators.maxLength(15)]
+        [Validators.required, Validators.maxLength(15)],
       ],
-      numeroInterior: [this.solicitud32501State.numeroInterior,[Validators.maxLength(15)]],
+      numeroInterior: [
+        this.solicitud32501State.numeroInterior,
+        [Validators.maxLength(15)],
+      ],
       codigoPostal: [
         this.solicitud32501State.codigoPostal,
-        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS),Validators.maxLength(5)],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_SOLO_NUMEROS),
+          Validators.maxLength(5),
+        ],
       ],
     });
 
@@ -297,7 +347,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-  obtenerAvisoOpcionesDeRadio():void{
+  obtenerAvisoOpcionesDeRadio(): void {
     this.mercanciasDesmontadasOSinMontarService
       .obtenerAvisoOpcionesDeRadio()
       .pipe(takeUntil(this.destroyed$))

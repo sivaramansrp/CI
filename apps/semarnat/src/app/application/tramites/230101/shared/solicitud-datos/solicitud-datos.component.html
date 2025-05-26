@@ -6,7 +6,7 @@
           <h4 class="panel-title">
             <a aria-label="Repeat"><i class="bi bi-copy" aria-hidden="true"></i>Opciones de pre-llenado de Solicitud</a>
           </h4>
-          <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()"> </button>
+          <button type="button" class="collpase-button {{(!colapsable) ? 'collapsed' : '' }}" (keydown)="mostrarColapsable()"> </button>
         </div>
         @if(colapsable){
         <div class="panel-collapse collapse in" id="panel-01">
@@ -26,7 +26,7 @@
                 </thead>
                 <tbody>
                   @for (item of tablaFilaDatos; let i = $index; track i) {
-                  <tr>
+                  <tr class="table-row">
                     <td>{{ item.fechaCreacion }}</td>
                     <td>{{ item.mercancia }}</td>
                     <td>{{ item.cantidad }}</td>
