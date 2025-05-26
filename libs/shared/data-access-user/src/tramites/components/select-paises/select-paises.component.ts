@@ -34,6 +34,7 @@ export class SelectPaisesComponent implements OnChanges {
 
   formSelect: FormGroup;
   value: string = '';
+  public handleChange = SelectPaisesComponent.handleChange;
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
@@ -41,8 +42,8 @@ export class SelectPaisesComponent implements OnChanges {
     });
   }
 
-  private onChange: (value: string) => void = () => { };
-  private onTouched: () => void = () => { };
+  private static onChange: (value: string) => void = () => { /**/ };
+  private static onTouched: () => void = () => { /**/ };
 
   /**
    * Detecta cambios en las propiedades de entrada y actualiza las validaciones
@@ -81,9 +82,9 @@ export class SelectPaisesComponent implements OnChanges {
    * @param event - Evento de cambio del elemento select.
    * @returns void
    */
-  handleChange(event: Event): void {
+  static handleChange(event: Event): void {
     const VALUE = (event.target as HTMLSelectElement).value;
-    this.onChange(VALUE);
+    SelectPaisesComponent.onChange(VALUE);
   }
 
   /**
@@ -113,7 +114,7 @@ export class SelectPaisesComponent implements OnChanges {
    * @returns void
    */
   registerOnChange(fn: (_value: string) => void): void {
-    this.onChange = fn;
+    SelectPaisesComponent.onChange = fn;
     this.formSelect.get('selectControl')?.valueChanges.subscribe(fn);
   }
 
@@ -122,8 +123,8 @@ export class SelectPaisesComponent implements OnChanges {
    * @param fn - Función que se ejecutará al marcar el control como tocado.
    * @returns void
    */
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+  static registerOnTouched(fn: () => void): void {
+    SelectPaisesComponent.onTouched = fn;
   }
 
   /**

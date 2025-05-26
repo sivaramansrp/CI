@@ -4,7 +4,7 @@ export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bande
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
-export { enviroment } from './enviroments/enviroment';
+export { ENVIRONMENT } from './enviroments/enviroment';
 export {
   InputConfig,
   LabelValueDatos,

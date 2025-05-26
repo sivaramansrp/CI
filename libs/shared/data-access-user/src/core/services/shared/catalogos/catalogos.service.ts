@@ -1,11 +1,10 @@
 import {
-  CatalogoDocumento,
   CatalogoPaises,
   CatalogoResponse,
   JSONResponse,
   RespuestaCatalogos,
 } from '../../../models/shared/catalogos.model';
-import { enviroment } from '../../../../enviroments/enviroment';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -14,8 +13,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CatalogosService {
-  urlServer = enviroment.URL_SERVER;
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER;
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) 
   { }

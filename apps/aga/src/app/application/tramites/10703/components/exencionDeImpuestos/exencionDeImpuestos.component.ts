@@ -3,6 +3,7 @@ import {
   CatalogoSelectComponent,
   InputCheckComponent,
   InputRadioComponent,
+  TableBodyData,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -84,7 +85,7 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Opciones para los botones de radio.

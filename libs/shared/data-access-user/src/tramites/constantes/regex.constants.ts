@@ -10,7 +10,7 @@ export const REG_X = {
 /**
  * Expresión regular que valida que la cadena no contenga los caracteres <, >, / o \.
  */
-export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>\/\\]+$/;
+export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>/\\]+$/;
 
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
@@ -29,7 +29,7 @@ export const REGEX_LEADING_SPACES = /^[ ]+/;
  * - Bloquea caracteres no válidos como emojis o scripts no latinos.
  */
 export const REGEX_DESCRIPCION_ESPECIALES =
-  /^[-A-Za-z0-9\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?&#@;,.:'"\/\[\]_-]*$/;
+  /^[-A-Za-z0-9\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s%$*()!_?&#@;,.:'"/[\]_-]*$/;
 
 /**
  * Expresión regular para validar RFC (Registro Federal de Contribuyentes) en México.
@@ -245,7 +245,7 @@ export const REGEX_AVALUO = ('^[0-9]*\\.?[0-9]+$');
  * Ejemplo válido: ejemplo@correo.com,otro@correo.com
  */
 export const REGEX_CORREO_ELECTRONICO =
-  /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+  /^[0-9a-z_\-.]+@[0-9a-z\-.]+\.[a-z]{2,4}(,[[0-9a-z_\-.]+@[0-9a-z\-.]+\.[a-z]{2,4})*$/i;
 
 /**
  * Expresión regular para validar números de teléfono.
@@ -342,7 +342,7 @@ export const REGEX_SIN_DIGITOS = /\D/g;
 /**
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
-export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
+export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
 
 /**
  * Expresión regular para validar un número de teléfono de 10 dígitos.
@@ -352,7 +352,7 @@ export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  */
-export const REGEX_POSTAL = '/^\d{5}$/';
+export const REGEX_POSTAL = /^\d{5}$/;
 /**
  * Expresión regular para validar cadenas alfanuméricas con espacios.
  * 

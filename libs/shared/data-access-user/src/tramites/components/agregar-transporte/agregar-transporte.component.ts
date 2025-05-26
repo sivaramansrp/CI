@@ -35,7 +35,6 @@ import {
   TransportePeatonal,
 } from '../../../core/models/shared/agregar-transporte.model';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { BodyValidaFerro } from '../../../core/models/shared/validaciones-transporte.model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -651,5 +650,6 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     return typeof valor === 'boolean';
   }
 
-  eliminarElementoTabla(): void {}
+  public eliminarElementoTabla = AgregarTransporteComponent.eliminarElementoTabla;
+  static eliminarElementoTabla(): void { /**/ }
 }

@@ -107,8 +107,9 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', VALIDATORS],
     });
   }
-  private onChange: (value: string | number | null) => void = () => { };
-  private onTouched: () => void = () => { };
+  
+  private static onChange: (value: string | number | null) => void = () => { /**/ };
+  private static onTouched: () => void = () => { /**/ };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
@@ -116,8 +117,8 @@ export class InputRadioComponent implements OnInit {
   onSelectionChange(value: string | number) : void {
     this.selectedValue = value;
     this.valueChange.emit(value);
-    this.onChange(value);
-    this.onTouched();
+    InputRadioComponent.onChange(value);
+    InputRadioComponent.onTouched();
   }
 
   // ✅ Implement `ControlValueAccessor`
@@ -128,12 +129,12 @@ export class InputRadioComponent implements OnInit {
     }
   }
 
-  registerOnChange(fn: (value: string | number | null) => void): void {
-    this.onChange = fn;
+  static registerOnChange(fn: (value: string | number | null) => void): void {
+    InputRadioComponent.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+  static registerOnTouched(fn: () => void): void {
+    InputRadioComponent.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
