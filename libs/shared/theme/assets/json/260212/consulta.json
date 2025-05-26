@@ -18,8 +18,8 @@
   "selectedEntradas": "valor ficticio",
   "claveDeReferncia": "valor ficticio",
   "CadenaDeLaDependencia": "valor ficticio",
-  "selectedLlaveDePago": "valor ficticio",
+  "llaveDePago": "valor ficticio",
   "selectedFechaDePago": "valor ficticio",
-  "selectedImporteDePago": "valor ficticio"
+  "importeDePago": "valor ficticio"
  
 }

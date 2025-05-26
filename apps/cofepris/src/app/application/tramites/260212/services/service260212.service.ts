@@ -31,8 +31,8 @@ export class Service260212Service {
     if (DATOS.selecteDespecificarClasificacion) {
       this.tramite260212Store.setDespecificarClasificacion(DATOS.selecteDespecificarClasificacion);
     }
-    if (DATOS.setBanco) {
-      this.tramite260212Store.setBanco(DATOS.setBanco);
+    if (DATOS.banco) {
+      this.tramite260212Store.setBanco(DATOS.banco);
     }
     this.tramite260212Store.setRfcDelResponsableSanitario(DATOS.setRfcDelResponsableSanitario);
     this.tramite260212Store.setDenominacionRazonSocial(DATOS.setDenominacionRazonSocial);
@@ -49,15 +49,15 @@ export class Service260212Service {
      if (DATOS.setEntradas) {
       this.tramite260212Store.setEntradas(DATOS.setEntradas);
     }
-   this.tramite260212Store.setClaveDeReferncia(DATOS.setClaveDeReferncia);
+   this.tramite260212Store.setClaveDeReferncia(DATOS.ClaveDeReferncia);
    this.tramite260212Store.setCadenaDeLaDependencia(DATOS.CadenaDeLaDependencia);
-   this.tramite260212Store.setLlaveDePago(DATOS.setLlaveDePago);
+   this.tramite260212Store.setLlaveDePago(DATOS.llaveDePago);
    this.tramite260212Store.setFechaDePago(DATOS.setFechaDePago);
-    this.tramite260212Store.setImporteDePago(DATOS.setImporteDePago);
+    this.tramite260212Store.setImporteDePago(DATOS.importeDePago);
   }
  
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260212State> {
-    return this.http.get<Tramite260212State>('assets/json/120212/consulta.json');
+    return this.http.get<Tramite260212State>('assets/json/260212/consulta.json');
   }
  
 }

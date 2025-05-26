@@ -10,7 +10,7 @@ export interface Tramite260212State {
   selectedClave: CatalogoResponse | null,
   selectedDescripcion: CatalogoResponse | null,
   selecteDespecificarClasificacion:Catalogo |null
-  setBanco:CatalogoResponse|null,
+  banco:string,
   setRfcDelResponsableSanitario:string,
   setDenominacionRazonSocial:string,
   setCorreoElectronico:string,
@@ -23,11 +23,11 @@ export interface Tramite260212State {
   setCodigoPostal:string,
   setRegimen:CatalogoResponse|null,
   setEntradas:CatalogoResponse|null,
-  setClaveDeReferncia:string,
+  ClaveDeReferncia:string,
   CadenaDeLaDependencia:string,
-  setLlaveDePago:string,
+  llaveDePago:string,
   setFechaDePago:string,
-  setImporteDePago:string
+  importeDePago:string
 }
 
 export function createInitialState(): Tramite260212State {
@@ -37,7 +37,7 @@ export function createInitialState(): Tramite260212State {
     selectedClave: null,
     selectedDescripcion: null,
     selecteDespecificarClasificacion:null,
-    setBanco:null,
+    banco:'',
     setRfcDelResponsableSanitario:'',
     setDenominacionRazonSocial:'',
     setCorreoElectronico:'',
@@ -50,11 +50,11 @@ export function createInitialState(): Tramite260212State {
     setCodigoPostal:'',
     setRegimen:null,
     setEntradas:null,
-    setClaveDeReferncia:'',
+    ClaveDeReferncia:'',
     CadenaDeLaDependencia:'',
-    setLlaveDePago:'',
+    llaveDePago:'',
     setFechaDePago:'',
-    setImporteDePago:''
+    importeDePago:''
   };
 }
 @Injectable({
@@ -94,10 +94,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setBanco(setBanco: CatalogoResponse): void {
+  public setBanco(banco: string): void {
     this.update((state) => ({
       ...state,
-      setBanco,
+      banco,
     }));
   }
 
@@ -184,10 +184,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       setEntradas,
     }));
   }
-  public setClaveDeReferncia(setClaveDeReferncia: string):void {
+  public setClaveDeReferncia(ClaveDeReferncia: string):void {
     this.update((state) => ({
       ...state,
-      setClaveDeReferncia,
+      ClaveDeReferncia,
     }));
   }
   public setCadenaDeLaDependencia(CadenaDeLaDependencia: string):void {
@@ -197,10 +197,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setLlaveDePago(setLlaveDePago: string):void {
+  public setLlaveDePago(llaveDePago: string):void {
     this.update((state) => ({
       ...state,
-      setLlaveDePago,
+      llaveDePago,
     }));
   }
   public setFechaDePago(setFechaDePago: string):void {
@@ -209,10 +209,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       setFechaDePago,
     }));
   }
-  public setImporteDePago(setImporteDePago: string):void {
+  public setImporteDePago(importeDePago: string):void {
     this.update((state) => ({
       ...state,
-      setImporteDePago,
+      importeDePago,
     }));
   }
 }

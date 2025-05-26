@@ -44,7 +44,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedBanco$: Observable<CatalogoResponse | null> =
+  selectedBanco$: Observable<string> =
     this.tramite260212Query.selectedBanco$;
   /** Catálogo de estados cargado desde un archivo JSON */
   pagoDerechos!: FormGroup;
