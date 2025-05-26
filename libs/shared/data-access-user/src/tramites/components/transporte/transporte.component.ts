@@ -13,6 +13,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -56,6 +57,7 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
   imports: [
     CatalogoSelectComponent,
     CommonModule,
+    FormsModule,
     InputCheckComponent,
     InputHoraComponent,
     NotificacionesComponent,
@@ -114,12 +116,14 @@ export class TransporteComponent implements OnInit, OnChanges {
   /**
    * Cabecera de la tabla para el transporte carretero.
    */
-  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = HEADER_TABLA_CARRETERO;
+  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] =
+    HEADER_TABLA_CARRETERO;
 
   /**
    * Cabecera de la tabla para el transporte peatonal.
    */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = HEADER_TABLA_PEATONAL;
+  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] =
+    HEADER_TABLA_PEATONAL;
 
   /**
    * Cabecera de la tabla para el transporte otro.
@@ -134,7 +138,8 @@ export class TransporteComponent implements OnInit, OnChanges {
   /**
    * Cabecera de la tabla para el transporte maritimo.
    */
-  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = HEADER_TABLA_MARITIMO;
+  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] =
+    HEADER_TABLA_MARITIMO;
 
   /**
    * Etiqueta para la hora de arribo.
@@ -243,6 +248,12 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   readonly LISTA_TIPO_TRANSPORTE = LISTA_TIPO_TRANSPORTE;
 
+  /**
+   * @description Indica si se deben seleccionar todos los checkboxes de la tabla.
+   * @type {boolean}
+   */
+  checkSeleccionarTodos: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
@@ -345,7 +356,10 @@ export class TransporteComponent implements OnInit, OnChanges {
         { value: '', disabled: true },
         [Validators.maxLength(10)],
       ],
-      numero_equipo: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
+      numero_equipo: [
+        { value: '', disabled: true },
+        [Validators.maxLength(15)],
+      ],
     });
   }
 
@@ -472,14 +486,35 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @param event - Evento que contiene el estado del checkbox principal.
    * @returns void
    */
-  // eslint-disable-next-line class-methods-use-this
   seleccionarTodos(event: Event): void {
-    const CHECKBOXES = document.querySelectorAll('.check-transporte');
-    CHECKBOXES.forEach((checkbox) => {
-      (checkbox as HTMLInputElement).checked = (
-        event.target as HTMLInputElement
-      ).checked;
+    this.checkSeleccionarTodos = !this.checkSeleccionarTodos;
+    const CHECKBOXES = (event.target as HTMLInputElement).checked;
+    this.bodyTabla.forEach((item) => {
+      item.seleccionado = CHECKBOXES;
     });
+  }
+
+  /**
+   * Selecciona uno o varios checkboxes con la clase 'check-transporte'.
+   */
+  seleccionarItemTabla(i: number): void {
+    const ITEM = this.bodyTabla[i];
+    ITEM.seleccionado = !ITEM.seleccionado;
+  }
+
+  /**
+   * Elimina los elementos seleccionados de la tabla de transporte.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSeleccionados(): void {
+    const SELECCIONADOS = this.bodyTabla.every((item) => item.seleccionado);
+
+    if (SELECCIONADOS) {
+      this.bodyTabla = [];
+      this.checkSeleccionarTodos = false;
+    }
+
+    this.datosTabla.emit(this.bodyTabla);
   }
 
   /**
@@ -534,6 +569,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       case 1: {
         const TRANSPORTE: TransporteDespacho = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
         this.bodyTabla.push(TRANSPORTE);
         this.carreteroForma.reset();
         break;
@@ -545,6 +581,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         TRANSPORTE.tipo_equipo =
           TRANSPORTE.tipo_equipo === '-1' ? '' : TRANSPORTE.tipo_equipo;
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
+
         this.bodyTabla.push(TRANSPORTE);
         this.ferroviarioForma.reset();
         break;
@@ -553,6 +591,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       case 3: {
         const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
+
         this.bodyTabla.push(TRANSPORTE);
         this.aereoForma.reset();
         break;
@@ -561,6 +601,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       case 4: {
         const TRANSPORTE: TransporteDespacho = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
+
         this.bodyTabla.push(TRANSPORTE);
         this.maritimoForma.reset();
         break;
@@ -568,6 +610,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       case 5: {
         const TRANSPORTE: TransporteDespacho = this.peatonalForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
+
         this.bodyTabla.push(TRANSPORTE);
         this.peatonalForma.reset();
         break;
@@ -576,6 +620,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       default: {
         const TRANSPORTE: TransporteDespacho = this.otroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
+        TRANSPORTE.seleccionado = false;
+
         this.bodyTabla.push(TRANSPORTE);
         this.otroForma.reset();
         break;
@@ -600,6 +646,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       txtBtnCancelar: '',
     };
 
+    this.observaciones.setValue('');
     this.enviarTransporteTabla();
     this.cerrarModal();
   }

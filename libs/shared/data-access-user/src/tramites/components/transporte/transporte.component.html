@@ -22,6 +22,7 @@
                 <input
                   class="form-check"
                   type="checkbox"
+                  [(ngModel)]="checkSeleccionarTodos"
                   (change)="seleccionarTodos($event)"
                 />
               </div>
@@ -35,12 +36,13 @@
           @for (row of bodyTabla; let i= $index; track i) {
           <tr>
             <td>
-              <div class="form-check">
+              <div class="form-check check-transporte">
                 <input
                   class="form-check"
                   type="checkbox"
                   title="Seleccionar todos"
-                  (change)="seleccionarTodos($event)"
+                  [(ngModel)]="row.seleccionado"
+                  (change)="seleccionarItemTabla(i)"
                 />
               </div>
             </td>
@@ -74,6 +76,7 @@
     <button
       type="button"
       class="btn btn-danger"
+      (click)="eliminarSeleccionados()"
       *ngIf="bodyTabla.length > 0"
     >
       Eliminar

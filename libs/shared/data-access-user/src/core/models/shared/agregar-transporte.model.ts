@@ -67,6 +67,7 @@ export interface ItemTransporteDespacho {
 }
 
 export interface TransporteDespacho {
+  seleccionado?: boolean;
   tipo_transporte: string;
   emp_transportista?: string;
   numero_porte?: string;
@@ -104,6 +105,6 @@ export interface TransporteDespacho {
 
   tipo_transporte_des: string;
   datos_transporte: string;
-  
+
   mismosDatosTransporte: string;
 }
