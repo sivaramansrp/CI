@@ -1,17 +1,16 @@
+/**
+ * datos-mercancia.component.ts
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite110102State } from '../../estados/store/tramite110102.store';
 
 import { ExportadorAutorizadoService } from '../../service/exportador-autorizado.service';
 
 /**
- * Componente DataosMercanciaComponent.
- *
  * Este componente representa la sección de datos de la mercancía.
- * Actualmente, no contiene lógica adicional y sirve como un contenedor
- * para la vista definida en 'dataos-de-la-mercancia.component.html'.
+ * Gestiona la interacción con el estado global y la obtención de datos del servidor.
  */
 @Component({
   selector: 'app-datos-mercancia',
@@ -19,65 +18,83 @@ import { ExportadorAutorizadoService } from '../../service/exportador-autorizado
   standalone: false, // Indica que este componente no es un componente independiente (standalone).
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si los datos de respuesta del servidor están disponibles.
+   */
+  public datosRespuestaDisponibles: boolean = false;
 
+  /**
+   * Subject para notificar la destrucción del componente y desuscribirse de observables.
+   */
+  private notificadorDestruccion$: Subject<void> = new Subject();
 
+  /**
+   * Estado actual de la consulta.
+   */
+  public estadoConsulta!: ConsultaioState;
 
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
-
-  /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
-  public consultaState!:ConsultaioState;
-    /**
+  /**
    * Índice de la pestaña actualmente seleccionada.
    * Inicializado a 1 por defecto.
    */
-    indice: number = 1;
+  public indicePestana: number = 1;
 
-
-    constructor(
-      private exportadorAutorizadoService: ExportadorAutorizadoService,
+  /**
+   * Constructor del componente.
+   * @param {ExportadorAutorizadoService} servicioExportador - Servicio para gestionar datos de exportadores autorizados.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la consulta.
+   */
+  constructor(
+    private servicioExportador: ExportadorAutorizadoService,
     private consultaQuery: ConsultaioQuery
-  ) {
-  }
+  ) {}
 
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Configura las suscripciones necesarias y verifica si se deben obtener datos del servidor.
+   */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((seccionState) => {
-        this.consultaState = seccionState;
-        console.log('Consulta State:', this.consultaState);
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoSeccion) => {
+        this.estadoConsulta = estadoSeccion;
       });
 
-    if(this.consultaState.update) {
-      this.getBandejaSolicitudesDatos();
+    if (this.estadoConsulta.update) {
+      this.obtenerDatosBandejaSolicitudes();
     } else {
-      this.esDatosRespuesta = true;
+      this.datosRespuestaDisponibles = true;
     }
   }
 
-   getBandejaSolicitudesDatos():void {
-    this.exportadorAutorizadoService.getRegistro()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: Tramite110102State) => {
-        if(response) {
-          this.esDatosRespuesta = true;
-          this.exportadorAutorizadoService.setRegistro(response);   
+  /**
+   * Obtiene los datos de la bandeja de solicitudes desde el servidor.
+   */
+  obtenerDatosBandejaSolicitudes(): void {
+    this.servicioExportador.getRegistro()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((respuesta: Tramite110102State) => {
+        if (respuesta) {
+          this.datosRespuestaDisponibles = true;
+          this.servicioExportador.setRegistro(respuesta);
         }
       });
   }
 
   /**
-   * Método para seleccionar una pestaña específica.
-   *
-   * @param i El índice de la pestaña a seleccionar.
+   * Selecciona una pestaña específica.
+   * @param {number} indice - El índice de la pestaña a seleccionar.
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  seleccionarPestana(indice: number): void {
+    this.indicePestana = indice;
   }
 
+  /**
+   * Hook del ciclo de vida que se llama cuando la directiva se destruye.
+   * Completa el subject `notificadorDestruccion$` para desuscribirse de todos los observables.
+   */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }
-

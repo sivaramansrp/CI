@@ -3,24 +3,24 @@
 
                 <div class="row">
                         <ul class="nav nav-tabs">
-                                <li [ngClass]="indice === 1 ? 'active' : ''">
-                                        <a data-toggle="tab" (click)="seleccionaTab(1)"
-                                                (keydown.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)"
+                                <li [ngClass]="indicePestana === 1 ? 'active' : ''">
+                                        <a data-toggle="tab" (click)="seleccionarPestana(1)"
+                                                (keydown.enter)="seleccionarPestana(1)" (keydown.space)="seleccionarPestana(1)"
                                                 role="button" tabindex="1">Solicitante</a>
                                 </li>
-                                <li [ngClass]="indice === 2 ? 'active' : ''">
-                                        <a data-toggle="tab" (click)="seleccionaTab(2)"
-                                                (keydown.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)"
+                                <li [ngClass]="indicePestana === 2 ? 'active' : ''">
+                                        <a data-toggle="tab" (click)="seleccionarPestana(2)"
+                                                (keydown.enter)="seleccionarPestana(2)" (keydown.space)="seleccionarPestana(2)"
                                                 role="button" tabindex="2">Datos de la Mercancía</a>
                                 </li>
                         </ul>
                         <ng-container>
-                                @switch (indice) {
+                                @switch (indicePestana) {
                                 @case (1) {
                                 <solicitante [tabindex]="1"></solicitante>
                                 }
                                 @case (2) {
-                                @if(esDatosRespuesta){
+                                @if(datosRespuestaDisponibles){
                                 <app-datos-de-la-mercancia></app-datos-de-la-mercancia>
                                 <app-registro-mercancia-comercializador></app-registro-mercancia-comercializador>
                                 <app-registro-exportador-autorizado></app-registro-exportador-autorizado>

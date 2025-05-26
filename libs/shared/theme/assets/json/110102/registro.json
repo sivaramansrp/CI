@@ -1,7 +1,7 @@
 {
     "cveRegistroProductor": "110102",
-    "unidadAdministrativaClave": "1",
-    "solicitudEntidadFederativaEntidadClave": "1",
+    "claveEntidadFederativa": "1",
+    "claveUnidadAdministrativa": "1",
     "protestoDecirVerdad": true,
     "solicitaSeparacionContable": true,
     "solicitaExportadorAutorizado": true,

@@ -178,8 +178,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
         takeUntil(this.destruido$),
         map((estadoSeccion) => {
           this.formularioRepresentacionFederal.patchValue({
-            claveEntidadFederativa: estadoSeccion.solicitudEntidadFederativaEntidadClave || '',
-            claveUnidadAdministrativa: estadoSeccion.unidadAdministrativaClave || '',
+            claveEntidadFederativa: estadoSeccion.claveEntidadFederativa || '',
+            claveUnidadAdministrativa: estadoSeccion.claveUnidadAdministrativa || '',
             protestoDecirVerdad: estadoSeccion.protestoDecirVerdad || false,
           });
         })

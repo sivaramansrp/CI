@@ -27,8 +27,8 @@ export class ExportadorAutorizadoService {
   setRegistro(_registro: Tramite110102State):void {
     this.tramite110102Store.update({
       cveRegistroProductor: _registro.cveRegistroProductor,
-      unidadAdministrativaClave: _registro.unidadAdministrativaClave,
-      solicitudEntidadFederativaEntidadClave: _registro.solicitudEntidadFederativaEntidadClave,
+      claveUnidadAdministrativa: _registro.claveUnidadAdministrativa,
+      claveEntidadFederativa: _registro.claveEntidadFederativa,
       protestoDecirVerdad: _registro.protestoDecirVerdad,
       solicitaSeparacionContable: _registro.solicitaSeparacionContable,
       solicitaExportadorAutorizado: _registro.solicitaExportadorAutorizado,
