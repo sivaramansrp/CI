@@ -111,7 +111,7 @@
               <input type="text" class="form-control" id="adquirienteMontoDisponible" formControlName="adquirienteMontoDisponible">
             </div>
             <div class="col-md-4">
-              <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="seleccionarParticipante()">
+              <button type="button"  [disabled]="esFormularioSoloLectura" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="seleccionarParticipante()">
                 Seleccionar participante 
             </button>
             </div>
@@ -121,7 +121,7 @@
                 <input type="text" class="form-control" id="rfc1" formControlName="rfc1">
               </div>
               <div class="col-md-4 mt-5">
-                <button type="button" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
+                <button  type="button"  [disabled]="esFormularioSoloLectura" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
               </div>
              <div class="row d-flex justify-content-center mt-5">
               <div class="col-md-4">

@@ -4,10 +4,10 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs';
 import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
-
+import { Subject } from 'rxjs';
 /**
  * 
  *  app-paso-solicitante
@@ -53,7 +53,6 @@ export class PasoSolicitanteComponent implements OnInit, OnDestroy{
    guardarDatosFormulario(): void {
     this.service.getLicitationesVigentesData().pipe(
         takeUntil(this.destroyed$)).subscribe((resp) => {
-        console.log("Response from json",resp);
         if(resp){
         this.esDatosRespuesta = true;
         this.service.actualizarEstadoFormulario(resp);

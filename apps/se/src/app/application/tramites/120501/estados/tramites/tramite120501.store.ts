@@ -2,7 +2,6 @@ import { Store, StoreConfig } from '@datorama/akita';
   
 import { Injectable } from '@angular/core';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 

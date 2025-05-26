@@ -19,7 +19,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
@@ -27,7 +27,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
 
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { Subject } from 'rxjs';
@@ -58,7 +58,7 @@ interface AccionBoton {
 @Component({
   selector: 'app-licitaciones-vigentes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, CatalogoSelectComponent, BtnContinuarComponent,AlertComponent,TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent,CatalogoSelectComponent,AlertComponent,TablaDinamicaComponent],
   templateUrl: './licitaciones-vigentes.component.html',
   styleUrls: ['./licitaciones-vigentes.component.scss'],
 })
@@ -183,28 +183,6 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-     * Observable para la entidad federativa.
-     * LicitacionesVigentesComponent
-     * 
-     */
-  //entidadFederativa$: Observable<Catalogo | null> = this.tramite120501Query.entidadFederativa$;
-
-  /**
-   * Observable para la representación federal.
-   * LicitacionesVigentesComponent
-   * 
-   */
-  //representacionFederal$: Observable<Catalogo | null> = this.tramite120501Query.representacionFederal$;
-
-  /**
-   * Observable para el monto a recibir.
-   * LicitacionesVigentesComponent
-   * 
-   */
-  //montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
-  
-  
-  /**
    * Indica si se muestra la representación federal.
    */
   showRepresentacionFederal: boolean = false;
@@ -236,41 +214,20 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-        //   this.esFormularioSoloLectura = true;
-        //  this.inicializarEstadoFormulario();
+       
   }
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
     
-      this.inicializarEstadoFormulario();
-
-   // this.formularioTotalCount();
-    //this.actualizarRecuentoTotalDeFilas();
+    this.inicializarEstadoFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.obtenerDatosDeTabla();
 
-    // this.montoRecibir$.subscribe((montoRecibir) => {
-    //   if(montoRecibir){
-    //     this.adquiriente.get('montoRecibir')?.setValue(montoRecibir);
-    //   }
-    // });
-
-    // this.entidadFederativa$.subscribe((entidadFederativa) => {
-    //   if (entidadFederativa) {
-    //     this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
-    //   }
-    // });
-
-    // this.representacionFederal$.subscribe((representacionFederal) => {
-    //   if (representacionFederal) {
-    //     this.formulario.get('representacionFederal')?.setValue(representacionFederal);
-    //   }
-    // });
   }
   inicializarFormulario(): void {
     this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
@@ -307,7 +264,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 
    inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      this.guardarDatosFormulario(); 
     } else {
       this.inicializarFormulario();
     }
@@ -326,22 +283,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       // No se requiere ninguna acción en el formulario
     }
 }
-  /**
-   * Inicializa el formulario para el recuento total de filas.
-   */
-  // formularioTotalCount(): void {
-  //   this.formForTotalCount = this.fb.group({
-  //     recuentoTotalDeFilas: [{ value: '', disabled: true }],
-  //   });
-  // }
-  /**
-   * Actualiza el recuento total de filas en el formulario.
-   */
-  // public actualizarRecuentoTotalDeFilas(): void {
-  //   // eslint-disable-next-line @typescript-eslint/naming-convention
-  //   const totalRowCount = this.tableBodyData.length;
-  //   this.formForTotalCount.patchValue({ recuentoTotalDeFilas: totalRowCount });
-  // }
+ 
   /**
    * Obtiene la lista de entidades federativas.
    */
@@ -483,15 +425,6 @@ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite12050
 * 
 */
 onChangeEntiadFederative(): void {
-   if (
-      this.formulario.get('entidadFederativa')?.value ===
-      '1'
-    ) {
-      this.formulario.get('entidadFederativa')?.disable();
-    } else {
-      this.formulario.get('entidadFederativa')?.enable();
-    }
-
      const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
      this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
   }
