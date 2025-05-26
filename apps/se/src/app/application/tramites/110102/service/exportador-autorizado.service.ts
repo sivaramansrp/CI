@@ -25,15 +25,17 @@ export class ExportadorAutorizadoService {
   }
 
   setRegistro(_registro: Tramite110102State):void {
-    this.tramite110102Store.setCveRegistroProductor(_registro.cveRegistroProductor);
-    this.tramite110102Store.setUnidadAdministrativaClave(_registro.unidadAdministrativaClave);
-    this.tramite110102Store.setSolicitudEntidadFederativaEntidadClave(_registro.solicitudEntidadFederativaEntidadClave);
-    this.tramite110102Store.setProtestoDecirVerdad(_registro.protestoDecirVerdad);
-    this.tramite110102Store.setSolicitaSeparacionContable(_registro.solicitaSeparacionContable);
-    this.tramite110102Store.setSolicitaExportadorAutorizado(_registro.solicitaExportadorAutorizado);
-    this.tramite110102Store.setCondicionExportador(_registro.condicionExportador);
-    this.tramite110102Store.setSolicitaExportadorAutorizadoJPN(_registro.solicitaExportadorAutorizadoJPN);
-    this.tramite110102Store.setCondicionExportadorJPN(_registro.condicionExportadorJPN);
+    this.tramite110102Store.update({
+      cveRegistroProductor: _registro.cveRegistroProductor,
+      unidadAdministrativaClave: _registro.unidadAdministrativaClave,
+      solicitudEntidadFederativaEntidadClave: _registro.solicitudEntidadFederativaEntidadClave,
+      protestoDecirVerdad: _registro.protestoDecirVerdad,
+      solicitaSeparacionContable: _registro.solicitaSeparacionContable,
+      solicitaExportadorAutorizado: _registro.solicitaExportadorAutorizado,
+      condicionExportador: _registro.condicionExportador,
+      solicitaExportadorAutorizadoJPN: _registro.solicitaExportadorAutorizadoJPN,
+      condicionExportadorJPN: _registro.condicionExportadorJPN
+    });
     
   }
 }
