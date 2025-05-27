@@ -402,6 +402,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.obtenerPatente();
     // this.tipoSolicitudSeleccion();
 
+    this.obtenerMontoAPagar();
     this.verificarDatosExistentesStore();
   }
 
@@ -1820,6 +1821,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
             }
           }
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene el monto a pagar desde el servicio de parámetros y lo establece en el formulario.
+   * @returns {void} No retorna ningún valor.
+   */
+  public obtenerMontoAPagar(): void {
+    this.parametroMontoService
+      .getParametroMonto()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((montoResponse) => {
+          this.pagoCaptura.get('montoAPagar')?.enable();
+          this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
+          this.pagoCaptura.get('montoAPagar')?.disable();
         })
       )
       .subscribe();
