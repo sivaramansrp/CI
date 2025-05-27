@@ -62,7 +62,7 @@ export class ModalFuncionesComponent implements OnChanges {
    * @param event 
    * @returns 
    */
-  onArchivoChange(event: Event) {
+  onArchivoChange(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     const ARCHIVO = INPUT.files?.[0];
     if (ARCHIVO) {
@@ -125,7 +125,7 @@ export class ModalFuncionesComponent implements OnChanges {
   /**
    * Emite el archivo seleccionado si es válido, a través del archivoSeleccionado.
    */
-  anexar() {
+  anexar(): void {
     if (this.archivo) {
       this.archivoSeleccionado.emit(this.archivo);
     }

@@ -101,6 +101,7 @@ export enum CategoriaMensaje {
   selector: 'lib-notificaciones',
   standalone: true,
   imports: [CommonModule, AlertComponent, ModalModule],
+  providers: [BsModalService],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
 })
@@ -236,7 +237,6 @@ export class NotificacionesComponent implements OnChanges {
   declinarAccion(): void {
     this.confirmacionModal.emit(false);
     this.modal?.hide();
-    this.confirmacionModal.emit(false);
   }
 
   /**

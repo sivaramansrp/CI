@@ -41,7 +41,7 @@
               [catalogo]="this.servicioVidaSilvestre.bancos"
               [label]="'Banco'"
               [required]="true"
-              (change)="manejarSeleccionBanco()"
+              (change)="setValoresStore(formularioPagoDerechos,'banco')"
             ></app-catalogo-select>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <label class="control-label" for="llaveDePago">Llave de pago*:</label>
             <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
               [class.is-invalid]="formularioPagoDerechos.get('llaveDePago')?.touched && formularioPagoDerechos.get('llaveDePago')?.invalid"
-              (input)="manejarCambioLlavePago()">
+              (input)="manejarCambioLlavePago()" (change)="setValoresStore(formularioPagoDerechos,'llaveDePago')">
             <div class="invalid-feedback"
               *ngIf="formularioPagoDerechos.get('llaveDePago')?.touched && formularioPagoDerechos.get('llaveDePago')?.invalid">
               <span *ngIf="formularioPagoDerechos.get('llaveDePago')?.hasError('required')">Este campo es

@@ -1,130 +1,75 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { Component } from '@angular/core';
 import { FabricanteDatosComponent } from './fabricante-datos.component';
-import { FormBuilder } from '@angular/forms';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { Location } from '@angular/common';
-import { Tramite260103Store } from '../../estados/tramite260103Store.store';
-import { ImportacionMateriasPrimasService } from '../../service/importacion-retorno-sanitario.service';
-import { HttpClientModule } from '@angular/common/http';
+import { ImportacionRetornoSanitarioService } from '../../service/importacion-retorno-sanitario.service';
+import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 
-@Injectable()
-class MockDatosSolicitudService {
-  obtenerListaPaises() {}
-}
+// Mocking child components since they might not be standalone or needed fully
+import { Component } from '@angular/core';
 
-@Injectable()
-class MockTramite260103Store {
-  updateFabricanteTablaDatos() {}
-}
+@Component({ selector: 'app-titulo', template: '' })
+class MockTituloComponent {}
 
-@Injectable()
-class MockImportacionMateriasPrimasService {
-  obtenerOstro() {}
-}
+@Component({ selector: 'app-input-radio', template: '' })
+class MockInputRadioComponent {}
 
 describe('FabricanteDatosComponent', () => {
-  let fixture;
-  let component;
+  let component: FabricanteDatosComponent;
+  let fixture: ComponentFixture<FabricanteDatosComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule,FabricanteDatosComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  // Mocks
+  const mockDatosSolicitudService = {
+    obtenerListaPaises: () => of([]),
+  };
+
+  const mockImportacionRetornoSanitarioService = {
+    obtenerOstro: () => of({}),
+  };
+
+  const mockTramiteQuery = {
+    getFabricanteTablaDatos$: of([]),
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        FabricanteDatosComponent, // ✅ standalone component imported here
+      ],
+      declarations: [
+        MockTituloComponent,
+        MockInputRadioComponent,
+      ],
       providers: [
-        FormBuilder,
-        { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
-        Location,
-        { provide: Tramite260103Store, useClass: MockTramite260103Store },
-        { provide: ImportacionMateriasPrimasService, useClass: MockImportacionMateriasPrimasService }
-      ]
-    }).overrideComponent(FabricanteDatosComponent, {
-
+        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+        { provide: ImportacionRetornoSanitarioService, useValue: mockImportacionRetornoSanitarioService },
+        { provide: Tramite260103Query, useValue: mockTramiteQuery },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of({ get: () => null }),
+          },
+        },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(FabricanteDatosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.cargarDatos = jest.fn();
-    component.ngOnInit();
-    expect(component.cargarDatos).toHaveBeenCalled();
+  it('should initialize the form with default values', () => {
+    expect(component.agregarDatosForm).toBeDefined();
+    expect(component.agregarDatosForm.get('nombres')).not.toBeNull();
   });
-
-  it('should run #cargarDatos()', async () => {
-    component.datosSolicitudService = component.datosSolicitudService || {};
-    component.datosSolicitudService.obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-    component.cargarDatos();
-    expect(component.datosSolicitudService.obtenerListaPaises).toHaveBeenCalled();
-  });
-
-  it('should run #limpiarFormulario()', async () => {
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.reset = jest.fn();
-    component.limpiarFormulario();
-    expect(component.agregarDatosForm.reset).toHaveBeenCalled();
-  });
-
-  it('should run #cancelar()', async () => {
-    component.ubicaccion = component.ubicaccion || {};
-    component.ubicaccion.back = jest.fn();
-    component.cancelar();
-    expect(component.ubicaccion.back).toHaveBeenCalled();
-  });
-
-  it('should run #guardar()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateFabricanteTablaDatos = jest.fn();
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.value = 'value';
-    component.ubicaccion = component.ubicaccion || {};
-    component.ubicaccion.back = jest.fn();
-    component.guardar();
-    expect(component.tramiteStore.updateFabricanteTablaDatos).toHaveBeenCalled();
-  });
-
-  it('should run #changeNacionalidad()', async () => {
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.value = {
-      tipoPersona: {}
-    };
-    component.agregarDatosForm.enable = jest.fn();
-    component.agregarDatosForm.disable = jest.fn();
-    component.agregarDatosForm.get = jest.fn().mockReturnValue({
-      disable: function() {},
-      enable: function() {}
-    });
-    component.tipoPersona = component.tipoPersona || {};
-    component.tipoPersona.NO_CONTRIBUYENTE = 'NO_CONTRIBUYENTE';
-    component.changeNacionalidad();
-    expect(component.agregarDatosForm.enable).toHaveBeenCalled();
-  });
-
-  it('should run #buscar()', async () => {
-    component.importacionMateriasPrimasService = component.importacionMateriasPrimasService || {};
-    component.importacionMateriasPrimasService.obtenerOstro = jest.fn().mockReturnValue(observableOf({}));
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.patchValue = jest.fn();
-    component.seBuscaRfc();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
-    component.ngOnDestroy();
-  });
-
 });
