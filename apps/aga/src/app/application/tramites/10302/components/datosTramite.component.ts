@@ -21,6 +21,7 @@ import {
   InputCheckComponent,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
+  TableBodyData,
   TableComponent,
   TituloComponent,
   ValidacionesFormularioService,
@@ -83,7 +84,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancías.

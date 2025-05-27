@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentoService {
-  private urlServer = enviroment.URL_SERVER_UPLOAD;
+  private urlServer = ENVIRONMENT.URL_SERVER_UPLOAD;
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario
@@ -33,9 +34,9 @@ export class DocumentoService {
    * @param id
    * @returns JSONResponse
    */
-  generarAcuse(cuerpoAcuse: any): Observable<any> {
+  generarAcuse(cuerpoAcuse: unknown): Observable<unknown> {
     return this.http
-      .put<any>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
+      .put<unknown>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
       .pipe(
         catchError((error) => {
           return throwError(() => error);

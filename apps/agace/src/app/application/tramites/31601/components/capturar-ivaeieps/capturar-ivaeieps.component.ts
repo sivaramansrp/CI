@@ -267,7 +267,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   agregarDatos(): void {
     if (this.ivaForm.valid) {
       const {RFC, DENOMINACION, DOMICILIO } = this.ivaForm.value;
-      this.destinatarioHeaderData.tableBody[0].tbodyData.push([
+      this.destinatarioHeaderData.tableBody[0].tbodyData.push(...[
         RFC,
         DENOMINACION,
         DOMICILIO,

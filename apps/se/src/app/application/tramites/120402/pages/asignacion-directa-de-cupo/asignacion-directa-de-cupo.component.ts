@@ -4,11 +4,15 @@
  */
 import { Component, ViewChild } from '@angular/core';
  
-import { ALERT, ASIGNACION } from '@ng-mf/data-access-user';
+import { ASIGNACION } from '@ng-mf/data-access-user';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, Notificacion, WizardComponent } from '@ng-mf/data-access-user';
+
+import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+
+import { NOTA} from '../../constantes/definiciones.enum';
 /**
  * Interface representing the action of a button.
  */
@@ -45,11 +49,36 @@ export class AsignacionDirectaDeCupoComponent {
    * Índice actual del paso en el asistente.
    */
   indice: number = 1;
- 
-  /**
-   * Clase CSS para aplicar estilos específicos a los elementos de la interfaz.
+
+   /**
+   * Mensaje de información para la alerta.
    */
-  class: string = 'alert-danger';
+  public infoAlert = 'alert-info';
+
+  public showAlert: boolean = false;
+
+ /**
+   * Mensaje de confirmación para campos obligatorios no seleccionados.
+   * @type {string}
+   */
+  
+  MENSAJE_CONFIRMACION: string = NOTA.CONTINUAR_BUTTON_ALERT;
+
+    /**
+     * Constructor del componente.
+   
+     * @param tramite120402Query - Query para obtener datos del store.
+     */
+    constructor(
+  
+      private tramite120402Query: Tramite120402Query
+    ) {}
+ 
+ /**
+   * Notificación para mostrar alertas al usuario.
+   * @type {Notificacion}
+   */
+  nuevaAlertaNotificacion!: Notificacion;
 
     /**
    * The data for the steps in the wizard.
@@ -66,13 +95,18 @@ export class AsignacionDirectaDeCupoComponent {
    * @param e The action button event containing the action and value.
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+   
+   
+if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
-    }
-  }
+    
+  }}
+  /**
+   * Actualiza el estado del grid de comercializadores de productos.
+   */
 }

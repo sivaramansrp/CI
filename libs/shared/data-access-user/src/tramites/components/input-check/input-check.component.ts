@@ -11,7 +11,7 @@ import {
   FormGroup,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -27,9 +27,8 @@ import { CommonModule } from '@angular/common';
       useExisting: forwardRef(() => InputCheckComponent),
       multi: true,
     },
-  ]
+  ],
 })
-
 export class InputCheckComponent implements OnChanges, ControlValueAccessor {
   /**
    * Identificador único requerido para el checkbox del componente.
@@ -60,13 +59,21 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
   @Input() isDisabled: boolean = false;
 
   /**
+   * Indica la clase CSS que se aplicará al checkbox.
+   * Si reverse es verdadero, se aplicará la clase ''form-check-custome', que pone el checkbox al final
+   * de la etiqueta label.
+   * Por default la clase es 'form-check', donde el checkbox se encuentra al inicio de la etiqueta label.
+   */
+  @Input() reverse!: boolean;
+
+  /**
    * Control de formulario que contiene el estado del checkbox.
    */
   forma: FormGroup;
 
   constructor() {
     this.forma = new FormGroup({
-      check: new FormControl(false)
+      check: new FormControl(false),
     });
   }
 
@@ -75,19 +82,18 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
    * @param value Indica el nuevo valor booleano.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onChange: (value: boolean) => void = () => { };
+  private onChange: (value: boolean) => void = () => {};
 
   /**
    * Función que se llama cuando el control es marcado como "tocado".
    * @returns void
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => { };
-
+  private onTouched: () => void = () => {};
 
   /**
    * Detecta cambios en las propiedades de entrada y actualiza las validaciones del control de formulario 'checkbox'.
-   * 
+   *
    * @param changes - Cambios detectados en las propiedades de entrada.
    * @returns void
    */
@@ -95,9 +101,7 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
     if (changes['required']) {
       const CONTROL = this.forma.get('checkbox');
       if (this.required) {
-        CONTROL?.setValidators([
-          Validators.requiredTrue,
-        ]);
+        CONTROL?.setValidators([Validators.requiredTrue]);
       } else {
         CONTROL?.clearValidators();
       }
@@ -117,7 +121,7 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
 
   /**
    * Maneja el evento de cambio de un input tipo checkbox.
-   * 
+   *
    * @param event - Evento de cambio del checkbox.
    * @returns void
    */
@@ -128,7 +132,7 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
 
   /**
    * Escribe un valor booleano en el control de formulario 'check'.
-   * 
+   *
    * @param value - Valor booleano a establecer en el control.
    * @returns void
    */

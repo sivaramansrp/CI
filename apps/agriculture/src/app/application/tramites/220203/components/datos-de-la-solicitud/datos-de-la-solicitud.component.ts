@@ -197,9 +197,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 
   /**
    * @description Datos de la tabla de detalles.
-   * @type {string[]}
+   * @type {TableBodyData[]}
    */
-  detallecuerpoTabla: string[] = [];
+  detallecuerpoTabla: TableBodyData[] = [];
 
   /**
    * @description Datos de la tabla principal.
