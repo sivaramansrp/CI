@@ -12,9 +12,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ALERT } from '../../constantes/modificacion.constants';
+import { AVISO } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { Aviso } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -102,7 +102,7 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * Textos constantes utilizados en el componente.
    * @property {any} TEXTOS
    */
-  TEXTOS = Aviso;
+  TEXTOS = AVISO;
 
   /**
    * Mensaje de éxito para el primer paso.

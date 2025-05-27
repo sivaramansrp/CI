@@ -24,18 +24,17 @@ import {
   HEADER_TABLA_OTRO,
   HEADER_TABLA_PEATONAL,
   LABEL_HORA_ARRIBO,
-} from '../../../core/enums/transporte-componente.enums';
+} from '../../../core/enums/transporte-componente.enum';
 import {
-  ItemTransporte,
+  ItemTransporteDespacho,
   TransporteAereo,
   TransporteCarretero,
   TransporteFerroviario,
   TransporteMaritimo,
   TransporteOtro,
   TransportePeatonal,
-} from '../../../core/models/shared/agregar-trasnporte.model';
+} from '../../../core/models/shared/agregar-transporte.model';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { BodyValidaFerro } from '../../../core/models/shared/validaciones-transporte.model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -103,33 +102,33 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Cabecera de la tabla para el transporte ferroviario.
    */
-  readonly HEADER_TABLA_FERROVIARIO: ItemTransporte[] =
+  readonly HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] =
     HEADER_TABLA_FERROVIARIO;
 
   /**
    * Cabecera de la tabla para el transporte carretero.
    */
-  readonly HEADER_TABLA_CARRETERO: ItemTransporte[] = HEADER_TABLA_CARRETERO;
+  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = HEADER_TABLA_CARRETERO;
 
   /**
    * Cabecera de la tabla para el transporte peatonal.
    */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL;
+  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = HEADER_TABLA_PEATONAL;
 
   /**
    * Cabecera de la tabla para el transporte otro.
    */
-  readonly HEADER_TABLA_OTRO: ItemTransporte[] = HEADER_TABLA_OTRO;
+  readonly HEADER_TABLA_OTRO: ItemTransporteDespacho[] = HEADER_TABLA_OTRO;
 
   /**
    * Cabecera de la tabla para el transporte aereo.
    */
-  readonly HEADER_TABLA_AEREO: ItemTransporte[] = HEADER_TABLA_AEREO;
+  readonly HEADER_TABLA_AEREO: ItemTransporteDespacho[] = HEADER_TABLA_AEREO;
 
   /**
    * Cabecera de la tabla para el transporte maritimo.
    */
-  readonly HEADER_TABLA_MARITIMO: ItemTransporte[] = HEADER_TABLA_MARITIMO;
+  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = HEADER_TABLA_MARITIMO;
 
   /**
    * Etiqueta para la hora de arribo.
@@ -142,7 +141,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Cabecera de la tabla.
    */
-  headerTabla!: ItemTransporte[];
+  headerTabla!: ItemTransporteDespacho[];
 
   /**
    * Contenido de la tabla.
@@ -328,9 +327,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Determina el tipo de tabla y configura el formulario correspondiente según el tipo de transporte.
    *
-   * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
+   * @returns {ItemTransporteDespacho[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
-  tipoTabla(): ItemTransporte[] {
+  tipoTabla(): ItemTransporteDespacho[] {
     switch (parseInt(this.tipo, 10)) {
       case 1:
         this.formaSeleccionada = 'carreteroForma';
@@ -651,5 +650,6 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     return typeof valor === 'boolean';
   }
 
-  eliminarElementoTabla(): void {}
+  public eliminarElementoTabla = AgregarTransporteComponent.eliminarElementoTabla;
+  static eliminarElementoTabla(): void { /**/ }
 }

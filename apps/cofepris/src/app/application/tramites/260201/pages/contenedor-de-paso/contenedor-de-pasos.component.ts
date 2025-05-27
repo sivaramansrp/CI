@@ -1,6 +1,6 @@
 import {
+  AVISO,
   AccionBoton,
-  Aviso,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
@@ -54,7 +54,7 @@ export class ContenedorDePasosComponent {
    */
   indice: number = 1;
 
-  TEXTOS: string = Aviso.Aviso;
+  TEXTOS: string = AVISO.Aviso;
 
   /**
    *

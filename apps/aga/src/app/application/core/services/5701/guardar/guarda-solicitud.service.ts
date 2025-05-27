@@ -1,4 +1,4 @@
-import { API_POST_SOLICITUD, enviroment } from '@libs/shared/data-access-user/src';
+import { API_POST_SOLICITUD, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -15,7 +15,7 @@ export class GuardaSolicitudService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo, formaDatosInfo } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
+import { FormaDatosInfo, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
 import { Solicitud6502State, Tramite6502Store } from '../../../../core/estados/tramites/tramite6502.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -110,7 +110,7 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Datos del formulario principal
    */
-  public formaDatos: formaDatosInfo[] = [];
+  public formaDatos: FormaDatosInfo[] = [];
 
   /**
    * Inicialización del componente
