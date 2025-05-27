@@ -5,6 +5,7 @@
   [configuracionTabla]="configuracionTabla"
   [datos]="personaparas"
   [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
 >
 </app-tabla-dinamica>
 <div class="d-flex justify-content-end align-items-center mt-5 mb-5">
@@ -14,7 +15,8 @@
     type="button"
     class="btn btn-primary"
     name="Buscardomicilios"
-    (click)="toggleButtons()" >
+    (click)="toggleButtons()"
+     [disabled]="esFormularioSoloLectura" >
     Agregar plantas
   </button>
 
@@ -23,12 +25,10 @@
     *ngIf="showSecondButton"
     type="button"
     class="btn btn-primary"
-    (click)="toggleButtons()">
+    (click)="toggleButtons()"
+     [disabled]="esFormularioSoloLectura">
     Eliminar plantas
   </button>
 </div>
 </form>
-
-
-
 <hr *ngIf="showSecondButton" />

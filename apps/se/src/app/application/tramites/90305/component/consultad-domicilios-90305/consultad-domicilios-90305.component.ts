@@ -91,14 +91,8 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
     private tramite90305Query: Tramite90305Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    // Si tuvieras lógica para solo lectura, podrías suscribirte aquí
-    // this.tramite90305Query.selectReadonly$
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe(readonly => {
-    //     this.esFormularioSoloLectura = readonly;
-    //     this.inicializarEstadoFormulario();
-    //   });
-     this.consultaioQuery.selectConsultaioState$
+    
+    this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
@@ -120,6 +114,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
 
     this.selectedEstado$.pipe(takeUntil(this.destroy$)).subscribe((selectedEstado) => {
       if (selectedEstado) {
+        console.log("selectedEstado" + selectedEstado);
         this.formConsulta.get('estadoControl')?.setValue(selectedEstado);
       }
     });
@@ -155,9 +150,9 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-    this.formConsulta = this.fb.group({
-        estadoControl: [this.solicitudState?.selectedEstado, Validators.required],
-      });
+    // this.formConsulta = this.fb.group({
+    //     estadoControl: [this.solicitudState?.selectedEstado, Validators.required],
+    //   });
     }
 
   /**

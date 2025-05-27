@@ -8,26 +8,22 @@
  */
 
 import { CommonModule } from '@angular/common';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  CatalogoResponse,
+  ConsultaioQuery,
 } from '@ng-mf/data-access-user';
-
-
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
-
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
+import { map, takeUntil } from 'rxjs/operators';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
-
 import { ProsecModificacionModel } from '../../models/prosec-modificacion.model';
+import { Tramite90305Store } from '../../estados/tramite90305.store';
+import { Tramite90305Query } from '../../estados/tramite90305.query';
 
 /**
  * compo doc
@@ -49,75 +45,97 @@ import { ProsecModificacionModel } from '../../models/prosec-modificacion.model'
 export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
+  /** Subject para destruir la consulta */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   listaDomiciliosForm!: FormGroup;
+
+  /** Consulta: variables para catálogo y formulario */
+  estadoJson: CatalogoResponse[] = [];
+  formConsulta!: FormGroup;
+  public estadoCatalogo!: CatalogoResponse[];
+  public esFormularioSoloLectura: boolean = false;
+
   /**
-   *
    * compo doc
    * @constructor
    * @param {ProsecModificacionServiceTsService} listaDomicilios - Servicio para obtener la lista de domicilios
    */
-  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {
-    //constructor
+  constructor(
+    private listaDomicilios: ProsecModificacionServiceTsService,
+    private fb: FormBuilder,
+    private tramite90305Store: Tramite90305Store,
+    private tramite90305Query: Tramite90305Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+   this.consultaioQuery.selectConsultaioState$
+       .pipe(
+         takeUntil(this.destroyNotifier$),
+         map((seccionState)=>{
+           this.esFormularioSoloLectura = seccionState.readonly; 
+         })
+       )
+       .subscribe()
   }
 
   /** Controla qué botón se muestra en la interfaz */
   showSecondButton = false;
 
   /** Alterna la visibilidad de los botones */
-  toggleButtons():void {
+  toggleButtons(): void {
     this.showSecondButton = !this.showSecondButton;
   }
 
   /** Configuración de columnas para la tabla dinámica */
-  configuracionTabla: ConfiguracionColumna<ProsecModificacionModel >[] = [
+  configuracionTabla: ConfiguracionColumna<ProsecModificacionModel>[] = [
     {
       encabezado: 'Calle',
-      clave: (item: ProsecModificacionModel ) => item.calle,
+      clave: (item: ProsecModificacionModel) => item.calle,
       orden: 1,
     },
     {
       encabezado: 'Número exterior',
-      clave: (item: ProsecModificacionModel ) => item.numeroExterior,
+      clave: (item: ProsecModificacionModel) => item.numeroExterior,
       orden: 2,
     },
     {
       encabezado: 'Número interior',
-      clave: (item: ProsecModificacionModel ) => item.numeroInterior,
+      clave: (item: ProsecModificacionModel) => item.numeroInterior,
       orden: 3,
     },
     {
       encabezado: 'Código postal',
-      clave: (item: ProsecModificacionModel ) => item.codigoPostal,
+      clave: (item: ProsecModificacionModel) => item.codigoPostal,
       orden: 4,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: ProsecModificacionModel ) => item.colonia,
+      clave: (item: ProsecModificacionModel) => item.colonia,
       orden: 5,
     },
     {
       encabezado: 'Localidad',
-      clave: (item: ProsecModificacionModel ) => item.localidad,
+      clave: (item: ProsecModificacionModel) => item.localidad,
       orden: 6,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (item: ProsecModificacionModel ) => item.municipioOAlcaldia,
+      clave: (item: ProsecModificacionModel) => item.municipioOAlcaldia,
       orden: 7,
     },
     {
       encabezado: 'Entidad Federativa',
-      clave: (item: ProsecModificacionModel ) => item.entidadFederativa,
+      clave: (item: ProsecModificacionModel) => item.entidadFederativa,
       orden: 8,
     },
     {
       encabezado: 'País',
-      clave: (item: ProsecModificacionModel ) => item.pais,
+      clave: (item: ProsecModificacionModel) => item.pais,
       orden: 9,
     },
     {
       encabezado: 'Teléfono',
-      clave: (item: ProsecModificacionModel ) => item.telefono,
+      clave: (item: ProsecModificacionModel) => item.telefono,
       orden: 10,
     },
   ];
@@ -126,10 +144,10 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
 
   /** Datos de domicilios obtenidos del servicio */
-  personaparas: ProsecModificacionModel [] = [];
+  personaparas: ProsecModificacionModel[] = [];
 
-  /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios */
-  ngOnInit() :void{
+  /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios y consulta */
+  ngOnInit(): void {
     this.loadDomicilios();
   }
 
@@ -145,11 +163,19 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
       });
   }
 
+  /** Consulta: Obtiene el estado seleccionado del formulario y lo guarda en el store */
+  getMunicipios(): void {
+    const SELECTED_ESTADO = this.formConsulta.get('estadoControl')?.value;
+    this.tramite90305Store.setSelectedEstado(SELECTED_ESTADO);
+  }
+
   /*
    * Método del ciclo de vida de Angular - destruye el componente
    */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
