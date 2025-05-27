@@ -1,10 +1,11 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
 import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PasswordService } from '../../core/service/password.service';
-import { catchError, map, of, Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 /**
  * Componente para el cambio de contraseña de usuario.
@@ -18,7 +19,7 @@ import { catchError, map, of, Subject, takeUntil } from 'rxjs';
   templateUrl: './cambio-contrasena.component.html',
   styleUrl: './cambio-contrasena.component.scss',
 })
-export class CambioContrasenaComponent implements OnInit {
+export class CambioContrasenaComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para el cambio de contraseña */
   public FormCambioContrasena!: FormGroup;
   /** Notificación para mostrar mensajes al usuario */
@@ -32,7 +33,8 @@ export class CambioContrasenaComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private passwordService: PasswordService
+    private passwordService: PasswordService,
+    private router: Router,
   ) { }
 
   /**
@@ -63,7 +65,6 @@ export class CambioContrasenaComponent implements OnInit {
       this.FormCambioContrasena.markAllAsTouched();
       return;
     }
-
     const MODELO_CAMBIO: CambioContrasena = {
       contrasenaAnterior: this.FormCambioContrasena.get('contrasenaAnterior')?.value,
       contrasenaNueva: this.FormCambioContrasena.get('contrasenaNueva')?.value,
@@ -72,7 +73,9 @@ export class CambioContrasenaComponent implements OnInit {
     this.passwordService.cambioContrasena(MODELO_CAMBIO)
       .pipe(
         map((data) => {
-
+          if (data) {
+            this.router.navigate(['login/']);
+          }
         }),
         catchError((_error) => {
           console.error('Error al cambiar la contraseña', _error);
