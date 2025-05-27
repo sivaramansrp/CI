@@ -1,12 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { EmpresaFronteraSolicitudService } from '../../services/empresa-frontera-solicitud/empresa-frontera-solicitud.service';
 import { Solicitud120602Service } from '../../services/solicitud120602/solicitud120602.service';
 
 /**
- * @class DatosComponent
- * @classdesc Este componente gestiona la selección de pestañas mediante un índice.
+ * @Component
+ * @selector app-datos
+ * @description
+ * Componente `DatosComponent` que gestiona la selección de pestañas y la carga de datos para el trámite 120602.
+ * 
+ * Detalles:
+ * - Utiliza el decorador `@Component` para definir las propiedades del componente.
+ * - Renderiza la plantilla HTML asociada para mostrar y gestionar los datos del trámite.
+ * - Controla la selección de pestañas mediante el índice y la carga de datos desde el store y servicios.
+ * 
+ * Propiedades:
+ * - `selector`: Define el nombre del selector del componente como `app-datos`.
+ * - `templateUrl`: Ruta al archivo de plantilla HTML del componente.
+ * 
+ * @example
+ * <app-datos></app-datos>
  */
 @Component({
   selector: 'app-datos',
@@ -38,7 +51,6 @@ export class DatosComponent implements OnInit, OnDestroy {
   * @description Inicializa una instancia del `DatosComponent`.
   */
   constructor(
-    public empresaFronterSolicitudService: EmpresaFronteraSolicitudService,
     private solicitus120602Service: Solicitud120602Service,
     private consultaQuery: ConsultaioQuery
   ) {
@@ -102,6 +114,17 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+ * @method ngOnDestroy
+ * @description
+ * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+ * 
+ * Detalles:
+ * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
+ * - Completa el observable para liberar recursos y evitar fugas de memoria.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -118,8 +118,20 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   pasos: ListaPasosWizard[] = [];
 
+  /**
+ * @property solicitudState
+ * @description
+ * Estado actual de la solicitud de la empresa para el trámite 120602.
+ * @type {Solicitud120602State}
+ */
   public solicitudState!: Solicitud120602State;
 
+  /**
+ * @property destroyNotifier$
+ * @description
+ * Sujeto utilizado para notificar la destrucción del componente y cancelar suscripciones activas.
+ * @type {Subject<void>}
+ */
   private destroyNotifier$: Subject<void> = new Subject();
 
    /**
@@ -138,6 +150,13 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     private tramite120602Query: Tramite120602Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+   }
+
+  /**
+   * Método de inicialización del componente.
+   */
+  ngOnInit(): void {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -153,14 +172,8 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
        this.inicializarFormulario();
       })
     )
-    .subscribe()
-    console.log('this.esFormularioSoloLectura', this.esFormularioSoloLectura)
-   }
+    .subscribe();
 
-  /**
-   * Método de inicialización del componente.
-   */
-  ngOnInit(): void {
     this.inicializarFormulario();
     this.obtenerFederalEstatal();
   }
@@ -220,9 +233,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       Object.keys(this.formularioEmpresa.controls).forEach(control => {
         this.formularioEmpresa.get(control)?.enable();
       });
-    } else {
-      // No se requiere ninguna acción en el formulario
-
     }
   }
 

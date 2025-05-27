@@ -3,9 +3,19 @@ import { ENVIRONMENT } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+/**
+ * @Injectable
+ * @providedIn root
+ * 
+ * @description
+ * Decorador que marca la clase `Solicitud120602Service` como un servicio inyectable en Angular.
+ * @example
+ * constructor(private solicitud120602Service: Solicitud120602Service) { }
+ */
 @Injectable({
   providedIn: 'root'
 })
+
 export class Solicitud120602Service {
 
   /**
@@ -18,14 +28,52 @@ export class Solicitud120602Service {
   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
+  /**
+ * @constructor
+ * @description
+ * Constructor del servicio `Solicitud120602Service`.
+ * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
+ * @param {Tramite120602Store} tramite120602Store - Store para manejar el estado del trámite 120602.
+ */
   constructor(private http: HttpClient, private tramite120602Store: Tramite120602Store) {
     // Lógica de inicialización si es necesario
   }
 
+  /**
+ * @method getEmpresaSolicitudData
+ * @description
+ * Obtiene los datos de la empresa para el trámite 120602 desde un archivo JSON local.
+ * 
+ * Detalles:
+ * - Realiza una petición HTTP GET para recuperar la información de la empresa almacenada en el archivo `empresa-solicitud.json`.
+ * - Devuelve un observable que emite un objeto de tipo `Solicitud120602State` con los datos obtenidos.
+ * 
+ * @returns {Observable<Solicitud120602State>} Observable con los datos de la empresa para el trámite.
+ * 
+ * @example
+ * this.solicitud120602Service.getEmpresaSolicitudData().subscribe(data => {
+ *   console.log(data);
+ * });
+ */
   getEmpresaSolicitudData(): Observable<Solicitud120602State> {
     return this.http.get<Solicitud120602State>('assets/json/120602/empresa-solicitud.json');
   }
 
+  /**
+ * @method actualizarEstadoFormulario
+ * @description
+ * Actualiza el estado global del formulario de empresa en el store `Tramite120602Store` con los datos proporcionados.
+ * 
+ * Detalles:
+ * - Asigna cada propiedad del objeto `DATOS` al método correspondiente del store para mantener sincronizado el estado global.
+ * - Utiliza el operador de fusión nula (`??`) para asegurar valores por defecto en campos opcionales.
+ * 
+ * @param {Solicitud120602State} DATOS - Objeto que contiene los datos de la empresa a actualizar en el store.
+ * 
+ * @example
+ * this.actualizarEstadoFormulario(datosEmpresa);
+ * // Actualiza el estado global del formulario con los datos de la empresa.
+ */
   actualizarEstadoFormulario(DATOS: Solicitud120602State): void {
     this.tramite120602Store.setEstado(DATOS.estado);
     this.tramite120602Store.setRepresentacionFederal(DATOS.representacionFederal);
