@@ -1998,14 +1998,14 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
     "id": 287,
     "tramite": 80105,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modalidad-terciarización/action",
+    "linkDepartment": "/pago/modalidad-terciarización/action",
     "department": "se"
   },
   {
