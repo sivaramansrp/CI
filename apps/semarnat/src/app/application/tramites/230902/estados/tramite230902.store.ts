@@ -23,8 +23,8 @@ export interface Solicitud230902State {
   /** Cadena de pago de dependencia asociada al trámite. */
   cadenaPagoDependencia: string;
 
-  /** Banco seleccionado para el pago del trámite. */
-  bancoseleccionado: string;
+  /** Banco para el pago del trámite. */
+  banco: string;
 
   /** Llave de pago proporcionada para el trámite. */
   llaveDePago: string;
@@ -53,7 +53,7 @@ export function createInitialState(): Solicitud230902State {
     entidadFederativa: '',
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
-    bancoseleccionado: '',
+    banco: '',
     llaveDePago: '',
     fecPago: '',
     impPago: null,
@@ -74,87 +74,18 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
   }
 
   /**
-   * Establece el tipo de movimiento en el estado.
-   * 
-   * {string} tipodeMovimiento - Tipo de movimiento seleccionado.
-   */
-  public setTipoDeMovimiento(tipodeMovimiento: string): void {
+  * @método
+  * @nombre establecerDatos
+  * @descripción
+  * Actualiza el estado con los valores proporcionados.
+  * 
+  * @param {Partial<Tramites30401State>} datos - Valores parciales para actualizar el estado.
+  */
+  public establecerDatos(datos: Partial<Solicitud230902State>): void {    
     this.update((state) => ({
-      ...state,
-      tipodeMovimiento,
-    }));
-  }
-
-  /**
-   * Establece el tipo de régimen en el estado.
-   * 
-   * {string} tipoRegimen - Tipo de régimen seleccionado.
-   */
-  public setTipoDeRegimen(tipoRegimen: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoRegimen,
-    }));
-  }
-
-  /**
-   * Establece la entidad federativa en el estado.
-   * 
-   * {string} entidadFederativa - Entidad federativa seleccionada.
-   */
-  public setEntidadFederativa(entidadFederativa: string): void {
-    this.update((state) => ({
-      ...state,
-      entidadFederativa,
-    }));
-  }
-
-  /**
-   * Establece la clave de referencia en el estado.
-   * 
-   * {string} claveDeReferencia - Clave de referencia proporcionada.
-   */
-  public setlclaveDeReferencia(claveDeReferencia: string): void {
-    this.update((state) => ({
-      ...state,
-      claveDeReferencia,
-    }));
-  }
-
-  /**
-   * Establece la cadena de pago de dependencia en el estado.
-   * 
-   * {string} cadenaPagoDependencia - Cadena de pago de dependencia proporcionada.
-   */
-  public setcadenaPagoDependencia(cadenaPagoDependencia: string): void {
-    this.update((state) => ({
-      ...state,
-      cadenaPagoDependencia,
-    }));
-  }
-
-  /**
-   * Establece el banco seleccionado en el estado.
-   * 
-   * {string} bancoseleccionado - Banco seleccionado.
-   */
-  public setbancoseleccionado(bancoseleccionado: string): void {
-    this.update((state) => ({
-      ...state,
-      bancoseleccionado,
-    }));
-  }
-
-  /**
-   * Establece la llave de pago en el estado.
-   * 
-   * {string} llaveDePago - Llave de pago proporcionada.
-   */
-  public setllaveDePago(llaveDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      llaveDePago,
-    }));
+     ...state,
+     ...datos,
+   }));
   }
 
   /**
@@ -166,18 +97,6 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     this.update((state) => ({
       ...state,
       fecPago,
-    }));
-  }
-
-  /**
-   * Establece el importe de pago en el estado.
-   * 
-   * {Date} impPago - Importe de pago proporcionado.
-   */
-  public setimpPago(impPago: Date): void {
-    this.update((state) => ({
-      ...state,
-      impPago,
     }));
   }
 

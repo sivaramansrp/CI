@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
@@ -55,6 +55,28 @@ export class SolicitudComponent implements OnInit {
    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
   TEXTOS = SOLICITUD_32201_ENUM;
+
+  /**
+   * Etiqueta del archivo seleccionado.
+   */
+  elgirDeArchivo: string = this.TEXTOS.ELGIR_DE_ARCHIVO;
+
+  /**
+   * Elemento de entrada de archivo HTML.
+   * 
+   * @type {HTMLInputElement}
+   */
+  elgirArchivo!: HTMLInputElement;
+
+  /**
+   * Archivo de medicamentos seleccionado.
+   */
+  archivoMedicamentos: File | null = null;
+
+  /**
+   * Evento de salida que emite cuando se hace clic en el botón continuar.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
 
   /**
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -172,6 +194,35 @@ export class SolicitudComponent implements OnInit {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Activa la selección del archivo de medicamentos.
+   * @returns {void}
+   */
+  activarSeleccionArchivo(): void {
+    this.elgirArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    if (this.elgirArchivo) {
+      this.elgirArchivo.click();
+    }
+  }
+
+  /**
+   * Maneja el cambio de archivo en el input de archivo.
+   * 
+   * @param event Evento de cambio de archivo.
+   * 
+   * @returns {void}
+   */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
+      this.elgirDeArchivo = this.archivoMedicamentos.name;
+    } else {
+      this.elgirDeArchivo = this.elgirArchivo?.value;
     }
   }
 

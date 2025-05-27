@@ -80,7 +80,8 @@ describe('LicitacionesVigentesComponent', () => {
       descripcion: 'Sample description',
       montoadjudicado: '1000',
       fechainiciovigencia: 'value1',
-      fechafinvigencia: 'value2'
+      fechafinvigencia: 'value2',
+      registrofederaldecontribuyentes: ''
     });
     expect(component.showRepresentacionFederal).toBe(true);
   });

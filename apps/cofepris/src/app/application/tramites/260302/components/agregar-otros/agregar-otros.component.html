@@ -9,7 +9,15 @@
             type="text"
             class="form-control"
             formControlName="nombreDescripcion"
+            [ngClass]="esInvalido('nombreDescripcion') ? 'required' : ''"
           />
+          <div *ngIf="esInvalido('nombreDescripcion')" class="text-danger">
+            <small
+              *ngIf="agregarDatosForm.controls['nombreDescripcion'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -18,7 +26,6 @@
     <div class="row">
       <h4>Datos generales</h4>
       <div class="col-md-6">
-    
         <label class="form-label">Terceros nacionalidad*:</label>
         <div class="form-check">
           <app-input-radio
@@ -41,6 +48,7 @@
             id="contenidoOpcionTipoPersona"
             formControlName="tipoPersona"
             (change)="changeNacionalidad()"
+            [showTooltip]="true"
           >
           </app-input-radio>
         </div>
@@ -60,9 +68,18 @@
           class="form-control"
           id="terceros_rfc"
           type="text"
-          maxlength="15"
+          [maxlength]="15"
           formControlName="rfc"
+          [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('rfc')" class="text-danger">
+          <small *ngIf="agregarDatosForm.controls['rfc'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+          <small *ngIf="agregarDatosForm.controls['rfc'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="form-group col-md-4">
         <label class="form-label mt-3 fs-2" for="curp">C.U.R.P.*:</label>
@@ -73,7 +90,13 @@
           size="29"
           type="text"
           formControlName="curp"
+          [ngClass]="esInvalido('curp') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('curp')" class="text-danger">
+          <small *ngIf="agregarDatosForm.controls['curp'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-12">
@@ -101,7 +124,25 @@
     <div class="row">
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control" formControlName="nombres" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombres"
+          [maxlength]="200"
+          [ngClass]="esInvalido('nombres') ? 'required' : ''"
+        />
+        <div *ngIf="esInvalido('nombres')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['nombres'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+          <small
+            *ngIf="agregarDatosForm.controls['nombres'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Primer apellido*:</label>
@@ -109,7 +150,21 @@
           type="text"
           class="form-control"
           formControlName="primerApellido"
+          [maxlength]="200"
+          [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('primerApellido')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['primerApellido'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+          <small
+            *ngIf="agregarDatosForm.controls['primerApellido'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Segundo apellido:</label>
@@ -117,25 +172,49 @@
           type="text"
           class="form-control"
           formControlName="segundoApellido"
+          [maxlength]="200"
         />
+        <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['segundoApellido'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+          <small
+            *ngIf="agregarDatosForm.controls['segundoApellido'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
     </div>
     } @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
-      <div class="form-group">
-        <label
-          class="form-label row mt-3 mover-izquierda fs-2"
-          for="denominacionRazon"
+      <div class="form-group col-md-4">
+        <label class="form-label row mt-3 ms-2 fs-2" for="razonSocial"
           >Denominación/razón social*:</label
         >
         <input
-          class="form-control col-md-4"
+          class="form-control"
           id="terceros_rSocial"
           size="75"
-          maxlength="254"
+          [maxlength]="250"
           type="text"
-          formControlName="denominacionRazon"
+          formControlName="razonSocial"
+          [ngClass]="esInvalido('razonSocial') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('razonSocial')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['razonSocial'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+          <small
+            *ngIf="agregarDatosForm.controls['razonSocial'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
     </div>
     }
@@ -143,17 +222,17 @@
     <!-- Domicilio -->
     <h4>Domicilio</h4>
     <div class="row">
-      <div class="col-md-4">
-        <label class="form-label">País:</label>
-        <input
-          id="terceros_selectPais"
-          type="text"
-          class="form-control"
+       <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
           formControlName="pais"
-        />
+          [label]="'País'"
+          [required]="true"
+          [placeholder]="'Selecciona un valor'"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado/localidad:</label>
+        <label class="form-label">Estado:</label>
         <input
           id="terceros_txtEstado"
           maxlength="120"
@@ -161,31 +240,6 @@
           type="text"
           class="form-control"
           formControlName="estado"
-        />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">Municipio/alcaldia:</label>
-        <input
-          id="terceros_txtMunicipio"
-          maxlength="120"
-          size="29"
-          type="text"
-          class="form-control"
-          formControlName="municipio"
-        />
-      </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="col-md-4">
-        <label class="form-label">Localidad:</label>
-        <input
-          type="text"
-          id="terceros_txtEstadoLocalidad"
-          maxlength="255"
-          size="29"
-          class="form-control"
-          formControlName="localidad"
         />
       </div>
       <div class="col-md-4">
@@ -199,18 +253,8 @@
           formControlName="codigoPostal"
         />
       </div>
-      <div class="col-md-4">
-        <label class="form-label">Colonia:</label>
-        <input
-          id="terceros_colonia"
-          maxlength="120"
-          size="29"
-          type="text"
-          class="form-control"
-          formControlName="colonia"
-        />
-      </div>
     </div>
+
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label">Calle*:</label>
@@ -221,13 +265,21 @@
         ></span>
         <input
           id="terceros_calle"
-          maxlength="100"
+          [maxlength]="100"
           size="29"
           type="text"
           class="form-control"
           formControlName="calle"
+          [ngClass]="esInvalido('calle') ? 'required' : ''"
         />
         <i class="fas fa-info-circle"></i>
+        <div *ngIf="esInvalido('calle')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['calle'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior:</label>
@@ -256,18 +308,31 @@
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" />
+        <input
+          type="text"
+          class="form-control"
+          [maxlength]="5"
+          formControlName="lada"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
         <input
           type="text"
           id="terceros_telefono"
-          maxlength="30"
+          [maxlength]="25"
           size="29"
           class="form-control"
           formControlName="telefono"
+          [ngClass]="esInvalido('telefono') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('telefono')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['telefono'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:</label>
@@ -283,7 +348,15 @@
           type="email"
           class="form-control"
           formControlName="correoElectronico"
+          [ngClass]="esInvalido('correoElectronico') ? 'required' : ''"
         />
+        <div *ngIf="esInvalido('correoElectronico')" class="text-danger">
+          <small
+            *ngIf="agregarDatosForm.controls['correoElectronico'].errors?.['pattern']"
+          >
+            Por favor, escribe una dirección de correo válida
+          </small>
+        </div>
       </div>
     </div>
 
