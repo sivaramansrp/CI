@@ -41,14 +41,14 @@ export class TablaDinamicaComponent<T> {
    * Cuando es `true`, los checkboxes de selección estarán deshabilitados y el usuario no podrá seleccionar filas.
    * Cuando es `false`, los checkboxes estarán habilitados y el usuario podrá seleccionar filas normalmente.
    */
-  @Input() disableSeleccionTablaCheckBox!: boolean;
+  @Input() disableSeleccionTablaCheckBox:boolean = false;
 
   /**
    * Indica si la selección de filas mediante radio button en la tabla dinámica está deshabilitada.
    * 
    * Cuando es `true`, los usuarios no podrán seleccionar filas usando el radio button.
    */
-  @Input() disableSeleccionTablaRadio!: boolean;
+  @Input() disableSeleccionTablaRadio:boolean = false;
   /*
      * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
      *
