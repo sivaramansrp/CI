@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map,takeUntil,Subject } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { ConsultaioStore } from '@ng-mf/data-access-user';
-import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 
 
@@ -81,7 +82,6 @@ this.consultaStore.establecerConsultaio(
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
-      console.log(this.consultaState);
     if(this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -110,7 +110,6 @@ this.consultaStore.establecerConsultaio(
       )
       .subscribe((resp) => {
         if(resp){
-          console.log(resp);
         this.esDatosRespuesta = true;
         this.tramiteStore.setActividadProductiva(resp?.actividadProductiva);
         this.tramiteStore.setRepresentacionFederal(resp?.representacionFederal);

@@ -1,34 +1,28 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
+
 import {
   Solicitud90201State,
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
-
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
+import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { Sectoresy } from '@libs/shared/data-access-user/src';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
-import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 /**
@@ -43,12 +37,12 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
   selector: 'app-sectores-y-mercancias',
   standalone: true,
   imports: [
-    CommonModule,
-    TituloComponent,
-    CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    CommonModule,
     ReactiveFormsModule,
+    TablaDinamicaComponent,
+    TituloComponent
   ],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
@@ -106,21 +100,21 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
    * la clave para acceder a los datos en cada fila y el orden de las columnas.
    *
-   * @type {ConfiguracionColumna<any>[]}
+   * @type {ConfiguracionColumna<SectoresTabla>[]}
    *
    * @property {string} encabezado - El nombre del encabezado de la columna.
    * @property {Function} clave - Una función que toma un elemento y devuelve el valor para la columna.
    * @property {number} orden - El orden de la columna en la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
+  public configuracionTabla: ConfiguracionColumna<SectoresTabla>[] = [
     {
       encabezado: 'Lista de sectores',
-      clave: (item: any) => item.sectores,
+      clave: (item: SectoresTabla) => item.sectores,
       orden: 1,
     },
     {
       encabezado: 'Clave del sector',
-      clave: (item: any) => item.claveDel,
+      clave: (item: SectoresTabla) => item.claveDel,
       orden: 2,
     },
   ];
@@ -240,7 +234,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         this.sectoresForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.sectoresForm.enable();
-      } else {
       }
   }
 
@@ -281,7 +274,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Establece la propiedad `seleccion` a `true`.
    * Este método se utiliza para indicar que se ha seleccionado un sector.
    */
-  public sectorSeleccion() {
+  public sectorSeleccion():void {
     this.seleccion = true;
   }
 
@@ -307,6 +300,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite90201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

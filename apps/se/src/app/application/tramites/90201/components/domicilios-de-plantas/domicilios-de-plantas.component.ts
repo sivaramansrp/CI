@@ -2,10 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { map,takeUntil,Subject } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import { Solicitud90201State, Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
-
+import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';

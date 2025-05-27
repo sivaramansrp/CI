@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup,FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, takeUntil, Subject } from 'rxjs';
+
+import { Subject, map, takeUntil } from 'rxjs';
 
 import {
   Solicitud90201State,

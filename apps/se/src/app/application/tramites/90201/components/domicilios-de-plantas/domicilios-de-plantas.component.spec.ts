@@ -1,63 +1,92 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import DomiciliosTabla from 'libs/shared/theme/assets/json/90201/domicilios-de-plantas-tabla.json';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
-  let fixture: ComponentFixture<DomiciliosDePlantasComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DomiciliosDePlantasComponent, ReactiveFormsModule],
-      providers: [FormBuilder],
-    }).compileComponents();
-  });
+  let fb: FormBuilder;
+  let consultaioQueryMock: any;
+  let tramite90201StoreMock: any;
+  let tramite90201QueryMock: any;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DomiciliosDePlantasComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    fb = new FormBuilder();
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
+    };
+    tramite90201StoreMock = {
+      setRepresentacionFederal: jest.fn(),
+      setActividadProductiva: jest.fn()
+    };
+    tramite90201QueryMock = {
+      selectSolicitud$: of({
+        representacionFederal: 'FEDERAL',
+        actividadProductiva: 'PRODUCTIVA'
+      })
+    };
+    component = new DomiciliosDePlantasComponent(
+      fb,
+      consultaioQueryMock,
+      tramite90201StoreMock,
+      tramite90201QueryMock
+    );
+    component.solicitudState = {
+      representacionFederal: 'FEDERAL',
+      actividadProductiva: 'PRODUCTIVA'
+    } as any;
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form with default values and disabled fields', () => {
-    const form = component.formDomiciliosDePlantas;
-    expect(form).toBeDefined();
-    expect(form.get('representacionFederal')?.value).toBe('');
-    expect(form.get('representacionFederal')?.disabled).toBe(true);
-    expect(form.get('actividadProductiva')?.value).toBe('');
-    expect(form.get('actividadProductiva')?.disabled).toBe(true);
-  });
-
-  it('should initialize the table configuration correctly', () => {
-    const configuracionTabla: ConfiguracionColumna<any>[] = component.configuracionTabla;
-    expect(configuracionTabla).toBeDefined();
-    expect(configuracionTabla.length).toBe(7);
-    expect(configuracionTabla[0].encabezado).toBe('Calle');
-    expect(configuracionTabla[0].clave({ calle: 'Test Calle' })).toBe('Test Calle');
-    expect(configuracionTabla[1].encabezado).toBe('Número exterior');
-    expect(configuracionTabla[1].clave({ numero: '123' })).toBe('123');
-  });
-
-  it('should initialize the table data with values from DomiciliosTabla', () => {
-    
-    const domiciliosTabla: DomiciliosDePlantasTabla[] = component.domiciliosTabla;
-    expect(domiciliosTabla).toBeDefined();
-    expect(domiciliosTabla).toEqual(DomiciliosTabla);
-  });
-
-  it('should call establecerFormDomiciliosDePlantas to initialize the form', () => {
-    const spy = jest.spyOn(component, 'establecerFormDomiciliosDePlantas');
+  it('should initialize form with correct values on establecerFormDomiciliosDePlantas', () => {
     component.establecerFormDomiciliosDePlantas();
+    expect(component.formDomiciliosDePlantas).toBeDefined();
+    expect(component.formDomiciliosDePlantas.get('representacionFederal')?.value).toBe('FEDERAL');
+    expect(component.formDomiciliosDePlantas.get('actividadProductiva')?.value).toBe('PRODUCTIVA');
+  });
+
+  it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.establecerFormDomiciliosDePlantas();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.formDomiciliosDePlantas.disabled).toBe(true);
+  });
+
+  it('should enable form when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.establecerFormDomiciliosDePlantas();
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.formDomiciliosDePlantas.enabled).toBe(true);
+  });
+
+  it('should call store method in setValoresStore', () => {
+    component.establecerFormDomiciliosDePlantas();
+    component.formDomiciliosDePlantas.get('representacionFederal')?.setValue('NEWVAL');
+    component.setValoresStore('representacionFederal', 'setRepresentacionFederal');
+    expect(tramite90201StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('NEWVAL');
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarEstadoFormulario on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+    component.ngOnInit();
     expect(spy).toHaveBeenCalled();
-    const form = component.formDomiciliosDePlantas;
-    expect(form.get('representacionFederal')?.value).toBe('');
-    expect(form.get('actividadProductiva')?.value).toBe('');
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 });

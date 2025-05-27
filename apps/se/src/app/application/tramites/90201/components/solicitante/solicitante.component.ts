@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 
 /**
@@ -22,7 +22,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent {
+export class SolicitanteComponent implements OnInit {
 
   /**
    * Un grupo de formularios que representa el formulario de solicitud.
