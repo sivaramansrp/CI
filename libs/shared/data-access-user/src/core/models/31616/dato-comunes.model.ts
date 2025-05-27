@@ -14,22 +14,22 @@ export interface MercanciasInfo {
 export const MERCANCIA_TABLA = [
     {
         encabezado: 'Denominacion Social',
-        clave: (ele: MercanciasInfo) => ele.denominacion_social,
+        clave: (ele: MercanciasInfo): string => ele.denominacion_social,
         orden: 1,
     },
     {
         encabezado: 'RFC',
-        clave: (ele: MercanciasInfo) => ele.rfc,
+        clave: (ele: MercanciasInfo): string => ele.rfc,
         orden: 2,
     },
     {
         encabezado: 'Numero de Empleados',
-        clave: (ele: MercanciasInfo) => ele.numero_de_empleados,
+        clave: (ele: MercanciasInfo): string => ele.numero_de_empleados,
         orden: 3,
     },
     {
         encabezado: 'Bimestre',
-        clave: (ele: MercanciasInfo) => ele.bimestre,
+        clave: (ele: MercanciasInfo): string => ele.bimestre,
         orden: 4,
     }
 ];
@@ -69,27 +69,27 @@ export interface InstalacionesPrincipalesTablaInfo {
 export const INSTALACIONES_PRINCIPALES_TABLA = [
     {
         encabezado: '*Instalaciones principales',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.instalaciones_principales,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.instalaciones_principales,
         orden: 1,
     },
     {
         encabezado: '*Tipo de instalación',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.tipo_de_instalacion,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.tipo_de_instalacion,
         orden: 2,
     },
     {
         encabezado: 'Entidad federativa',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.entidad_federativa,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.entidad_federativa,
         orden: 3,
     },
     {
         encabezado: 'Municipio o delegación',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.municipio_o_delegacion,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.municipio_o_delegacion,
         orden: 4,
     },
     {
         encabezado: 'Colonia, calle y número',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.colonia,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.colonia,
         orden: 5,
     }
 ];
@@ -129,27 +129,27 @@ export interface PersonasInfo {
 export const PERSONAS_TABLA = [
     {
         encabezado: 'RFC',
-        clave: (ele: PersonasInfo) => ele.rfc,
+        clave: (ele: PersonasInfo): string => ele.rfc,
         orden: 1,
     },
     {
         encabezado: 'CURP',
-        clave: (ele: PersonasInfo) => ele.curp,
+        clave: (ele: PersonasInfo): string => ele.curp,
         orden: 2,
     },
     {
         encabezado: 'Nombre',
-        clave: (ele: PersonasInfo) => ele.nombre,
+        clave: (ele: PersonasInfo): string => ele.nombre,
         orden: 3,
     },
     {
         encabezado: 'Apellido Paterno',
-        clave: (ele: PersonasInfo) => ele.apellidoPaterno,
+        clave: (ele: PersonasInfo): string => ele.apellidoPaterno,
         orden: 4,
     },
     {
         encabezado: 'Apellido Materno',
-        clave: (ele: PersonasInfo) => ele.apellidoMaterno,
+        clave: (ele: PersonasInfo): string => ele.apellidoMaterno,
         orden: 5,
     }
 ];

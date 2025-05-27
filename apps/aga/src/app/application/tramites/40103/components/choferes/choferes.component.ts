@@ -28,6 +28,7 @@ import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
+import { Extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -37,7 +38,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
-import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { map } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 import { takeUntil } from 'rxjs';
@@ -60,7 +60,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   CHOFERES_PAGE = CHOFERES_PAGE;
   modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
-  extranjero: Array<extranjero> = [];
+  extranjero: Array<Extranjero> = [];
   activeTab: string = 'nacional';
   /**
    * Observable que contiene la lista de estados disponibles.
