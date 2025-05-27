@@ -229,10 +229,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       Object.keys(this.formularioEmpresa.controls).forEach(control => {
         this.formularioEmpresa.get(control)?.disable();
       });
-    } else if (!this.esFormularioSoloLectura) {
-      Object.keys(this.formularioEmpresa.controls).forEach(control => {
-        this.formularioEmpresa.get(control)?.enable();
-      });
     }
   }
 
