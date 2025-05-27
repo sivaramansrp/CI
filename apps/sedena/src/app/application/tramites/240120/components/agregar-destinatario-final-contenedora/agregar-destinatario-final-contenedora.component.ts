@@ -1,7 +1,7 @@
 import { Subject, takeUntil } from 'rxjs';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
@@ -21,7 +21,7 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent implements OnDestroy {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    *
@@ -52,38 +52,42 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnDestroy {
   // eslint-disable-next-line no-empty-function
   constructor(public tramiteStore: Tramite240120Store,
     public tramiteQuery: Tramite240120Query,
-  ) {
-    this.getDestinatarioFinalTablaDatos();
-  }
+  ) {}
 
-  /**
-   * Actualiza la lista de destinatarios finales en el store del trámite.
-   *
-   * @method updateDestinatarioFinalTablaDatos
-   * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
-   * @returns {void}
-   */
+/**
+ * Actualiza la lista de destinatarios finales en el store del trámite.
+ *
+ * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+ * @returns {void}
+ */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
 
   /**
-   * Obtiene los datos del destinatario final desde el store y los asigna a la variable local.
-   * Se suscribe al observable y actualiza la propiedad destinatarioFinalDatos con los datos recibidos.
-   * Utiliza takeUntil para evitar fugas de memoria al destruir el componente.
-   */
-  getDestinatarioFinalTablaDatos(): void {
-    this.tramiteQuery.getmodificarDestinarioDatos$
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Se suscribe al observable `getmodificarDestinarioDatos$` para obtener los datos
+ * del destinatario final y los asigna a la propiedad local. Utiliza `takeUntil`
+ * para limpiar la suscripción al destruir el componente.
+ *
+ * @returns {void}
+ */
+  
+  ngOnInit(): void {
+     this.tramiteQuery.getmodificarDestinarioDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.destinatarioFinalDatos = datos;
       });
   }
+ 
 
-  /**
-   * Actualiza los datos existentes del destinatario final en el store.
-   * @param event Arreglo de objetos DestinoFinal con los datos actualizados.
-   */
+/**
+ * Actualiza los datos existentes del destinatario final en el store.
+ *
+ * @param {DestinoFinal[]} event - Arreglo de objetos DestinoFinal con los datos actualizados.
+ * @returns {void}
+ */
   actualizaExistenteEnDestinatarioDatos(event: DestinoFinal[]): void {
     this.tramiteStore.actualizaExistenteEnDestinatarioDatos(event);
   }

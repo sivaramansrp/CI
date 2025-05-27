@@ -1,4 +1,53 @@
 // @ts-nocheck
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { of, Subject } from 'rxjs';
+
+// import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
+// import { Tramite240120Store } from '../../estados/tramite240120Store.store';
+// import { Tramite240120Query } from '../../estados/tramite240120Query.query';
+// import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+// class MockTramite240120Store {
+//   updateDestinatarioFinalTablaDatos = jest.fn();
+// }
+
+// class MockTramite240120Query {
+//   // This is the correct property the component expects
+//   getmodificarDestinarioDatos$ = of(null);
+// }
+
+// describe('AgregarDestinatarioFinalContenedoraComponent', () => {
+//   let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
+//   let component: AgregarDestinatarioFinalContenedoraComponent;
+
+//   beforeEach(() => {
+//     TestBed.configureTestingModule({
+//       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+//       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+//       providers: [
+//         { provide: Tramite240120Store, useClass: MockTramite240120Store },
+//         { provide: Tramite240120Query, useClass: MockTramite240120Query }
+//       ]
+//     }).compileComponents();
+//     fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
+
+//   it('should create the component', () => {
+//     expect(component).toBeTruthy();
+//   });
+
+//   it('should call updateDestinatarioFinalTablaDatos on the store', () => {
+//     const mockData = [{ nombre: 'Test' }];
+//     component.updateDestinatarioFinalTablaDatos(mockData as any);
+//     expect(component.tramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(mockData);
+//   });
+// });
+
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -18,7 +67,7 @@ class MockTramite240120Store {}
 
 @Injectable()
 class MockTramite240120Query {
-  obtenerTercerosDatos$ = {};
+  obtenerTercerosDatos$ = observableOf({});
 }
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
