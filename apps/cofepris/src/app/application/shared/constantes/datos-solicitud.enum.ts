@@ -715,3 +715,11 @@ export enum TIPO_ACTUALIZACION {
   AGREGAR = 'Agregar',
   ELIMINAR ='Eliminar',
 }
+
+/**
+ * Constante que representa el identificador para productos especiales.
+ * 
+ * @remarks
+ * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
+ */
+export const TIPO_PRODUCTO_ESPECIAL = '3'

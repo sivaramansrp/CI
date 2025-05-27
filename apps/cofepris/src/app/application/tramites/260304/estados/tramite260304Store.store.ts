@@ -2,17 +2,21 @@ import {
   DatosSolicitudFormState,
   MercanciaFormEstupefacientes,
 } from '../../../shared/models/datos-solicitud.model';
-import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
+import {
+  Destinatario,
+  Fabricante,
+  Facturador,
+  Proveedor,
+} from '../../../shared/models/terceros-relacionados.model';
+import { TABLA_OPCION_DATA, TIPO_ACTUALIZACION } from '../../../shared/constantes/datos-solicitud.enum';
 import { Injectable } from '@angular/core';
 import { Otros } from '../models/medicamentos-contengan.model';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
-
 export interface Tramite260304State {
   /**
    * @type {Destinatario[]}
@@ -67,6 +71,9 @@ export interface Tramite260304State {
    * Datos SCIAN seleccionados para la tabla
    */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  seleccionadoOtrosDatos?: Otros[];
+   seleccionadoDestinatarioDatos?: Destinatario[];
 
   /**
    * @type {TablaMercanciasDatos[]}
@@ -211,14 +218,22 @@ export class Tramite260304Store extends Store<Tramite260304State> {
    * @description Agrega nuevos fabricantes a la lista existente.
    * @param {Destinatario[]} newFabricantes - Lista de nuevos fabricantes.
    */
-  public updateDestinatarioTablaDatos(newDestinatario: Destinatario[]): void {
-    this.update((state) => ({
-      ...state,
-      destinatarioTableDatos: [
-        ...state.destinatarioTableDatos,
-        ...newDestinatario,
-      ],
-    }));
+ public updateDestinatarioTablaDatos(
+    newDestinatarios: Destinatario[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        destinatarioTableDatos:Tramite260304Store.actualizarLista(
+          state.destinatarioTableDatos,
+          newDestinatarios,
+          'nombreRazonSocial',
+          tipoActualizacion
+        ),
+        seleccionadoDestinatarioDatos: [],
+      };
+    });
   }
 
   /**
@@ -226,11 +241,62 @@ export class Tramite260304Store extends Store<Tramite260304State> {
    * @description Agrega nuevos facturadores a la lista existente.
    * @param {Otros[]} otrosTablaDatos - Lista de nuevos Otros.
    */
-  public updateOtrosTablaDatos(otrosTablaDatos: Otros[]): void {
-    this.update((state) => ({
-      ...state,
-      otrosTablaDatos: [...state.otrosTablaDatos, ...otrosTablaDatos],
-    }));
+  public updateOtrosTablaDatos(
+    newOtros: Otros[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        otrosTablaDatos: Tramite260304Store.actualizarLista(
+          state.otrosTablaDatos,
+          newOtros,
+          'rfc',
+          tipoActualizacion
+        ),
+        seleccionadoOtrosDatos: [],
+      };
+    });
+  }
+   /**
+   * @method updateMercanciaForm
+   * @description Actualiza el formulario de mercancía.
+   */
+  public static actualizarLista<
+    T extends Fabricante | Destinatario | Proveedor | Facturador | Otros
+  >(
+    listaOriginal: T[],
+    nuevosLista: T[],
+    clave: keyof T,
+    tipoActualizacion?: string
+  ): T[] {
+    if (tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR) {
+      let listaActualizada = [...listaOriginal];
+      listaActualizada = listaActualizada.filter(
+        (item: Fabricante | Destinatario | Proveedor | Facturador | Otros) => {
+          return !nuevosLista.some(
+            (
+              nuevo: Fabricante | Destinatario | Proveedor | Facturador | Otros
+            ) =>
+              nuevo[clave as keyof typeof nuevo] ===
+              item[clave as keyof typeof item]
+          );
+        }
+      );
+      return listaActualizada;
+    }
+    const LISTA_ACTUALIZADA = [...listaOriginal];
+    const INDICE_ENCONTRADO = LISTA_ACTUALIZADA.findIndex(
+      (item) => item?.[clave] === nuevosLista?.[0]?.[clave]
+    );
+
+    if (INDICE_ENCONTRADO !== -1) {
+      LISTA_ACTUALIZADA.splice(INDICE_ENCONTRADO, 1, nuevosLista[0]);
+    } else {
+      LISTA_ACTUALIZADA.push(...nuevosLista);
+    }
+
+    return LISTA_ACTUALIZADA;
   }
 
   /**
@@ -246,7 +312,28 @@ export class Tramite260304Store extends Store<Tramite260304State> {
       opcionConfigDatos,
     }));
   }
-
+    /**
+   * @method updateSeleccionadoOtrosDatos
+   * @description Actualiza los datos de otros seleccionados.
+   */
+  public updateSeleccionadoOtrosDatos(neuvoOtros: Otros[]): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoOtrosDatos: neuvoOtros,
+    }));
+  }
+  /**
+   * @method updateSeleccionadoDestinatarioDatos
+   * @description Actualiza los datos del destinatario seleccionado.
+   */
+  public updateSeleccionadoDestinatarioDatos(
+    neuvoDestinatario: Destinatario[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoDestinatarioDatos: neuvoDestinatario,
+    }));
+  }
   /**
    * @method updateSeleccionadoOpcionDatos
    * @description Actualiza la opción seleccionada en el estado.
@@ -270,6 +357,7 @@ export class Tramite260304Store extends Store<Tramite260304State> {
     this.update((state) => ({
       ...state,
       tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos:[]
     }));
   }
   /**

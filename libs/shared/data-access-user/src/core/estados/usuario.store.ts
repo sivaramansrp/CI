@@ -47,7 +47,7 @@ export class UsuarioStore extends Store<UsuarioState> {
    * @param nombre
    */
   public establecerUsuario(idUsuario: string, perfilUsuario: PerfilUsuario,
-    roles: Rol[], jwt: string) {
+    roles: Rol[], jwt: string): void {
     this.update(state => ({
       ...state,
       idUsuario,
@@ -61,7 +61,7 @@ export class UsuarioStore extends Store<UsuarioState> {
   /**
    * Limpia los datos del usuario al cerrar sesión
    */
-  public limpiarUsuario() {
+  public limpiarUsuario(): void {
     this.reset();
   }
 }

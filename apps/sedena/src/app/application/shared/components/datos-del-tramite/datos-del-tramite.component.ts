@@ -324,12 +324,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     new EventEmitter<JustificacionTramiteFormState>();
 
   /**
-   * @property {unknown[] | null} aduanasBotones
+   * @property { btnNombre: string; class: string; funcion?: () => void } aduanasBotones
    * Lista de botones relacionados con aduanas que se recibe desde el componente padre.
    * Este input permite configurar dinámicamente los botones asociados a las aduanas.
    * @decorador @Input
    */
-  @Input() aduanasBotones: unknown[] | null = null;
+  @Input() aduanasBotones!: { btnNombre: string; class: string; funcion?: () => void }[];
 
   /**
    * Constructor del componente.
