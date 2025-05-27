@@ -72,4 +72,8 @@ export class SolicitudModificacionPermisoSalidaTerritorioService {
       'assets/json/261401/tramite-asociados.json'
     );
   }
+
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/261401/pais.json');
+  }
 }
