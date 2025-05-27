@@ -192,5 +192,4 @@ export * from './tramites/constantes/120501/participantes.enum'
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
-
-export * from './core/models/shared/fechas.model';
+export * from './core/utils/utilerias';
