@@ -7,19 +7,7 @@ import { CrossListLable } from "../models/datos-solicitud.model";
  */
 export const MENSAJE_DE_ALERTA = {
   message: `
-    <div class="row">
-      <div class="col-md-1 d-flex justify-content-center">
-        <form>
-          <label>
-            <input type="checkbox" id="manifiestos" name="manifiestos" required>
-            <span style="color: #31708f;">*</span>
-          </label>
-        </form>
-      </div>
-      <div class="col-md-11">
-        <p>Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.</p>
-      </div>
-    </div>
+    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma. 
     `,
 }
 
