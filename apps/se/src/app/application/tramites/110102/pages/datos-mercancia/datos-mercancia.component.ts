@@ -71,12 +71,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Obtiene los datos de la bandeja de solicitudes desde el servidor.
    */
   obtenerDatosBandejaSolicitudes(): void {
-    this.servicioExportador.getRegistro()
+    this.servicioExportador.obtenerRegistro()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((respuesta: Tramite110102State) => {
         if (respuesta) {
           this.datosRespuestaDisponibles = true;
-          this.servicioExportador.setRegistro(respuesta);
+          this.servicioExportador.actualizarRegistro(respuesta);
         }
       });
   }
