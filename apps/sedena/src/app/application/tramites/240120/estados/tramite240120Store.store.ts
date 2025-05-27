@@ -26,6 +26,7 @@ export interface Tramite240120State {
   datosDelTramite: DatosDelTramiteFormState;
   modificarDestinarioDatos?: DestinoFinal | null;
   modificarProveedorDatos?: Proveedor | null;
+  modificarMercanciasDatos?: MercanciaDetalle | null;
 }
 
 /**
@@ -367,5 +368,85 @@ export class Tramite240120Store extends Store<Tramite240120State> {
       ...state,
       modificarProveedorDatos: proveedor,
     }));
+  }
+
+  /**
+   * Actualiza una mercancía existente en la lista de mercancías del estado,
+   * reemplazando el elemento que coincide con el `tableIndex` del nuevo objeto proporcionado.
+   * Después de la actualización, restablece el estado de modificación de mercancía a `null`.
+   * 
+   * @param {MercanciaDetalle[]} datos - Arreglo que contiene la mercancía actualizada.
+   */
+  public actualizarMercanciasdatos(datos: MercanciaDetalle[]): void {
+    this.update((state) => ({
+      ...state,
+      merccancialTablaDatos: state.merccancialTablaDatos.map(
+        (item) => item.tableIndex === datos[0].tableIndex
+          ? datos[0]
+          : item
+      ),
+    }));
+    this.setModificarMercanciasDatos(null);
+  }
+
+  /**
+   * Establece el objeto de mercancía que se va a modificar en el estado.
+   * 
+   * @param {MercanciaDetalle | null} mercancia - Objeto de mercancía a modificar o `null` para limpiar el estado.
+   */
+  public setModificarMercanciasDatos(mercancia: MercanciaDetalle | null): void {
+    this.update(state => ({
+      ...state,
+      modificarMercanciasDatos: mercancia,
+    }));
+  }
+
+  /**
+   * Reemplaza la lista completa de mercancías en el estado.
+   * 
+   * @param {MercanciaDetalle[]} mercancias - Nueva lista de objetos de mercancía.
+   */
+  public setMercanciasDatosTabla(mercancias: MercanciaDetalle[]): void {
+    this.update(state => ({
+      ...state,
+      merccancialTablaDatos: [...mercancias],
+    }));
+  }
+
+  /**
+   * Actualiza el objeto de mercancía que se está modificando en el estado.
+   * 
+   * @param {MercanciaDetalle} datos - Objeto de mercancía con los datos actualizados.
+   */
+  public actualizarMercancias(datos: MercanciaDetalle): void {
+    this.update((state) => ({
+      ...state,
+      modificarMercanciasDatos: datos,
+    }));
+  }
+
+  /**
+   * Elimina una mercancía específica de la lista `merccancialTablaDatos` en el estado.
+   *
+   * @param datos Los detalles de la mercancía que se desea eliminar.
+   *
+   * @remarks
+   * Esta función actualiza el estado filtrando la mercancía que coincida exactamente con todos los campos de `datos`.
+   *
+   * @example
+   * eliminarMercancias({ id: 1, nombre: 'Producto A', cantidad: 10 });
+   */
+  eliminarMercancias(datos: MercanciaDetalle): void {
+    this.update(state => {
+      const MERCANCIAS_ACTUALIZADAS = state.merccancialTablaDatos.filter(ele =>
+        !Object.keys(datos).every(
+          key => datos[key as keyof MercanciaDetalle] === ele[key as keyof MercanciaDetalle]
+        )
+      );
+      return {
+        ...state,
+        merccancialTablaDatos: MERCANCIAS_ACTUALIZADAS,
+      };
+    });
   }
 }
