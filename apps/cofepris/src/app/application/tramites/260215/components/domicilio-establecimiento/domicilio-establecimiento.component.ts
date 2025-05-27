@@ -6,6 +6,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
   CrossListLable,
   CrosslistComponent,
   InputFechaComponent,
@@ -89,6 +90,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
@@ -99,13 +106,125 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @param tramite260215Query
    * @param service
    */
+ 
+
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
-    private service: ServiciosPermisoSanitarioService
+    private service: ServiciosPermisoSanitarioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // constructor
+       /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
+      }
+
+
+/**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.domicilio.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.domicilio.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+/**
+ * Inicializa los formularios reactivos utilizados en el componente, así como la obtención de datos necesarios para su funcionamiento.
+ * 
+ * - Suscribe al observable `selectSolicitud$` para obtener y asignar el estado de la solicitud actual.
+ * - Llama a los métodos para obtener la lista de estados, la tabla de datos y los datos de mercancías.
+ * - Configura los formularios `domicilio`, `formAgente` y `formMercancias` con sus respectivos controles y validadores.
+ * 
+ * @remarks
+ * Este método debe ser llamado durante la inicialización del componente para asegurar que los formularios y datos requeridos estén disponibles.
+ */
+ inicializarFormulario(): void {
+       this.tramite260215Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.obtenerEstadoList();
+    this.obtenerTablaDatos();
+    this.obtenerMercanciasDatos();
+    this.domicilio = this.fb.group({
+      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      estado: [this.solicitudState?.estado, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      localidad: [this.solicitudState?.localidad],
+      colonia: [this.solicitudState?.colonia],
+      calle: [this.solicitudState?.calle],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono, Validators.required],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria: [
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
+      ],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      numeroPermiso: [this.solicitudState?.numeroPermiso],
+    });
+
+    this.formAgente = this.fb.group({
+      claveScianModal: ['', Validators.required],
+      claveDescripcionModal: [''],
+    });
+
+    this.formMercancias = this.fb.group({
+      clasificacion: ['', Validators.required],
+      especificar: ['', Validators.required],
+      denominacionEspecifica: ['', Validators.required],
+      denominacionDistintiva: ['', Validators.required],
+      denominacionComun: ['', Validators.required],
+      tipoDeProducto: ['', Validators.required],
+      estadoFisico: ['', Validators.required],
+      fraccionArancelaria: ['', Validators.required],
+      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMT: ['', Validators.required],
+      UMT: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: ['', Validators.required],
+      UMC: ['', Validators.required],
+      presentacion: ['', Validators.required],
+      numeroRegistro: ['', Validators.required],
+      fechaCaducidad: [''],
+    });
   }
 
   /**
@@ -223,59 +342,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Etiqueta de la lista de fechas.
    * */
-  ngOnInit() {
-    this.tramite260215Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.obtenerEstadoList();
-    this.obtenerTablaDatos();
-    this.obtenerMercanciasDatos();
-    this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
-      estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
-      ],
-      regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
-      numeroPermiso: [this.solicitudState?.numeroPermiso],
-    });
-
-    this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
-    });
-
-    this.formMercancias = this.fb.group({
-      clasificacion: ['', Validators.required],
-      especificar: ['', Validators.required],
-      denominacionEspecifica: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
-      denominacionComun: ['', Validators.required],
-      tipoDeProducto: ['', Validators.required],
-      estadoFisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
-      UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
-      UMC: ['', Validators.required],
-      presentacion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
-      fechaCaducidad: [''],
-    });
+  ngOnInit():void {
+   this.inicializarEstadoFormulario();
   }
 
   /**
@@ -422,7 +490,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable():void {
     this.colapsable = !this.colapsable;
   }
 
@@ -430,7 +498,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableDuos
    */
-  mostrar_colapsableDuos() {
+  mostrar_colapsableDuos():void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
@@ -438,7 +506,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableTres
    */
-  mostrar_colapsableTres() {
+  mostrar_colapsableTres():void {
     this.colapsableTres = !this.colapsableTres;
   }
   /**

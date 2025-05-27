@@ -22,6 +22,7 @@
         formControlName="estado"
         [label]="'Estado'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="estado"
         (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
       ></app-catalogo-select>
@@ -181,6 +182,7 @@
         formControlName="regimen"
         [label]="'Régimen'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="regimen"
         (change)="setValoresStore(domicilio, 'regimen', 'setRegimen')"
       ></app-catalogo-select>
@@ -191,6 +193,7 @@
         formControlName="aduanasEntradas"
         [label]="'Aduanas de entradas'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="aduanasEntradas"
         (change)="
           setValoresStore(domicilio, 'aduanasEntradas', 'setAduanasEntradas')
@@ -270,6 +273,7 @@
               formControlName="claveScianModal"
               [label]="'Clave S.C.I.A.N.'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveScianModal"
               (change)="
                 setValoresStore(
@@ -286,6 +290,7 @@
               formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'"
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveDescripcionModal"
               (change)="
                 setValoresStore(
@@ -333,6 +338,7 @@
               formControlName="clasificacion"
               [label]="'Clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="clasificacion"
               (change)="
                 setValoresStore(
@@ -349,6 +355,7 @@
               formControlName="especificar"
               [label]="'Especificar clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="especificar"
               (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
@@ -415,6 +422,7 @@
               formControlName="tipoDeProducto"
               [label]="'Tipo de producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoDeProducto"
               (change)="
                 setValoresStore(
@@ -431,6 +439,7 @@
               formControlName="estadoFisico"
               [label]="'Estado físico'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="estadoFisico"
               (change)="
                 setValoresStore(
@@ -515,6 +524,7 @@
               formControlName="UMC"
               [label]="'UMC'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="UMC"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
             ></app-catalogo-select>

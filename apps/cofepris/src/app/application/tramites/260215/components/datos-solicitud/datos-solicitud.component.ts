@@ -1,6 +1,7 @@
 import {
   AlDar,
   AlertComponent,
+  ConsultaioQuery,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -57,14 +58,87 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * @param tramite260215Store
    * @param tramite260215Query
    */
+
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   constructor(
     public readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
-    private tramite260215Query: Tramite260215Query
+    private tramite260215Query: Tramite260215Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Inicializa el formulario.
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
+ /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.forma.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.forma.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+ inicializarFormulario(): void {
+    this.tramite260215Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.forma = this.fb.group({
+      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
+      denominacion: [
+        { value: this.solicitudState?.denominacion, disabled: true },
+        Validators.required,
+      ],
+      correo: [
+        { value: this.solicitudState?.correo, disabled: true },
+        Validators.required,
+      ],
+    });
+  }
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} forma
@@ -89,39 +163,21 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable():void {
     this.colapsable = !this.colapsable;
   }
 
   /**
    * Método que se llama cuando se inicializa el componente
    * */
-  ngOnInit() {
-    this.tramite260215Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
-      denominacion: [
-        { value: this.solicitudState?.denominacion, disabled: true },
-        Validators.required,
-      ],
-      correo: [
-        { value: this.solicitudState?.correo, disabled: true },
-        Validators.required,
-      ],
-    });
+  ngOnInit():void {
+   this.inicializarEstadoFormulario()
   }
 
   /**
    * Método que se llama cuando se envía el formulario.
    */
-  alternarControlesDeFormulario() {
+  alternarControlesDeFormulario():void {
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {

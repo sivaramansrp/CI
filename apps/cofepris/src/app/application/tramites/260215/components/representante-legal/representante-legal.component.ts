@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
@@ -11,7 +12,6 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
@@ -35,6 +35,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+/**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb
@@ -44,22 +50,51 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
-    private tramite260215Query: Tramite260215Query
+    private tramite260215Query: Tramite260215Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Inicializa el estado de la solicitud.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
-  /**
-   * Grupo de formularios principal.
-   * @property {FormGroup} representante
-   */
-  representante!: FormGroup;
 
   /**
-   * Inicializa el componente.
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.representante.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.representante.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
    */
-  ngOnInit(): void {
-    this.tramite260215Query.selectSolicitud$
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  inicializarFormulario(): void {
+      this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -73,6 +108,19 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
       apellidoMaterno: [{ value: '', disabled: true }],
     });
+  }
+
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} representante
+   */
+  representante!: FormGroup;
+
+  /**
+   * Inicializa el componente.
+   */
+  ngOnInit(): void {
+ this.inicializarEstadoFormulario()
   }
 
   /**
