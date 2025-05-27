@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { SeccionLibStore, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, SeccionLibStore, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -51,24 +51,35 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
-  constructor(private readonly seccionStore: SeccionLibStore,private readonly httpServicios: HttpClient,private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
+  constructor(private readonly seccionStore: SeccionLibStore,private readonly httpServicios: HttpClient,private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private consultaQuery: ConsultaioQuery
+  ) {
     this.seccionStore.establecerFormaValida([false]);
     this.seccionStore.establecerSeccion([true])
   }
-  ngOnInit(): void {
-    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      if(data.sampleData.update){
-    this.httpServicios.get<ApiSolicitud>('../../../../../assets/json/220201/capturarSolicitud.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-if(data){
-   this.certificadoZoosanitarioServices.updatePagoDeDerechos(data?.pagoDeDerechos || {} as PagoDeDerechos);
-   this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(data?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
-   this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(data?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
+ngOnInit(): void {
+  this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      if (seccionState.update) {
+        this.guardarDatosFormulario();
+      } 
+    });
 }
-       });
-      }
-      });
-  }
 
+
+  guardarDatosFormulario(): void {
+     this.httpServicios.get<ApiSolicitud>('../../../../../assets/json/220201/capturarSolicitud.json').pipe(
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe((resp) => {
+          if(resp){
+   this.certificadoZoosanitarioServices.updatePagoDeDerechos(resp?.pagoDeDerechos || {} as PagoDeDerechos);
+   this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(resp?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
+   this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(resp?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
+          }
+        });
+  }
   /**
    * Evento emitido al cambiar de pestaña.
    * @event tabChanged
