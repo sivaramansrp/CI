@@ -10,6 +10,7 @@ import {
   FormulariosService,
   ICatalogo,
   Notificacion,
+  PaisesService,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   Recinto,
@@ -42,6 +43,7 @@ import {
   MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA,
   PATENTES_ID,
+  SIN_VALOR,
   TRANSPORTE,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
@@ -340,6 +342,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private tipoSolicitudService: TipoSolicitudService,
     private readonly tipoOperacionService: TipoOperacionService,
     private readonly tipoTransporteService: TipoTransporteService,
+    private readonly paisesService: PaisesService,
     private readonly tipoPedimentoService: TipoPedimentoService,
     private readonly tipoDespachoService: TipoDespachoService,
     private readonly aduanaService: AduanaService,
@@ -617,16 +620,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$)
       );
 
-    const CATALOGO_PAISES$ = this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-      .pipe(
-        map((resp) => {
-          if (resp.length > 0) {
-            this.paisesOrigen = resp;
-            this.paisesProcedencia = resp;
-          }
-        })
-      );
+    const CATALOGO_PAISES$ = this.paisesService.getListaPaises().pipe(
+      map((resp) => {
+        this.paisesOrigen = resp.datos;
+        this.paisesProcedencia = resp.datos;
+      })
+    );
 
     const CATALOGO_ADUANAS$ = this.aduanaService.getListaAduanas().pipe(
       map((resp) => {
@@ -1244,7 +1243,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = MSJ_ERROR_FECHA;
-      this.abrirModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_ADUANA_PEDIMENTO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
@@ -1285,7 +1293,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-    
+
   /**
    * Abre el modal para eliminar un documento.
    * @param {number} i - El índice del documento.
@@ -1530,6 +1538,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   verificarDatosExistentesStore(): void {
+    // Verifica si existe tipo de solicitud
+    if (this.solicitudState.tipoSolicitud !== SIN_VALOR) {
+      this.tipoSolicitudSeleccionada = parseInt(
+        this.FormSolicitud.get('tipoSolicitud')?.value,
+        10
+      );
+    }
     //Verifica si programa fomento esta habilitado y si tiene valor.
     if (this.solicitudState.programa) {
       const DATOS_PROGRAMA: DatosCheckInputText = {
@@ -1596,7 +1611,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public changeAduana(): void {
     const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
     if (ADUANA) {
-      this.despacho.get('idSeccionDespacho')?.setValue(-1);
+      this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
 
       this.seccionAduanaService
         .getListaSeccionesAduanas('CV2')
@@ -1936,16 +1951,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   limpiaCamposDdaLda(): void {
-    this.despacho.get('idAduanaDespacho')?.setValue(-1);
+    this.despacho.get('idAduanaDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('aduanaDespacho')?.setValue('');
-    this.despacho.get('idSeccionDespacho')?.setValue(-1);
+    this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('seccionAduanera')?.setValue('');
-    this.despacho.get('nombreRecinto')?.setValue(-1);
+    this.despacho.get('nombreRecinto')?.setValue(SIN_VALOR);
     this.despacho.get('tipoOperacion')?.setValue('');
     this.despacho.get('relacionSociedad')?.setValue(false);
     this.despacho.get('encargoConferido')?.setValue(false);
     this.despacho.get('domicilioDespacho')?.setValue('');
-    this.despacho.get('tipoDespacho')?.setValue(-1);
+    this.despacho.get('tipoDespacho')?.setValue(SIN_VALOR);
     this.despacho.get('tipoDespachoDescripcion')?.setValue('');
 
     this.setValoresStore(
@@ -2001,9 +2016,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   validaCampoRecintoEspecifique(): boolean {
     const RECINTO = this.despacho.get('nombreRecinto')?.value
       ? parseInt(this.despacho.get('nombreRecinto')?.value, 10)
-      : -1;
+      : SIN_VALOR;
     const ESPECIFIQUE = this.despacho.get('recintoEspecifique')?.value;
-    if (RECINTO !== -1 || ESPECIFIQUE !== '') {
+    if (RECINTO !== SIN_VALOR || ESPECIFIQUE !== '') {
       return true;
     }
     return false;
@@ -2040,6 +2055,30 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.despacho,
       'tipoDespachoDescripcion',
       'setDescripcionTipoDespacho'
+    );
+  }
+
+  /**
+   * Cambia el tipo de transporte y actualiza el store correspondiente.
+   * @param tipoTransporte {string} - El tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeSeleccionTipoTransporte(tipoTransporte: string): void {
+    this.vehiculo.get('tipoTransporte')?.setValue(tipoTransporte);
+    this.setValoresStore(this.vehiculo, 'tipoTransporte', 'setTipoTransporte');
+  }
+
+  /**
+   * Cambia el tipo de transporte y actualiza el store correspondiente.
+   * @param tipoTransporte {string} - El tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeSeleccionTipoVehiculo(tipoTransporte: string): void {
+    this.transporteArriboSalida.get('tipoTransporte')?.setValue(tipoTransporte);
+    this.setValoresStore(
+      this.transporteArriboSalida,
+      'tipoTransporteArriboSalida',
+      'setTipoTransporteArriboSalida'
     );
   }
 }

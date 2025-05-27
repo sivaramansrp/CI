@@ -1,4 +1,4 @@
-import { CatalogosNumeroResponse, enviroment } from '@libs/shared/data-access-user/src';
+import { CatalogosNumeroResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { API_GET_PARAMETRO_MONTO } from '../../../../constantes/5701/api-constants';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ export class ParametroMontoService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
