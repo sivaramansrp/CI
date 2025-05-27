@@ -22,12 +22,6 @@ export class TablaDinamicaComponent<T> {
   @Output() filaClic = new EventEmitter<T>();
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-
-   /**
-   * Si es true, todos los checkboxes de la tabla estarán deshabilitados.
-   */
-  @Input() deshabilitarCheckboxes: boolean = false;
-  
   /*
      * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
      *

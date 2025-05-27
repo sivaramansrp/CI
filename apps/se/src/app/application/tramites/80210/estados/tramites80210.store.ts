@@ -10,15 +10,6 @@ import { Plantas } from '../modelos/registro-solicitud-immex.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80210State {
-  /**
-   * RFC asociado al trámite.
-   */
-  rfc: string;
-
-  /**
-   * Estado seleccionado en el trámite.
-   */
-  estados: string;
 
   /**
    * Lista de identificadores de plantas disponibles.
@@ -46,8 +37,6 @@ export interface Tramites80210State {
  */
 export function createInitialState(): Tramites80210State {
   return {
-    rfc: '',
-    estados: '',
     plantasDisponibles: [],
     plantasSeleccionadas: [],
     showPlantas: false,
@@ -80,76 +69,16 @@ export class Tramite80210Store extends Store<Tramites80210State> {
 
   /**
    * @método
-   * @nombre setRFC
+   * @nombre establecerDatos
    * @descripción
-   * Actualiza el RFC en el estado global.
-   *
-   * @param rfc - RFC a establecer.
+   * Actualiza el estado con los valores proporcionados.
+   * 
+   * @param {Partial<Tramites30401State>} values - Valores parciales para actualizar el estado.
    */
-  public setRFC(rfc: string): void {
+  public establecerDatos(values: Partial<Tramites80210State>): void {    
     this.update((state) => ({
       ...state,
-      rfc,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setEstado
-   * @descripción
-   * Actualiza el estado seleccionado en el estado global.
-   *
-   * @param estados - Estado a establecer.
-   */
-  public setEstado(estados: string): void {
-    this.update((state) => ({
-      ...state,
-      estados,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setShowPlantas
-   * @descripción
-   * Actualiza la visibilidad de las plantas en el estado global.
-   *
-   * @param values - Valor booleano que indica si se deben mostrar las plantas.
-   */
-  public setShowPlantas(values: boolean): void {
-    this.update((state) => ({
-      ...state,
-      showPlantas: values,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setPlantasDisponibles
-   * @descripción
-   * Actualiza la lista de plantas disponibles en el estado global.
-   *
-   * @param values - Lista de identificadores de plantas disponibles.
-   */
-  public setPlantasDisponibles(plantasDisponibles: Plantas[]): void {
-    this.update((state) => ({
-      ...state,
-      plantasDisponibles: plantasDisponibles,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setPlantasSeleccionada
-   * @descripción
-   * Actualiza la lista de plantas seleccionadas en el estado global.
-   *
-   * @param values - Lista de identificadores de plantas seleccionadas.
-   */
-  public setPlantasSeleccionada(plantasSeleccionadas: Plantas[]): void {
-    this.update((state) => ({
-      ...state,
-      plantasSeleccionadas: plantasSeleccionadas,
+      ...values,
     }));
   }
 }

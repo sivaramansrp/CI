@@ -100,9 +100,7 @@ export class registroSolicitudImmexService implements OnDestroy {
 
 
    actualizarEstadoFormulario(datos: Tramites80210State): void {
-      this.tramite80210Store.setShowPlantas(datos.showPlantas);
-      this.tramite80210Store.setPlantasDisponibles(datos.plantasDisponibles);
-      this.tramite80210Store.setPlantasSeleccionada(datos.plantasSeleccionadas);
+      this.tramite80210Store.establecerDatos(datos);
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramites80210State> {

@@ -25,7 +25,7 @@ export class PasoUnoComponent implements OnInit {
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
   public consultaState!:ConsultaioState;
 
   constructor(
@@ -61,6 +61,8 @@ ngOnInit(): void {
         if(resp){
         this.esDatosRespuesta = true;
         this.registroSolicitudService.actualizarEstadoFormulario(resp);
+        }else {
+          this.esDatosRespuesta = false;
         }
       });
   }
