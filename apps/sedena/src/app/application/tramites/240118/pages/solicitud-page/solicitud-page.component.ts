@@ -1,4 +1,4 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { AVISO, AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -41,6 +41,22 @@ export class SolicitudPageComponent {
    */
   public indice: number = 1;
 
+/**
+ * @property TEXTOS
+ * @description
+ * Contiene el texto del aviso de privacidad que se mostrará en la página de solicitud.
+ * El valor se obtiene de la constante `AVISO_PRIVACIDAD.Aviso_Privacidad`.
+ * @type {string}
+ */
+  TEXTOS: string = AVISO.Aviso;
+
+    /**
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+  
   /**
    * @property wizardComponent
    * @description Referencia al componente `WizardComponent`, utilizada
