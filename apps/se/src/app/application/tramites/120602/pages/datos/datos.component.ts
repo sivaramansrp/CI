@@ -31,7 +31,7 @@ export class DatosComponent implements OnInit, OnDestroy {
   * Esta variable se utiliza para almacenar el índice del subtítulo.
   * @type {number}
   */
-  indice: number = 1;
+  public indice: number = 1;
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;

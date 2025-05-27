@@ -106,17 +106,17 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /**
   * Datos de la empresa.
   */
-  DATOS_EMPRESA: string = DATOS_EMPRESA;
+  public DATOS_EMPRESA: string = DATOS_EMPRESA;
 
   /**
      * Índice del paso actual en el formulario.
      */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * Lista de pasos del asistente.
    */
-  pasos: ListaPasosWizard[] = [];
+  private pasos: ListaPasosWizard[] = [];
 
   /**
  * @property solicitudState
@@ -138,7 +138,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false; 
 
   /**
   * Constructor de la clase.
@@ -235,7 +235,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     * Obtiene las opciones del catálogo federal y estatal.
     */
   obtenerFederalEstatal(): void {
-    this.federalEstatal = dropDown.listaDesplegable
+    this.federalEstatal = dropDown.listaDesplegable;
   }
 
   /**

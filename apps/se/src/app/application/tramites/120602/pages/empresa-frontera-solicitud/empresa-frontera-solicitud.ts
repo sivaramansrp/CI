@@ -63,21 +63,21 @@ export class EmpresaFronteraSolicitudComponent {
  * Contiene la lista de pasos del asistente (wizard) para el trámite de empresa en frontera.
  * @type {ListaPasosWizard[]}
  */
-  pasos: ListaPasosWizard[] = PASOS;
+  private pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @property {ListaPasosWizard[]} pantallasPasos
    * @description Contiene la lista de pasos del asistente (wizard).
    * La información se obtiene de la constante `EMPRESA_FRONTERA `.
    */
-  pantallasPasos: ListaPasosWizard[] = EMPRESA_FRONTERA ;
+  public pantallasPasos: ListaPasosWizard[] = EMPRESA_FRONTERA ;
 
   /**
    * @property {number} indice
    * @description Representa el índice del paso actual en el asistente.
    * Se inicializa en 2, lo que significa que el asistente comenzará en el tercer paso.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   
   /**
@@ -86,7 +86,7 @@ export class EmpresaFronteraSolicitudComponent {
  * Objeto de configuración que contiene la información necesaria para el control de los pasos del asistente (wizard).
  * @type {DatosPasos}
  */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
