@@ -1,6 +1,6 @@
 import { API_GET_INDUSTRIA_AUTOMOTRIZ, RFC_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { IndustriaAutomotrizResponse } from '../../models/5701/certificacion-automotriz.model';
 import { Injectable } from '@angular/core';
@@ -15,7 +15,7 @@ export class IndustriaAutomotrizService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

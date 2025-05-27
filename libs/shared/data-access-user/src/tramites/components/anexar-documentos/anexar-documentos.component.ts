@@ -11,14 +11,11 @@ import {
   ViewChildren
 } from '@angular/core';
 import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, MENSAJES_MODAL, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, catchError, map, of, take, takeUntil } from 'rxjs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 
 import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
-import { DocumentosCargados } from '../../../core/models/shared/components.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';

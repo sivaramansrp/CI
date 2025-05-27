@@ -1,10 +1,12 @@
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
+export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
+export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component'
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
-export { enviroment } from './enviroments/enviroment';
+export { ENVIRONMENT } from './enviroments/enviroment';
 export {
   InputConfig,
   LabelValueDatos,
@@ -56,7 +58,7 @@ export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/31602/comercio-exterior.model';
-export * from './core/models/shared/agregar-trasnporte.model';
+export * from './core/models/shared/agregar-transporte.model';
 export * from './core/models/shared/catalogo.model';
 export * from './core/models/shared/anexar-documentos.model';
 export * from './core/models/shared/catalogos.model';
@@ -112,7 +114,6 @@ export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/components/acuse/acuse.component';
 export * from './tramites/components/agregar-archivo/agregar-archivo.component';
-export * from './tramites/components/agregar-transporte/agregar-transporte.component';
 export * from './tramites/components/alert/alert.component';
 export * from './tramites/components/anexar-documentos/anexar-documentos.component';
 export * from './tramites/components/breadcrumb/breadcrumb.component';
@@ -187,9 +188,15 @@ export * from './core/services/shared/catalogos/tipo-operacion.service';
 export * from './core/services/shared/catalogos/tipo-transporte.service';
 export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
+export * from './core/services/shared/catalogos/paises.service';
+
+
 export * from './tramites/constantes/120501/participantes.enum'
 
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
 export * from './core/utils/utilerias';
+
+export * from './tramites/components/transporte/transporte.component';
+export * from './tramites/components/agregar-transporte/agregar-transporte.component';
