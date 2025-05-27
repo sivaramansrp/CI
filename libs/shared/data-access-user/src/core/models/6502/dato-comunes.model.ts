@@ -20,22 +20,22 @@ export interface InstalacionesPrincipalesTablaInfo {
 export const INSTALACIONES_PRINCIPALES_TABLA = [
     {
         encabezado: 'Tipo persona',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.tipo_persona,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.tipo_persona,
         orden: 1,
     },
     {
         encabezado: 'Nombre',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.nombre,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.nombre,
         orden: 2,
     },
     {
         encabezado: 'RFC',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.rfc,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.rfc,
         orden: 3,
     },
     {
         encabezado: 'Clave única de registro poblacional (CURP)',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.registro_poblacional,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.registro_poblacional,
         orden: 4,
     },
 ];
@@ -54,27 +54,27 @@ export interface InstalacionesPrincipalesRespuestaTabla {
 }
 
 /**
- * @interface formaDatosInfo
+ * @interface FormaDatosInfo
  * @description Representa la información de los datos de un formulario.
  * @property {string} nombre - Nombre de la persona o entidad.
  * @property {string} registroFederal - Registro Federal de Contribuyentes.
  * @property {string} curp - Clave Única de Registro de Población (CURP).
  */
-export interface formaDatosInfo {
+export interface FormaDatosInfo {
     nombre: string;
     registroFederal: string;
     curp: string;
 }
 
 /**
- * @interface formaRespuestaDatos
+ * @interface FormaRespuestaDatos
  * @description Representa la respuesta de los datos de un formulario.
  * @property {number} code - Código de respuesta.
  * @property {formaDatosInfo[]} data - Datos de la tabla NICO.
  * @property {string} message - Mensaje de la respuesta.
  */
-export interface formaRespuestaDatos {
+export interface FormaRespuestaDatos {
     code: number;
-    data: formaDatosInfo[];
+    data: FormaDatosInfo[];
     message: string;
 }

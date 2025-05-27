@@ -682,6 +682,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAlbergueModule
       ),
   },
+  {
+    path: 'registro-solicitud-immex-modalidad-controladora',
+    loadChildren: () =>
+      import('./tramites/80104/modalidad-controlodora.module').then(
+        (m) => m.ModalidadControlodoraModule
+      ),
+  },
 
 ];
 
