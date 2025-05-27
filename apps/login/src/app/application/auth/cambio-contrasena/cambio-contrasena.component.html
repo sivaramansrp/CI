@@ -7,34 +7,27 @@
             </div>
         </div>
         <form [formGroup]="FormCambioContrasena">
-            <div class="row ">
+            <div class="row">
+                <!-- Contraseña Anterior -->
                 <div class="col-md-6">
                     <label for="contrasenaAnterior" class="form-label text-title">Contraseña anterior*:</label>
                     <input type="password" id="contrasenaAnterior" formControlName="contrasenaAnterior"
                         class="form-control font-weight-titulo text-title" placeholder="Contraseña anterior" />
-                    <div *ngIf="FormCambioContrasena.get('contrasenaAnterior')?.invalid && FormCambioContrasena.get('contrasenaAnterior')?.touched"
-                        class="text-danger">
-                        La contraseña anterior es obligatoria.
-                    </div>
                 </div>
+
+                <!-- Contraseña Nueva -->
                 <div class="col-md-6">
-                    <label for="contrasenaNueva" class="form-label text-title">Contraseña nueva:</label>
+                    <label for="contrasenaNueva" class="form-label text-title">Contraseña nueva*:</label>
                     <input type="password" id="contrasenaNueva" formControlName="contrasenaNueva"
                         class="form-control font-weight-titulo text-title" placeholder="Contraseña nueva" />
-                    <div *ngIf="FormCambioContrasena.get('contrasenaNueva')?.invalid && FormCambioContrasena.get('contrasenaNueva')?.touched"
-                        class="text-danger">
-                        La contraseña nueva es obligatoria.
-                    </div>
                 </div>
+
+                <!-- Confirmación -->
                 <div class="col-md-6">
                     <label for="confirmacionContrasena" class="form-label text-title">Confirmación contraseña
-                        nueva:</label>
+                        nueva*:</label>
                     <input type="password" id="confirmacionContrasena" formControlName="confirmacionContrasena"
                         class="form-control font-weight-titulo text-title" placeholder="Confirmación contraseña" />
-                    <div *ngIf="FormCambioContrasena.get('confirmacionContrasena')?.invalid && FormCambioContrasena.get('confirmacionContrasena')?.touched"
-                        class="text-danger">
-                        La confirmación de la contraseña es obligatoria.
-                    </div>
                 </div>
             </div>
         </form>

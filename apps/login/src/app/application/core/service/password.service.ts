@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-export class TramiteService {
+export class PasswordService {
     /**
      * Constructor que inyecta el cliente HTTP de Angular.
      * @param http Cliente HTTP para realizar peticiones a la API.
@@ -33,5 +33,4 @@ export class TramiteService {
             })
         );
     }
-
 }
