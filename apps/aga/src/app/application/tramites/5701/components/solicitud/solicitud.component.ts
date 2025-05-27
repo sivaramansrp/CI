@@ -21,6 +21,7 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TablaSeleccion,
   TIPO_SOLICITUD,
   TipoDespachoService,
   TipoOperacionService,
@@ -33,6 +34,7 @@ import {
 } from '@ng-mf/data-access-user';
 import {
   ADV_LIMPIA_CAMPOS,
+  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
   FUNCION_STORE_DD,
   FUNCION_STORE_LDA,
@@ -108,6 +110,7 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
+import { LineaCaptura } from '../../../../core/models/5701/linea-captura.model';
 
 @Component({
   selector: 'app-solicitud',
@@ -329,6 +332,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public tipoDespacho!: string;
 
   public procesoModal!: string;
+
+  public tablaSeleccionPagos = TablaSeleccion;
+
+  public encabezadoDeTablaPagos = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+
+  public datosTablaPagos: LineaCaptura[] = [];
 
   constructor(
     private seccionQuery: SeccionLibQuery,
