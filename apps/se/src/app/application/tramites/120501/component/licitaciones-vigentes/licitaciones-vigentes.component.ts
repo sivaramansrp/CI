@@ -189,8 +189,22 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Indica si se muestra la selección de participante.
    */
   showSeleccionarParticipante: boolean = false;
+  
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando se establece en `true`, todos los controles del formulario y elementos interactivos
+ * se deshabilitan, impidiendo que el usuario realice cambios. Esta propiedad normalmente se
+ * configura según el estado de la aplicación, por ejemplo, al visualizar una solicitud enviada
+ * o cuando el usuario no tiene permisos de edición.
+ */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+ * Estado actual de la sección del trámite 120501.
+ * Esta propiedad almacena los datos del estado de la sección, obtenidos generalmente
+ * desde el store o desde una consulta al backend. Se utiliza para inicializar y actualizar
+ * los formularios del componente con los valores correspondientes a la solicitud en curso.
+ */
    private seccionState!: Solicitud120501State;
   /**
    * Constructor del componente.
@@ -423,7 +437,11 @@ setValoresStore(form: FormGroup, campo: string): void {
  * 
  */
 abrirModificarModal(event: Complementaria): void {
+  if(this.esFormularioSoloLectura){
+    return
+  }
   this.showRepresentacionFederal = true;
+  
 }
 
 /**
