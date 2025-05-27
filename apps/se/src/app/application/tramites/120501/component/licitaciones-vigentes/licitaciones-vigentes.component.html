@@ -7,7 +7,8 @@
     <div>
       <h6>Licitaciones disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configTableArray"
-      [datos] = "datos" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+      [datos] = "datos" (filaClic)="abrirModificarModal($event)"
+      ></app-tabla-dinamica>
 
       <div class="container" *ngIf="showRepresentacionFederal">
       <!-- Representación federal  -->
@@ -16,12 +17,19 @@
         <form [formGroup]="formulario">
           <div class="row">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="entidadFederativaOptions" formControlName="entidadFederativa" [label]="'Entidad federativa'"
-                [required]="true" [isDisabled]="esFormularioSoloLectura" name="federalent" (change)="onChangeEntiadFederative()" ></app-catalogo-select>
+              <app-catalogo-select 
+              [catalogo]="entidadFederativaOptions" 
+              formControlName="entidadFederativa" 
+              [label]="'Entidad federativa'"
+              [required]="true" 
+              [isDisabled]="esFormularioSoloLectura" 
+              name="federalent" 
+              (change)="setValoresStore(formulario, 'entidadFederativa')"></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="representacionFederalOptions" formControlName="representacionFederal" [label]="'Representación federal'"
-                [required]="true" [isDisabled]="esFormularioSoloLectura" name="representfederal" (change)="onChangeRepresentacionFederal()"></app-catalogo-select>
+                [required]="true" [isDisabled]="esFormularioSoloLectura" name="representfederal" 
+                (change)="setValoresStore(formulario, 'representacionFederal')"></app-catalogo-select>
             </div>
           </div>
           </form>
@@ -135,7 +143,7 @@
             <div class="col-md-4">
               <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
               <input type="text" class="form-control" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
-              (change)="montoRecibirValue()">
+              (change)="setValoresStore(adquiriente, 'montoRecibir')">
               <div *ngIf="isInvalid('montoRecibir')" class="text-danger">
                 Este campo es obligatorio
             </div>

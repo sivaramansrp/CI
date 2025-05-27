@@ -65,22 +65,14 @@ export class Tramite120501Store extends Store<Solicitud120501State> {
     super(createInitialState());
   }
 
-  public setmontoRecibir(montoRecibir: string): void {
-      this.update((state) => ({
-        ...state,
-        montoRecibir,
-      }));
-    }
-    public setEntidadFederativa(entidadFederativa: string):void {
-      this.update((state) => ({
-        ...state,
-        entidadFederativa,
-      }));
-    }
-    public setRepresentacionFederal(representacionFederal: string):void {
-      this.update((state) => ({
-        ...state,
-        representacionFederal,
-      }));
-    }
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Solicitud120501State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
+    }));
+  }
 }

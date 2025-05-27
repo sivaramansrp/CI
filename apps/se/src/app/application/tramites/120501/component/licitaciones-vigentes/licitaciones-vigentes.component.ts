@@ -7,7 +7,6 @@ import { FormGroup } from '@angular/forms';
 
 import { Adquiriente, AlertComponent, Complementaria, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -21,7 +20,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
-import { TableComponent } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -413,46 +411,11 @@ getAdquiriente():void{
      * El nombre del método en el store a invocar.
      * 
      */
-setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
+setValoresStore(form: FormGroup, campo: string): void {
   const VALOR = form.get(campo)?.value;
-  (this.tramite120501Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  this.tramite120501Store.actualizarEstado({ [campo]: VALOR });
 }
 
-/**
-* Actualiza el valor de la entidad federativa en el store.
-*
-* LicitacionesVigentesComponent
-* 
-*/
-onChangeEntiadFederative(): void {
-     const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
-     this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
-  }
- 
-
-
-
-/**
-* Actualiza el valor de la representación federal en el store.
-*
-* LicitacionesVigentesComponent
-*
-*/
-onChangeRepresentacionFederal(): void {
-  const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
-  this.tramite120501Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
-}
-
-/**
-* Actualiza el valor del monto a recibir en el store.
-*
-* LicitacionesVigentesComponent
-* 
-*/
-montoRecibirValue(): void {
-  const MONTO_RECIBIR = this.adquiriente.get('montoRecibir')?.value;
-  this.tramite120501Store.setmontoRecibir(MONTO_RECIBIR);
-}
 /**
  * Abre el modal para modificar la información.
  *
@@ -494,6 +457,6 @@ moverRFC1(selectedEntry: Complementaria1): void {
     this.datos1.splice(INDEX, 1);
   }
 }
-
+  
 
 }

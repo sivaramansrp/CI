@@ -37,9 +37,8 @@ export class LicitacionesDisponiblesService {
   }
 
     actualizarEstadoFormulario(DATOS: Solicitud120501State): void {
-    this.tramite120501Store.setmontoRecibir(DATOS.montoRecibir);
-      this.tramite120501Store.setEntidadFederativa(DATOS.entidadFederativa);
-      this.tramite120501Store.setRepresentacionFederal(DATOS.representacionFederal);
+    this.tramite120501Store.actualizarEstado(DATOS);
+    
 
     
   }
