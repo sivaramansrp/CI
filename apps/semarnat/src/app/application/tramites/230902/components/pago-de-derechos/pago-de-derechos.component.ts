@@ -221,6 +221,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

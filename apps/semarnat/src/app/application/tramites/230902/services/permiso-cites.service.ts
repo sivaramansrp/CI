@@ -6,8 +6,6 @@ import { Observable } from 'rxjs';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Solicitud230902State, Tramite230902Store } from '../estados/tramite230902.store';
 
-import { ConfiguracionItem } from '../enum/mercancia.enum';
-
 /**
  * Servicio para gestionar las operaciones relacionadas con los permisos CITES.
  * Proporciona métodos para inicializar catálogos, cargar datos de tablas y actualizar el estado del formulario.
@@ -103,17 +101,10 @@ export class PermisoCitesService {
   banco: Catalogo[] = [];
 
   /**
-   * URL del archivo JSON que contiene los datos de la tabla.
-   * Se utiliza para cargar los datos de la tabla desde un archivo local.
-   * {string}
-   */
-  private jsonUrl = 'assets/json/230902/tablaDatos.json';
-
-  /**
    * Constructor del servicio.
    * Inicializa el cliente HTTP para realizar solicitudes y el store para manipular el estado.
-   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
-   * @param {Tramite230902Store} Tramite230902Store - Store para manipular el estado de la solicitud.
+   * {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * {Tramite230902Store} Tramite230902Store - Store para manipular el estado de la solicitud.
    */
   constructor(private http: HttpClient, private Tramite230902Store: Tramite230902Store) {
     // No se necesita lógica de inicialización adicional.
@@ -161,9 +152,9 @@ export class PermisoCitesService {
 
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
-   * @param {PermisoCitesService} self - Instancia del servicio.
-   * @param {keyof PermisoCitesService} variable - Nombre de la variable donde se almacenarán los datos.
-   * @param {string} url - URL desde la cual se obtendrán los datos.
+   * {PermisoCitesService} self - Instancia del servicio.
+   * {keyof PermisoCitesService} variable - Nombre de la variable donde se almacenarán los datos.
+   * {string} url - URL desde la cual se obtendrán los datos.
    */
   obtenerRespuestaPorUrl(
     self: PermisoCitesService,
@@ -178,16 +169,8 @@ export class PermisoCitesService {
   }
 
   /**
-   * Carga los datos de la tabla desde un archivo JSON.
-   * @returns {Observable<ConfiguracionItem[]>} Observable que emite los datos de la tabla.
-   */
-  loadTablaDatos(): Observable<ConfiguracionItem[]> {
-    return this.http.get<ConfiguracionItem[]>(this.jsonUrl);
-  }
-
-  /**
    * Actualiza el estado del formulario en el store con los datos proporcionados.
-   * @param {Solicitud230902State} DATOS - Datos para actualizar el estado.
+   * {Solicitud230902State} DATOS - Datos para actualizar el estado.
    */
   actualizarEstadoFormulario(DATOS: Solicitud230902State): void {
     this.Tramite230902Store.establecerDatos(DATOS);
@@ -199,7 +182,7 @@ export class PermisoCitesService {
 
   /**
    * Obtiene los datos de registro de toma de muestras y mercancías desde un archivo JSON.
-   * @returns {Observable<Solicitud230902State>} Observable con los datos de la solicitud.
+   * {Observable<Solicitud230902State>} Observable con los datos de la solicitud.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud230902State> {
     return this.http.get<Solicitud230902State>('assets/json/230902/registro_toma_muestras_mercancias.json');

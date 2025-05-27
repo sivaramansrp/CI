@@ -167,15 +167,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      */
   listaFilaSeleccionadaMercancia!: ConfiguracionItem[];
 
-  /**
-     * Método para cargar los datos de la tabla.
-   * Realiza una solicitud al servicio para obtener los datos de la tabla.
-   */
-  cargarDatosTabla(): void {
-    this.permisoCitesService.loadTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((state) => {
-      this.tablaDatos = state;
-    });
-  }
 
   /**
    * Datos de la tabla de mercancías.
@@ -321,7 +312,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
 
     this.cambiarTipoDeMovimiento();
-    this.cargarDatosTabla();
   }
 
   /**
@@ -456,7 +446,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
      * Verifica si un control del formulario es inválido.
    * Devuelve verdadero si el control es inválido y ha sido tocado o modificado.
-   * @param formControlName Nombre del control en el formulario.
+   * formControlName Nombre del control en el formulario.
    */
   esInvalido(formControlName: string): boolean {
     const CONTROL = this.formMercancia.get(formControlName);
@@ -469,7 +459,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * Maneja la fila seleccionada en la tabla de mercancías.
    * Actualiza el formulario con los datos de la fila seleccionada.
    *
-   * @param fila Fila seleccionada en la tabla.
+   * fila Fila seleccionada en la tabla.
    */
   hadleFilaSeleccionada(fila: ConfiguracionItem[]): void {
     this.listaFilaSeleccionadaMercancia = fila;
@@ -645,7 +635,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
      * Maneja el cambio en la fracción arancelaria seleccionada.
    * Actualiza la descripción de la fracción en el formulario.
-   * @param $event Evento que contiene la fracción seleccionada.
+   * $event Evento que contiene la fracción seleccionada.
    */
   manejarCambioFraccionArancelaria($event: Catalogo): void {
     const FRACCION_DESCRIPCION =
@@ -723,8 +713,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
      * Método setValoresStore
    * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
-   * @param form Formulario reactivo que contiene los datos.
-   * @param campo Nombre del campo cuyo valor se actualizará en el store.
+   * form Formulario reactivo que contiene los datos.
+   * campo Nombre del campo cuyo valor se actualizará en el store.
    */
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
@@ -736,6 +726,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

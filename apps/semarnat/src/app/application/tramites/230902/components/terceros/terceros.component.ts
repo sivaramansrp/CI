@@ -149,11 +149,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
-   * @param permisoCitesService Servicio de permisos CITES.
-   * @param tramite230902Store Almacén de trámites 230902.
-   * @param tramite230902Query Consulta de trámites 230902.
-   * @param formBuilder Constructor de formularios.
-   * @param consultaioQuery Consulta de IO.
+   * permisoCitesService Servicio de permisos CITES.
+   * tramite230902Store Almacén de trámites 230902.
+   * tramite230902Query Consulta de trámites 230902.
+   * formBuilder Constructor de formularios.
+   * consultaioQuery Consulta de IO.
    */
   constructor(
     public permisoCitesService: PermisoCitesService,
@@ -212,7 +212,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de filas en la tabla.
    * Habilita o deshabilita la opción de modificar según las filas seleccionadas.
-   * @param filaSeleccionada Las filas seleccionadas en la tabla.
+   * filaSeleccionada Las filas seleccionadas en la tabla.
    */
   onFilaSeleccionada(filaSeleccionada: ConfiguracionItem[]): void {
     if(filaSeleccionada.length > 0) {
@@ -299,6 +299,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

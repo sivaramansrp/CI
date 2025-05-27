@@ -7,7 +7,7 @@
     </div>
     <label class="row mt-5">destinatarios*:</label>
     <div class="row mt-4">
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos"
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         [tipoSeleccionTabla]="TablaSeleccion" (listaDeFilaSeleccionada)="onFilaSeleccionada($event)"></app-tabla-dinamica>
     </div>
     <div class="row text-end pb-3">
