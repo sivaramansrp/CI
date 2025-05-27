@@ -5,7 +5,14 @@ import {
   SimpleChanges,
   forwardRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CatalogoPaises } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
@@ -22,9 +29,9 @@ import { CommonModule } from '@angular/common';
       multi: true,
     },
   ],
-  host: {}
+  host: {},
 })
-export class SelectPaisesComponent implements OnChanges {
+export class SelectPaisesComponent implements ControlValueAccessor, OnChanges {
   @Input() id!: string;
   @Input() catalogosPaises!: CatalogoPaises[];
   @Input() label!: string;
@@ -41,8 +48,10 @@ export class SelectPaisesComponent implements OnChanges {
     });
   }
 
-  private onChange: (value: string) => void = () => { };
-  private onTouched: () => void = () => { };
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onChange: (value: string) => void = () => {};
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, @typescript-eslint/no-empty-function
+  private onTouched: () => void = () => {};
 
   /**
    * Detecta cambios en las propiedades de entrada y actualiza las validaciones
@@ -77,7 +86,7 @@ export class SelectPaisesComponent implements OnChanges {
 
   /**
    * Maneja el evento de cambio en un elemento select.
-   * 
+   *
    * @param event - Evento de cambio del elemento select.
    * @returns void
    */
@@ -88,7 +97,7 @@ export class SelectPaisesComponent implements OnChanges {
 
   /**
    * Escribe un valor en el control del formulario.
-   * 
+   *
    * @param value - El valor a establecer en el control.
    * @returns void
    */
