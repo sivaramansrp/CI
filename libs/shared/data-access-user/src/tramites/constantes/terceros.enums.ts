@@ -7,3 +7,5 @@ export const TITULO_MODAL_AVISO = 'Aviso';
 export const MSG_SUCCESS = 'Datos guardados correctamente.';
 export const MSG_TERCERO_EXISTE = 'Los datos del tercero relacionado ya se encuentran registrados, favor de verificar.';
 export const MSG_ELIMINA_PERSONA = 'Datos eliminados correctamente.'
+
+export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';

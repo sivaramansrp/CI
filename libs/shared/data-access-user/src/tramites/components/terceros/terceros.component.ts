@@ -9,6 +9,7 @@ import {
 import {
   MSG_CAMPOS_VACIOS,
   MSG_ELIMINA_PERSONA,
+  MSG_SELECCIONA_REGISTRO,
   MSG_SUCCESS,
   MSG_TERCERO_EXISTE,
   TITULO_MODAL_AVISO,
@@ -33,7 +34,6 @@ import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
-
 @Component({
   selector: 'lib-terceros',
   templateUrl: './terceros.component.html',
@@ -49,7 +49,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent implements OnInit, OnDestroy {
+export class TercerosComponent<T> implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
   /**
@@ -92,7 +92,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
   encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
 
-
+  tercerosSeleccionados: PersonaTerceros[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -175,7 +175,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.personas.push(DATOS);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
-    }    
+    }
   }
 
   /**
@@ -223,5 +223,29 @@ export class TercerosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  eliminarTerceros(): void {
+    if (this.tercerosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.personas = this.personas.filter(
+      (persona) =>
+        !this.tercerosSeleccionados.some(
+          (seleccionado) => seleccionado.correo === persona.correo
+        )
+    );
+
+    this.tercerosStore.setTerceros(this.personas);
   }
 }

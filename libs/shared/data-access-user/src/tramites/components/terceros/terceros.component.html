@@ -47,10 +47,29 @@
       [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
       [configuracionTabla]="encabezadoDeTablaTerceros"
       [datos]="personas"
+      [botonEliminar]="true"
+      (listaDeFilaSeleccionada)="tercerosSeleccionados = $event"
     >
     </app-tabla-dinamica>
   </div>
   <div class="col-md-2"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="pull-right">
+      @if(personas.length > 0){
+      <button
+        type="button"
+        name="Eliminar"
+        class="btn btn-danger ms-2"
+        (click)="eliminarTerceros()"
+      >
+        Eliminar
+      </button>
+      }
+    </div>
+  </div>
 </div>
 
 @if (nuevaNotificacion) {
