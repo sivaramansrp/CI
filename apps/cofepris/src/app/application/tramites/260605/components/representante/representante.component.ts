@@ -1,4 +1,4 @@
-import { AlertComponent, Aviso, TituloComponent } from '@ng-mf/data-access-user';
+import { AVISO, AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
@@ -47,7 +47,7 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
    * @type {Aviso}
    * @memberof RepresentanteComponent
    */
-  public ADVERTENCIA = Aviso;
+  public ADVERTENCIA = AVISO;
 
   /**
    * Sujeto para notificar la destrucción del componente.

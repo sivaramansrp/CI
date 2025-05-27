@@ -2,9 +2,10 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con tratados y acuerdos.
  */
 
-import { HttpCoreService } from '../../shared/http/http.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,9 @@ export class DatostratadosacuerdosService {
   /**
    * @method getData
    *  Obtiene los datos de tratados y acuerdos desde un archivo JSON.
-   * @returns {Observable<any>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
    */
-  getData(): Observable<any> {
+  getData(): Observable<object> {
     return this.http.get('./assets/json/110102/datosTratadosAcuerdos.json');
   }
 }

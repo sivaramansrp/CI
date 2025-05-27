@@ -8,7 +8,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
 import { SanitarioService } from '../../services/sanitario.service';
-import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
+import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 
@@ -743,7 +743,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: tablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -751,7 +751,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: tablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -759,7 +759,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: tablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -767,7 +767,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: tablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.

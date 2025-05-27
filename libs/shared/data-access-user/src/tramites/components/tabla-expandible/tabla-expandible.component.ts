@@ -81,7 +81,7 @@ export class TablaExpandibleComponent<T, TN> {
   /**
    * Evento emitido cuando se alterna un valor
    */
-  @Output() alternarValor: EventEmitter<{ row: T; column: string }> = new EventEmitter();
+  @Output() alternarValor: EventEmitter<T> = new EventEmitter();
 
   /**
    * ID de la fila seleccionada
@@ -171,7 +171,7 @@ export class TablaExpandibleComponent<T, TN> {
   /**
    * Alterna un valor en una fila
    */
-  cambiarValor(fila: any): void {
+  cambiarValor(fila: T): void {
     this.alternarValor.emit(fila);
   }
 
