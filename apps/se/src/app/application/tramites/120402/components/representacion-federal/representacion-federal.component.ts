@@ -206,15 +206,13 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
 
  public ngOnInit(): void {
-    this.initializeForm();
+  this.inicializarEstadoFormulario();
     this.loadEntidad();
     this.loadRepresentacion();
-     this.inicializarEstadoFormulario();
-    this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
+     this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
       this.updateRepresentacionOptions(entidad);
-      this.representacionForm.get('representacion')?.setValue(''); // Reset representacion
+      this.representacionForm.get('representacion')?.setValue('');
     });
- 
   }
  
   /**
@@ -252,7 +250,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
        * Campo del formulario para la selección de la entidad federativa.
        * Se inicializa como una cadena vacía.
        */
-      entidad: ['', [Validators.required]],
+      entidad: [this.solicitudState?.entidad, [Validators.required]],
 
       /**
        * @property {string} representacion
@@ -260,7 +258,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
        * Campo del formulario para la selección de la representación federal.
        * Se inicializa como una cadena vacía.
        */
-      representacion: ['', [Validators.required]],
+      representacion: [this.solicitudState?.representacion, [Validators.required]],
     });
   }
 
@@ -356,19 +354,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
-  }
-
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite120402Query.selectSolicitud$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.solicitudState = data;
-      }
-    );
   }
 
      /**

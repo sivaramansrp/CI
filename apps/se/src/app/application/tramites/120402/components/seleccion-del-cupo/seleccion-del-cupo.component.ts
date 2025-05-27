@@ -303,17 +303,16 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       }
   }
  
+ 
   /**
    * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es inicializado.
    * Inicializa el formulario y carga los datos de la selección del cupo.
    */
   ngOnInit(): void {
-    this.initializeForm();
+    this.inicializarEstadoFormulario();
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
-    this.inicializarEstadoFormulario();
-    this.getValorStore();
  }
  
   /**
@@ -329,6 +328,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de selección del cupo con validaciones requeridas.
    */
   private initializeForm(): void {
+
     this.subscription.add(
       this.tramite120402Query.selectSolicitud$
         .pipe(
@@ -340,10 +340,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         .subscribe()
     );
     this.seleccionForm = this.fb.group({
-      regimen: ['', Validators.required],
-      tratado: ['', Validators.required],
-      producto: ['', Validators.required],
-      subproducto: ['', Validators.required],
+      regimen: [this.solicitudState?.regimen, Validators.required],
+      tratado: [this.solicitudState?.tratado, Validators.required],
+      producto: [this.solicitudState.producto, Validators.required],
+      subproducto: [this.solicitudState.subproducto, Validators.required],
     });
   }
  

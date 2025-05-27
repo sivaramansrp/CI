@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Query } from '@datorama/akita';
 import { Tramite120402State } from '../tramites/tramite120402.store';
 import { Tramite120402Store } from '../tramites/tramite120402.store';
+
 
  
 @Injectable({ providedIn: 'root' })
@@ -17,13 +19,13 @@ export class Tramite120402Query extends Query<Tramite120402State> {
   // subproducto$ = this.select((state) => state.subproducto);
   // cantidadSolicitada$ = this.select((state) => state.cantidadSolicitada);
 
-    /**
-   * Selecciona el estado completo de la solicitud
+  /**
+   * Selecciona todo el estado del tramite.
+   * @returns Observable con el estado completo del tramite 130108.
    */
-  selectSolicitud$ = this.select((state) => {
-    return state;
-  });
- 
+  get selectSolicitud$(): Observable<Tramite120402State> {
+    return this.select((state) => state);
+  }
   /**
    * Crea una nueva instancia de Tramite120402Query.
    * @param tramiteStore - La store del trámite 120402.

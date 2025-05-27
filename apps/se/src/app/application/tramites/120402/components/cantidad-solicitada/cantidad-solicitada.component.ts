@@ -125,8 +125,8 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
     this.inicializarEstadoFormulario();
+   // this.getValorStore();
   }
 
   /**
@@ -177,19 +177,6 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
     }
   }
 
-
-/**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite120402Query.selectSolicitud$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.solicitudState = data;
-      }
-    );
-  }
 
      /**
    * Actualiza un valor específico en el store del trámite.
