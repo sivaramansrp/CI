@@ -1,9 +1,8 @@
-import { AVISO,FIRMAR } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { Component, ViewChild } from '@angular/core';
 
+import { AVISO, FIRMAR, ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 

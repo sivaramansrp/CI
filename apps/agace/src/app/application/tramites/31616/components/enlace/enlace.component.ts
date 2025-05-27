@@ -2,10 +2,10 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31616TercerosState, Tramite31616TercerosStore } from '../../../../estados/tramites/tramite31616_terceros.store';
+import { TableBodyData, TableComponent } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31616TercerosQuery } from '../../../../estados/queries/tramite31616_terceros.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
@@ -36,7 +36,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de enlace.
    */
-  public enlanceBodyData: unknown = [];
+  public enlanceBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de enlace cargados desde archivo JSON.
