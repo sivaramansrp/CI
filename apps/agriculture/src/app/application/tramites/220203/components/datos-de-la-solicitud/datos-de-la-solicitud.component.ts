@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 
 interface DatoTabla {
@@ -49,10 +50,11 @@ interface FilaSolicitud {
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    TableComponent
+    TableComponent,
+    CommonModule
   ],
 })
-export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
+export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
   private destroyNotifier$ = new Subject<void>();
 
   /**
@@ -228,12 +230,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.datosMercanciaStore = datos.datosMercancia;
     })
-    this.createFromGroup();
-    this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosArancelaria();
-    this.obtenerCatalogosUMC();
-    this.obtenerCatalogosUMT();
-    this.obtenerCatalogosUSO();
   }
 
   /**
@@ -306,13 +302,24 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 
 
   ngOnInit(): void {
-    this.datosMercanciaFormGroup.statusChanges
+    
+     this.createFromGroup();
+    this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosArancelaria();
+    this.obtenerCatalogosUMC();
+    this.obtenerCatalogosUMT();
+    this.obtenerCatalogosUSO();
+  }
+
+  ngAfterViewInit(): void {
+      this.datosMercanciaFormGroup.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
         this.verificarEstadoDelBoton();
       }, (error) => {
         console.error(error);
       });
+    
   }
 
   /**

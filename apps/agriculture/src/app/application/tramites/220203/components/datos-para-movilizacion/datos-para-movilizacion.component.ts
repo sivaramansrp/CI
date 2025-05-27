@@ -1,6 +1,6 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 
 import { Subject, takeUntil } from 'rxjs';
 
+import { CommonModule } from '@angular/common';
 import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 
 /**
@@ -33,10 +34,11 @@ import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuic
     TercerosComponent,
     AlertComponent,
     FirmaElectronicaComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ]
 })
-export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
+export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * @description Lista de opciones de transporte obtenidas del catálogo.
@@ -78,25 +80,25 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * Inicializa los cambios del formulario y obtiene los datos necesarios de los catálogos.
    */
   ngOnInit(): void {
-
     this.formularioMovilizacion = this.fb.group({
       medioDeTransporte: [this.formularioMovilizacionStore.medioDeTransporte || '', Validators.required],
       identificacionTransporte: [this.formularioMovilizacionStore.identificacionTransporte || ''],
       puntoVerificacion: [this.formularioMovilizacionStore.puntoVerificacion || ''],
       nombreEmpresaTransportista: [this.formularioMovilizacionStore.nombreEmpresaTransportista || '', Validators.required]
     });
-    this.formularioMovilizacion.valueChanges
+
+    this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosPuntos();
+  }
+ngAfterViewInit(): void {
+   this.formularioMovilizacion.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
         this.verificarEstadoDelBoton();
       }, (error) => {
         console.error('Error en cambios de formulario:', error);
       });
-
-    this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosPuntos();
-  }
-
+}
   /**
    * @description Obtiene los datos del catálogo de transporte y los asigna a la lista de transportes.
    */

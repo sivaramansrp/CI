@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -9,6 +9,7 @@ import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/im
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
@@ -32,10 +33,11 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
     TableComponent,
     TituloComponent,
     AlertComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ]
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @description Formulario para el pago de derechos.
    * @type {FormGroup}
@@ -96,7 +98,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormularioPago();
-    this.formularioPago.statusChanges
+    this.obtenerListaJustificacion();
+    this.obtenerListaBanco();
+  }
+  ngAfterViewInit(): void {
+     this.formularioPago.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         () => {
@@ -106,9 +112,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           console.error('Error durante los cambios de estado del formulario:', error);
         }
       );
-
-    this.obtenerListaJustificacion();
-    this.obtenerListaBanco();
   }
 
   /**
