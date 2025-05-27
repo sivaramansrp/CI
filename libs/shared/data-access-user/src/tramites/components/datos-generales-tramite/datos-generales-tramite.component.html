@@ -48,5 +48,9 @@
         </div>
       </div>
     </form>
+    <div class="row mb-5 mt-5">
+      <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite"
+        (viewChildcambioDePestana)="viewChildcambioDePestana($event)"></app-reviewers-tabs>
+    </div>    
   </div>
 </div>

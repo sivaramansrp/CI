@@ -1,6 +1,8 @@
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
+export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
+export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component'
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { AVISO } from './tramites/constantes/aviso-privacidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
