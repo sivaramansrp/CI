@@ -1,4 +1,5 @@
 import { Observable,catchError, throwError } from 'rxjs';
+import { Solicitud260303State, Tramite260303Store } from '../../../estados/tramites/260303/tramite260303.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -14,8 +15,12 @@ export class CertificadosLicenciasPermisosService {
    * 
    * @param http - La instancia de HttpClient utilizada para realizar operaciones HTTP.
    */
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient,private tramite260303Store:Tramite260303Store) { 
     //
+  }
+
+    actualizarEstadoFormulario(DATOS: Solicitud260303State): void {
+    this.tramite260303Store.setDenominacionRazon(DATOS.denominacionRazon);
   }
 
   /**
@@ -23,8 +28,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getEstadoDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/estado-catalog.json').pipe(
+  public getEstadoDatos(): Observable<Solicitud260303State> {
+    return this.http.get<Solicitud260303State>('assets/json/260303/estado-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
