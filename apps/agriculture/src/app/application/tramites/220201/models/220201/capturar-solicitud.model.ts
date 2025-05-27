@@ -13,7 +13,6 @@ export interface CapturarSolicitud {
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
   pagoDeDerechos: PagoDeDerechos;
   validarEnvio: ValidarEnvio;
-  sampleData:DummyJson;
 }
 
 /**
@@ -30,27 +29,6 @@ export interface Solicitante {
   nombreRazonSocial: string;
   aPaterno: string;
   correo: string;
-}
-export interface DummyJson {
-    procedureId: string;
-
-    parameter: string; 
-
-    department: string; 
-
-    folioTramite: string; 
-
-    tipoDeTramite: string; 
-
-    estadoDeTramite: string; 
-
-    readonly: boolean, 
-
-    create: boolean, 
-
-    update: boolean, 
-
-    consultaioSolicitante: null, 
 }
 
 
@@ -185,29 +163,7 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       pagoDeformaValida: false,
       dataParaMovilizacion: false,
       dataDeLaSolicitud: false,
-    },
-    sampleData:params.sampleData || { 
-
-    procedureId: '', 
-
-    parameter: '', 
-
-    department: '', 
-
-    folioTramite: '', 
-
-    tipoDeTramite: '', 
-
-    estadoDeTramite: '', 
-
-    readonly: false, 
-
-    create: true, 
-
-    update: false, 
-
-    consultaioSolicitante: null, 
-  } 
+    }
 
   };
 }
