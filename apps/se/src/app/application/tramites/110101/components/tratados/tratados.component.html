@@ -3,18 +3,21 @@
 <form [formGroup]="formularioTratados">
     <div class="row">
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="pais"
+            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais"
                 [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formularioTratados,'pais', 'setPais')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="tratado"
+            <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado"
                 [label]="'Tratado o Acuerdo'" [required]="true" name="Tratado o Acuerdo"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formularioTratados,'tratado', 'setTratado')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="origen"
+            <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen"
                 [label]="'Criterio de origen'" [required]="true" name="Criterio de origen"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formularioTratados,'origen', 'setOrigen')"></app-catalogo-select>
         </div>
     </div>

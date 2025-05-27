@@ -4,13 +4,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
+import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import tratadosDropdown from '@libs/shared/theme/assets/json/110101/tratdos-dropdown.json';
 import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
 /**
@@ -62,6 +63,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
      * del solicitante dentro del contexto del trámite.
      */
   public solicitudeState!: Solicitante110101State;
+  public paisCatalogo: Catalogo[] = [];
+  public tratadoCatalogo: Catalogo[] = [];
+  public origenCatalogo: Catalogo[] = [];
 
 
     /**
@@ -79,6 +83,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
+    private pantallaService: PantallasSvcService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -103,6 +108,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
         this.solicitudeState = seccionState;
     })).subscribe();
     this.inicializarFormularioTratados();
+    this.getCatalogoList();
   }
 
   /**
@@ -145,19 +151,20 @@ export class TratadosComponent implements OnInit, OnDestroy {
 
   alerta = MENSAJE_ALERTA_TRATADOS;
 
-
-
-  /**
-   * Configuraciones de los menús desplegables.
-   * 
-   * @property {Array} configuracionesDropdown - Array de objetos que contienen los catálogos para los menús desplegables.
-   */
-  configuracionesDropdown = [
-    { catalogos: tratadosDropdown.pais },
-    { catalogos: tratadosDropdown.tratado },
-    { catalogos: tratadosDropdown.origen }
-  ];
-
+    /**
+     * Obtiene los datos de los catálogos desde el servicio backend y actualiza las propiedades de catálogos del componente.
+     * Este método se suscribe al observable `getCatalogoDatos` de `pantallaService`, procesa la respuesta de la API,
+     * y asigna los datos resultantes a `paisCatalogo`, `tratadoCatalogo` y `origenCatalogo` respectivamente.
+     * La suscripción se cancela automáticamente cuando el componente es destruido para evitar fugas de memoria.
+     */
+  public getCatalogoList(): void {
+    this.pantallaService.getCatalogoDatos().pipe(takeUntil(this.destroy$)).subscribe((response) => {
+      const API_RESPONSE = JSON.parse(JSON.stringify(response));
+      this.paisCatalogo = API_RESPONSE.pais;
+      this.tratadoCatalogo = API_RESPONSE.tratado;
+      this.origenCatalogo = API_RESPONSE.origen;
+    });
+  }
 
 
   /**

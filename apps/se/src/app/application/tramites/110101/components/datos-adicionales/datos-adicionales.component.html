@@ -8,6 +8,7 @@
                     [required]="true"
                     name="entidad" 
                     formControlName="entidad"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(formulario, 'entidad', 'setEntidad')" 
                     >
                 </app-catalogo-select>
@@ -18,6 +19,7 @@
                     [required]="true"
                     name="representacion" 
                     formControlName="representacion"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')"
                     >
                 </app-catalogo-select>

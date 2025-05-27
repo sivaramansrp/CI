@@ -68,4 +68,17 @@ export class PantallasSvcService {
         })
       );
     }
+
+    /**
+     * Recupera los datos del catálogo desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del catálogo.
+     */
+    getCatalogoDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/110101/tratdos-dropdown.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 }
