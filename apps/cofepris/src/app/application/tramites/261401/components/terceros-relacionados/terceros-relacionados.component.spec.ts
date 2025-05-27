@@ -176,7 +176,7 @@ describe('TercerosRelacionadosComponent additional logic', () => {
   it('should call abrirModal on onDeleted if rows selected', () => {
     const modalSpy = jest.spyOn(component, 'abrirModal');
     component.selectedRows = new Set([1]);
-    component.onDeleted();
+    component.onEliminar();
     expect(modalSpy).toHaveBeenCalled();
   });
 

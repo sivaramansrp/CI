@@ -2,7 +2,7 @@
  * Importaciones necesarias para el componente de terceros relacionados.
  * Incluye módulos y servicios para gestionar la tabla dinámica de destinatarios relacionados.
  */
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
@@ -29,7 +29,6 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, AlertComponent, TituloComponent, TablaDinamicaComponent,
     CatalogoSelectComponent,
-    NotificacionesComponent,
     InputRadioComponent,
     ReactiveFormsModule
   ],
@@ -288,7 +287,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona(){
+  get selectedTipoPersona(): string | null{
     return this.destinatarioForm.get('tipoPersona')?.value;
   }
   /**
