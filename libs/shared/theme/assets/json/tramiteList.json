@@ -1668,8 +1668,8 @@
   {
     "id": 239,
     "tramite": 261402,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/solicitud-modificacion-permiso-internacion/solicitud",
+    "linkDepartment": "/pago/solicitud-modificacion-permiso-internacion/solicitud",
     "department": "cofepris"
   },
   {
