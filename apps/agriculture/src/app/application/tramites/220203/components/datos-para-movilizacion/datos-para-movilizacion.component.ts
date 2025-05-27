@@ -2,6 +2,8 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catal
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
+import { Consulta, FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
@@ -9,7 +11,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { Subject, takeUntil } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
-import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+
 
 /**
  * @title Datos para la Movilización
@@ -61,6 +63,18 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterVi
 
   private destroyNotifier$ = new Subject<void>();
 
+   /**
+   * @description Almacena la información de consulta, incluyendo el estado de solo lectura.
+   * @type {Consulta}
+   */
+  consultaStore: Consulta = {} as Consulta
+
+  /**
+   * @description Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @description Constructor del componente.
    * @param {FormBuilder} fb Servicio para construir formularios reactivos.
@@ -72,6 +86,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterVi
   ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioMovilizacionStore = datos.formularioMovilizacion
+      this.consultaStore = datos.consulta;
     })
   }
 
@@ -98,6 +113,14 @@ ngAfterViewInit(): void {
       }, (error) => {
         console.error('Error en cambios de formulario:', error);
       });
+
+    if(this.consultaStore.readonly){
+        this.esFormularioSoloLectura = this.consultaStore.readonly;
+      this.formularioMovilizacion.disable();
+    }
+    else{
+      this.formularioMovilizacion.enable();
+    }
 }
   /**
    * @description Obtiene los datos del catálogo de transporte y los asigna a la lista de transportes.

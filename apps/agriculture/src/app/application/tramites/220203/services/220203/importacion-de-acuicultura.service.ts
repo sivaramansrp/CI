@@ -128,4 +128,24 @@ export class ImportacionDeAcuiculturaService {
   public limpiarFormulario(): void {
     this.acuiculturaStore.limpiarFormulario(); // Restablece todo el estado
   }
+
+  /**
+   * @description Obtiene los datos de acuicultura desde un archivo JSON local.
+   * @returns Observable con los datos de acuicultura.
+   */
+  public getAcuiculturaData(): Observable<Acuicultura> {
+    return this.http.get<Acuicultura>('assets/json/220203/acuicultura_forma.json');
+  }
+
+  /**
+   * @description Actualiza el estado completo del formulario en el store de acuicultura.
+   * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
+   */
+  public actualizarEstadoFormulario(DATOS: Acuicultura): void {
+    this.actualizarFormularioPago(DATOS.formularioPago);
+    this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
+    this.actualizarDatosMercancia(DATOS.datosMercancia);
+    
+  }
+
 }

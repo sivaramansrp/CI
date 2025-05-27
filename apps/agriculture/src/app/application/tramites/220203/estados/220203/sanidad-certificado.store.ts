@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 
-import { Acuicultura, DatosMercancia220203, FormularioMovilizacion, FormularioPago, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, DatosMercancia220203, FormularioMovilizacion, FormularioPago, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 
 
 
@@ -67,6 +67,17 @@ export class AcuiculturaStore extends Store<Acuicultura> {
                 ...state.formaValida,
                 ...updatedFormaValida,
             }
+        }));
+    }
+
+    /**
+     * Actualiza el estado con la información de la consulta.
+     * @param consulta Datos de la consulta.
+     */
+    public setConsultaioState(consulta: Consulta): void {
+        this.update(state => ({
+            ...state,
+            consulta
         }));
     }
 

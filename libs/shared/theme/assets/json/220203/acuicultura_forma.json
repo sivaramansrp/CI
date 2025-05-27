@@ -1,0 +1,68 @@
+{
+        "formularioPago": {
+            "exentoPago": "llenar",
+            "justificacion": "llenar",
+            "claveReferencia": "llenar",
+            "cadenaDependencia": "llenar",
+            "banco": "llenar",
+            "llavePago": "llenar",
+            "fechaPago": "llenar",
+            "importePago": "llenar"
+        },
+        "formularioMovilizacion": {
+            "medioDeTransporte": "llenar",
+            "identificacionTransporte": "llenar",
+            "puntoVerificacion": "llenar",
+            "nombreEmpresaTransportista": "llenar"
+        },
+        "datosMercancia": {
+            "realizarGroup": {
+                "aduanaIngreso": "llenar",
+                "oficinaInspeccion": "llenar",
+                "puntoInspeccion": "llenar",
+                "numeroGuia": "llenar",
+                "regimen": "llenar"
+            },
+            "mercanciaGroup": {
+                "tipoRequisito": "llenar",
+                "requisito": "llenar",
+                "numeroCertificadoInternacional": "llenar",
+                "numeroOficioCasoEspecial": "llenar",
+                "fraccionArancelaria": "llenar",
+                "descripcionFraccionArancelaria": "llenar",
+                "nico": "llenar",
+                "descripcionNico": "llenar",
+                "descripcion": "llenar",
+                "cantidadUMT": "llenar",
+                "umt": "llenar",
+                "cantidadUMC": "llenar",
+                "umc": "llenar",
+                "uso": "llenar",
+                "numeroDeLote": "llenar",
+                "faseDeDesarrollo": "llenar",
+                "especie": "llenar",
+                "paisDeOrigen": "llenar",
+                "paisDeProcedencia": "llenar"
+            },
+            "detalles": {
+                "nombreCientifico": "llenar"
+            }
+        },
+        "formaValida": {
+            "pagoDeformaValida": false,
+            "dataParaMovilizacion": false,
+            "dataDeLaSolicitud": false
+        },
+        "consulta": {
+            "procedureId": "llenar",
+            "parameter": "llenar",
+            "department": "llenar",
+            "folioTramite": "llenar",
+            "tipoDeTramite": "llenar",
+            "estadoDeTramite": "llenar",
+            "readonly": false,
+            "create": true,
+            "update": false,
+            "consultaioSolicitante": "llenar"
+        }
+    }

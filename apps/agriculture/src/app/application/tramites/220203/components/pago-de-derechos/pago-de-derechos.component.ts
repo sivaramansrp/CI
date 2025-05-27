@@ -6,7 +6,7 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catal
 
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
-import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
+import { Consulta, FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -78,6 +78,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
 
   private destroyNotifier$ = new Subject<void>();
   formularioPagoStore: FormularioPago = {} as FormularioPago;
+
+   /**
+   * @description Almacena la información de consulta, incluyendo el estado de solo lectura.
+   * @type {Consulta}
+   */
+  consultaStore: Consulta = {} as Consulta
+
+  /**
+   * @description Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
@@ -89,6 +102,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   ) {
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
+      this.consultaStore = datos.consulta;
     })
 
   }
@@ -112,6 +126,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
           console.error('Error durante los cambios de estado del formulario:', error);
         }
       );
+
+    if(this.consultaStore.readonly) {
+      this.esFormularioSoloLectura = this.consultaStore.readonly;
+      this.formularioPago.disable();
+    }
+    else {
+      this.formularioPago.enable();
+    }
   }
 
   /**
