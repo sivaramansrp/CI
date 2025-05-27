@@ -44,86 +44,116 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el destinatario.
    * Contiene los datos y validaciones del formulario de destinatarios.
+   * {FormGroup}
    */
   destinatarioForm!: FormGroup;
 
   /**
    * Indica si el popup está abierto.
    * Controla la visibilidad del popup.
+   * {boolean}
    */
   popupAbierto = false;
 
   /**
    * Indica si el popup está cerrado.
    * Controla el estado del cierre del popup.
+   * {boolean}
    */
   popupCerrado = true;
 
   /**
    * Estado de la solicitud 230902.
    * Contiene el estado actual de la solicitud.
+   * {Solicitud230902State}
    */
   solicitud230902State!: Solicitud230902State;
 
   /**
    * Notificador para destruir las suscripciones.
    * Se utiliza para cancelar suscripciones activas al destruir el componente.
+   * {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
 
   /**
    * Configuración de la tabla.
    * Define las columnas y configuraciones de la tabla de terceros.
+   * {ConfiguracionColumna<ConfiguracionItem>[]}
    */
   configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = TERCEROS_CONFIGURACION_TABLA;
 
   /**
    * Tipo de selección de la tabla.
    * Define el tipo de selección que se puede realizar en la tabla.
+   * {TablaSeleccion}
    */
   TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Datos de la tabla.
    * Contiene las filas de datos que se muestran en la tabla de terceros.
+   * {ConfiguracionItem[]}
    */
   tablaDatos: ConfiguracionItem[] = [];
 
   /**
    * Indica si la opción de modificar está habilitada.
    * Se activa cuando hay filas seleccionadas en la tabla.
+   * {boolean}
    */
   isModificarEnabled: boolean = false;
 
   /**
    * Identificador del modal.
    * Define el tipo de modal que se está mostrando.
+   * {string}
    */
   modal: string = '';
 
   /**
    * Título del modal.
    * Contiene el texto que se muestra como título en el modal.
+   * {string}
    */
   tituloModal!: string;
 
   /**
    * Mensaje del modal.
    * Contiene el texto que se muestra como mensaje en el modal.
+   * {string}
    */
   mensajeModal!: string;
 
   /**
    * Notificación actual.
    * Configura los datos de la notificación que se muestra en el popup.
+   * {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   * {boolean}
+   */
   esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Suscripción general para manejar y limpiar las suscripciones del componente.
+   * Se utiliza para evitar fugas de memoria.
+   * {Subscription}
+   */
   private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
+   * @param permisoCitesService Servicio de permisos CITES.
+   * @param tramite230902Store Almacén de trámites 230902.
+   * @param tramite230902Query Consulta de trámites 230902.
+   * @param formBuilder Constructor de formularios.
+   * @param consultaioQuery Consulta de IO.
    */
   constructor(
     public permisoCitesService: PermisoCitesService,
@@ -142,6 +172,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
         )
         .subscribe()
   }
+
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
@@ -149,7 +183,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.crearFormularioDestinatario();
     }
   }
- guardarDatosFormulario(): void {
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
+  guardarDatosFormulario(): void {
     this.crearFormularioDestinatario();
     if (this.esFormularioSoloLectura) {
       this.destinatarioForm.disable();
@@ -158,7 +197,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     } else {
       // No se requiere ninguna acción en el formulario
     }
- }
+  }
 
   /**
    * Inicializa el componente.
@@ -173,7 +212,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de filas en la tabla.
    * Habilita o deshabilita la opción de modificar según las filas seleccionadas.
-   * 
    * @param filaSeleccionada Las filas seleccionadas en la tabla.
    */
   onFilaSeleccionada(filaSeleccionada: ConfiguracionItem[]): void {
@@ -221,17 +259,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Define los campos y validaciones necesarias.
    */
   crearFormularioDestinatario(): void {
-  this.tramite230902Query.selectSolicitud$
+    this.tramite230902Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
         this.solicitud230902State = state;
       });  
-  this.subscription.add(
+    this.subscription.add(
       this.tramite230902Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState) => {
-            this. solicitud230902State = seccionState;
+            this.solicitud230902State = seccionState;
           })
         )
         .subscribe()
@@ -264,6 +302,4 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
- 
-
 }

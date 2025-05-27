@@ -12,9 +12,9 @@
     </div>
     <div class="row text-end pb-3">
       <div>
-        <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
-        <button type="button" class="btn btn-danger me-2">Eliminar no seleccionados</button>
-        <button type="button" class="btn btn-primary me-2" (click)="openPopup()">
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-default me-2">Eliminar Seleccionados</button>
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-danger me-2">Eliminar no seleccionados</button>
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary me-2" (click)="openPopup()">
           Modificar
         </button>
       </div>

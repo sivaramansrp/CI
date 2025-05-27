@@ -1,3 +1,23 @@
+/**
+ * Componente para gestionar los datos de la solicitud.
+ * Este componente permite la gestión de formularios, tablas y datos relacionados con la solicitud.
+ * 
+ * Métodos:
+ * - ngOnInit: Inicializa el componente y configura las suscripciones necesarias.
+ * - crearFormularioSolicitud: Crea y configura el formulario para los datos de la solicitud.
+ * - resetSolicitudForm: Resetea el formulario de solicitud.
+ * - createNewMercanciaItem: Crea y configura el formulario para los datos de mercancía.
+ * - cambiarTipoDeMovimiento: Maneja el cambio en el tipo de movimiento seleccionado.
+ * - updateFilaSeleccionada: Actualiza la fila seleccionada en la tabla.
+ * - modficarMercanciaItem: Modifica un elemento de mercancía en la tabla.
+ * - esInvalido: Verifica si un control del formulario es inválido.
+ * - onTipoRegimenChange: Maneja el cambio en el tipo de régimen seleccionado.
+ * - hadleFilaSeleccionada: Maneja la fila seleccionada en la tabla de mercancías.
+ * - alternarVisibilidadModalMercancia: Alterna la visibilidad del modal de datos de mercancía.
+ * - mostrarFormularioMercanciaModal: Muestra el formulario de mercancía en un modal.
+ * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
+ * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
+ */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
@@ -21,31 +41,6 @@ import { Subscription, } from 'rxjs';
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 
-
-
-
-
-
-/**
- * Componente para gestionar los datos de la solicitud.
- * Este componente permite la gestión de formularios, tablas y datos relacionados con la solicitud.
- * 
- * Métodos:
- * - ngOnInit: Inicializa el componente y configura las suscripciones necesarias.
- * - crearFormularioSolicitud: Crea y configura el formulario para los datos de la solicitud.
- * - resetSolicitudForm: Resetea el formulario de solicitud.
- * - createNewMercanciaItem: Crea y configura el formulario para los datos de mercancía.
- * - cambiarTipoDeMovimiento: Maneja el cambio en el tipo de movimiento seleccionado.
- * - updateFilaSeleccionada: Actualiza la fila seleccionada en la tabla.
- * - modficarMercanciaItem: Modifica un elemento de mercancía en la tabla.
- * - esInvalido: Verifica si un control del formulario es inválido.
- * - onTipoRegimenChange: Maneja el cambio en el tipo de régimen seleccionado.
- * - hadleFilaSeleccionada: Maneja la fila seleccionada en la tabla de mercancías.
- * - alternarVisibilidadModalMercancia: Alterna la visibilidad del modal de datos de mercancía.
- * - mostrarFormularioMercanciaModal: Muestra el formulario de mercancía en un modal.
- * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
- * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
- */
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
@@ -165,14 +160,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Se utiliza para rastrear el estado de la selección de archivos en el componente.
    */
   isFileSelected: boolean = false;
- 
+
   /**
    * Método para cargar los datos de la tabla.
    * Realiza una solicitud al servicio para obtener los datos de la tabla.
-   */
+     */
   listaFilaSeleccionadaMercancia!: ConfiguracionItem[];
+
   /**
-   * Método para cargar los datos de la tabla.
+     * Método para cargar los datos de la tabla.
    * Realiza una solicitud al servicio para obtener los datos de la tabla.
    */
   cargarDatosTabla(): void {
@@ -198,22 +194,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Controla la visibilidad del modal de datos de mercancía.
    */
   showDatosMercanciaModal: boolean = false;
-  
 
-  
   /**
    * Observable utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    * Se utiliza para cancelar suscripciones activas cuando el componente se destruye.
    */
   private destroyed$ = new Subject<void>();
 
-  
   /**
    * Indica si la operación actual es una actualización.
    * Se utiliza para diferenciar entre crear un nuevo elemento y actualizar uno existente.
    */
   esOperacionDeActualizacion: boolean = false;
-  
+
   /**
    * Indica si el botón "Modificar" está habilitado.
    * Se utiliza para controlar la disponibilidad del botón de modificación.
@@ -252,12 +245,22 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   mensajeModal!: string;
   public nuevaNotificacion!: Notificacion;
 
-  esFormularioSoloLectura: boolean = false; 
-  private subscription: Subscription = new Subscription();
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+ */
+ esFormularioSoloLectura: boolean = false; 
+
+/**
+ * Suscripción general para manejar y limpiar las suscripciones del componente.
+ * Se utiliza para evitar fugas de memoria.
+ */
+ private subscription: Subscription = new Subscription();
+
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
-   */
+     */
   constructor(
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
@@ -275,15 +278,23 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         )
         .subscribe()
   }
-   inicializarEstadoFormulario(): void {
+
+  /**
+     * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
     } else {
-      this. crearFormularioSolicitud();
+      this.crearFormularioSolicitud();
     }
   }
-   guardarDatosFormulario(): void {
-    this. crearFormularioSolicitud();
+
+  /**
+     * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormularioSolicitud();
     if (this.esFormularioSoloLectura) {
       this.formSolicitud.disable();
     } else if (!this.esFormularioSoloLectura) {
@@ -291,10 +302,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     } else {
       // No se requiere ninguna acción en el formulario
     }
-}
+  }
 
   /**
-   * Inicializa el componente.
+     * Inicializa el componente.
    * Configura los formularios, datos iniciales y suscripciones necesarias.
    */
   ngOnInit(): void {
@@ -314,7 +325,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Crea y configura el formulario para los datos de la solicitud.
+     * Crea y configura el formulario para los datos de la solicitud.
    * Define los campos y validaciones necesarias.
    */
   crearFormularioSolicitud(): void {
@@ -323,7 +334,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.destroyed$),
             map((seccionState) => {
-              this. solicitud230902State = seccionState;
+              this.solicitud230902State = seccionState;
             })
           )
           .subscribe()
@@ -333,9 +344,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       tipoRegimen: [this.solicitud230902State.tipoRegimen, Validators.required],
     });
   }
-  
+
   /**
-   * Crea y configura el formulario para los datos de mercancía.
+     * Crea y configura el formulario para los datos de mercancía.
    * Define los campos y validaciones necesarias. Recibe datos iniciales opcionales.
    */
   crearNuevoFormularioMercancia(data?: ConfiguracionItem): void {
@@ -387,11 +398,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.otraFraccionSeleccionada = true;
     }
     this.formMercancia.get('fraccionDescripcion')?.disable();
-   
   }
-  
+
   /**
-   * Maneja el cambio en el campo "otraFracción".
+     * Maneja el cambio en el campo "otraFracción".
    * Si el campo está seleccionado, agrega un control adicional al formulario
    * y reinicia los valores relacionados con la fracción arancelaria.
    * Si no está seleccionado, elimina el control adicional.
@@ -415,7 +425,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio en el tipo de movimiento seleccionado.
+     * Maneja el cambio en el tipo de movimiento seleccionado.
    * Actualiza el estado y los botones relacionados con el movimiento.
    */
   cambiarTipoDeMovimiento(): void {
@@ -430,7 +440,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza la fila seleccionada en la tabla.
+     * Actualiza la fila seleccionada en la tabla.
    * Sincroniza los datos de la fila seleccionada con el formulario.
    */
   updateFilaSeleccionada(): void {
@@ -443,12 +453,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
- 
- 
   /**
-   * Verifica si un control del formulario es inválido.
+     * Verifica si un control del formulario es inválido.
    * Devuelve verdadero si el control es inválido y ha sido tocado o modificado.
-   * 
    * @param formControlName Nombre del control en el formulario.
    */
   esInvalido(formControlName: string): boolean {
@@ -459,7 +466,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la fila seleccionada en la tabla de mercancías.
+     * Maneja la fila seleccionada en la tabla de mercancías.
    * Actualiza el formulario con los datos de la fila seleccionada.
    *
    * @param fila Fila seleccionada en la tabla.
@@ -475,71 +482,68 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.enableModficarBoton = true;
     this.enableEliminarBoton = true;
   }
- 
- 
+
   /**
-   * Modifica un elemento de mercancía en la tabla.
+     * Modifica un elemento de mercancía en la tabla.
    * Actualiza los datos del formulario con los valores de la fila seleccionada.
    */
   modficarMercanciaItem(): void {
-   
-     if (this.listaFilaSeleccionadaMercancia.length < 2) {
-      
-       const GET_INDEX = (array: Catalogo[], value: string): number =>
-         array.findIndex((item) => item.descripcion === value) + 1;
-       
-       this.updateFilaSeleccionada();
-       this.esOperacionDeActualizacion = true;
-       const FRACCION_DESCRIPCION =
-         this.permisoCitesService.fraccionArancelariaDescripcion.find((item)=>Number(item.id) === Number(this.filaSeleccionada.fraccionArancelaria))?.descripcion || '';
- 
-         const MERCANCIA_CONFIGURACION_ITEM: ConfiguracionItem = {
-         id: this.filaSeleccionada.id,
-         fraccionArancelaria: GET_INDEX(
-           this.permisoCitesService.fraccionArancelaria,
-           this.filaSeleccionada.fraccionArancelaria
-         ).toString(),
-         fraccionDescripcion:FRACCION_DESCRIPCION,
-         otraFraccion: this.filaSeleccionada.otraFraccion,
-         descripcion: this.filaSeleccionada.descripcion,
-         rendimientoProducto: this.filaSeleccionada.rendimientoProducto,
-         clasificacionTaxonomica: GET_INDEX(
-           this.permisoCitesService.clasificacionTaxonomica,
-           this.filaSeleccionada.clasificacionTaxonomica
-         ).toString(),
-         nombreCientifico: GET_INDEX(
-           this.permisoCitesService.nombreCientifico,
-           this.filaSeleccionada.nombreCientifico
-         ).toString(),
-         nombreComun: GET_INDEX(
-           this.permisoCitesService.nombreComun,
-           this.filaSeleccionada.nombreComun
-         ).toString(),
-         marca: this.filaSeleccionada.marca,
-         cantidad: this.filaSeleccionada.cantidad,
-         unidadMedida: GET_INDEX(
-           this.permisoCitesService.unidadMedida,
-           this.filaSeleccionada.unidadMedida
-         ).toString(),
-         paisOrigen: GET_INDEX(
-           this.permisoCitesService.paisOrigen,
-           this.filaSeleccionada.paisOrigen
-         ).toString(),
-         paisProcedencia: GET_INDEX(
-           this.permisoCitesService.paisProcedencia,
-           this.filaSeleccionada.paisProcedencia
-         ).toString(),
-       };
- 
-       this.crearNuevoFormularioMercancia(MERCANCIA_CONFIGURACION_ITEM);
-       this.alternarVisibilidadModalMercancia();
-     } else {
+    if (this.listaFilaSeleccionadaMercancia.length < 2) {
+      const GET_INDEX = (array: Catalogo[], value: string): number =>
+        array.findIndex((item) => item.descripcion === value) + 1;
+
+      this.updateFilaSeleccionada();
+      this.esOperacionDeActualizacion = true;
+      const FRACCION_DESCRIPCION =
+        this.permisoCitesService.fraccionArancelariaDescripcion.find((item)=>Number(item.id) === Number(this.filaSeleccionada.fraccionArancelaria))?.descripcion || '';
+
+      const MERCANCIA_CONFIGURACION_ITEM: ConfiguracionItem = {
+        id: this.filaSeleccionada.id,
+        fraccionArancelaria: GET_INDEX(
+          this.permisoCitesService.fraccionArancelaria,
+          this.filaSeleccionada.fraccionArancelaria
+        ).toString(),
+        fraccionDescripcion:FRACCION_DESCRIPCION,
+        otraFraccion: this.filaSeleccionada.otraFraccion,
+        descripcion: this.filaSeleccionada.descripcion,
+        rendimientoProducto: this.filaSeleccionada.rendimientoProducto,
+        clasificacionTaxonomica: GET_INDEX(
+          this.permisoCitesService.clasificacionTaxonomica,
+          this.filaSeleccionada.clasificacionTaxonomica
+        ).toString(),
+        nombreCientifico: GET_INDEX(
+          this.permisoCitesService.nombreCientifico,
+          this.filaSeleccionada.nombreCientifico
+        ).toString(),
+        nombreComun: GET_INDEX(
+          this.permisoCitesService.nombreComun,
+          this.filaSeleccionada.nombreComun
+        ).toString(),
+        marca: this.filaSeleccionada.marca,
+        cantidad: this.filaSeleccionada.cantidad,
+        unidadMedida: GET_INDEX(
+          this.permisoCitesService.unidadMedida,
+          this.filaSeleccionada.unidadMedida
+        ).toString(),
+        paisOrigen: GET_INDEX(
+          this.permisoCitesService.paisOrigen,
+          this.filaSeleccionada.paisOrigen
+        ).toString(),
+        paisProcedencia: GET_INDEX(
+          this.permisoCitesService.paisProcedencia,
+          this.filaSeleccionada.paisProcedencia
+        ).toString(),
+      };
+
+      this.crearNuevoFormularioMercancia(MERCANCIA_CONFIGURACION_ITEM);
+      this.alternarVisibilidadModalMercancia();
+    } else {
       this.abrirMultipleSeleccionPopup();
-     }
+    }
   }
 
   /**
-   * Abre el popup de selección múltiple.
+     * Abre el popup de selección múltiple.
    * Muestra un mensaje de error si se seleccionan múltiples registros para modificar.
    */
   abrirMultipleSeleccionPopup(): void {
@@ -559,31 +563,31 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el popup de selección múltiple.
+     * Cierra el popup de selección múltiple.
    */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
- 
+
   /**
-   * Elimina los elementos seleccionados de la tabla de mercancías.
+     * Elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado global con los datos restantes.
    */
   eliminarMercanciaItem():void{
     const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(item => item.id);
-  
+
     this.tablaDatos = this.tablaDatos.filter(
       item => !IDS_TO_DELETE.includes(item.id)
     );
-  
+
     this.listaFilaSeleccionadaMercancia = [];
     this.tramite230902Store.setMercanciaTablaDatos(this.tablaDatos);
     this.cerrarEliminarConfirmationPopup()
   } 
-   
+
   /**
-   * Abre el popup de confirmación para eliminar elementos.
+     * Abre el popup de confirmación para eliminar elementos.
    * Muestra un mensaje de confirmación antes de eliminar los registros seleccionados.
    */
   abrirElimninarConfirmationopup(): void {
@@ -599,9 +603,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     };
     this.confirmEliminarPopupAbierto = true;
   }
-  
+
   /**
-   * Cierra el popup de confirmación para eliminar elementos.
+     * Cierra el popup de confirmación para eliminar elementos.
    */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
@@ -609,7 +613,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Confirma la eliminación de los elementos seleccionados.
+     * Confirma la eliminación de los elementos seleccionados.
    * Abre el popup de confirmación si hay elementos seleccionados.
    */
   confirmEliminarMercanciaItem(): void {
@@ -620,7 +624,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna la visibilidad del modal de datos de mercancía.
+     * Alterna la visibilidad del modal de datos de mercancía.
    * Muestra u oculta el modal según el estado actual.
    */
   alternarVisibilidadModalMercancia(): void {
@@ -628,7 +632,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Muestra el formulario de mercancía en un modal.
+     * Muestra el formulario de mercancía en un modal.
    * Inicializa los datos necesarios para el formulario.
    */
   mostrarformMercanciaModal(): void {
@@ -639,9 +643,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio en la fracción arancelaria seleccionada.
+     * Maneja el cambio en la fracción arancelaria seleccionada.
    * Actualiza la descripción de la fracción en el formulario.
-   * 
    * @param $event Evento que contiene la fracción seleccionada.
    */
   manejarCambioFraccionArancelaria($event: Catalogo): void {
@@ -655,15 +658,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía el formulario de mercancía y agrega los datos a la tabla.
+     * Envía el formulario de mercancía y agrega los datos a la tabla.
    * Valida el formulario antes de agregar los datos.
    */
   enviarFormularioMercancia(): void {
     if (this.formMercancia.invalid || (!this.otraFraccionSeleccionada && this.formMercancia.get('fraccionArancelaria')?.value === '0')) {
       return;
     }
-      const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
-  
+    const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
+
     const TABLA_ROW: ConfiguracionItem = {
       id: this.esOperacionDeActualizacion
         ? this.formMercancia.get('id')?.value
@@ -678,7 +681,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       rendimientoProducto: this.formMercancia.get('rendimientoProducto')?.value,
       clasificacionTaxonomica: GET_DESCRIPTION(
         this.permisoCitesService.clasificacionTaxonomica,
-       this.formMercancia.get('clasificacionTaxonomica')?.value
+        this.formMercancia.get('clasificacionTaxonomica')?.value
       ),
       nombreCientifico: GET_DESCRIPTION(
         this.permisoCitesService.nombreCientifico,
@@ -703,35 +706,33 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.formMercancia.get('paisProcedencia')?.value
       ),
     };
-  
+
     const EXISTING_INDEX = this.tablaDatos.findIndex(item => item.id === TABLA_ROW.id);
-  
+
     if (EXISTING_INDEX > -1) {
       this.tablaDatos[EXISTING_INDEX] = TABLA_ROW;
     } else {
       this.tablaDatos = [...this.tablaDatos, TABLA_ROW];
     }
-  
+
     this.tramite230902Store.setMercanciaTablaDatos(this.tablaDatos);
     this.formMercancia.reset();
     this.alternarVisibilidadModalMercancia();
   }
- 
-  /**
-   * Método setValoresStore
-   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
-   * Parámetros:
-   *   - form: Formulario reactivo que contiene los datos.
-   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
-   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
-   */
-    setValoresStore(form: FormGroup, campo: string): void {
-      const VALOR = form.get(campo)?.value;
-      this.tramite230902Store.establecerDatos({ [campo]: VALOR });
-    }
 
   /**
-   * Limpia las suscripciones cuando el componente se destruye.
+     * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * @param form Formulario reactivo que contiene los datos.
+   * @param campo Nombre del campo cuyo valor se actualizará en el store.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+  }
+
+  /**
+     * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
