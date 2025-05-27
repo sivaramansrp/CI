@@ -43,7 +43,7 @@
         <div class="col-md-4">
             <app-catalogo-select 
                 [catalogo]="tipoEmpresaData.catalogos" 
-                [label]="'Tipo de empresa:'" 
+                [label]="'Tipo de empresa'" 
                 [required]="true" 
                 formControlName="tipoEmpresa"
                 (change)="setValoresStore(formularioEmpresa,'tipoEmpresa', 'setTipoEmpresa')"
@@ -57,14 +57,14 @@
         </div>
         <div class="col-md-12">
             <label for="actividad-economica-preponderante" class="form-label">Clasificación del Catálogo de Actividades
-                Económicas del SAT conforme a la Actividad Económica Preponderante":</label>
+                Económicas del SAT conforme a la Actividad Económica Preponderante*:</label>
             <input type="text" id="actividad-economica-preponderante" class="form-control"
                 name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante"
                 (change)="setValoresStore(formularioEmpresa,'actividadEconomicaPreponderante', 'setActividadEconomicaPreponderante')"
                 >
         </div>
         <div class="col-md-12">
-            <label for="descripcion" class="form-label">Descripción:</label>
+            <label for="descripcion" class="form-label">Descripción de la Actividad Económica del SAT:</label>
             <textarea id="descripcion" class="form-control" formControlName="descripcion" [readonly]="true"
             (change)="setValoresStore(formularioEmpresa,'descripcion', 'setDescripcion')"
             ></textarea>
@@ -85,7 +85,7 @@
                 [disabled]="true">
         </div>
         <div class="col-md-4">
-            <label for="EstadoDomicilio" class="form-label">Estado</label>
+            <label for="EstadoDomicilio" class="form-label">Estado:</label>
             <input type="text" id="estadoDomicilio" class="form-control" formControlName="estadoDomicilio" readonly [disabled]="true">
         </div>
         <div class="col-md-4">
