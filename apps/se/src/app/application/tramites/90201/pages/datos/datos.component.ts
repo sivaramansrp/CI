@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import{ ConsultaioStore } from '@ng-mf/data-access-user';
+import { Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
@@ -19,16 +20,40 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Estado actual de la consulta para el componente.
+   * 
+   * @type {ConsultaioState}
+   * @public
+   */
   public consultaState!:ConsultaioState;
 
+  /**
+   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+   * 
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones a observables y evitar fugas de memoria.
+   * 
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-constructor(private consultaQuery: ConsultaioQuery,private consultaStore:ConsultaioStore,private productoresService: ExpansionDeProductoresService) {
-// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+/**
+ * Constructor de la clase DatosComponent.
+ * 
+ * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
+ * @param consultaStore Almacén para gestionar el estado de las consultas de trámite.
+ * @param productoresService Servicio para la expansión y gestión de productores.
+ * @param tramiteStore Almacén específico para el manejo del estado del trámite 90201.
+ * 
+ * Al inicializar el componente, se establece la consulta inicial en el store de consultas
+ * con los parámetros correspondientes al trámite 90201.
+ */
+constructor(private consultaQuery: ConsultaioQuery,private consultaStore:ConsultaioStore,private productoresService: ExpansionDeProductoresService,private tramiteStore:Tramite90201Store) {
 this.consultaStore.establecerConsultaio(
       '90201',
       'BANDEJA_SOLICITUDES',
@@ -42,6 +67,14 @@ this.consultaStore.establecerConsultaio(
     );
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y actualizar la propiedad `consultaState`.
+   * - Dependiendo del valor de `consultaState.update`, decide si guardar los datos del formulario o mostrar los datos de respuesta.
+   * 
+   * @returns {void}
+   */
    ngOnInit(): void {
 
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
@@ -55,6 +88,20 @@ this.consultaStore.establecerConsultaio(
     }
   }
 
+  /**
+   * Guarda los datos del formulario obteniendo la información de los productores.
+   * 
+   * Este método realiza una solicitud al servicio `productoresService` para obtener
+   * los datos de expansión de productores. Si la respuesta es válida, actualiza
+   * el estado interno del componente y almacena los datos relevantes en el store
+   * de trámites.
+   * 
+   * @remarks
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente
+   * se destruye, evitando fugas de memoria.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   guardarDatosFormulario(): void {
     this.productoresService
       .getRegistroExpansionDeProductoresData().pipe(
@@ -62,8 +109,13 @@ this.consultaStore.establecerConsultaio(
       )
       .subscribe((resp) => {
         if(resp){
+          console.log(resp);
         this.esDatosRespuesta = true;
-       // this.productoresService.actualizarEstadoFormulario(resp);
+        this.tramiteStore.setActividadProductiva(resp?.actividadProductiva);
+        this.tramiteStore.setRepresentacionFederal(resp?.representacionFederal);
+        this.tramiteStore.setRfc(resp?.rfc);
+        this.tramiteStore.setFraccion(resp?.fraccion);
+        this.tramiteStore.setSector(resp?.sector);
         }
       });
   }
@@ -74,6 +126,10 @@ this.consultaStore.establecerConsultaio(
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

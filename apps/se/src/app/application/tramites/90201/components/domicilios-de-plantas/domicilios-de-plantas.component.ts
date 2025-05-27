@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +7,8 @@ import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud90201State } from '../../../../estados/tramites/tramite90201.store';
+import { Solicitud90201State, Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 
 /**
@@ -48,7 +47,14 @@ export class DomiciliosDePlantasComponent {
   */
   esFormularioSoloLectura: boolean = false; 
 
-    public solicitudState!: Solicitud90201State;
+  /**
+   * Estado actual de la solicitud del trámite 90201.
+   * 
+   * Contiene toda la información relevante relacionada con la solicitud,
+   * incluyendo datos de la planta, domicilio y otros detalles necesarios
+   * para el proceso del trámite.
+   */
+  public solicitudState!: Solicitud90201State;
 
   /**
    * Configuración de la tabla para los domicilios de plantas.
@@ -78,16 +84,19 @@ export class DomiciliosDePlantasComponent {
    */
   public domiciliosTabla: DomiciliosDePlantasTabla[] = DomiciliosTabla;
 
-
-
   /**
-   * Constructor de DomiciliosDePlantasComponent.
-   * Inicializa el formulario para domicilios de plantas.
+   * Constructor de la clase DomiciliosDePlantasComponent.
    * 
-   * @param fb - Una instancia de FormBuilder utilizada para crear el formulario.
+   * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param consultaioQuery - Servicio para consultar el estado de la sección de IO.
+   * @param tramite90201Store - Store para la gestión del estado del trámite 90201.
+   * @param tramite90201Query - Servicio para consultar el estado del trámite 90201.
+   * 
+   * Al inicializar el componente, se suscribe al estado de consultaioQuery para actualizar
+   * la propiedad de solo lectura del formulario y establecer los domicilios de plantas.
    */
-  constructor(private fb: FormBuilder,private consultaioQuery: ConsultaioQuery) {
-    //this.establecerFormDomiciliosDePlantas();
+   constructor(private fb: FormBuilder,private consultaioQuery: ConsultaioQuery,private tramite90201Store: Tramite90201Store,
+      private tramite90201Query: Tramite90201Query) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -97,23 +106,63 @@ export class DomiciliosDePlantasComponent {
       })
     )
     .subscribe()
-    
-    
-  }
+    }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `inicializarEstadoFormulario` para preparar el estado inicial del formulario.
+   */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa el estado del formulario dependiendo del modo de solo lectura.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
    inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.establecerFormDomiciliosDePlantas();
+     this.inicializarFormulario();
     }  
   }
+    
+  /**
+   * Inicializa el formulario de domicilios de plantas.
+   * 
+   * Este método suscribe al observable `selectSolicitud$` del query `tramite90201Query`
+   * para obtener el estado de la solicitud y asignarlo a la propiedad `solicitudState`.
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando se emite `destroyNotifier$`.
+   * Después de la suscripción, llama al método `establecerFormDomiciliosDePlantas` para configurar el formulario.
+   */
+  inicializarFormulario(): void {
+     this.tramite90201Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
 
-    guardarDatosFormulario(): void {
+           })
+           
+          ).subscribe()
+         this.establecerFormDomiciliosDePlantas();
+    }
+
+  /**
+   * Guarda los datos del formulario de domicilios de plantas.
+   * 
+   * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado)
+   * dependiendo de si el formulario está en modo solo lectura.
+   * 
+   * - Si el formulario es solo lectura, lo deshabilita.
+   * - Si el formulario no es solo lectura, lo habilita.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.formDomiciliosDePlantas.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -122,7 +171,6 @@ export class DomiciliosDePlantasComponent {
       }
   }
 
-
   /**
    * Inicializa el grupo de formularios para "Domicilios de Plantas" con valores predeterminados y campos deshabilitados.
    * 
@@ -130,16 +178,31 @@ export class DomiciliosDePlantasComponent {
    * - `representacionFederal`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
    * - `actividadProductiva`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
    */
-  public establecerFormDomiciliosDePlantas() {
+  public establecerFormDomiciliosDePlantas(): void {
     this.formDomiciliosDePlantas = this.fb.group({
-      representacionFederal: [{value: '',disabled: true}],
-      actividadProductiva: [{value: '',disabled: true}]
+      representacionFederal: [{value: this.solicitudState?.representacionFederal,disabled: true}],
+      actividadProductiva: [{value: this.solicitudState?.actividadProductiva,disabled: true}]
     });
   }
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+ * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones y recursos.
+ * Completa el observable para evitar fugas de memoria.
+ */
  ngonDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Actualiza un valor en el store de Tramite90201 utilizando el nombre del método proporcionado.
+   *
+   * @param campo - El nombre del campo del formulario cuyo valor se desea obtener.
+   * @param metodoNombre - El nombre del método del store de Tramite90201 que se debe invocar para actualizar el valor.
+   */
+   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
+    const VALOR = this.formDomiciliosDePlantas.get(campo)?.value;
+    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
 }

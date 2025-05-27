@@ -9,6 +9,8 @@ export interface Solicitud90201State {
   fraccion: string;
   sector: string;
   rfc: string;
+  representacionFederal: string;
+  actividadProductiva: string;
 }
 
 /**
@@ -20,6 +22,8 @@ export function createInitialState(): Solicitud90201State {
     fraccion: '',
     sector: '',
     rfc: '',
+    representacionFederal: '',
+    actividadProductiva: ''
   };
 }
 
@@ -62,6 +66,26 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
     this.update((state) => ({
       ...state,
       rfc,
+    }));
+  }
+  /**
+   * Actualiza la representación federal de la solicitud
+   * @param representacionFederal
+   */
+  public setRepresentacionFederal(representacionFederal: string) {
+    this.update((state) => ({ 
+      ...state,
+      representacionFederal,
+    }));
+  }
+  /**
+   * Actualiza la actividad productiva de la solicitud
+   * @param actividadProductiva
+   */
+  public setActividadProductiva(actividadProductiva: string) {
+    this.update((state) => ({
+      ...state,
+      actividadProductiva,
     }));
   }
 

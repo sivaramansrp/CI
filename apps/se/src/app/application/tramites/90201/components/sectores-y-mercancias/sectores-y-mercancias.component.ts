@@ -1,7 +1,4 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -80,8 +77,22 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   */
   esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Representa el estado actual de la solicitud 90201.
+   * 
+   * @type {Solicitud90201State}
+   * @public
+   */
   public solicitudState!: Solicitud90201State;
 
+   /**
+   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+   * 
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones a observables y evitar fugas de memoria.
+   * 
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
@@ -125,11 +136,18 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
+ 
   /**
    * Constructor del componente SectoresYMercanciasComponent.
-   *
-   * @param _expansionDesvc - Servicio para manejar la expansión de productores.
-   * @param fb - Instancia de FormBuilder para crear formularios reactivos.
+   * 
+   * @param _expansionDesvc Servicio para la expansión de productores.
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite90201Store Store para el manejo del estado del trámite 90201.
+   * @param tramite90201Query Query para consultar el estado del trámite 90201.
+   * @param consultaioQuery Query para consultar el estado de consulta IO.
+   * 
+   * Al inicializar el componente, se suscribe al observable `selectConsultaioState$` para actualizar
+   * la propiedad `esFormularioSoloLectura` y establecer el formulario de sectores según el estado de la sección.
    */
   constructor(
     private _expansionDesvc: ExpansionDeProductoresService,
@@ -149,15 +167,27 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     .subscribe()
   }
 
-  /**
-   * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
-   * Inicializa los catálogos llamando al método `inicializaCatalogos`.
-   */
+  
+    /**
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Inicializa el estado del formulario y carga los catálogos necesarios para el componente.
+     */
     ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.inicializaCatalogos();
   }
  
+  /**
+   * Inicializa el formulario para el trámite 90201.
+   * 
+   * Este método suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y lo asigna a la propiedad `solicitudState`. Además, asegura que la suscripción se cancele correctamente
+   * cuando el componente se destruya utilizando `takeUntil` con `destroyNotifier$`.
+   * 
+   * Posteriormente, llama al método `establecerFormSectores` para configurar los sectores del formulario.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   inicializarFormulario(): void{
        this.tramite90201Query.selectSolicitud$
         .pipe(
@@ -172,7 +202,15 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           this.establecerFormSectores();
         }
 
+  /**
+   * Inicializa el estado del formulario según el modo de operación.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * En caso contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
    inicializarEstadoFormulario(): void {
+
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -180,7 +218,19 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }  
   }
 
+    /**
+     * Guarda los datos del formulario de sectores y mercancías.
+     * 
+     * - Inicializa el formulario antes de realizar cualquier acción.
+     * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), deshabilita todos los controles del formulario.
+     * - Si el formulario no está en modo solo lectura, habilita todos los controles del formulario.
+     * 
+     * @remarks
+     * Este método se utiliza para asegurar que el formulario tenga el estado correcto (habilitado o deshabilitado)
+     * según el modo de solo lectura antes de guardar los datos.
+     */
     guardarDatosFormulario(): void {
+      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.sectoresForm.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -188,8 +238,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       } else {
       }
   }
-
-
 
   /**
    * Inicializa el `sectoresForm` con valores predeterminados y validadores.

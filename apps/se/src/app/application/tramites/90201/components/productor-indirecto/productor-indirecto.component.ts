@@ -1,7 +1,3 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -17,7 +13,7 @@ import {
   Solicitud90201State,
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
-import { Subject, takeUntil, map, Subscription } from 'rxjs';
+import { Subject, takeUntil, map } from 'rxjs';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 /**
@@ -66,16 +62,32 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   public checkbox = TablaSeleccion.CHECKBOX;
 
+
   /**
-   * Representa el estado de la solicitud.
+   * Estado actual de la solicitud para el trámite 90201.
+   * 
+   * Esta propiedad almacena toda la información relevante del estado de la solicitud,
+   * permitiendo su consulta y manipulación dentro del componente.
+   * 
+   * @type {Solicitud90201State} - Tipo que define la estructura del estado de la solicitud.
    */
   public solicitudState!: Solicitud90201State;
 
   /**
-   * Un Subject que se utiliza para notificar la destrucción del componente.
+   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+   * 
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar 
+   * suscripciones a observables y evitar fugas de memoria.
+   * 
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Representa el formulario reactivo para el productor indirecto.
+   * Utilizado para gestionar y validar los datos ingresados por el usuario
+   * en el componente de productor indirecto.
+   */
   formProductorIndirecto!: FormGroup;
 
   /**
@@ -83,11 +95,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * Este es un identificador único utilizado para fines fiscales en México.
    */
   public rfc: string = '';
-
-  /**
-   * Representa la suscripción al estado de la solicitud.
-   */
-  private subscription: Subscription = new Subscription();
   
   /**
   * Indica si el formulario está en modo solo lectura.
@@ -95,11 +102,18 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   */
   esFormularioSoloLectura: boolean = false; 
 
+ 
   /**
-   * Constructor del componente SectoresYMercanciasComponent.
-   *
-   * @param _expansionDesvc - Servicio para manejar la expansión de productores.
-   * @param fb - Instancia de FormBuilder para crear formularios reactivos.
+   * Constructor de la clase ProductorIndirectoComponent.
+   * 
+   * @param tramite90201Store - Servicio para manejar el estado de los trámites 90201.
+   * @param tramite90201Query - Servicio para consultar el estado de los trámites 90201.
+   * @param consultaioQuery - Servicio para consultar el estado de la sección de consulta IO.
+   * @param fb - FormBuilder para la creación y manejo de formularios reactivos.
+   * 
+   * Al inicializar el componente, se suscribe al estado de consultaioQuery para actualizar
+   * la propiedad de solo lectura del formulario y reinicializar el formulario del productor
+   * cada vez que cambia el estado.
    */
   constructor(
     private tramite90201Store: Tramite90201Store,
@@ -118,7 +132,17 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     .subscribe()
   }
 
+    /**
+     * Inicializa el estado del formulario dependiendo del modo de solo lectura.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
+     * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+     * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+     *
+     * @returns {void} No retorna ningún valor.
+     */
     inicializarEstadoFormulario(): void {
+
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -126,7 +150,17 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     }  
   }
    
+  /**
+   * Guarda los datos del formulario de productor indirecto.
+   * 
+   * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado)
+   * dependiendo de si el formulario está en modo solo lectura.
+   * 
+   * - Si `esFormularioSoloLectura` es verdadero, deshabilita el formulario.
+   * - Si `esFormularioSoloLectura` es falso, habilita el formulario.
+   */
   guardarDatosFormulario(): void {
+    this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
          this.formProductorIndirecto.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -142,7 +176,18 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   this.inicializarEstadoFormulario();
   }
   
-  inicializarFormulario(): void{
+  /**
+   * Inicializa el formulario del componente.
+   * 
+   * Este método suscribe al observable `selectSolicitud$` del query `tramite90201Query`
+   * para obtener el estado actual de la solicitud y asignarlo a la propiedad `solicitudState`.
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que permite limpiar la suscripción adecuadamente al destruir el componente.
+   * 
+   * Posteriormente, llama al método `inicializarProductorFormulario` para inicializar
+   * el formulario específico del productor indirecto.
+   */
+  inicializarFormulario(): void {
        this.tramite90201Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -156,18 +201,39 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
           this.inicializarProductorFormulario();
     }
 
+  /**
+   * Inicializa el formulario reactivo para el productor indirecto.
+   * 
+   * Este método crea una nueva instancia del formulario `formProductorIndirecto`
+   * utilizando el `FormBuilder` (`fb`). El formulario contiene un solo campo:
+   * - `rfc`: Inicializado con el valor de `rfc` proveniente del estado de la solicitud (`solicitudState`).
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   inicializarProductorFormulario(): void {
     this.formProductorIndirecto = this.fb.group({
           rfc: [this.solicitudState?.rfc],
-          })
-        
+          })     
   }
   
+  /**
+   * Establece un valor en el store llamando al método especificado.
+   *
+   * @param campo - Nombre del campo a actualizar (actualmente no se utiliza en la función).
+   * @param metodoNombre - Nombre del método del store `Tramite90201Store` que será invocado.
+   *
+   * Esta función toma el valor del RFC actual y lo pasa como argumento al método correspondiente del store.
+   */
   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
     const VALOR = this.rfc;
     (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+ * Notifica a los suscriptores para limpiar recursos y evitar fugas de memoria.
+ * Completa el observable `destroyNotifier$` para finalizar todas las suscripciones dependientes.
+ */
  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
