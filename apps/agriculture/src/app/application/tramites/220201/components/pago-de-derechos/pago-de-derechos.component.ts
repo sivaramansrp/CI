@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 
@@ -12,7 +12,7 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
-import {Subject, skip, takeUntil } from 'rxjs';
+import {Subject, map, skip, takeUntil } from 'rxjs';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
@@ -106,7 +106,8 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit 
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-      private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery
+      private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
+      private consultaQuery: ConsultaioQuery
   ) {
     this.obtenerDetallesDeListaDeOpciones();
   }
@@ -130,12 +131,17 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit 
   }
 
   ngAfterViewInit(): void {
-    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
-    this.esFormularioSoloLectura = seccionState?.sampleData?.readonly;
-      if(this.esFormularioSoloLectura){
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+           if(this.esFormularioSoloLectura){
         this.pagoForm.disable();
       }
-    });
+        })
+      )
+      .subscribe();
   }
 
   

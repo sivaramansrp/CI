@@ -4,13 +4,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import {Subject, skip, takeUntil } from 'rxjs';
+import {Subject, map, skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
@@ -150,7 +150,8 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery
+    private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
+      private consultaQuery: ConsultaioQuery
   ) {
     this.crearFormulario();
     this.initActionFormBuild();
@@ -185,12 +186,17 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   }
 
    ngAfterViewInit(): void {
-    this.certificadoZoosanitarioServices.getFormData().pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
-    this.esFormularioSoloLectura = seccionState?.sampleData?.readonly;
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
       if(this.esFormularioSoloLectura){
     this.datosDelaSolicitud.disable();
       }
-    });
+        })
+      )
+      .subscribe();
   }
   /**
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
