@@ -10,7 +10,6 @@ import { PermisoCitesService } from '../../services/permiso-cites.service';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styles: ``,
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
