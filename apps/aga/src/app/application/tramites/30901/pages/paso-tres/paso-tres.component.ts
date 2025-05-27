@@ -1,11 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
  * Componente PasoTresComponent.
- * 
+ *
  * Este componente maneja la lógica para el paso tres de un trámite específico.
- * 
+ *
  * @component
  * @selector app-paso-tres
  * @templateUrl ./paso-tres.component.html
@@ -13,13 +15,15 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'app-paso-tres',
+  standalone: true,
+  imports: [FirmaElectronicaComponent, CommonModule],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {
   /**
    * Constructor de la clase PasoTresComponent.
-   * 
+   *
    * @param router - Servicio de Angular Router para la navegación entre rutas.
    */
   constructor(public router: Router) {
@@ -39,4 +43,3 @@ export class PasoTresComponent {
     }
   }
 }
-

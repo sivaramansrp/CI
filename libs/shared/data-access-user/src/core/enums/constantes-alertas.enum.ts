@@ -166,7 +166,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   ],
 };
 export const IMPORTANTE = {
-  Importante: `<p><strong>Importante:</strong> Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
+  Importante: `<p><strong>Importante:</strong>Si existe duda respecto del producto a registrar o al pago correspondiente, por favor comunicate a los teléfonos 0155 5128 2544 y 0155 5128 2595</p>`,
 };
 
 export const ALERTA_DE_MATERIAL = {

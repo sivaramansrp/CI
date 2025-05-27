@@ -159,4 +159,10 @@ export const enum TEXTO_FILA_REGISTRO{
   BAJA = 'Baja',
 }
 
+/**
+ * @description Constantes relacionadas con el proceso de generación de línea de captura.
+ * Contiene la URL para generar la línea de captura y el texto del botón para continuar.
+ */
+export const GENERAR_LINEA_CAPTURA_URL = 'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf';
+
 
