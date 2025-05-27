@@ -25,9 +25,9 @@ export class TablaDinamicaComponent<T> {
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
 
-  @Input() disableSeleccionTablaCheckBox!: boolean;
+  @Input() disableSeleccionTablaCheckBox:boolean = false;
 
-  @Input() disableSeleccionTablaRadio!: boolean;
+  @Input() disableSeleccionTablaRadio:boolean = false;
   /*
      * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
      *
