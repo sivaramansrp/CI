@@ -1,6 +1,8 @@
 <app-datos-del-tramite
   [datosMercanciaTabla]="datosMercanciaTabla"
   (updateDatosDelTramiteFormulario)="updateDatosDelTramiteFormulario($event)"
+  (modificarMercanciasDatos)="modificarMercanciasDatos($event)"
+  (eliminarMercanciaFinalEvent)="eliminarMercanciasDatos($event)"
   [datosDelTramiteFormState]="datosDelTramiteFormState"
   [idProcedimiento]="idProcedimiento"
 ></app-datos-del-tramite>
