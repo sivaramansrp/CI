@@ -7,6 +7,7 @@ import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
 
 import { BitacoraModel , MercanciasModel , ModificacionInfo , PLANTAS, ProductorIndirecto , ProsecModificacionModel , SectorModel } from '../models/prosec-modificacion.model';
+import { Tramite90305State, Tramite90305Store } from '../estados/tramite90305.store';
 
 
 @Injectable({
@@ -14,7 +15,7 @@ import { BitacoraModel , MercanciasModel , ModificacionInfo , PLANTAS, Productor
 })
 export class ProsecModificacionServiceTsService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite90305Store: Tramite90305Store,) {
     //constructor
    }
   getListaDomicilios() : Observable<ProsecModificacionModel[]> {
@@ -41,5 +42,14 @@ export class ProsecModificacionServiceTsService {
   getEstadoData(): Observable<CatalogoResponse[]> {
     return this.http.get<CatalogoResponse[]>('assets/json/90305/estado.json');
   }
+
+   actualizarEstadoFormulario(DATOS: Tramite90305State): void {
+    this.tramite90305Store.setSelectedEstado(DATOS.selectedEstado);
+  }
+
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite90305State> {
+    return this.http.get<Tramite90305State>('assets/json/90305/registro_toma_muestras_mercancias.json');
+  }
   
 }
+

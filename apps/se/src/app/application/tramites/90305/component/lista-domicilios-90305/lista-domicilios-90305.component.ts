@@ -25,7 +25,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 import { ProsecModificacionModel } from '../../models/prosec-modificacion.model';
 

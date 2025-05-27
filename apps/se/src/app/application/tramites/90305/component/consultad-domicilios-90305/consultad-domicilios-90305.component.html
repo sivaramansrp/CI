@@ -9,6 +9,7 @@
             [label]="'Estado*'"
             [placeholder]="'Seleccione una aduana'"
             formControlName="estadoControl"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="getMunicipios()"
           ></app-catalogo-select>
         </div>

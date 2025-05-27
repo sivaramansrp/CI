@@ -4,12 +4,12 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite90305State {
-  selectedEstado: CatalogoResponse | null;
+  selectedEstado: String;
 }
 
 export function createInitialState(): Tramite90305State {
   return {
-    selectedEstado: null,
+    selectedEstado: '',
   };
 }
 @Injectable({
@@ -21,7 +21,7 @@ export class Tramite90305Store extends Store<Tramite90305State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: CatalogoResponse) : void {
+  public setSelectedEstado(selectedEstado: String) : void {
     this.update((state) => ({
       ...state,
       selectedEstado,
