@@ -1240,15 +1240,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+    
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
-      this.tituloModal = TITULO_MODAL_ERROR;
-      this.mensajeModal = MSJ_ERROR_FECHA;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: 'Avisos',
-        mensaje: MSG_ADUANA_PEDIMENTO,
+        mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
