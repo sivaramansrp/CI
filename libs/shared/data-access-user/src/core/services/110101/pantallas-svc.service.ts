@@ -14,6 +14,9 @@ import {JSONResponse} from '../../models/shared/catalogos.model';
 
 export class PantallasSvcService {
 
+  /**
+   * URL del servidor para acceder a los catálogos auxiliares definidos en el entorno.
+   */
   urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
