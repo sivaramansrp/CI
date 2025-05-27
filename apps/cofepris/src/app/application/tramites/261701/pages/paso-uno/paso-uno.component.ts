@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../constantes/cancelacion-peticion.enum';
 import { CancelacionPeticionService } from '../../services/cancelacion-peticion.service';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
 
 /**
@@ -42,6 +42,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Estado de la consulta actual. */
+  public consultaState!:ConsultaioState;
+
   /**
    * compo doc
    * Emisor de eventos que notifica el cambio de pestaña.
@@ -61,6 +67,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private cancelacionPeticionService: CancelacionPeticionService,
+    private consultaQuery: ConsultaioQuery
   ) {
     //no hacer nada
   }
@@ -78,6 +85,29 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((tramiteAsociados) => {
         this.tramiteAsociados = tramiteAsociados;
       });
+    
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.notificadorDestruccion$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.cancelacionPeticionService
+    .obtenerCancelacionPeticion()
+    .pipe(takeUntil(this.notificadorDestruccion$))
+    .subscribe((cancelacionPeticion) => {
+      this.esDatosRespuesta = true;
+      this.cancelacionPeticionService.actualizarEstadoFormulario(cancelacionPeticion);
+    });
   }
 
   /**

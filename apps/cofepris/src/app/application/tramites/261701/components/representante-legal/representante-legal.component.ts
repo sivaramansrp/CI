@@ -1,10 +1,10 @@
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { REPRESENTANTE_LEGAL } from '../../constantes/cancelacion-peticion.enum';
 import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 
@@ -51,7 +51,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * utilizados en el contexto de los trámites relacionados con permisos a desistir.
    * @memberof RepresentanteLegalComponent
    */
-   public representanteLegalFormData = REPRESENTANTE_LEGAL;
+   public representanteLegalFormData: ModeloDeFormaDinamica[] = [];
 
    /**
    * Subject para destruir las suscripciones.
@@ -64,6 +64,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     * @memberof RepresentanteLegalComponent
     */
     public cancelacionState!: CancelacionPeticion261701State;
+
+    /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+    esFormularioSoloLectura: boolean = false; 
 
    /**
   * compo doc
@@ -93,9 +99,24 @@ get ninoFormGroup(): FormGroup {
    */
   constructor(
       private tramite261701Store: Tramite261701Store,
-      private tramite261701Query: Tramite261701Query  
+      private tramite261701Query: Tramite261701Query,
+      private consultaioQuery: ConsultaioQuery,
     ) {
-         // Constructor vacio
+      /**
+       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+       *
+       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+       */
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+         this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
     }
 
     /**
@@ -116,8 +137,28 @@ get ninoFormGroup(): FormGroup {
         })
       )
       .subscribe();
-  }
-
+  
+      this.actualizarRepresentanteLegalFormData();
+    }
+      
+    /**
+     * Actualiza representanteLegalFormData basado en el valor actual de esFormularioSoloLectura
+     * y establece los valores predeterminados desde cancelacionState
+     */
+    private actualizarRepresentanteLegalFormData(): void {
+      // Mantener la lógica ternaria original para determinar qué conjunto de datos usar
+      this.representanteLegalFormData =  this.esFormularioSoloLectura ? REPRESENTANTE_LEGAL.map(campo => {
+        if (this.cancelacionState[campo.campo] !== undefined) {
+          return {
+            ...campo,
+            desactivado: true, 
+          };
+        }
+        // Si no existe, mantener el campo original
+        return campo;
+      }) : REPRESENTANTE_LEGAL ;
+    }
+  
   /**
   * compo doc
   * @method establecerCambioDeValor

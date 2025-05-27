@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { MANIFIESTOS_ALERT } from '../../constantes/cancelacion-peticion.enum';
 import { Tramite261701Query } from '../../estados/query/tramite261701.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 /**
  * ManifiestosDeclaracionesComponent es un componente que permite gestionar los manifiestos
@@ -22,7 +22,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  * @type {string}
  * @memberof ManifiestosDeclaracionesComponent
  */
-  public manifiestosAlert: string = MANIFIESTOS_ALERT.message;
+  public manifiestosAlert: string = this.getManifiestosAlert().message;
   
   /**
    * compo doc
@@ -49,6 +49,11 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    */
     public cancelacionPeticionState!: CancelacionPeticion261701State;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
       
   /**
  * compo doc
@@ -60,10 +65,25 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  */
   constructor(
     private tramite261701Store: Tramite261701Store,
-    private tramite261701Query: Tramite261701Query 
+    private tramite261701Query: Tramite261701Query,
+    private consultaioQuery: ConsultaioQuery, 
   ) {
-    // Constructor vacio
-  }
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
+}
 
   /**
   * compo doc
@@ -84,6 +104,31 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
         })
       )
       .subscribe();
+
+    if(this.esFormularioSoloLectura) this.manifiestosAlert = this.getManifiestosAlert(true).message;
+  }
+
+  /**
+   * Genera el HTML para el mensaje de manifiestos con la opción de habilitar o deshabilitar el checkbox
+   */
+  private getManifiestosAlert(disabled: boolean = false): { message: string } {
+    return {
+      message: `
+        <div class="row">
+          <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <form>
+              <label>
+                <input type="checkbox" id="manifiestos" name="manifiestos" required ${disabled ? 'disabled' : ''}>
+                <span class="ml-5" style="color: #31708f;">*</span>
+              </label>
+            </form>
+          </div>
+          <div class="col-md-10">
+            <p>Cumplo con los requisitos y la normatividad aplicable, sin que ello me exima de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en las que pueda incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo, acepto que la notificación de este trámite sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.</p>
+          </div>
+        </div>
+        `
+    };
   }
 
   /**

@@ -1,5 +1,6 @@
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Component, OnDestroy, OnInit} from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -57,6 +58,12 @@ export class PermisoCancelarComponent implements OnInit, OnDestroy {
    */
    public cancelacionState!: CancelacionPeticion261701State;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
     /**
    * compo doc
    * @constructor
@@ -67,9 +74,24 @@ export class PermisoCancelarComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite261701Store: Tramite261701Store,
-    private tramite261701Query: Tramite261701Query
+    private tramite261701Query: Tramite261701Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-       // Constructor vacio
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
     
   /**
@@ -78,7 +100,7 @@ export class PermisoCancelarComponent implements OnInit, OnDestroy {
    * utilizados en el contexto de los trámites relacionados con permisos a Cancelar.
    * @memberof PermisoCancelarComponent
    */
-  public permisoCancelarFormData = PERMISO_A_CANCELAR;
+  public permisoCancelarFormData: ModeloDeFormaDinamica[] = [];
 
   /**
   * compo doc
@@ -116,6 +138,26 @@ get ninoFormGroup(): FormGroup {
         })
       )
       .subscribe();
+  
+    this.actualizarPermisoCancelarFormData();
+  }
+    
+  /**
+   * Actualiza permisoCancelarFormData basado en el valor actual de esFormularioSoloLectura
+   * y establece los valores predeterminados desde cancelacionState
+   */
+  private actualizarPermisoCancelarFormData(): void {
+    // Mantener la lógica ternaria original para determinar qué conjunto de datos usar
+    this.permisoCancelarFormData =  this.esFormularioSoloLectura ? PERMISO_A_CANCELAR.map(campo => {
+      if (this.cancelacionState[campo.campo] !== undefined) {
+        return {
+          ...campo,
+          desactivado: true, 
+        };
+      }
+      // Si no existe, mantener el campo original
+      return campo;
+    }) : PERMISO_A_CANCELAR ;
   }
 
   /**
