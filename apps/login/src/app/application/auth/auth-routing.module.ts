@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page/auth-page.component';
+import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,10 @@ export const ROUTES_AUTH: Routes = [
   {
     path: '',
     component: AuthPageComponent
+  },
+  {
+    path: 'cambio-contrasena',
+    component: CambioContrasenaComponent
   },
   {
     path: 'registro-notificaciones',
