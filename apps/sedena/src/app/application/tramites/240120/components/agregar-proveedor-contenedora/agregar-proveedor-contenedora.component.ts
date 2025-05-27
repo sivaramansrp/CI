@@ -1,7 +1,7 @@
 import { Subject, takeUntil } from 'rxjs';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -25,7 +25,7 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent implements OnDestroy {
+export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
 
   /**
    * Identificador del procedimiento asociado al trámite.
@@ -54,9 +54,7 @@ export class AgregarProveedorContenedoraComponent implements OnDestroy {
   constructor(
     public tramite240120Store: Tramite240120Store,
     public tramiteQuery: Tramite240120Query,
-  ) {
-    this.getProveedorDatosFinalTablaDatos();
-  }
+  ) { }
 
   /**
    * Actualiza los datos de la tabla de proveedores en el store del trámite.
@@ -67,12 +65,16 @@ export class AgregarProveedorContenedoraComponent implements OnDestroy {
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240120Store.updateProveedorTablaDatos(event);
   }
-
-  /**
-   * Obtiene los datos finales de proveedores desde el query y los asigna a la propiedad local.
-   * Utiliza takeUntil para evitar fugas de memoria al destruir el componente.
+/**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al observable `getmodificarProveedorDatos$` para obtener los datos
+   * del proveedor y los asigna a la propiedad local. Utiliza `takeUntil`
+   * para limpiar la suscripción al destruir el componente.
+   *
+   * @returns {void}
    */
-  getProveedorDatosFinalTablaDatos(): void {
+  
+  ngOnInit(): void {
     this.tramiteQuery.getmodificarProveedorDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
@@ -80,7 +82,7 @@ export class AgregarProveedorContenedoraComponent implements OnDestroy {
       });
   }
 
-  /**
+   /**
    * Actualiza los datos existentes de proveedores en el store.
    *
    * @param {Proveedor[]} event - Lista de proveedores actualizados.
@@ -93,6 +95,8 @@ export class AgregarProveedorContenedoraComponent implements OnDestroy {
   /**
    * Método de ciclo de vida que se ejecuta al destruirse el componente.
    * Se utiliza para completar el notificador y evitar fugas de memoria.
+   *
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

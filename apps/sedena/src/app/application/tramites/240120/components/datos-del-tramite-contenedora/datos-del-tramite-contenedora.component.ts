@@ -56,7 +56,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   ) // eslint-disable-next-line no-empty-function
   {}
 
-  /**
+    /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables del estado para mostrar los datos en la vista.
    *
