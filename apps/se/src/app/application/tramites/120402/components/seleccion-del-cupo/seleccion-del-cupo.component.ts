@@ -25,7 +25,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
 import {Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
@@ -118,6 +118,20 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    
+  /**
+   * Estado seleccionado del trámite 260911.
+   */
+  estadoSeleccionado!: Tramite120402State;
+
+
+  /** 
+ * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+ * Se emite un valor y se completa cuando el componente se destruye.
+ */  
+
+  private destroy$ = new Subject<void>();
+
    /**
    * Suscripción a los cambios en el formulario react
    */
@@ -135,24 +149,6 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   public mercancia!: Catalogo[];
 
-
-   /**
-   * Método que inicializa el objeto `mercancia` con datos predeterminados.
-   * Estos datos se utilizan para llenar el catálogo de opciones disponibles para el usuario,
-   * que incluyen "Sí" y "No" como posibles respuestas a una pregunta sobre el registro de muestras.
-   *
-   * @returns {void} No retorna nada, ya que solo inicializa el objeto `mercancia`.
-   *
-   * @example
-   * component.getMercancia();
-   */
-  // public getMercancia(): void {
-  //   this.mercancia = [
-  //     { id: 1, descripcion: 'Si' },
-  //     { id: 2, descripcion: 'No' },
-  //   ];
-  // }
-  
   /**
    * Enum de acciones disponibles en la tabla dinámica.
    */
@@ -245,11 +241,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
  
-  regimen$: Observable<Catalogo | null> = this.tramite120402Query.regimen$;
-  tratado$: Observable<Catalogo | null> = this.tramite120402Query.tratado$;
-  producto$: Observable<Catalogo | null> = this.tramite120402Query.producto$;
-  subproducto$: Observable<Catalogo | null> =
-    this.tramite120402Query.subproducto$;
+ 
  
   /**
    * Constructor del componente.
@@ -321,32 +313,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.loadTratado();
     this.loadProducto();
     this.inicializarEstadoFormulario();
- 
-    this.regimen$.subscribe((regimen) => {
-      if (regimen) {
-        this.seleccionForm.get('regimen')?.setValue(regimen);
-      }
-    });
- 
-    this.tratado$.subscribe((tratado) => {
-      if (tratado) {
-        this.seleccionForm.get('tratado')?.setValue(tratado);
-      }
-    });
- 
-    this.producto$.subscribe((producto) => {
-      if (producto) {
-        this.seleccionForm.get('producto')?.setValue(producto);
-      }
-    });
- 
-    this.subproducto$.subscribe((subproducto) => {
-      if (subproducto) {
-        this.seleccionForm.get('subproducto')?.setValue(subproducto);
-      }
-    });
- 
-  }
+    this.getValorStore();
+ }
  
   /**
    * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es destruido.
@@ -491,36 +459,32 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     }
   }
  
+  
+
   /**
-   * Obtiene el valor seleccionado del campo de régimen aduanero y lo establece en el store.
+   * Obtiene el estado actual del trámite desde el store.
    */
-  getRegimen(): void {
-    const SELECTED_REGIMEN = this.seleccionForm.get('regimen')?.value;
-    this.tramite120402Store.setRegimen(SELECTED_REGIMEN);
+  getValorStore(): void {
+    this.tramite120402Query.selectSolicitud$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
   }
- 
-  /**
-   * Obtiene el valor seleccionado del campo de tratado comercial y lo establece en el store.
+
+     /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
    */
-  getTratado(): void {
-    const SELECTED_TRATADO = this.seleccionForm.get('tratado')?.value;
-    this.tramite120402Store.setTratado(SELECTED_TRATADO);
-  }
- 
-  /**
-   * Obtiene el valor seleccionado del campo de producto y lo establece en el store.
-   */
-  obtenerValorProducto(): void {
-    const SELECTED_PRODUCTO = this.seleccionForm.get('producto')?.value;
-    this.tramite120402Store.setProducto(SELECTED_PRODUCTO);
-  }
- 
-  /**
-   * Obtiene el valor seleccionado del campo de subproducto y lo establece en el store.
-   */
-  getSubproducto(): void {
-    const SELECTED_SUBPRODUCTO = this.seleccionForm.get('subproducto')?.value;
-    this.tramite120402Store.setSubproducto(SELECTED_SUBPRODUCTO);
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite120402Store.setTramite120402State({
+      [control]: VALOR
+    });
   }
 }
  

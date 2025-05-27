@@ -19,30 +19,8 @@ export class Solocitud120402Service {
   }
 
   actualizarEstadoFormulario(DATOS: Tramite120402State): void {
-   if (DATOS.entidad) {
-     this.tramite120402Store.setEntidad(DATOS.entidad);
-   }
-   if (DATOS.representacion) {
-     this.tramite120402Store.setRepresentacion(DATOS.representacion);
-   }
-   if (DATOS.regimen) {
-     this.tramite120402Store.setRegimen(DATOS.regimen);
-   }
-   if (DATOS.tratado) {
-     this.tramite120402Store.setTratado(DATOS.tratado);
-   }
-   if (DATOS.producto) {
-     this.tramite120402Store.setProducto(DATOS.producto);
-   }
-   if (DATOS.subproducto) {
-     this.tramite120402Store.setSubproducto(DATOS.subproducto);
-   }
-   if (typeof DATOS.cantidadSolicitada === 'string') {
-     this.tramite120402Store.setCantidadSolicitada(DATOS.cantidadSolicitada);
-   }
-   if (typeof DATOS.cupoSeleccionado === 'string') {
-     this.tramite120402Store.setCantidadSolicitada(DATOS.cupoSeleccionado);
-   }
+ 
+    this.tramite120402Store.setTramite120402State(DATOS);
   
    
   }

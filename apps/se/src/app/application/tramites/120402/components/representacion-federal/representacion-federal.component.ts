@@ -38,7 +38,7 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
 import { Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
@@ -86,9 +86,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
      * Estado de la solicitud de la sección 301.
      */
     public solicitudState!: Tramite120402State;
-  
-    
-  /**
+
+       /**
    * @property {FormGroup} representacionForm
    * @description
    * Formulario reactivo que maneja la selección de entidad federativa y representación federal.
@@ -130,23 +129,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * Se utiliza para filtrar y mostrar las representaciones según la entidad seleccionada.
    */
   public allRepresentaciones: Catalogo[] = [];
-
-  /**
-   * @property {Observable<Catalogo | null>} entidad$
-   * @description
-   * Observable que expone la entidad federativa seleccionada desde el store.
-   * Permite reaccionar a los cambios de la entidad en el formulario.
-   */
-  entidad$: Observable<Catalogo | null> = this.tramite120402Query.entidad$;
-
-  /**
-   * @property {Observable<Catalogo | null>} representacion$
-   * @description
-   * Observable que expone la representación federal seleccionada desde el store.
-   * Permite reaccionar a los cambios de la representación en el formulario.
-   */
-  representacion$: Observable<Catalogo | null> =
-    this.tramite120402Query.representacion$;
 
   /**
    * @constructor
@@ -233,22 +215,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       this.representacionForm.get('representacion')?.setValue(''); // Reset representacion
     });
  
-    this.entidad$.subscribe((entidad) => {
-  if (entidad) {
-    this.representacionForm.get('entidad')?.setValue(entidad);
-  }
-});
-
-this.representacion$.subscribe((representacion) => {
-  if (representacion) {
-    this.representacionForm.get('representacion')?.setValue(representacion);
-  }
-});
-
   }
  
- 
-
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -357,25 +325,6 @@ this.representacion$.subscribe((representacion) => {
  
  
  
-  
- 
- 
-
-  /**
-   * @method getEntidad
-   * @description
-   * Establece la entidad seleccionada en el store y actualiza el valor del formulario.
-   * Se utiliza para sincronizar el estado del formulario con el store.
-   *
-   * @param {Catalogo} selectedEntidad - Entidad federativa seleccionada.
-   * @returns {void}
-   */
-  getEntidad(selectedEntidad: Catalogo): void {
-    this.tramite120402Store.setEntidad(selectedEntidad);
-    this.representacionForm.get('entidad')?.setValue(selectedEntidad.id.toString(), { emitEvent: false });
-    this.updateRepresentacionOptions(selectedEntidad);
-   }
-
     /**
    * @method setValoresStore
    * @description
@@ -396,19 +345,6 @@ this.representacion$.subscribe((representacion) => {
     (this.tramite120402Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
  
-  /**
-   * @method getRepresentacion
-   * @description
-   * Establece la representación federal seleccionada en el store y actualiza el valor del formulario.
-   * Se utiliza para sincronizar el estado del formulario con el store.
-   *
-   * @param {Catalogo} selectedRepresentacion - Representación federal seleccionada.
-   * @returns {void}
-   */
-  getRepresentacion(selectedRepresentacion: Catalogo): void {
-    this.tramite120402Store.setRepresentacion(selectedRepresentacion);
-    this.representacionForm.get('representacion')?.setValue(selectedRepresentacion.id.toString(), { emitEvent: false });  
-  }
  
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
@@ -420,5 +356,31 @@ this.representacion$.subscribe((representacion) => {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite120402Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.solicitudState = data;
+      }
+    );
+  }
+
+     /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   */
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite120402Store.setTramite120402State({
+      [control]: VALOR
+    });
   }
 }

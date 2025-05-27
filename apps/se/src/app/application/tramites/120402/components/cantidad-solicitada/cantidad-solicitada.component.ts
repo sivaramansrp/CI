@@ -2,7 +2,7 @@
  * Componente que representa un formulario para solicitar una cantidad específica.
  * Gestiona la validación y el envío del formulario.
  */
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -66,18 +66,15 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  cantidadSolicitada$: Observable<string | null> =
-    this.tramite120402Query.cantidadSolicitada$;
-
   /**
    * Constructor del componente.
    * @param fb FormBuilder para la creación y gestión del formulario reactivo.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query,
-    private consultaioQuery: ConsultaioQuery,
+    public tramite120402Store: Tramite120402Store,
+    public tramite120402Query: Tramite120402Query,
+    public consultaioQuery: ConsultaioQuery,
   ) {
     /**
       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -130,11 +127,6 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormulario();
     this.inicializarEstadoFormulario();
-    this.cantidadSolicitada$.subscribe((cantidadSolicitada) => {
-      if (cantidadSolicitada) {
-        this.form.get('cantidadSolicitada')?.setValue(cantidadSolicitada);
-      }
-    });
   }
 
   /**
@@ -185,11 +177,31 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Obtiene el valor seleccionado del campo de cantidad solicitada y lo establece en el store.
+
+/**
+   * Obtiene el estado actual del trámite desde el store.
    */
-  getCantidadSolicitada(): void {
-    const CANTIDAD_SOLICITADA = this.form.get('cantidadSolicitada')?.value;
-    this.tramite120402Store.setCantidadSolicitada(CANTIDAD_SOLICITADA);
+  getValorStore(): void {
+    this.tramite120402Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.solicitudState = data;
+      }
+    );
   }
+
+     /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   */
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite120402Store.setTramite120402State({
+      [control]: VALOR
+    });
+  }
+
 }
