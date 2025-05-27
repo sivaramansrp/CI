@@ -1,19 +1,13 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { Subject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { CancelacionesStore } from '../../estados/cancelaciones.store';
-
-import { CancelacionesQuery } from '../../estados/cancelaciones.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-import { Subject, Subscription } from 'rxjs';
-
-import { map, takeUntil } from 'rxjs/operators';
 /**
  * @description
  * Componente para manejar la entidad externa en el trámite 140201.
@@ -118,7 +112,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-    this.updateState();
+    this.estadoActualizacion();
     }  
   }
 
@@ -127,7 +121,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-   this.updateState();
+   this.estadoActualizacion();
       if ( this.entidadForm && this.esFormularioSoloLectura) {
         this.entidadForm.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -140,7 +134,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el estado del formulario con los datos observables.
    */
-  updateState(): void {
+  estadoActualizacion(): void {
     this.entidadExterna$.pipe(takeUntil(this.destroy$)).subscribe((entidadExterna) => {
       if (entidadExterna) {
         this.entidadForm.get('entidadExterna')?.setValue(entidadExterna);
@@ -175,7 +169,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza la entidad externa en el almacén.
    */
-  updateEntidadExterna() {
+  updateEntidadExterna(): void {
     const ENTIDADEXTERNA = this.entidadForm.get('entidadExterna')?.value;
     this.cancelacionesStore.setEntidadExterna(ENTIDADEXTERNA);
   }
@@ -183,7 +177,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el nombre del solicitante IPC en el almacén.
    */
-  updateNombreSolicitanteIPC() {
+  updateNombreSolicitanteIPC():void {
     const NOMBRESOLICITANTEIPC = this.entidadForm.get('nombreSolicitanteIPC')?.value;
     this.cancelacionesStore.setNombreSolicitanteIPC(NOMBRESOLICITANTEIPC);
   }
@@ -191,7 +185,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el cargo del solicitante IPC en el almacén.
    */
-  updateCargoSolicitanteIPC() {
+  updateCargoSolicitanteIPC():void {
     const CARGOSOLICITANTEIPC = this.entidadForm.get('cargoSolicitanteIPC')?.value;
     this.cancelacionesStore.setCargoSolicitanteIPC(CARGOSOLICITANTEIPC);
   }
@@ -199,7 +193,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el folio del oficio de solicitud IPC en el almacén.
    */
-  updateFolioOficioSolicitudIPC() {
+  updateFolioOficioSolicitudIPC():void {
     const FOLIOOFICIOSOLICITUDIPC = this.entidadForm.get('folioOficioSolicitudIPC')?.value;
     this.cancelacionesStore.setFolioOficioSolicitudIPC(FOLIOOFICIOSOLICITUDIPC);
   }
@@ -207,7 +201,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el correo del solicitante IPC en el almacén.
    */
-  updateCorreoSolicitanteIPC() {
+  updateCorreoSolicitanteIPC():void {
     const CORREOSOLICITANTEIPC = this.entidadForm.get('correoSolicitanteIPC')?.value;
     this.cancelacionesStore.setCorreoSolicitanteIPC(CORREOSOLICITANTEIPC);
   }

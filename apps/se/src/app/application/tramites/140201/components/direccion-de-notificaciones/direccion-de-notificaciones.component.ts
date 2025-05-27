@@ -1,26 +1,18 @@
-/** 
- * DireccionDeNotificacionesComponent
- */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
 import {
   Catalogo,
   CatalogoSelectComponent,
   REG_X,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,Subscription, map,takeUntil } from 'rxjs';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { CancelacionesQuery } from '../../estados/cancelaciones.query';
-
-import { Subject,Subscription, map,takeUntil } from 'rxjs';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 /**
  * Componente DireccionDeNotificacionesComponent
  *
@@ -172,7 +164,7 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.updateState();
+     this.estadoActualizacion();
     }  
   }
 
@@ -181,7 +173,7 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    this.updateState();
+    this.estadoActualizacion();
       if (this.direccionNotificacionesForm && this.esFormularioSoloLectura) {
         this.direccionNotificacionesForm.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -193,12 +185,12 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Método updateState
+   * Método estadoActualizacion
    *
    * Actualiza el estado del formulario suscribiéndose a los observables de entidad federativa,
    * colonia, localidad, municipio, país, número interior, código postal y teléfono.
    */
-  updateState() : void {
+  estadoActualizacion() : void {
     this.entidadFederativa$
       .pipe(takeUntil(this.destroy$))
       .subscribe((entidadFederativa) => {

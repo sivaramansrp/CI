@@ -150,13 +150,13 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   actualizarEstado(): void {
     this.rfcIngresado$.pipe(takeUntil(this.destroy$)).subscribe((rfcIngresado) => {
       if (rfcIngresado) {
-        this.cancelacionForm.get('rfcIngresado')?.setValue(rfcIngresado);
+        this.cancelacionForm?.get('rfcIngresado')?.setValue(rfcIngresado);
       }
     });
 
     this.motivoCancelacion$.pipe(takeUntil(this.destroy$)).subscribe((motivoCancelacion) => {
       if (motivoCancelacion) {
-        this.cancelacionForm.get('motivoCancelacion')?.setValue(motivoCancelacion);
+        this.cancelacionForm?.get('motivoCancelacion')?.setValue(motivoCancelacion);
       }
     });
   }

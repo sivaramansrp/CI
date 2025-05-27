@@ -1,26 +1,18 @@
-/**
- * DatosDelLas140201Component
- */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import { CancelacionesStore } from '../../estados/cancelaciones.store';
-
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { CancelacionesService } from '../../services/cancelaciones.service';
-
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DireccionDeNotificacionesComponent } from '../direccion-de-notificaciones/direccion-de-notificaciones.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente DatosDelLasComponent
@@ -112,7 +104,7 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.updateState();
+      this.estadoActualizacion();
     }  
   }
 
@@ -121,7 +113,7 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-     this.updateState();
+     this.estadoActualizacion();
       if ( this.formularioDeNotificacionesForm && this.esFormularioSoloLectura) {
         this.formularioDeNotificacionesForm.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -133,12 +125,12 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Método updateState
+   * Método estadoActualizacion
    * 
    * Actualiza el estado del formulario suscribiéndose a los observables de nombre,
    * apellido paterno y correo electrónico.
    */
-  updateState(): void {
+  estadoActualizacion(): void {
     this.nombre$.pipe(takeUntil(this.destroy$)).subscribe((nombre) => {
       if (nombre) {
         this.formularioDeNotificacionesForm.get('nombre')?.setValue(nombre);
