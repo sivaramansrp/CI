@@ -24,7 +24,6 @@
           <app-catalogo-select
             [catalogo]="catalogosArray[i]" 
             [label]="inputFields[i].label"
-            [placeholder]="inputFields[i].placeholder"
             [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"

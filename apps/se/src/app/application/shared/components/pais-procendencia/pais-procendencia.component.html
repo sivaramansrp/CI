@@ -9,7 +9,6 @@
         <app-catalogo-select
           [catalogo]="elementosDeBloque"
           [label]="'Bloque'"
-          [placeholder]="'Seleccione un valor'"
           formControlName="bloque"
           (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
         ></app-catalogo-select>       
@@ -33,7 +32,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="descripcion" class="form-label"
-          >Uso(s) especÍfico de la mercancÍa*:</label
+          >Uso(s) especÍfico(s) de la mercancÍa*:</label
         >
         <textarea
           class="form-control"

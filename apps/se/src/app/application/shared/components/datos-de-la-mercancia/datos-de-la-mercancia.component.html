@@ -41,7 +41,6 @@
         [catalogo]="fraccionCatalogo"
         [label]="'Fracción arancelaria'"
         [required]="true"
-        [placeholder]="'Seleccione un valor'"
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
       ></app-catalogo-select>
@@ -104,7 +103,6 @@
           [catalogo]="unidadCatalogo"
           [label]="'UMT'"
           [required]="true"
-          [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
           [tooltipQuestionCircle]="true"
           (change)="setValoresStore(form, 'unidadMedida')"
