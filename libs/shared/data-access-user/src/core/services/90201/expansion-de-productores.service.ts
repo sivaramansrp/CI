@@ -2,7 +2,8 @@ import { JSONResponse, RespuestaCatalogos } from '../../models/shared/catalogos.
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 
 /**
  * Servicio para gestionar la expansión de productores en el trámite 90201.
@@ -29,13 +30,7 @@ import { enviroment } from '../../../enviroments/enviroment';
 
 export class ExpansionDeProductoresService {
 
-  /**
-   * URL base del servidor auxiliar para solicitudes JSON.
-   * 
-   * Esta propiedad obtiene su valor desde la variable de entorno `URL_SERVER_JSON_AUXILIAR`.
-   * Se utiliza para realizar peticiones a servicios auxiliares relacionados con productores.
-   */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
   * @param http: constructor de HttpClient
@@ -49,9 +44,9 @@ export class ExpansionDeProductoresService {
   /**
    * Obtiene el catálogo de sectores desde un archivo JSON local.
    *
-   * @returns Un observable que emite la respuesta del catálogo de sectores (`RespuestaCatalogos`).
+   * @returns Un observable que emite la respuesta del catálogo de sectores.
    */
-  getSectorCatalog() {
+  getSectorCatalog(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
 

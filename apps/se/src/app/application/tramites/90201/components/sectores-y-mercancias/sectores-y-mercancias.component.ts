@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-
-import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
-
+import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   Solicitud90201State,
   Tramite90201Store,
@@ -16,8 +18,8 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
+import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { Sectoresy } from '@libs/shared/data-access-user/src';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -66,9 +68,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public sectorCatalogo: Catalogo[] = [];
   /**
    * Una propiedad pública que contiene el contenido de texto para el componente Sectores y Mercancias.
-   * El contenido se importa del módulo `Sectoresy`.
+   * El contenido se importa del módulo `SECTORESY`.
    */
-  public TEXTOS = Sectoresy;
+  public TEXTOS = SECTORESY;
 
   /**
   * Indica si el formulario está en modo solo lectura.

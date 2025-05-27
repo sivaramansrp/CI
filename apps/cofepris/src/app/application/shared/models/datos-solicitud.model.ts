@@ -189,6 +189,8 @@ export interface TablaMercanciasDatos {
   paisDeDestino?:string,
   denominacionCumonInternacional?:string;
   marcaComercialDenominacion?:string;
+  especifique?: string;
+  especifiqueObligatorio?:string;
 
 }
 
@@ -324,6 +326,7 @@ export interface MercanciaForm {
   claveDeLos?: string;
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
+  especifiqueObligatorio?:string;
 }
 
 /**

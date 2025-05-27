@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfiguracionColumna, ESTADO_REGISTRO, TablaAcciones, TEXTO_FILA_REGISTRO } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { ESTADO_REGISTRO, TEXTO_FILA_REGISTRO } from '../../../tramites/constantes/constantes';
+import { TablaAcciones, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -92,12 +94,12 @@ export class TablaDinamicaComponent<T> {
    * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
    */
   @Input()
+  get inputSelection(): number {
+    return this._inputSelection; // Devuelve el valor interno de `_inputSelection`
+  }
   set inputSelection(value: number) {
-
     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
-
     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
-
   }
   /**
    *   Array que recibe que acciones va a tener la tabla
@@ -133,7 +135,7 @@ export class TablaDinamicaComponent<T> {
    * 
    * @event
    */
-  @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
+  @Output() alternarValor = new EventEmitter<{ row: T; column: string }>();
 
 
   /**
@@ -251,7 +253,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @param row - La fila cuyos valores se desean cambiar.
    */
-  cambiarValor(row: any): void {
+  cambiarValor(row: { row: T; column: string; }): void {
     this.alternarValor.emit(row);
   }
 
