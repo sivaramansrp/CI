@@ -22,14 +22,17 @@ import {
   TercerosState,
   TercerosStore,
 } from '../../../core/estados/terceros.store';
+import { CONFIGURACION_ENCABEZADO_TABLA_TERCEROS } from '../../../core/enums/terceros.enum';
 import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/110208/modificacion.enum';
 import { TercerosQuery } from '../../../core/queries/terceros.query';
+import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
-import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-terceros',
@@ -42,6 +45,7 @@ import { TituloComponent } from '../titulo/titulo.component';
     TituloComponent,
     UppercaseDirective,
     NotificacionesComponent,
+    TablaDinamicaComponent,
   ],
   styleUrl: './terceros.component.scss',
 })
@@ -83,6 +87,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+
+  tablaSeleccion = TablaSeleccion;
+
+  encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
+
+
 
   constructor(
     private fb: FormBuilder,
