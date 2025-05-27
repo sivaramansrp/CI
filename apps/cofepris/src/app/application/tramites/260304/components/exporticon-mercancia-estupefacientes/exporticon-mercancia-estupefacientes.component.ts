@@ -18,12 +18,16 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  REGEX_DECIMAL,
+  REGEX_SOLO_DIGITOS,
+  REGEX_VALID_UMC,
+  REGEX_VALID_UMT,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subject, first, takeUntil, tap } from 'rxjs';
 import {
   Tramite260304State,
@@ -55,13 +59,17 @@ import { Tramite260304Query } from '../../estados/tramite260304Query.query';
   providers: [DatosSolicitudService],
 })
 export class ExporticonMercanciaEstupefacientesComponent
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
    */
   public mercanciaForm!: FormGroup;
+    /**
+     * Referencia a los componentes de la lista de fechas.
+     */
+    @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  
 
   /**
    * @property {MercanciaForm} MercanciaFormEstupefacientes
@@ -69,6 +77,13 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public mercanciaFormState!: MercanciaFormEstupefacientes;
 
+  /**
+   * @public
+   * @property {TablaMercanciasDatos} detalleMercanciaDatosSeleccionados
+   * @description
+   * Propiedad que almacena los datos seleccionados de la mercancía en la tabla.
+   */
+  public detalleMercanciaDatosSeleccionados!: TablaMercanciasDatos;
   /**
    * @property {Catalogo[]} clasificacionProductoDatos
    * @description Catalog of product classifications used to populate the form.
@@ -194,6 +209,46 @@ export class ExporticonMercanciaEstupefacientesComponent
   public detalleMercanciaDatos: DetalleMercancíaProductoTerminado[] = [];
 
   /**
+   * @property {Array<Object>} aduanasEntradaBotons
+   * 
+   * Arreglo de objetos que representa los botones de acción para la gestión de mercancía en la interfaz.
+   * Cada objeto contiene:
+   * - `btnNombre`: El nombre que se muestra en el botón.
+   * - `class`: La clase CSS que se aplica al botón para su estilo.
+   * - `funcion`: Función que se ejecuta al hacer clic en el botón, la cual interactúa con la lista `crossList`.
+   * 
+   * Los botones disponibles son:
+   * - "Agregar todos": Agrega todos los elementos.
+   * - "Agregar selección": Agrega solo los elementos seleccionados.
+   * - "Restar selección": Quita solo los elementos seleccionados.
+   * - "Restar todos": Quita todos los elementos.
+   * 
+   * @remarks
+   * Este arreglo se utiliza para renderizar dinámicamente los botones de acción en la interfaz de usuario y asociarles su funcionalidad correspondiente.
+   */
+   aduanasEntradaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+  /**
    * Constante que representa la configuración o estructura de la tabla de detalles
    * de mercancía de productos terminados. Puede ser utilizada para construir
    * @type {typeof DETALLE_MERCANCIA_PRODUCTO_TERMINADO}
@@ -265,12 +320,63 @@ export class ExporticonMercanciaEstupefacientesComponent
         tap((seccionState) => {
           this.tramiteState = seccionState;
           this.mercanciaFormState = this.tramiteState.mercanciaForm;
+          if (seccionState.tablaMercanciasConfigDatos[0]) {
+            this.detalleMercanciaDatosSeleccionados = seccionState.seleccionadoTablaMercanciasDatos[0];
+          }
           this.crearMercanciaForm();
         })
       )
       .subscribe();
   }
 
+    /**
+   * Método que se ejecuta cuando se selecciona una unidad de medida comercial.
+   * Actualmente no implementa ninguna lógica.
+   *
+   * @returns {void}
+   */
+obtenerMensajeError(controlName: string): string {
+  const CONTROL = this.mercanciaForm.get(controlName);
+
+  if (!CONTROL || !CONTROL.errors) {
+    return '';
+  }
+ if (CONTROL.errors['required']) {
+    return 'Este campo es obligatorio';
+  }
+
+
+  if (!REGEX_DECIMAL.test(CONTROL.value)) {
+    return 'Por favor, escribe un número entero válido';
+  }
+
+ 
+  if (CONTROL.errors['pattern']) {
+    return controlName==='cantidadUMT' ? 'Este campo permite doce números enteros y hasta cinco decimales':
+    'Este campo permite doce números enteros y hasta diez decimales';
+  }
+
+  return '';
+}
+  /**
+    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+    * @param {keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes} field - Nombre del campo a obtener.
+    * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+    */
+  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes): string | number | undefined | string[] {
+    return this.detalleMercanciaDatosSeleccionados?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes];
+  }
+    /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.mercanciaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
   /**
    * @method crearMercanciaForm
    * @description Crea y configura el formulario reactivo para la gestión de mercancías estupefacientes.
@@ -283,70 +389,38 @@ export class ExporticonMercanciaEstupefacientesComponent
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
-        this.mercanciaFormState.clasificacionProducto,
+        this.obtenerValor('clasificacionProducto'),
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.mercanciaFormState.especificarClasificacionProducto,
+        this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionCumonInternacional: [
-        this.mercanciaFormState.denominacionCumonInternacional,
+        this.obtenerValor('denominacionCumonInternacional'),
         Validators.required,
       ],
-      marcaComercialDenominacion: [
-        this.mercanciaFormState.marcaComercialDenominacion,
-        Validators.required,
+      marcaComercialDenominacion: [this.obtenerValor('marcaComercialDenominacion'), Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required,],
+      formaFarmaceutica: [this.obtenerValor('formaFarmaceutica'), Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
+       fraccionArancelaria: [
+        this.obtenerValor('fraccionArancelaria'),
+        [Validators.required,Validators.minLength(8),Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
-      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
-      formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica,
-        Validators.required,
-      ],
-      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
-      fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria,
-        Validators.required,
-      ],
-      descripcionFraccion: [
-        this.mercanciaFormState.descripcionFraccion,
-        Validators.required,
-      ],
-      unidadMedidaTarifa: [
-        this.mercanciaFormState.cantidadUmtValor,
-        Validators.required,
-      ],
-      cantidadUMT: [this.mercanciaFormState.cantidadUmt, Validators.required],
-      cantidadUMC: [
-        this.mercanciaFormState.cantidadUmcValor,
-        Validators.required,
-      ],
-      unidadMedidaComercializacion: [
-        this.mercanciaFormState.cantidadUmc,
-        Validators.required,
-      ],
-
-      numeroCAS: [this.mercanciaFormState.numeroCAS],
-      cantidadDeLotes: [
-        this.mercanciaFormState.cantidadDeLotes,
-        Validators.required,
-      ],
-
-      paisDeDestino: ['101', Validators.required],
-
-      paisDeProcedencia: [
-        this.mercanciaFormState.paisDeProcedencia,
-        Validators.required,
-      ],
-
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
-
-      numeroRegistroSanitario: [
-        this.mercanciaFormState.numeroRegistroSanitario,
-        Validators.required,
-      ],
-
-      usoEspecifico: [this.mercanciaFormState.usoEspecifico],
+      descripcionFraccion: [this.obtenerValor('descripcionFraccion'), Validators.required],
+      unidadMedidaTarifa: [this.obtenerValor('unidadMedidaTarifa'), Validators.required],
+      cantidadUMT: [this.obtenerValor('cantidadUMT'), [Validators.required,Validators.pattern(REGEX_VALID_UMT)]],
+      cantidadUMC: [this.obtenerValor('cantidadUMC'), [Validators.required,Validators.pattern(REGEX_VALID_UMC)]],
+      unidadMedidaComercializacion: [this.obtenerValor('unidadMedidaComercializacion'), Validators.required],
+      numeroCAS: [this.obtenerValor('numeroCAS')],
+      cantidadDeLotes: [this.obtenerValor('cantidadDeLotes'), Validators.required],
+      paisDeDestino: [this.obtenerValor('paisDeDestino'), Validators.required],
+      paisDeProcedencia: [this.obtenerValor('paisDeProcedencia'), Validators.required],
+      presentacion: [this.obtenerValor('presentacion'), Validators.required],
+      numeroRegistroSanitario: [this.obtenerValor('numeroRegistroSanitario'), Validators.required],
+      usoEspecifico: [this.obtenerValor('usoEspecifico')],
+      detallarUsoEspecifico:[this.obtenerValor('detallarUsoEspecifico')],
     });
   }
 
@@ -517,11 +591,11 @@ export class ExporticonMercanciaEstupefacientesComponent
     this.detalleMercanciaDatos = VALOR
       ? []
       : this.detalleMercanciaDatos.filter((item) =>
-          this.tablaMercanciasLista.some(
-            (tablaItem) =>
-              tablaItem.registroSanitario === item.registroSanitario
-          )
-        );
+        this.tablaMercanciasLista.some(
+          (tablaItem) =>
+            tablaItem.registroSanitario === item.registroSanitario
+        )
+      );
   }
 
   /**

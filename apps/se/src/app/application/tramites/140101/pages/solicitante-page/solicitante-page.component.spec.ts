@@ -3,7 +3,7 @@ import { SolicitantePageComponent } from './solicitante-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src'; // Import WizardComponent
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { AVISO, FIRMAR } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { AVISO, FIRMAR } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'ng-alert',

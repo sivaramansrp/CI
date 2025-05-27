@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
+import { Observable } from 'rxjs';
 
 /**
  * This service is used to make http requests & handle the response.
@@ -19,7 +21,7 @@ export class HttpCoreService {
    * @param http: HttpClient constructor
    */
   constructor(public http: HttpClient) {
-    this.url = !enviroment.MOCK ? enviroment.URL_SERVER : '';
+    this.url = !ENVIRONMENT.MOCK ? ENVIRONMENT.URL_SERVER : '';
   }
   /**
    * This method is used to make a post request & handle the response.
@@ -28,8 +30,8 @@ export class HttpCoreService {
    * @returns response
    * @example post('/save', {name: 'John'})
    */    
-   post(apiRoute: string, body: any) {
-    return this.http.post(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+   post<T>(apiRoute: string, body: T): Observable<object> {
+    return this.http.post(`${this.url + apiRoute}`, body, { headers: HttpCoreService.getHttpHeaders() });
   }
   /**
    * This method is used to make a get request & handle the response.
@@ -38,8 +40,8 @@ export class HttpCoreService {
    * @example get('/get')
    * @example get('/get/1')
    */
-  get(apiRoute: string) {
-    return this.http.get(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
+  get<T>(apiRoute: string): Observable<T> {
+    return this.http.get<T>(`${this.url + apiRoute}`, { headers: HttpCoreService.getHttpHeaders() });
   }
   /**
    * This method is used to make a put request & handle the response.
@@ -48,8 +50,8 @@ export class HttpCoreService {
    * @returns response
    * @example put('/update', {name: 'John'})
    */
-  put(apiRoute: string, body: any) {
-    return this.http.put(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+  put<T>(apiRoute: string, body: T): Observable<T> {
+    return this.http.put<T>(`${this.url + apiRoute}`, body, { headers: HttpCoreService.getHttpHeaders() });
   }
   /**
    * This method is used to make a delete request & handle the response.
@@ -57,8 +59,8 @@ export class HttpCoreService {
    * @returns response
    * @example delete('/delete')
    */
-  delete(apiRoute: string) {
-    return this.http.delete(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
+  delete<T>(apiRoute: string): Observable<T> {
+    return this.http.delete<T>(`${this.url + apiRoute}`, { headers: HttpCoreService.getHttpHeaders() });
   }
   /**
    * This method is used to get the http headers.
@@ -66,10 +68,10 @@ export class HttpCoreService {
    * @example getHttpHeaders()
    * @example getHttpHeaders().set('Content-Type', 'application/json')
    */
-  getHttpHeaders(): HttpHeaders {
-    let headers: HttpHeaders = new HttpHeaders({
+  static getHttpHeaders(): HttpHeaders {
+    const HEADERS: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded'
     });
-    return headers;
+    return HEADERS;
   }
 }

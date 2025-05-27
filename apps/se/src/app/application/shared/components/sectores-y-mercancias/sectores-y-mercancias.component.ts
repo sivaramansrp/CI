@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { Sectoresy } from '@libs/shared/data-access-user/src';
+import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -62,9 +62,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public sectorCatalogo: Catalogo[] = [];
   /**
    * Una propiedad pública que contiene el contenido de texto para el componente Sectores y Mercancias.
-   * El contenido se importa del módulo `Sectoresy`.
+   * El contenido se importa del módulo `SECTORESY`.
    */
-  public TEXTOS = Sectoresy;
+  public TEXTOS = SECTORESY;
 
   /**
    * Configuración para las columnas de la tabla.
