@@ -1,6 +1,6 @@
 import { API_GET_PATENTE_APODERADO, RFC_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PatenteApoderadoResponse } from '../../models/5701/Patente.model';
@@ -15,7 +15,7 @@ export class PatenteApoderadoService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

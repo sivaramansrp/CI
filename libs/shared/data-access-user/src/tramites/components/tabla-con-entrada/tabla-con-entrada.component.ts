@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionAporteColumna } from '@ng-mf/data-access-user';
+
+import { TablaCampoSeleccion, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import { ConfiguracionAporteColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
-import { TablaCampoSeleccion } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tabla-con-entrada',
@@ -189,13 +189,13 @@ export class TablaConEntradaComponent<T> {
    */
   changeInputValue(evento: Event, i: number, llave: string): void {
     const VALUE = (evento.target as HTMLInputElement).value; // Captura el valor ingresado
-    (this.datos[i] as Record<string, any>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
+    (this.datos[i] as Record<string, string | number | boolean>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
     this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
   }
 
   changeCheckBoxValue(evento: Event, i: number, llave: string): void {
     const VALUE = (evento.target as HTMLInputElement).value; // Captura el valor ingresado
-    (this.datos[i] as Record<string, any>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
+    (this.datos[i] as Record<string, string | number | boolean>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
     this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
   }
 
