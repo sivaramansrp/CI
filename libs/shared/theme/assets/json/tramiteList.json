@@ -2004,8 +2004,8 @@
   {
     "id": 287,
     "tramite": 80105,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modalidad-terciarización/action",
+    "linkDepartment": "/pago/modalidad-terciarización/action",
     "department": "se"
   },
   {

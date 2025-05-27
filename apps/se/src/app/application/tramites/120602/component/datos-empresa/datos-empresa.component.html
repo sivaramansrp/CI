@@ -10,6 +10,7 @@
           [required]="false"
           name="Estado"
           formControlName="estado"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(formularioEmpresa, 'estado', 'setEstado')"
         >
         </app-catalogo-select>
@@ -22,6 +23,7 @@
           [required]="true"
           name="Representación federal"
           formControlName="representacionFederal"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="
             setValoresStore(
               formularioEmpresa,
@@ -47,10 +49,11 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="federalEstatal"
-          [label]="'Tipo de empresa:'"
+          [label]="'Tipo de empresa'"
           [required]="true"
           name="Tipo de empresa"
           formControlName="tipoEmpresa"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="
             setValoresStore(formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa')
           "
@@ -262,6 +265,7 @@
           [required]="true"
           name="País"
           formControlName="datosPais"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(formularioEmpresa, 'datosPais', 'setDatosPais')"
         ></app-catalogo-select>
       </div>

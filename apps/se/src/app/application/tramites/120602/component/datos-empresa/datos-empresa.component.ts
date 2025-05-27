@@ -7,10 +7,8 @@ import {
   AlertComponent,
   BtnContinuarComponent,
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   DatosPasos,
-  InputRadioComponent,
   ListaPasosWizard,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -33,9 +31,10 @@ import { Tramite120602Query } from '../../../../estados/queries/tramite120602.qu
 
 import { Solicitud120602State, Tramite120602Store } from '../../../../estados/tramites/tramite120602.store';
 
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { takeUntil, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 
 /**
  * Metadatos del componente 'DatosEmpresaComponent'.
@@ -167,29 +166,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-  // inicializarEstadoFormulario(): void {
-  //   if (this.esFormularioSoloLectura) {
-  //     this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
-  //   } else {
-  //     this.inicializarFormulario();
-  //   }
-  // }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-//   guardarDatosFormulario(): void {
-//     this.inicializarFormulario();
-// }
-
-  /**
   * Inicializa el formulario reactivo de la empresa.
   */
   private inicializarFormulario(): void {
@@ -236,13 +212,17 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       datosEstado: [this.solicitudState.datosEstado],
       correoElectronico: [this.solicitudState.correoElectronico],
     });
-
     if (this.esFormularioSoloLectura) {
-      this.formularioEmpresa.disable();
+      Object.keys(this.formularioEmpresa.controls).forEach(control => {
+        this.formularioEmpresa.get(control)?.disable();
+      });
     } else if (!this.esFormularioSoloLectura) {
-      this.formularioEmpresa.enable();
+      Object.keys(this.formularioEmpresa.controls).forEach(control => {
+        this.formularioEmpresa.get(control)?.enable();
+      });
     } else {
       // No se requiere ninguna acción en el formulario
+
     }
   }
 
