@@ -1,7 +1,7 @@
 import { BodyValidaAereo, BodyValidaFerro, ValidacionesTransporteResponse } from "../../../models/shared/validaciones-transporte.model";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { API_CONSULTAR_VALIDACION } from "../../../constants/api-constants";
-import { enviroment } from "../../../../enviroments/enviroment";
+import { ENVIRONMENT } from "../../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 @Injectable({
@@ -15,7 +15,7 @@ export class ValidaTransporteService {
     private readonly host: string;
 
     constructor(private http: HttpClient) {
-        this.host = `${enviroment.API_HOST}/api`;
+        this.host = `${ENVIRONMENT.API_HOST}/api`;
     }
 
     /**

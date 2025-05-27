@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
@@ -7,6 +6,7 @@ import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acus
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { InputFecha } from '../../../core/models/shared/components.model';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';

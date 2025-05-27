@@ -19,7 +19,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Catalogo, TableBodyData } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
@@ -142,10 +143,10 @@ export class AgregarMiembroDeLaEmpresaComponent
   public miembroDeLaEmpresaHeaderData: string[] = [];
 
   /**
-   * @property {unknown[]} miembroDeLaEmpresaBodyData
+   * @property {TableBodyData[]} miembroDeLaEmpresaBodyData
    *  Datos del cuerpo de la tabla de miembros de la empresa.
    */
-  public miembroDeLaEmpresaBodyData: unknown[] = [];
+  public miembroDeLaEmpresaBodyData: TableBodyData[] = [];
 
   /**
    * @property {any} getEstablecimientoTableData

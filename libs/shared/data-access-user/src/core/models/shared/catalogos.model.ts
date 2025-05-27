@@ -81,15 +81,23 @@ export interface CatalogoDocumento extends Catalogo {
 }
 
 /**
+ * Representa la respuesta de un catálogo de países.
+ * @property {CatalogoPaises[]} datos - Lista de países.
+ */
+export interface CatalogoPaisesResponse {
+  datos: CatalogoPaises[];
+}
+
+/**
  * Representa un catálogo de países.
  */
 export interface CatalogoPaises {
   /** Identificador único del país. */
-  id: number;
+  clave: number;
   /** Código ISO del país. */
-  codigoIso: string;
+  codigoIso?: string;
   /** Nombre del país. */
-  nombre: string;
+  descripcion: string;
 }
 
 /**

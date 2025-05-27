@@ -1,56 +1,52 @@
-/* eslint-disable dot-notation */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
 import { DatosTratadosAcuerdosComponent } from './datos-tratados-acuerdos.component';
-
-import { CONFIGURACION_ACCIONISTAS, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { DatostratadosacuerdosService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CONFIGURACION_ACCIONISTAS, TablaSeleccion } from '@ng-mf/data-access-user';
 
 describe('DatosTratadosAcuerdosComponent', () => {
   let component: DatosTratadosAcuerdosComponent;
-  let fixture: ComponentFixture<DatosTratadosAcuerdosComponent>;
-  let service: DatostratadosacuerdosService;
+  let mockService: any;
 
   beforeEach(async () => {
-    const SERVICE_MOCK = {
-      getData: jest.fn().mockReturnValue(of({ key: 'value' })),
+    mockService = {
+      getData: jest.fn().mockReturnValue(of(['dato1', 'dato2']))
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosTratadosAcuerdosComponent, CommonModule, TablaDinamicaComponent],
-      providers: [{ provide: DatostratadosacuerdosService, useValue: SERVICE_MOCK }],
+      imports: [DatosTratadosAcuerdosComponent],
+      providers: [
+        { provide: DatostratadosacuerdosService, useValue: mockService }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
-    service = TestBed.inject(DatostratadosacuerdosService);
+    const FIXTURE = TestBed.createComponent(DatosTratadosAcuerdosComponent);
+    component = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DatosTratadosAcuerdosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
-    expect(component.configuracionTabla).toEqual(CONFIGURACION_ACCIONISTAS);
-    expect(component.seleccionTabla).toEqual(TablaSeleccion.UNDEFINED);
+  it('debe inicializar configuracionTabla y seleccionTabla correctamente', () => {
+    expect(component.configuracionTabla).toBe(CONFIGURACION_ACCIONISTAS);
+    expect(component.seleccionTabla).toBe(TablaSeleccion.UNDEFINED);
   });
 
-  it('should fetch data on init', () => {
+  it('ngOnInit debe obtener datos del servicio y asignarlos a datosTabla', () => {
     component.ngOnInit();
-    expect(service.getData).toHaveBeenCalled();
-    expect(component.datosTabla).toEqual({ key: 'value' });
+    expect(mockService.getData).toHaveBeenCalled();
+    expect(component.datosTabla).toEqual(['dato1', 'dato2']);
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
-    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
+  it('ngOnDestroy debe completar el subject destroyed$', () => {
+    const SPY_NEXT = jest.spyOn((component as any).destroyed$, 'next');
+    const SPY_COMPLETE = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(NEXT_SPY).toHaveBeenCalled();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
+    expect(SPY_NEXT).toHaveBeenCalled();
+    expect(SPY_COMPLETE).toHaveBeenCalled();
   });
 });

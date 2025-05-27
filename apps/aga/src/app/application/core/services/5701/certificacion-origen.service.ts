@@ -1,5 +1,5 @@
 import { API_GET_RFC_ORIGEN, RFC_QUERY } from '../../../constantes/5701/api-constants';
-import { CatalogosBooleanResponse, enviroment } from '@libs/shared/data-access-user/src';
+import { CatalogosBooleanResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -14,7 +14,7 @@ export class CertificacionOrigenService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

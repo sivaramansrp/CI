@@ -286,15 +286,15 @@ export const DETALLE_MERCANCIA_PRODUCTO_TERMINADO = [
     orden: 1,
   },
   {
-    encabezado: 'Registro Sanitario',
-    clave: (ele: DetalleMercancíaProductoTerminado): string => ele.registroSanitario,
-    orden: 2,
-  }, 
-  {
     encabezado: 'Presentación',
     clave: (ele: DetalleMercancíaProductoTerminado): string => ele.presentacion,
-    orden: 3,
+    orden: 2,
   },
+    {
+    encabezado: 'Registro Sanitario',
+    clave: (ele: DetalleMercancíaProductoTerminado): string => ele.registroSanitario,
+    orden: 3,
+  }, 
 ];
 
 /**
@@ -311,8 +311,8 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
  * @description Opciones de tipo de persona para terceros.
  */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
-  { label: 'Física', value: TipoPersona.FISICA },
-  { label: 'Moral', value: TipoPersona.MORAL },
+  { label: 'Física', value: TipoPersona.FISICA ,hint:'Física'},
+  { label: 'Moral', value: TipoPersona.MORAL,hint:'Moral' }
 ];
 
 /**
