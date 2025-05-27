@@ -1,9 +1,17 @@
 <div [formGroup]="forma">
-  <div class="form-check">
+  <div [ngClass]="reverse ? 'form-check-custome' : 'form-check'">
     <label class="form-check-label" [for]="id">
-      {{ label }}
+      {{ label }}@if(reverse){: }
       <ng-content></ng-content>
     </label>
-    <input class="form-check-input" type="checkbox" title="Checkbox" value="" [id]="id" formControlName="check" (change)="handleChange($event)">   
+    <input
+      class="form-check-input"
+      type="checkbox"
+      title="Checkbox"
+      value=""
+      [id]="id"
+      formControlName="check"
+      (change)="handleChange($event)"
+    />
   </div>
 </div>

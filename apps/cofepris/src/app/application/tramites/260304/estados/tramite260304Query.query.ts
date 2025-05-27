@@ -23,7 +23,7 @@ export class Tramite260304Query extends Query<Tramite260304State> {
    *
    * @param {Tramite260304Store} store - La tienda que contiene el estado del trámite 260304.
    */
-  constructor(protected override store:Tramite260304Store) {
+  constructor(protected override store: Tramite260304Store) {
     super(store);
   }
   /**
@@ -43,14 +43,23 @@ export class Tramite260304Query extends Query<Tramite260304State> {
   public getdestinatarioTablaDatos$ = this.select(
     (state) => state.destinatarioTableDatos
   );
-  
+
+  /**
+ * @property {Observable<DatosSolicitudFormState>} getDatosSolicitudFormState$
+ * @description
+ * Selecciona el estado del formulario de datos de la solicitud.
+ */
+  public getOtrosSeleccionado$ = this.select(
+    (state) => state.seleccionadoOtrosDatos);
   /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
    * @description
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
-
+public getDestinatarioSeleccionado$ = this.select(
+    (state) => state.seleccionadoDestinatarioDatos
+  )
 
   /**
    * @description Obtiene un observable que selecciona el estado `otrosTablaDatos` desde el estado global.
@@ -59,4 +68,5 @@ export class Tramite260304Query extends Query<Tramite260304State> {
   getOtrasTablaDatos$ = this.select(
     (state) => state.otrosTablaDatos
   );
+  
 }
