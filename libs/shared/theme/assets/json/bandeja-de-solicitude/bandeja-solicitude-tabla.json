@@ -7,5 +7,14 @@
         "diasTranscurridos": "4",
         "departamento": "AGA",
         "numeroDeProcedimiento": "301"
+    },
+    {
+        "id": 2,
+        "tipoDeTramite": "Contenedores de importación Permiso",
+        "fecha": "2025-04-01",
+        "fechaActualizacion": "2025-04-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11204"
     }
 ]

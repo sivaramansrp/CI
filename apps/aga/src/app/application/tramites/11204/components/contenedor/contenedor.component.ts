@@ -14,7 +14,7 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
 
 /**
@@ -201,6 +201,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * @param fb Constructor de formularios.
    * @param datosTramiteService Servicio de datos del trámite.
@@ -216,7 +222,24 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     public Tramite11204Store: Tramite11204Store,
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarFormulario();
+      })
+    )
+    .subscribe();
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
