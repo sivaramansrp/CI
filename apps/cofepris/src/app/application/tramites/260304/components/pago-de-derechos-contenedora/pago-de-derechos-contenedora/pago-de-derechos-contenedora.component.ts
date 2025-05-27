@@ -7,9 +7,10 @@ import { Tramite260304Store } from '../../../estados/tramite260304Store.store';
 
 /**
  * @component PagoDeDerechosContenedoraComponent
- * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
- * para gestionar la funcionalidad relacionada con el pago de derechos.
- * Este componente interactúa con el estado del trámite a través del store `Tramite260304Store`.
+ * @description
+ * Componente contenedor responsable de gestionar la funcionalidad relacionada con el pago de derechos,
+ * haciendo uso del componente `PagoDeDerechosComponent`. Interactúa con el estado global del trámite
+ * a través del store `Tramite260304Store` para mostrar y actualizar los datos correspondientes al pago.
  */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -21,23 +22,25 @@ import { Tramite260304Store } from '../../../estados/tramite260304Store.store';
 export class PagoDeDerechosContenedoraComponent {
   /**
    * @property {PagoDerechosFormState} pagoDerechos
-   * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
+   * @description
+   * Estado actual del formulario de pago de derechos, obtenido del estado global del trámite.
    */
   public pagoDerechos: PagoDerechosFormState;
 
   /**
    * @property {string} idProcedimiento
    * @description
-   * Identificador del procedimiento.
+   * Identificador único del procedimiento, utilizado para asociar el pago de derechos al trámite correspondiente.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260304Store` para gestionar el estado del trámite.
-   * Inicializa la propiedad `pagoDerechos` con el valor actual del store.
-   *
-   * @param tramiteStore - Store que administra el estado del trámite 260304.
+   * @description
+   * Constructor que inyecta el store `Tramite260304Store` para gestionar el estado del trámite.
+   * Inicializa la propiedad `pagoDerechos` con el valor actual almacenado en el store.
+   * 
+   * @param tramiteStore Store que administra el estado del trámite 260304.
    */
   constructor(public tramiteStore: Tramite260304Store) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
@@ -45,9 +48,10 @@ export class PagoDeDerechosContenedoraComponent {
 
   /**
    * @method updatePagoDerechos
-   * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
-   *
-   * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
+   * @description
+   * Actualiza en el store el estado del formulario de pago de derechos con los valores recibidos.
+   * 
+   * @param {PagoDerechosFormState} event Estado actualizado del formulario de pago de derechos.
    * @returns {void} Este método no retorna ningún valor.
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {

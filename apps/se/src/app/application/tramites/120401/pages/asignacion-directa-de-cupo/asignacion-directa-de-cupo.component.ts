@@ -2,7 +2,7 @@
  * Componente que gestiona la asignación directa de cupo.
  * Muestra una serie de pantallas de pasos y utiliza textos predefinidos.
  */
-import { AVISO,FIRMAR } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { AVISO, FIRMAR } from '@libs/shared/data-access-user/src';
 
 import { Component, ViewChild } from '@angular/core';
  

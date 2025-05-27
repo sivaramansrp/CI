@@ -2,13 +2,14 @@ import { Login, TokenResponse } from '../../../models/shared/inicio-sesion.model
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { enviroment } from '../../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InicioSesionService {
-  urlServer = enviroment.URL_SERVER;
+  urlServer = ENVIRONMENT.URL_SERVER;
 
   constructor(public http: HttpClient) {
     // Lógica de inicialización si es necesario
