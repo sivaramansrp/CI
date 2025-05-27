@@ -45,6 +45,7 @@
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
       <div *ngIf="esInvalido('fraccion')" class="text-danger">
         <small *ngIf="form.controls['fraccion'].errors?.['required']">
@@ -105,6 +106,7 @@
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
           (change)="setValoresStore(form, 'unidadMedida')"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
           <small *ngIf="form.controls['unidadMedida'].errors?.['required']">

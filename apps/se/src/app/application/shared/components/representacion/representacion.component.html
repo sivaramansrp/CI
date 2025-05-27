@@ -9,6 +9,7 @@
             [required]="true"
             [placeholder]="'Seleccione un valor'"
             formControlName="entidad"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmRepresentacionForm, 'entidad')"
           ></app-catalogo-select>
           <div
@@ -25,6 +26,7 @@
             [required]="true"
             [placeholder]="'Seleccione un valor'"
             formControlName="representacion"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmRepresentacionForm, 'representacion')"
           ></app-catalogo-select>
           <div

@@ -9,6 +9,7 @@
             [radioOptions]="solicitudOpciones"
             formControlName="solicitud"
             [isRequired]="true"
+            [disabled]="esFormularioSoloLectura"
             (valueChange)="setValoresStore(form, 'solicitud')"
             [layout]="'vertical'"
           ></app-input-radio>
@@ -17,7 +18,7 @@
               Este campo es obligatorio.
             </small>
           </div>
-        </div>
+        </div> 
       </div>
       <div class="col-md-8">
         <div *ngFor="let catalogo of catalogosArray; let i = index">
@@ -28,6 +29,7 @@
             [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
             <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">

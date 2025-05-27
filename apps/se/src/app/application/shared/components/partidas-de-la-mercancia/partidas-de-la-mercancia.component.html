@@ -75,10 +75,10 @@
         <div class="col-md-4 text-end">
           <div class="btn-group">
             <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
-              data-bs-target="#modalCargarArchivo">
+              data-bs-target="#modalCargarArchivo" [disabled]="esFormularioSoloLectura">
               Cargar archivo
             </button>
-            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()">
+            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>
@@ -113,10 +113,10 @@
             <div class="col-md-4 text-end">
               <div class="btn-group">
                 <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                  data-bs-dismiss="modal">
+                  data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                   Cerrar
                 </button>
-                <button type="button" class="btn btn-primary ms-2">Enviar</button>
+                <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Enviar</button>
               </div>
             </div>
           </div>
@@ -164,7 +164,7 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button">
+              <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Elimina Partida
               </button>
               <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
@@ -257,10 +257,10 @@
                 <div class="col-md-4 text-end">
                   <div class="btn-group">
                     <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                      data-bs-dismiss="modal">
+                      data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                       Cancelar
                     </button>
-                    <button type="button" class="btn btn-primary ms-2">Modificar</button>
+                    <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
                 </div>
               </div>
