@@ -17,6 +17,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent],
+  providers:[BsModalService],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })

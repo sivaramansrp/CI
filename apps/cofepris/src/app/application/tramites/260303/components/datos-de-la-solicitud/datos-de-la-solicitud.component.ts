@@ -26,6 +26,7 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
     CrosslistComponent,
     AlertComponent
   ],
+  providers:[BsModalService],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
