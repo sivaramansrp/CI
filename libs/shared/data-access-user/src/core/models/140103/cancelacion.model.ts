@@ -18,7 +18,7 @@ export interface Cupo {
   
   }
   
-  export interface certificadosCancelar {
+  export interface CertificadosCancelar {
     folioOficioCertificado: string;
     nombreRazonSocial: string;
     estado: string;

@@ -64,7 +64,7 @@
             type="button"
             name="filaSeleccionada"
             [value]="i"
-            (click)="cambiarValor(fila)"
+            (click)="cambiarValor({ row: fila, column: '' })"
             aria-label="Seleccionar"
           >
             {{ obtenerTextoBoton(fila) }}
@@ -75,7 +75,7 @@
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
         <td
           *ngFor="let col of obtenerConfiguracionOrdenada()"
-          (click)="col.hiperenlace ? cambiarValor(fila) : null"
+          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: ''}) : null"
           [ngClass]="{ 'cursor-pointer': col.hiperenlace }"
         >
           {{ col.clave(fila) || ' ' }}

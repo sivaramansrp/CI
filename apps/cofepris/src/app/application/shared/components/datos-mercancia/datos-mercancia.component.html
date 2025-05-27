@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        @if(elementosAnadidos.includes('especifique') && mercanciaForm.get('tipoProducto')?.value === '3' ){
+        @if(elementosAnadidos.includes('especifique') && mercanciaForm.get('tipoProducto')?.value === tipoProductoEspecial){
             <div class="row">
                 <div class="col-md-10">
                     <div class="form-group">
@@ -167,7 +167,7 @@
             </div>
         </div>
         }
-        @if(elementosAnadidos.includes('especifiqueForma') && mercanciaForm.get('formaFarmaceutica')?.value === '3' ){
+        @if(elementosAnadidos.includes('especifiqueForma') && mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial ){
           <div class="row">
               <div class="col-md-10">
                   <div class="form-group">
@@ -194,7 +194,7 @@
             </div>
         }
 
-        @if(elementosAnadidos.includes('especifiqueEstado') && mercanciaForm.get('estadoFisico')?.value === '3' ){
+        @if(elementosAnadidos.includes('especifiqueEstado') && mercanciaForm.get('estadoFisico')?.value === tipoProductoEspecial ){
           <div class="row">
               <div class="col-md-10">
                   <div class="form-group">
