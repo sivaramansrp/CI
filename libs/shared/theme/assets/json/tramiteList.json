@@ -492,9 +492,9 @@
   {
     "id": 71,
     "tramite": 220201,
-    "linkDashboard": "/agriculture/certificado-zoosanitario/zoosanitario",
-    "linkDepartment": "/agriculture/certificado-zoosanitario/zoosanitario",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/certificado-zoosanitario/zoosanitario",
+    "linkDepartment": "/pago/certificado-zoosanitario/zoosanitario",
+    "department": "agricultura"
   },
   {
     "id": 72,
