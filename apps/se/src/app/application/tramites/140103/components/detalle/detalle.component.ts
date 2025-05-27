@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
  /**
  * Componente que gestiona el detalle de un formulario relacionado con datos de importación o exportación.
  * Este componente permite visualizar y modificar información sobre los detalles del producto
@@ -35,7 +38,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
   templateUrl: './detalle.component.html',
   styleUrls: ['./detalle.component.scss']
 })
-export class DetalleComponent implements OnInit {
+export class DetalleComponent implements OnInit, OnDestroy{
 
   /**
    * Formulario reactivo que contiene todos los datos relacionados con el detalle de importación o exportación.
@@ -44,13 +47,39 @@ export class DetalleComponent implements OnInit {
    */
   DetalleForm!: FormGroup;
 
+/**
+ * @property {Subject<void>} destroyNotifier$
+ * Sujeto utilizado para manejar la destrucción de suscripciones en los observables.
+ *
+ * Se usa comúnmente junto con el operador `takeUntil` en pipes de RxJS
+ * para evitar fugas de memoria al destruir el componente.
+ */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente. Inicializa el formulario reactivo utilizando el FormBuilder.
    * 
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {
-    // Initialization logic can be added here if needed
+  constructor(
+    private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+        this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              this.inicializarEstadoFormulario();
+            })
+          )
+          .subscribe();
   }
 
   /**
@@ -79,6 +108,34 @@ export class DetalleComponent implements OnInit {
 
     // Llamada para cargar los datos en el formulario
     this.getFormData();
+
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      //
+    }
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.DetalleForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.DetalleForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
@@ -101,5 +158,18 @@ export class DetalleComponent implements OnInit {
     this.DetalleForm.get('DetalleData.fundamentos')?.setValue('Fundamento de la vigencia del UPO');
     this.DetalleForm.get('DetalleData.inicio')?.setValue('2024-01-01');
     this.DetalleForm.get('DetalleData.fecha')?.setValue('2024-12-31');
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
+    ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

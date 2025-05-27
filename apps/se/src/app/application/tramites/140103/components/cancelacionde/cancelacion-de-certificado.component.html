@@ -7,7 +7,7 @@
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="regimen" [label]="'Régimen aduanero:'" [required]="true" name="regimen"
-            formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
+            formControlName="regimen" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'regimen', 'setRegimen')">
           </app-catalogo-select>
 
@@ -15,14 +15,14 @@
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="mecanismo" [label]="'Mecanismo de asignación:'" [required]="true"
-            name="regime" formControlName="mecanismo" [isDisabled]="esFormularioSoloLectura"
+            name="regime" formControlName="mecanismo" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'mecanismo', 'setMecanismo')">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="tratado" [label]="'Tratado o bloqueo comercial:'" [required]="true"
-            name="tratado" formControlName="tratado" [isDisabled]="esFormularioSoloLectura"
+            name="tratado" formControlName="tratado" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'tratado', 'setTratado')">
           </app-catalogo-select>
         </div>
@@ -31,21 +31,21 @@
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="producto" [label]="'Nombre de producto:'" [required]="true" name="producto"
-            formControlName="producto" [isDisabled]="esFormularioSoloLectura"
+            formControlName="producto" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'producto', 'setProducto')">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="subproducto" [label]="'Nombre del subproducto:'" [required]="true"
-            name="subproducto" formControlName="subproducto" [isDisabled]="esFormularioSoloLectura"
+            name="subproducto" formControlName="subproducto" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'subproducto', 'setSubproducto')">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal:'" [required]="true"
-            name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura"
+            name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(CancelacionForm,'representacion', 'setRepresentacion')">
           </app-catalogo-select>
 

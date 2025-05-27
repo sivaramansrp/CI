@@ -19,12 +19,24 @@ export class Solicitud140103Service{
   }
 
   actualizarEstadoFormulario(DATOS: Solicitud140103State): void {
-    this.tramite140103Store.setRegimen(DATOS.regimen);
-    this.tramite140103Store.setMecanismo(DATOS.mecanismo);
-    this.tramite140103Store.setTratado(DATOS.tratado);
-    this.tramite140103Store.setProducto(DATOS.producto);
-    this.tramite140103Store.setSubproducto(DATOS.subproducto);
-    this.tramite140103Store.setRepresentacion(DATOS.representacion);
+    if (DATOS.regimen){
+      this.tramite140103Store.setRegimen(DATOS.regimen);
+    }
+    if(DATOS.mecanismo){
+       this.tramite140103Store.setMecanismo(DATOS.mecanismo);
+    }
+    if(DATOS.tratado){
+      this.tramite140103Store.setTratado(DATOS.tratado);
+    }
+    if(DATOS.producto){
+      this.tramite140103Store.setProducto(DATOS.producto);
+    }
+    if(DATOS.subproducto){
+      this.tramite140103Store.setSubproducto(DATOS.subproducto);
+    }
+    if (DATOS.representacion){
+      this.tramite140103Store.setRepresentacion(DATOS.representacion);
+    }
     this.tramite140103Store.setCantidad(DATOS.cantidad);
   }
 

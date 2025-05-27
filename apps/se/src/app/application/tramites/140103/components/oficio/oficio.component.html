@@ -1,7 +1,7 @@
 
 <ng-titulo titulo="Oficio" />
 <div>
-<form [formGroup]="OficioForm" >
+<form *ngIf="OficioForm" [formGroup]="OficioForm" >
     <div formGroupName="oficioData">
 
 <div class="row"  style="padding-bottom: 20px;" >

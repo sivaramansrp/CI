@@ -1,14 +1,9 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { Cupo } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,14 +11,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { OficioComponent } from '../oficio/oficio.component';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import cancelacions from 'libs/shared/theme/assets/json/140103/cancelacion.json';
-import cancelcatalog from 'libs/shared/theme/assets/json/140103/cancelcatalog.json';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+import cancelacions from '@libs/shared/theme/assets/json/140103/cancelacion.json';
+import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
 
-import { map, Subject, takeUntil } from 'rxjs';
 
 import {
   Solicitud140103State,
@@ -226,6 +224,21 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     },
   ];
 
+
+  /**
+ * @constructor
+ * Constructor del componente que inyecta los servicios necesarios para la gestión del formulario.
+ *
+ * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos.
+ * @param {Tramite140103Store} tramite140103Store - Store específico para manejar el estado del trámite 140103.
+ * @param {Tramite140103Query} tramite140103Query - Query para obtener el estado del store de trámite 140103.
+ * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado del store de consulta IO.
+ *
+ * Dentro del constructor se suscribe al observable `selectConsultaioState$` del `consultaioQuery`
+ * para detectar cambios en el estado de la sección. Se actualiza la propiedad `esFormularioSoloLectura`
+ * y se inicializa el estado del formulario con `inicializarEstadoFormulario()`.
+ * Se utiliza `takeUntil(this.destroyNotifier$)` para limpiar la suscripción cuando el componente se destruye.
+ */
   constructor(
     private fb: FormBuilder,
     private tramite140103Store: Tramite140103Store,
@@ -243,6 +256,14 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+
+  /**
+ * @method ngOnInit
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ *
+ * Inicializa el formulario reactivo mediante `inicializarFormulario()` y configura
+ * su estado inicial llamando a `inicializarEstadoFormulario()`.
+ */
   ngOnInit(): void {
     this.inicializarFormulario();
     this.inicializarEstadoFormulario();
@@ -260,29 +281,39 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
   }
 
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite140103Store
-  ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite140103Store[metodoNombre] as (value: any) => void)(valor);
-  }
-
-
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
+    if (this.CancelacionForm && this.esFormularioSoloLectura) {
       this.CancelacionForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.CancelacionForm.enable();
     } else {
       // No se requiere ninguna acción en el formulario
     }
+  }
+
+/**
+ * @method setValoresStore
+ * Asigna el valor de un campo del formulario al store correspondiente invocando un método específico.
+ *
+ * @param {FormGroup} form - El formulario reactivo que contiene los valores a establecer.
+ * @param {string} campo - El nombre del campo dentro del formulario del cual se obtendrá el valor.
+ * @param {keyof Tramite140103Store} metodoNombre - El nombre del método del store que se invocará para actualizar el estado.
+ *
+ * Se obtiene el valor del campo especificado del formulario y se llama dinámicamente
+ * al método correspondiente del `Tramite140103Store` pasándole dicho valor.
+ */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite140103Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite140103Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -297,7 +328,9 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState as Solicitud140103State;
         })
       )
-      .subscribe((data) => {});
+      .subscribe((data) => {
+        //
+      });
 
     this.CancelacionForm = this.fb.group({
       regimen: [this.solicitudState.regimen, Validators.required],
@@ -309,6 +342,14 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

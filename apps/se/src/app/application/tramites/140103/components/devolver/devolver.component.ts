@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,19 +6,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { Facturas } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { Facturase } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import facturasdata from 'libs/shared/theme/assets/json/140103/fracturastable.json';
 import {
   Solicitud140103State,
   Tramite140103Store,
 } from '../../../../estados/tramites/tramite140103.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Facturas } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import { Facturase } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+import facturasdata from '@libs/shared/theme/assets/json/140103/fracturastable.json';
 /**
  * Componente para gestionar el proceso de devolución de facturas.
  * Este componente utiliza un formulario reactivo para capturar y mostrar información relacionada con
@@ -49,6 +50,7 @@ interface Factura {
     TablaDinamicaComponent,
     FormsModule,
     ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './devolver.component.html',
   styleUrls: ['./devolver.component.scss'],
@@ -114,7 +116,23 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * Contiene un grupo de controles para el folio, disponible, cantidad, total y cuadrados.
    */
   DevolverForm!: FormGroup;
+
+/**
+ * @property {Solicitud140103State} solicitudState
+ * Estado actual de la solicitud del trámite 140103.
+ * 
+ * Esta propiedad almacena los datos relacionados con el estado de la solicitud
+ * y puede ser utilizada para mostrar información o realizar validaciones dentro del componente.
+ */
   public solicitudState!: Solicitud140103State;
+
+/**
+ * @property {Subject<void>} destroyNotifier$
+ * Sujeto utilizado para manejar la destrucción de suscripciones en los observables.
+ *
+ * Se usa comúnmente junto con el operador `takeUntil` en pipes de RxJS
+ * para evitar fugas de memoria al destruir el componente.
+ */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
@@ -145,6 +163,13 @@ export class DevolverComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+ /**
+ * @method ngOnInit
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ *
+ * Inicializa el formulario reactivo mediante `inicializarFormulario()` y configura
+ * su estado inicial llamando a `inicializarEstadoFormulario()`.
+ */
   ngOnInit(): void {
     this.inicializarFormulario();
     this.inicializarEstadoFormulario();
@@ -162,15 +187,6 @@ export class DevolverComponent implements OnInit, OnDestroy {
     }
   }
 
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite140103Store
-  ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite140103Store[metodoNombre] as (value: any) => void)(valor);
-  }
-
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -186,6 +202,27 @@ export class DevolverComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * @method setValoresStore
+ * Asigna el valor de un campo del formulario al store correspondiente invocando un método específico.
+ *
+ * @param {FormGroup} form - El formulario reactivo que contiene los valores a establecer.
+ * @param {string} campo - El nombre del campo dentro del formulario del cual se obtendrá el valor.
+ * @param {keyof Tramite140103Store} metodoNombre - El nombre del método del store que se invocará para actualizar el estado.
+ *
+ * Se obtiene el valor del campo especificado del formulario y se llama dinámicamente
+ * al método correspondiente del `Tramite140103Store` pasándole dicho valor.
+ */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite140103Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite140103Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+
   /**
    * Método que se ejecuta al inicializar el componente. Este método crea el formulario reactivo
    * y configura los controles necesarios con las validaciones requeridas.
@@ -198,7 +235,9 @@ export class DevolverComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState as Solicitud140103State;
         })
       )
-      .subscribe((data) => {});
+      .subscribe((data) => {
+        //
+      });
       
     // Inicializa el formulario con los controles necesarios y las validaciones
     this.DevolverForm = this.fb.group({
@@ -230,6 +269,14 @@ export class DevolverComponent implements OnInit, OnDestroy {
     this.DevolverForm.get('cuadrados')?.disable();
   }
 
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
