@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -124,7 +124,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciasBody: unknown[] = [];
+  public mercanciasBody: TableBodyData[] = [];
 
   /**
    * Estado actual de la solicitud.

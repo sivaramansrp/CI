@@ -7,6 +7,7 @@ import {
   InputFecha,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TableBodyData,
   TableComponent,
   TituloComponent,
   ValidacionesFormularioService,
@@ -154,7 +155,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciasBody: unknown[] = [];
+  public mercanciasBody: TableBodyData[] = [];
 
   /**
    * Estado actual de la solicitud.
