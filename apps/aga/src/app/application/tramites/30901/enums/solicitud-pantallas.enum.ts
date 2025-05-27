@@ -1,5 +1,5 @@
 /**  Enumerado para las pantallas de la solicitud de inspección fisica */
-export const InspeccionFisicaPasos = [
+export const INSPECCION_FISICA_PASOS = [
   {
     indice: 1,
     titulo: 'Capturar solicitud',
@@ -27,7 +27,7 @@ export const InspeccionFisicaPasos = [
  * - `label`: El texto mostrado a la usuaria.
  * - `value`: El valor correspondiente de la opción.
  */
-export const OpcionesDeBotonDeRadio = [
+export const OPCIONES_DE_BOTONDE_RADIO = [
   {
     label: 'Sí',
     value: '1',

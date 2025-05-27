@@ -2,7 +2,8 @@ import { JSONResponse, RespuestaCatalogos } from '../../models/shared/catalogos.
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ import { enviroment } from '../../../enviroments/enviroment';
 
 export class ExpansionDeProductoresService {
 
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
   * @param http: constructor de HttpClient
@@ -24,7 +25,7 @@ export class ExpansionDeProductoresService {
    }
 
 
-  getSectorCatalog() {
+  getSectorCatalog(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
 

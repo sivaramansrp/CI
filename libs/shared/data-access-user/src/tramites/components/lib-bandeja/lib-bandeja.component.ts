@@ -183,8 +183,11 @@ export class LibBandejaComponent<T> implements OnInit {
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
     }
+    if(ORIGIN === 'READ_PROCEDURE_VERIFICAR_DICTAMEN') {
+      this.router.navigate(['/verificar-dictamen']);
+    }
   }
-   /*
+  /*
    * Alterna la visibilidad del contenido colapsable basado en el orden
    */
   public mostrarColapsable(orden: number): void {
