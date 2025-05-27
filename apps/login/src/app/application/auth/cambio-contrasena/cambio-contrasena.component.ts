@@ -4,6 +4,7 @@ import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
 import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PasswordService } from '../../core/service/password.service';
+import { catchError, map, of, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para el cambio de contraseña de usuario.
@@ -22,7 +23,8 @@ export class CambioContrasenaComponent implements OnInit {
   public FormCambioContrasena!: FormGroup;
   /** Notificación para mostrar mensajes al usuario */
   public nuevaNotificacion: Notificacion | null = null;
-
+  /** Notificador para destruir las suscripciones.*/
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor que inyecta dependencias necesarias.
    * @param fb FormBuilder para crear el formulario reactivo.
@@ -67,19 +69,27 @@ export class CambioContrasenaComponent implements OnInit {
       contrasenaNueva: this.FormCambioContrasena.get('contrasenaNueva')?.value,
       confirmacionContrasena: this.FormCambioContrasena.get('confirmacionContrasena')?.value
     };
+    this.passwordService.cambioContrasena(MODELO_CAMBIO)
+      .pipe(
+        map((data) => {
 
-    this.passwordService.cambioContrasena(MODELO_CAMBIO).subscribe({
-      next: (success: boolean) => {
-        if (success) {
-          // console.log('Contraseña modificada exitosamente');
-        } else {
-          console.error('No se pudo cambiar la contraseña');
-        }
-      },
-      error: (err: unknown) => {
-        console.error('Error al cambiar la contraseña', err);
-      }
-    });
+        }),
+        catchError((_error) => {
+          console.error('Error al cambiar la contraseña', _error);
+          return of(null);
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
+  }
+
+  /**
+  * Método para destruir el componente
+  * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
