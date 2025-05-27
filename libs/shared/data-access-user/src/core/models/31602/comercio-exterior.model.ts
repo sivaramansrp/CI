@@ -35,17 +35,17 @@ export interface Anteriores {
 export const EMPRESAS_TABLA = [
     {
       encabezado: 'RFC',
-      clave: (ele: EmpresasDelGrupo) => ele.rfc,
+      clave: (ele: EmpresasDelGrupo): string => ele.rfc,
       orden: 1,
     },
     {
       encabezado: 'Denominction o razon social',
-      clave: (ele: EmpresasDelGrupo) => ele.denominctionORazonSocial,
+      clave: (ele: EmpresasDelGrupo): string => ele.denominctionORazonSocial,
       orden: 2,
     },
     {
       encabezado: 'Domicillo',
-      clave: (ele: EmpresasDelGrupo) => ele.domicillo,
+      clave: (ele: EmpresasDelGrupo): string => ele.domicillo,
       orden: 3,
     },
 ];
@@ -69,42 +69,42 @@ export const EMPRESAS_TABLA = [
 export const ANTERIORES_TABLA = [
   {
     encabezado: 'Denominación Social',
-    clave: (ele: Anteriores) => ele.denominacionSocial,
+    clave: (ele: Anteriores): string => ele.denominacionSocial,
     orden: 1,
   },
   {
     encabezado: 'RFC',
-    clave: (ele: Anteriores) => ele.rfc,
+    clave: (ele: Anteriores): string => ele.rfc,
     orden: 2,
   },
   {
     encabezado: 'Número de empleados',
-    clave: (ele: Anteriores) => ele.numeroEmpleaUno,
+    clave: (ele: Anteriores): string => ele.numeroEmpleaUno,
     orden: 3,
   },
   {
     encabezado: '1er Bimestre',
-    clave: (ele: Anteriores) => ele.bimestreUno,
+    clave: (ele: Anteriores): string => ele.bimestreUno,
     orden: 4,
   },
   {
     encabezado: 'Número de empleados',
-    clave: (ele: Anteriores) => ele.numeroEmpleaDos,
+    clave: (ele: Anteriores): string => ele.numeroEmpleaDos,
     orden: 5,
   },
   {
     encabezado: '2do Bimestre',
-    clave: (ele: Anteriores) => ele.bimestreDos,
+    clave: (ele: Anteriores): string => ele.bimestreDos,
     orden: 6,
   },
   {
     encabezado: 'Número de empleados',
-    clave: (ele: Anteriores) => ele.numeroEmpleaTres,
+    clave: (ele: Anteriores): string => ele.numeroEmpleaTres,
     orden: 7,
   },
   {
     encabezado: '3er Bimestre',
-    clave: (ele: Anteriores) => ele.bimestreTres,
+    clave: (ele: Anteriores): string => ele.bimestreTres,
     orden: 8,
   }
 

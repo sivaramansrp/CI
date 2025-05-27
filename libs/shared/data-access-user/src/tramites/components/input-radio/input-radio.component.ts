@@ -10,6 +10,7 @@ import {
   forwardRef,
 } from '@angular/core';
 import {
+  ControlValueAccessor,
   FormBuilder,
   FormGroup,
   NG_VALUE_ACCESSOR,
@@ -36,7 +37,7 @@ import { CommonModule } from '@angular/common';
     },
   ],
 })
-export class InputRadioComponent implements OnInit {
+export class InputRadioComponent implements ControlValueAccessor, OnInit {
   @Input() description!: string; // Optional description
   @Input() showDescription: boolean = false;
   @Input() labelMargin: string = '15px'; // Dynamic label margin
@@ -107,13 +108,20 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', VALIDATORS],
     });
   }
-  private onChange: (value: string | number | null) => void = () => { };
-  private onTouched: () => void = () => { };
+
+  // eslint-disable-next-line class-methods-use-this
+  private onChange: (value: string | number | null) => void = () => {
+    /**/
+  };
+  // eslint-disable-next-line class-methods-use-this
+  private onTouched: () => void = () => {
+    /**/
+  };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
    */
-  onSelectionChange(value: string | number) : void {
+  onSelectionChange(value: string | number): void {
     this.selectedValue = value;
     this.valueChange.emit(value);
     this.onChange(value);
@@ -145,101 +153,100 @@ export class InputRadioComponent implements OnInit {
   }
 
   /**
-  * @method alCambiarElTamano
-  * @description
-  * Este método se ejecuta cuando ocurre un evento de redimensionamiento de la ventana del navegador.
-  * 
-  * Funcionalidad:
-  * - Escucha el evento `resize` de la ventana utilizando el decorador `@HostListener`.
-  * - Llama al método `calcularAnchoBotonDeRadio()` para ajustar dinámicamente el ancho de los botones de radio.
-  * - Es útil en diseños responsivos para garantizar que los botones de radio se adapten al tamaño del contenedor o de la ventana.
-  * 
-  * @example
-  * // Cuando el usuario redimensiona la ventana:
-  * this.alCambiarElTamano();
-  * // Se recalcula el ancho de los botones de radio.
-  */
+   * @method alCambiarElTamano
+   * @description
+   * Este método se ejecuta cuando ocurre un evento de redimensionamiento de la ventana del navegador.
+   *
+   * Funcionalidad:
+   * - Escucha el evento `resize` de la ventana utilizando el decorador `@HostListener`.
+   * - Llama al método `calcularAnchoBotonDeRadio()` para ajustar dinámicamente el ancho de los botones de radio.
+   * - Es útil en diseños responsivos para garantizar que los botones de radio se adapten al tamaño del contenedor o de la ventana.
+   *
+   * @example
+   * // Cuando el usuario redimensiona la ventana:
+   * this.alCambiarElTamano();
+   * // Se recalcula el ancho de los botones de radio.
+   */
   @HostListener('window:resize')
   alCambiarElTamano(): void {
     this.calcularAnchoBotonDeRadio();
   }
 
   /**
-  * @method obtenerEstiloParaRadio
-  * @description
-  * Este método genera estilos dinámicos para los botones de radio en función de la configuración del diseño.
-  * 
-  * Funcionalidad:
-  * - Calcula el ancho de cada botón de radio cuando se utiliza un diseño de cuadrícula (`gridLayout`).
-  * - Aplica estilos específicos para diseños horizontales (`layout: 'horizontal'`).
-  * - Aplica estilos predeterminados para diseños verticales.
-  * 
-  * @returns {Object} Un objeto con los estilos CSS aplicables a los botones de radio.
-  * 
-  * @example
-  * // Estilos para diseño de cuadrícula:
-  * const estilos = this.obtenerEstiloParaRadio();
-  * console.log(estilos); // { width: '33.33%', padding: '8px', ... }
-  */
+   * @method obtenerEstiloParaRadio
+   * @description
+   * Este método genera estilos dinámicos para los botones de radio en función de la configuración del diseño.
+   *
+   * Funcionalidad:
+   * - Calcula el ancho de cada botón de radio cuando se utiliza un diseño de cuadrícula (`gridLayout`).
+   * - Aplica estilos específicos para diseños horizontales (`layout: 'horizontal'`).
+   * - Aplica estilos predeterminados para diseños verticales.
+   *
+   * @returns {Object} Un objeto con los estilos CSS aplicables a los botones de radio.
+   *
+   * @example
+   * // Estilos para diseño de cuadrícula:
+   * const estilos = this.obtenerEstiloParaRadio();
+   * console.log(estilos); // { width: '33.33%', padding: '8px', ... }
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obtenerEstiloParaRadio(): { [klass: string]: any } {
     const COUNT = this.radioOptions.length || 1;
-  
+
     if (this.gridLayout) {
       return {
         width: `${100 / COUNT}%`,
-        'padding': '8px',
+        padding: '8px',
         'box-sizing': 'border-box',
         'white-space': 'nowrap',
-        'overflow': 'hidden',
+        overflow: 'hidden',
         'text-overflow': 'ellipsis',
-        'max-width': '100%'
+        'max-width': '100%',
       };
     }
-  
+
     if (this.layout === 'horizontal') {
       return {
-        'display': 'inline-block',
-        'margin-right': '30px'
+        display: 'inline-block',
+        'margin-right': '30px',
       };
     }
-  
+
     return {
-      'display': 'block',
-      'margin-bottom': '10px'
+      display: 'block',
+      'margin-bottom': '10px',
     };
   }
-  
-/**
-  * @method calcularAnchoBotonDeRadio
-  * @description
-  * Este método calcula dinámicamente el ancho de los botones de radio cuando se utiliza un diseño de cuadrícula (`gridLayout`).
-  * 
-  * Funcionalidad:
-  * - Verifica si el diseño de cuadrícula está habilitado (`gridLayout`) y si el contenedor de los botones de radio (`radioContainer`) está disponible.
-  * - Obtiene el ancho del contenedor de los botones de radio.
-  * - Calcula el ancho de cada botón de radio considerando el espacio entre ellos (`SPACING`) y el número total de opciones (`COUNT`).
-  * - Asigna el ancho calculado a la propiedad `radioButtonWidth`.
-  * 
-  * @example
-  * // Calcular el ancho de los botones de radio:
-  * this.calcularAnchoBotonDeRadio();
-  * console.log(this.radioButtonWidth); // '120px'
-  */
+
+  /**
+   * @method calcularAnchoBotonDeRadio
+   * @description
+   * Este método calcula dinámicamente el ancho de los botones de radio cuando se utiliza un diseño de cuadrícula (`gridLayout`).
+   *
+   * Funcionalidad:
+   * - Verifica si el diseño de cuadrícula está habilitado (`gridLayout`) y si el contenedor de los botones de radio (`radioContainer`) está disponible.
+   * - Obtiene el ancho del contenedor de los botones de radio.
+   * - Calcula el ancho de cada botón de radio considerando el espacio entre ellos (`SPACING`) y el número total de opciones (`COUNT`).
+   * - Asigna el ancho calculado a la propiedad `radioButtonWidth`.
+   *
+   * @example
+   * // Calcular el ancho de los botones de radio:
+   * this.calcularAnchoBotonDeRadio();
+   * console.log(this.radioButtonWidth); // '120px'
+   */
   calcularAnchoBotonDeRadio(): void {
     if (!this.gridLayout || !this.radioContainer) {
       return;
     }
-  
+
     const ANCHO_DEL_CONTENEDOR = this.radioContainer.nativeElement.offsetWidth;
     const ESPACIADO = 10;
     const CONTAR = this.radioOptions.length || 1;
-  
-    const ANCHO_POR_RELACION = (ANCHO_DEL_CONTENEDOR - ESPACIADO * CONTAR) / CONTAR;
+
+    const ANCHO_POR_RELACION =
+      (ANCHO_DEL_CONTENEDOR - ESPACIADO * CONTAR) / CONTAR;
     this.anchoDelBotonDeRadio = `${ANCHO_POR_RELACION}px`;
   }
-  
-  
 
   /**
    * Devuelve el orden en que se deben renderizar la etiqueta y el input de radio.

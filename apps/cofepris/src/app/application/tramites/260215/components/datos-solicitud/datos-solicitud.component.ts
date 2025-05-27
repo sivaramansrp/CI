@@ -1,5 +1,5 @@
 import {
-  AlDar,
+  AL_DAR,
   AlertComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -83,7 +83,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * @type {Importante}
    * @memberof RegistroParaLaComponent
    */
-  public TEXTOS = AlDar;
+  public TEXTOS = AL_DAR;
 
   /**
    * Alterna el estado colapsable de la sección del formulario.

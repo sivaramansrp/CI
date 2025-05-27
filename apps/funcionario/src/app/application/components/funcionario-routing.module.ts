@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
+import { AutorizacionMasivaComponent } from './autorizacion-masiva/autorizacion-masiva.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
 import { BandejaPendientesComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
@@ -56,6 +57,10 @@ const ROUTES: Routes = [
   {
     path: 'datos-generales-tramite',
     component: DatosGeneralesTramiteComponent
+  },
+   {
+    path: 'autorizacion-masiva',
+    component: AutorizacionMasivaComponent
   },
 
 ];
