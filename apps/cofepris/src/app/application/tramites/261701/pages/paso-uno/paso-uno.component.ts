@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../constantes/cancelacion-peticion.enum';
 import { CancelacionPeticionService } from '../../services/cancelacion-peticion.service';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';

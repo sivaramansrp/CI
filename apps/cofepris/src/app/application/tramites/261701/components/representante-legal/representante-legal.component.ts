@@ -147,7 +147,7 @@ get ninoFormGroup(): FormGroup {
      */
     private actualizarRepresentanteLegalFormData(): void {
       // Mantener la lógica ternaria original para determinar qué conjunto de datos usar
-      this.representanteLegalFormData =  this.esFormularioSoloLectura ? REPRESENTANTE_LEGAL.map(campo => {
+      this.representanteLegalFormData = this.esFormularioSoloLectura ? REPRESENTANTE_LEGAL.map(campo => {
         if (this.cancelacionState[campo.campo] !== undefined) {
           return {
             ...campo,

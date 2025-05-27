@@ -148,7 +148,7 @@ get ninoFormGroup(): FormGroup {
    */
   private actualizarPermisoCancelarFormData(): void {
     // Mantener la lógica ternaria original para determinar qué conjunto de datos usar
-    this.permisoCancelarFormData =  this.esFormularioSoloLectura ? PERMISO_A_CANCELAR.map(campo => {
+    this.permisoCancelarFormData = this.esFormularioSoloLectura ? PERMISO_A_CANCELAR.map(campo => {
       if (this.cancelacionState[campo.campo] !== undefined) {
         return {
           ...campo,

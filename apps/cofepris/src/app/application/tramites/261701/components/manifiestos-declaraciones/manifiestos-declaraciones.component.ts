@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 
 /**
  * ManifiestosDeclaracionesComponent es un componente que permite gestionar los manifiestos
@@ -105,7 +105,9 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
       )
       .subscribe();
 
-    if(this.esFormularioSoloLectura) this.manifiestosAlert = this.getManifiestosAlert(true).message;
+    if(this.esFormularioSoloLectura){
+      this.manifiestosAlert = this.getManifiestosAlert(true).message;
+    }
   }
 
   /**
