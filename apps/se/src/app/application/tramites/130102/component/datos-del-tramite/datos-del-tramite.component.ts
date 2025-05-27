@@ -31,8 +31,10 @@ import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
@@ -50,6 +52,10 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   templateUrl: './datos-del-tramite.component.html',
 })
 export class DetosDelTramiteComponent implements OnInit, OnDestroy {
+   /**
+     * Suscripción a los cambios en el formulario react
+     */
+    private subscription: Subscription = new Subscription();
   /**
    * Lista de campos de entrada utilizados en el formulario.
    */
@@ -95,7 +101,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    * Valor predeterminado en la selección.
    */
   defaultSelect: string = 'Inicial';
-
+  esFormularioSoloLectura: boolean = false;
   public solicitudState!: Solicitud130102State;
   private destroyNotifier$: Subject<void> = new Subject();
   /**
@@ -106,16 +112,48 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private fb: FormBuilder, 
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+     this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
    * Inicializa el componente, configura el formulario y obtiene datos iniciales.
    */
   ngOnInit(): void { 
-    this.tramite130102Query.selectSolicitud$
+    
+    this.fetchSolicitudeOptions();
+    this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
+  }
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.formDelTramite.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDelTramite.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  inicializarFormulario():void{
+this.tramite130102Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -129,8 +167,6 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
       tipoDocumento: [''],
       fraccion: [this.solicitudState?.fraccion, [Validators.required]],
     });
-    this.fetchSolicitudeOptions();
-    this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
   }
   /**
    * Asigna un valor del formulario al store.

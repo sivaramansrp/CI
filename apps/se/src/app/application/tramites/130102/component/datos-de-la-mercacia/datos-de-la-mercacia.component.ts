@@ -21,7 +21,7 @@ import fractionValues from 'libs/shared/theme/assets/json/130102/fraccion_arance
 import productoOptions from 'libs/shared/theme/assets/json/130102/producto-otions.json';
 import unidadOptions from 'libs/shared/theme/assets/json/130102/unidad_da.json';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { REG_X } from '@ng-mf/data-access-user';
@@ -54,6 +54,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
+   esFormularioSoloLectura: boolean = false;
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -107,9 +108,18 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
      private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
@@ -118,7 +128,32 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit(): void {
-    this.tramite130102Query.selectSolicitud$
+     this.inicializarEstadoFormulario();
+   
+   this.fetchProductoOptions();
+   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+  }
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.formDelLa.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDelLa.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+  inicializarFormulario():void{
+ this.tramite130102Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -159,10 +194,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         ],
       ],
     });
-   this.fetchProductoOptions();
-   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
   }
-
     /**
    * Asigna un valor del formulario al store.
    *

@@ -11,17 +11,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import SolicitudMercanciaValues from 'libs/shared/theme/assets/json/130102/solicitud_mercancia.json';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import {
+  Solicitud130102State,
+  Tramite130102Store,
+} from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 /**
@@ -40,6 +44,10 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './criterio-de-dict.component.scss',
 })
 export class CriterioDeDictComponent implements OnInit {
+   /**
+   * Suscripción a los cambios en el formulario react
+   */
+  private subscription: Subscription = new Subscription();
   /**
    * Configuración del formulario de criterio de dictamen.
    */
@@ -56,10 +64,9 @@ export class CriterioDeDictComponent implements OnInit {
    */
   seleccionadaSolicitudMercancia: Catalogo = { id: 0, descripcion: '' };
 
-  
   public solicitudState!: Solicitud130102State;
   private destroyNotifier$: Subject<void> = new Subject();
-
+  esFormularioSoloLectura: boolean = false;
   /**
    * Inicializa el componente CriterioDeDict.
    * @constructor
@@ -67,12 +74,22 @@ export class CriterioDeDictComponent implements OnInit {
    * @returns void
    * @description Inicializa el componente CriterioDeDict.
    */
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -83,14 +100,18 @@ export class CriterioDeDictComponent implements OnInit {
     this.seleccionadaSolicitudMercancia = e;
   }
 
-    /**
+  /**
    * Asigna un valor del formulario al store.
    *
    * @param {FormGroup} form - Formulario reactivo.
    * @param {string} campo - Campo del formulario a obtener.
    * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130102Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite130102Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -101,20 +122,64 @@ export class CriterioDeDictComponent implements OnInit {
    * @description Obtiene las solicitudes de mercancía.
    */
   ngOnInit(): void {
-
-   this.tramite130102Query.selectSolicitud$
+    this.inicializarEstadoFormulario();
+    this.tramite130102Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => { 
+        map((seccionState) => {
           this.solicitudState = seccionState;
         })
       )
       .subscribe();
 
     this.frmCriterioDictamen = this.fb.group({
-      solicitudMercancia: [this.solicitudState?.solicitudMercancia, Validators.required],
+      solicitudMercancia: [
+        this.solicitudState?.solicitudMercancia,
+        Validators.required,
+      ],
     });
 
-    this.formularioRegistroService.registrarFormulario('frmCriterioDictamen', this.frmCriterioDictamen);
+    this.formularioRegistroService.registrarFormulario(
+      'frmCriterioDictamen',
+      this.frmCriterioDictamen
+    );
+  }
+
+    inicializarFormulario(): void {
+    this.subscription.add(
+      this.tramite130102Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    );
+   this.frmCriterioDictamen = this.fb.group({
+      solicitudMercancia: [
+        this.solicitudState?.solicitudMercancia,
+        Validators.required,
+      ],
+    });
+  }
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.frmCriterioDictamen.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.frmCriterioDictamen.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 }

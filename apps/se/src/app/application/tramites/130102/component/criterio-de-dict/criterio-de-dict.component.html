@@ -10,6 +10,7 @@
           (selectionChange)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia')"
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         @if (frmCriterioDictamen.controls['solicitudMercancia'].invalid && frmCriterioDictamen.controls['solicitudMercancia'].touched) {
           <div class="text-danger">
