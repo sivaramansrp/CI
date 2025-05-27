@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { InputFecha } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
+import { InputFecha } from '../../../core/models/shared/components.model';
+import {TituloComponent } from '../titulo/titulo.component';
 
 export interface BotonDeAccion {
   etiqueta: string;

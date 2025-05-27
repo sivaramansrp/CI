@@ -2,9 +2,9 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Aviso,
+  AVISO,
   ConsultaioQuery,
-  Importante,
+  IMPORTANTE,
 } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -67,18 +67,18 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
    *
-   * @type {Importante}
+   * @type {IMPORTANTE}
    * @memberof RegistroParaLaComponent
    */
-  public TEXTOS = Importante;
+  public TEXTOS = IMPORTANTE;
 
   /**
    * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
    *
-   * @type {Aviso}
+   * @type {AVISO}
    * @memberof RegistroParaLaComponent
    */
-  public ADVERTENCIA = Aviso;
+  public ADVERTENCIA = AVISO;
 
   /**
    * Índice del paso actual en el formulario.

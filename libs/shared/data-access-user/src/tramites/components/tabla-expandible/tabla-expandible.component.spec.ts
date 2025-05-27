@@ -181,7 +181,7 @@ describe('TablaExpandibleComponent', () => {
     });
 
     it('debería emitir el evento alternarValor', () => {
-      const fila = { row: hostComponent.datos[0], column: 'nombre' };
+      const fila = hostComponent.datos[0];
       component.cambiarValor(fila);
       
       expect(hostComponent.onAlternarValor).toHaveBeenCalledWith(fila);
