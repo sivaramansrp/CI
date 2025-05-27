@@ -3,7 +3,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-cuentas-bancarias.model';
 
@@ -16,7 +16,7 @@ export class RegistroCuentasBancariasService {
    * URL del servidor utilizado para servicios auxiliares JSON.
    * Esta URL se obtiene de la configuración del entorno.
    */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Un BehaviorSubject que contiene la fuente del componente actual como una cadena.
