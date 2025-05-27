@@ -1,12 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
-import { TableData, TableRow } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
 import { MENSAJEDE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
+import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
 import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
 
@@ -76,9 +76,9 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * **Datos del cuerpo de la tabla de establecimientos**  
    * 
    * Contiene la información detallada de los establecimientos.  
-   * Se usa `unknown` hasta definir su estructura específica.
+   * Se usa `TableBodyData[]` hasta definir su estructura específica.
    */
-  public establecimientoBodyData: TableRow[] = [];
+  public establecimientoBodyData: TableBodyData[] = [];
 
   /**
    * **Datos de la tabla de destinatarios**  

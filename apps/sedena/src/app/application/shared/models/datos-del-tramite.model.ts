@@ -52,6 +52,7 @@ export interface MercanciaDetalle {
   tipoMoneda: string;
   descripcion: string;
   paisOrigen?: string;
+  tableIndex?: number;
 }
 
 /**

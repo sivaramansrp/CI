@@ -35,7 +35,7 @@
               <p class="fw-bold">Registro de Agentes Aduanales</p>
               <div class="row mb-3">
                 <div class="col-md-6">
-                  <label class="form-label" for="nombreAgente">Nombre(s)*</label>
+                  <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
                   <input type="text" class="form-control" id="nombreAgente" formControlName="nombreAgente" />
                   <div *ngIf="esInvalido('marca')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['marca'].hasError('required')">
@@ -44,7 +44,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="primerApellido">Primer Apellido*</label>
+                  <label class="form-label" for="primerApellido">Primer Apellido*:</label>
                   <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
                   <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['segundoApellido'].hasError('required')">
@@ -53,7 +53,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="segundoApellido">Segundo Apellido*</label>
+                  <label class="form-label" for="segundoApellido">Segundo Apellido*:</label>
                   <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
                   <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['segundoApellido'].hasError('required')">
@@ -62,7 +62,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="patente">Número de patente de agente aduanal*</label>
+                  <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
                   <input type="text" class="form-control" id="patente" formControlName="patente" />
                   <div *ngIf="esInvalido('patente')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['patente'].hasError('required')">

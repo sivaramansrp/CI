@@ -21,9 +21,9 @@ export class MercanciaasociadaService {
   /**
    * @method getMercanciaAsociada
    *  Obtiene los datos de la mercancía asociada desde un archivo JSON.
-   * @returns {Observable<any>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
    */
-  getMercanciaAsociada(): Observable<any> {
+  getMercanciaAsociada(): Observable<unknown> {
     return this.http.get('./assets/json/110102/mercanciaasociada.json');
   }
 }
