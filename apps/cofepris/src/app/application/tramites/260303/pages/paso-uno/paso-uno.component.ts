@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import {Subject,map,takeUntil } from 'rxjs';
+import {Subject,forkJoin,map,takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { Solicitud260303State } from '../../../../estados/tramites/260303/tramite260303.store';
 
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
@@ -49,17 +50,49 @@ export class PasoUnoComponent implements OnInit {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    this.certificadosLicenciasPermisosService
-      .getEstadoDatos().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(resp);
+    forkJoin({
+      estado: this.certificadosLicenciasPermisosService.getEstadoDatos(),
+      scian: this.certificadosLicenciasPermisosService.getScianDatos(),
+      clave: this.certificadosLicenciasPermisosService.getClaveDatos(),
+      regimen: this.certificadosLicenciasPermisosService.getRegimenDatos(),
+      mercancias: this.certificadosLicenciasPermisosService.getMercanciasDatos(),
+      tipoProducto: this.certificadosLicenciasPermisosService.getTipoDeProductoDatos(),
+      paisProcedencia: this.certificadosLicenciasPermisosService.getPaisDeProcedenciaDatos(),
+      fabricante: this.certificadosLicenciasPermisosService.getFabricanteDatos(),
+      facturador: this.certificadosLicenciasPermisosService.getFacturadorDatos(),
+      proveedor: this.certificadosLicenciasPermisosService.getProveedorDatos(),
+      certificado: this.certificadosLicenciasPermisosService.getCertificadoDatos(),
+      otros: this.certificadosLicenciasPermisosService.getOtrosDatos(),
+      banco: this.certificadosLicenciasPermisosService.getBancoDatos(),
+      tipoDocumento: this.certificadosLicenciasPermisosService.getTipoDeDocumentoDatos()
+    })
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respCombinado) => {
+        if (respCombinado) {
+          this.esDatosRespuesta = true;
+
+          const RESPUESTA_UNIFICADA: Solicitud260303State = {
+            ...respCombinado.estado,
+            ...respCombinado.scian,
+            ...respCombinado.clave,
+            ...respCombinado.regimen,
+            ...respCombinado.mercancias,
+            ...respCombinado.tipoProducto,
+            ...respCombinado.paisProcedencia,
+            ...respCombinado.fabricante,
+            ...respCombinado.facturador,
+            ...respCombinado.proveedor,
+            ...respCombinado.certificado,
+            ...respCombinado.otros,
+            ...respCombinado.banco,
+            ...respCombinado.tipoDocumento
+          };
+
+          this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(RESPUESTA_UNIFICADA);
         }
       });
   }
+
 
 
 }
