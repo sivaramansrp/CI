@@ -1,12 +1,9 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { InformacionDeLaComponent } from './informacion-de-la.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { BtnContinuarComponent, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('InformacionDeLaComponent', () => {
   let component: InformacionDeLaComponent;
@@ -20,7 +17,8 @@ describe('InformacionDeLaComponent', () => {
         CommonModule,
         BtnContinuarComponent,
         CatalogoSelectComponent,
-        TituloComponent,InformacionDeLaComponent
+        TituloComponent,
+        InformacionDeLaComponent
       ]
     }).compileComponents();
   });
@@ -71,6 +69,5 @@ describe('InformacionDeLaComponent', () => {
     component.valorSeleccionadoNico();
     expect(component.informacionDeLaform.get('descripcionNico')?.disabled).toBe(true);
   });
-
 
 });

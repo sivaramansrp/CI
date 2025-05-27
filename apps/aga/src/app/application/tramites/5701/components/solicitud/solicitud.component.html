@@ -3,8 +3,14 @@
 <form [formGroup]="FormSolicitud">
   <div class="row">
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo de solicitud'"
-        [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
+      <app-catalogo-select
+        [catalogo]="tiposSolicitud"
+        formControlName="tipoSolicitud"
+        [label]="'Tipo de solicitud'"
+        [required]="true"
+        name="tipoSolicitud"
+        (change)="tipoSolicitudSeleccion()"
+      ></app-catalogo-select>
     </div>
   </div>
 
@@ -20,23 +26,44 @@
           extraordinario
         </h6>
       </div>
-      <app-input-radio [radioOptions]="radioPatentes" [layout]="'horizontal'" (change)="patenteApoderado()"
-        id="apoderadoPatente" formControlName="apoderadoPatente">
+      <app-input-radio
+        [radioOptions]="radioPatentes"
+        [layout]="'horizontal'"
+        (change)="patenteApoderado()"
+        id="apoderadoPatente"
+        formControlName="apoderadoPatente"
+      >
       </app-input-radio>
     </div>
 
     <!-- Sección RFC y Nombre  -->
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="rfcs" formControlName="empresaApoderado" [label]="'RFC'"
-          [id]="'empresaApoderado'" [required]="true" name="empresaApoderado"></app-catalogo-select>
+        <app-catalogo-select
+          [catalogo]="rfcs"
+          formControlName="empresaApoderado"
+          [label]="'RFC'"
+          [id]="'empresaApoderado'"
+          [required]="true"
+          name="empresaApoderado"
+        ></app-catalogo-select>
       </div>
 
       @if (isApoderado && masDeUnaEmpresa) {
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="rfcs" formControlName="empresasApoderado" [label]="'RFC'"
-          [id]="'empresasApoderado'" [required]="true" name="empresasApoderado"></app-catalogo-select>
-        <span id="errorEmpresasApoderado" name="errorEmpresasApoderado" class="text-danger"></span>
+        <app-catalogo-select
+          [catalogo]="rfcs"
+          formControlName="empresasApoderado"
+          [label]="'RFC'"
+          [id]="'empresasApoderado'"
+          [required]="true"
+          name="empresasApoderado"
+        ></app-catalogo-select>
+        <span
+          id="errorEmpresasApoderado"
+          name="errorEmpresasApoderado"
+          class="text-danger"
+        ></span>
       </div>
       }
     </div>
@@ -46,103 +73,189 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="RFCImpExp">RFC*:</label>
-          <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text" formControlName="RFCImpExp"
+          <input
+            class="form-control"
+            id="rfc"
+            placeholder="RFC"
+            type="text"
+            formControlName="RFCImpExp"
             [ngClass]="
-                  isValid(datosImportadorExportador, 'RFCImpExp')
-                    ? 'required'
-                    : ''
-                " libUppercase (blur)="busquedaRfc()" />
+              isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
+            "
+            libUppercase
+            (change)="validaRfc()"
+          />
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="nombre">Nombre:</label>
-          <input class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre" type="text"
-            appUppercase />
+          <input
+            class="form-control"
+            id="nombre"
+            formControlName="nombre"
+            placeholder="Nombre"
+            type="text"
+            appUppercase
+          />
         </div>
       </div>
     </div>
     }
-
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="desNumeroRegistro">Número de registro o programa:</label>
-          <input class="form-control" id="desNumeroRegistro" placeholder="" type="text"
-            formControlName="desNumeroRegistro" [ngClass]="
+    <section id="seccion-certificaciones" *ngIf="">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="desNumeroRegistro"
+              >Número de registro o programa:</label
+            >
+            <input
+              class="form-control"
+              id="desNumeroRegistro"
+              placeholder=""
+              type="text"
+              formControlName="desNumeroRegistro"
+              [ngClass]="
                 isValid(datosImportadorExportador, 'desNumeroRegistro')
                   ? 'required'
                   : ''
-              " (change)="
+              "
+              (change)="
                 setValoresStore(
                   datosImportadorExportador,
                   'desNumeroRegistro',
                   'setDescripcionNumeroRegistro'
                 )
-              " />
+              "
+            />
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <lib-check-input-text [checkboxValor]="solicitudState.programa"
-          [textoValor]="solicitudState.descripcionProgramaFomento" [idCheckbox]="'programa'"
-          [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento:'" [required]="false" [reverse]="true"
-          [hidden]="false" [maxLengthValidacion]="300" (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
-      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <lib-check-input-text
+            [checkboxValor]="solicitudState.programa"
+            [textoValor]="solicitudState.descripcionProgramaFomento"
+            [idCheckbox]="'programa'"
+            [idInputTexto]="'desProgramaFomento'"
+            [label]="'Programa de fomento:'"
+            [required]="false"
+            [reverse]="true"
+            [hidden]="false"
+            [maxLengthValidacion]="300"
+            (checkboxChange)="checkPrograma($event)"
+          ></lib-check-input-text>
+        </div>
 
-      <div class="col-md-4">
-        <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.descripcionImmex"
-          [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa):'" [required]="false"
-          [reverse]="true" [hidden]="false" [maxLengthValidacion]="300"
-          (checkboxChange)="checkImmex($event)"></lib-check-input-text>
-      </div>
+        <div class="col-md-4">
+          <lib-check-input-text
+            [checkboxValor]="solicitudState.checkIMMEX"
+            [textoValor]="solicitudState.descripcionImmex"
+            [idCheckbox]="'checkIMMEX'"
+            [idInputTexto]="'desImmex'"
+            [label]="'Immex (Número/aaaa):'"
+            [required]="false"
+            [reverse]="true"
+            [hidden]="false"
+            [maxLengthValidacion]="300"
+            (checkboxChange)="checkImmex($event)"
+          ></lib-check-input-text>
+        </div>
 
-      <div class="col-md-4">
-        <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
-          [textoValor]="solicitudState.descripcionIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
-          [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz:'" [required]="false"
-          [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
-          (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
-      </div>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <label for="tipoEmpresa">Tipo de empresa certificada:</label>
-      </div>
-
-      <div class="col-md-6">
-        <app-input-radio [radioOptions]="radioOpciones"
-          (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
-          id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
-        </app-input-radio>
-      </div>
-
-      <div class="col-md-6">
-        <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false"
-          formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
-
-        <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false"
-          formControlName="certificacionOEA"
-          (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
-
-        <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false" formControlName="revision"
-          (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
-      </div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="idSocioComercial">ID socio comercial
-            @if (solicitudState.socioComercial) {*}:</label>
-          <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
-            type="text"
-            (change)="setValoresStore(datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')" />
+        <div class="col-md-4">
+          <lib-check-input-text
+            [checkboxValor]="solicitudState.industriaAutomotriz"
+            [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
+            [idCheckbox]="'industriaAutomotriz'"
+            [idInputTexto]="'desIndustrialAutomotriz'"
+            [label]="'Industria Automotriz:'"
+            [required]="false"
+            [reverse]="true"
+            [hidden]="false"
+            [maxLengthValidacion]="25"
+            (checkboxChange)="checkAutomotriz($event)"
+          ></lib-check-input-text>
         </div>
       </div>
-    </div>
 
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label for="tipoEmpresa">Tipo de empresa certificada:</label>
+        </div>
+
+        <div class="col-md-6">
+          <app-input-radio
+            [radioOptions]="radioOpciones"
+            (change)="
+              setValoresStore(
+                datosImportadorExportador,
+                'tipoEmpresaCertificada',
+                'setTipoEmpresaCertificada'
+              )
+            "
+            id="tipoEmpresaCertificada"
+            formControlName="tipoEmpresaCertificada"
+          >
+          </app-input-radio>
+        </div>
+
+        <div class="col-md-6">
+          <lib-input-check
+            [id]="'socioComercial'"
+            [label]="'Socio comercial'"
+            [required]="false"
+            formControlName="socioComercial"
+            (change)="checkIdSocioComercial()"
+          ></lib-input-check>
+
+          <lib-input-check
+            [id]="'certificacionOEA'"
+            [label]="'Operador económico autorizado'"
+            [required]="false"
+            formControlName="certificacionOEA"
+            (change)="
+              setValoresStore(
+                datosImportadorExportador,
+                'certificacionOEA',
+                'setCertificacionOEA'
+              )
+            "
+          ></lib-input-check>
+
+          <lib-input-check
+            [id]="'revision'"
+            [label]="'Revisión en origen'"
+            [required]="false"
+            formControlName="revision"
+            (change)="
+              setValoresStore(
+                datosImportadorExportador,
+                'revision',
+                'setRevision'
+              )
+            "
+          ></lib-input-check>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="idSocioComercial"
+              >ID socio comercial @if (solicitudState.socioComercial)
+              {*}:</label
+            >
+            <input
+              class="form-control"
+              id="idSocioComercial"
+              formControlName="idSocioComercial"
+              placeholder=""
+              type="text"
+              (change)="onIdSocioComercialChange()"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <ng-titulo titulo="Datos del servicio" />
@@ -150,10 +263,17 @@
     <div class="row">
       <div class="col-md-4">
         <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
-        <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
-          [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''" (change)="
-              setValoresStore(datosServicio, 'fechaInicio', 'setFechaInicio')
-            " />
+        <input
+          class="form-control"
+          type="date"
+          name="fechaInicio"
+          id="fechaInicio"
+          formControlName="fechaInicio"
+          [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
+          (change)="
+            setValoresStore(datosServicio, 'fechaInicio', 'setFechaInicio')
+          "
+        />
 
         @if (isValid(datosServicio,'fechaInicio')) {
         <div class="mensaje-error">Fecha no válida</div>
@@ -161,18 +281,30 @@
       </div>
 
       <div class="col-md-4">
-        <input-hora formControlName="horaInicio" [label]="'Hora inicio'" [required]="true" [inputId]="'horaInicio'"
+        <input-hora
+          formControlName="horaInicio"
+          [label]="'Hora inicio'"
+          [required]="true"
+          [inputId]="'horaInicio'"
           (change)="
-              setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
-            "></input-hora>
+            setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
+          "
+        ></input-hora>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
         <label for="fechaFinal" class="form-label">Fecha final*:</label>
-        <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''" (change)="changeFechaFinal()" />
+        <input
+          class="form-control"
+          type="date"
+          name="fechaFinal"
+          id="fechaFinal"
+          formControlName="fechaFinal"
+          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
+          (change)="changeFechaFinal()"
+        />
 
         @if (isValid(datosServicio,'fechaFinal')) {
         <div class="mensaje-error">Fecha no válida</div>
@@ -186,8 +318,13 @@
       </div>
 
       <div class="col-md-4">
-        <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"
-          (change)="changeHoraFinal()"></input-hora>
+        <input-hora
+          formControlName="horaFinal"
+          [label]="'Hora Final'"
+          [required]="true"
+          [inputId]="'horaFinal'"
+          (change)="changeHoraFinal()"
+        ></input-hora>
         @if (intervaloFechaError()) {
         <div class="mensaje-error">Intervalo de fecha no válido</div>
         } @if (fechaInicioPasadaFechaFinalError()) {
@@ -208,13 +345,20 @@
                   Especifique los días que se utilizarán dentro del periodo*:
                 </a>
               </h4>
-              <button type="button" class="collpase-button collapsed" title="Colapsable"></button>
+              <button
+                type="button"
+                class="collpase-button collapsed"
+                title="Colapsable"
+              ></button>
             </div>
             @if(colapsable){
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
-                <crosslist [fechas]="selectRangoDias" [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
-                  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+                <crosslist
+                  [fechas]="selectRangoDias"
+                  [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                  (fechasSeleccionadasChange)="changeCrosslist($event)"
+                ></crosslist>
               </div>
             </div>
             }
@@ -225,98 +369,211 @@
   </div>
 
   <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-  <div formGroupName="despachoSeleccion">
+  <div formGroupName="despacho">
     <div class="row">
       <div class="col-md-4">
-
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
-            formControlName="lda">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="lda"
+            (click)="showConfirmDialogLDA_DD('lda')"
+            formControlName="lda"
+          />
           <label class="form-check-label" for="lda">Despacho LDA</label>
         </div>
-
       </div>
+
       <div class="col-md-4">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="dd" (change)="showConfirmDialogLDA_DD('dd')"
-            formControlName="dd">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="dd"
+            (click)="showConfirmDialogLDA_DD('dd')"
+            formControlName="dd"
+          />
           <label class="form-check-label" for="dd">Despacho DD</label>
         </div>
       </div>
     </div>
 
-    <div class="row" *ngIf="tipoDespacho">
+    @if(despachoSeleccionado) {
+    <div
+      class="row"
+      *ngIf="despacho.get('lda')?.value || despacho.get('dd')?.value"
+    >
+      @if (despacho.get('lda')?.value) {
       <div class="col-md-4">
         <div class="form-group">
-          <label for="tipo" class="form-label">{{this.labelTipoDespacho}}*:</label>
-          <input type="text" [id]="idNameAutorizacion" class="form-control" [formControlName]="idNameAutorizacion"
-            placeholder="" (change)="setValoresStore(despachoSeleccion, idNameAutorizacion, funcionStoreAutorizacion)"
-            [ngClass]="
-            isValid(despachoSeleccion, idNameAutorizacion)
-              ? 'required'
-              : ''
-          " />
+          <label for="tipo" class="form-label">RFC autorización LDA*:</label>
+          <input
+            type="text"
+            id="rfcDespachoLDA"
+            class="form-control"
+            formControlName="rfcDespachoLDA"
+            placeholder=""
+            (change)="
+              setValoresStore(despacho, 'rfcDespachoLDA', 'setAutorizacionLDA')
+            "
+            [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
+          />
         </div>
       </div>
+      } @else if (despacho.get('dd')?.value) {
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="tipo" class="form-label">Autorizacion DDEX*:</label>
+          <input
+            type="text"
+            id="folioDDEX"
+            class="form-control"
+            formControlName="folioDDEX"
+            placeholder=""
+            (change)="
+              setValoresStore(despacho, 'folioDDEX', 'setAutorizacionDDEX')
+            "
+            [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
+          />
+        </div>
+      </div>
+      }
     </div>
+    }
 
-  </div>
-
-  <div formGroupName="despacho">
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="aduanas" formControlName="idAduanaDespacho" [label]="'Aduana'"
-          [required]="true"
-          (change)="setValoresStore(despacho, 'idAduanaDespacho', 'setIdAduanaDespacho')"></app-catalogo-select>
+        <div>
+          <label for="">Aduana:</label>
+          <span>*</span>
+        </div>
+        <select
+          class="form-control"
+          formControlName="idAduanaDespacho"
+          (change)="changeAduana()"
+        >
+          <option value="-1">Selecciona una opción...</option>
+          <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
+            {{ aduana.descripcion }}
+          </option>
+        </select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionDespacho"
-          [label]="'Sección aduanera'" [required]="false" [isDisabled]="desactivarSelectSeccionAduanera"
-          (change)="changeSeccionAduanera()"></app-catalogo-select>
+        <div>
+          <label for="">Sección aduanera:</label>
+        </div>
+        <select
+          class="form-control"
+          formControlName="idSeccionDespacho"
+          (change)="changeSeccionAduanera()"
+          [required]="false"
+        >
+          <option value="-1">Selecciona una opción...</option>
+          <option
+            *ngFor="let seccion of seccionAduanera"
+            [value]="seccion.clave"
+          >
+            {{ seccion.descripcion }}
+          </option>
+        </select>
       </div>
-      @if (!tipoDespacho) {
+    </div>
+    <div class="row">
+      @if (!despachoSeleccionado) {
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="recintoCatalogo" formControlName="nombreRecinto" [label]="'Nombre del recinto'"
-          [required]="false" [isDisabled]="desactivarSelectRecinto" (change)="changeRecinto()"></app-catalogo-select>
+        <div>
+          <label for="">Nombre del recinto:</label>
+        </div>
+        <select
+          class="form-control"
+          formControlName="nombreRecinto"
+          (change)="changeRecinto()"
+          [required]="false"
+        >
+          <option value="-1">Selecciona una opción...</option>
+          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
+            {{ recinto.descripcion }}
+          </option>
+        </select>
       </div>
       } @else {
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="selectCatalogoDespacho" formControlName="nombreRecinto"
-          [label]="'Tipo despacho'" [required]="false" [isDisabled]="activarCatalogoDespacho"></app-catalogo-select>
+        <app-catalogo-select
+          [catalogo]="selectCatalogoDespacho"
+          formControlName="tipoDespacho"
+          [label]="'Tipo despacho'"
+          [required]="false"
+          [isDisabled]="activarCatalogoDespacho"
+          (change)="changeTipoDespacho()"
+        ></app-catalogo-select>
       </div>
-
       }
-
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="tipoOperacion"
+          formControlName="tipoOperacion"
+          [label]="'Tipo de operación'"
+          [required]="true"
+          (change)="
+            setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
+          "
+        ></app-catalogo-select>
+      </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
-          [required]="true" (change)="
-              setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
-            "></app-catalogo-select>
-      </div>
-      <div class="col-md-4">
-        <label for="patente" class="form-label">Patente/Número de autorización:</label>
-        <input class="form-control" type="text" name="patente" id="patente" formControlName="patente" />
+        <label for="patente" class="form-label"
+          >Patente/Número de autorización:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          name="patente"
+          id="patente"
+          formControlName="patente"
+        />
       </div>
       <div class="col-md-4 checks">
-        <lib-input-check [id]="'relacionSociedad'" [label]="'Relación de sociedad'" [required]="false"
+        <lib-input-check
+          [id]="'relacionSociedad'"
+          [label]="'Relación de sociedad'"
+          [required]="false"
+          [reverse]="true"
           formControlName="relacionSociedad"
-          (change)="setValoresStore(despacho,'relacionSociedad', 'setRelacionSociedad')"></lib-input-check>
+          (change)="
+            setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
+          "
+        ></lib-input-check>
 
-        <lib-input-check [id]="'encargoConferido'" [label]="'Encargo conferido'" [required]="false"
+        <lib-input-check
+          [id]="'encargoConferido'"
+          [label]="'Encargo conferido'"
+          [required]="false"
+          [reverse]="true"
           formControlName="encargoConferido"
-          (change)="setValoresStore(despacho,'encargoConferido', 'setEncargoConferido')"></lib-input-check>
+          (change)="
+            setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
+          "
+        ></lib-input-check>
       </div>
     </div>
 
-    <div class="row" *ngIf="tipoDespacho">
+    <div class="row" *ngIf="despachoSeleccionado">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="domicilioDespacho">Indica el domicilio*:</label>
-          <textarea class="form-control h-25" id="exampleFormControlTextarea1" rows="3"
-            formControlName="domicilioDespacho" id="domicilioDespacho" placeholder="" title="Domicilio"></textarea>
+          <label class="form-label" for="domicilioDespacho"
+            >Indica el domicilio*:</label
+          >
+          <textarea
+            class="form-control h-25"
+            id="exampleFormControlTextarea1"
+            rows="3"
+            formControlName="domicilioDespacho"
+            id="domicilioDespacho"
+            placeholder=""
+            title="Domicilio"
+          ></textarea>
         </div>
       </div>
     </div>
@@ -325,45 +582,74 @@
   @if (individual()) {
   <ng-titulo titulo="Datos del pedimento" />
 
-  <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
-    (validaCampos)="validaCampoPedimento()"></c-pedimento>
+  <c-pedimento
+    [validacion]="validacionPedimento"
+    [datosNroPedimento]="datosPedimentoComponente"
+    [tablaPedimento]="solicitudState.pedimentos"
+    (validaCampos)="validaCampoPedimento()"
+    (datosTablaPedimento)="changeAgregarPedimento($event)"
+  ></c-pedimento>
   }
 
   <ng-titulo titulo="Mercancía" />
   <div formGroupName="mercancia">
     <div class="row">
       <div class="col-md-4">
-        <app-select-paises [catalogosPaises]="paisesOrigen" formControlName="paisOrigen" [label]="'País de origen'"
-          [required]="true" (change)="setValoresStore(mercancia, 'paisOrigen', 'setPaisOrigen')"></app-select-paises>
+        
+        <app-select-paises
+          [catalogosPaises]="paisesOrigen"
+          formControlName="paisOrigen"
+          [label]="'País de origen'"
+          [required]="true"
+          (change)="setValoresStore(mercancia, 'paisOrigen', 'setPaisOrigen')"
+        ></app-select-paises>
       </div>
 
       <div class="col-md-4">
-        <app-select-paises [catalogosPaises]="paisesProcedencia" formControlName="paisProcedencia"
-          [label]="'País de procedencia'" [required]="true" (change)="
-              setValoresStore(
-                mercancia,
-                'paisProcedencia',
-                'setPaisProcedencia'
-              )
-            "></app-select-paises>
+        <app-select-paises
+          [catalogosPaises]="paisesProcedencia"
+          formControlName="paisProcedencia"
+          [label]="'País de procedencia'"
+          [required]="true"
+          (change)="
+            setValoresStore(mercancia, 'paisProcedencia', 'setPaisProcedencia')
+          "
+        ></app-select-paises>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label for="descripcionGenerica" class="form-label">Descripción genérica*:</label>
-          <textarea class="form-control" rows="3" id="descripcionGenerica" formControlName="descripcionGenerica"
+          <label for="descripcionGenerica" class="form-label"
+            >Descripción genérica*:</label
+          >
+          <textarea
+            class="form-control"
+            rows="3"
+            id="descripcionGenerica"
+            formControlName="descripcionGenerica"
             (change)="
-                setValoresStore(mercancia, 'descripcionGenerica', 'setDescripcionGenerica')
-              "></textarea>
+              setValoresStore(
+                mercancia,
+                'descripcionGenerica',
+                'setDescripcionGenerica'
+              )
+            "
+          ></textarea>
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
           <label for="justificacion" class="form-label">Justificación*:</label>
-          <textarea class="form-control" rows="3" id="justificacion" formControlName="justificacion" (change)="
-                setValoresStore(mercancia, 'justificacion', 'setJustificacion')
-              "></textarea>
+          <textarea
+            class="form-control"
+            rows="3"
+            id="justificacion"
+            formControlName="justificacion"
+            (change)="
+              setValoresStore(mercancia, 'justificacion', 'setJustificacion')
+            "
+          ></textarea>
         </div>
       </div>
     </div>
@@ -372,44 +658,26 @@
   @if (individual()) {
   <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
-  <div formGroupName="vehiculo">
-    <div class="row">
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte" [label]="'Tipo de transporte'"
-          [required]="false" (change)="
-              setValoresStore(vehiculo, 'tipoTransporte', 'setTipoTransporte')
-            "></app-catalogo-select>
-      </div>
-    </div>
-    @if (vehiculo.get('tipoTransporte')?.value) {
-    <div class="row">
-      <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"
-        (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
-        [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
-    </div>
-    }
-  </div>
+  <lib-transporte
+    [catalogoTransporte]="tipoVehiculo"
+    [tipoTransporteSeleccionado]="solicitudState.tipoTransporte"
+    [tablaTransporte]="solicitudState.transporte"
+    (seleccionTipoTransporte)="changeSeleccionTipoTransporte($event)"
+    (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
+  ></lib-transporte>
 
-  <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
-  <div formGroupName="transporteArriboSalida">
-    <div class="row">
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tipoTransporte" formControlName="tipoTransporte" [label]="'Tipo de transporte'"
-          [required]="false" (change)="
-            setValoresStore(transporteArriboSalida, 'tipoTransporte', 'setTipoTransporteArriboSalida')
-          "></app-catalogo-select>
-      </div>
-    </div>
-    @if (transporteArriboSalida.get('tipoTransporte')?.value) {
-    <div class="row">
-      <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"
-        (datosTabla)="changeAgregarVehiculo($event, 'transporte')"></lib-agregar-transporte>
-    </div>
-    }
-  </div>
+   <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
+   <lib-transporte
+    [catalogoTransporte]="tipoTransporte"
+    [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
+    [tablaTransporte]="solicitudState.transporteArriboDatos"
+    (seleccionTipoTransporte)="changeSeleccionTipoVehiculo($event)"
+    (datosTabla)="changeAgregarVehiculo($event, 'transporte')"
+  ></lib-transporte>
   }
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
+
   <agrega-personas />
 
   <ng-titulo titulo="Pagos" />
@@ -417,24 +685,43 @@
     <div class="row rf">
       <div class="col-md-4 form-group">
         <label class="form-label" for="montoPagar">Monto a pagar:</label>
-        <input class="form-control" id="montoPagar" placeholder="" type="text" formControlName="montoAPagar" (change)="
-              setValoresStore(pagoCaptura, 'montoAPagar', 'setMontoPagar')
-            " />
+        <input
+          class="form-control"
+          id="montoPagar"
+          placeholder=""
+          type="text"
+          formControlName="montoAPagar"
+          (change)="
+            setValoresStore(pagoCaptura, 'montoAPagar', 'setMontoPagar')
+          "
+        />
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4 form-group">
         <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
-        <input class="form-control" id="lineaCaptura" placeholder="" type="text" formControlName="lineaCaptura"
+        <input
+          class="form-control"
+          id="lineaCaptura"
+          placeholder=""
+          type="text"
+          formControlName="lineaCaptura"
           (change)="
-              setValoresStore(pagoCaptura, 'lineaCaptura', 'setLineaCaptura')
-            " />
+            setValoresStore(pagoCaptura, 'lineaCaptura', 'setLineaCaptura')
+          "
+        />
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label" for="monto">Monto*:</label>
-        <input class="form-control" id="monto" placeholder="" type="text" formControlName="monto"
-          (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')" />
+        <input
+          class="form-control"
+          id="monto"
+          placeholder=""
+          type="text"
+          formControlName="monto"
+          (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
+        />
       </div>
     </div>
 
@@ -442,7 +729,12 @@
       <div class="col-md-8"></div>
       <div class="col-md-4">
         <div class="btn-group">
-          <button class="btn btn-primary me-2" type="button">
+          <button
+            class="btn btn-primary me-2"
+            type="button"
+            (click)="consultarLineaCaptura()"
+            [disabled]="!FormSolicitud.get('pagoCaptura')?.valid"
+          >
             Consultar
           </button>
           <button class="btn btn-danger" type="button">Eliminar</button>
@@ -452,8 +744,8 @@
 
     <div class="row">
       <p class="p-bold">
-        A través del siguiente vinculo puedes ingresar a la página para
-        generar la línea de captura de la constancia que se solicita:
+        A través del siguiente vinculo puedes ingresar a la página para generar
+        la línea de captura de la constancia que se solicita:
       </p>
       <p>Generar línea de captura</p>
     </div>
@@ -461,29 +753,12 @@
   }
 </form>
 
-<!-- Modal error -->
-<div class="modal fade modal" #modalAviso tabindex="-1" aria-labelledby="modalAviso" aria-hidden="true"
-  data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{ tituloModal }}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <p>{{ mensajeModal }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="cerrarModal('aviso', true)">
-          Sí
-        </button>
-        <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="confirmacionModal($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

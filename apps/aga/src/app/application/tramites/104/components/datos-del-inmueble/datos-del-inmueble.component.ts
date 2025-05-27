@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -16,9 +16,9 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   imports: [CommonModule, TituloComponent,
     TableComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule],
+    ReactiveFormsModule,TablePaginationComponent],
   templateUrl: './datos-del-inmueble.component.html',
-  styleUrl: './datos-del-inmueble.component.css',
+  styleUrl: './datos-del-inmueble.component.scss',
 })
 export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
 
@@ -44,6 +44,10 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    */
   formularioDireccion!: FormGroup;
 
+  /**
+   * Subject utilizado para limpiar las suscripciones al destruir el componente.
+   * Se emite un valor y se completa en ngOnDestroy para evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
 
   /**
@@ -72,9 +76,9 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * **Datos del cuerpo de la tabla de establecimientos**  
    * 
    * Contiene la información detallada de los establecimientos.  
-   * Se usa `unknown` hasta definir su estructura específica.
+   * Se usa `TableBodyData[]` hasta definir su estructura específica.
    */
-  public establecimientoBodyData: unknown = [];
+  public establecimientoBodyData: TableBodyData[] = [];
 
   /**
    * **Datos de la tabla de destinatarios**  
@@ -82,6 +86,36 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Contiene los encabezados y el cuerpo de la tabla de destinatarios.
    */
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
+
+  /**
+   * **Catálogo de folios de autorización**
+   * 
+   * Almacena las opciones disponibles para el campo de folio de autorización en el formulario.
+   */
+  catalogoFolioAutorizacion: Catalogo[] = [];
+
+  
+  //  Controla la visibilidad del panel plegable.
+  //  El valor predeterminado está establecido en verdadero (panel ampliado).
+   
+  public colapsable = true;
+
+
+    /**
+   * Número total de elementos en la tabla.
+   */
+  totalItems: number = 0;
+
+  /**
+   * Página actual de la paginación.
+   */
+  currentPage: number = 1;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+   */
+  itemsPerPage: number = 5;
+
 
   /**
    * **Constructor del componente**  
@@ -115,6 +149,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         this.mostrarAlerta = true; // Muestra la alerta si el valor es '1'.
         this.mensajeDeAlerta = MENSAJEDE_ALERTA.ADJUNTAR; // Asigna el mensaje de alerta correspondiente.
       }
+      this.catalogoFolioAutorizacion=dropDown?.folioAutorizacion;
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
     this.escucharCambiosFormulario();
@@ -266,6 +301,49 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         this.datosDelInmueble104Store.setDireccion(formData);
       });
   }
+
+  /**
+ * Muestra u oculta el panel plegable.
+ * Cambia el estado de la propiedad `colapsable`.
+ */
+  mostrarColapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+
+
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  updatePagination():void{
+    const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.establecimientoBodyData = this.establecimientoBodyData.slice(
+      STARTINDEX,
+      STARTINDEX + this.itemsPerPage
+    );
+  }
+
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number):void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number):void{
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
 
   /**
    * **Limpia las suscripciones al destruir el componente**  

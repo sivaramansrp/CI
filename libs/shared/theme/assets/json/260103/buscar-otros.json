@@ -1,5 +1,8 @@
 {
+  "curp": "CURP123456HDFABC09",
   "nombreDescripcion": "Juan Perez",
+  "nacionalidad": "true",
+  "tipoPersona": "Física",
   "nombres": "Juan",
   "primerApellido": "Perez",
   "segundoApellido": "Lopez",
@@ -15,5 +18,5 @@
   "correoElectronico": "juan.perez@example.com",
   "localidad": "test",
   "municipioAlcaldia": "test",
-  "denominacionRazon":"denominacionRazon"
+  "denominacionRazon": "denominacionRazon"
 }

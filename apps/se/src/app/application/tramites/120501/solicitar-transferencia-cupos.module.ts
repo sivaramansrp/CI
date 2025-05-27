@@ -26,9 +26,9 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { LicitacionesVigentesComponent } from './component/licitaciones-vigentes/licitaciones-vigentes.component';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
-import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [

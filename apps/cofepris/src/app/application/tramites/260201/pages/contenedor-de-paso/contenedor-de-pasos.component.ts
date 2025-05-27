@@ -1,4 +1,5 @@
 import {
+  AVISO,
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
@@ -52,6 +53,15 @@ export class ContenedorDePasosComponent {
    * Inicializado con el valor `1`.
    */
   indice: number = 1;
+
+  TEXTOS: string = AVISO.Aviso;
+
+  /**
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
 
   /**
    * @property {WizardComponent} wizardComponent

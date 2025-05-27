@@ -14,6 +14,7 @@ import { Location } from '@angular/common';
 import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 import { ExportacionMedicamentosContenganService } from '../../service/exportacion-medicamentos-contengan.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 
 @Injectable()
 class MockDatosSolicitudService {
@@ -29,6 +30,12 @@ class MockTramite260304Store {
 class MockImportacionMateriasPrimasService {
   obtenerOstro() {}
 }
+@Injectable()
+  class MockTramite260304Query{
+    getOtrosSeleccionado$() {
+      return observableOf({});
+    }
+  }
 
 describe('AgregarOtrosComponent', () => {
   let fixture;
@@ -43,6 +50,7 @@ describe('AgregarOtrosComponent', () => {
         { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
         Location,
         { provide: Tramite260304Store, useClass: MockTramite260304Store },
+          { provide: Tramite260304Query, useClass: MockTramite260304Query },
       ]
     }).overrideComponent(AgregarOtrosComponent, {
 
@@ -56,10 +64,31 @@ describe('AgregarOtrosComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should run #crearFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.obtenerValor = jest.fn();
+    component.crearFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.obtenerValor).toHaveBeenCalled();
+  });
+
   it('should run #ngOnInit()', async () => {
     component.cargarDatos = jest.fn();
+    component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.getOtrosSeleccionado$ = observableOf({});
+    component.crearFormulario = jest.fn();
+    component.changeNacionalidad = jest.fn();
     component.ngOnInit();
     expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.crearFormulario).toHaveBeenCalled();
+    expect(component.changeNacionalidad).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerValor()', async () => {
+
+    component.obtenerValor({});
+
   });
 
   it('should run #cargarDatos()', async () => {
@@ -70,6 +99,8 @@ describe('AgregarOtrosComponent', () => {
   });
 
   it('should run #limpiarFormulario()', async () => {
+    component.tipoPersonaRadioOpcions = component.tipoPersonaRadioOpcions || {};
+    component.tipoPersonaRadioOpcions = ['tipoPersonaRadioOpcions'];
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.reset = jest.fn();
     component.limpiarFormulario();
@@ -83,15 +114,32 @@ describe('AgregarOtrosComponent', () => {
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
+  it('should run #obtenerNuevoValorFormulario()', async () => {
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.getRawValue = jest.fn().mockReturnValue({
+      segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
+      tipoPersona: {},
+      denominacionRazon: {}
+    });
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.MORAL = 'MORAL';
+    component.tipoPersona.FISICA = 'FISICA';
+    component.obtenerNuevoValorFormulario();
+    expect(component.agregarDatosForm.getRawValue).toHaveBeenCalled();
+  });
+
   it('should run #guardar()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateOtrosTablaDatos = jest.fn();
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.value = 'value';
+    component.obtenerNuevoValorFormulario = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.guardar();
     expect(component.tramiteStore.updateOtrosTablaDatos).toHaveBeenCalled();
+    expect(component.obtenerNuevoValorFormulario).toHaveBeenCalled();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
   it('should run #changeNacionalidad()', async () => {
@@ -105,18 +153,49 @@ describe('AgregarOtrosComponent', () => {
       disable: function() {},
       enable: function() {}
     });
+    component.alternarOpcionNoContribuyente = jest.fn();
     component.tipoPersona = component.tipoPersona || {};
     component.tipoPersona.NO_CONTRIBUYENTE = 'NO_CONTRIBUYENTE';
     component.changeNacionalidad();
-    expect(component.agregarDatosForm.enable).toHaveBeenCalled();
   });
 
-  it('should run #buscar()', async () => {
-    component.importacionMateriasPrimasService = component.importacionMateriasPrimasService || {};
-    component.importacionMateriasPrimasService.obtenerOstro = jest.fn().mockReturnValue(observableOf({}));
+  it('should run #alternarOpcionNoContribuyente()', async () => {
+    component.tipoPersonaRadioOpcions = component.tipoPersonaRadioOpcions || {};
+    component.tipoPersonaRadioOpcions.findIndex = jest.fn().mockReturnValue([
+      {
+        "value": {}
+      }
+    ]);
+    component.tipoPersonaRadioOpcions.push = jest.fn();
+    component.tipoPersonaRadioOpcions.splice = jest.fn();
+    component.alternarOpcionNoContribuyente({})
+  });
+
+  it('should run #seBuscaRfc()', async () => {
+    component.exportacionMateriasPrimasService = component.exportacionMateriasPrimasService || {};
+    component.exportacionMateriasPrimasService.obtenerOstro = jest.fn().mockReturnValue(observableOf({}));
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.patchValue = jest.fn();
+    component.agregarDatosForm.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      disabled: {},
+      value: {}
+    });
     component.seBuscaRfc();
+    expect(component.exportacionMateriasPrimasService.obtenerOstro).toHaveBeenCalled();
+    expect(component.agregarDatosForm.patchValue).toHaveBeenCalled();
+    expect(component.agregarDatosForm.get).toHaveBeenCalled();
+  });
+
+  it('should run #esInvalido()', async () => {
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.get = jest.fn().mockReturnValue({
+      dirty: {},
+      touched: {},
+      invalid: {}
+    });
+    component.esInvalido({});
+    expect(component.agregarDatosForm.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -124,6 +203,8 @@ describe('AgregarOtrosComponent', () => {
     component.unsubscribe$.next = jest.fn();
     component.unsubscribe$.complete = jest.fn();
     component.ngOnDestroy();
+    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
 
 });

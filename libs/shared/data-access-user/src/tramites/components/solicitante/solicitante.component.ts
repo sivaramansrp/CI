@@ -1,8 +1,9 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
-import { Component, Input, OnInit,forwardRef } from '@angular/core';
+import { Component, Input,OnDestroy, OnInit,forwardRef } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  FOLIO_DEL_TRAMITE,
   PERSONA_FISICA_EXTRANJERO,
   PERSONA_FISICA_NACIONAL,
   PERSONA_MORAL_EXTRANJERO,
@@ -15,13 +16,16 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '../../../core/queries/consulta.query';
+import { ConsultaioState } from '../../../core/estados/consulta.store';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',
@@ -30,30 +34,46 @@ import { tap } from 'rxjs';
     TituloComponent,
     ReactiveFormsModule,
     CommonModule,
+    TooltipModule,
     forwardRef(() => UppercaseDirective),
   ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
   host: {}
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit,OnDestroy {
   @Input() tabindex!: number;
 
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
+  datosTramite: FormularioDinamico[] = [];
+
 
   form!: FormGroup;
+  guardarDatos!: ConsultaioState;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
-    private formServices: FormulariosService
+    private formServices: FormulariosService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.guardarDatos = seccionState;
+        })
+      )
+      .subscribe();
     this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
+    this.inicializarFormGroup(this.datosTramite, 'datosTramite');
+    this.form.patchValue({datosTramite: this.guardarDatos?.consultaioSolicitante??{}});    
   }
 
   /**
@@ -90,6 +110,7 @@ export class SolicitanteComponent implements OnInit {
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
+    this.datosTramite=FOLIO_DEL_TRAMITE;
   }
 
   /**
@@ -105,6 +126,9 @@ export class SolicitanteComponent implements OnInit {
   get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
+  get datosTramiteForm(): FormGroup {
+    return this.form.get('datosTramite') as FormGroup;
+  }
 
   /**
    * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
@@ -113,6 +137,7 @@ export class SolicitanteComponent implements OnInit {
     this.form = this.fb.group({
       datosGenerales: this.fb.group({}),
       domicilioFiscal: this.fb.group({}),
+      datosTramite: this.fb.group({})
     });
   }
 
@@ -199,5 +224,9 @@ export class SolicitanteComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

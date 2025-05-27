@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import { TableData} from '../../../core/models/shared/components.model';
+import { TableBodyData, TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,13 +36,12 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any = [];
-
+  @Input() commonTableBody: TableBodyData[] = [];
   /**
   * @description
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
-
+  @Output() seleccionCambio = new EventEmitter<boolean>();
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -82,13 +83,13 @@ export class TableComponent implements OnInit, OnChanges {
 
   /**
    * Agrega la propiedad `selected` a cada elemento del arreglo si no está definida,
-   * asignándole `false` como valor predeterminado. Además, inicializa la estructura
+   * asignándole `false` como valor predeterminado. Además, inicializa la estructuraf
    * de `tableData` si aún no existe.
    *
    * @param data - Arreglo de elementos a los que se desea asegurar la propiedad `selected`.
    * @returns Un nuevo arreglo con los elementos actualizados.
    */
-  private agregarSeleccion(data: any[]): any[] {
+  private agregarSeleccion(data: TableBodyData[]): TableBodyData[] {
     if (!this.tableData) {
       this.tableData = { tableHeader: [], tableBody: [] };
     }
@@ -115,5 +116,7 @@ export class TableComponent implements OnInit, OnChanges {
       ...item,
       selected: CHECKED,
     }));
+    this.seleccionCambio.emit(CHECKED);
   }
+ 
 }

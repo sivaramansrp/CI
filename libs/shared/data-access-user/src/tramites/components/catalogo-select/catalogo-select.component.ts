@@ -42,13 +42,14 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   @Input() isInline: boolean = false;
+  @Input() questionCircleTooltip?: string = '';
 
   formSelect: FormGroup;
   value: string = '';
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
-      selectControl: [''],
+      selectControl: [-1],
     });
   }
 
