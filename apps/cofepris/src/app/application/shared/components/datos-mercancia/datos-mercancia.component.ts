@@ -11,6 +11,7 @@ import {
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
 } from '../../constantes/datos-solicitud.enum';
 import {
@@ -251,6 +252,17 @@ export class DatosMercanciaComponent implements OnInit {
    * los elementos que deben estar deshabilitados en el formulario.
    */
   public elementosDeshabilitados: string[] = [];
+
+/**
+ * @property {typeof TIPO_PRODUCTO_ESPECIAL} tipoProductoEspecial - Referencia a la constante que define los tipos especiales de producto.
+ * 
+ * @remarks
+ * Esta propiedad se utiliza para acceder y manejar los diferentes tipos de productos especiales dentro del componente.
+ * 
+ * @comando
+ * Utilice esta propiedad para mostrar o validar los tipos de productos especiales en la interfaz de usuario.
+ */
+ tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
   /**
    * @constructor
