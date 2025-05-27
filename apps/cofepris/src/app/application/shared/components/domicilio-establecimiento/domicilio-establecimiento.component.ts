@@ -311,6 +311,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   colapsableDuos: boolean = false;
 
+  /**
+   * @property {NicoInfo[]} personaparas - Arreglo que contiene información de personas relacionadas.
+   * @description Lista de objetos NicoInfo que representan las personas asociadas al establecimiento.
+   * @type {NicoInfo[]}
+   */
   personaparas: NicoInfo[] = [];
 
   /**
@@ -338,7 +343,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
-modalInstance!: Modal;  /**
+/**
+ * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
+ * dentro del componente DomicilioEstablecimientoComponent.
+ *
+ * */
+modalInstance!: Modal; /**
    * Lista de mercancías agregadas por el usuario.
    */
   listaMercancias: MercanciasInfo[] = [];
@@ -372,6 +382,15 @@ modalInstance!: Modal;  /**
     derecha: 'País(es) seleccionado(s)',
   };
 
+  /**
+   * @method
+   * @description
+   * Muestra el modal asociado al modelo de clave.
+   * 
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
   public mostrarModeloClave(): void {
     this.modalInstance.show();
   }
