@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -63,7 +63,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancías

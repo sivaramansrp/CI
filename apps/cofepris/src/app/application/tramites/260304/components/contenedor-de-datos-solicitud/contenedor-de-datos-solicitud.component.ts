@@ -23,17 +23,15 @@ import { Subject } from 'rxjs';
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 
 /**
- * @component
- * @name ContenedorDeDatosSolicitudComponent
+ * @component ContenedorDeDatosSolicitudComponent
  * @description
- * Componente que actúa como contenedor para manejar los datos de la solicitud del trámite 260304.
- * Permite la selección y actualización de datos relacionados con opciones, SCIAN y mercancías.
+ * Componente contenedor responsable de manejar y mostrar los datos de la solicitud del trámite 260304.
+ * Permite la selección y actualización de las tablas de opciones, SCIAN y mercancías, así como la actualización
+ * de los datos principales del formulario y la sincronización de los datos seleccionados en el store global.
  *
  * @selector app-contenedor-de-datos-solicitud
  * @standalone true
- * @imports
- * - CommonModule
- * - DatosDeLaSolicitudComponent
+ * @imports CommonModule, DatosDeLaSolicitudComponent
  */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
@@ -46,7 +44,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description
-   * Observable utilizado para notificar la destrucción del componente y liberar recursos.
+   * Observable utilizado como notificador para liberar recursos y cancelar suscripciones al destruir el componente.
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -60,7 +59,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {object} opcionConfig
    * @description
-   * Configuración de la tabla de opciones.
+   * Configuración de la tabla de opciones, incluyendo tipo de selección, columnas y datos.
    */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
@@ -71,7 +70,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {object} scianConfig
    * @description
-   * Configuración de la tabla SCIAN.
+   * Configuración de la tabla SCIAN, incluyendo tipo de selección, columnas y datos.
    */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -82,7 +81,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {object} tablaMercanciasConfig
    * @description
-   * Configuración de la tabla de mercancías.
+   * Configuración de la tabla de mercancías, incluyendo tipo de selección, columnas y datos.
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -128,44 +127,44 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {string} idProcedimiento
    * @description
-   * Identificador del procedimiento.
+   * Identificador único del procedimiento para el trámite.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @property {string[]} elementosRequeridos
    * @description
-   * Lista de elementos requeridos para completar el formulario o proceso.
+   * Lista de elementos requeridos para completar el formulario/trámite.
    */
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
    * @property {string[]} elementosAnadidos
    * @description
-   * Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
+   * Lista de elementos adicionales que pueden ser incluidos en el formulario/trámite.
    */
   public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
 
   /**
    * @constructor
    * @description
-   * Inicializa el componente con las dependencias necesarias.
+   * Constructor que inyecta las dependencias necesarias para consultar y actualizar el estado del trámite.
    *
-   * @param {Tramite260304Query} tramite260304Query - Consulta para acceder al estado del trámite.
-   * @param {Tramite260304Store} tramite260304Store - Tienda para actualizar el estado del trámite.
+   * @param {Tramite260304Query} tramite260304Query - Servicio de consulta para acceder al estado del trámite.
+   * @param {Tramite260304Store} tramite260304Store - Servicio para actualizar el estado global del trámite.
    */
   constructor(
     private tramite260304Query: Tramite260304Query,
     private tramite260304Store: Tramite260304Store
   ) {
-    //Constructor necesario para inyectar las dependencias
+    // Constructor para la inyección de dependencias.
   }
 
   /**
    * @method ngOnInit
    * @description
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al estado del trámite y actualiza las configuraciones de las tablas.
+   * Hook de inicialización del componente.
+   * Suscribe al estado global del trámite y actualiza las configuraciones de las tablas con los datos correspondientes.
    */
   ngOnInit(): void {
     this.tramite260304Query.selectTramiteState$
@@ -183,25 +182,22 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el evento cuando se selecciona una opción en la tabla.
-   *
-   * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`)
-   *                que representa las opciones seleccionadas.
-   *
-   * Actualiza la configuración de datos en el store `tramite260304Store`
-   * con las opciones seleccionadas.
+   * @method opcionSeleccionado
+   * @description
+   * Maneja el evento cuando se seleccionan opciones en la tabla de opciones.
+   * Actualiza el store con las opciones seleccionadas.
+   * @param {TablaOpcionConfig[]} event - Opciones seleccionadas de la tabla.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
     this.tramite260304Store.updateOpcionConfigDatos(event);
   }
 
   /**
-   * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
-   *
-   * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
-   *
-   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260304
-   * utilizando el evento proporcionado.
+   * @method scianSeleccionado
+   * @description
+   * Maneja el evento cuando se seleccionan elementos en la tabla SCIAN.
+   * Actualiza el store con los datos seleccionados de SCIAN.
+   * @param {TablaScianConfig[]} event - Elementos seleccionados de la tabla SCIAN.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
     this.tramite260304Store.updateScianConfigDatos(event);
@@ -211,8 +207,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @method mercanciasSeleccionado
    * @description
    * Maneja el evento de selección de mercancías en la tabla.
-   *
-   * @param {TablaMercanciasDatos[]} event - Datos seleccionados en la tabla de mercancías.
+   * Actualiza el store con los elementos seleccionados de la tabla de mercancías.
+   * @param {TablaMercanciasDatos[]} event - Elementos seleccionados de la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
     this.tramite260304Store.updateTablaMercanciasConfigDatos(event);
@@ -221,9 +217,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method datasolicituActualizar
    * @description
-   * Actualiza el estado del formulario de datos de la solicitud en el store.
-   *
-   * @param {DatosSolicitudFormState} event - Nuevo estado del formulario.
+   * Actualiza el estado del formulario principal de la solicitud en el store.
+   * @param {DatosSolicitudFormState} event - Nuevo estado del formulario de la solicitud.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
     this.tramite260304Store.updateDatosSolicitudFormState(event);
@@ -232,9 +227,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method datosDeTablaSeleccionados
    * @description
-   * Actualiza el estado del store con los datos seleccionados de las tablas.
-   *
-   * @param {DatosDeTablaSeleccionados} event - Datos seleccionados de las tablas.
+   * Actualiza el estado del store con los datos seleccionados de todas las tablas (opciones, SCIAN, mercancías)
+   * y el estado del colapsable de opciones.
+   * @param {DatosDeTablaSeleccionados} event - Datos seleccionados de las tablas y estado colapsable.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
     this.tramite260304Store.update((state) => ({
@@ -249,8 +244,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method ngOnDestroy
    * @description
-   * Método del ciclo de vida de Angular que se llama antes de destruir el componente.
-   * Libera recursos y completa el observable `destroyNotifier$`.
+   * Hook de destrucción de componente. Libera recursos y completa el observable para cancelar suscripciones.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

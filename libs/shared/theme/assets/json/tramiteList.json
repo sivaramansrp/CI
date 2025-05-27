@@ -1997,8 +1997,8 @@
   {
     "id": 286,
     "tramite": 80104,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
