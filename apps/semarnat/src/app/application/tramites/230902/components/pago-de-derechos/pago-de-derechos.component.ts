@@ -131,12 +131,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearFormularioPagoDerechos();
     if (this.esFormularioSoloLectura) {
       this.formPagoDerechos.disable();
-      this.fechaFinalInput.habilitado = false
-      this.fechaFinalInput.required = false
     } else if (!this.esFormularioSoloLectura) {
       this.formPagoDerechos.enable();
-      this.fechaFinalInput.habilitado = true
-      this.fechaFinalInput.required = true
     } else {
       // No se requiere ninguna acción en el formulario
     }
