@@ -19,8 +19,8 @@ export class Service260212Service {
   }
  
   actualizarEstadoFormulario(DATOS: Tramite260212State): void {
-    if (DATOS.selectedEstado) {
-      this.tramite260212Store.setSelectedEstado(DATOS.selectedEstado);
+    if (DATOS.estado) {
+      this.tramite260212Store.setSelectedEstado(DATOS.estado);
     }
     if (DATOS.selectedClave) {
       this.tramite260212Store.setClave(DATOS.selectedClave);
@@ -34,20 +34,21 @@ export class Service260212Service {
     if (DATOS.banco) {
       this.tramite260212Store.setBanco(DATOS.banco);
     }
-    this.tramite260212Store.setRfcDelResponsableSanitario(DATOS.setRfcDelResponsableSanitario);
-    this.tramite260212Store.setDenominacionRazonSocial(DATOS.setDenominacionRazonSocial);
-    this.tramite260212Store.setCorreoElectronico(DATOS.setCorreoElectronico);
-    this.tramite260212Store.setMunicipio(DATOS.setMunicipio);
-    this.tramite260212Store.setLocalidad(DATOS.setLocalidad);
-    this.tramite260212Store.setColonia(DATOS.setColonia);
-    this.tramite260212Store.setCalle(DATOS.setCalle);
-    this.tramite260212Store.setLada(DATOS.setLada);
-    this.tramite260212Store.setCodigoPostal(DATOS.setCodigoPostal);
-     if (DATOS.setRegimen) {
-      this.tramite260212Store.setRegimen(DATOS.setRegimen);
+    this.tramite260212Store.setRfcDelResponsableSanitario(DATOS.rfcDelResponsableSanitario);
+    this.tramite260212Store.setDenominacionRazonSocial(DATOS.denominacionRazonSocial);
+    this.tramite260212Store.setCorreoElectronico(DATOS.correoElectronico);
+    this.tramite260212Store.setMunicipio(DATOS.municipio);
+    this.tramite260212Store.setLocalidad(DATOS.localidad);
+    this.tramite260212Store.setColonia(DATOS.colonia);
+    this.tramite260212Store.setCalle(DATOS.calle);
+    this.tramite260212Store.setLada(DATOS.lada);
+     this.tramite260212Store.setTelefono(DATOS.teléfono);
+    this.tramite260212Store.setCodigoPostal(DATOS.codigoPostal);
+     if (DATOS.regimen) {
+      this.tramite260212Store.setRegimen(DATOS.regimen);
     }
-     if (DATOS.setEntradas) {
-      this.tramite260212Store.setEntradas(DATOS.setEntradas);
+     if (DATOS.entradas) {
+      this.tramite260212Store.setEntradas(DATOS.entradas);
     }
    this.tramite260212Store.setClaveDeReferncia(DATOS.ClaveDeReferncia);
    this.tramite260212Store.setCadenaDeLaDependencia(DATOS.CadenaDeLaDependencia);

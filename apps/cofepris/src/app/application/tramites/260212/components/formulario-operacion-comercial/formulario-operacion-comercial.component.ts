@@ -33,11 +33,11 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedRegimen$: Observable<CatalogoResponse | null> =
+  selectedRegimen$: Observable<string> =
     this.tramite260212Query.selectedRegimen$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
-  selectedEntradas$: Observable<CatalogoResponse | null> =
+  selectedEntradas$: Observable<string> =
     this.tramite260212Query.selectedEntradas$;
   /**
  * Arreglo que almacena las claves del catálogo.
@@ -83,7 +83,8 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
  * - Recupera las claves del catálogo mediante el servicio.
  */
   ngOnInit(): void {
-this.formularioOperacionInitial()
+this.formularioOperacionInitial();
+this. inicializarEstadoFormulario();
 }
 
   /**
@@ -167,5 +168,6 @@ this.solicitudService.getClave().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }

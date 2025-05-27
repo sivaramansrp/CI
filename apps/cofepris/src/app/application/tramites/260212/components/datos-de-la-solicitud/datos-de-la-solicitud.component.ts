@@ -52,7 +52,7 @@ private subscription: Subscription = new Subscription();
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<CatalogoResponse | null> =
+  selectedEstado$: Observable<string> =
     this.tramite260212Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
 

@@ -6,23 +6,23 @@ import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite260212State {
   // selectedClave: string;
-  selectedEstado: CatalogoResponse | null;
+  estado: string ;
   selectedClave: CatalogoResponse | null,
   selectedDescripcion: CatalogoResponse | null,
   selecteDespecificarClasificacion:Catalogo |null
   banco:string,
-  setRfcDelResponsableSanitario:string,
-  setDenominacionRazonSocial:string,
-  setCorreoElectronico:string,
-  setMunicipio:string,
-  setLocalidad:string,
-  setColonia:string,
-  setCalle:string,
-  setLada:string,
-  setTelefono:string,
-  setCodigoPostal:string,
-  setRegimen:CatalogoResponse|null,
-  setEntradas:CatalogoResponse|null,
+  rfcDelResponsableSanitario:string,
+  denominacionRazonSocial:string,
+  correoElectronico:string,
+  municipio:string,
+  localidad:string,
+  colonia:string,
+  calle:string,
+  lada:string,
+  teléfono:string,
+  codigoPostal:string,
+  regimen:string,
+  entradas:string,
   ClaveDeReferncia:string,
   CadenaDeLaDependencia:string,
   llaveDePago:string,
@@ -33,23 +33,23 @@ export interface Tramite260212State {
 export function createInitialState(): Tramite260212State {
   return {
     // selectedClave: '',
-    selectedEstado: null,
+    estado: '',
     selectedClave: null,
     selectedDescripcion: null,
     selecteDespecificarClasificacion:null,
     banco:'',
-    setRfcDelResponsableSanitario:'',
-    setDenominacionRazonSocial:'',
-    setCorreoElectronico:'',
-    setMunicipio:'',
-    setLocalidad:'',
-    setColonia:'',
-    setCalle:'',
-    setLada:'',
-    setTelefono:'',
-    setCodigoPostal:'',
-    setRegimen:null,
-    setEntradas:null,
+    rfcDelResponsableSanitario:'',
+    denominacionRazonSocial:'',
+    correoElectronico:'',
+    municipio:'',
+    localidad:'',
+    colonia:'',
+    calle:'',
+    lada:'',
+    teléfono:'',
+    codigoPostal:'',
+    regimen:'',
+    entradas:'',
     ClaveDeReferncia:'',
     CadenaDeLaDependencia:'',
     llaveDePago:'',
@@ -66,10 +66,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
+  public setSelectedEstado(estado: string): void {
     this.update((state) => ({
       ...state,
-      selectedEstado,
+      estado,
     }));
   }
 
@@ -101,87 +101,87 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setRfcDelResponsableSanitario(setRfcDelResponsableSanitario: string):void {
+  public setRfcDelResponsableSanitario(rfcDelResponsableSanitario: string):void {
     this.update((state) => ({
       ...state,
-      setRfcDelResponsableSanitario,
+      rfcDelResponsableSanitario,
     }));
   }
 
-  public setDenominacionRazonSocial(setDenominacionRazonSocial: string):void {
+  public setDenominacionRazonSocial(denominacionRazonSocial: string):void {
     this.update((state) => ({
       ...state,
-      setDenominacionRazonSocial,
+      denominacionRazonSocial,
     }));
   }
 
-  public setCorreoElectronico(setCorreoElectronico: string):void {
+  public setCorreoElectronico(correoElectronico: string):void {
     this.update((state) => ({
       ...state,
-      setCorreoElectronico,
+      correoElectronico,
     }));
   }
 
-  public setMunicipio(setMunicipio: string):void {
+  public setMunicipio(municipio: string):void {
     this.update((state) => ({
       ...state,
-      setMunicipio,
+      municipio,
     }));
   }
 
-  public setLocalidad(setLocalidad: string):void {
+  public setLocalidad(localidad: string):void {
     this.update((state) => ({
       ...state,
-      setLocalidad,
+      localidad,
     }));
   }
 
-  public setColonia(setColonia: string):void {
+  public setColonia(colonia: string):void {
     this.update((state) => ({
       ...state,
-      setColonia,
+      colonia,
     }));
   }
 
-  public setCalle(setCalle: string):void {
+  public setCalle(calle: string):void {
     this.update((state) => ({
       ...state,
-      setCalle,
+      calle,
     }));
   }
 
-  public setLada(setLada: string):void {
+  public setLada(lada: string):void {
     this.update((state) => ({
       ...state,
-      setLada,
+      lada,
     }));
   }
 
-  public setTelefono(setTelefono: string):void {
+  public setTelefono(teléfono: string):void {
     this.update((state) => ({
       ...state,
-      setTelefono,
+      teléfono,
     }));
   }
 
-  public setCodigoPostal(setCodigoPostal: string):void {
+  public setCodigoPostal(codigoPostal: string):void {
     this.update((state) => ({
       ...state,
-      setCodigoPostal,
+      codigoPostal,
     }));
   }
 
-  public setRegimen(setRegimen: CatalogoResponse):void {
+  public setRegimen(regimen: string):void {
     this.update((state) => ({
       ...state,
-      setRegimen,
+      regimen,
     }));
   }
 
-  public setEntradas(setEntradas: CatalogoResponse):void {
+  public setEntradas(entradas: string):void {
     this.update((state) => ({
       ...state,
-      setEntradas,
+      entradas,
     }));
   }
   public setClaveDeReferncia(ClaveDeReferncia: string):void {
