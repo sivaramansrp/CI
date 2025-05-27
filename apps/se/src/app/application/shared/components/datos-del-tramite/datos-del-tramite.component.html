@@ -12,11 +12,6 @@
             (valueChange)="setValoresStore(form, 'solicitud')"
             [layout]="'vertical'"
           ></app-input-radio>
-          <div *ngIf="esInvalido('solicitud')" class="text-danger">
-            <small *ngIf="form.controls['solicitud'].errors?.['required']">
-              Este campo es obligatorio.
-            </small>
-          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -28,11 +23,6 @@
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
           ></app-catalogo-select>
-          <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
-            <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">
-              Este campo es obligatorio.
-            </small>
-          </div>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@
         ></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
-            La descripción es obligatoria.
+            Este campo es obligatorio.
           </small>
           <small *ngIf="form.controls['descripcion'].errors?.['minlength']">
             Debe tener al menos 10 caracteres.
@@ -44,11 +44,6 @@
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
       ></app-catalogo-select>
-      <div *ngIf="esInvalido('fraccion')" class="text-danger">
-        <small *ngIf="form.controls['fraccion'].errors?.['required']">
-          Debe seleccionar un valor.
-        </small>
-      </div>
     </div>
     <div class="row">
       <div class="col-md-4 form-group">
@@ -107,11 +102,6 @@
           [tooltipQuestionCircle]="true"
           (change)="setValoresStore(form, 'unidadMedida')"
         ></app-catalogo-select>
-        <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
-          <small *ngIf="form.controls['unidadMedida'].errors?.['required']">
-            Debe seleccionar una unidad de medida.
-          </small>
-        </div>
       </div>
     </div>
   </form>

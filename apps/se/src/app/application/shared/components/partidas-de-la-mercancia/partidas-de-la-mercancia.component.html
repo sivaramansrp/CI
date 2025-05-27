@@ -11,8 +11,7 @@
               (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
             <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
-                es obligatoria.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo se
                 permiten números.</small>
@@ -58,8 +57,7 @@
               (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia')"></textarea>
             <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
-                es obligatoria.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
                 255 caracteres.</small>
@@ -196,8 +194,7 @@
                             formControlName="cantidadPartidasDeLaMercancia" appUppercase aria-labelledby="cantidad" />
                           <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
                             <small
-                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
-                              es obligatoria.</small>
+                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo
                               se permiten números.</small>
@@ -237,8 +234,7 @@
                             formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"></textarea>
                           <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
                             <small
-                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
-                              es obligatoria.</small>
+                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
                               255 caracteres.</small>
