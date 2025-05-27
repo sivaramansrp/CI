@@ -1,19 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import ProductorTabla from 'libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { ProductorIndirectoTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { FormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { FormBuilder, FormGroup,FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, takeUntil, Subject } from 'rxjs';
+
 import {
   Solicitud90201State,
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
-import { Subject, takeUntil, map } from 'rxjs';
+
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import ProductorTabla from '@libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 /**
@@ -27,28 +30,26 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,TituloComponent, TablaDinamicaComponent],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
 export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   /**
-   * Configuración para las columnas de la tabla en el componente Productor Indirecto.
-   * Cada configuración de columna incluye el nombre del encabezado, una función clave para extraer el valor de un elemento y el orden de la columna.
+   * Configuración de las columnas de la tabla de productor indirecto.
+   * Cada objeto en el arreglo define un encabezado, una clave para acceder a los datos
+   * y un orden para la visualización de las columnas.
    *
-   * @type {ConfiguracionColumna<any>[]}
-   * @property {string} encabezado - El nombre del encabezado de la columna.
-   * @property {(item: any) => any} clave - Una función para extraer el valor de un elemento para la columna.
-   * @property {number} orden - El orden de la columna en la tabla.
+   * @type {ConfiguracionColumna<ProductorIndirectoTabla>[]}
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'registro', clave: (item: any) => item.registro, orden: 1 },
+  public configuracionTabla: ConfiguracionColumna<ProductorIndirectoTabla>[] = [
+    { encabezado: 'registro', clave: (item: ProductorIndirectoTabla) => item.registro, orden: 1 },
     {
       encabezado: 'denominacion',
-      clave: (item: any) => item.denominación,
+      clave: (item: ProductorIndirectoTabla) => item.denominacion,
       orden: 2,
     },
-    { encabezado: 'correo', clave: (item: any) => item.correo, orden: 3 },
+    { encabezado: 'correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
   ];
 
   /**
@@ -165,7 +166,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
          this.formProductorIndirecto.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.formProductorIndirecto.enable();
-      } else {
       }
   }
   /**
@@ -226,7 +226,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
     const VALOR = this.rfc;
-    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
 /**

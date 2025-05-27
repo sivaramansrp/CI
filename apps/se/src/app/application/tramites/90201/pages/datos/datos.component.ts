@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { map,takeUntil,Subject } from 'rxjs';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import{ ConsultaioStore } from '@ng-mf/data-access-user';
-import { Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
+import { Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 90201

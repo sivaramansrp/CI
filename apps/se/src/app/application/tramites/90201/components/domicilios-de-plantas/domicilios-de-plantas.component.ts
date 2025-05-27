@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import DomiciliosTabla from 'libs/shared/theme/assets/json/90201/domicilios-de-plantas-tabla.json';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map,takeUntil,Subject } from 'rxjs';
+
 import { Solicitud90201State, Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import DomiciliosTabla from '@libs/shared/theme/assets/json/90201/domicilios-de-plantas-tabla.json';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 
@@ -27,7 +30,7 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrl: './domicilios-de-plantas.component.scss',
 })
-export class DomiciliosDePlantasComponent {
+export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
 
   /**
@@ -63,19 +66,19 @@ export class DomiciliosDePlantasComponent {
    * incluyendo el encabezado, la clave para acceder al valor en cada fila 
    * y el orden en que se mostrarán las columnas.
    * 
-   * @type {ConfiguracionColumna<any>[]} configuracionTabla - Arreglo de configuraciones de columnas.
+   * @type {ConfiguracionColumna<DomiciliosDePlantasTabla>[]} configuracionTabla - Arreglo de configuraciones de columnas.
    * @property {string} encabezado - El texto que se mostrará en el encabezado de la columna.
    * @property {Function} clave - Función que recibe un elemento y devuelve el valor correspondiente a la columna.
    * @property {number} orden - El orden en que se mostrará la columna en la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Calle', clave: (item: any) => item.calle, orden: 1 },
-    { encabezado: 'Número exterior', clave: (item: any) => item.numero, orden: 2 },
-    { encabezado: 'Número interior', clave: (item: any) => item.interior, orden: 3 },
-    { encabezado: 'Código postal', clave: (item: any) => item.postal, orden: 4 },
-    { encabezado: 'Colonia', clave: (item: any) => item.colonia, orden: 5 },
-    { encabezado: 'Municipio o alcaldía', clave: (item: any) => item.municipio, orden: 6 },
-    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 },
+  public configuracionTabla: ConfiguracionColumna<DomiciliosDePlantasTabla>[] = [
+    { encabezado: 'Calle', clave: (item: DomiciliosDePlantasTabla) => item.calle, orden: 1 },
+    { encabezado: 'Número exterior', clave: (item: DomiciliosDePlantasTabla) => item.numero, orden: 2 },
+    { encabezado: 'Número interior', clave: (item: DomiciliosDePlantasTabla) => item.interior, orden: 3 },
+    { encabezado: 'Código postal', clave: (item: DomiciliosDePlantasTabla) => item.postal, orden: 4 },
+    { encabezado: 'Colonia', clave: (item: DomiciliosDePlantasTabla) => item.colonia, orden: 5 },
+    { encabezado: 'Municipio o alcaldía', clave: (item: DomiciliosDePlantasTabla) => item.municipio, orden: 6 },
+    { encabezado: 'Estado', clave: (item: DomiciliosDePlantasTabla) => item.estado, orden: 7 },
   ];
 
   /**
@@ -167,7 +170,6 @@ export class DomiciliosDePlantasComponent {
         this.formDomiciliosDePlantas.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.formDomiciliosDePlantas.enable();
-      } else {
       }
   }
 
@@ -190,7 +192,7 @@ export class DomiciliosDePlantasComponent {
  * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones y recursos.
  * Completa el observable para evitar fugas de memoria.
  */
- ngonDestroy(): void {
+ ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -203,6 +205,6 @@ export class DomiciliosDePlantasComponent {
    */
    setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
     const VALOR = this.formDomiciliosDePlantas.get(campo)?.value;
-    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

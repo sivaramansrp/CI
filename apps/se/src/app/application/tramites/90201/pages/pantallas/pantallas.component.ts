@@ -1,20 +1,12 @@
-/* eslint-disable sort-imports */
-/**
- * Este componente se utiliza para mostrar los pasos del asistente - 90201
- * Lista de pasos
- * Índice del paso
- */ 
-
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-// eslint-disable-next-line sort-imports
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { PANTAPASOS } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
  * Interfaz que representa un botón de acción.
@@ -79,8 +71,12 @@ export class PantallasComponent {
 
 
 
+  /**
+   * Constructor de la clase PantallasComponent.
+   * 
+   * @param catalogosServices Servicio inyectado para gestionar operaciones relacionadas con catálogos.
+   */
   constructor(private catalogosServices: CatalogosService) {
-    //
   }
 
 
