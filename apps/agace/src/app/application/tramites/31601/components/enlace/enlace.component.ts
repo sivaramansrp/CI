@@ -4,7 +4,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { TableBodyData, TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import enlace from 'libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
@@ -33,7 +33,7 @@ export class EnlaceComponent implements OnInit {
   /**
    * Cuerpo de la tabla de enlace, donde se almacenan los datos.
    */
-  public enlanceBodyData: unknown = [];
+  public enlanceBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de enlace que se cargan desde un archivo JSON.

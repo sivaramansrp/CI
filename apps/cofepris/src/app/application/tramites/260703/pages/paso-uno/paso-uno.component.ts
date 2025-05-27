@@ -1,7 +1,3 @@
-import {
-  Catalogo,
-  ConfiguracionColumna,
-} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -15,6 +11,9 @@ import {
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
+import {
+  ConfiguracionColumna
+} from '@libs/shared/data-access-user/src';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
@@ -25,6 +24,7 @@ import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.mo
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
+  providers: [SolicitudPermisoService]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -54,11 +54,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     CONFIGURACIONCOLUMNA;
 
   /**
-   * Lista de bancos disponibles para seleccionar.
-   */
-  banco!: Catalogo[];
-
-  /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
    * Esto ayuda a evitar fugas de memoria.
    */
@@ -70,7 +65,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
-    private solicitudPermisoService: SolicitudPermisoService,
+    public solicitudPermisoService: SolicitudPermisoService,
     private tramite260703Store: Tramite260703Store,
     private tramite260703Query: Tramite260703Query
   ) {
@@ -139,7 +134,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
-      this.banco = this.solicitudPermisoService.banco;
       this.crearformularioPagoDerechos();
     }
     this.indice = i;
