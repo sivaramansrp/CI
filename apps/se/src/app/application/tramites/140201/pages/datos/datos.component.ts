@@ -33,7 +33,7 @@ export class DatosComponent implements AfterViewInit , OnInit , OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
-    if(this.consultaState.update) { 
+    if(this.consultaState.update) {  
       this.guardarDatosFormulario();
       
     } else {

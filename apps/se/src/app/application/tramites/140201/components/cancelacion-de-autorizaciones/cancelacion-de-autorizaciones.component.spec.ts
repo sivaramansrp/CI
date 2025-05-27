@@ -49,8 +49,7 @@ describe('CancelacionDeAutorizacionesComponent', () => {
         { provide: CancelacionesStore, useValue: cancelacionesStore },
         { provide: CancelacionesQuery, useValue: cancelacionesQuery },
         { provide: ConsultaioQuery, useValue: consultaioQueryMock }
-
-      ],
+  ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CancelacionDeAutorizacionesComponent);

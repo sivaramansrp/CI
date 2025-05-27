@@ -1,27 +1,18 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
+import { Subject, Subscription} from 'rxjs';
+import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { map, takeUntil } from 'rxjs/operators';
+import { CANCELACION_DE_AUTORIZACIONES } from '../../constantes/cancelacion-table.enum'
+import { CancelacionDeAutorizaciones } from '../../models/cancelacions.model'
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
+import { CancelacionesService } from '../../services/cancelaciones.service'
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CommonModule } from '@angular/common';
-// eslint-disable-next-line sort-imports
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { TablaDinamicaComponent, TablaSeleccion, } from '@libs/shared/data-access-user/src';
-
-import { CancelacionesService } from '../../services/cancelaciones.service'
-
-import { CancelacionDeAutorizaciones } from '../../models/cancelacions.model'
-
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-
-import { Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-
-import { CancelacionesStore } from '../../estados/cancelaciones.store';
-
-import { CancelacionesQuery } from '../../estados/cancelaciones.query';
-
-import { CANCELACION_DE_AUTORIZACIONES } from '../../constantes/cancelacion-table.enum'
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * @description
  * Componente para la cancelación de autorizaciones 140201.
@@ -40,30 +31,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
 
   /**
-   * @ignore
-   */
-  constructor(private fb: FormBuilder,
-    private cancelacionesService: CancelacionesService,
-    private cancelacionesStore: CancelacionesStore,
-    private cancelacionesQuery: CancelacionesQuery,
-    private consultaioQuery: ConsultaioQuery
-  ) {
-   
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = true; //seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
-
-  }
-
-  /**
-   * @ignore
-   */
+   * Sujeto para manejar la destrucción de suscripciones y evitar fugas de memoria
+  */
   private destroy$ = new Subject<void>();
 
     /**
@@ -111,6 +80,28 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    * Datos de cancelación de autorizaciones.
    */
   cancelacionData: CancelacionDeAutorizaciones[] = [];
+
+   /**
+   * @ignore
+   */
+  constructor(private fb: FormBuilder,
+    private cancelacionesService: CancelacionesService,
+    private cancelacionesStore: CancelacionesStore,
+    private cancelacionesQuery: CancelacionesQuery,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+   
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+
+  }
 
   /**
    * Inicializa el componente.
@@ -173,7 +164,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el RFC ingresado en el almacén.
    */
-  updateRfcIngresado() {
+  updateRfcIngresado(): void {
     const RFCINGRESADO = this.cancelacionForm?.get('rfcIngresado')?.value;
     this.cancelacionesStore.setRfcIngresado(RFCINGRESADO);
   }
@@ -181,7 +172,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el motivo de cancelación en el almacén.
    */
-  updateMotivoCancelacion() {
+  updateMotivoCancelacion(): void {
     const MOTIVOCANCELACION = this.cancelacionForm?.get('motivoCancelacion')?.value;
     this.cancelacionesStore.setMotivoCancelacion(MOTIVOCANCELACION);
   }

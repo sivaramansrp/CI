@@ -87,7 +87,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroy$),
       map((seccionState)=>{
-      this.esFormularioSoloLectura = true; //seccionState.readonly; 
+      this.esFormularioSoloLectura = seccionState.readonly; 
         this.inicializarEstadoFormulario();
       })
     )
