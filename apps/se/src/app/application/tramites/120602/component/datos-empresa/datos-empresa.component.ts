@@ -169,7 +169,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       this.inicializarFormulario();
       })
     )
     .subscribe();
