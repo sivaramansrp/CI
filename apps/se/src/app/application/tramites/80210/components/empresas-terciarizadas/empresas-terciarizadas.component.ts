@@ -205,14 +205,23 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Busca las empresas controladoras y actualiza el estado de las plantas.
    */
   buscarControladoras(): void {
-    if (this.empresasForm.valid) {
+    if (this.esFormularioValido()) {
       this.showPlantas = true;
-      this.tramite80210Store.setPlantasDisponibles([]);
+      this.tramite80210Store.establecerDatos({plantasDisponibles:[]});
       this.segregatePlantasDatos();
-      this.tramite80210Store.setShowPlantas(this.showPlantas);
+      this.tramite80210Store.establecerDatos({showPlantas:this.showPlantas});
       this.empresasForm.get('rfc')?.reset();
       this.empresasForm.get('estado')?.reset("-1");
     }
+  }
+
+    /**
+   * Verifica si el formulario de empresas es válido.
+   *
+   * @returns {boolean} Retorna `true` si el formulario es válido y el campo 'estado' tiene un valor distinto de '-1'; de lo contrario, retorna `false`.
+   */
+  esFormularioValido(): boolean {
+    return this.empresasForm.valid && this.empresasForm.get('estado')?.value !== '-1';
   }
 
   /**
@@ -239,7 +248,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destoryNotification$),
           tap((plantas) => {
-            this.tramite80210Store.setPlantasDisponibles(plantas?.datos);
+            this.tramite80210Store.establecerDatos({plantasDisponibles:plantas?.datos});
           })
         )
         .subscribe((plantas) => {
@@ -312,11 +321,11 @@ agregarPlantas(): void {
     const DISPONIBLES_PLANTAS_ID = this.plantasDisponibles.map(
       (planta) => planta
     );
-    this.tramite80210Store.setPlantasDisponibles(DISPONIBLES_PLANTAS_ID);
+    this.tramite80210Store.establecerDatos({plantasDisponibles:DISPONIBLES_PLANTAS_ID});
     const SELECCIONADA_PLANTAS_ID = this.plantasSeleccionadas.map(
       (planta) => planta
     );
-    this.tramite80210Store.setPlantasSeleccionada(SELECCIONADA_PLANTAS_ID);
+    this.tramite80210Store.establecerDatos({plantasSeleccionadas:SELECCIONADA_PLANTAS_ID});
 
   }
 
@@ -351,16 +360,6 @@ agregarPlantas(): void {
     this.listaFilaSeleccionada = [];
   }
 
-  /**
-   * Establece valores en el estado global desde el formulario.
-   * 
-   * @param campo - Nombre del campo en el formulario.
-   * @param metodoNombre - Método del estado global para actualizar el valor.
-   */
-  setValoresStore(campo: string, metodoNombre: keyof Tramite80210Store): void {
-    const VALOR = this.empresasForm.get(campo)?.value;
-    (this.tramite80210Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
 
   /**
    * Método de limpieza al destruir el componente.

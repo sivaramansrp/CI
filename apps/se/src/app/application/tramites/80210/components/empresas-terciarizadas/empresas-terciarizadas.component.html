@@ -57,7 +57,6 @@
               empresasForm.get('rfc')?.touched &&
               empresasForm.get('rfc')?.invalid
             "
-            (change)="setValoresStore('rfc', 'setRFC')"
           />
           <div
             class="invalid-feedback"
@@ -81,12 +80,11 @@
           [label]="'Estado'"
           [required]="true"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="setValoresStore('estado', 'setEstado')"
         ></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" [disabled]="!this.empresasForm.valid && esFormularioSoloLectura" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
+        <button type="button" [disabled]="!esFormularioValido()" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
           Buscar controladoras
         </button>
       </div>
@@ -102,13 +100,13 @@
           [configuracionTabla]="tablaConfiguration"
           [datos]="plantasDisponibles"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [deshabilitarCheckboxes]="false"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaDisponibles($event)"
         ></app-tabla-dinamica>
       </div>
       
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura || !this.listaFilaDisponibles.length" (click)="agregarPlantas()">
           Agregar plantas
         </button>
       </div>
@@ -121,12 +119,12 @@
         [configuracionTabla]="tablaConfiguration"
           [datos]="plantasSeleccionadas"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [deshabilitarCheckboxes]="false"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
         ></app-tabla-dinamica>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura || !this.listaFilaSeleccionada.length" (click)="eliminarPlantas()">
           Eliminar plantas
         </button>
       </div>
