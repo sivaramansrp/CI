@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { GENERAR_LINEA_CAPTURA_URL } from '@libs/shared/data-access-user/src/tramites/constantes/30901/pago-line-de-capture.enums';
+import { GENERAR_LINEA_CAPTURA_URL } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';

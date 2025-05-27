@@ -1,1 +1,0 @@
-export const GENERAR_LINEA_CAPTURA_URL = 'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf';
