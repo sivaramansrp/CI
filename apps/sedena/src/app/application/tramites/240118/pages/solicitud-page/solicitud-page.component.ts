@@ -1,4 +1,4 @@
-import { AVISO_PRIVACIDAD, AccionBoton } from '@ng-mf/data-access-user';
+import { AVISO, AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -48,7 +48,7 @@ export class SolicitudPageComponent {
  * El valor se obtiene de la constante `AVISO_PRIVACIDAD.Aviso_Privacidad`.
  * @type {string}
  */
-  TEXTOS: string = AVISO_PRIVACIDAD.Aviso_Privacidad;
+  TEXTOS: string = AVISO.Aviso;
 
     /**
    *

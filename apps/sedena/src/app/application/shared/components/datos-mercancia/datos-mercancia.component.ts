@@ -16,6 +16,7 @@ import { NO_VISIBILIDAD_UMC } from '../../constants/datos-del-tramilte.enum';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
+import { REGEX_NUMEROS } from '@ng-mf/data-access-user';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -336,7 +337,7 @@ export class DatosMercanciaComponent implements OnInit {
   }
     onCantidadUMTInput(event: Event): void {
       const INPUT = event.target as HTMLInputElement;
-      INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+      INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
       this.datosMercancia.get('cantidadUMT')?.setValue(INPUT.value, { emitEvent: false });
     }
     /**
