@@ -2018,8 +2018,8 @@
   {
     "id": 289,
     "tramite": 80211,
-    "linkDashboard": "/se/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
-    "linkDepartment": "/pago/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
+    "linkDashboard": "/se/registro-expansion/modalidad-ampliacion-terciarizadoras",
+    "linkDepartment": "/pago/registro-expansion/modalidad-ampliacion-terciarizadoras",
     "department": "se"
   },
   {
