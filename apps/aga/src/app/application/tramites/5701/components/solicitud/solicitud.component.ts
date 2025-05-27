@@ -1248,7 +1248,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Avisos',
-        mensaje: MSG_ADUANA_PEDIMENTO,
+        mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
