@@ -96,8 +96,13 @@ export interface CatalogoPaises {
   clave: number;
   /** Código ISO del país. */
   codigoIso?: string;
-  /** Nombre del país. */
+  /** Descripcion del país. */
   descripcion: string;
+  /** Nombre del país. */
+  nombre?: string;
+  /** Clave del país. */
+  id?: number;
+  
 }
 
 /**
