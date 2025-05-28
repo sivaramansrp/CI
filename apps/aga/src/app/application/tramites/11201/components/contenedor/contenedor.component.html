@@ -168,7 +168,7 @@
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
-                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="soloLectura"
                                 [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
@@ -250,6 +250,7 @@
                 </nav>
             </div>
         </div>
+        @if (consultaDatos.create) {
         <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
             <div class="form-group">
                 <div class="col-md-12">
@@ -276,6 +277,7 @@
                 </div>
             </div>
         </div>
+        }
     </form>
     <ng-template #plantillademodelo>
         <div class="modal-header">

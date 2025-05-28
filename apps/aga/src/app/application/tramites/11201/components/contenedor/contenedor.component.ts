@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -306,6 +306,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -405,8 +406,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
     });
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm?.disable();
+    } else {
+      this.solicitudForm?.enable();
     }
   }
   /**
