@@ -6,7 +6,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
-import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
+import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
 import { Subject } from 'rxjs';
 /**
  * 

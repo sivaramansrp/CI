@@ -23,7 +23,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
+import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
 
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
