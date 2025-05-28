@@ -44,9 +44,28 @@ export const MSG_ADUANA_PEDIMENTO =
 export const ERR_VALIDACION_PEDIMENTO =
   'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
 
+/**
+ * @description Titulo del modal de error
+ */
 export const TITULO_MODAL_ERROR = 'Aviso';
+
+/**
+ *@description Mensaje de error para la validación de fecha
+ */
 export const MSJ_ERROR_FECHA =
   'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.';
+
+/**
+ * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..
+ */
+export const MSJ_ERROR_LINEA_CAPTURA =
+  'Debe capturar todos los datos marcados como obligatorios.';
+
+/**
+ * @description Mensaje de error cuando la línea de captura no es válida.
+ */
+export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
+  'Línea de captura no es válida, favor de verificar.';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX

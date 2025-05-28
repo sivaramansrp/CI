@@ -44,6 +44,8 @@ import {
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA,
+  MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   PATENTES_ID,
   SIN_VALOR,
   TRANSPORTE,
@@ -1799,13 +1801,38 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
 
+    if (!LINEA_PAGO || !MONTO) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_ERROR,
+        mensaje: MSJ_ERROR_LINEA_CAPTURA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
     this.validaLineaPagoService
       .getLineaPagoValidacion(LINEA_PAGO)
       .pipe(
         takeUntil(this.destroyNotifier$),
         switchMap((responseValidaPago) => {
           if (responseValidaPago.codigo !== '00') {
-            // TODO: Implementar mensaje de error para línea de captura no válida.
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
             return EMPTY;
           }
           return this.parametroMontoService.getParametroMonto();
