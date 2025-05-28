@@ -1,48 +1,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 import { REGEX_PATRON_DECIMAL_12_3 } from "../../tramites/constantes/regex.constants";
 
-export class FechaUtil {
-
-    /** * @property _esFechaValida
-     * @description Indica si la fecha proporcionada es válida (pasada o igual a hoy).
-     * * @private
-     * @type {boolean}
-     * @default false
-     */
-    private static _esFechaValida = false;
-
-    /**
-     * @method esFechaPasada
-     * @description Verifica si una fecha es anterior o igual a la actual y actualiza esFechaValida.
-     *
-     * @param fechaStr Fecha en formato "DD/MM/YYYY"
-     * @returns boolean - true si es pasada o igual a hoy.
-     */
-    static esFechaPasada(fechaStr: string): boolean {
-        if (!fechaStr) {
-            this._esFechaValida = false;
-            return false;
-        }
-
-        const [DAY, MONTH, YEAR] = fechaStr.split('/').map(Number);
-        const FECHA_ENTRADA = new Date(YEAR, MONTH - 1, DAY);
-        const HOY = new Date();
-
-        if (isNaN(FECHA_ENTRADA.getTime())) {
-            this._esFechaValida = false;
-            return false;
-        }
-
-        FECHA_ENTRADA.setHours(0, 0, 0, 0);
-        HOY.setHours(0, 0, 0, 0);
-
-        this._esFechaValida = FECHA_ENTRADA <= HOY;
-        return this._esFechaValida;
-    }
-}
-
-
-
 /**
 * Validador personalizado para verificar si un valor numérico cumple con un formato específico.
 * 
