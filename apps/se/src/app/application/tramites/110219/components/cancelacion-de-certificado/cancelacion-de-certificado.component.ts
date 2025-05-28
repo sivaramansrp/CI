@@ -63,6 +63,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   @Output() isNumeroCertificado = new EventEmitter<boolean>();
   @Output() isNumeroCertificadoPattern = new EventEmitter<boolean>();
 
+  @Output() certificadoOriginEnable = new EventEmitter<boolean>();
+
+
   /** Texto de alerta para mostrar en el componente. */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
@@ -84,6 +87,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   mostrarErrores: boolean = true;
   /** Indica si se está buscando un certificado. */
   estaBuscando: boolean = true;
+
+  isCertificadoOriginEnable: boolean = false;
   /** Catálogo de tratados. */
   tratado!: CatalogosSelect;
 
@@ -303,7 +308,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
-        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(/^\d{16}$/)]],
+        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(/^\d{14}$/)]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required]],
@@ -322,6 +327,41 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
     return
 
+  }
+
+
+  onTablaDblClick(evt: MouseEvent): void {
+    // 1️⃣ ¿Dónde hizo dblclick? Busca el <td>
+    const td = (evt.target as HTMLElement).closest('td');
+    if (!td) { return; }
+
+    // 2️⃣ ¿En qué columna? Compara el índice del <td> con tu headers[]
+    const tr = td.parentElement;
+    if (!tr) { return; }
+    const clickedColIndex = Array.from(tr.children).indexOf(td);
+    const targetColIndex = this.headers .findIndex(h => h.encabezado === 'Número de certificado');
+
+    if (clickedColIndex !== targetColIndex) {
+      // no es la columna “Certificado”
+      return;
+    }
+
+    // 3️⃣ Extrae el valor mostrado en la celda y busca el objeto
+    const valor = td.textContent ? td.textContent.trim() : '';
+    const match = this.certificadoDisponsiblesTablaDatos
+      .find(item => String(item.numeroCertificado) === valor);
+
+    if (match) {
+      this.isCertificadoOriginEnable = true;
+      this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
+      this.handleCertificadoDblClick(match);
+    }
+  }
+
+ private handleCertificadoDblClick(cert: ColumnasTabla) {
+    // Aquí tu lógica: navegar, abrir modal, etc.
+    console.log('DblClick en certificado:', cert);
+    // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
   }
 
   /** Limpia los recursos al destruir el componente. */

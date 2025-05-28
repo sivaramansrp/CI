@@ -52,6 +52,8 @@ export class PasoUnoComponent implements AfterViewInit {
 
   isDatos!:boolean;
 
+  isCertificado!:boolean;
+
   /**
    * Evento para emitir datos al componente padre.
    */
@@ -126,5 +128,9 @@ export class PasoUnoComponent implements AfterViewInit {
 
   isNumeroData(data: boolean): void {
     this.isDatosNumero.emit(data);
+  }
+
+  certificadoEnable(event:boolean){
+     this.isCertificado = event;
   }
 }

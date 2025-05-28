@@ -4,25 +4,13 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen*:</label>
-        <input type="text" required="true" maxlength="16" pattern="\d{16}$" class="form-control"
+        <input type="text" required="true" maxlength="14" pattern="\d{14}$" class="form-control"
           formControlName="numeroCertificado"
           (change)=" setValoresStore(validacionForm,'numeroCertificado','setNumeroCertificado' )" />
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
         <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()"> Buscar Certificado </button>
       </div>
-      <!-- <div *ngIf="mostrarErrores" class="alert alert-danger text-center" role="alert">
-        <p>Corrija los siguientes errores:</p>
-        <span style="color: rgb(134, 17, 17);">
-          1.(Número de certificado) es un campo requerido
-        </span>
-      </div>
-      <div *ngIf="mostrarErrores" class="alert alert-danger text-center" role="alert">
-  <p>Corrija los siguientes errores:</p>
-  <span style="color: rgb(134, 17, 17);">
-    {{ mensajeError }}
-  </span>
-</div> -->
     </div>
     <ng-titulo titulo="" />
     <div class="row">
@@ -57,8 +45,8 @@
     </div>
     <div class="table-container centered-table-wrapper mt-5">
       <ng-titulo titulo="Certificados disponibles" />
-      <ng-container *ngIf="!estaBuscando && !mostrarErrores">
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
+      <ng-container *ngIf="!estaBuscando && !mostrarErrores" (dblclick)="onTablaDblClick($event)">
+        <app-tabla-dinamica (dblclick)="onTablaDblClick($event)" [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
           [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
       </ng-container>
       <ng-container *ngIf="estaBuscando && mostrarErrores">
