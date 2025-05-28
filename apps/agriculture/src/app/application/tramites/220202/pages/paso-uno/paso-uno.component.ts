@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-
+import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 
 /**
@@ -80,14 +79,19 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
 
   
   ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-            this.consultaState = seccionState;
-        })).subscribe();
-      if(this.consultaState.update) {
-        this.guardarDatosFormulario();
-      } else {
-        this.esDatosRespuesta = true;
-      }
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      })
+    )
+    .subscribe();
   }
   
     guardarDatosFormulario(): void {

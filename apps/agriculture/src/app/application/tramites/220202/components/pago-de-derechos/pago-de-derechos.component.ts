@@ -13,9 +13,12 @@ import {
 
 import {
   Catalogo,
+  ConsultaioQuery,
   InputFecha,
   TituloComponent
 } from '@ng-mf/data-access-user';
+
+import { map } from 'rxjs';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
@@ -129,6 +132,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   exentoPagoValor: string = 'Si';
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
+  esFormularioSoloLectura: boolean = true;
+
 
   /**
    * Valor seleccionado en el radio button de exención de pago.
@@ -156,10 +161,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes a la API de Agricultura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) {
+  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
     this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.pago;
     })
+
+    this.agriculturaApiService
+      .getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formularioPagoStore = datos.pago;
+      });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -171,14 +194,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.pagoForm = this.fb.group({
-      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
-      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia || '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia || '', disabled: true }, Validators.required],
-      banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago || '', disabled: true }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago || '', disabled: true }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago || '', disabled: true }, Validators.required],
+      exentoPago: [{ value: this.formularioPagoStore.exentoPago || 'Si', disabled: this.esFormularioSoloLectura }, Validators.required],
+      justificacion: [{ value: this.formularioPagoStore.justificacion, disabled: this.esFormularioSoloLectura }, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia || '', disabled: this.esFormularioSoloLectura }],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia || '', disabled: this.esFormularioSoloLectura }],
+      banco: [{ value: this.formularioPagoStore.banco, disabled: this.esFormularioSoloLectura }, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago || '', disabled: this.esFormularioSoloLectura }],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago || '', disabled: this.esFormularioSoloLectura }],
     });
     this.pagoForm.statusChanges
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction

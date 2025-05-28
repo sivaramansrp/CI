@@ -10,9 +10,8 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.en
 
 import { Subject,map, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '../../queries/consulta.query';
 
 /**
  * @component DatosDeLaSolicitudComponent
@@ -172,19 +171,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private readonly agriculturaApiService: AgriculturaApiService,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+    this.agriculturaApiService.getAllDatosForma()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((datos) => {
       this.formulariodataStore = datos.datos;
-    })
+      this.createFromFields(); 
+    });
 
-    this.consultaioQuery.selectConsultaioState$
+  this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-   
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
       })
     )
-    .subscribe()
+    .subscribe();
 
   }
 
@@ -196,15 +197,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.createFromFields();
-    this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        datosFormaValidacion: false,
-      };
-      FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : false;
-      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    })
-    this.obtenerTodosLosDatosDeLaLista();
+   this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
+    const FORMA_VALIDA_ACTUALIZADA = {
+      datosFormaValidacion: false,
+    };
+    FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : false;
+    this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+  });
+  this.obtenerTodosLosDatosDeLaLista();
 
   }
 
@@ -263,17 +263,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param FORMULARIO Datos de formulariodataStore.
    * @returns Objeto con los campos opcionales.
    */
-  crearCamposOpcionales() {
-    const FORMULARIO = this.formulariodataStore;
-    return {
-      numeroDeGuia: [FORMULARIO.numeroDeGuia || ''],
-      requisito: [FORMULARIO.requisito || ''],
-      numeroCertificadoInternacional: [FORMULARIO.numeroCertificadoInternacional || ''],
-      descripcionFraccion: [FORMULARIO.descripcionFraccion || ''],
-      descripcionNico: [FORMULARIO.descripcionNico || ''],
-      descripcion: [FORMULARIO.descripcion || ''],
-    };
-  }
+   crearCamposOpcionales() {
+     const FORMULARIO = this.formulariodataStore;
+     return {
+       numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
+       requisito: [{ value: FORMULARIO.requisito || '', disabled: this.esFormularioSoloLectura }],
+       numeroCertificadoInternacional: [{ value: FORMULARIO.numeroCertificadoInternacional || '', disabled: this.esFormularioSoloLectura }],
+       descripcionFraccion: [{ value: FORMULARIO.descripcionFraccion || '', disabled: this.esFormularioSoloLectura }],
+       descripcionNico: [{ value: FORMULARIO.descripcionNico || '', disabled: this.esFormularioSoloLectura }],
+       descripcion: [{ value: FORMULARIO.descripcion || '', disabled: this.esFormularioSoloLectura }],
+     };
+   }
 
 
 

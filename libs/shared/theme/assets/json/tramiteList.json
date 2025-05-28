@@ -507,8 +507,8 @@
     "id": 73,
     "tramite": 220203,
     "linkDashboard": "/agriculture/importacion-acuacultura/sanidad",
-    "linkDepartment": "/agriculture/importacion-acuacultura/sanidad",
-    "department": "agriculture"
+    "linkDepartment": "/pago/importacion-acuacultura/sanidad",
+    "department": "agricultura"
   },
   {
     "id": 74,
