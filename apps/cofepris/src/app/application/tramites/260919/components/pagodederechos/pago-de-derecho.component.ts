@@ -98,12 +98,12 @@ public bancoData = BANCO_DATA;
   crearFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
-        clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, Validators.required],
-        cadenadeladependencia: [this.pagoDeDerechosState?.cadenadeladependencia, Validators.required],
-        banco: [this.pagoDeDerechosState?.banco, Validators.required],
-        llavedepago: [this.pagoDeDerechosState?.llavedepago, Validators.required],
-        fechadepago: [this.pagoDeDerechosState?.fechadepago, Validators.required],
-        importedepago: [this.pagoDeDerechosState?.importedepago, Validators.required],
+        clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{9}$/)]],
+        cadenadeladependencia: [this.pagoDeDerechosState?.cadenadeladependencia,[ Validators.pattern(/^[a-zA-Z0-9]{40}$/)]],
+        banco: [this.pagoDeDerechosState?.banco],
+        llavedepago: [this.pagoDeDerechosState?.llavedepago,[Validators.pattern(/^[a-zA-Z0-9]{30}$/)]],
+        fechadepago: [this.pagoDeDerechosState?.fechadepago],
+        importedepago: [this.pagoDeDerechosState?.importedepago,[Validators.pattern(/^\d{16}$/)]],
       }),
     });
   }
@@ -112,17 +112,20 @@ public bancoData = BANCO_DATA;
  * Actualiza la fecha de pago en el store con el evento recibido.
  * @param evento Fecha seleccionada en formato de cadena.
  */
-seleccionarFechaInicio(evento: string): void {
+ seleccionarFechaInicio(evento: string): void {
   this.solicitud260919Store.setFechadePago(evento);
 }
-
   /**
    * Limpia los datos del formulario.
    */
   clearForm(): void {
-    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; // Preservar el valor del banco
     this.pagoDeDerechosForm.reset(); // Restablecer el formulario
-    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); // Restaurar el valor del banco
+    // Explicitly reset the fechaDePago value
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(null);
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsPristine();
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsUntouched();
+  // Optionally, reset the store value if needed
+  this.solicitud260919Store.setFechadePago('');
   }
 
   /**

@@ -1,6 +1,6 @@
 import { ADUANA_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA } from '../../constants/catalogs.enum';
 
-import { AlertComponent, Catalogo, InputRadioComponent, NotificacionesComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
@@ -26,7 +26,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputCheckComponent,NotificacionesComponent,AlertComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputCheckComponent,NotificacionesComponent,AlertComponent,NotificacionesComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
@@ -111,6 +111,8 @@ opcionDeBotonDeRadio = OPCION_DE_BOTON_DE_RADIO;
  */
 public infoAlert = 'alert-warning';
 
+rfc: string = 'MAVL621207C95';
+
   /**
  * Constructor del componente.
  * @param fb - Constructor para crear formularios reactivos.
@@ -131,6 +133,25 @@ constructor(private fb: FormBuilder,
  /** Configuración de columnas para la tabla de mercancias */
  mercanciasDatos = CONFIGURACION_COLUMNAS_MERCANCIAS;
 
+ /**
+   * Razón social legal del solicitante.
+   */
+ legalRazonSocial: string = '';
+
+ /**
+  * Apellido paterno del solicitante.
+  */
+ apellidoPaterno: string = '';
+
+ /**
+  * Apellido materno del solicitante.
+  */
+ apellidoMaterno: string = '';
+
+ public nuevaNotificacion!: Notificacion;
+  elementoParaEliminar!: number;
+  pedimentos: Array<Pedimento> = [];
+
 /** Inicialización del componente */
   ngOnInit(): void {
    this.solicitud260919Query.selectSolicitud$
@@ -149,36 +170,71 @@ constructor(private fb: FormBuilder,
     this.getAduanaData();
     this.getMercanciasData();
   }
- 
-
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    }
+   
+    this.elementoParaEliminar = i;
+  }
   /** Configuración del formulario con validaciones para los campos del trámite. */
 createForm(): void{
   this.dataDeLaSolicitudForm = this.fb.group({
     datosDelTramiteRealizar: this.fb.group({
       tipoOperacion:[{ value: this.dataDeLaSolicitudState.tipoOperacion || ''}],
-      justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true }],
-      rfcDel:[this.dataDeLaSolicitudState?.rfcDel, Validators.required],
-      denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
-      correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
-      codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
+      justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true },[Validators.maxLength(2000)]],
+      rfcDel:[this.dataDeLaSolicitudState?.rfcDel,[Validators.maxLength(13), Validators.pattern('^[A-Za-z0-9]+$')]],
+      denominacion: [this.dataDeLaSolicitudState?.denominacion, [Validators.maxLength(100)]],
+      correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, [Validators.email, Validators.maxLength(100)]],
+      codigopostal: [this.dataDeLaSolicitudState?.codigopostal, [
+        Validators.required,
+        Validators.maxLength(12),
+        Validators.pattern('^[0-9]+$'), 
+      ]],
       estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
       municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
-      localidad: [this.dataDeLaSolicitudState?.localidad, Validators.required],
-      colonia: [this.dataDeLaSolicitudState?.colonia, Validators.required],
-      calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
-      lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
-      telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
-      avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento || false, Validators.required],
+      localidad: [this.dataDeLaSolicitudState?.localidad, [
+        Validators.required,
+        Validators.maxLength(120),
+        Validators.pattern('^[a-zA-Z0-9 ]+$'),
+      ]],
+      colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
+      calle: [this.dataDeLaSolicitudState?.calle, [Validators.maxLength(100)]],
+      lada: [this.dataDeLaSolicitudState?.lada, [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(5),
+        Validators.pattern('^[0-9]+$'), 
+      ],],
+      telefono: [this.dataDeLaSolicitudState?.telefono,[
+        Validators.required,
+        Validators.maxLength(30), 
+        Validators.pattern('^[0-9]+$'),
+      ],],
+      avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento || false],
       licenciaSanitaria: [
-        { value: this.dataDeLaSolicitudState?.licenciaSanitaria || '', disabled: !this.dataDeLaSolicitudState?.avisoDeFuncionamiento },
+        { value: this.dataDeLaSolicitudState?.licenciaSanitaria || '', disabled: this.dataDeLaSolicitudState?.avisoDeFuncionamiento },
         Validators.required,
       ],
       regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
       aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
-      rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
-      legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
-      apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
-      apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
+      rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc],
+      legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial],
+      apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno],
+      apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno],
     }),
    
   });
@@ -204,6 +260,36 @@ toggleLicenciaSanitaria(): void {
   } else {
     LICENCIA_SANITARIA_CONTROL?.enable();
   }
+
+  //  const avisoDeFuncionamientoControl = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento');
+  // const licenciaSanitariaControl = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.licenciaSanitaria');
+
+  // if (!avisoDeFuncionamientoControl || !licenciaSanitariaControl) {
+  //   console.error('Form controls are not defined');
+  //   return;
+  // }
+  // console.log('Initial avisoDeFuncionamiento value:', avisoDeFuncionamientoControl?.value);
+  // console.log('Initial licenciaSanitaria value:', licenciaSanitariaControl?.value);
+  // // Listen to changes in avisoDeFuncionamiento
+  // avisoDeFuncionamientoControl?.valueChanges.subscribe((isChecked) => {
+  //   console.log('avisoDeFuncionamiento changed:', isChecked);
+
+  //   if (isChecked) {
+  //     licenciaSanitariaControl?.disable(); // Disable licenciaSanitaria if aviso is checked
+  //   } else {
+  //     licenciaSanitariaControl?.enable(); // Enable licenciaSanitaria if aviso is unchecked
+  //   }
+  // });
+
+  // // Listen to changes in licenciaSanitaria
+  // licenciaSanitariaControl?.valueChanges.subscribe((value) => {
+  //   console.log('licenciaSanitaria changed:', value);
+
+  //   if (value) {
+  //     avisoDeFuncionamientoControl?.setValue(true); // Check avisoDeFuncionamiento if licenciaSanitaria has a value
+  //     licenciaSanitariaControl.disable(); // Disable licenciaSanitaria
+  //   }
+  // });
 }
 /**
  * Método para manejar el evento de cambio en el tipo de operación.
@@ -211,6 +297,7 @@ toggleLicenciaSanitaria(): void {
  * En caso contrario, deshabilita el control de justificación y limpia su valor.
  */
 changeEvent(): void{
+  
   const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
   const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
 
@@ -281,6 +368,28 @@ changeEvent(): void{
     this.dataDeLaSolicitudForm.enable();
     this.dataDeLaSolicitudForm.enable();
     this.habilitarEstado = false;
+  }
+
+  seleccionarEstablecimiento(): void {
+    this.abrirModal(0);
+  }
+
+  getSolicitudData(): void {
+    this.importarDeRemediosHerbals.getSolicitudData().subscribe((data) => {
+      if (data && data.length > 0) {
+        const SOLICITUD_DATA = data[0];
+        this.datosDelTramiteRealizar.patchValue({
+          legalRazonSocial: SOLICITUD_DATA.nombreORazónSocial,
+          apellidoPaterno: SOLICITUD_DATA.apellidoPaterno,
+          apellidoMaterno: SOLICITUD_DATA.apellidoMaterno,
+        });
+        this.datosDelTramiteRealizar.get('legalRazonSocial')?.disable();
+        this.datosDelTramiteRealizar.get('apellidoPaterno')?.disable();
+        this.datosDelTramiteRealizar.get('apellidoMaterno')?.disable();
+      }
+      
+    });
+ 
   }
 
 /**

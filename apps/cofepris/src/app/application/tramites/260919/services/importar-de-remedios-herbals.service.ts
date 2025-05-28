@@ -105,4 +105,9 @@ export class ImportarDeRemediosHerbalsService {
   getFacturadorData(): Observable<FilaTablaData[]> {
     return this.http.get<FilaTablaData[]>('./assets/json/260919/facturador.json');
   }
+
+  getSolicitudData(): Observable<TramitesAsociados[]> {
+      return this.http.get<TramitesAsociados[]>('./assets/json/260919/solicitud.json');
+    }
+  
 }
