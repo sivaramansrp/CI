@@ -73,7 +73,7 @@ describe('EntidadExternaComponent', () => {
 
   it('should update the form state with observable values', () => {
     component.ngOnInit();
-    component.updateState();
+    component.estadoActualizacion();
     expect(component.entidadForm.get('entidadExterna')?.value).toBe('Entidad Externa');
     expect(component.entidadForm.get('nombreSolicitanteIPC')?.value).toBe('Nombre Solicitante');
     expect(component.entidadForm.get('cargoSolicitanteIPC')?.value).toBe('Cargo Solicitante');
@@ -124,7 +124,7 @@ describe('EntidadExternaComponent', () => {
 
     component.guardarDatosFormulario();
 
-    expect(component.updateState).toHaveBeenCalled();
+    expect(component.estadoActualizacion).toHaveBeenCalled();
     expect(disableSpy).toHaveBeenCalled();
     expect(enableSpy).not.toHaveBeenCalled();
   });
@@ -137,7 +137,7 @@ describe('EntidadExternaComponent', () => {
 
     component.guardarDatosFormulario();
 
-    expect(component.updateState).toHaveBeenCalled();
+    expect(component.estadoActualizacion).toHaveBeenCalled();
     expect(enableSpy).toHaveBeenCalled();
     expect(disableSpy).not.toHaveBeenCalled();
   });
@@ -145,7 +145,7 @@ describe('EntidadExternaComponent', () => {
   it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    const updateSpy = jest.spyOn(component, 'updateState');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
 
     component.inicializarEstadoFormulario();
 
@@ -153,10 +153,10 @@ describe('EntidadExternaComponent', () => {
     expect(updateSpy).not.toHaveBeenCalledTimes(2); 
   });
 
-  it('should only call updateState when readonly is false in inicializarEstadoFormulario', () => {
+  it('should only call estadoActualizacion when readonly is false in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = false;
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    const updateSpy = jest.spyOn(component, 'updateState');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
 
     component.inicializarEstadoFormulario();
 
