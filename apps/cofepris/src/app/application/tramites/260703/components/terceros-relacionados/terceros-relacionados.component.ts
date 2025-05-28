@@ -32,7 +32,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Destinatario) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'RFC', clave: (item: Destinatario) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C', clave: (item: Destinatario) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Destinatario) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',
@@ -108,7 +108,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Fabricante) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'RFC', clave: (item: Fabricante) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C', clave: (item: Fabricante) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Fabricante) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',

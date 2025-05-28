@@ -1,9 +1,9 @@
 <div class="row">
   <form [formGroup]="formDatosProrroga">
     <div class="col-md-12">
-      <label class="form-label" for="vigenciaActual">{{
-        vigenciaActualLabel
-      }}</label>
+      <span class="form-label font-size" for="vigenciaActual">
+         {{ vigenciaActualLabel }}</span
+      >
     </div>
     <div class="col-md-12">
       <label class="form-label" for="vigenciaActualTexto">{{
@@ -15,6 +15,7 @@
         class="width"
         [setFecha]="formDatosProrroga.get('fechaInicioVigencia')?.value"
         [datos]="configuracionFechaFinVigencia"
+        [icono]="false"
         (valorCambiado)="onFechaFinVigenciaChange($event)"
       ></input-fecha>
     </div>
@@ -22,6 +23,7 @@
       <input-fecha
         [setFecha]="formDatosProrroga.get('fechaFinVigencia')?.value"
         [datos]="configuracionFechaInicioVigencia"
+         [icono]="false"
         (valorCambiado)="onFechaInicioChange($event)"
       ></input-fecha>
     </div>

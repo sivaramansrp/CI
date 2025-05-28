@@ -3,7 +3,7 @@
   <form [formGroup]="domicilloDelEstablecimientoForm">
     <div class="row">
       <div class="col-md-4">
-        <label for="codigoPostal" class="form-label">Código postal*:</label>
+        <label for="codigoPostal" class="form-label">Código postal *:</label>
         <input
           type="text"
           name="codigoPostal"
@@ -11,24 +11,29 @@
           class="form-control"
           formControlName="codigoPostal"
           placeholder="95270"
+          maxlength="12"
           (change)="setValoresStore('codigoPostal')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
-        "
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
+          "
         />
         <div
-        class="invalid-feedback"
-        *ngIf="
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
-          domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
-        "
-      >
-        <span
-          *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.hasError('required')"
-          >Este campo es obligatorio.</span
+          class="invalid-feedback"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.touched &&
+            domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid
+          "
         >
-      </div>
+          <span
+            *ngIf="
+              domicilloDelEstablecimientoForm
+                .get('codigoPostal')
+                ?.hasError('required')
+            "
+            >Este campo es obligatorio.</span
+          >
+        </div>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
@@ -38,12 +43,11 @@
           [label]="'Estado'"
           [required]="true"
           name="estado"
-          (change)="estadoSeleccion()"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <label for="descripcionMunicipio" class="form-label"
-          >Municipio y alcaldía*:</label
+          >Municipio y alcaldía *:</label
         >
         <input
           type="text"
@@ -54,25 +58,34 @@
           formControlName="descripcionMunicipio"
           (change)="setValoresStore('descripcionMunicipio')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched &&
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid"
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')
+              ?.touched &&
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
+          "
         />
         <div
-        class="invalid-feedback"
-        *ngIf="
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched &&
-          domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
-        "
-      >
-        <span
-          *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.hasError('required')"
-          >Este campo es obligatorio.</span
+          class="invalid-feedback"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')
+              ?.touched &&
+            domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid
+          "
         >
-      </div>
+          <span
+            *ngIf="
+              domicilloDelEstablecimientoForm
+                .get('descripcionMunicipio')
+                ?.hasError('required')
+            "
+            >Este campo es obligatorio.</span
+          >
+        </div>
       </div>
     </div>
     <div class="row mt-5">
-      <lib-notificaciones [notificacionInput]="notificacionInput"></lib-notificaciones>
+      <lib-notificaciones
+        [notificacionInput]="notificacionInput"
+      ></lib-notificaciones>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -102,7 +115,7 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <label for="calle" class="form-label">Calle*:</label>
+        <label for="calle" class="form-label">Calle *:</label>
         <input
           type="text"
           name="calle"
@@ -112,9 +125,9 @@
           formControlName="calle"
           (change)="setValoresStore('calle')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('calle')?.touched &&
-          domicilloDelEstablecimientoForm.get('calle')?.invalid
-        "
+            domicilloDelEstablecimientoForm.get('calle')?.touched &&
+            domicilloDelEstablecimientoForm.get('calle')?.invalid
+          "
         />
       </div>
       <div
@@ -125,7 +138,9 @@
         "
       >
         <span
-          *ngIf="domicilloDelEstablecimientoForm.get('calle')?.hasError('required')"
+          *ngIf="
+            domicilloDelEstablecimientoForm.get('calle')?.hasError('required')
+          "
           >Este campo es obligatorio.</span
         >
       </div>
@@ -144,7 +159,7 @@
         />
       </div>
       <div class="col-md-3">
-        <label for="telefono" class="form-label">Teléfono*:</label>
+        <label for="telefono" class="form-label">Teléfono *:</label>
         <input
           type="text"
           name="telefono"
@@ -154,8 +169,9 @@
           placeholder="2979725632"
           (change)="setValoresStore('telefono')"
           [class.is-invalid]="
-          domicilloDelEstablecimientoForm.get('telefono')?.touched &&
-          domicilloDelEstablecimientoForm.get('telefono')?.invalid"
+            domicilloDelEstablecimientoForm.get('telefono')?.touched &&
+            domicilloDelEstablecimientoForm.get('telefono')?.invalid
+          "
         />
       </div>
       <div
@@ -166,7 +182,11 @@
         "
       >
         <span
-          *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.hasError('required')"
+          *ngIf="
+            domicilloDelEstablecimientoForm
+              .get('telefono')
+              ?.hasError('required')
+          "
           >Este campo es obligatorio.</span
         >
       </div>
@@ -174,13 +194,24 @@
 
     <div class="row" class="mt-5">
       <div class="form-group">
-        <label class="form-label" for="scian">S.C.I.A.N.*:</label>
+        <label class="form-label" for="scian">S.C.I.A.N. *:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
-          [datos]="datos"
+          [datos]="scianDatos"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
         >
         </app-tabla-dinamica>
+      </div>
+      <div class="row" style="padding-bottom: 20px; text-align: right">
+        <div>
+          <button type="button" class="btn me-2" >Eliminar</button>
+          <button
+            type="button"
+            class="btn btn-primary me-2"
+          >
+            Agregar
+          </button>
+        </div>
       </div>
     </div>
 
@@ -192,48 +223,71 @@
             id="funcionamiento"
             formControlName="funcionamiento"
             (change)="setValoresStore('funcionamiento')"
-          />Aviso de funcionamiento*
+          />Aviso de funcionamiento *
         </label>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="licencia"
+        <label class="form-label" for="licencia" 
+        *ngIf='this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
           >No. de licencia sanitaria:
         </label>
-        <input 
-        type="text"
-        id="licencia"
-        name="licencia"
-        class="form-control"
-        formControlName="licencia"
-        (change)="setValoresStore('licencia')"
-        >
+        <label class="form-label" for="licencia"
+        *ngIf='!this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
+
+          >No. de licencia sanitaria*:
+        </label>
+        <input
+          type="text"
+          id="licencia"
+          name="licencia"
+          class="form-control"
+          formControlName="licencia"
+          (change)="setValoresStore('licencia')"
+        />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-8">
         <app-catalogo-select
-          [catalogo]="regimen"
+          [catalogo]="solicitudPermisoService.regimen"
           formControlName="regimen"
           [placeholder]="'Definitivos'"
-          [label]="'Regimen al que se destinara la mercancia:'"
+          [label]="'Regimen al que se destinara la mercancia'"
           [required]="true"
+          [tooltipQuestionCircle]="true"
           name="regimen"
-          (change)="regimeSeleccion()"
+          (onChange)="setValoresStore('regimen')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="aduana"
+          [catalogo]="solicitudPermisoService.aduana"
           [placeholder]="'DOS BOCAS'"
           formControlName="aduana"
           [label]="'Aduana'"
           [required]="true"
           name="aduana"
-          (change)="aduanaSeleccion()"
+          (onChange)="setValoresStore('aduana')"
         ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="form-group">
+        <label class="form-label" for="mercancias">Mercancías *:</label>
+        <app-tabla-dinamica
+          [configuracionTabla]="configuracionTablaMercancia"
+          [datos]="mercanciaDatos"
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+        >
+        </app-tabla-dinamica>
+        <div class="row" style="padding-bottom: 20px; text-align: right">
+          <div>
+            <button type="button" class="btn btn-default me-2">
+              Modificar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </form>
 </div>
-
-

@@ -1,8 +1,9 @@
 import { Observable, catchError, throwError } from 'rxjs';
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {JSONResponse} from '../../models/shared/catalogos.model';
-import { enviroment } from '../../../enviroments/enviroment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +14,10 @@ import { enviroment } from '../../../enviroments/enviroment';
 
 export class PantallasSvcService {
 
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  /**
+   * URL del servidor para acceder a los catálogos auxiliares definidos en el entorno.
+   */
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
   * @param http: constructor de HttpClient

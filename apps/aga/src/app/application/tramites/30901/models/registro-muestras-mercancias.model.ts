@@ -88,7 +88,7 @@ export interface RegistroMuestras {
   /**
    * Valor combinado de fracción arancelaria seleccionado en un combo.
    */
-  comboFraccionConcatenada: string;
+  comboFraccionConcatenada: number;
 
   /**
    * Código de la fracción arancelaria.
@@ -103,7 +103,7 @@ export interface RegistroMuestras {
   /**
    * Valor combinado de NICOS seleccionado en un combo.
    */
-  comboNicos: string;
+  comboNicos: number;
 
   /**
    * Descripción del NICOS asociado.
