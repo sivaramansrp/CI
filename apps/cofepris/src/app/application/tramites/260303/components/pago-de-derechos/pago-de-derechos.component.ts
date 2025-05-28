@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
@@ -51,6 +51,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
    public solicitudState!: Solicitud260303State;
 
+   
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente PagoDeDerechosComponent.
    * 
@@ -63,9 +70,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
     private fb: FormBuilder,
     private tramite260303Store: Tramite260303Store,
-    private tramite260303Query: Tramite260303Query
+    private tramite260303Query: Tramite260303Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     //
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
    }
 
   /**
@@ -77,15 +95,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * - Llama a `cerrarPagoDerechosForm` para inicializar o restablecer el formulario de pago.
    */
   ngOnInit(): void {
-    this.tramite260303Query.selectSolicitud$.pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
     this.getBancoCatalogDatos();
     this.cerrarPagoDerechosForm();
+  }
+
+  inicializarFormulario(): void {
+    this.tramite260303Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+      .subscribe();
   }
 
   /**
@@ -155,6 +176,34 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       const VALOR = form.get(campo)?.value;
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

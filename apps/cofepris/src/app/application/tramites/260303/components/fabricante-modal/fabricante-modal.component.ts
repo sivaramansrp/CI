@@ -1,9 +1,9 @@
+import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 
@@ -45,7 +45,13 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    * Notificador para destruir los observables al finalizar.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente FabricanteModalComponent.
    * 
@@ -57,8 +63,18 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite260303Store: Tramite260303Store,
     private tramite260303Query: Tramite260303Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.titulo = '';
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -76,6 +92,16 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     )
     .subscribe();
     this.cerrarTercerosRelacionadosForm();
+  }
+
+  inicializarFormulario(): void {
+    this.tramite260303Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+      .subscribe();
   }
 
   /**
@@ -121,6 +147,34 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
       const VALOR = form.get(campo)?.value;
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+ * Determina si se debe cargar un formulario nuevo o uno existente.  
+ * Ejecuta la lógica correspondiente según el estado del componente.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.tercerosRelacionadosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.tercerosRelacionadosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -256,6 +256,11 @@ public TEXTOS = MANIFIESTOS;
  */
 private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+esFormularioSoloLectura: boolean = false;
 
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
@@ -272,8 +277,18 @@ constructor(
   private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
   private tramite260211Store: Tramite260303Store,
   private tramite260211Query: Tramite260303Query,
+  private consultaioQuery: ConsultaioQuery,
 ) {
   //
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 }
 
 /**
@@ -287,6 +302,14 @@ constructor(
  *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
  */
 ngOnInit(): void {
+  this.inicializarTablaYCatalogoDatos();
+  this.crearElstablecimientoForm();
+  this.crearRepresentanteLegalForm();
+  this.cerrarSCIANForm();
+  this.cerrarMercanciasForm();
+}
+
+  inicializarFormulario(): void {
     this.tramite260211Query
       .selectSolicitud$
       .pipe(
@@ -296,12 +319,7 @@ ngOnInit(): void {
         })
       )
       .subscribe();
-  this.inicializarTablaYCatalogoDatos();
-  this.crearElstablecimientoForm();
-  this.crearRepresentanteLegalForm();
-  this.cerrarSCIANForm();
-  this.cerrarMercanciasForm();
-}
+  }
 
 /**
  * Inicializa la tabla de datos y los catálogos asociados invocando una serie de métodos.
@@ -700,6 +718,43 @@ public inicializarTablaYCatalogoDatos(): void {
       const VALOR = form.get(campo)?.value;
       (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+    /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.denominacionForm.disable();
+      this.domicilioDeElstablecimientoForm.disable();
+      this.representanteLegalForm.disable();
+      this.scianForm.disable();
+      this.mercanciasForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.denominacionForm.enable();
+      this.domicilioDeElstablecimientoForm.enable();
+      this.representanteLegalForm.enable();
+      this.scianForm.enable();
+      this.mercanciasForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
+
 
 
     /**
