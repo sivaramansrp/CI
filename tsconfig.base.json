@@ -23,8 +23,8 @@
       "@package-json": ["package.json"],
       "aga/Routes": ["apps/aga/src/app/remote-entry/entry.routes.ts"],
       "agace/Routes": ["apps/agace/src/app/remote-entry/entry.routes.ts"],
-      "agriculture/Routes": [
-        "apps/agriculture/src/app/remote-entry/entry.routes.ts"
+      "agricultura/Routes": [
+        "apps/agricultura/src/app/remote-entry/entry.routes.ts"
       ],
       "bandejas/Routes": ["apps/bandejas/src/app/remote-entry/entry.routes.ts"],
       "cofepris/Routes": ["apps/cofepris/src/app/remote-entry/entry.routes.ts"],

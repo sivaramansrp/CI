@@ -151,6 +151,27 @@ export interface Fabricante {
 }
 
 /**
+ * Representa la información de una mercancía.
+ * 
+ * Mercancia
+ * 
+ * productoClassificacion - Clasificación del producto.
+ * productoEspecificarClassificacion - Especificación de la clasificación del producto.
+ * denomiacionEspecifica - Denominación específica del producto.
+ * marca - Marca del producto.
+ * fraccionArancelaria - Fracción arancelaria asociada al producto.
+ * descripcionFraccion - Descripción de la fracción arancelaria.
+ */
+export interface Mercancia {
+  productoClassificacion: string;
+  productoEspecificarClassificacion: string;
+  denomiacionEspecifica: string;
+  marca: string,
+  fraccionArancelaria: number;
+  descripcionFraccion: string;
+}
+
+/**
  * Estado del formulario preoperativo.
  * Contiene los datos relacionados con el formulario preoperativo.
  */

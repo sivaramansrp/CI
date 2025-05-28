@@ -4,10 +4,9 @@
   </div>
   <div class="row mt-5">
     <form [formGroup]="datosMercancia">
-      <!-- Descripción as a textarea -->
       <div class="row mb-3">
         <div class="col-12">
-          <label for="descripcion" class="form-label"> Descripción* </label>
+          <label for="descripcion" class="form-label">Descripción * :</label>
           <textarea
             id="descripcion"
             class="form-control"
@@ -16,14 +15,16 @@
             style="height: 90px"
             placeholder="Ingrese la descripción"
           ></textarea>
-          <div
-            *ngIf="
-              datosMercancia.get('descripcion')?.touched &&
-              datosMercancia.get('descripcion')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡La descripción es requerida!
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('descripcion')?.touched &&
+                datosMercancia.get('descripcion')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
           </div>
         </div>
       </div>
@@ -34,24 +35,26 @@
           <app-catalogo-select
             formControlName="fraccionArancelaria"
             [catalogo]="fraccionesCatalogo"
-            [label]="'Fracción arancelaria*'"
+            [label]="'Fracción arancelaria'"
             [required]="true"
           ></app-catalogo-select>
-          <div
-            *ngIf="
-              datosMercancia.get('fraccionArancelaria')?.touched &&
-              datosMercancia.get('fraccionArancelaria')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡Seleccione una fracción arancelaria!
-          </div>
+          <div class="error-message">
+            <small class="text-danger" *ngIf="datosMercancia.get('fraccionArancelaria')?.touched && datosMercancia.get('fraccionArancelaria')?.hasError('required')">
+              Este campo es obligatorio.
+            </small>
+          </div>            
         </div>
 
         <div class="col-md-6">
           <label for="descFraccion" class="form-label">
-            Descripción de la fracción arancelaria*
+            Descripción de la fracción arancelaria * :
           </label>
+          <span
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="Descripción de la fracción arancelaria"
+          ata-bs-toggle="tooltip"
+        >
+        </span>
           <textarea
             id="descFraccion"
             type="text"
@@ -60,14 +63,16 @@
             style="height: 90px"
             readonly
           ></textarea>
-          <div
-            *ngIf="
-              datosMercancia.get('descFraccion')?.touched &&
-              datosMercancia.get('descFraccion')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡La descripción de la fracción es requerida!
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('descFraccion')?.touched &&
+                datosMercancia.get('descFraccion')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
           </div>
         </div>
       </div>
@@ -75,26 +80,35 @@
       <!-- Cantidad en UMT, UMT, Valor comercial -->
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="cantidadUMT" class="form-label"> Cantidad en UMT* </label>
+          <label for="cantidadUMT" class="form-label">Cantidad en UMT * :</label>
+          <span
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="Cantidad en UMT"
+          ata-bs-toggle="tooltip"
+        >
+        </span>
           <input
             id="cantidadUMT"
-            type="number"
+            type="text"
             class="form-control"
             formControlName="cantidadUMT"
+            (input)="onCantidadUMTInput($event)"
           />
-          <div
-            *ngIf="
-              datosMercancia.get('cantidadUMT')?.touched &&
-              datosMercancia.get('cantidadUMT')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡La cantidad en UMT es requerida!
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('cantidadUMT')?.touched &&
+                datosMercancia.get('cantidadUMT')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
           </div>
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label"> UMT* </label>
+          <label for="umt" class="form-label">UMT * :</label>
           <input
             id="umt"
             type="text"
@@ -103,20 +117,22 @@
             placeholder="Kilogramo"
             readonly
           />
-          <div
-            *ngIf="
-              datosMercancia.get('umt')?.touched &&
-              datosMercancia.get('umt')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡La UMT es requerida!
-          </div>
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('umt')?.touched &&
+                datosMercancia.get('umt')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
+          </div>          
         </div>
 
         <div class="col-md-4">
           <label for="valorComercial" class="form-label">
-            Valor comercial*
+            Valor comercial * :
           </label>
           <input
             id="valorComercial"
@@ -124,15 +140,18 @@
             class="form-control"
             formControlName="valorComercial"
           />
-          <div
-            *ngIf="
-              datosMercancia.get('valorComercial')?.touched &&
-              datosMercancia.get('valorComercial')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡El valor comercial es requerido!
-          </div>
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('valorComercial')?.touched &&
+                datosMercancia.get('valorComercial')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
+          </div>          
+
         </div>
       </div>
 
@@ -145,16 +164,19 @@
             [catalogo]="umcCatalogo"
             [label]="'UMC'"
             [required]="true"
+            [tooltipQuestionCircle]="true"
           ></app-catalogo-select>
-          <div
-            *ngIf="
-              datosMercancia.get('umc')?.touched &&
-              datosMercancia.get('umc')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡Seleccione una UMC!
-          </div>
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('umc')?.touched &&
+                datosMercancia.get('umc')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
+          </div>          
         </div>
       }
 
@@ -165,15 +187,17 @@
             [label]="'Tipo moneda'"
             [required]="true"
           ></app-catalogo-select>
-          <div
-            *ngIf="
-              datosMercancia.get('tipoMoneda')?.touched &&
-              datosMercancia.get('tipoMoneda')?.invalid
-            "
-            class="text-danger"
-          >
-            ¡Seleccione un tipo de moneda!
-          </div>
+          <div class="error-message">
+            <small
+              *ngIf="
+                datosMercancia.get('tipoMoneda')?.touched &&
+                datosMercancia.get('tipoMoneda')?.invalid
+              "
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>            
+          </div>          
         </div>
       </div>
 
