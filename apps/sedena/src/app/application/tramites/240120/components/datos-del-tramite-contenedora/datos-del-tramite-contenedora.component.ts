@@ -65,7 +65,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite240120Store,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
     /**
