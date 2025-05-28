@@ -147,7 +147,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public Vigencia: InputFecha = VIGENCIA;
 
+  /** 
+   * Desactiva el radio de "Contenedor" cuando se selecciona "Archivo CSV"
+   */
   radioContenedor:boolean = false;
+
+  /**
+   * Desactiva el radio de "Archivo CSV" cuando se selecciona "Contenedor"
+   */
   radioArchivoCsv:boolean = false;
 
   /**
@@ -413,6 +420,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** 
+  * Cierra el modal manualmente desde el componente
+  */
   hideModal(): void {
     const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
     MODAL_INSTANCE.hide();
