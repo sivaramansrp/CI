@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +10,9 @@ import { SolicitudService } from '../../services/solicitud.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { map,takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Subscription} from 'rxjs';
 
 /**
  * Componente RepresentanteLegalComponent
@@ -27,7 +29,7 @@ import { map, Subject, Subscription, takeUntil } from 'rxjs';
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
-export class RepresentanteLegalComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
    esFormularioSoloLectura: boolean = true;
     private subscription: Subscription = new Subscription();
@@ -77,39 +79,47 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   ngOnInit():void {
     this.obtenerOpcionesSolicitud()
-    this.personaForm = this.fb.group({
+//  this.personaForm = this.fb.group({
+//       rfc: ['', Validators.required],
+//       nombre: [{ value: '', disabled: true }],
+//       primerApellido: [{ value: '', disabled: true }],
+//       segundoApellido: [{ value: '', disabled: true }],
+
+    // });
+    
+  this.actualizarEstado()
+;}
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
+      if (this.personaForm) {
+        this.guardarDatosFormulario();
+      }
+    } else {
+      this.actualizarEstado();
+    }  
+  }
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+    // Solo intentar deshabilitar si el formulario ya está inicializado
+    if (this.personaForm) {
+      if (this.esFormularioSoloLectura) {
+        this.personaForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.personaForm.enable();
+      }
+    }
+  }
+
+actualizarEstado(): void {
+this.personaForm = this.fb.group({
       rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
       primerApellido: [{ value: '', disabled: true }],
       segundoApellido: [{ value: '', disabled: true }],
     });
-
-
-  }
-
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      //this.inicializarFormulario();
-      this.actualizarEstado();
-    }  
-  }
-
-
-  guardarDatosFormulario(): void {
-    this.actualizarEstado();
-      if (this.esFormularioSoloLectura) {
-        this.personaForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.personaForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
-  }
-
-  actualizarEstado(): void {
-
   }
 
   /**

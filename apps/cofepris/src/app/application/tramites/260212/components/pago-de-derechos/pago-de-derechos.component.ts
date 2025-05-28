@@ -18,7 +18,7 @@ import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**

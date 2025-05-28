@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CatalogoResponse, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -19,7 +19,7 @@ import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancia
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 
-import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -171,23 +171,25 @@ private subscription: Subscription = new Subscription();
   }
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
+      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
+      if (this.datosEstablecimientoForm) {
+        this.guardarDatosFormulario();
+      }
     } else {
-      //this.inicializarFormulario();
       this.actualizarEstado();
     }  
   }
 
-
   guardarDatosFormulario(): void {
     this.actualizarEstado();
+    // Solo intentar deshabilitar si el formulario ya está inicializado
+    if (this.datosEstablecimientoForm) {
       if (this.esFormularioSoloLectura) {
         this.datosEstablecimientoForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.datosEstablecimientoForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
+    }
   }
 
    actualizarEstado(): void {

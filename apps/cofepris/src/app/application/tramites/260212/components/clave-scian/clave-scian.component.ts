@@ -1,11 +1,15 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoResponse, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
+import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 
-import { Observable, Subject } from 'rxjs';
+import { map, takeUntil} from 'rxjs';
+import {Observable} from 'rxjs';
+import {Subscription} from 'rxjs';
+
+import {Subject} from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -26,6 +30,9 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './clave-scian.component.scss',
 })
 export class ClaveScianComponent implements OnInit, OnDestroy {
+
+  esFormularioSoloLectura: boolean = true;
+  private subscription: Subscription = new Subscription();
   /**
    * Reactive form group managing the "Clave Scian" form fields.
    */
@@ -69,7 +76,19 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
     private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
     // eslint-disable-next-line no-empty-function
-    private tramite260212Query: Tramite260212Query) { }
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery) { 
+       this.consultaioQuery.selectConsultaioState$
+              .pipe(
+                takeUntil(this.destroy$),
+                map((seccionState)=>{
+                  this.esFormularioSoloLectura = seccionState.readonly;
+                  this.inicializarEstadoFormulario();
+                })
+              )
+              .subscribe()
+    }
+
 
   /**
    * Angular lifecycle hook invoked on component initialization.
@@ -77,8 +96,39 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.claveScianForm();
+    this.inicializarEstadoFormulario()
+  }
 
-    this.solicitudService.getClave().subscribe((data) => {
+  /**
+   * Configures the reactive form with "clave" and "descripcion" fields.
+   */
+  claveScianForm(): void {
+    this.claveForm = this.fb.group({
+      clave: ['', Validators.required],
+      descripcion: ['']
+    });
+  }
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.actualizarEstado();
+    }  
+  }
+
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+      if (this.esFormularioSoloLectura) {
+        this.claveForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.claveForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+   actualizarEstado(): void {
+this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     });
 
@@ -93,17 +143,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
         this.claveForm.get('descripcion')?.setValue(selectedDescripcion);
       }
     });
-  }
-
-  /**
-   * Configures the reactive form with "clave" and "descripcion" fields.
-   */
-  claveScianForm(): void {
-    this.claveForm = this.fb.group({
-      clave: ['', Validators.required],
-      descripcion: ['']
-    });
-  }
+   }
 
   /**
    * Emits the cancel event to notify parent components about the action.

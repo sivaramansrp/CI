@@ -8,7 +8,7 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente FormularioOperacionComercialComponent
@@ -101,23 +101,26 @@ this. inicializarEstadoFormulario();
 
    inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
+      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
+      if (this.formularioOperacionForm) {
+        this.guardarDatosFormulario();
+      }
     } else {
       //this.inicializarFormulario();
       this.actualizarEstado();
     }  
   }
 
-
   guardarDatosFormulario(): void {
     this.actualizarEstado();
+    // Solo intentar deshabilitar si el formulario ya está inicializado
+    if (this.formularioOperacionForm) {
       if (this.esFormularioSoloLectura) {
         this.formularioOperacionForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.formularioOperacionForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
+    }
   }
 
   actualizarEstado(): void {
