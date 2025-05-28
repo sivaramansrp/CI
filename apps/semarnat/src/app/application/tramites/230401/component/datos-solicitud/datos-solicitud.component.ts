@@ -274,7 +274,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          if(!seccionState.create && seccionState.procedureId === '230401') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
           this.inicializarEstadoFormulario();
         })
       )

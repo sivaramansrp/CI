@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './component/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
@@ -37,6 +37,7 @@ import { ToastrService } from 'ngx-toastr';
     SolicitanteComponent,
     TituloComponent,
     WizardComponent,
+    InputFechaComponent
   ],
   providers: [
     PantallasActionService,

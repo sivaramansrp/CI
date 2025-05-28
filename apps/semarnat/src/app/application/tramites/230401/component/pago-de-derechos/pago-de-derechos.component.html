@@ -35,9 +35,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group ">
-                        <label class="control-label" for="fecha">Fecha de pago:</label>
-                        <input class="form-control" id="fecha" placeholder="Fecha de pago" type="date"
-                            formControlName="fecha">
+                        <input-fecha (valorCambiado)="onFechaCambiada($event)" [setFecha]="pagoDerechos.get('fecha')?.value"
+                            [datos]="fechaDeLaFacturaInput"></input-fecha>
                     </div>
                 </div>
                 <div class="col-md-4">

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, InputFecha, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { FECHA_FACTURA, PagoDerechosState } from '../../models/tramies230401.models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   delay,
@@ -8,7 +9,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
@@ -56,6 +56,14 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Representa la fecha de la factura como una entrada de tipo `InputFecha`.
+   * Este valor se inicializa con la constante `FECHA_FACTURA`.
+   * 
+   * @type {InputFecha}
+   */
+  public fechaDeLaFacturaInput: InputFecha = FECHA_FACTURA;
+
   constructor(public pantallasService: PantallasActionService, private fb: FormBuilder,
     public tramite230401Store:Tramite230401Store, public solicitud230401Query: Solicitud230401Query,
     private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore,
@@ -70,23 +78,25 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
    * Los campos 'banco' y 'fecha' son obligatorios.
    */
   ngOnInit(): void {
+    this.solicitud230401Query.seletPagoDerechosState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.pagoDerechosState = seccionState;
+        })
+      ).subscribe();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          if(!seccionState.create && seccionState.procedureId === '230401') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.fechaDeLaFacturaInput.habilitado = !this.esFormularioSoloLectura;
+          }
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
-     this.solicitud230401Query.seletPagoDerechosState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.pagoDerechosState = seccionState;
-          })
-        ).subscribe();
-    this.createPagoDerechos();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -124,8 +134,6 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
       this.createPagoDerechos();
       if (this.esFormularioSoloLectura) {
         this.pagoDerechos.disable();
-      } else {
-        this.pagoDerechos.enable();
       }
     }
 
@@ -165,7 +173,19 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
     this.clasificacion = this.pagoDerechos.get('banco')?.value;
     this.tramite230401Store.setPagoDerechosStateProperty('banco', this.clasificacion);
   }
-
+ /**
+   * Maneja el evento cuando la fecha es cambiada.
+   * 
+   * @param fecha - La nueva fecha seleccionada en formato de cadena.
+   * Si se proporciona una fecha válida, actualiza el formulario `pagoDerechos`
+   * con el valor de la fecha de exportación.
+   */
+ onFechaCambiada(fecha: string): void {
+  if (fecha) {
+    this.pagoDerechos.patchValue({ fecha: fecha });
+    this.tramite230401Store.setPagoDerechosStateProperty('fecha', fecha);
+  }
+}
     /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
