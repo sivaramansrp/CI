@@ -153,4 +153,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Actualiza un valor en el store de Tramite90201 utilizando el nombre del método proporcionado.
+   *
+   * @param campo - El nombre del campo del formulario cuyo valor se desea obtener.
+   * @param metodoNombre - El nombre del método del store de Tramite90201 que se debe invocar para actualizar el valor.
+   */
+   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
+    const VALOR = this.formDomiciliosDePlantas.get(campo)?.value;
+    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 }
