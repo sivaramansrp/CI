@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 
@@ -55,7 +55,7 @@ export class DatosComponent implements OnInit, OnDestroy {
  * Al inicializar el componente, se establece la consulta inicial en el store de consultas
  * con los parámetros correspondientes al trámite 90201.
  */
-constructor(private consultaQuery: ConsultaioQuery,private consultaStore:ConsultaioStore,private productoresService: ExpansionDeProductoresService,private tramiteStore:Tramite90201Store) {
+constructor(private consultaQuery: ConsultaioQuery,private productoresService: ExpansionDeProductoresService,private tramiteStore:Tramite90201Store) {
   }
 
   /**

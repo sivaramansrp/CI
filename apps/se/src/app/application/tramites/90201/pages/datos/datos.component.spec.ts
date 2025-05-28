@@ -33,7 +33,6 @@ describe('DatosComponent', () => {
     };
     component = new DatosComponent(
       consultaQueryMock,
-      consultaStoreMock,
       productoresServiceMock,
       tramiteStoreMock
     );
