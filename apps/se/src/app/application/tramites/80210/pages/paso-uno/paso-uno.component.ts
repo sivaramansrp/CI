@@ -36,7 +36,15 @@ export class PasoUnoComponent implements OnInit {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
-
+/**
+ * Método del ciclo de vida que se ejecuta al inicializar el componente.
+ *
+ * Suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta
+ * y lo asigna a la propiedad `consultaState`. Dependiendo del valor de `update` en el estado,
+ * decide si debe cargar los datos del formulario o marcar que los datos de respuesta están listos.
+ *
+ * @returns {void}
+ */
 ngOnInit(): void {
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
