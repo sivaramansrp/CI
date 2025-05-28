@@ -27,7 +27,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-  
   public consultaState!:ConsultaioState;
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
