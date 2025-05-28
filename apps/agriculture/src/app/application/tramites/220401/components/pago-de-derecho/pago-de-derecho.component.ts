@@ -34,6 +34,7 @@ import { Subject, map, takeUntil } from 'rxjs';
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule, CatalogoSelectComponent],
   standalone: true,
 })
+
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /**
    * @comdoc
@@ -42,13 +43,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @uso Este objeto se utiliza para agrupar y controlar los campos del formulario relacionados con el pago de derecho en el trámite.
    */
   FormSolicitud!: FormGroup; 
-  /**
-   * Notificador para cancelar las suscripciones y evitar fugas de memoria.
-   * Se utiliza en los operadores takeUntil de RxJS.
-   * 
-   * @private
-   * @type {Subject<void>}
-   */
   /**
    * Notificador privado para cancelar las suscripciones y evitar fugas de memoria.
    * Se utiliza en los operadores takeUntil de RxJS.
@@ -66,12 +60,51 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
      * @uso Almacena los datos de la solicitud para ser utilizados y actualizados en el formulario de pago de derecho.
      */
     public solicitudState!: solicitud220401State;
-  answer: string = ''; // Respuesta seleccionada por el usuario
+  // Respuesta seleccionada por el usuario
+  /**
+   * @comdoc
+   * @descripcion Respuesta seleccionada por el usuario.
+   * @tipo string
+   * @uso Almacena la respuesta seleccionada en el formulario.
+   */
+  answer: string = '';
   
-  public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
-  public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
+  /**
+   * Opciones disponibles para justificar el pago.
+   * @type {Catalogo[]}
+   * @descripcion Arreglo de catálogos que contiene las opciones de justificación para el pago de derechos.
+   * @uso Se utiliza para poblar el campo de justificación en el formulario.
+   */
+  public Justificacion!: Catalogo[];
+  /**
+   * Opciones disponibles para seleccionar el banco.
+   * @tipo Catalogo[]
+   * @descripcion Arreglo de catálogos que contiene las opciones de banco para el pago de derechos.
+   * @uso Se utiliza para poblar el campo de banco en el formulario.
+   */
+  public Banco!: Catalogo[]; 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @comdoc
+   * @descripcion Determina si los campos del formulario deben estar deshabilitados para evitar modificaciones.
+   * @tipo boolean
+   * @uso Se utiliza para controlar la habilitación o deshabilitación de los campos del formulario según el estado de solo lectura.
+   */
   esFormularioSoloLectura: boolean = false; 
    // eslint-disable-next-line no-empty-function
+  /**
+   * Constructor del componente PagoDeDerecho.
+   * 
+   * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param agregar220401Store - Store para manejar el estado relacionado con el trámite 220401.
+   * @param agregarQuery - Servicio para consultar el estado de la agregación.
+   * @param consultaioQuery - Servicio para consultar el estado de la sección IO.
+   * 
+   * Al inicializar, se suscribe al estado de consultaioQuery para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado de solo lectura.
+   * - Inicializar el formulario de derecho llamando a `inicializarDerechoFormulario()`.
+   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   */
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
@@ -268,6 +301,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * 
+   * Emite una señal para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   * 
+   * @comdoc
+   * @descripcion Cancela las suscripciones y libera recursos al destruir el componente.
+   * @uso Se utiliza para limpiar las suscripciones de RxJS y otros recursos al finalizar el ciclo de vida del componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

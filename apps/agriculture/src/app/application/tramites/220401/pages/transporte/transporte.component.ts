@@ -33,10 +33,22 @@ export class TransporteComponent implements OnDestroy, OnInit {
    * Esta variable se utiliza para crear la forma del transporte.
    */
   transporteForm!: FormGroup;
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Estado actual de la solicitud 220401.
+   */
   public solicitudState!: solicitud220401State;
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Catálogo de tipos de transporte.
+   */
   public tiposTransporte: Catalogo[] = [];
   /**
    * constructor de la clase
@@ -135,6 +147,12 @@ export class TransporteComponent implements OnDestroy, OnInit {
      });
   }
 
+  /**
+   * Establece valores en el store a partir del formulario.
+   * @param form Formulario de transporte
+   * @param campo Nombre del campo en el formulario
+   * @param metodoNombre Nombre del método en el store Agregar220401Store
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);

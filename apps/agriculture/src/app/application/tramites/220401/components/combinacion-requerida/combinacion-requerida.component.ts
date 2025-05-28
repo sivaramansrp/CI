@@ -114,6 +114,10 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: solicitud220401State;
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, el formulario no permite edición.
+   */
   esFormularioSoloLectura: boolean = false;
   /**
  * El constructor se encarga de inyectar los servicios necesarios para el componente.

@@ -29,7 +29,22 @@ import sexoJson from '@libs/shared/theme/assets/json/220401/sexo.json';
 export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
   /** Configuración del primer select de aduanas */
   frmMercanciaAnimal!: FormGroup;
-   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @comdoc
+   * Inicializa el formulario de datos generales de animales.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+   * De lo contrario, inicializa el formulario para su edición.
+   *
+   * @comdoc
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+    /**
+     * Inicializa el formulario de datos generales de animales.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+     * De lo contrario, inicializa el formulario para su edición.
+     */
     public solicitudState!: solicitud220401State;
   /** Configuración del primer select de aduanas */
   aduanas: Catalogo[] = aduanasJson;

@@ -60,6 +60,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
   radioOptions = radioOptionsData; // Use imported JSON data
+  /**
+   * Valor seleccionado en el componente de radio.
+   */
   selectedValue: string = 'Nuevo';
  /** Valor seleccionado en el componente de radio. */
   defaultSelect: string | number = 'oficina central';
@@ -67,8 +70,17 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Formulario de datos del certificado. */
   datosdelForm!: FormGroup;
-  radioBoton = unidadRadioFields; // import data from Json
+  /**
+   * Opciones de radio para unidad, importadas desde un archivo JSON.
+   */
+  radioBoton = unidadRadioFields; // importar datos desde Json
+  /**
+   * Estado de la solicitud 220401.
+   */
   public solicitudState!: solicitud220401State;
+  /**
+   * Arreglo para almacenar el catálogo de estados.
+   */
   estadoJson: CatalogoResponse[] = [];
 
   /**
@@ -201,28 +213,52 @@ this.inicializarCertificadoFormulario();
    * Maneja los cambios en el valor seleccionado.
    */
   
-      onValueChange(value: string | number) {
+   onValueChange(value: string | number) {
         this.selectedValue = value.toString();
       }
   
+    /**
+     * Carga los datos de delegaciones desde el servicio y actualiza la configuración de catálogos.
+     */
     loaddataDelegacionesData(): void {
       this._pantallas220401Service.getDelegacionesData().subscribe((data) => {
-        this.delegacionesJson = data;
-        this.updateCatalogConfigs();
+      this.delegacionesJson = data;
+      this.updateCatalogConfigs();
       });
     }
+    /**
+     * Actualiza la configuración de los catálogos con los datos de delegaciones actuales.
+     */
     updateCatalogConfigs(): void {
       this.catalogConfigs.forEach((config) => {
-        config.catalogo = this.delegacionesJson;
+      config.catalogo = this.delegacionesJson;
       });
     }
-  
 
+  /**
+   * Arreglo que almacena las delegaciones obtenidas para los catálogos.
+   * Se utiliza para poblar los selectores de delegaciones en el formulario.
+   */
   delegacionesJson: CatalogoResponse[] = [];
 
   
+  /**
+   * Formulario reactivo adicional utilizado para gestionar controles dinámicos relacionados con delegaciones.
+   * Se inicializa en el método `inicializarFormulario` y se utiliza para almacenar y manipular los valores
+   * de los selectores de delegaciones en el formulario.
+   */
   formGroup1!: FormGroup;
 
+  /**
+   * Configuración de los catálogos utilizados en el formulario.
+   * Cada objeto representa un selector de delegaciones con sus propiedades:
+   * - catalogo: datos de delegaciones cargados dinámicamente.
+   * - label: etiqueta mostrada en el formulario.
+   * - controlName: nombre del control en el formulario reactivo.
+   * - required: indica si el campo es obligatorio.
+   * - catalogos: opciones disponibles para el selector.
+   * - primerOpcion: valor de la primera opción (por defecto vacío).
+   */
   catalogConfigs = [
     {
       catalogo: this.delegacionesJson,
@@ -258,6 +294,15 @@ this.inicializarCertificadoFormulario();
     },
   ];
   
+  /**
+   * Obtiene los valores seleccionados de las delegaciones a partir de la configuración del catálogo
+   * y actualiza el estado correspondiente en el servicio _pantallas220401Service.
+   *
+   * Para cada configuración en `catalogConfigs`, extrae el nombre del control y su valor actual
+   * del formulario `formGroup1`, luego utiliza estos datos para actualizar el estado en el servicio.
+   *
+   * @comdoc
+   */
   getDelegaciones() {
     const SELECTED_DELEGCIONES = this.catalogConfigs.map((config) => ({
       controlName: config.controlName,
@@ -288,6 +333,10 @@ this.inicializarCertificadoFormulario();
   
    
     
+    /**
+     * @comdoc
+     * Columnas de la tabla de mercancías.
+     */
     tableColumns = [
       'No. partida',
       'Fracción arancelaria',
@@ -298,31 +347,48 @@ this.inicializarCertificadoFormulario();
       'Cantidad (UMC)',
     ];
   
+    /**
+     * @comdoc
+     * Datos de ejemplo para la tabla de mercancías.
+     */
     mercanciasData = [
       {
-        tbodyData: [
-          'Establecimiento 1',
-          '123-456-7890',
-          'correo',
-          'Actividad 1',
-          'Otro detalle',
-          'Certificado 001',
-          'Domicilio 1',
-        ],
+      tbodyData: [
+        'Establecimiento 1',
+        '123-456-7890',
+        'correo',
+        'Actividad 1',
+        'Otro detalle',
+        'Certificado 001',
+        'Domicilio 1',
+      ],
       },
     ];
+    /**
+     * Establece un valor en el store usando el formulario, el nombre del campo y el método correspondiente.
+     * 
+     * @param form Formulario reactivo del que se obtiene el valor.
+     * @param campo Nombre del campo dentro del formulario.
+     * @param metodoNombre Nombre del método del store a invocar.
+     */
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
       const VALOR = form.get(campo)?.value;
-    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+      (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
     
  
+  /**
+   * @comdoc
+   * Devuelve un arreglo de opciones de catálogo para los selectores de delegaciones.
+   * Cada opción contiene un identificador y una descripción.
+   *
+   * @returns {Array<{ id: number; descripcion: string }>} Opciones del catálogo.
+   */
   private static getCatalogos(): { id: number; descripcion: string }[] {
     return [
-      { id: 1, descripcion: 'Option 1' },
-      { id: 2, descripcion: 'Option 2' },
-      { id: 3, descripcion: 'Option 3' },
+      { id: 1, descripcion: 'Opción 1' },
+      { id: 2, descripcion: 'Opción 2' },
+      { id: 3, descripcion: 'Opción 3' },
     ];
- 
-}
+  }
 }
