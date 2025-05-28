@@ -16,6 +16,12 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
   styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit, OnDestroy{
+
+  /**
+   * Obtiene el mensaje de alerta para los manifiestos.
+   */
+  private getManifiestosAlert = ManifiestosDeclaracionesComponent.getManifiestosAlert;
+
 /** compo doc
  * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
  *
@@ -113,7 +119,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   /**
    * Genera el HTML para el mensaje de manifiestos con la opción de habilitar o deshabilitar el checkbox
    */
-  private getManifiestosAlert(disabled: boolean = false): { message: string } {
+  static getManifiestosAlert(disabled: boolean = false): { message: string } {
     return {
       message: `
         <div class="row">
@@ -174,7 +180,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
       ELEMENTO_CHECKBOX.addEventListener('click', MANEJADOR_CLICK);
 
       // Almacenar el manejador en el elemento para eliminarlo posteriormente
-      (ELEMENTO_CHECKBOX as any).__manejadorClick = MANEJADOR_CLICK;
+      (ELEMENTO_CHECKBOX as HTMLElement & { __manejadorClick?: EventListener }).__manejadorClick = MANEJADOR_CLICK;
     }
     this.establecerValor();
   }
@@ -191,9 +197,9 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    */
   ngOnDestroy(): void {
     const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
-    if (ELEMENTO_CHECKBOX && (ELEMENTO_CHECKBOX as any).__manejadorClick) {
+    if (ELEMENTO_CHECKBOX && (ELEMENTO_CHECKBOX as HTMLElement & { __manejadorClick?: EventListener }).__manejadorClick) {
       // Eliminar el evento de escucha del checkbox
-      ELEMENTO_CHECKBOX.removeEventListener('click', (ELEMENTO_CHECKBOX as any).__manejadorClick);
+      ELEMENTO_CHECKBOX.removeEventListener('click', (ELEMENTO_CHECKBOX as HTMLElement & { __manejadorClick?: EventListener }).__manejadorClick!);
     }
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
