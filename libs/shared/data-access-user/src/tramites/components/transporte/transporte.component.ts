@@ -760,6 +760,9 @@ export class TransporteComponent implements OnInit, OnChanges {
         tap((response) => {
           if (response.codigo === '00') {
             this.aereoForma.get('guia_valida')?.setValue(true);
+          } else {
+            this.aereoForma.get('guia_master_aereo')?.setValue('');
+            this.aereoForma.get('guia_house_aereo')?.setValue('');
           }
         }),
         takeUntil(this.destroyNotifier$)
