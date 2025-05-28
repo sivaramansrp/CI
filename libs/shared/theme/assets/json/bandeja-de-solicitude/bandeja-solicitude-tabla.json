@@ -10,9 +10,9 @@
     },
     {
         "id": 2,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
+        "tipoDeTramite": "Cargar archivos",
+        "fecha": "2023-11-03",
+        "fechaActualizacion": "2023-11-10",
         "diasTranscurridos": "4",
         "departamento": "AGA",
         "numeroDeProcedimiento": "701"
