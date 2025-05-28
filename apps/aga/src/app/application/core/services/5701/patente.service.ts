@@ -1,7 +1,7 @@
 import { API_GET_PATENTE, RFC_QUERY } from '../../../constantes/5701/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PatenteResponse } from '../../models/5701/Patente.model';
 
@@ -32,14 +32,23 @@ export class PatenteService {
   getListaPatente(rfcSolicitante: string): Observable<PatenteResponse> {
     const ENDPOINT = `${this.host}` + API_GET_PATENTE.replace(RFC_QUERY, rfcSolicitante);
 
-    return this.http.get<PatenteResponse>(ENDPOINT).pipe(
+    const HEADER = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Authorization',
+      })
+    };
+
+    return this.http.get<PatenteResponse>(ENDPOINT, HEADER).pipe(
       map((response) => {
         return response;
       }),
-      catchError(() => {
-        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
+      catchError((error) => {
+        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT}`);
         return throwError(() => ERROR);
       })
     );
   }
+
 }
