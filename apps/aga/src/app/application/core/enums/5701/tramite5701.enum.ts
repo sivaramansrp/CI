@@ -22,25 +22,68 @@ export const FECHA_FINAL = {
 };
 
 /**
- * @description Constantes para el manejo de mensajes y títulos en la aplicación *
+ * @description Mensaje de aviso para el cambio de tipo de solicitud.
  */
 export const MSG_CAMBIO_TIPO_SOLICITUD = '';
+
+/**
+ * @description Titulo del modal de aviso.
+ */
 export const TITULO_MODAL = 'Aviso';
+
+/**
+ * @description Mensaje de error cuando no se han llenado los campos obligatorios.
+ */
 export const ERR_CAMPOS_OBLIGATORIOS =
   'Debes capturar todos los datos marcados como obligatorios.';
+
+/**
+ * @description Mensaje de eeror cuando se hace una busqueda sin datos.
+ */
 export const ERR_INPUT_BUSQUEDA_VACIO =
   'No has proporcionado información que es requerida.';
+
+/**
+ * @description Mensaje de error cuando se hace una busqueda con un gafete que no existe.
+ */
 export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS =
   'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.';
+
+/**
+ * @description Mensaje de error cuando se intenta agregar mas de 5 personas respsonsables de despacho.
+ */
 export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
+
+/**
+ * @description Mensaje de confirmación cuando se elimina exitosamente un elemento de la tabla.
+ */
 export const MSG_ELIMINA_ELEMENTO = 'Datos eliminados correctamente.';
+
+/**
+ * @description Mensaje de advertencia cuando se cambia el tipo de solicitud
+ */
 export const ADV_LIMPIA_CAMPOS =
   'Los datos capturados serán borrados, estás de acuerdo (SI/NO)?';
+
+/**
+ * @description Mensaje de aviso cuando se agregan los datos correctamente en un tabla.
+ */
 export const MSG_DATOS_GUARDADOS = 'Datos guardados correctamente.';
 
+/**
+ * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haberlo ingresado al input.
+ */
 export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
+
+/**
+ * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haber seleccionado una aduana de despacho.
+ */
 export const MSG_ADUANA_PEDIMENTO =
   'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';
+
+/**
+ * @description Mensaje de error cuando el pedimento no se puede validar.
+ */
 export const ERR_VALIDACION_PEDIMENTO =
   'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
 
