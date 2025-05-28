@@ -19,8 +19,88 @@ export class CertificadosLicenciasPermisosService {
     //
   }
 
-    actualizarEstadoFormulario(DATOS: Solicitud260303State): void {
+  actualizarEstadoFormulario(DATOS: Solicitud260303State): void {
     this.tramite260303Store.setDenominacionRazon(DATOS.denominacionRazon);
+    this.tramite260303Store.setCodigoPostal(DATOS.codigoPostal);
+    this.tramite260303Store.setEstado(DATOS.estado);
+    this.tramite260303Store.setMuncipio(DATOS.municipio);
+    this.tramite260303Store.setLocalidad(DATOS.localidad);
+    this.tramite260303Store.setColonia(DATOS.colonia);
+    this.tramite260303Store.SetCalleYNumero(DATOS.calleYNumero);
+    this.tramite260303Store.SetCorreoElecronico(DATOS.correoElecronico);
+    this.tramite260303Store.setLada(DATOS.lada);
+    this.tramite260303Store.setTelefono(DATOS.telefono);
+    this.tramite260303Store.setClaveScianModal(DATOS.claveScianModal);
+    this.tramite260303Store.setAvisoDeFuncionamiento(DATOS.avisoDeFuncionamiento);
+    this.tramite260303Store.setClave(DATOS.clave);
+    this.tramite260303Store.setDescripcion(DATOS.descripcion);
+    this.tramite260303Store.setAvisoCheckbox(DATOS.avisoCheckbox);
+    this.tramite260303Store.setLicenciaSanitaria(DATOS.licenciaSanitaria);
+    this.tramite260303Store.setRegimen(DATOS.regimen);
+    this.tramite260303Store.setRegimenDestinara(DATOS.regimenDestinara);
+    this.tramite260303Store.setNumeroPermiso(DATOS.numeroPermiso);
+    this.tramite260303Store.setLosDatosNo(DATOS.losDatosNo);
+    this.tramite260303Store.setLosDatosYes(DATOS.losDatosYes);
+    this.tramite260303Store.setNombreORazon(DATOS.nombreORazon);
+    this.tramite260303Store.setClasificacion(DATOS.clasificacion);
+    this.tramite260303Store.setEspecificarClasificacionProducto(DATOS.especificarClasificacionProducto);
+    this.tramite260303Store.setDenominacionEspecifica(DATOS.denominacionEspecifica);
+    this.tramite260303Store.setDenominacionDistintiva(DATOS.denominacionDistintiva);
+    this.tramite260303Store.setDenominacionComun(DATOS.denominacionComun);
+    this.tramite260303Store.setTipoDeProducto(DATOS.tipoDeProducto);
+    this.tramite260303Store.setEstadoFisico(DATOS.estadoFisico);
+    this.tramite260303Store.setFraccionArancelaria(DATOS.fraccionArancelaria);
+    this.tramite260303Store.setDescripcionFraccion(DATOS.descripcionFraccion);
+    this.tramite260303Store.setCantidadUMT(DATOS.cantidadUMT);
+    this.tramite260303Store.setUMT(DATOS.UMT);
+    this.tramite260303Store.setCantidadUMC(DATOS.cantidadUMC);
+    this.tramite260303Store.setUMC(DATOS.UMC);
+    this.tramite260303Store.setPresentacion(DATOS.presentacion);
+    this.tramite260303Store.setNumeroRegistro(DATOS.numeroRegistro);
+    this.tramite260303Store.setFechaCaducidad(DATOS.fechaCaducidad);
+    this.tramite260303Store.setCumplimiento(DATOS.cumplimiento);
+    this.tramite260303Store.setRfc(DATOS.rfc);
+    this.tramite260303Store.setNombre(DATOS.nombre);
+    this.tramite260303Store.setApellidoPaterno(DATOS.apellidoPaterno);
+    this.tramite260303Store.setApellidoMaterno(DATOS.apellidoMaterno);
+    this.tramite260303Store.setDci(DATOS.dci);
+    this.tramite260303Store.setMarcaComercialODenominacionDistintiva(DATOS.marcaComercialODenominacionDistintiva);
+    this.tramite260303Store.setDescripcionDeLaFraccion(DATOS.descripcionDeLaFraccion);
+    this.tramite260303Store.setNumeroCas(DATOS.numeroCas);
+    this.tramite260303Store.setCantidadDeLotes(DATOS.cantidadDeLotes);
+    this.tramite260303Store.setKgOrPorLote(DATOS.kgOrPorLote);
+    this.tramite260303Store.setPais(DATOS.pais);
+    this.tramite260303Store.setPaisDeProcedencia(DATOS.paisDeProcedencia);
+    this.tramite260303Store.setDetallarUso(DATOS.detallarUso);
+    this.tramite260303Store.setNumeroDePiezas(DATOS.numeroDePiezas);
+    this.tramite260303Store.setDescripcionDelNumeroDePiezas(DATOS.descripcionDelNumeroDePiezas);
+    this.tramite260303Store.setNumeroDeRegistro(DATOS.numeroDeRegistro);
+    this.tramite260303Store.SetClaveDeReferencia(DATOS.claveDeReferencia);
+    this.tramite260303Store.SetCadenaDaLaDependencia(DATOS.cadenaDaLaDependencia);
+    this.tramite260303Store.SetBanco(DATOS.banco);
+    this.tramite260303Store.SetLaveDePago(DATOS.laveDePago);
+    this.tramite260303Store.SetFechaDePago(DATOS.fechaDePago);
+    this.tramite260303Store.SetImporteDePago(DATOS.importeDePago);
+    this.tramite260303Store.SetTipoDocumento(DATOS.tipoDocumento);
+    this.tramite260303Store.SetTercerosRelacionadosDenominacionSocial(DATOS.tercerosRelacionadosDenominacionSocial);
+    this.tramite260303Store.SetTercerosRelacionadosTerceroNombre(DATOS.tercerosRelacionadosTerceroNombre);
+    this.tramite260303Store.SetTercerosRelacionadosNacional(DATOS.tercerosRelacionadosNacional);
+    this.tramite260303Store.SetTercerosRelacionadosExtranjero(DATOS.tercerosRelacionadosExtranjero);
+    this.tramite260303Store.SetTercerosRelacionadosFisica(DATOS.tercerosRelacionadosFisica);
+    this.tramite260303Store.SetTercerosRelacionadosMoral(DATOS.tercerosRelacionadosMoral);
+    this.tramite260303Store.SetTercerosRelacionadosNoContribuyente(DATOS.tercerosRelacionadosNoContribuyente);
+    this.tramite260303Store.SetTercerosRelacionadosRfc(DATOS.tercerosRelacionadosRfc);
+    this.tramite260303Store.SetTercerosRelacionadosCurp(DATOS.tercerosRelacionadosCurp);
+    this.tramite260303Store.SetTercerosRelacionadosRazonSocial(DATOS.tercerosRelacionadosRazonSocial);
+    this.tramite260303Store.SetTercerosRelacionadosPais(DATOS.tercerosRelacionadosPais);
+    this.tramite260303Store.SetTercerosRelacionadosEstado(DATOS.tercerosRelacionadosEstado);
+    this.tramite260303Store.SetTercerosRelacionadosCodigoPostal(DATOS.tercerosRelacionadosCodigoPostal);
+    this.tramite260303Store.SetTercerosRelacionadosCalle(DATOS.tercerosRelacionadosCalle);
+    this.tramite260303Store.SetTercerosRelacionadosNumeroExterior(DATOS.tercerosRelacionadosNumeroExterior);
+    this.tramite260303Store.SetTercerosRelacionadosNumeroInterior(DATOS.tercerosRelacionadosNumeroInterior);
+    this.tramite260303Store.SetTercerosRelacionadosLada(DATOS.tercerosRelacionadosLada);
+    this.tramite260303Store.SetTercerosRelacionadosTelefono(DATOS.tercerosRelacionadosTelefono);
+    this.tramite260303Store.SetTercerosRelacionadosCorreoElectronico(DATOS.tercerosRelacionadosCorreoElectronico);
   }
 
   /**
