@@ -1250,6 +1250,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+    
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
