@@ -243,10 +243,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
  * Inicializa los formularios principales del componente con los valores actuales del estado.
  */
   inicializarFormulario(): void {
-    this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Solicitud120501State) => {
-        this.seccionState = data;
-      });
+    this.obtenerEstadoSolicitud();
     this.formulario = this.fb.group({
       entidadFederativa: [this.seccionState?.entidadFederativa, Validators.required],
       representacionFederal: [this.seccionState?.representacionFederal, Validators.required],
@@ -273,8 +270,19 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       montoRecibir: [this.seccionState?.montoRecibir, Validators.required],
       rfc1: [this.seccionState?.rfc1],
     })
-  } 
+  }
 
+  /**
+   * Subscribes to the `selectSolicitud$` observable from `tramite120501Query` and updates the component's
+   * `seccionState` property with the latest `Solicitud120501State` data.
+   * The subscription is automatically unsubscribed when the `destroyed$` observable emits, preventing memory leaks.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Solicitud120501State) => {
+        this.seccionState = data;
+      });
+  }
   /**
  * Inicializa el estado de los formularios según el modo de solo lectura.
  *
