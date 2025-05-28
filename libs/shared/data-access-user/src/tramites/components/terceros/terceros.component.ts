@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -45,8 +45,9 @@ import { TituloComponent } from '../titulo/titulo.component';
   ],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent implements OnInit, OnDestroy {
+export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   @Input({ required: true }) tabindex!: number;
+  @Input({ required: false }) esFormularioSoloLectura: boolean = false;
 
   /**
    * @description
@@ -100,12 +101,28 @@ export class TercerosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.tercerosState.terceros.length > 0) {
       this.personas = this.tercerosState.terceros;
     }
   }
 
+  /**
+   * @inheritdoc
+   * 
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `FormPersona` para evitar modificaciones.
+   * En caso contrario, habilita el formulario para permitir la edición.
+   */
+  ngAfterViewInit(): void {
+      if(this.esFormularioSoloLectura){
+        this.FormPersona.disable();
+      }
+      else{
+        this.FormPersona.enable();
+      }
+  }
   /**
    * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
    * Resetea el formulario después de agregar.
