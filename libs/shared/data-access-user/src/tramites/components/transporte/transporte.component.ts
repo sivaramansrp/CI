@@ -282,6 +282,10 @@ export class TransporteComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * @description Maneja el cambio del tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
   onChangeTipoTransporte(): void {
     if (this.bodyTabla.length > 0) {
       this.nuevaNotificacion = {
