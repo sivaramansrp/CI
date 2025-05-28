@@ -20,7 +20,7 @@ export class DatosComponent implements OnInit, OnDestroy {
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * Estado actual de la consulta para el componente.
@@ -56,17 +56,6 @@ export class DatosComponent implements OnInit, OnDestroy {
  * con los parámetros correspondientes al trámite 90201.
  */
 constructor(private consultaQuery: ConsultaioQuery,private consultaStore:ConsultaioStore,private productoresService: ExpansionDeProductoresService,private tramiteStore:Tramite90201Store) {
-this.consultaStore.establecerConsultaio(
-      '90201',
-      'BANDEJA_SOLICITUDES',
-      'se',
-      '03039399393939393',
-      'tipoTramite',
-      'tipoTramite',
-      true,
-      false,
-      true
-    );
   }
 
   /**

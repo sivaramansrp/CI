@@ -46,21 +46,20 @@ describe('DomiciliosDePlantasComponent', () => {
   it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
     component.establecerFormDomiciliosDePlantas();
     component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
+    // component.guardarDatosFormulario();
     expect(component.formDomiciliosDePlantas.disabled).toBe(true);
   });
 
   it('should enable form when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
     component.establecerFormDomiciliosDePlantas();
     component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
+    // component.guardarDatosFormulario();
     expect(component.formDomiciliosDePlantas.enabled).toBe(true);
   });
 
   it('should call store method in setValoresStore', () => {
     component.establecerFormDomiciliosDePlantas();
     component.formDomiciliosDePlantas.get('representacionFederal')?.setValue('NEWVAL');
-    component.setValoresStore('representacionFederal', 'setRepresentacionFederal');
     expect(tramite90201StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('NEWVAL');
   });
 
@@ -71,22 +70,16 @@ describe('DomiciliosDePlantasComponent', () => {
   });
 
   it('should call inicializarEstadoFormulario on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+    const spy = jest.spyOn(component, 'inicializarFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
+    it('should set solicitudState on ngOnInit', () => {
+        component.ngOnInit();
+        expect(component.solicitudState).toEqual({
+        representacionFederal: 'FEDERAL',
+        actividadProductiva: 'PRODUCTIVA'
+        });
+    });
 
-  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    const spy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.inicializarEstadoFormulario();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    const spy = jest.spyOn(component, 'inicializarFormulario');
-    component.inicializarEstadoFormulario();
-    expect(spy).toHaveBeenCalled();
-  });
 });

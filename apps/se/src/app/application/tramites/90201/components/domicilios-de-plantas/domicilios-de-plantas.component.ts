@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DOMICILIOS_PLANTAS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import DomiciliosTabla from '@libs/shared/theme/assets/json/90201/domicilios-de-plantas-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -47,7 +48,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false; 
 
   /**
    * Estado actual de la solicitud del trámite 90201.
@@ -59,26 +60,12 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud90201State;
 
   /**
-   * Configuración de la tabla para los domicilios de plantas.
+   * Configuración de la tabla utilizada para mostrar los domicilios de las plantas.
+   * Esta propiedad obtiene su estructura y parámetros desde la constante `DOMICILIOS_PLANTAS`.
    * 
-   * Esta configuración define las columnas que se mostrarán en la tabla, 
-   * incluyendo el encabezado, la clave para acceder al valor en cada fila 
-   * y el orden en que se mostrarán las columnas.
-   * 
-   * @type {ConfiguracionColumna<DomiciliosDePlantasTabla>[]} configuracionTabla - Arreglo de configuraciones de columnas.
-   * @property {string} encabezado - El texto que se mostrará en el encabezado de la columna.
-   * @property {Function} clave - Función que recibe un elemento y devuelve el valor correspondiente a la columna.
-   * @property {number} orden - El orden en que se mostrará la columna en la tabla.
+   * @see DOMICILIOS_PLANTAS para la definición de columnas, filtros y otras opciones de la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<DomiciliosDePlantasTabla>[] = [
-    { encabezado: 'Calle', clave: (item: DomiciliosDePlantasTabla) => item.calle, orden: 1 },
-    { encabezado: 'Número exterior', clave: (item: DomiciliosDePlantasTabla) => item.numero, orden: 2 },
-    { encabezado: 'Número interior', clave: (item: DomiciliosDePlantasTabla) => item.interior, orden: 3 },
-    { encabezado: 'Código postal', clave: (item: DomiciliosDePlantasTabla) => item.postal, orden: 4 },
-    { encabezado: 'Colonia', clave: (item: DomiciliosDePlantasTabla) => item.colonia, orden: 5 },
-    { encabezado: 'Municipio o alcaldía', clave: (item: DomiciliosDePlantasTabla) => item.municipio, orden: 6 },
-    { encabezado: 'Estado', clave: (item: DomiciliosDePlantasTabla) => item.estado, orden: 7 },
-  ];
+  public configuracionTabla = DOMICILIOS_PLANTAS;
 
   /**
    * Un arreglo de objetos `DomiciliosDePlantasTabla` que representa la tabla de domicilios.
@@ -99,15 +86,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
    constructor(private fb: FormBuilder,private consultaioQuery: ConsultaioQuery,private tramite90201Store: Tramite90201Store,
       private tramite90201Query: Tramite90201Query) {
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.establecerFormDomiciliosDePlantas();
-      })
-    )
-    .subscribe()
+    
     }
 
   /**
@@ -115,24 +94,17 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Llama a la función `inicializarEstadoFormulario` para preparar el estado inicial del formulario.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
+    this.inicializarFormulario();
   }
 
-  /**
-   * Inicializa el estado del formulario dependiendo del modo de solo lectura.
-   * 
-   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
-   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
-   * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
-   */
-   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-     this.inicializarFormulario();
-    }  
-  }
-    
   /**
    * Inicializa el formulario de domicilios de plantas.
    * 
@@ -155,24 +127,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     }
 
   /**
-   * Guarda los datos del formulario de domicilios de plantas.
-   * 
-   * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado)
-   * dependiendo de si el formulario está en modo solo lectura.
-   * 
-   * - Si el formulario es solo lectura, lo deshabilita.
-   * - Si el formulario no es solo lectura, lo habilita.
-   */
-  guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.formDomiciliosDePlantas.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.formDomiciliosDePlantas.enable();
-      }
-  }
-
-  /**
    * Inicializa el grupo de formularios para "Domicilios de Plantas" con valores predeterminados y campos deshabilitados.
    * 
    * El grupo de formularios contiene los siguientes controles:
@@ -184,6 +138,10 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       representacionFederal: [{value: this.solicitudState?.representacionFederal,disabled: true}],
       actividadProductiva: [{value: this.solicitudState?.actividadProductiva,disabled: true}]
     });
+
+    if (this.esFormularioSoloLectura) {
+      this.formDomiciliosDePlantas.disable();
+    }
   }
 
 /**
@@ -194,16 +152,5 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Actualiza un valor en el store de Tramite90201 utilizando el nombre del método proporcionado.
-   *
-   * @param campo - El nombre del campo del formulario cuyo valor se desea obtener.
-   * @param metodoNombre - El nombre del método del store de Tramite90201 que se debe invocar para actualizar el valor.
-   */
-   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
-    const VALOR = this.formDomiciliosDePlantas.get(campo)?.value;
-    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

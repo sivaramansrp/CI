@@ -46,11 +46,11 @@ export class PantallasComponent {
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
-  pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * Una referencia a la instancia de WizardComponent dentro de la plantilla.
@@ -70,7 +70,7 @@ export class PantallasComponent {
    * @property {string} txtBtnAnt - El texto para el botón "Anterior".
    * @property {string} txtBtnSig - El texto para el botón "Continuar".
    */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',

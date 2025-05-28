@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup,FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -19,6 +19,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
+import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 /**
  * Componente ProductorIndirecto que se utiliza para mostrar y gestionar los ProductorIndirecto.
@@ -31,28 +32,21 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
 export class ProductorIndirectoComponent implements OnInit, OnDestroy {
-  /**
-   * Configuración de las columnas de la tabla de productor indirecto.
-   * Cada objeto en el arreglo define un encabezado, una clave para acceder a los datos
-   * y un orden para la visualización de las columnas.
-   *
-   * @type {ConfiguracionColumna<ProductorIndirectoTabla>[]}
-   */
-  public configuracionTabla: ConfiguracionColumna<ProductorIndirectoTabla>[] = [
-    { encabezado: 'registro', clave: (item: ProductorIndirectoTabla) => item.registro, orden: 1 },
-    {
-      encabezado: 'denominacion',
-      clave: (item: ProductorIndirectoTabla) => item.denominacion,
-      orden: 2,
-    },
-    { encabezado: 'correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
-  ];
 
+  /**
+   * Configuración de la tabla utilizada en el componente Productor Indirecto.
+   * 
+   * Esta propiedad almacena la configuración específica de la tabla, 
+   * definida por la constante `PRODUCTOR_INDIRECTO`, que determina 
+   * la estructura, columnas y comportamiento de la tabla mostrada 
+   * en el componente.
+   */
+  public configuracionTabla = PRODUCTOR_INDIRECTO;
   /**
    * Un arreglo de objetos `ProductorIndirectoTabla` que representa los datos para la tabla de productor indirecto.
    * Se inicializa con los valores de `ProductorTabla`.
@@ -90,21 +84,21 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * Utilizado para gestionar y validar los datos ingresados por el usuario
    * en el componente de productor indirecto.
    */
-  formProductorIndirecto!: FormGroup;
+  public formProductorIndirecto!: FormGroup;
 
   /**
    * Representa el RFC (Registro Federal de Contribuyentes) de un usuario.
    * Este es un identificador único utilizado para fines fiscales en México.
    */
   public rfc: string = '';
-  
+
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
 
- 
+
   /**
    * Constructor de la clase ProductorIndirectoComponent.
    * 
@@ -123,60 +117,26 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private fb: FormBuilder
   ) {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarProductorFormulario();
-      })
-    )
-    .subscribe()
-  }
 
-    /**
-     * Inicializa el estado del formulario dependiendo del modo de solo lectura.
-     *
-     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
-     * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
-     * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
-     *
-     * @returns {void} No retorna ningún valor.
-     */
-    inicializarEstadoFormulario(): void {
-
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-     this.inicializarFormulario();
-    }  
   }
-   
-  /**
-   * Guarda los datos del formulario de productor indirecto.
-   * 
-   * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado)
-   * dependiendo de si el formulario está en modo solo lectura.
-   * 
-   * - Si `esFormularioSoloLectura` es verdadero, deshabilita el formulario.
-   * - Si `esFormularioSoloLectura` es falso, habilita el formulario.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-         this.formProductorIndirecto.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.formProductorIndirecto.enable();
-      }
-  }
+  
   /**
    * Inicializa el componente ProductorIndirecto.
    * Se suscribe al estado de la solicitud y actualiza el RFC con el valor del estado.
    */
   ngOnInit(): void {
-  this.inicializarEstadoFormulario();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+    this.inicializarFormulario();
   }
-  
+
   /**
    * Inicializa el formulario del componente.
    * 
@@ -189,18 +149,18 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * el formulario específico del productor indirecto.
    */
   inicializarFormulario(): void {
-       this.tramite90201Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
+    this.tramite90201Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
 
-           })
-           
-          ).subscribe()
+        })
 
-          this.inicializarProductorFormulario();
-    }
+      ).subscribe()
+
+    this.inicializarProductorFormulario();
+  }
 
   /**
    * Inicializa el formulario reactivo para el productor indirecto.
@@ -213,10 +173,14 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   inicializarProductorFormulario(): void {
     this.formProductorIndirecto = this.fb.group({
-          rfc: [this.solicitudState?.rfc],
-          })     
+      rfc: [this.solicitudState?.rfc],
+    })
+
+    if (this.esFormularioSoloLectura) {
+      this.formProductorIndirecto.disable();
+    }
   }
-  
+
   /**
    * Establece un valor en el store llamando al método especificado.
    *
@@ -230,12 +194,12 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-/**
- * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
- * Notifica a los suscriptores para limpiar recursos y evitar fugas de memoria.
- * Completa el observable `destroyNotifier$` para finalizar todas las suscripciones dependientes.
- */
- ngOnDestroy(): void {
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Notifica a los suscriptores para limpiar recursos y evitar fugas de memoria.
+   * Completa el observable `destroyNotifier$` para finalizar todas las suscripciones dependientes.
+   */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

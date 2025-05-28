@@ -26,6 +26,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
+import { SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
@@ -76,7 +77,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Representa el estado actual de la solicitud 90201.
@@ -86,40 +87,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud90201State;
 
-   /**
-   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
-   * 
-   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
-   * suscripciones a observables y evitar fugas de memoria.
-   * 
-   * @private
-   */
+  /**
+  * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+  * 
+  * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+  * suscripciones a observables y evitar fugas de memoria.
+  * 
+  * @private
+  */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración para las columnas de la tabla.
-   *
-   * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
-   * la clave para acceder a los datos en cada fila y el orden de las columnas.
-   *
-   * @type {ConfiguracionColumna<SectoresTabla>[]}
-   *
-   * @property {string} encabezado - El nombre del encabezado de la columna.
-   * @property {Function} clave - Una función que toma un elemento y devuelve el valor para la columna.
-   * @property {number} orden - El orden de la columna en la tabla.
+   * Configuración de la tabla utilizada para mostrar los sectores y mercancías.
+   * 
+   * Esta propiedad almacena la configuración de columnas, estilos y opciones
+   * específicas para la tabla de sectores y mercancías, utilizando la constante
+   * `SECTORES_TABLA`.
    */
-  public configuracionTabla: ConfiguracionColumna<SectoresTabla>[] = [
-    {
-      encabezado: 'Lista de sectores',
-      clave: (item: SectoresTabla) => item.sectores,
-      orden: 1,
-    },
-    {
-      encabezado: 'Clave del sector',
-      clave: (item: SectoresTabla) => item.claveDel,
-      orden: 2,
-    },
-  ];
+  public configuracionTabla = SECTORES_TABLA;
 
   /**
    * Un array de objetos `SectoresTabla` que representa los sectores.
@@ -137,7 +122,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
- 
+
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    * 
@@ -157,27 +142,43 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private tramite90201Query: Tramite90201Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.establecerFormSectores();
-      })
-    )
-    .subscribe()
+
   }
 
-  
-    /**
-     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-     * Inicializa el estado del formulario y carga los catálogos necesarios para el componente.
-     */
-    ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa los catálogos necesarios y realiza la consulta inicial.
+   *
+   * @returns void
+   */
+  ngOnInit(): void {
     this.inicializaCatalogos();
+    this.inicializarConsulta();
   }
- 
+
+  /**
+   * Inicializa la consulta y el formulario asociado.
+   * 
+   * Suscribe al estado de consulta utilizando un observable, actualizando la propiedad
+   * `esFormularioSoloLectura` según el estado de solo lectura (`readonly`) recibido.
+   * Además, inicializa el formulario llamando a `inicializarFormulario()`.
+   * 
+   * @remarks
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que previene fugas de memoria.
+   */
+  inicializarConsulta(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+    this.inicializarFormulario();
+  }
+
   /**
    * Inicializa el formulario para el trámite 90201.
    * 
@@ -189,54 +190,18 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * 
    * @returns {void} No retorna ningún valor.
    */
-  inicializarFormulario(): void{
-       this.tramite90201Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
+  inicializarFormulario(): void {
+    this.tramite90201Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
 
-           })
-           
-          ).subscribe()
+        })
 
-          this.establecerFormSectores();
-        }
+      ).subscribe()
 
-  /**
-   * Inicializa el estado del formulario según el modo de operación.
-   *
-   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero),
-   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
-   * En caso contrario, inicializa el formulario llamando a `inicializarFormulario()`.
-   */
-   inicializarEstadoFormulario(): void {
-
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-     this.inicializarFormulario();
-    }  
-  }
-
-    /**
-     * Guarda los datos del formulario de sectores y mercancías.
-     * 
-     * - Inicializa el formulario antes de realizar cualquier acción.
-     * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), deshabilita todos los controles del formulario.
-     * - Si el formulario no está en modo solo lectura, habilita todos los controles del formulario.
-     * 
-     * @remarks
-     * Este método se utiliza para asegurar que el formulario tenga el estado correcto (habilitado o deshabilitado)
-     * según el modo de solo lectura antes de guardar los datos.
-     */
-    guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.sectoresForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.sectoresForm.enable();
-      }
+    this.establecerFormSectores();
   }
 
   /**
@@ -251,6 +216,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       sector: [this.solicitudState?.sector],
       fraccion: [this.solicitudState?.fraccion, Validators.maxLength(8)],
     });
+    if (this.esFormularioSoloLectura) {
+      this.sectoresForm.disable();
+    }
   }
 
   /**
@@ -276,7 +244,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Establece la propiedad `seleccion` a `true`.
    * Este método se utiliza para indicar que se ha seleccionado un sector.
    */
-  public sectorSeleccion():void {
+  public sectorSeleccion(): void {
     this.seleccion = true;
   }
 
@@ -285,8 +253,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este método se utiliza para indicar que no se ha seleccionado un sector.
    */
   ngOnDestroy(): void {
-   this.destroyNotifier$.next();
-   this.destroyNotifier$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

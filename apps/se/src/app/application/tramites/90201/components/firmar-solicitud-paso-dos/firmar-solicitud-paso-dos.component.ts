@@ -14,6 +14,7 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tra
 import TablaDatos from '@libs/shared/theme/assets/json/90201/acuse-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { ACUSE_DATOS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 
 /**
@@ -49,19 +50,17 @@ export class FirmarSolicitudPasoDosComponent {
    * Esta variable se llena con los datos del objeto `solicitud`.
    */
   public TEXTOS2 = SOLICITUD;
+  
   /**
-   * Configuración para las columnas de la tabla en el componente "firmar-solicitud-paso-dos".
-   *
-   * @type {ConfiguracionColumna<AcuseTablaDatos>[]} configuracionTabla - Un arreglo de configuraciones de columnas.
-   * @property {string} encabezado - El texto del encabezado para la columna.
-   * @property {Function} clave - Una función que devuelve el valor para la columna basado en el elemento.
-   * @property {number} orden - El orden en el que la columna debe aparecer.
+   * Configuración de la tabla utilizada en el componente para mostrar los datos del acuse.
+   * 
+   * @remarks
+   * Esta propiedad almacena la configuración de columnas, formato y otros parámetros
+   * necesarios para renderizar la tabla de datos del acuse en la interfaz de usuario.
+   * 
+   * @see ACUSE_DATOS para la definición de la configuración.
    */
-  public configuracionTabla: ConfiguracionColumna<AcuseTablaDatos>[] = [
-    { encabezado: 'no', clave: (item: AcuseTablaDatos) => item.no, orden: 1 },
-    { encabezado: 'documento', clave: (item: AcuseTablaDatos) => item.documento, orden: 2 },
-    { encabezado: 'descargar', clave: (item: AcuseTablaDatos) => item.descargar, orden: 3 },
-  ];
+  public configuracionTabla = ACUSE_DATOS;
 
   /**
    * Un arreglo de objetos `AcuseTablaDatos` que contiene los datos para la tabla.

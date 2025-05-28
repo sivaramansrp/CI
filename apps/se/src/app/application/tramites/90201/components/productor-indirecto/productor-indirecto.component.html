@@ -9,7 +9,6 @@
         class="form-control w-50"
         id="rfc"
         formControlName="rfc"
-        [(ngModel)]="rfc"
         placeholder="Ingresa el RFC"
         maxlength="13"
         (change)="setValoresStore('rfc', 'setRfc')"
@@ -30,7 +29,7 @@
       [configuracionTabla]="configuracionTabla"
       [datos]="tablaDatos"
       [tipoSeleccionTabla]="checkbox"
-      [disableSeleccionTablaCheckBox]="true"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     >
     </app-tabla-dinamica>
     <nav aria-label="Page navigation example">
