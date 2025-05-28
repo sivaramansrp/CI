@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   templateUrl: './registro-persona-notificaciones.component.html',
   styleUrl: './registro-persona-notificaciones.component.scss',
 })
-export class RegistroPersonaNotificacionesComponent implements OnInit {
+export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para capturar el RFC de la persona a notificar.
    */
@@ -74,17 +74,26 @@ export class RegistroPersonaNotificacionesComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.registroState = seccionState;
-        })
+        }),
+        takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-    this.consfirmarDatos();
+    this.confirmarDatos();
+  }
+
+  /**
+  * Se ejecuta al destruir el componente, limpiando las suscripciones.
+  */
+  ngOnDestroy() {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
    * Confirma y actualiza los datos de las personas notificadoras en el estado.
    * Si no existen personas, inicializa la lista y actualiza la visualización de la tabla.
    */
-  consfirmarDatos() {
+  confirmarDatos() {
     this.personasNotificaciones = this.registroState.personasNotificaciones;
     if (this.registroState.regustrarDatos) {
       if (this.personasNotificaciones.length === 0) {
@@ -109,7 +118,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit {
   /**
    * Navega a la pantalla para agregar una persona para oír/recibir notificaciones.
    */
-  AgregarPersonaParaOirRecibirNotificaciones() {
+  AgregarPersonas() {
     this.router.navigate(['login/consulta-registro-notificador']);
   }
 

@@ -34,7 +34,14 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Estado de la solicitud de registro.
    */
   public registroState!: RegistroStore;
+  /**
+  * Indica si los datos han sido confirmados para el registro.
+  */
   public registrarDatos: boolean = false;
+
+  /**
+   * Modelo que contiene los datos del notificador consultado.
+   */
   public modelNotificador!: ConsultaRegistro;
 
   /**
@@ -63,7 +70,8 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.registroState = seccionState;
-        })
+        }),
+        takeUntil(this.destroyNotifier$)
       )
       .subscribe();
     this.consultaDatos(this.registroState.rfc);
@@ -121,9 +129,9 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
     this.registroStore.setValorRegistro(this.registrarDatos = false);
     this.router.navigate(['login/registro-notificaciones']);
   }
-/**
- * Método para confirmar datos y enviar datos a tabla 
- */
+  /**
+   * Método para confirmar datos y enviar datos a tabla 
+   */
   confirmarDatos() {
     this.registrarDatos = true;
     this.registroStore.setValorRegistro(this.registrarDatos);
