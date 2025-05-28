@@ -49,3 +49,22 @@ export interface DatosSolicitante {
   actividadEconomica: string;
   correoElectronico: string;
 }
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+export interface ConsultaDatos {
+  tipoBusqueda: string;
+  aduana: string;
+  fechaIngreso: string;
+  inicialesContenedor: string;
+  numeroContenedor: string;
+  digitoDeControl: string;
+  contenedores: string;
+  aduanaMenuDesplegable: string;
+  fechaDeIngreso: string;
+  menuDesplegable: string;
+  numeroManifiesta: number;
+  datosDelContenedor: DatosDelContenedor[];
+}

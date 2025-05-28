@@ -51,14 +51,17 @@
                     <div class="col-md-4 menu-desplegable">
                         <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
-                            (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
+                            [isDisabled]="soloLectura"></app-catalogo-select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
+                            <input-fecha [datos]="fechaInicioInput"
+                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"
+                                (valorCambiado)="cambioFechaIngreso($event)" [icono]="!soloLectura"></input-fecha>
                         </div>
                     </div>
                 </div>
@@ -107,16 +110,18 @@
                     <div class="col-md-4 menu-desplegable">
                         <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="contenedores"
-                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"
+                            [isDisabled]="soloLectura"></app-catalogo-select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group pull-right">
-                            <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
-                            <button type="button" class="btn btn-primary ms-2"
-                                (click)="validarDigitoVerificador()">Agregar</button>
+                            <button type="button" class="btn btn-default" (click)="limpiarCampos()"
+                                [disabled]="soloLectura">Limpiar</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="validarDigitoVerificador()"
+                                [disabled]="soloLectura">Agregar</button>
                         </div>
                     </div>
                 </div>
@@ -135,7 +140,7 @@
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
                             [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
                             (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')"
-                            [required]="true"
+                            [isDisabled]="soloLectura" [required]="true"
                             [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
@@ -152,7 +157,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group pull-right">
-                            <button type="button" class="btn btn-primary" (click)="enviarManifiesto()">Buscar</button>
+                            <button type="button" class="btn btn-primary" (click)="enviarManifiesto()"
+                                [disabled]="soloLectura">Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -162,8 +168,8 @@
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
-                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
-                        [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                                [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                     <div align="center" id="paginGridContenedoresITC">
@@ -182,43 +188,46 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaMenuDesplegable"
-                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
+                                [placeholder]="aduana.primerOpcion" [required]="true"
+                                formControlName="aduanaMenuDesplegable"
+                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
+                                [isDisabled]="soloLectura"></app-catalogo-select>
                         </div>
-                    </div>  
+                    </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group datepicker-group">
-                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"></input-fecha>
-                            </div>    
+                                <input-fecha [datos]="fechaInicioInput"
+                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"
+                                    (valorCambiado)="cambioFechaDeIngreso($event)" [icono]="!soloLectura"></input-fecha>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
                             <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
-                                required>
+                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required
+                                [disabled]="soloLectura">
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
+                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo()" [disabled]="soloLectura">Cargar
                                 Archivo</button>
                         </div>
                         <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
-                        [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                         <div class="col-md-4">
                             <ng-titulo titulo="Cargar Archivo" />
                             <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required>
+                            <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required
+                                [disabled]="soloLectura">
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
+                            <button type="button" class="btn btn-default" (click)="archivo()" [disabled]="soloLectura">Enviar</button>
                         </div>
                         <div *ngIf="mostrarCargarArchivoTable" class="table-container">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
-                        [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                 </div>

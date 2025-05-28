@@ -1,6 +1,25 @@
 <div class="container">
   <ng-titulo titulo="Datos generales del solicitante" />
   <form [formGroup]="solicitudForm">
+    @if (this.consultaDatos.consultaioSolicitante) {
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <label class="form-label" for="folioDelTramite">Folio del trámite:</label>
+        <input type="text" class="form-control" id="folioDelTramite" formControlName="folioDelTramite" readonly>
+      </div>
+    
+      <div class="col-md-4">
+        <label class="form-label" for="fechaDeInicio">Fecha de inicio:</label>
+        <input type="text" class="form-control" id="fechaDeInicio" formControlName="fechaDeInicio" readonly>
+      </div>
+    
+      <div class="col-md-4">
+        <label class="form-label" for="estadoDelTramite">Estado del trámite:</label>
+        <input type="text" class="form-control" id="estadoDelTramite" formControlName="estadoDelTramite" readonly>
+      </div>
+    
+    </div>
+    }
     <div class="row">
 
       <div class="col-md-4">

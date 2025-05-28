@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Solicitud11201State } from '../../../../core/estados/tramites/tramite11201.store';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
 import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
 
@@ -26,8 +26,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   constructor(public fb: FormBuilder,
     public tramite11201Store: Tramite11201Store,
     private datosTramiteService: DatosTramiteService,
-    // eslint-disable-next-line no-empty-function
-    private tramite11201Query: Tramite11201Query) {
+    private tramite11201Query: Tramite11201Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
 
   }
 
@@ -35,9 +36,29 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
+  /**
+  * @property {Subject<void>} destroyNotifier$
+  * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+  */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {Solicitud11201State} derechoState
+   * @description Estado actual del trámite 11201, que contiene los datos del solicitante y otros detalles relevantes.
+   */
   public derechoState: Solicitud11201State = {} as Solicitud11201State;
+
+  /**
+   * @property {EventEmitter<string>} continuarEvento
+   * @description Evento que se emite para indicar que se debe continuar al siguiente paso en el proceso.
+   */
   @Output() continuarEvento = new EventEmitter<string>();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el solicitante y el trámite.
+   */
+  consultaDatos!: ConsultaioState;
 
   /**
    * Datos simulados que representan a un solicitante con varios atributos.
@@ -62,8 +83,19 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe()
     this.loadDatosSolicitante();
     this.solicitudForm = this.fb.group({
+      folioDelTramite: [this.consultaDatos?.consultaioSolicitante?.folioDelTramite],
+      fechaDeInicio: [this.consultaDatos?.consultaioSolicitante?.fechaDeInicio],
+      estadoDelTramite: [this.consultaDatos?.consultaioSolicitante?.estadoDelTramite],
       rfc: [''],
       denominacion: [''],
       actividadEconomica: [''],

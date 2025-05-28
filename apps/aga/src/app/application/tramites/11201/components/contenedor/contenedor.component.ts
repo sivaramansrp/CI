@@ -1,5 +1,5 @@
+import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -241,6 +241,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Evento para continuar.
    */
   @Output() continuarEvento = new EventEmitter<string>();
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -249,6 +261,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     public tramite11201Store: Tramite11201Store,
     private tramite11201Query: Tramite11201Query,
     private modalService: BsModalService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.transporteList = {
       catalogos: [],
@@ -287,6 +300,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
+    this.datosDelContenedor = this.solicitud11201State.datosDelContenedor || [];
     this.inicializarFormulario();
     this.cargarCatalogos();
     this.tabSeleccionado();
@@ -382,6 +405,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
     });
+    if (this.soloLectura) {
+      this.solicitudForm?.disable();
+    }
   }
   /**
      * Cargar datos de la tabla.
