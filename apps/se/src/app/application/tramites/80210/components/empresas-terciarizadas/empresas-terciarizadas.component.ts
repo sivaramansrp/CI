@@ -167,14 +167,8 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.empresasForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.empresasForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
-}
+    this.empresasForm.disable();
+  }
 
 
   /**
