@@ -1,11 +1,13 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable class-methods-use-this */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
@@ -14,7 +16,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 /**
  * Componente que gestiona el formulario de pago de derechos de importación o exportación.
@@ -33,18 +35,58 @@ import { map, Subject, takeUntil } from 'rxjs';
   standalone: true,
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+  /**
+   * @comdoc
+   * @descripcion Grupo de controles de formulario utilizado para gestionar y validar los datos ingresados en la solicitud.
+   * @tipo FormGroup
+   * @uso Este objeto se utiliza para agrupar y controlar los campos del formulario relacionados con el pago de derecho en el trámite.
+   */
   FormSolicitud!: FormGroup; 
+  /**
+   * Notificador para cancelar las suscripciones y evitar fugas de memoria.
+   * Se utiliza en los operadores takeUntil de RxJS.
+   * 
+   * @private
+   * @type {Subject<void>}
+   */
+  /**
+   * Notificador privado para cancelar las suscripciones y evitar fugas de memoria.
+   * Se utiliza en los operadores takeUntil de RxJS.
+   * 
+   * @comdoc
+   * @tipo Subject<void>
+   * @acceso privado
+   * @uso Permite emitir una señal para destruir las suscripciones activas al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+    /**
+     * @comdoc
+     * @descripcion Estado actual de la solicitud del trámite 220401.
+     * @tipo solicitud220401State
+     * @uso Almacena los datos de la solicitud para ser utilizados y actualizados en el formulario de pago de derecho.
+     */
     public solicitudState!: solicitud220401State;
   answer: string = ''; // Respuesta seleccionada por el usuario
   
   public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
   public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
+  esFormularioSoloLectura: boolean = false; 
    // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
-  ) { }
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarDerechoFormulario();
+      })
+    )
+    .subscribe()
+   }
 
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -57,7 +99,25 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @memberof PagoDeDerechoComponent
    */
   ngOnInit(): void {
-this.agregarQuery.selectSolicitud$
+
+    this.inicializarDerechoFormulario();
+
+
+}
+    /**
+     * Inicializa el formulario de solicitud de pago de derecho.
+     *
+     * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud y lo asigna a `solicitudState`.
+     * - Llama a los métodos `getJustificacion` y `getBanco` para obtener las opciones necesarias para los campos del formulario.
+     * - Crea el formulario reactivo `FormSolicitud` con los campos requeridos y sus validaciones correspondientes, utilizando los valores del estado si están disponibles.
+     * - Inicializa la lógica para actualizar los campos del formulario según el valor inicial de `exentoDePago`.
+     * - Suscribe a los cambios del campo `exentoDePago` para actualizar dinámicamente los campos del formulario cuando este valor cambie.
+     *
+     * @remarks
+     * Este método debe ser llamado durante la inicialización del componente para asegurar que el formulario y sus dependencias estén correctamente configurados.
+     */
+    inicializarFormulario(){
+    this.agregarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -88,8 +148,40 @@ this.agregarQuery.selectSolicitud$
     this.FormSolicitud.get('exentoDePago')?.valueChanges.subscribe((value) => {
       this.updateFormFieldsBasedOnExentoDePago(value);
     });
+    }
 
-}
+  /**
+   * Inicializa el formulario de derecho según el modo de la vista.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), 
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  inicializarDerechoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+    /**
+     * Guarda los datos del formulario y ajusta el estado de habilitación del mismo según el modo de solo lectura.
+     *
+     * Inicializa el formulario antes de aplicar los cambios. Si el formulario está en modo solo lectura,
+     * lo deshabilita para evitar modificaciones. Si no está en modo solo lectura, lo habilita para permitir ediciones.
+     * No realiza ninguna acción adicional si no se cumple ninguna de las condiciones anteriores.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.FormSolicitud.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.FormSolicitud.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
 
   /**
    * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
@@ -162,34 +254,19 @@ this.agregarQuery.selectSolicitud$
       { id: 2, descripcion: 'No' },
     ];
   }
-
+ 
   /**
-   * Método que puede extenderse para manejar la selección de justificación.
-   * 
-   * @memberof PagoDeDerechoComponent
+   * Valida el formulario de pago de derecho.
+   *
+   * @comdoc
+   * @descripcion Verifica si el formulario es inválido y permite implementar lógica adicional en caso de que no cumpla con las validaciones.
+   * @uso Se puede utilizar para mostrar mensajes de error o evitar el envío del formulario si hay campos inválidos.
    */
-  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
-  JustificacionSeleccion(): void { }
-
-  /**
-   * Método que puede extenderse para manejar la selección del banco.
-   * 
-   * @memberof PagoDeDerechoComponent
-   */
-  // eslint-disable-next-line no-empty-function
-  BancoSeleccion(): void {
-    
-   }
-
-  /**
-   * Método para validar el formulario y registrar los valores si el formulario es válido.
-   * 
-   * Este método actualmente no realiza ninguna acción, pero se puede extender para realizar el registro o envío de los datos.
-   * 
-   * @memberof PagoDeDerechoComponent
-   */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  validarFormulario() { }
+  validarFormulario(): void {
+    if (this.FormSolicitud.invalid) {    
+      // Aquí se puede agregar lógica para manejar el formulario inválido
+    }
+  }
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

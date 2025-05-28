@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -15,32 +15,26 @@ import {
 } from '@angular/forms';
 /** Importación de componentes reutilizables y modelos. */
 import {
-  Catalogo,
   CatalogoResponse,
   CatalogoSelectComponent,
   ConsultaioQuery,
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-/** Datos de opciones para el componente de radio desde un archivo JSON. */
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
+
 import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
-/** Importación del store y estado para la gestión de la solicitud. */
 
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-/** Campos de radio desde un archivo JSON. */
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { Pantallas220401Service } from '../pantallas220401.service';
-import { Observable } from 'rxjs';
+
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
@@ -77,6 +71,11 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   public solicitudState!: solicitud220401State;
   estadoJson: CatalogoResponse[] = [];
 
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * Cuando es `true`, los campos del formulario no pueden ser editados por el usuario.
+   * Cuando es `false`, el formulario es editable.
+   */
   esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente, inyecta los servicios necesarios.
@@ -95,8 +94,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
-          // this.inicializarEstadoFormulario();
+          this.inicializarCertificadoFormulario();
         })
       )
       .subscribe()
@@ -105,6 +103,58 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Inicialización del componente.
    */
   ngOnInit(): void {
+this.inicializarCertificadoFormulario();
+
+      }
+
+  /**
+   * Inicializa el formulario del certificado según el modo de la vista.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), 
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * En caso contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+
+    /**
+     * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado) según el modo de solo lectura.
+     * 
+     * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita los formularios `datosdelForm` y `formGroup1`.
+     * - Si no está en modo solo lectura, habilita ambos formularios.
+     * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.datosdelForm.disable();
+        this.formGroup1.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.datosdelForm.enable();
+        this.formGroup1.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+  /**
+   * @comdoc
+   * Inicializa y configura los formularios reactivos utilizados en el componente.
+   * 
+   * - Crea los formularios `datosdelForm` y `formGroup1` con sus respectivos controles y validaciones.
+   * - Suscribe al observable `selectSolicitud$` para obtener y almacenar el estado de la solicitud.
+   * - Agrega controles dinámicamente a `formGroup1` según la configuración de catálogos (`catalogConfigs`).
+   * - Carga los datos de delegaciones mediante `loaddataDelegacionesData`.
+   * - Sincroniza los valores de los controles de `formGroup1` con el estado almacenado en el servicio `_pantallas220401Service`.
+   * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
+   */
+  inicializarFormulario(){
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
@@ -146,8 +196,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
       })
-
-      }
+  }
       /**
    * Maneja los cambios en el valor seleccionado.
    */

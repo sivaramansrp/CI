@@ -10,6 +10,7 @@
                 [label]="'Especie*'"
                 [placeholder]="'Seleccione un valor'"
                 formControlName="especie"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formCombinacion,'especie', 'setespecie')">
                 ></app-catalogo-select>
             </div>
@@ -21,6 +22,7 @@
                 [label]="'Función Zootécnica*'"
                 [placeholder]="'Seleccione un valor'"
                 formControlName="funcionZootecnica"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formCombinacion,'funcionZootecnica', 'setfuncionZootecnica')"
                 ></app-catalogo-select>
             </div>

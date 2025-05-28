@@ -113,6 +113,7 @@ export interface solicitud220401State {
   regimenMercancia:string;
   paisOrigen:string;
   exentoPago:string;
+  tipoDeTransporte:string
 }
 
 /**
@@ -217,7 +218,8 @@ export function createInitialState(): solicitud220401State {
     oisaSalida:'',
     regimenMercancia:'',
     paisOrigen:'',
-    exentoPago:''
+    exentoPago:'',
+    tipoDeTransporte:''
   };
   
 }

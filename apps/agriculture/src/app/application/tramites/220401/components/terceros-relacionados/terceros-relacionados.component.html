@@ -4,7 +4,8 @@
      <div class="row">
         <div class="col-md-12">
             <h6 class="mb-5">Establecimiento de Origen *</h6>
-            <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
+            <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData" [disableSeleccionTablaCheckBox]="true"
+            ></ng-table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
                     <!-- <li class="page-item disabled">
@@ -28,7 +29,7 @@
      <div class="row">
         <div class="col-md-12">
             <h6 class="mb-5">Destinatario (destino final)*</h6>
-            <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioBodyData"></ng-table>
+            <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioBodyData" [disableSeleccionTablaCheckBox]="true"></ng-table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
                     <!-- <li class="page-item disabled">
@@ -52,7 +53,7 @@
      <div class="row">
         <div class="col-md-12">
             <h6 class="mb-5">Importador*</h6>
-            <ng-table [commonTableHeader]="importadorHeaderData" [commonTableBody]="importadorBodyData"></ng-table>
+            <ng-table [commonTableHeader]="importadorHeaderData" [commonTableBody]="importadorBodyData" [disableSeleccionTablaCheckBox]="true"></ng-table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
                     <!-- <li class="page-item disabled">

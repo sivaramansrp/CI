@@ -2,7 +2,9 @@ import { Agregar220401Store, solicitud220401State } from '../../../../estados/tr
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -138,17 +140,30 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.esFormularioSoloLectura = true;
-          this.inicializarEstadoFormulario();
+          this.inicializarCombinacionFormulario();
         })
       )
       .subscribe()
   }
 
+  /**
+   * @inheritdoc
+   * 
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se llama a la función para inicializar el formulario de combinación.
+   */
   ngOnInit(): void {
-this.inicializarEstadoFormulario();
+this.inicializarCombinacionFormulario();
   }
 
-  inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el formulario de combinación requerido.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), 
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  inicializarCombinacionFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -156,6 +171,16 @@ this.inicializarEstadoFormulario();
     }  
   }
 
+  /**
+   * Inicializa el formulario y carga los datos necesarios para el componente.
+   *
+   * Este método realiza las siguientes acciones:
+   * - Se suscribe al observable `selectSolicitud$` para obtener el estado de la solicitud y lo asigna a `solicitudState`.
+   * - Llama a `crearFormCombinacion` para crear la estructura del formulario.
+   * - Carga los datos requeridos para los campos del formulario, incluyendo especie, función zootécnica, mercancía, país de destino, nombre del establecimiento, tipo de actividad, aduana de salida, OISA de salida, régimen de mercancía y país de origen.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   inicializarFormulario(): void {
     this.agregarQuery.selectSolicitud$
       .pipe(
@@ -180,6 +205,15 @@ this.inicializarEstadoFormulario();
   }
 
 
+  /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
   guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {

@@ -42,6 +42,8 @@ export class TableComponent implements OnInit, OnChanges {
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
   @Output() seleccionCambio = new EventEmitter<boolean>();
+
+   @Input() disableSeleccionTablaCheckBox:boolean = false;
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
