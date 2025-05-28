@@ -1,8 +1,18 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <h1>Vigencia de la Autorización</h1>
+      </div>
+      <div class="col-md-6"></div>
+      <div class="col-md-12 mt-2 mb-2">
+        @if(!esValido) {
+        <ng-alert
+          [CUSTOMECLASS]="'alert-danger'"
+          class="text-center"
+          [CONTENIDO]="'<div class=\'error-container\'><style>.error-container {text-align: center;font-family: Arial, sans-serif;}.error-title {font-weight: bold;margin-bottom: 1rem;}.error-item {display: flex;justify-content: center;align-items: center;gap: 0.5rem;}.error-index {text-align: left;min-width: 20px;position: absolute;left: 15px;}.error-text {color: #b40606;}</style><p class=\'error-title\'>Corrija los siguientes errores:</p><p class=\'error-item\'><span class=\'error-index\'>1.</span><span class=\'error-text\'>(Pago) es un campo requerido</span></p></div>'"
+        ></ng-alert>
+        }
       </div>
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
@@ -10,7 +20,7 @@
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUno></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {

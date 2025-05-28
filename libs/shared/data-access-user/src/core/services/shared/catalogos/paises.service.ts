@@ -1,8 +1,8 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_GET_PAISES } from '../../../constants/api-constants';
 import { CatalogoPaisesResponse } from '../../../models/shared/catalogos.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -21,7 +21,16 @@ export class PaisesService {
    */
   getListaPaises(): Observable<CatalogoPaisesResponse> {
     const ENDPOINT = `${this.host}${API_GET_PAISES}`;
-    return this.http.get<CatalogoPaisesResponse>(ENDPOINT).pipe(
+
+    const HEADER = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Authorization',
+      })
+    };
+
+    return this.http.get<CatalogoPaisesResponse>(ENDPOINT, HEADER).pipe(
       map((response) => {
         return response;
       }),
