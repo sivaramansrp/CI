@@ -12,7 +12,7 @@
             [label]="opcionDeImportador.labelNombre"
             [required]="opcionDeImportador.required"
             name="opcionDeImportador"
-            [isDisabled]="true"
+            [isDisabled]="false"
             (selectionChange)="mostrarOcultarPanelTramite($event)"
           ></app-catalogo-select>
         </div>
@@ -39,7 +39,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group" id="selectLugarTomaMuestra">
-          <label for="textMotivoFaltaMuestra">Folio anterior*:</label>
+          <label for="textMotivoFaltaMuestra">Folio anterior* :</label>
           <input
             type="text"
             formControlName="descMotivoFaltaMuestra"
@@ -72,10 +72,10 @@
       <div class="col-md-8">
         <div class="form-group">
           <label for="fracciondescripcion" class="form-label"
-            >Descripción*:</label
+            >Descripción :</label
           >
           <textarea
-            class="form-control"
+            class="form-control no-resize"
             rows="3"
             id="fracciondescripcion"
             formControlName="fracciondescripcion"
@@ -100,9 +100,9 @@
       </div>
       <div class="col-md-8 mt-4">
         <div class="form-group">
-          <label for="descNico" class="form-label">Descripción*:</label>
+          <label for="descNico" class="form-label">Descripción :</label>
           <textarea
-            class="form-control"
+            class="form-control no-resize"
             rows="3"
             id="descNico"
             formControlName="nicoDescripcion"
@@ -110,18 +110,17 @@
           ></textarea>
         </div>
       </div>
-      <div class="col-md-8 mt-4">
+      <div class="col-md-4 mt-4">
         <div class="form-group">
           <label for="textNombreQuimico" class="form-label"
-            >Nombre químico*:</label
+            >Nombre químico* :</label
           >
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control no-resize"
+            rows="1"
             id="textNombreQuimico"
             formControlName="nombreQuimico"
             readonly
-            style="height: 80px"
             (change)="setNombreQuimico()"
           ></textarea>
         </div>
@@ -129,29 +128,27 @@
       <div class="col-md-8 mt-4">
         <div class="form-group">
           <label for="textNombreComercial" class="form-label"
-            >Nombre comercial*:</label
+            >Nombre comercial* :</label
           >
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control no-resize"
+            rows="1"
             id="textNombreComercial"
             formControlName="nombreComercial"
             readonly
-            style="height: 80px"
           ></textarea>
         </div>
       </div>
       <div class="col-md-8 mt-4">
         <div class="form-group">
           <label for="textNumeroCas" class="form-label"
-            >Número de Chemical Abstracts Substance (CAS) *:</label
+            >Número de Chemical Abstracts Substance (CAS)* :</label
           >
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control no-resize"
+            rows="1"
             id="textNumeroCas"
             formControlName="numeroCAS"
-            style="height: 80px"
             readonly
             (change)="setNombreComercial()"
           ></textarea>
@@ -174,7 +171,7 @@
           <label for="textDescClobGenerica1" class="form-label text-left"
             >Indique el acondicionamiento con el que se presenta la mercancía al
             momento del despacho aduanero (sacos, totes, pipas, carro tranque,
-            iso tanque, etc) *:</label
+            iso tanque, etc)* :</label
           >
           <textarea
             class="form-control"

@@ -304,7 +304,7 @@
     "id": 44,
     "tramite": 110209,
     "linkDashboard": "/se/certificado-sgp/solicitud",
-    "linkDepartment": "/se/certificado-sgp/solicitud",
+    "linkDepartment": "/pago/certificado-sgp/solicitud",
     "department": "se"
   },
   {
@@ -430,7 +430,7 @@
     "id": 62,
     "tramite": 130119,
     "linkDashboard": "/se/aviso-importacion-maquinas/registrar-solicitud",
-    "linkDepartment": "/se/aviso-importacion-maquinas/registrar-solicitud",
+    "linkDepartment": "/pago/aviso-importacion-maquinas/registrar-solicitud",
     "department": "se"
   },
   {
@@ -1157,15 +1157,15 @@
   {
     "id": 166,
     "tramite": 130108,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/producto-petrolifero/solicitud",
+    "linkDepartment": "/pago/producto-petrolifero/solicitud",
     "department": "sener"
   },
   {
     "id": 167,
     "tramite": 130121,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/permiso-de-hidrocarburos/datos",
+    "linkDepartment": "/pago/permiso-de-hidrocarburos/datos",
     "department": "sener"
   },
   {
@@ -1668,8 +1668,8 @@
   {
     "id": 239,
     "tramite": 261402,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/solicitud-modificacion-permiso-internacion/solicitud",
+    "linkDepartment": "/pago/solicitud-modificacion-permiso-internacion/solicitud",
     "department": "cofepris"
   },
   {
@@ -2018,8 +2018,8 @@
   {
     "id": 289,
     "tramite": 80211,
-    "linkDashboard": "/se/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
-    "linkDepartment": "/pago/registro-solicitud-immex/modalidad-ampliacion-terciarizadoras",
+    "linkDashboard": "/se/registro-expansion/modalidad-ampliacion-terciarizadoras",
+    "linkDepartment": "/pago/registro-expansion/modalidad-ampliacion-terciarizadoras",
     "department": "se"
   },
   {
