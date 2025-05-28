@@ -19,13 +19,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
 import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
 import { map, takeUntil } from 'rxjs/operators';
 import {
   CatalogoResponse,
 } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { Subject } from 'rxjs';
 import { Tramite90305Query } from '../../estados/tramite90305.query';
@@ -64,8 +64,6 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
   public esFormularioSoloLectura: boolean = false;
-  /** Suscripción para manejar el estado seleccionado */
-  private subscription?: Subscription;
 
     /**
    * Estado de la solicitud de la sección 301.
@@ -145,9 +143,6 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-    // this.formConsulta = this.fb.group({
-    //     estadoControl: [this.solicitudState?.selectedEstado, Validators.required],
-    //   });
     }
 
   /**
@@ -202,9 +197,5 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    // Desuscribirse de la suscripción si existe
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 }
