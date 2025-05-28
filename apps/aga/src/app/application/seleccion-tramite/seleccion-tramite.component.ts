@@ -1,7 +1,7 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import { Component, OnDestroy, OnInit, inject} from '@angular/core';
 import { APPINJECT } from '../../app.inject';
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 @Component({
   selector: 'seleccion-tramite',
