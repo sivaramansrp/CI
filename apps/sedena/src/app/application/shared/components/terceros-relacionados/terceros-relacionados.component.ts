@@ -169,12 +169,9 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @returns {void}
    */
   modificarDestinatario(): void {
-    this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
-    this.router.navigate(['../agregar-destino-final'], { relativeTo: this.activatedRoute,queryParams: { destinario:this.destinarioTablaSeleccionada[0].codigoPostal } 
-    });
-  
+    this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0]);
   }
-  
+
   /**
    * Elimina el destinatario final seleccionado y emite un evento con el destinatario eliminado.
    * 
@@ -201,8 +198,6 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarProveedor(): void {
     this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
-    this.router.navigate(['../agregar-proveedor'], { relativeTo: this.activatedRoute,queryParams: {proveedor:this.proveedorTablaSeleccionada[0].rfc} 
-    });
   }
   ngOnInit(): void {
     this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento); 
