@@ -189,8 +189,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     this.cancelacionesService
       .getCancelacionDeAutorizaciones()
       .pipe(takeUntil(this.destroy$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((resp:any) => { 
+      .subscribe((resp: CancelacionDeAutorizaciones[]) => { 
         this.cancelacionData = resp;
       });
   }

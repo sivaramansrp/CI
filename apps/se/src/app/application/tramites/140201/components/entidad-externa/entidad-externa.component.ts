@@ -126,9 +126,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
       this.entidadForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.entidadForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**

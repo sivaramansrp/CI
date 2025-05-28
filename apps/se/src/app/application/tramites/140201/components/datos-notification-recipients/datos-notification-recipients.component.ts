@@ -118,9 +118,7 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
       this.formularioDeNotificacionesForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.formularioDeNotificacionesForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
 

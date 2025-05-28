@@ -99,10 +99,10 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
-  
-/**
- * Destruye las suscripciones para evitar fugas de memoria.
- */
+
+  /**
+   * Destruye las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

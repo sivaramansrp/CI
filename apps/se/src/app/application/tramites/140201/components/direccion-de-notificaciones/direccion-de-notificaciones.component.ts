@@ -178,9 +178,7 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
       this.direccionNotificacionesForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.direccionNotificacionesForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
 

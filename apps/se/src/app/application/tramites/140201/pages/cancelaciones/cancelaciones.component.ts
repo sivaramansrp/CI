@@ -31,6 +31,14 @@ export class CancelacionesComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  
+  /**
+   * Método para manejar la acción del botón en el asistente.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del botón.
+   * 
+   * @returns {void}
+   */
   getValorIndice(e: AccionBoton) :void{
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
