@@ -1,4 +1,8 @@
 import {
+  CVE_UNIDAD_ADMIN,
+  TIPO_TRAMITE,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import {
   Component,
   EventEmitter,
   OnInit,
@@ -13,27 +17,20 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TransporteDespacho,
   TercerosQuery,
   TercerosState,
-  TercerosStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
   ListPersonaNoti,
+  Pedimento,
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
-import { map, Subject, takeUntil } from 'rxjs';
-import {
-  Solicitud5701State,
-  Tercero5701State,
-} from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Pedimento } from '../../../../core/models/5701/solicitud-payload.model';
-import {
-  CVE_UNIDAD_ADMIN,
-  TIPO_TRAMITE,
-} from '../../../../core/enums/5701/tramite5701.enum';
+import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 interface AccionBoton {
@@ -129,7 +126,7 @@ export class SolicitudPageComponent implements OnInit {
     private tercerosQuery: TercerosQuery,
     private guardarSolicitudService: GuardaSolicitudService
   ) {}
-  
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    *
@@ -201,48 +198,231 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
 
+  /**
+   * @description Obtiene la lista de personas notificadas a partir del estado de terceros.
+   * @returns Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
+   */
+  obtenerPersonasNotificacion(): ListPersonaNoti[] {
+    return this.tercerosState.terceros.map((persona, i) => {
+      return {
+        id_persona_noti: i + 1,
+        correo_electronico: persona.correo,
+        nombreTercero: persona.nombre,
+      };
+    });
+  }
+
+  /**
+   * @description Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
+   * @returns Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
+   */
+  obtenerResponsablesDespacho(): PersonaResponsableDespacho[] {
+    return this.solicitudState.personasResponsablesDespacho.map((persona) => {
+      return {
+        gafete: persona.gafeteRespoDespacho,
+        nombre: persona.nombre,
+        apellido_paterno: persona.primerApellido,
+        apellido_materno: persona.segundoApellido,
+      };
+    });
+  }
+
+  /**
+   * @description Obtiene una lista de pedimentos a partir del estado de la solicitud.
+   * @returns Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
+   */
+  obtenerPedimentosLista(): Pedimento[] {
+    return this.solicitudState.pedimentos.map((pedimento, i) => {
+      return {
+        id_pedimento: i + 1,
+        patente: pedimento.patente,
+        pedimento: pedimento.pedimento.toString(),
+        aduana: pedimento.aduana.toString(),
+        tipo_pedimento: pedimento.tipoPedimento.toString(),
+        numeros: pedimento.numero,
+        cove: pedimento.comprobanteValor,
+        estado_pedimento: parseInt(pedimento.estadoPedimento, 10),
+        sub_estado_pedimento: parseInt(pedimento.subEstadoPedimento, 10),
+        numero_pedimento: pedimento.pedimento,
+        tipo_pedimento_por_evaluacion: '',
+        bln_valido_pedimento:
+          pedimento.pedimentoValidado === 'SI' ? true : false,
+        fecha_edo_ws_pedimento: '',
+        bln_activo: false,
+      };
+    });
+  }
+
+  /**
+   * @description Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
+   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   */
+  obtenerTransporteArriboSalida(): TransporteDespacho[] {
+    const TIPO_TRANSPORTE_ARRIBO_SALIDA =
+      this.solicitudState.tipoTransporteArriboSalida;
+    switch (TIPO_TRANSPORTE_ARRIBO_SALIDA) {
+      case '1':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              emp_transportista: (transporte.emp_transportista || '') as string,
+              numero_porte: transporte.numero_porte || '',
+              fecha_porte: (transporte.fecha_porte || '') as string,
+              marca_transporte: transporte.marca_transporte || '',
+              modelo_transporte: transporte.modelo_transporte || '',
+              placas_transporte: transporte.placas_transporte || '',
+              contenedor_transporte: transporte.contenedor_transporte || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '2':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              numero_bl: transporte.numero_bl || '',
+              tipo_equipo: transporte.tipo_equipo || '',
+              iniciales_equipo: transporte.iniciales_equipo || '',
+              numero_equipo: transporte.numero_equipo || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '4':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              guia_bl_Maritimo: transporte.guia_bl_Maritimo || '',
+              guia_house_maritimo: transporte.guia_house_maritimo || '',
+              nombre_buque_maritimo: transporte.nombre_buque_maritimo || '',
+              contenedor_maritimo: transporte.contenedor_maritimo || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '5':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo,
+              guia_master_aereo: transporte.guia_master_aereo || '',
+              guia_house_aereo: transporte.guia_house_aereo || '',
+              fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
+              hora_arribo_aereo: transporte.hora_arribo_aereo || '',
+              guia_valida: transporte.guia_valida,
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '6':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              emp_transportista: transporte.emp_transportista || '',
+              tipo_transporte_des: transporte.tipo_transporte_des || '',
+              datos_transporte: transporte.datos_transporte || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      default:
+        return [] as TransporteDespacho[];
+    }
+  }
+
+  /**
+   * @description Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
+   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   */
+  obtenerTransporteDespacho(): TransporteDespacho[] {
+    const TIPO_TRANSPORTE_DESPACHO = this.solicitudState.tipoTransporte;
+
+    switch (TIPO_TRANSPORTE_DESPACHO) {
+      case '1':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              emp_transportista: (transporte.emp_transportista || '') as string,
+              numero_porte: transporte.numero_porte || '',
+              fecha_porte: (transporte.fecha_porte || '') as string,
+              marca_transporte: transporte.marca_transporte || '',
+              modelo_transporte: transporte.modelo_transporte || '',
+              placas_transporte: transporte.placas_transporte || '',
+              contenedor_transporte: transporte.contenedor_transporte || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '2':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              numero_bl: transporte.numero_bl || '',
+              tipo_equipo: transporte.tipo_equipo || '',
+              iniciales_equipo: transporte.iniciales_equipo || '',
+              numero_equipo: transporte.numero_equipo || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '3':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              rfc_empresa: transporte.rfc_empresa || '',
+              emp_transportista: transporte.emp_transportista || '',
+              nombre_transportista: transporte.nombre_transportista || '',
+              num_gafete: transporte.num_gafete || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '6':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              emp_transportista: transporte.emp_transportista || '',
+              tipo_transporte_des: transporte.tipo_transporte_des || '',
+              datos_transporte: transporte.datos_transporte || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+
+      default:
+        return [] as TransporteDespacho[];
+    }
+  }
+
+  /**
+   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
+   * del tramite 5701.
+   * @returns {void} No retorna ningún valor.   *
+   */
+
   private enviaSolicitudRequest(): void {
-    const RESPONSABLES_DESPACHO: PersonaResponsableDespacho[] =
-      this.solicitudState.personasResponsablesDespacho.map((persona) => {
-        return {
-          gafete: persona.gafeteRespoDespacho,
-          nombre: persona.nombre,
-          apellido_paterno: persona.primerApellido,
-          apellido_materno: persona.segundoApellido,
-        };
-      });
-
-    const PERSONAS_NOTIFICACION: ListPersonaNoti[] =
-      this.tercerosState.terceros.map((persona, i) => {
-        return {
-          id_persona_noti: i + 1,
-          correo_electronico: persona.nombre,
-          nombreTercero: persona.correo,
-        };
-      });
-
-    const PEDIMENTOS_LISTA: Pedimento[] = this.solicitudState.pedimentos.map(
-      (pedimento, i) => {
-        return {
-          id_pedimento: i + 1,
-          patente: pedimento.patente,
-          pedimento: pedimento.pedimento.toString(),
-          aduana: pedimento.aduana.toString(),
-          tipo_pedimento: pedimento.tipoPedimento.toString(),
-          numeros: pedimento.numero,
-          cove: pedimento.comprobanteValor,
-          estado_pedimento: parseInt(pedimento.estadoPedimento, 10),
-          sub_estado_pedimento: parseInt(pedimento.subEstadoPedimento, 10),
-          numero_pedimento: pedimento.pedimento,
-          tipo_pedimento_por_evaluacion: '',
-          bln_valido_pedimento:
-            pedimento.pedimentoValidado === 'SI' ? true : false,
-          fecha_edo_ws_pedimento: '',
-          bln_activo: false,
-        };
-      }
-    );
-
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
       id_solicitud: this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
@@ -304,7 +484,7 @@ export class SolicitudPageComponent implements OnInit {
           relacion: this.solicitudState.relacionSociedad,
           bln_despacho: true,
         },
-        pedimentos: PEDIMENTOS_LISTA,
+        pedimentos: this.obtenerPedimentosLista(),
         tipo_servicio: {
           bln_activo: false,
           cve_tipo_servicio: this.solicitudState.tipoSolicitud,
@@ -333,12 +513,10 @@ export class SolicitudPageComponent implements OnInit {
           justificacion: this.solicitudState.justificacion,
           pais_procedencia: this.solicitudState.paisProcedencia.toString(),
         },
-        tipo_transporte_despacho: this.solicitudState.tipoTransporte,
-        list_transporte_despacho: this.solicitudState.transporte,
-        tipo_transporte_arribo: this.solicitudState.tipoTransporteArriboSalida,
-        list_unidad_arribo: this.solicitudState.transporteArriboDatos,
-        persona_responsable: RESPONSABLES_DESPACHO,
-        list_persona_noti: PERSONAS_NOTIFICACION,
+        list_transporte_despacho: this.obtenerTransporteDespacho(),
+        list_unidad_arribo: this.obtenerTransporteArriboSalida(),
+        persona_responsable: this.obtenerResponsablesDespacho(),
+        list_persona_noti: this.obtenerPersonasNotificacion(),
       },
     };
 
