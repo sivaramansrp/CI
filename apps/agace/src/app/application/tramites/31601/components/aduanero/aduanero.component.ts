@@ -25,14 +25,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
 import { REGEX_RFC } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
@@ -48,6 +49,8 @@ import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json'
 import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
 import productivo from 'libs/shared/theme/assets/json/31601/productivo.json';
 import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.json';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 /**
  * @class AduaneroComponent
@@ -69,6 +72,7 @@ import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.j
     TituloComponent,
     AgregarMiembroDeLaEmpresaComponent,
   ],
+  providers: [BsModalService]
 })
 export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
@@ -255,6 +259,16 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   public noSeHaSubidoNingunArchivo: boolean = false;
 
   modalRef?: BsModalRef;
+    
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+   /**
+   * Suscripción a los cambios en el formulario react
+   */
+   private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente.
@@ -266,14 +280,44 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
-    private modalService: BsModalService
-  ) {}
+    private modalService: BsModalService,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
    */
   ngOnInit() {
+    this.inicializarEstadoFormulario();
+    this.getEstablecimiento();
+    this.getEmpleadosData();
+    this.getDomiciliosData();
+    this.getInstalaciones();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite31601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -281,100 +325,108 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();
-    this.preOperativeForm = this.fb.group({
-      autorizacionIVAIEPS: [this.solicitudState?.autorizacionIVAIEPS, Validators.required],
-      regimen_0:[this.solicitudState?.regimen_0],
-      regimen_1:[this.solicitudState?.regimen_1],
-      regimen_2:[this.solicitudState?.regimen_2],
-      regimen_3:[this.solicitudState?.regimen_3],
-      sectorProductivo:[this.solicitudState?.sectorProductivo],
-      servicio:[this.solicitudState?.servicio],
-      preOperativo: [this.solicitudState?.preOperativo, Validators.required],
-      indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
-      senale: [this.solicitudState?.senale, Validators.required],
-      empPropios:[this.solicitudState?.empPropios],
-      bimestre:[this.solicitudState?.bimestre],
-      senaleSi: [this.solicitudState?.senaleSi, Validators.required],
-      seMomento: [this.solicitudState?.seMomento, Validators.required],
-      cumplir: [this.solicitudState?.cumplir, Validators.required],
-      indique: [this.solicitudState?.indique, Validators.required],
-      encuentra: [this.solicitudState?.encuentra, Validators.required],
-      delMismo: [this.solicitudState?.delMismo, Validators.required],
-      senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
-      enCaso: [this.solicitudState?.enCaso, Validators.required],
-      comboBimestresIDCSeleccione:[this.solicitudState?.comboBimestresIDCSeleccione],
-      ingresar: [this.solicitudState?.ingresar, Validators.required],
-      encuentraSus: [this.solicitudState?.encuentraSus, Validators.required],
-      registrosQue:[this.solicitudState?.registrosQue],
-      registrosQue2:[this.solicitudState?.registrosQue2],
-      momentoIngresar: [this.solicitudState?.momentoIngresar, Validators.required],
-      indiqueCuenta: [this.solicitudState?.indiqueCuenta, Validators.required],
-      indiqueCheck:[this.solicitudState?.indiqueCheck],
-      nombreDel: [
-        this.solicitudState?.nombreDel,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(250),
+      .subscribe()
+      
+      this.preOperativeForm = this.fb.group({
+        autorizacionIVAIEPS: [this.solicitudState?.autorizacionIVAIEPS, Validators.required],
+        regimen_0:[this.solicitudState?.regimen_0],
+        regimen_1:[this.solicitudState?.regimen_1],
+        regimen_2:[this.solicitudState?.regimen_2],
+        regimen_3:[this.solicitudState?.regimen_3],
+        sectorProductivo:[this.solicitudState?.sectorProductivo],
+        servicio:[this.solicitudState?.servicio],
+        preOperativo: [this.solicitudState?.preOperativo, Validators.required],
+        indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
+        senale: [this.solicitudState?.senale, Validators.required],
+        empPropios:[this.solicitudState?.empPropios],
+        bimestre:[this.solicitudState?.bimestre],
+        senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+        seMomento: [this.solicitudState?.seMomento, Validators.required],
+        cumplir: [this.solicitudState?.cumplir, Validators.required],
+        indique: [this.solicitudState?.indique, Validators.required],
+        encuentra: [this.solicitudState?.encuentra, Validators.required],
+        delMismo: [this.solicitudState?.delMismo, Validators.required],
+        senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
+        enCaso: [this.solicitudState?.enCaso, Validators.required],
+        comboBimestresIDCSeleccione:[this.solicitudState?.comboBimestresIDCSeleccione],
+        ingresar: [this.solicitudState?.ingresar, Validators.required],
+        encuentraSus: [this.solicitudState?.encuentraSus, Validators.required],
+        registrosQue:[this.solicitudState?.registrosQue],
+        registrosQue2:[this.solicitudState?.registrosQue2],
+        momentoIngresar: [this.solicitudState?.momentoIngresar, Validators.required],
+        indiqueCuenta: [this.solicitudState?.indiqueCuenta, Validators.required],
+        indiqueCheck:[this.solicitudState?.indiqueCheck],
+        nombreDel: [
+          this.solicitudState?.nombreDel,
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(250),
+          ],
         ],
-      ],
-      lugarDeRadicacion: [
-        this.solicitudState?.lugarDeRadicacion,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(250),
+        lugarDeRadicacion: [
+          this.solicitudState?.lugarDeRadicacion,
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(250),
+          ],
         ],
-      ],
-      contabilidad: [this.solicitudState?.contabilidad, Validators.required],
-      rmfRadio: [this.solicitudState?.rmfRadio, Validators.required],
-      vinculacionRegistroCancelado: [this.solicitudState?.vinculacionRegistroCancelado, Validators.required],
-      proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
-      numeroAutorizacionCITES: [
-        '',
-        [
-          Validators.required, // Required field
-          Validators.pattern(REGEX_RFC),
+        contabilidad: [this.solicitudState?.contabilidad, Validators.required],
+        rmfRadio: [this.solicitudState?.rmfRadio, Validators.required],
+        vinculacionRegistroCancelado: [this.solicitudState?.vinculacionRegistroCancelado, Validators.required],
+        proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
+        numeroAutorizacionCITES: [
+          '',
+          [
+            Validators.required, // Required field
+            Validators.pattern(REGEX_RFC),
+          ],
         ],
-      ],
-      rfc: [
-        '',
-        [
-          Validators.required, // Required field
-          Validators.pattern(REGEX_RFC),
+        rfc: [
+          '',
+          [
+            Validators.required, // Required field
+            Validators.pattern(REGEX_RFC),
+          ],
         ],
-      ],
-      razonSocial: [
-        '',
-        [
-          Validators.required, // Required field
-          Validators.minLength(3), // Minimum length of 3 characters
+        razonSocial: [
+          '',
+          [
+            Validators.required, // Required field
+            Validators.minLength(3), // Minimum length of 3 characters
+          ],
         ],
-      ],
-      numeroEmpleados: [
-        '',
-        [
-          Validators.required, // Required field
-          Validators.pattern(/^[0-9]+$/), // Only allows numbers
+        numeroEmpleados: [
+          '',
+          [
+            Validators.required, // Required field
+            Validators.pattern(/^[0-9]+$/), // Only allows numbers
+          ],
         ],
-      ],
-      empleadosPropios: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]+$'), // Only allows numbers
-          Validators.min(1), // Minimum value 1
-          Validators.max(99999999), // Maximum value 8 digits
-          Validators.maxLength(8), // Ensures a maximum of 8 characters
+        empleadosPropios: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^[0-9]+$'), // Only allows numbers
+            Validators.min(1), // Minimum value 1
+            Validators.max(99999999), // Maximum value 8 digits
+            Validators.maxLength(8), // Ensures a maximum of 8 characters
+          ],
         ],
-      ],
-      archivoNacionales: ['']
-    });
-    this.getEstablecimiento();
-    this.getEmpleadosData();
-    this.getDomiciliosData();
-    this.getInstalaciones();
+        archivoNacionales: ['']
+      });
+    
+
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.preOperativeForm.controls).forEach((key) => {
+        this.preOperativeForm.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.preOperativeForm.controls).forEach((key) => {
+        this.preOperativeForm.get(key)?.enable();
+      })
+    }  
   }
 
   /**
@@ -514,6 +566,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

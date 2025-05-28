@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -20,7 +21,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -29,6 +30,9 @@ import enSuCaracterDe from 'libs/shared/theme/assets/json/31601/enSuCaracterDe.j
 import miembrodelaempresaTable from 'libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
 import nacionalidad from 'libs/shared/theme/assets/json/31601/nacionalidad.json';
 import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -49,13 +53,16 @@ import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json'
   ],
 })
 export class AgregarMiembroDeLaEmpresaComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnDestroy
 {
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property {FormGroup} agregarMiembroDeLaEmpresaForm
    *  Formulario reactivo para agregar miembros de la empresa.
    */
   agregarMiembroDeLaEmpresaFrom!: FormGroup;
+
+  checkBoxesForm!: FormGroup;
 
   /**
    * @property {ElementRef} AgregarMOdel
@@ -105,11 +112,16 @@ export class AgregarMiembroDeLaEmpresaComponent
    */
   nacionalidadOptions: Catalogo[] = nacionalidad;
 
+  public solicitudState!: Solicitud31601State;
+
   /**
    * @constructor
    * Servicio para construir formularios reactivos.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query,
+  ) {
     //constructor
   }
 
@@ -119,20 +131,37 @@ export class AgregarMiembroDeLaEmpresaComponent
    */
   ngOnInit(): void {
     this.getEstablecimiento();
-    this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
-      ensucarácterde: [1, Validators.required],
-      obligadoaTributarenMéxico: [true, Validators.required],
-      nacionalidad: [1, Validators.required],
-      registroFederaldeContribuyentes: [
-        { value: 'HEJE780514BVA', disabled: true },
-        Validators.required,
-      ],
-      rfc: ['HEJE780514BVA', [Validators.required]],
-      nombreCompleto: [
-        { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
-        Validators.required,
-      ],
-    });
+    
+  }
+
+  inicializarEstadoFormulario(): void {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
+      this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
+        ensucarácterde: [this.solicitudState?.ensucarácterde ? this.solicitudState?.ensucarácterde : 1, Validators.required],
+        rfc: [this.solicitudState?.rfc ? this.solicitudState?.rfc : 'HEJE780514BVA', [Validators.required]],
+        obligadoaTributarenMéxico: [this.solicitudState?.obligadoaTributarenMéxico ?this.solicitudState?.obligadoaTributarenMéxico : true, Validators.required],
+        nacionalidad: [this.solicitudState?.nacionalidad? this.solicitudState?.nacionalidad : 1, Validators.required],
+        registroFederaldeContribuyentes: [
+          { value: 'HEJE780514BVA', disabled: true },
+          Validators.required,
+        ],
+        nombreCompleto: [
+          { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
+          Validators.required,
+        ],
+      });
+
+      this.checkBoxesForm = this.fb.group({
+        squemaIntegral:[this.solicitudState?.squemaIntegral, Validators.required],
+        sidoModificadas: [this.solicitudState?.sidoModificadas, Validators.required]
+      })
   }
 
   /**
@@ -225,5 +254,19 @@ export class AgregarMiembroDeLaEmpresaComponent
     if (this.AgregarModelInstance) {
       this.AgregarModelInstance.hide();
     }
+  }
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

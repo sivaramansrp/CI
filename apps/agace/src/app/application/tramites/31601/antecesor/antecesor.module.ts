@@ -16,6 +16,7 @@ import { AduaneroComponent } from '../components/aduanero/aduanero.component';
 
 import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
 import { AnexarRequisitosComponent } from '../components/anexar-requisitos/anexar-requisitos.component';
+import { BrowserModule } from '@angular/platform-browser';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
@@ -26,6 +27,7 @@ import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core
 import { provideHttpClient } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { Solocitud31601Service } from '../services/service31601.service';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -52,8 +54,10 @@ import { BsModalService } from 'ngx-bootstrap/modal';
     BtnContinuarComponent,
     RequisitosComponent,
     ToastrModule.forRoot(),
+    BrowserModule
   ],
   providers: [
+    Solocitud31601Service,
     ServiciosPantallaService,
     provideHttpClient(),
     ToastrService,

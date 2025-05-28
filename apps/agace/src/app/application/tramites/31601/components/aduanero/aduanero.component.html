@@ -155,6 +155,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
             formControlName="sectorProductivo"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
@@ -165,6 +166,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
             formControlName="servicio"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
@@ -284,6 +286,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="comboBimestresIDC"
             formControlName="bimestre"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
           >
           </app-catalogo-select>
@@ -528,6 +531,7 @@
           [placeholder]="'Seleccione un valor'"
           [catalogo]="comboBimestresIDC"
           formControlName="comboBimestresIDCSeleccione"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(preOperativeForm,'comboBimestresIDCSeleccione', 'setComboBimestresIDCSeleccione')"
         >
         </app-catalogo-select>
@@ -1039,6 +1043,7 @@
               [label]="'Entidad Federativa'"
               [placeholder]="'Seleccione un valor'"
               [catalogo]="entidadFederativa"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
             >
             </app-catalogo-select>
           </div>
@@ -1213,6 +1218,7 @@
               [label]="'Bimestre'"
               [placeholder]="'Seleccione un valor'"
               [catalogo]="comboBimestresIDC"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
             >
             </app-catalogo-select>
           </div>

@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-empty-function */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import enlace from 'libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el enlace de un representante, incluyendo su información en un formulario.
@@ -24,7 +27,8 @@ import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
   templateUrl: './enlace.component.html', // Ruta a la plantilla HTML
   styleUrl: './enlace.component.scss', // Ruta al archivo de estilos SCSS
 })
-export class EnlaceComponent implements OnInit {
+export class EnlaceComponent implements OnInit, OnDestroy {
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Encabezados de la tabla de enlace.
    */
@@ -49,31 +53,31 @@ export class EnlaceComponent implements OnInit {
    * Datos predefinidos de un representante, que se cargan en el formulario.
    */
   representativeData = enlaceData;
+  public solicitudState!: Solicitud31601State;
 
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query,
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario reactivo y carga los encabezados de la tabla.
    */
   ngOnInit(): void {
-    // Inicializa el formulario con las validaciones
-    this.represtantante = this.fb.group({
-      resigtro: ['', Validators.required],
-      rfc: ['', Validators.required],
-      nombre: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
-      cargo: ['', Validators.required],
-      cuidad: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correo: ['', Validators.required],
-      suplente: ['', Validators.required],
-    });
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
+      this.getRegistroForm()
 
     // Carga los datos de la tabla
     this.getEnlace();
@@ -109,9 +113,9 @@ export class EnlaceComponent implements OnInit {
    */
   public getRegistroForm() {
     this.represtantante = this.fb.group({
-      resigtro: ['', Validators.required],
-      rfc: ['', Validators.required],
-      nombre: ['', Validators.required],
+      resigtroReprestantante: ['', Validators.required],
+      rfcReprestantante: ['', Validators.required],
+      nombreReprestante: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
       apellidoMaterno: ['', Validators.required],
       cargo: ['', Validators.required],
@@ -148,5 +152,19 @@ export class EnlaceComponent implements OnInit {
     this.represtantante.get('apellidoPaterno')?.disable();
     this.represtantante.get('apellidoMaterno')?.disable();
     this.represtantante.get('cuidad')?.disable();
+  }
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

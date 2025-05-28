@@ -51,9 +51,10 @@
                 <div class="form-group">
                   <input
                     class="form-control"
-                    id="resigtro"
-                    formControlName="resigtro"
+                    id="resigtroReprestantante"
+                    formControlName="resigtroReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'resigtroReprestantante', 'setResigtroReprestantante')"
                   />
                 </div>
               </div>
@@ -61,12 +62,13 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="rfc">RFC:</label>
+                  <label class="form-label" for="rfcReprestantante">RFC:</label>
                   <input
                     class="form-control"
-                    id="rfc"
-                    formControlName="rfc"
+                    id="rfcReprestantante"
+                    formControlName="rfcReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'rfcReprestantante', 'setRfcReprestantante')"
                   />
                 </div>
               </div>
@@ -80,12 +82,13 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="nombre">Nombre:</label>
+                  <label class="form-label" for="nombreReprestante">Nombre:</label>
                   <input
                     class="form-control"
-                    id="nombre"
-                    formControlName="nombre"
+                    id="nombreReprestante"
+                    formControlName="nombreReprestante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'nombreReprestante', 'setNombreReprestante')"
                   />
                 </div>
               </div>

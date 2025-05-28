@@ -385,6 +385,47 @@ export interface Solicitud31601State {
      * El valor de cumplimientoLineamientos.
      */
     cumplimientoLineamientos: string;
+    /**
+     * El valor de squemaIntegral.
+     */
+    squemaIntegral: string;
+    /**
+     * El valor de sidoModificadas.
+     */
+    sidoModificadas: string;
+    /**
+     * El valor de ensucarácterde.
+     */
+    ensucarácterde: string;
+    /**
+     * El valor de rfc.
+     */
+    rfc: string;
+    /**
+     * El valor de obligadoaTributarenMéxico.
+     */
+    obligadoaTributarenMéxico: string;
+    /**
+     * El valor de nacionalidad.
+     */
+    nacionalidad: string;
+    /**
+     * El valor de registroFederaldeContribuyentes.
+     */
+    registroFederaldeContribuyentes: string;
+    /**
+     * El valor de resigtroReprestantante.
+     */
+    resigtroReprestantante: string;
+    /**
+     * El valor de rfcReprestantante.
+     */
+    rfcReprestantante: string;
+    /**
+     * El valor de nombreReprestante.
+     */
+    nombreReprestante: string;
+    
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -770,7 +811,53 @@ export function createInitialState(): Solicitud31601State {
         /**
          * El valor de cumplimientoLineamientos.
          */
-        cumplimientoLineamientos: ''
+        cumplimientoLineamientos: '',
+
+        /**
+         * El valor de squemaIntegral.
+         */
+        squemaIntegral: '',
+
+        /**
+         * El valor de sidoModificadas.
+         */
+        sidoModificadas: '',
+        /**
+         * El valor de ensucarácterde.
+         */
+        ensucarácterde: '',
+        /**
+         * El valor de rfc.
+         */
+        rfc: '',
+        /**
+         * El valor de obligadoaTributarenMéxico.
+         */
+        obligadoaTributarenMéxico: '',
+
+        /**
+         * El valor de nacionalidad.
+         */
+        nacionalidad: '',
+
+        /**
+         * El valor de registroFederaldeContribuyentes.
+         */
+        registroFederaldeContribuyentes: '',
+        /**
+         * El valor de resigtroReprestantante.
+         */
+        resigtroReprestantante: '',
+
+        /**
+         * El valor de rfcReprestantante.
+         */
+        rfcReprestantante: '',
+
+        /**
+         * El valor de nombreReprestante.
+         */
+        nombreReprestante: '',
     };
 }
 
@@ -1630,6 +1717,112 @@ public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
     this.update((state) => ({
         ...state,
         cumplimientoLineamientos,
+    }));
+}
+
+/**
+ * Establece el estado de squemaIntegral.
+ * @param squemaIntegral - El valor de squemaIntegral.
+ */
+public setSquemaIntegral(squemaIntegral: string) {
+    this.update((state) => ({
+        ...state,
+        squemaIntegral,
+    }));
+}
+
+/**
+ * Establece el estado de sidoModificadas.
+ * @param sidoModificadas - El valor de sidoModificadas.
+ */
+public setSidoModificadas(sidoModificadas: string) {
+    this.update((state) => ({
+        ...state,
+        sidoModificadas,
+    }));
+}
+/**
+ * Establece el estado de ensucarácterde.
+ * @param ensucarácterde - El valor de ensucarácterde.
+ */
+public setEnsucarácterde(ensucarácterde: string) {
+    this.update((state) => ({
+        ...state,
+        ensucarácterde,
+    }));
+}
+/**
+ * Establece el estado de rfc.
+ * @param rfc - El valor de rfc.
+ */
+public setRfc(rfc: string) {
+    this.update((state) => ({
+        ...state,
+        rfc,
+    }));
+}
+/**
+ * Establece el estado de obligadoaTributarenMéxico.
+ * @param obligadoaTributarenMéxico - El valor de obligadoaTributarenMéxico.
+ */
+public setObligadoaTributarenMéxico(obligadoaTributarenMéxico: string) {
+    this.update((state) => ({
+        ...state,
+        obligadoaTributarenMéxico,
+    }));
+}
+
+/**
+ * Establece el estado de nacionalidad.
+ * @param nacionalidad - El valor de nacionalidad.
+ */
+public setNacionalidad(nacionalidad: string) {
+    this.update((state) => ({
+        ...state,
+        nacionalidad,
+    }));
+}
+
+/**
+ * Establece el estado de registroFederaldeContribuyentes.
+ * @param registroFederaldeContribuyentes - El valor de registroFederaldeContribuyentes.
+ */
+public setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: string) {
+    this.update((state) => ({
+        ...state,
+        registroFederaldeContribuyentes,
+    }));
+}
+/**
+ * Establece el estado de resigtroReprestantante.
+ * @param resigtroReprestantante - El valor de resigtroReprestantante.
+ */
+public setResigtroReprestantante(resigtroReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        resigtroReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de rfcReprestantante.
+ * @param rfcReprestantante - El valor de rfcReprestantante.
+ */
+public setRfcReprestantante(rfcReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        rfcReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de nombreReprestante.
+ * @param nombreReprestante - El valor de nombreReprestante.
+ */
+public setNombreReprestante(nombreReprestante: string) {
+    this.update((state) => ({
+        ...state,
+        nombreReprestante,
     }));
 }
 } 

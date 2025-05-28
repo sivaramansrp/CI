@@ -37,26 +37,28 @@
 </div>
 
 <div class="container p-3 mt-4 mb-4">
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" id="checkbox1" />
-    <label class="form-check-label text-justify" for="checkbox1">
-      <span class="text-danger">*</span> Una vez manifestado lo anterior, se
-      solicita al SAT, a través de AGACE, que realice las inspecciones a que
-      hace referencia la fracción IX de la regla 7.1.1, a las instalaciones
-      señaladas en las que se realizan las operaciones de comercio exterior con
-      el propósito de verificar la información plasmada en la presente solicitud
-      del Registro en el Esquema Integral de Certificación.
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" id="checkbox2" />
-    <label class="form-check-label text-justify" for="checkbox2">
-      <span class="text-danger">*</span> Bajo protesta de decir verdad,
-      manifiesto que los datos asentados en el presente documento son ciertos y
-      que las facultades que me fueron otorgadas para representar al solicitante
-      no me han sido modificadas y/o revocadas.
-    </label>
-  </div>
+  <form [formGroup]="checkBoxesForm" class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkbox1" formControlName="squemaIntegral" (change)="setValoresStore(checkBoxesForm,'squemaIntegral', 'setsquemaIntegral')"/>
+      <label class="form-check-label text-justify" for="checkbox1">
+        <span class="text-danger">*</span> Una vez manifestado lo anterior, se
+        solicita al SAT, a través de AGACE, que realice las inspecciones a que
+        hace referencia la fracción IX de la regla 7.1.1, a las instalaciones
+        señaladas en las que se realizan las operaciones de comercio exterior con
+        el propósito de verificar la información plasmada en la presente solicitud
+        del Registro en el Esquema Integral de Certificación.
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkbox2" formControlName="sidoModificadas" (change)="setValoresStore(checkBoxesForm,'sidoModificadas', 'setsidoModificadas')"/>
+      <label class="form-check-label text-justify" for="checkbox2">
+        <span class="text-danger">*</span> Bajo protesta de decir verdad,
+        manifiesto que los datos asentados en el presente documento son ciertos y
+        que las facultades que me fueron otorgadas para representar al solicitante
+        no me han sido modificadas y/o revocadas.
+      </label>
+    </div>
+  </form>
 </div>
 
 <div class="modal fade" tabindex="-1" #Agregar>
@@ -74,6 +76,8 @@
                   [label]="'En su carácter de'"
                   [required]="true"
                   [catalogo]="enSuCaracterDeOptions"
+                  formControlName="'ensucarácterde'"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucarácterde', 'setEnsucarácterde')"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -85,6 +89,8 @@
                   id="rfc"
                   formControlName="rfc"
                   class="form-control"
+                  formControlName="'rfc'"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'rfc', 'setRfc')"
                 />
               </div>
             </div>
@@ -105,6 +111,8 @@
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   [gap]="'50px'"
+                  formControlName="obligadoaTributarenMéxico"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'obligadoaTributarenMéxico', 'setObligadoaTributarenMéxico')"
                 ></app-input-radio>
               </div>
             </div>
@@ -133,6 +141,7 @@
                   [required]="true"
                   [catalogo]="nacionalidadOptions"
                   formControlName="nacionalidad"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'nacionalidad', 'setNacionalidad')"
                 ></app-catalogo-select>
               </div>
             </div>
