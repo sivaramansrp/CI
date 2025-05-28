@@ -44,7 +44,9 @@ export class ProsecModificacionServiceTsService {
   }
 
    actualizarEstadoFormulario(DATOS: Tramite90305State): void {
+    if(DATOS.selectedEstado){
     this.tramite90305Store.setSelectedEstado(DATOS.selectedEstado);
+    }
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite90305State> {

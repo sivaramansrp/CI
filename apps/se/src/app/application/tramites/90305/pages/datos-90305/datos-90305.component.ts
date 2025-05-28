@@ -7,13 +7,10 @@
  * Gestiona el estado de consulta y la carga de datos del formulario.
  */
 
-import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { SolicitanteComponent, TIPO_PERSONA, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
-// Importa tus servicios reales si los tienes, por ejemplo:
-// import { Pantallas90305Service } from '../../services/pantallas90305.service';
-// import { Solicitud90305Service } from '../../services/solicitud90305.service';
 
 /**
  * compo doc

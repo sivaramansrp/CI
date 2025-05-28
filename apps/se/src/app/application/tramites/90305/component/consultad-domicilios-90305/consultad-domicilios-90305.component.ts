@@ -7,8 +7,11 @@
  * El estado seleccionado se gestiona utilizando Akita para asegurar la persistencia del estado.
  */
 
-import { CommonModule } from '@angular/common';
-
+import {
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -17,23 +20,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-
-import {
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
+import { map, takeUntil } from 'rxjs/operators';
 import {
   CatalogoResponse,
 } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-
-import { Tramite90305Query } from '../../estados/tramite90305.query';
-import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
-
+import { CommonModule } from '@angular/common';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
+import { Subject } from 'rxjs';
+import { Tramite90305Query } from '../../estados/tramite90305.query';
 /**
  * compo docs
  * @selector app-consultad-domicilios-90305
@@ -55,7 +50,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<String> =
+  selectedEstado$: Observable<CatalogoResponse | null> =
     this.tramite90305Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
   estadoJson: CatalogoResponse[] = [];

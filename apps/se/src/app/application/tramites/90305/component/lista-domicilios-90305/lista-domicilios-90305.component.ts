@@ -7,23 +7,23 @@
  * y se presentan en una tabla dinámica.
  */
 
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
+  CatalogoResponse,
+  ConsultaioQuery,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  CatalogoResponse,
-  ConsultaioQuery,
 } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ProsecModificacionModel } from '../../models/prosec-modificacion.model';
-import { Tramite90305Store } from '../../estados/tramite90305.store';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
+import { Subject } from 'rxjs';
 import { Tramite90305Query } from '../../estados/tramite90305.query';
+import { Tramite90305Store } from '../../estados/tramite90305.store';
 
 /**
  * compo doc
