@@ -6,7 +6,7 @@ import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
 import { Router } from '@angular/router';
-import { TramiteService } from '../../core/service/tramite.service';
+import { UsuariosService } from '../../core/service/usuarios.service';
 
 /**
  * Componente para consultar los datos de una persona y mostrar notificaciones relacionadas.
@@ -48,7 +48,7 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
     private fb: FormBuilder,
     private registroStore: RegistroStates,
     private registroQuery: BusquedaRFCQuery,
-    private tramiteService: TramiteService,
+    private usuarioService: UsuariosService,
     private router: Router
   ) {
   }
@@ -75,7 +75,7 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
    * @param rfc RFC de la persona a consultar.
    */
   consultaDatos(rfc: string) {
-    this.tramiteService.consultaDatosPorRFCoCURP(rfc)
+    this.usuarioService.consultaDatosPorRFCoCURP(rfc)
       .pipe(
         map((data) => {
           this.modelNotificador = data;
