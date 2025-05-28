@@ -10,7 +10,8 @@
                 (change)="obtenerRequisitosFraccionArancelariaEsquema();setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
-               [required]="true"></app-catalogo-select>
+               [required]="true"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {

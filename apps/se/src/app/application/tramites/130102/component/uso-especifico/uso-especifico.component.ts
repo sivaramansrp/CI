@@ -15,14 +15,14 @@ import { TituloComponent } from "libs/shared/data-access-user/src/tramites/compo
 import fraccionOptionJson from 'libs/shared/theme/assets/json/130102/fracciónarancelaria-options.json';
 
 import { CommonModule } from '@angular/common';
-
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-uso-especifico',
@@ -82,7 +82,7 @@ export class UsoEspicificoComponent implements OnInit {
    * Notificador para destruir las suscripciones activas al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+ esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -92,9 +92,19 @@ export class UsoEspicificoComponent implements OnInit {
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) { 
-    // constructor
+   this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+              console.log("uso especifico", this.esFormularioSoloLectura);
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
@@ -103,8 +113,30 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-
-    this.tramite130102Query.selectSolicitud$
+this.inicializarEstadoFormulario();
+    
+    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+  }
+inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+   guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.usoEspicificoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.usoEspicificoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  inicializarFormulario():void{
+      this.tramite130102Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -118,9 +150,10 @@ export class UsoEspicificoComponent implements OnInit {
       descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
 
     });
-    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+       if (this.esFormularioSoloLectura) {
+    this.usoEspicificoForm.disable();
   }
-
+  }
     /**
    * Asigna un valor del formulario al store.
    *

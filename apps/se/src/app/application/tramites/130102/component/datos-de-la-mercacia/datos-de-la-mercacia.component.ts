@@ -22,8 +22,8 @@ import productoOptions from 'libs/shared/theme/assets/json/130102/producto-otion
 import unidadOptions from 'libs/shared/theme/assets/json/130102/unidad_da.json';
 
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -54,6 +54,9 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
+  /*
+  * @description Indica si el formulario es de solo lectura.
+  */
    esFormularioSoloLectura: boolean = false;
   /**
    * compo doc
@@ -194,6 +197,9 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         ],
       ],
     });
+     if (this.esFormularioSoloLectura) {
+    this.formDelLa.disable();
+  }
   }
     /**
    * Asigna un valor del formulario al store.

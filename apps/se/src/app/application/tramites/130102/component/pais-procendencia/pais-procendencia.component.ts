@@ -20,7 +20,7 @@ import {
 } from '@angular/forms';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
@@ -32,6 +32,8 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -94,6 +96,7 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+   esFormularioSoloLectura: boolean = false;
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -130,16 +133,49 @@ export class PaisProcendenciaComponent implements OnInit {
   constructor(private http: HttpClient, private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+        private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+     this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+              console.log("pais-procendencia",this.esFormularioSoloLectura);
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
-     this.tramite130102Query.selectSolicitud$
+  this.inicializarEstadoFormulario();
+    this.fetchPaisProc();
+    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
+  }
+    inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+   guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.paisForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.paisForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  inicializarFormulario(): void {
+   this.tramite130102Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {  
@@ -153,8 +189,9 @@ export class PaisProcendenciaComponent implements OnInit {
       descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
       observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
-    this.fetchPaisProc();
-    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
+     if (this.esFormularioSoloLectura) {
+    this.paisForm.disable();
+  }
   }
   /**
    * Asigna un valor del formulario al store.

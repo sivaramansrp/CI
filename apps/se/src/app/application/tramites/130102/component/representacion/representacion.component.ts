@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import EntidadFederativaOptions from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import RepresentacionFederalOptions from 'libs/shared/theme/assets/json/130102/representacion_federal.json';
@@ -19,6 +19,8 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
@@ -67,6 +69,9 @@ export class RepresentacionComponent implements OnInit {
 
   public solicitudState!: Solicitud130102State;
   private destroyNotifier$: Subject<void> = new Subject();
+  
+    esFormularioSoloLectura: boolean = false;
+
 
   /**
    * Inicializa el componente RepresentacionComponent.
@@ -77,11 +82,57 @@ export class RepresentacionComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+     private consultaioQuery: ConsultaioQuery
+    
   ) {
-    //constructor
+    this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+               console.log("represenation",this.esFormularioSoloLectura);
+            this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
+inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+   guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.frmRepresentacion.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.frmRepresentacion.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  inicializarFormulario(): void {
+  this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
 
+    this.frmRepresentacion = this.fb.group({
+      entidad: [ this.solicitudState?.entidad , Validators.required],
+      representacion: [ this.solicitudState?.representacion , Validators.required],
+    });
+    if (this.esFormularioSoloLectura) {
+    this.frmRepresentacion.disable();
+  }
+  }
   /**
    * Maneja la selección de una entidad federativa.
    * @param e - La entidad federativa seleccionada.
@@ -105,19 +156,7 @@ export class RepresentacionComponent implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
-    this.tramite130102Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {  
-        this.solicitudState = seccionState;
-      })
-    )
-    .subscribe();
-
-    this.frmRepresentacion = this.fb.group({
-      entidad: [ this.solicitudState?.entidad , Validators.required],
-      representacion: [ this.solicitudState?.representacion , Validators.required],
-    });
+    this.inicializarEstadoFormulario();
     this.formularioRegistroService.registrarFormulario('frmRepresentacion', this.frmRepresentacion);
   }
 

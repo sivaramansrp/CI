@@ -20,15 +20,14 @@ import { TableComponent } from 'libs/shared/data-access-user/src/tramites/compon
  
 import establecimientoTable from 'libs/shared/theme/assets/json/130102/partidas-de-la.json';
 import fraccionArancelariaTIGIE from 'libs/shared/theme/assets/json/130102/partidas-de-la-catalogos-select.json';
- 
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
-import { REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery, REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -90,6 +89,7 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
  
     public solicitudState!: Solicitud130102State;
     private destroyNotifier$: Subject<void> = new Subject();
+    esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del formulario reactivo.
@@ -99,16 +99,44 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
       private tramite130102Store: Tramite130102Store,
       private tramite130102Query: Tramite130102Query,
-      private formularioRegistroService: FormularioRegistroService
+      private formularioRegistroService: FormularioRegistroService,
+       private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+      this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+              console.log("partidas-de-la", this.esFormularioSoloLectura);
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
- 
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+   
+  }
+  guardarDatosFormulario(): void {
+      this.crearFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.form.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.form.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
+    this.inicializarEstadoFormulario();
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
@@ -168,6 +196,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+     if (this.esFormularioSoloLectura) {
+    this.form.disable();
+  }
   }
  
   /**

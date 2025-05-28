@@ -54,7 +54,7 @@
         (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccionArancelaria"
-           [isDisabled]="esFormularioSoloLectura ? true : false"
+        [isDisabled]="esFormularioSoloLectura ? true : false"
       ></app-catalogo-select>
       @if (formDelLa.controls['fraccionArancelaria'].invalid && formDelLa.controls['fraccionArancelaria'].touched) {
         <div class="text-danger">

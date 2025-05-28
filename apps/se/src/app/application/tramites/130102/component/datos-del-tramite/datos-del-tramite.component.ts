@@ -22,8 +22,8 @@ import {
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
@@ -120,6 +120,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.esFormularioSoloLectura = seccionState.readonly;
+            console.log("datos-del-tramite",this.esFormularioSoloLectura);
              this.inicializarEstadoFormulario();
            })
          )
@@ -131,6 +132,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void { 
     
+    this.inicializarEstadoFormulario();
     this.fetchSolicitudeOptions();
     this.formularioRegistroService.registrarFormulario('formDelTramite', this.formDelTramite);
   }
@@ -167,6 +169,9 @@ this.tramite130102Query.selectSolicitud$
       tipoDocumento: [''],
       fraccion: [this.solicitudState?.fraccion, [Validators.required]],
     });
+     if (this.esFormularioSoloLectura) {
+    this.formDelTramite.disable();
+  }
   }
   /**
    * Asigna un valor del formulario al store.

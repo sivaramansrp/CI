@@ -13,6 +13,7 @@
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
 
         

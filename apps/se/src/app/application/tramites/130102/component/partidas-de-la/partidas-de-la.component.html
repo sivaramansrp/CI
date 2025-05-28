@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
-                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"></app-catalogo-select>
+                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     @if (esInvalido('fraccionArancelariaTIGIE')) {
                         <div class="text-danger">
                           @if (form.controls['fraccionArancelariaTIGIE_TIGIE'].errors?.['required']) {

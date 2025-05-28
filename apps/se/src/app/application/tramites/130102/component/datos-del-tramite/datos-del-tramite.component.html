@@ -17,7 +17,7 @@
       <div class="col-md-8">
         <div *ngFor="let catalogo of catalogosArray; let i = index">
           <app-catalogo-select [catalogo]="catalogo" [label]="inputFields[i].label" [placeholder]="inputFields[i].placeholder"
-            [required]="inputFields[i].required" formControlName="fraccion"
+            [required]="inputFields[i].required" formControlName="fraccion"    [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(formDelTramite,'fraccion', 'setFraccion')">
           </app-catalogo-select>
           @if (formDelTramite.controls['fraccion'].invalid && formDelTramite.controls['fraccion'].touched) {

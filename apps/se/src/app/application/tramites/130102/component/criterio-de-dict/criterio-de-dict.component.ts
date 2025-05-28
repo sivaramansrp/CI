@@ -86,6 +86,7 @@ export class CriterioDeDictComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          console.log("Hello",this.esFormularioSoloLectura);
           this.inicializarEstadoFormulario();
         })
       )
@@ -123,21 +124,21 @@ export class CriterioDeDictComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramite130102Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+    // this.tramite130102Query.selectSolicitud$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.solicitudState = seccionState;
+    //     })
+    //   )
+    //   .subscribe();
 
-    this.frmCriterioDictamen = this.fb.group({
-      solicitudMercancia: [
-        this.solicitudState?.solicitudMercancia,
-        Validators.required,
-      ],
-    });
+    // this.frmCriterioDictamen = this.fb.group({
+    //   solicitudMercancia: [
+    //     this.solicitudState?.solicitudMercancia,
+    //     Validators.required,
+    //   ],
+    // });
 
     this.formularioRegistroService.registrarFormulario(
       'frmCriterioDictamen',
@@ -162,6 +163,9 @@ export class CriterioDeDictComponent implements OnInit {
         Validators.required,
       ],
     });
+       if (this.esFormularioSoloLectura) {
+    this.frmCriterioDictamen.disable();
+  }
   }
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
