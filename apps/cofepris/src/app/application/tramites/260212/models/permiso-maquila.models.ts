@@ -41,6 +41,8 @@ export interface ClaveModel {
   descripcíon: string;
 }
 
+
+
 /**
  * Modelo para opciones de un select.
  * Cada opción tiene un label y un valor.
@@ -50,6 +52,7 @@ export interface OpcionesPublicacion{
   label: string;
   value: string;
 }
+
 
 /**
  * Modelo de datos para una fila de una tabla.
@@ -67,4 +70,9 @@ export interface TablaDatos {
 export interface DatosSeleccionados extends TablaDatos {
 
   checked: boolean;
+}
+
+export interface EstadoFisico {
+  id: number;
+  descripcíon: string;
 }

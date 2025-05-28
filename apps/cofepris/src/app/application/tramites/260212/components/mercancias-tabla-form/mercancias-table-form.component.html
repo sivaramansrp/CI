@@ -102,7 +102,7 @@
             <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
                 Cancelar
             </button>
-            <button class="btn btn-default ms-2">Agregar</button>
+            <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Agregar</button>
             <button class="btn btn-default ms-2">Limpiar</button>
         </div>
     </form>

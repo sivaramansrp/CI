@@ -73,6 +73,9 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit {
+
+  esFormularioSoloLectura: boolean = true;
+
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -260,7 +263,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
-    this.tercerosService.getEncabezadoDeTabla().subscribe((data: any) => {
+    this.tercerosService.getEncabezadoDeTabla().subscribe((data:any) => {
       this.tablaEncabezadoData = data.columns;
     });
 
@@ -1356,7 +1359,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si el valor es válido, de lo contrario devuelve un objeto con la propiedad `requiredPais`.
    */
   // eslint-disable-next-line class-methods-use-this
-  requiredPaisValidator(control: AbstractControl) {
+  requiredPaisValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     return control.value !== '' && control.value !== '-1'
       ? null
       : { requiredPais: true };
@@ -1370,7 +1373,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
   // eslint-disable-next-line class-methods-use-this
-  rfcValidator(control: AbstractControl) {
+  rfcValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
     const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
     return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
@@ -1386,7 +1389,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
   // eslint-disable-next-line class-methods-use-this
-  curpValidator(control: AbstractControl) {
+  curpValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
     return pattern.test(control.value) ? null : { invalidCURP: true };
@@ -1400,7 +1403,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
   // eslint-disable-next-line class-methods-use-this
-  telefonoValidator(control: AbstractControl) {
+  telefonoValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }

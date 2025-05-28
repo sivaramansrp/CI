@@ -15,6 +15,7 @@ import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { EstadoFisico } from '../../models/permiso-maquila.models';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -167,8 +168,11 @@ this.solicitudService.getClave().subscribe((data) => {
       this.clasificacionProducto = data;
     });
 
-    this.solicitudService.getTestadoFisico().subscribe((data) => {
-      this.estadoFisico = data;
+    this.solicitudService.getTestadoFisico().subscribe((data: EstadoFisico[]) => {
+      this.estadoFisico = data.map(item => ({
+        id: item.id,
+        descripcion: item.descripcíon, 
+      }));
     });
 
     this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {

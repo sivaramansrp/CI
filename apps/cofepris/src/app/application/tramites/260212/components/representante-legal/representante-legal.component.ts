@@ -79,15 +79,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   ngOnInit():void {
     this.obtenerOpcionesSolicitud()
-//  this.personaForm = this.fb.group({
-//       rfc: ['', Validators.required],
-//       nombre: [{ value: '', disabled: true }],
-//       primerApellido: [{ value: '', disabled: true }],
-//       segundoApellido: [{ value: '', disabled: true }],
-
-    // });
-    
-  this.actualizarEstado()
+    this.actualizarEstado()
 ;}
 
   inicializarEstadoFormulario(): void {
@@ -127,6 +119,7 @@ this.personaForm = this.fb.group({
    * @param field Nombre del campo del formulario a validar.
    * @returns `true` si el campo es válido; de lo contrario, `false`.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   esValido(field: string) {
     return this.validacionesService.isValid(this.personaForm, field);
   }

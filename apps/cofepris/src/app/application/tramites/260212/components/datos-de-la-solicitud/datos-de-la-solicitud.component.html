@@ -131,7 +131,7 @@
             <button name="eliminarServicio" class="btn btn-danger">
               Eliminar
             </button>
-            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()">
+            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>
