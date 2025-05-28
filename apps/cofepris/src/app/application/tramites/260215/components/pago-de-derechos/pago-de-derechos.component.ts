@@ -59,8 +59,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+ 
   /**
-   * Constructor del componente.
+   * Constructor del componente PagoDeDerechosComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite260215Store Store para el manejo del estado relacionado al trámite 260215.
+   * @param tramite260215Query Query para consultar el estado del trámite 260215.
+   * @param serviciosPermisoSanitarioService Servicio inyectado para operaciones relacionadas con permisos sanitarios.
+   * @param consultaioQuery Query para consultar el estado de la sección de consulta IO.
+   *
+   * Al inicializar el componente, se obtienen los datos bancarios y se suscribe al estado de consulta IO
+   * para actualizar el modo de solo lectura y reinicializar el estado del formulario cuando sea necesario.
    */
   constructor(
     private fb: FormBuilder,
@@ -111,6 +121,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario de solicitud para el trámite 260215.
+   * 
+   * Este método suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y asignarlo a la propiedad `solicitudState`. Posteriormente, crea el formulario reactivo `formSolicitud`
+   * utilizando los valores obtenidos de `solicitudState`, agrupando los campos relacionados con los datos
+   * del importador o exportador.
+   * 
+   * El método utiliza `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   */
   inicializarFormulario(): void {
     this.tramite260215Query.selectSolicitud$
       .pipe(
@@ -133,7 +153,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
   /**
-   * Catálogo de bancos.
+   * Catálogo de bancos utilizado en el formulario.
+   * Contiene la configuración para el campo de selección de banco.
    */
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',

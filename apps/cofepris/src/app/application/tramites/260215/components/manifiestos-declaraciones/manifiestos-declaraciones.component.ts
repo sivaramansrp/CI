@@ -53,7 +53,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Opciones disponibles para el cumplimiento, basadas en el enumerado `CumplimientoOptions`.
+   * Estas opciones se utilizan para definir los posibles estados o tipos de cumplimiento
+   * dentro del componente de manifiestos y declaraciones.
+   */
   cumplimientoOptions = CumplimientoOptions;
+
+  
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.

@@ -93,6 +93,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario del representante legal.
+   * 
+   * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   *   y lo asigna a la propiedad `solicitudState`.
+   * - Crea el formulario reactivo `representante` con los campos requeridos y sus validaciones.
+   * - Los campos `nombre`, `apellidoPaterno` y `apellidoMaterno` se inicializan deshabilitados.
+   * 
+   * @remarks
+   * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario
+   * esté correctamente configurado con los datos actuales de la solicitud.
+   */
   inicializarFormulario(): void {
       this.tramite260215Query.selectSolicitud$
       .pipe(
@@ -126,7 +138,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
-  obtenerValor() {
+  obtenerValor():void {
     this.representante.patchValue({
       nombre: 47875,
       apellidoPaterno: 'Paterno',
@@ -152,7 +164,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpia los campos del formulario.
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

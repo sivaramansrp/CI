@@ -66,6 +66,19 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   */
   esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Constructor de la clase `DatosSolicitudComponent`.
+   *
+   * @param fb Instancia de `FormBuilder` utilizada para la creación y gestión de formularios reactivos.
+   * @param tramite260215Store Servicio para la gestión del estado relacionado con el trámite 260215.
+   * @param tramite260215Query Servicio para consultar el estado del trámite 260215.
+   * @param consultaioQuery Servicio para consultar el estado de la sección `Consultaio`.
+   *
+   * Al inicializar el componente, se suscribe al estado de `Consultaio` para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado recibido.
+   * - Llamar al método `inicializarEstadoFormulario()` para aplicar configuraciones adicionales.
+   * - Cancelar automáticamente la suscripción cuando se emite un valor en `destroyNotifier$`, evitando fugas de memoria.
+   */
   constructor(
     public readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
@@ -118,6 +131,18 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     }  
   }
 
+/**
+ * Inicializa el formulario reactivo para la solicitud del trámite 260215.
+ * 
+ * - Se suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+ *   y lo asigna a la propiedad `solicitudState`.
+ * - Crea el formulario (`forma`) utilizando `FormBuilder`, estableciendo los valores iniciales
+ *   de los campos a partir de `solicitudState` y deshabilitándolos.
+ * - Los campos `denominacion` y `correo` son requeridos.
+ * 
+ * @remarks
+ * La suscripción al observable se gestiona con `takeUntil` para evitar fugas de memoria.
+ */
  inicializarFormulario(): void {
     this.tramite260215Query.selectSolicitud$
       .pipe(

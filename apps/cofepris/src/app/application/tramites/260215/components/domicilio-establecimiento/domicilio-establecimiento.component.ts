@@ -108,6 +108,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
  
 
+  /**
+   * Constructor de DomicilioEstablecimientoComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite260215Store Store para el manejo del estado relacionado al trámite 260215.
+   * @param tramite260215Query Query para consultar el estado del trámite 260215.
+   * @param service Servicio para operaciones relacionadas con permisos sanitarios.
+   * @param consultaioQuery Query para consultar el estado de la sección de Consultaio.
+   *
+   * Suscribe al estado de `Consultaio` para obtener información actualizada sobre el estado del formulario.
+   * Asigna el valor de solo lectura a la propiedad `esFormularioSoloLectura` y llama a `inicializarEstadoFormulario()`
+   * cada vez que el estado cambia. La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
@@ -339,9 +352,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     derecha: 'País(es) seleccionados',
   };
 
+  
   /**
-   * Etiqueta de la lista de fechas.
-   * */
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
+   */
   ngOnInit():void {
    this.inicializarEstadoFormulario();
   }
