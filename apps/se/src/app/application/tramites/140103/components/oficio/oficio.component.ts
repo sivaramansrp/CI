@@ -11,6 +11,8 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { certificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
+
+/** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
 interface ConfiguracionItem {
   folioOficioCertificado: string;
   nombreRazonSocial: string;
@@ -194,7 +196,9 @@ export class OficioComponent implements OnInit, OnDestroy{
     // Llama al método para actualizar el campo 'monto' con valores predeterminados
     this.updateformfied();
 
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
+
   }
 
  /**
@@ -204,6 +208,8 @@ export class OficioComponent implements OnInit, OnDestroy{
   inicializarEstadoFormulario(): void {
     if (this.OficioForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
+    } else {
+      // Si el formulario no está definido o no es de solo lectura, se habilita para edición
     }
   }
 

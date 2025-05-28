@@ -109,6 +109,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
     // Llamada para cargar los datos en el formulario
     this.getFormData();
 
+     /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
   }
 
@@ -117,7 +118,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.DetalleForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       //

@@ -27,11 +27,20 @@ import {
   Solicitud140103State,
   Tramite140103Store,
 } from '../../../../estados/tramites/tramite140103.store';
+
+/**
+ * Interfaz que representa la estructura de un cupo, incluyendo detalles del producto, mecanismo y tipo.
+ */
 interface Cupos {
+  /** Cantidad asignada del cupo */
   cupo: number;
+  /** Nombre del producto asociado al cupo */
   nombreProducto: string;
+  /** Nombre del subproducto asociado al cupo */
   nombreSubproducto: string;
+  /** Mecanismo utilizado para la asignación del cupo */
   mecanismoAsignacion: string;
+  /** Tipo de cupo asignado */
   tipoCupo: string;
 }
 
@@ -130,6 +139,11 @@ interface Cupos {
  *
  * @method updateformfied()
  * - Se puede incluir en el futuro, si se decide agregar la funcionalidad de actualización de campos del formulario.
+ */
+
+/**
+ * Componente que gestiona la cancelación de certificados.
+ * Implementa los hooks de ciclo de vida OnInit y OnDestroy para inicialización y limpieza.
  */
 export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   /**
@@ -265,7 +279,10 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
  * su estado inicial llamando a `inicializarEstadoFormulario()`.
  */
   ngOnInit(): void {
+    /** Inicializa el formulario reactivo con sus controles y valores predeterminados. */
     this.inicializarFormulario();
+
+     /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
   }
 

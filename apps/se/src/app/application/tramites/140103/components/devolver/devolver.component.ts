@@ -36,10 +36,17 @@ import facturasdata from '@libs/shared/theme/assets/json/140103/fracturastable.j
  * - `FormsModule`: Módulo necesario para trabajar con formularios basados en plantillas.
  * - `ReactiveFormsModule`: Módulo necesario para trabajar con formularios reactivos en Angular.
  */
+
+/**
+ * Interfaz que representa una factura con su número, importe inicial y saldo a devolver opcional.
+ */
 interface Factura {
+  /** Número único que identifica la factura */
   numeroDeFactura: string;
+  /** Importe inicial registrado en la factura */
   importeInicial: string;
-  saldoaDevolver?: string; // This field is optional since it's missing in some cases (like `facturase`)
+  /** Saldo pendiente a devolver (opcional) */
+  saldoaDevolver?: string; 
 }
 
 @Component({
@@ -55,6 +62,10 @@ interface Factura {
   templateUrl: './devolver.component.html',
   styleUrls: ['./devolver.component.scss'],
 })
+/**
+ * Componente que gestiona la devolución de elementos o datos.
+ * Implementa los hooks de ciclo de vida OnInit y OnDestroy para inicialización y limpieza.
+ */
 export class DevolverComponent implements OnInit, OnDestroy {
   /**
    * Lista de facturas cargadas desde un archivo JSON, que contiene información relevante
@@ -171,7 +182,10 @@ export class DevolverComponent implements OnInit, OnDestroy {
  * su estado inicial llamando a `inicializarEstadoFormulario()`.
  */
   ngOnInit(): void {
+    /** Inicializa el formulario reactivo con sus controles y valores predeterminados. */
     this.inicializarFormulario();
+
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
   }
 
@@ -180,7 +194,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.DevolverForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();

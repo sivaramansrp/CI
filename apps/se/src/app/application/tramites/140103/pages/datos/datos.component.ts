@@ -29,6 +29,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /** Inyecta los servicios necesarios para manejar la solicitud y consultar el estado de la sección. */
   constructor(
     private solicitud140103Service: Solicitud140103Service,
     private consultaQuery: ConsultaioQuery
@@ -68,6 +69,14 @@ export class DatosComponent implements OnInit, OnDestroy {
       });
   }
 
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
