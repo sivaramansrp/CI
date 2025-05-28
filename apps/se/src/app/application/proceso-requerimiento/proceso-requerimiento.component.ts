@@ -188,7 +188,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private requerimientoService: AtenderRequerimientoService,
     private tramiteQueries: TramiteFolioQueries,
   ) {
-    
+
     /**
      * Suscripción al estado de consulta.
      * Guarda los datos actuales del estado en `guardarDatos`.
