@@ -29,13 +29,22 @@ export class TablaDinamicaComponent<T> {
    */
   @Output() filaClic = new EventEmitter<T>();
 
+  /**
+   * Este input define el tipo de selección que se utilizará en la tabla dinámica.
+   */
   @Input() tipoSeleccionTabla!: TablaSeleccion;
 
+  /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
   @Input() disableSeleccionTablaCheckBox: boolean = false;
 
+  /**
+   * Este input permite deshabilitar la selección de filas mediante botones de radio en la tabla.
+   * Si se establece en `true`, los botones de radio de selección estarán deshabilitados.
+   */
   @Input() disableSeleccionTablaRadio: boolean = false;
-
-  @Input() botonEliminar: boolean = false;
 
   /*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
@@ -84,6 +93,15 @@ export class TablaDinamicaComponent<T> {
   get inputSelection(): number {
     return this._inputSelection; // Devuelve el valor interno de `_inputSelection`
   }
+
+  /**
+   * Establece el valor de la selección de entrada y sincroniza el identificador de la fila seleccionada.
+   *
+   * @param value - El nuevo valor numérico que representa la fila seleccionada.
+   *
+   * Al asignar un valor a esta propiedad, se actualiza tanto la variable interna `_inputSelection`
+   * como la propiedad `idFilaSeleccionada`, asegurando que ambas estén sincronizadas.
+   */
   set inputSelection(value: number) {
     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
@@ -144,6 +162,10 @@ export class TablaDinamicaComponent<T> {
    */
   public accionesEnum = TablaAcciones;
 
+  /**
+   * Almacena el valor del botón que se mostrará en la tabla.
+   * Este valor se utiliza para determinar el estado del registro y el texto del botón.
+   */
   public batonValor: string = ESTADO_REGISTRO.BAJA;
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".

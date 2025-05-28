@@ -1,6 +1,10 @@
 import { ConfiguracionColumna } from '../models/shared/configuracion-columna.model';
 import { PersonaTerceros } from '../models/shared/datos-generales.model';
 
+/**
+ * @description
+ * Configuración de las columnas para la tabla de terceros.
+ */
 export const CONFIGURACION_ENCABEZADO_TABLA_TERCEROS: ConfiguracionColumna<PersonaTerceros>[] =
   [
     /**

@@ -334,9 +334,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
-  /**
-   * TODO: Estas variables se van a eliminar
-   */
+  //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
    */
@@ -412,7 +410,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    // this.tipoSolicitudSeleccion();
 
     this.obtenerMontoAPagar();
     this.verificarDatosExistentesStore();

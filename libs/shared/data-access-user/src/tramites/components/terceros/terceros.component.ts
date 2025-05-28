@@ -50,6 +50,10 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   styleUrl: './terceros.component.scss',
 })
 export class TercerosComponent<T> implements OnInit, OnDestroy {
+  /**
+   * @description
+   * Tabindex para la navegación por las navtabs.
+   */
   @Input({ required: true }) tabindex!: number;
 
   /**
@@ -88,10 +92,23 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description
+   * Configuración de la tabla de terceros.
+   */
   tablaSeleccion = TablaSeleccion;
 
+  /**
+   * @description
+   * Encabezado de la tabla de terceros.
+   */
   encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
 
+
+  /**
+   * @description
+   * Arreglo para almacenar los terceros seleccionados.
+   */
   tercerosSeleccionados: PersonaTerceros[] = [];
 
   constructor(
@@ -225,6 +242,11 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Elimina los terceros seleccionados del arreglo `personas`.
+   * Si no hay terceros seleccionados, muestra una notificación de aviso.
+   * @returns {void}
+   */
   eliminarTerceros(): void {
     if (this.tercerosSeleccionados.length === 0) {
       this.nuevaNotificacion = {
