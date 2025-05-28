@@ -48,13 +48,27 @@ import { TituloComponent } from '../titulo/titulo.component';
 export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   @Input({ required: true }) tabindex!: number;
   @Input({ required: false }) esFormularioSoloLectura: boolean = false;
+  /**
+   * @desc Lista de personas asociadas como terceros.
+   * @type {PersonaTerceros[]}
+   * @input
+   * @optional
+   * 
+   * @description [Compodoc] Arreglo de objetos de tipo PersonaTerceros que representa las personas agregadas como terceros en el trámite. Este input es opcional.
+   */
   @Input({ required: false }) personas: PersonaTerceros[] = [];
+   /**
+   * @description
+   * Evento emitido cuando la lista de personas (terceros) cambia.
+   * 
+   * @type {EventEmitter<PersonaTerceros[]>}
+   * @memberof TercerosComponent
+   * @event personasChange
+   * @see PersonaTerceros
+   */
   @Output() personasChange = new EventEmitter<PersonaTerceros[]>();
 
-  /**
-   * @description
-   * Formulario reactivo para la captura de datos de terceros.
-   */
+ 
   public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: [
