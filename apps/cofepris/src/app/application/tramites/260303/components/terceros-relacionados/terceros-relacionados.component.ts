@@ -137,6 +137,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
     public deepCopy(obj = {}) {
       return JSON.parse(JSON.stringify(obj));
     }
@@ -231,6 +232,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   private generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
     const FIELDS: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
     return FIELDS.map((field, index) => ({

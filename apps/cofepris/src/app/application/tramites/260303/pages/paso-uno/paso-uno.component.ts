@@ -3,7 +3,6 @@ import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/
 import {Subject,forkJoin,map,takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { Solicitud260303State } from '../../../../estados/tramites/260303/tramite260303.store';
-
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -45,32 +44,48 @@ export class PasoUnoComponent implements OnInit {
     }
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  /**
+   * Obtiene los datos necesarios del servidor y actualiza el estado del formulario.
+   * Utiliza forkJoin para realizar múltiples peticiones en paralelo y unifica las respuestas.
    */
   guardarDatosFormulario(): void {
     forkJoin({
+      // Solicita los datos del estado
       estado: this.certificadosLicenciasPermisosService.getEstadoDatos(),
+      // Solicita los datos de SCIAN
       scian: this.certificadosLicenciasPermisosService.getScianDatos(),
+      // Solicita los datos de clave
       clave: this.certificadosLicenciasPermisosService.getClaveDatos(),
+      // Solicita los datos de régimen
       regimen: this.certificadosLicenciasPermisosService.getRegimenDatos(),
+      // Solicita los datos de mercancías
       mercancias: this.certificadosLicenciasPermisosService.getMercanciasDatos(),
+      // Solicita los datos del tipo de producto
       tipoProducto: this.certificadosLicenciasPermisosService.getTipoDeProductoDatos(),
+      // Solicita los datos del país de procedencia
       paisProcedencia: this.certificadosLicenciasPermisosService.getPaisDeProcedenciaDatos(),
+      // Solicita los datos del fabricante
       fabricante: this.certificadosLicenciasPermisosService.getFabricanteDatos(),
+      // Solicita los datos del facturador
       facturador: this.certificadosLicenciasPermisosService.getFacturadorDatos(),
+      // Solicita los datos del proveedor
       proveedor: this.certificadosLicenciasPermisosService.getProveedorDatos(),
+      // Solicita los datos del certificado
       certificado: this.certificadosLicenciasPermisosService.getCertificadoDatos(),
+      // Solicita otros datos adicionales
       otros: this.certificadosLicenciasPermisosService.getOtrosDatos(),
+      // Solicita los datos del banco
       banco: this.certificadosLicenciasPermisosService.getBancoDatos(),
+      // Solicita los datos del tipo de documento
       tipoDocumento: this.certificadosLicenciasPermisosService.getTipoDeDocumentoDatos()
     })
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respCombinado) => {
         if (respCombinado) {
+          // Indica que los datos de respuesta están disponibles
           this.esDatosRespuesta = true;
 
+          // Unifica todas las respuestas en un solo objeto de estado
           const RESPUESTA_UNIFICADA: Solicitud260303State = {
             ...respCombinado.estado,
             ...respCombinado.scian,
@@ -88,6 +103,7 @@ export class PasoUnoComponent implements OnInit {
             ...respCombinado.tipoDocumento
           };
 
+          // Actualiza el estado del formulario con los datos unificados
           this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(RESPUESTA_UNIFICADA);
         }
       });

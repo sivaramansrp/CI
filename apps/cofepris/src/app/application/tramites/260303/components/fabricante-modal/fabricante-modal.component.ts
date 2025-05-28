@@ -94,6 +94,11 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     this.cerrarTercerosRelacionadosForm();
   }
 
+  /**
+   * Inicializa el formulario obteniendo el estado actual de la solicitud desde el store.
+   * Se suscribe al observable selectSolicitud$ para actualizar la propiedad solicitudState
+   * con los datos más recientes de la solicitud.
+   */
   inicializarFormulario(): void {
     this.tramite260303Query.selectSolicitud$.pipe(
       takeUntil(this.destroyNotifier$),

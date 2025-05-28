@@ -8,13 +8,10 @@ import { CommonModule } from '@angular/common';
 import { FECHA_PAGO } from '../../services/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-
-
 /**
  * PagoDeDerechosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -73,7 +70,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite260303Query: Tramite260303Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    //
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -99,10 +95,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.cerrarPagoDerechosForm();
   }
 
+  /**
+   * Inicializa el formulario suscribiéndose al estado de la solicitud.
+   * 
+   * Este método se suscribe al observable `selectSolicitud$` del query,
+   * y actualiza la propiedad `solicitudState` cada vez que hay cambios en el estado.
+   * La suscripción se limpia automáticamente cuando el componente se destruye.
+   */
   inicializarFormulario(): void {
     this.tramite260303Query.selectSolicitud$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
+        // Actualiza el estado local de la solicitud con los datos más recientes
         this.solicitudState = seccionState;
       })
     )

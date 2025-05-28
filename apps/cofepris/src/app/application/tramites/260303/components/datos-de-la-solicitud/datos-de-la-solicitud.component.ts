@@ -279,7 +279,6 @@ constructor(
   private tramite260211Query: Tramite260303Query,
   private consultaioQuery: ConsultaioQuery,
 ) {
-  //
       this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -357,6 +356,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
   public deepCopy(obj = {}) {
     return JSON.parse(JSON.stringify(obj));
   }
@@ -667,14 +667,15 @@ public inicializarTablaYCatalogoDatos(): void {
    * - "Restar selección": Elimina los elementos seleccionados de la lista cruzada.
    * - "Restar todos": Elimina todos los elementos de la lista cruzada.
    */
-  public getCrossListBtn() {
+  public getCrossListBtn(): { btnNombre: string; class: string; funcion: () => void }[] {
     return [
-      { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
-      { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('') },
-      { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[0].quitar('') },
-      { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+      { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: (): void => this.crossList.toArray()[0].agregar('t') },
+      { btnNombre: 'Agregar selección', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].agregar('') },
+      { btnNombre: 'Restar selección', class: 'btn-danger', funcion: (): void => this.crossList.toArray()[0].quitar('') },
+      { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].quitar('t') },
     ];
   }
+
 
   /**
    * Obtiene el catálogo de datos de países de procedencia desde el servicio y lo asigna a la propiedad `paisDeProcedenciaCatalogo`.
