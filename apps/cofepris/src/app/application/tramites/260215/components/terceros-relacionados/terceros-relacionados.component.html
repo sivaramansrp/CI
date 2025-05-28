@@ -131,6 +131,7 @@
               <app-input-radio
                 [radioOptions]="nacionalidadOptions"
                 [isRequired]="true"
+                formControlName="tercerosNacionalidad"
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadio($event)"
               ></app-input-radio>
@@ -145,6 +146,7 @@
               <app-input-radio
                 [radioOptions]="tipoPersonaOptions"
                 [isRequired]="true"
+                formControlName="tipoPersona"
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
@@ -345,6 +347,7 @@
                   [required]="true"
                   for="pais"
                   id="pais"
+                  formControlName="pais"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -357,6 +360,7 @@
                   [required]="true"
                   for="estadoLocalidad"
                   id="estadoLocalidad"
+                  formControlName="estadoLocalidad"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -369,6 +373,7 @@
                   [required]="true"
                   for="municipioAlcaldia"
                   id="municipioAlcaldia"
+                  formControlName="municipioAlcaldia"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -382,6 +387,7 @@
                   [required]="false"
                   for="localidad"
                   id="localidad"
+                  formControlName="localidad"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -394,6 +400,7 @@
                   [required]="true"
                   for="codigoPostaloEquivalente"
                   id="codigoPostaloEquivalente"
+                  formControlName="codigoPostaloEquivalente"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -405,6 +412,7 @@
                   [label]="'Colonia'"
                   for="colonia"
                   id="colonia"
+                  formControlName="colonia"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -419,6 +427,7 @@
                   [required]="true"
                   for="pais"
                   id="pais"
+                  formControlName="pais"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -615,6 +624,7 @@
               <app-input-radio
                 [radioOptions]="tipoPersonaOptions"
                 [isRequired]="true"
+                formControlName="tipoPersona"
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
@@ -701,6 +711,7 @@
                 [required]="true"
                 for="pais"
                 id="pais"
+                formControlName="pais"
               ></app-catalogo-select>
             </div>
           </div>
@@ -713,6 +724,7 @@
                 [required]="true"
                 for="estadoLocalidad"
                 id="estadoLocalidad"
+                formControlName="estadoLocalidad"
               ></app-catalogo-select>
             </div>
           </div>
@@ -725,6 +737,7 @@
                 [required]="true"
                 for="municipioAlcaldia"
                 id="municipioAlcaldia"
+                formControlName="municipioAlcaldia"
               ></app-catalogo-select>
             </div>
           </div>
@@ -737,6 +750,7 @@
                 [required]="false"
                 for="localidad"
                 id="localidad"
+                formControlName="localidad"
               ></app-catalogo-select>
             </div>
           </div>
@@ -748,7 +762,7 @@
                 [label]="'Código postal o equivalente*:'"
                 for="codigoPostaloEquivalente"
                 id="codigoPostaloEquivalente"
-  
+                formControlName="codigoPostaloEquivalente"
               ></app-catalogo-select>
             </div>
           </div>
@@ -760,6 +774,7 @@
                 [label]="'Colonia:'"
                 for="colonia"
                 id="colonia"
+                formControlName="colonia"
               ></app-catalogo-select>
             </div>
           </div>
@@ -908,6 +923,7 @@
               <app-input-radio
                 [radioOptions]="tipoPersonaOptions"
                 [isRequired]="true"
+                formControlName="tipoPersona"
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
@@ -996,6 +1012,7 @@
               [required]="true"
               for="pais"
               id="pais"
+              formControlName="pais"
             ></app-catalogo-select>
           </div>
         </div>
@@ -1184,6 +1201,7 @@
               <app-input-radio
                 [radioOptions]="tipoPersonaOptions"
                 [isRequired]="true"
+                formControlName="tipoPersona"
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
@@ -1272,6 +1290,7 @@
                 [required]="true"
                 for="pais"
                 id="pais"
+                formControlName="pais"
               ></app-catalogo-select>
             </div>
           </div>
