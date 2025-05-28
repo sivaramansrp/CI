@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -48,6 +48,8 @@ import { TituloComponent } from '../titulo/titulo.component';
 export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   @Input({ required: true }) tabindex!: number;
   @Input({ required: false }) esFormularioSoloLectura: boolean = false;
+  @Input({ required: false }) personas: PersonaTerceros[] = [];
+  @Output() personasChange = new EventEmitter<PersonaTerceros[]>();
 
   /**
    * @description
@@ -60,12 +62,6 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
       [Validators.required, Validators.pattern(CONSTANTES.EXP_CORREO)],
     ],
   });
-
-  /**
-   * @description
-   * Arreglo que almacena los datos de las personas relacionadas.
-   */
-  personas: PersonaTerceros[] = [];
 
   /**
    * @description
@@ -180,6 +176,7 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
 
     if (!EXISTE_TERCERO) {
       this.personas.push(DATOS);
+      this.personasChange.emit(this.personas);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
     }    
@@ -192,6 +189,7 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
    */
   eliminar(i: number): void {
     this.personas.splice(i, 1);
+    this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
