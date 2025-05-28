@@ -1,6 +1,13 @@
-import { CatalogosSelect, ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore,TablaSeleccion} from '@ng-mf/data-access-user';
+import {
+  CatalogosSelect,
+  ConfiguracionColumna,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -12,7 +19,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 
-
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
@@ -22,13 +28,15 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
-import { CATALOGOS, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+import {
+  CATALOGOS,
+  VALIDO,
+} from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
-
 
 /**
  * @component HistoricoFabricantesComponent
@@ -45,10 +53,15 @@ import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
-    TablaDinamicaComponent
-  ]
+    TablaDinamicaComponent,
+  ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
   /**
    * @property {FormGroup} historicoFabricantesForm - El grupo de formularios para capturar los datos de los fabricantes.
    */
@@ -83,9 +96,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<HistoricoColumns>[]} tableColumns - Configuración de las columnas de la tabla de fabricantes nacionales.
    */
   tableColumns: ConfiguracionColumna<HistoricoColumns>[] = [
-    { encabezado: 'Nombre del fabricante', 
-      clave: (fila) => fila.nombreFabricante, 
-      orden: 1 },
+    {
+      encabezado: 'Nombre del fabricante',
+      clave: (fila) => fila.nombreFabricante,
+      orden: 1,
+    },
     {
       encabezado: 'Número de registro fiscal',
       clave: (fila) => fila.numeroRegistroFiscal,
@@ -181,7 +196,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (this.historicoFabricantesForm.valid) {
             this.ElegibilidadDeTextilesStore.setFormaValida([
               ...this.historicoState.formaValida,
-              { id: 3, descripcion: "TodoValido" }])
+              { id: 3, descripcion: 'TodoValido' },
+            ]);
           }
         })
       )
@@ -189,11 +205,18 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
     this.seccionStore.establecerFormaValida([false]);
 
-    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === VALIDO){
+    if (
+      this.historicoState.formaValida &&
+      this.historicoState.formaValida[0] &&
+      this.historicoState.formaValida[0].descripcion === VALIDO
+    ) {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     } else {
       this.seccionStore.establecerFormaValida([false]);
+    }
+    if (this.formularioDeshabilitado) {
+      this.historicoFabricantesForm.disable();
     }
   }
 
@@ -203,8 +226,13 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.historicoFabricantesForm = this.fb.group({
-      exportadorFabricanteMismo: [this.historicoState.exportadorFabricanteMismo],
-      numeroRegistroFiscal: [this.historicoState.numeroRegistroFiscal, [Validators.required, Validators.minLength(5)]],
+      exportadorFabricanteMismo: [
+        this.historicoState.exportadorFabricanteMismo,
+      ],
+      numeroRegistroFiscal: [
+        this.historicoState.numeroRegistroFiscal,
+        [Validators.required, Validators.minLength(5)],
+      ],
       fabricantesNacionales: [[]],
     });
   }
@@ -214,16 +242,17 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
+    this.elegibilidadTextilesService
+      .obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
           this.fabricantesNacionales = response as HistoricoColumns[];
         },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }}
-    );
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**
@@ -239,10 +268,30 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @property {CatalogosSelect[]} dropdownConfigs - Configuraciones de los dropdowns.
    */
   dropdownConfigs: CatalogosSelect[] = [
-    { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: CATALOGOS, primerOpcion: '' },
-    { labelNombre: 'OSIA', required: true, catalogos: CATALOGOS, primerOpcion: '' },
-    { labelNombre: 'Oficina Central', required: true, catalogos: CATALOGOS, primerOpcion: '' },
-    { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: CATALOGOS, primerOpcion: '' }
+    {
+      labelNombre: 'Delegaciones estatales SAGARPA',
+      required: true,
+      catalogos: CATALOGOS,
+      primerOpcion: '',
+    },
+    {
+      labelNombre: 'OSIA',
+      required: true,
+      catalogos: CATALOGOS,
+      primerOpcion: '',
+    },
+    {
+      labelNombre: 'Oficina Central',
+      required: true,
+      catalogos: CATALOGOS,
+      primerOpcion: '',
+    },
+    {
+      labelNombre: 'Distrito Desarrollo Rural (DDR)',
+      required: false,
+      catalogos: CATALOGOS,
+      primerOpcion: '',
+    },
   ];
 
   /**
@@ -258,7 +307,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     metodoNombre: keyof ElegibilidadDeTextilesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(VALOR);
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
   }
 
   /**
