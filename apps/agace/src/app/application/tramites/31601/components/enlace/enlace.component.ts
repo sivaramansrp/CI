@@ -11,6 +11,7 @@ import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el enlace de un representante, incluyendo su información en un formulario.
@@ -29,6 +30,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 })
 export class EnlaceComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Encabezados de la tabla de enlace.
    */
@@ -62,22 +64,32 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
-  ) {}
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.getRegistroForm();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario reactivo y carga los encabezados de la tabla.
    */
   ngOnInit(): void {
-    this.tramite31601Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe()
-      this.getRegistroForm()
+    this.getRegistroForm()
 
     // Carga los datos de la tabla
     this.getEnlace();
@@ -112,6 +124,14 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Método que configura el formulario con los datos del representante.
    */
   public getRegistroForm() {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
     this.represtantante = this.fb.group({
       resigtroReprestantante: [this.solicitudState?.resigtroReprestantante ? this.solicitudState?.resigtroReprestantante : this.representativeData.resigtro, Validators.required],
       rfcReprestantante: [this.solicitudState?.rfcReprestantante ? this.solicitudState?.rfcReprestantante : this.representativeData.rfc, Validators.required],
@@ -124,6 +144,16 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       correoReprestantante: [this.solicitudState?.correoReprestantante ? this.solicitudState?.correoReprestantante : this.representativeData.correo, Validators.required],
       suplente: [this.solicitudState?.suplente, Validators.required],
     });
+
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.represtantante.controls).forEach((key) => {
+        this.represtantante.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.represtantante.controls).forEach((key) => {
+        this.represtantante.get(key)?.enable();
+      })
+    }  
 
     // Rellena el formulario con los datos del representante
     this.patchData();

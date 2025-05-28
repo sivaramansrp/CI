@@ -21,6 +21,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 
 /**
@@ -66,6 +67,7 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
 })
 export class RequisitosComponent implements OnInit, OnDestroy {
   requisitos!: FormGroup; // Formulario reactivo para manejar los requisitos
+  esFormularioSoloLectura: boolean = false; 
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
@@ -146,14 +148,37 @@ export class RequisitosComponent implements OnInit, OnDestroy {
     private pantallaSvc: ServiciosPantallaService,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta cuando el componente se inicializa.
    * Se encarga de cargar los tipos de documentos desde el archivo JSON.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario(); // Inicializa el estado del formulario
+    this.loadTipos(); // Carga los tipos de documento al inicializar el componente
+  }
+
+  inicializarEstadoFormulario(): void {
     this.tramite31601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -162,10 +187,19 @@ export class RequisitosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-      this.requisitos = this.fb.group({
-        tipoDocumento:[this.solicitudState?.tipoDocumento,Validators.required]
+    this.requisitos = this.fb.group({
+      tipoDocumento:[this.solicitudState?.tipoDocumento,Validators.required]
+    })
+
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.requisitos.controls).forEach((key) => {
+        this.requisitos.get(key)?.disable();
       })
-    this.loadTipos(); // Carga los tipos de documento al inicializar el componente
+    } else {
+      Object.keys(this.requisitos.controls).forEach((key) => {
+        this.requisitos.get(key)?.enable();
+      })
+    }  
   }
 
   /**

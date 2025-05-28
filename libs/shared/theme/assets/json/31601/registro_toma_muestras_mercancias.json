@@ -37,6 +37,17 @@
       "rfc": "RFC123456789",
       "razonSocial": "Razón Social S.A. de C.V.",
       "numeroEmpleados": 50,
-      "empleadosPropios": "empleadosPropios"
+      "empleadosPropios": "empleadosPropios",
+      "resigtroReprestantante": "resigtroReprestantante",
+      "rfcReprestantante": "rfcReprestantante",
+      "nombreReprestante": "nombreReprestante",
+      "apellidoPaterno": "apellidoPaterno",
+      "apellidoMaterno": "apellidoMaterno",
+      "cargo": "cargo",
+      "cuidad": "cuidad",
+      "telefonoReprestantante": "telefonoReprestantante",
+      "correoReprestantante": "correoReprestantante",
+      "suplente": "suplente",
+      "tipoDocumento": "tipoDocumento"
 }
 

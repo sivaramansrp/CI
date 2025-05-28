@@ -55,6 +55,17 @@ export class Solocitud31601Service {
     this.tramite31601Store.setProveedoresListadoSAT(DATOS.proveedoresListadoSAT);
     this.tramite31601Store.setNumeroEmpleados(DATOS.numeroEmpleados);
     this.tramite31601Store.setEmpleadosPropios(DATOS.empleadosPropios);
+    this.tramite31601Store.setResigtroReprestantante(DATOS.resigtroReprestantante);
+    this.tramite31601Store.setRfcReprestantante(DATOS.rfcReprestantante);
+    this.tramite31601Store.setNombreReprestante(DATOS.nombreReprestante);
+    this.tramite31601Store.setApellidoPaterno(DATOS.apellidoPaterno);
+    this.tramite31601Store.setApellidoMaterno(DATOS.apellidoMaterno);
+    this.tramite31601Store.setCargo(DATOS.cargo);
+    this.tramite31601Store.setCuidad(DATOS.cuidad);
+    this.tramite31601Store.setTelefonoReprestantante(DATOS.telefonoReprestantante);
+    this.tramite31601Store.setCorreoReprestantante(DATOS.correoReprestantante);
+    this.tramite31601Store.setSuplente(DATOS.suplente);
+    this.tramite31601Store.setTipoDocumento(DATOS.tipoDocumento);
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {
