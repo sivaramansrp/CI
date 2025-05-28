@@ -17,12 +17,13 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
-  TransporteDespacho,
   TercerosQuery,
   TercerosState,
+  TransporteDespacho,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
+  ListFechasSevex,
   ListPersonaNoti,
   Pedimento,
   PersonaResponsableDespacho,
@@ -417,6 +418,21 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
+   * @description Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
+   * @returns {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
+   */
+  obtenerFechasSevex(): ListFechasSevex[] {
+    return this.solicitudState.selectRangoDias.map((fecha) => {
+      return {
+        fecha: fecha,
+        fecha_desc: fecha,
+        hora_inicio_svex: this.solicitudState.horaInicio,
+        hora_final_svex: this.solicitudState.horaFinal,
+      };
+    });
+  }
+
+  /**
    * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
    * del tramite 5701.
    * @returns {void} No retorna ningún valor.   *
@@ -426,7 +442,6 @@ export class SolicitudPageComponent implements OnInit {
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
       id_solicitud: this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
-      cve_unidad_administrativa: CVE_UNIDAD_ADMIN, //TODO: Este campo se va a eliminar
       costo_total: '',
       rfc: '', //Este viene del store con los datos del inicio de sesión
       representante_legal: {
@@ -517,6 +532,7 @@ export class SolicitudPageComponent implements OnInit {
         list_unidad_arribo: this.obtenerTransporteArriboSalida(),
         persona_responsable: this.obtenerResponsablesDespacho(),
         list_persona_noti: this.obtenerPersonasNotificacion(),
+        list_fechas_sevex: this.obtenerFechasSevex(),
       },
     };
 

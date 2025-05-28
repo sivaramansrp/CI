@@ -14,7 +14,6 @@ import { TransporteDespacho } from '@libs/shared/data-access-user/src';
 export interface SolicitudPayload {
   id_solicitud: number | null;
   id_tipo_tramite: number;
-  cve_unidad_administrativa: string; // TODO: Este campo se va a eliminar.
   costo_total: string;
   rfc: string;
   representante_legal: RepresentanteLegal;
@@ -293,12 +292,12 @@ export interface ListPersonaNoti {
  * @property {number} mismo_horario - Indicador si coincide el mismo horario (1 = sí, 0 = no).
  */
 export interface ListFechasSevex {
-  fecha: Date;
-  fecha_desc: Date;
+  fecha: string;
+  fecha_desc: string;
   hora_inicio_svex: string;
   hora_final_svex: string;
-  hora_inicio_rni: string;
-  hora_fin_rni: string;
-  fuera_horario: number;
-  mismo_horario: number;
+  hora_inicio_rni?: string;
+  hora_fin_rni?: string;
+  fuera_horario?: number;
+  mismo_horario?: number;
 }
