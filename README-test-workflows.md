@@ -40,7 +40,7 @@ Puedes modificar las variables en el archivo `test-workflow-locally.sh` para pro
 TEST_ENV="dev"                    # Entorno: dev, staging, prod
 TEST_MODE="selected"              # Modo: changed, selected, all
 TEST_SELECTED_APPS="dashboard,login"  # Apps específicas
-TEST_APP_GROUP1="true"            # Grupo 1: dashboard,login,aga,agriculture,se
+TEST_APP_GROUP1="true"            # Grupo 1: dashboard,login,aga,agricultura,se
 TEST_APP_GROUP2="false"           # Grupo 2: semarnat,agace,funcionario,cofepris,amecafe
 TEST_APP_GROUP3="false"           # Grupo 3: sener,inbal,sedena,profepa,crt
 TEST_APP_GROUP4="false"           # Grupo 4: inah,bandejas,stps
