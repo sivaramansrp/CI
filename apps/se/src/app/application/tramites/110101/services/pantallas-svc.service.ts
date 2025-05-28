@@ -1,14 +1,15 @@
-import { JSONResponse,enviroment } from '@libs/shared/data-access-user/src';
 import { Observable,catchError, throwError } from 'rxjs';
 import { Solicitante110101State, Tramite110101Store } from '../estados/tramites/solicitante110101.store';
+import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PantallasSvcService {
- urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+ urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
   * @param http: constructor de HttpClient
