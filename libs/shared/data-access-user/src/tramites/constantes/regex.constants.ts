@@ -635,26 +635,18 @@ export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
 export const REGEX_LINEA_CAPTURA = /^([A-Z0-9]{10}M1[A-Z0-9]{8}$)/;
 
 /**
- * Expresión regular para validar que una cadena contenga al menos una letra mayúscula (A-Z).
- * Ejemplo válido: "Contraseña"
+ * Expresión regular para validar contraseñas seguras.
+ *
+ * Requisitos que valida:
+ * - Al menos una letra mayúscula (A-Z)
+ * - Al menos una letra minúscula (a-z)
+ * - Al menos un dígito (0-9)
+ * - Al menos un símbolo especial de la lista: @ # $ % | ° ! & / ( ) = ? ¿ + * " ' `
+ * - No permite espacios en blanco
+ * - Longitud entre 8 y 64 caracteres
+ *
+ * Ejemplos válidos:
+ * - "Abcdef1@"
+ * - "MiClave2024!"
  */
-export const REGEX_CONTIENE_MAYUSCULA = /[A-Z]/;
-
-/**
- * Expresión regular para validar que una cadena contenga al menos una letra minúscula (a-z).
- * Ejemplo válido: "contraseña"
- */
-export const REGEX_CONTIENE_MINUSCULA = /[a-z]/;
-
-/**
- * Expresión regular para validar que una cadena contenga al menos uno de los siguientes caracteres:
- * número o símbolo especial: @ # $ % | ° ! & / ( ) = ? ¿ + * " '
- * Ejemplo válido: "Password1!", "Clave@2024"
- */
-export const REGEX_CONTIENE_NUMERO_O_OSIMBOLO = /[@#$%|°!&/()=?¿+*"']/;
-
-/**
- * Expresión regular para validar si una cadena contiene espacios en blanco.
- * Ejemplo válido (contiene espacio): "mi clave"
- */
-export const REGEX_SIN_ESPACIOS = /\s/;
+export const REGEX_CONRASENIA = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%|°!&/()=?¿+*"'`])[^\s]{8,64}$/;

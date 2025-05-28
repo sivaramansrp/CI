@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, REGEX_CONTIENE_MAYUSCULA, REGEX_CONTIENE_MINUSCULA, REGEX_CONTIENE_NUMERO_O_OSIMBOLO, REGEX_SIN_ESPACIOS } from '@libs/shared/data-access-user/src';
+import { Notificacion, REGEX_CONRASENIA } from '@libs/shared/data-access-user/src';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
@@ -103,8 +103,7 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
     if (!VALUE) {
       return null;
     }
-    const LONGITUD_VALIDA = VALUE.length >= 8 && VALUE.length <= 64;
-    const ES_VALIDA = LONGITUD_VALIDA && REGEX_CONTIENE_MAYUSCULA.test(VALUE) && REGEX_CONTIENE_MINUSCULA.test(VALUE) && REGEX_CONTIENE_NUMERO_O_OSIMBOLO.test(VALUE) && !REGEX_SIN_ESPACIOS.test(VALUE);
+    const ES_VALIDA = REGEX_CONRASENIA.test(VALUE);
     return ES_VALIDA ? null : { contrasenaInvalida: true };
   }
 
