@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * Representa la información de un servicio IMMEX.
  *
@@ -87,4 +89,33 @@ export interface ApiResponse {
 export interface AccionBoton {
   accion: string;
   valor: number;
+}
+/**
+ * Representa un catálogo de elementos.
+ *
+ * @property {number} id - Identificador único del catálogo.
+ * @property {string} descripcion - Descripción del elemento del catálogo.
+ */
+
+export interface AduanaDeIngreso {
+  id: number;
+  descripcion: string;
+}
+
+/**
+ * Representa el estado de ampliación de servicios.
+ *
+ * @property {Servicios} servicios - Representa los servicios asociados al estado.
+ * @property {Catalogo[]} aduanaDeIngresoSelecion - Lista de aduanas seleccionadas para el ingreso.
+ * @property {string} rfcEmpresa - RFC (Registro Federal de Contribuyentes) de la empresa.
+ * @property {string} numeroPrograma - Número del programa asociado al servicio.
+ * @property {string} tiempoPrograma - Duración o tiempo asociado al programa.
+ */
+
+export interface AmpliacionServiciosState {
+  servicios: Servicios;
+  aduanaDeIngresoSelecion: Catalogo[];
+  rfcEmpresa: string;
+  numeroPrograma: string;
+  tiempoPrograma: string;
 }

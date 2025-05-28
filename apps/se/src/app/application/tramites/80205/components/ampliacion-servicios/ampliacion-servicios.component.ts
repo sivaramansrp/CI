@@ -5,6 +5,7 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   FormularioDinamico,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -22,6 +23,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../../models/datos-info.model';
+import { Subject,Subscription,map,takeUntil} from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
@@ -30,7 +32,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-ampliacion-servicios',
@@ -118,6 +120,18 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   tiempoPrograma: string = '';
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+  
+  /**
+   * Indica si el campo debe ser deshabilitado.
+   * @property {boolean} campoDeshabilitar
+   */
+  campoDeshabilitar:boolean= false;
+
+  /**
    * Configuración de columnas para la tabla de domicilios.
    * @property {ConfiguracionColumna<ServicioInmex>[]} configuracionTabla
    */
@@ -178,6 +192,11 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {Servicios} infoRegistro
    */
   infoRegistro!: Servicios;
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
 
   /**
    * Constructor del componente.
@@ -191,17 +210,19 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private ampliacionServiciosStore: AmpliacionServiciosStore,
-    private readonly httpServicios: HttpClient
+    private readonly httpServicios: HttpClient,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    /**
-     * Inicializa el formulario reactivo con los campos correspondientes a la información del registro.
-     * Este método debe ser llamado durante la inicialización del componente para preparar los controles del formulario.
-     *
-     * @method inicializarFormularioInfoRegistro
-     * @returns {void}
-     */
-    this.inicializarFormularioInfoRegistro();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
+    
+    
     /**
      * Inicializa el formulario principal del componente con los campos necesarios.
      * @method inicializarFormularioPrincipal
@@ -235,16 +256,33 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       });
   }
 
+  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularioInfoRegistro();
+    }  
+    
+  }
+
   /**
    * Método de inicialización del componente.
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.obtenerIngresoSelectList();
     this.getDatos();
     this.suscribirseADatosImmex();
     this.suscribirseADatos();
     this.suscribirseAFields();
+    
+
   }
   /**
    * Maneja los cambios en los campos de entrada y actualiza el estado correspondiente
@@ -461,6 +499,25 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
         })
     );
   }
+  
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormularioInfoRegistro();
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+    } else if (!this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=false;
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
 
   /**
    * Elimina servicios del grid.
