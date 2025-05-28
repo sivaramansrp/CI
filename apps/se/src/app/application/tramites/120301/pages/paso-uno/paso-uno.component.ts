@@ -7,11 +7,11 @@
  */
 
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
@@ -56,6 +56,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   constructor(
     private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private elegibilidadTextilesService: ElegibilidadTextilesService
   ) {}
@@ -65,16 +66,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
+
+          if (this.consultaState.update) {
+            this.formularioDeshabilitado = false;
+            this.cargarDatosPrevios();
+          } else if (this.consultaState.readonly) {
+            this.formularioDeshabilitado = true;
+          }
         })
       )
       .subscribe();
-    if (this.consultaState.update) {
-      this.formularioDeshabilitado = false;
-      this.cargarDatosPrevios();
-    }
-    if (this.consultaState.readonly) {
-      this.formularioDeshabilitado = true;
-    }
   }
   /**
    * @method onMostrarTabs
