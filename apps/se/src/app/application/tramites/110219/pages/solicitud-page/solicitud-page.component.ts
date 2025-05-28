@@ -57,7 +57,13 @@ export class SolicitudPageComponent implements OnInit {
 /**
    * Número del paso actual.
    */
-nombre!: number;
+nombre: number = 1;
+
+isNumeroDe!: boolean;
+
+isNumeroDatos: boolean = false;
+
+isNumeroPattern!: boolean;
  
   /**
    * Datos de los pasos del asistente.
@@ -92,6 +98,7 @@ nombre!: number;
    */
   getValorIndice(e: AccionBoton): void {
     this.alEventoHijo(this.nombre);
+
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -110,4 +117,27 @@ nombre!: number;
   alEventoHijo(event: number) {
     this.nombre = event;
   }
+
+  isNumeroDeCertificado(event: boolean) {
+     this.isNumeroDe = event;
+  }
+
+  isNumeroDePattern(event: boolean) {
+    this.isNumeroPattern = event;
+  }
+
+  getDatosCertificado(event:number){
+    this.nombre = event;
+    
+  }
+
+  isDatosNumero(event:boolean){
+    this.isNumeroDatos = event;
+    if(!this.isNumeroDatos){
+       this.getValorIndice({
+      accion: 'cont',
+      valor: 2,})
+    }
+  }
+
 }

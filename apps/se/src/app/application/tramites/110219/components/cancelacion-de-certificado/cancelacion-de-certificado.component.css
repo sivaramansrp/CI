@@ -1,12 +1,15 @@
-.buscar{
+/* .buscar{
     margin-left: 445px;
 }
 
 .buscars{
     margin-left: 60px;
-}
+} */
 
 .table-container{
     overflow-x: auto;
     white-space: nowrap;
+}
+::ng-deep .centered-table-wrapper app-tabla-dinamica .table-wrapper table th, table td {
+    text-align: center !important;
 }

@@ -1,5 +1,5 @@
-import { AlertComponent,ConfiguracionColumna, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent,BtnContinuarComponent,ConfiguracionColumna, DatosPasos, PASOS, ListaPasosWizard, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FECHA_VENCIMIENTO, FECHA_EXPEDICION, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -23,13 +23,17 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
 @Component({
   selector: 'app-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, InputFechaComponent],
+  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, InputFechaComponent, BtnContinuarComponent],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /** Formulario para la cancelación de certificados. */
   cancelacionForm!: FormGroup;
+
+  @Output() dataEventContinuar = new EventEmitter<number>();
+  @Output() isDataEventContinuar = new EventEmitter<boolean>();
+
 
   /** Sujeto para manejar la destrucción del componente. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -83,6 +87,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     { encabezado: 'Razón Social', clave: (ele: ProductoresAsociados) => ele.razonSocial, orden: 6 },
   ];
 
+   /** Lista de pasos del asistente. */
+    pasos: ListaPasosWizard[] = PASOS;
+
+    indice: number = 1;
+
   /**
    * Constructor del componente.
    * @param certificadoService Servicio para gestionar certificados.
@@ -91,6 +100,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @param store Almacén de datos del trámite.
    * @param query Consulta de datos del trámite.
    */
+
+    /** Datos de los pasos del asistente. */
+    datosPasos: DatosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+
   constructor(
     private certificadoService: CertificadoService,
     private fb: FormBuilder,
@@ -177,6 +195,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     if (this.cancelacionForm.invalid) {
       this.cancelacionForm.markAllAsTouched();
       this.cancelacionForm.markAsDirty();
+    }
+  }
+
+  /** Emite un evento al hacer clic en un botón. */
+  emitirEventoClick(): void {
+    if(!(this.cancelacionForm.get('validacionForm.motivoCancelacion')?.hasError('required'))){
+        this.datosPasos;
+        this.dataEventContinuar.emit(3);
+        this.isDataEventContinuar.emit(false);
+    } else {
+             this.datosPasos.indice = 1;
+      this.isDataEventContinuar.emit(true);
+      this.dataEventContinuar.emit(3);
     }
   }
 

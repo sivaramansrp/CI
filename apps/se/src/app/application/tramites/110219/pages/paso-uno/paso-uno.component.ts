@@ -16,6 +16,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
 })
 export class PasoUnoComponent implements AfterViewInit {
+
+  isNumeroDe! : boolean;
+
+  isNumeroDePattern!:boolean;
   /**
    * Evento para emitir el índice de la pestaña seleccionada al componente padre.
    */
@@ -46,10 +50,18 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
+  isDatos!:boolean;
+
   /**
    * Evento para emitir datos al componente padre.
    */
   @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
+  @Output() eventoNumeroDe: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() eventoNumeroDePattern : EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() eventoDatosHijoCertificado: EventEmitter<number> = new EventEmitter<number>();
+  @Output() isDatosNumero: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
+
 
   /**
    * Constructor del componente.
@@ -94,5 +106,25 @@ export class PasoUnoComponent implements AfterViewInit {
     this.eventoDatosHijo.emit(data);
     this.indice = 3;
     this.seleccionaTab(this.indice);
+  }
+
+  isNumero(event:boolean){
+     this.isNumeroDe = event;
+     this.eventoNumeroDe.emit(this.isNumeroDe)
+  }
+
+  isNumeroPattern(event: boolean) {
+    this.isNumeroDePattern = event;
+    this.eventoNumeroDePattern.emit(this.isNumeroDePattern);
+  }
+
+   numeroData(data: number): void {
+    this.eventoDatosHijoCertificado.emit(data);
+    this.indice = 3;
+    this.seleccionaTab(this.indice);
+  }
+
+  isNumeroData(data: boolean): void {
+    this.isDatosNumero.emit(data);
   }
 }

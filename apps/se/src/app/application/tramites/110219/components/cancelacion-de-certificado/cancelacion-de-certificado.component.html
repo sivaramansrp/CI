@@ -4,13 +4,14 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen*:</label>
-        <input type="text" required="true" maxlength="50" pattern="^[0-9]{8,20}$" class="form-control" formControlName="numeroCertificado"
+        <input type="text" required="true" maxlength="16" pattern="\d{16}$" class="form-control"
+          formControlName="numeroCertificado"
           (change)=" setValoresStore(validacionForm,'numeroCertificado','setNumeroCertificado' )" />
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
         <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()"> Buscar Certificado </button>
       </div>
-     <div *ngIf="mostrarErrores" class="alert alert-danger text-center" role="alert">
+      <!-- <div *ngIf="mostrarErrores" class="alert alert-danger text-center" role="alert">
         <p>Corrija los siguientes errores:</p>
         <span style="color: rgb(134, 17, 17);">
           1.(Número de certificado) es un campo requerido
@@ -21,7 +22,7 @@
   <span style="color: rgb(134, 17, 17);">
     {{ mensajeError }}
   </span>
-</div>
+</div> -->
     </div>
     <ng-titulo titulo="" />
     <div class="row">
@@ -33,7 +34,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tratadoCatalogo.catalogos" [label]="'Tratado / Acuerdo'" [required]="false"
-          id="tratado" formControlName="tratado"
+          id="tratado" formControlName="tratado" [placeholder]="'Seleccione un tratado'"
           (change)="setValoresStore(validacionForm, 'tratado', 'setTratado')"></app-catalogo-select>
       </div>
     </div>
@@ -47,24 +48,32 @@
           (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscars">
-        <button type="button" class="btn btn-primary ms-3"> Buscar Certificado </button>
+        <button type="button" class="btn btn-primary"> Buscar Certificado </button>
       </div>
     </div>
-    
-      <div class="row mt-5" style="text-align: center;">
-        <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-      </div>
-      <div class="table-container mt-5">
-          <ng-titulo  titulo="Certificados disponibles" />
-          <ng-container *ngIf="!estaBuscando">
+
+    <div class="row mt-5" style="text-align: center;">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+    </div>
+    <div class="table-container centered-table-wrapper mt-5">
+      <ng-titulo titulo="Certificados disponibles" />
+      <ng-container *ngIf="!estaBuscando && !mostrarErrores">
         <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
           [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
-          </ng-container>
-           <ng-container *ngIf="estaBuscando">
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
-          ></app-tabla-dinamica>
-          </ng-container>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="estaBuscando && mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+      <ng-container *ngIf="!estaBuscando && mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+      <ng-container *ngIf="estaBuscando && !mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+    </div>
   </ng-container>
 </form>
 <btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>

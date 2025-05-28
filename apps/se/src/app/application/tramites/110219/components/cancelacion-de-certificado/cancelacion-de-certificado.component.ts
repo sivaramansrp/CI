@@ -60,6 +60,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /** Evento para emitir datos al componente padre. */
   @Output() dataEvent = new EventEmitter<number>();
 
+  @Output() isNumeroCertificado = new EventEmitter<boolean>();
+  @Output() isNumeroCertificadoPattern = new EventEmitter<boolean>();
+
   /** Texto de alerta para mostrar en el componente. */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
@@ -78,7 +81,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /** Selección de la tabla. */
   TablaSeleccion = TablaSeleccion;
   /** Indica si se deben mostrar errores en el formulario. */
-  mostrarErrores: boolean = false;
+  mostrarErrores: boolean = true;
   /** Indica si se está buscando un certificado. */
   estaBuscando: boolean = true;
   /** Catálogo de tratados. */
@@ -196,38 +199,40 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Activa el estado de búsqueda. */
   alBuscarClic(): void {
-    
+
     const control = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
     if (!control) {
-      this.mostrarErrores = true;
-      this.mensajeError = 'Ocurrió un error interno. Intente de nuevo.';
-      return;
+      this.estaBuscando = true;
+      this.isNumeroCertificado.emit(this.estaBuscando);
+
     } else if(control){
       this.estaBuscando = false;
-          this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value)
-
+      this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value);
+      this.isNumeroCertificado.emit(this.estaBuscando);
     }   
-  
-    control.markAsTouched();
-    control.updateValueAndValidity();
 
     if (control.invalid) {
-      this.mostrarErrores = true;
       this.mensajeError = '1.(Número de certificado) es un campo requerido';
-      return;
     }
 
     const certificadoExiste = this.buscarCertificado(control.value);
 
     if (!certificadoExiste) {
-      this.mostrarErrores = false;
       this.mensajeError = 'El certificado de origen no existe';
-      return;
     }
 
-    this.mostrarErrores = false;
+    
+    if((this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('pattern')) && !(this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('required'))){
+         this.mostrarErrores = true;
+         this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
+    } else {
+      this.mostrarErrores = false;
+         this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
+    }
+
     this.mensajeError = '';
   }
+
   /**
    * Busca un certificado en la tabla de certificados disponibles.
    * @param numeroCertificado Número de certificado a buscar.
@@ -298,7 +303,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
-        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(new RegExp('^-?\\d+(\\.\\d+)?$'))]],
+        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(/^\d{16}$/)]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required]],
@@ -310,6 +315,13 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /** Emite un evento al hacer clic en un botón. */
   emitirEventoClick(): void {
     this.dataEvent.emit(3);
+  }
+
+  get numeroCertificado()  {
+    this.cancelacionForm.get('validacionForm.numeroCertificado');
+
+    return
+
   }
 
   /** Limpia los recursos al destruir el componente. */
