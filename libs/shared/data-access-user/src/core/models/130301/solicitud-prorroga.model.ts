@@ -45,29 +45,29 @@ export interface PartidasInfo {
 export const PARTIDAS_TABLA = [
     {
         encabezado: '',
-        clave: (ele: PartidasInfo) => ele.serial,
+        clave: (ele: PartidasInfo): string => ele.serial,
         orden: 1,
       },
     {
       encabezado: 'Cantidad',
-      clave: (ele: PartidasInfo) => ele.cantidad,
+      clave: (ele: PartidasInfo): string => ele.cantidad,
       orden: 2,
     },
     {
       encabezado: 'Descripción',
-      clave: (ele: PartidasInfo) => ele.descripcion,
+      clave: (ele: PartidasInfo): string => ele.descripcion,
       orden: 3,
     },
     {
         
         encabezado: 'Precio unitario USD',
-        clave: (ele: PartidasInfo) => ele.totalUSD,
+        clave: (ele: PartidasInfo): string => ele.totalUSD,
         orden: 4,
     },
     {
         
         encabezado: 'Total USD',
-        clave: (ele: PartidasInfo) => ele.precioUnitarioUSD,
+        clave: (ele: PartidasInfo): string => ele.precioUnitarioUSD,
         orden: 5,
     },
     
@@ -135,17 +135,17 @@ export interface ProrrogasInfo {
 export const PRORROGAS_TABLA = [
     {
         encabezado: 'Fecha solicitud',
-        clave: (ele: ProrrogasInfo) => ele.fechaSolicitud,
+        clave: (ele: ProrrogasInfo): string => ele.fechaSolicitud,
         orden: 1,
       },
     {
       encabezado: 'Fecha inicial',
-      clave: (ele: ProrrogasInfo) => ele.fechaInicial,
+      clave: (ele: ProrrogasInfo): string => ele.fechaInicial,
       orden: 2,
     },
     {
       encabezado: 'Fecha final',
-      clave: (ele: ProrrogasInfo) => ele.fechaFinal,
+      clave: (ele: ProrrogasInfo): string => ele.fechaFinal,
       orden: 3,
     }
     
