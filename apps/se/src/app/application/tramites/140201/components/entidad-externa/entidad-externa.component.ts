@@ -58,17 +58,17 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    * Observable para el correo del solicitante IPC.
    */
   correoSolicitanteIPC$ = this.cancelacionesQuery.correoSolicitanteIPC$;
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /**
      * Suscripción a los cambios en el formulario react
      */
-    private subscription: Subscription = new Subscription();
-    
+  private subscription: Subscription = new Subscription();
+
   /**
    * @ignore
    */
@@ -77,15 +77,15 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
     private cancelacionesQuery: CancelacionesQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-      this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -101,34 +101,34 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
       fechaSolicitudIPC: [{ value: '', disabled: true }, [Validators.maxLength(20)]],
       correoSolicitanteIPC: ['', [Validators.maxLength(255)]]
     });
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+  * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  * Además, obtiene la información del catálogo de mercancía.
+  */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-    this.estadoActualizacion();
-    }  
+      this.estadoActualizacion();
+    }
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
   guardarDatosFormulario(): void {
-   this.estadoActualizacion();
-      if ( this.entidadForm && this.esFormularioSoloLectura) {
-        this.entidadForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.entidadForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.estadoActualizacion();
+    if (this.entidadForm && this.esFormularioSoloLectura) {
+      this.entidadForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.entidadForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
@@ -137,31 +137,31 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   estadoActualizacion(): void {
     this.entidadExterna$.pipe(takeUntil(this.destroy$)).subscribe((entidadExterna) => {
       if (entidadExterna) {
-        this.entidadForm.get('entidadExterna')?.setValue(entidadExterna);
+        this.entidadForm?.get('entidadExterna')?.setValue(entidadExterna);
       }
     });
 
     this.nombreSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((nombreSolicitanteIPC) => {
       if (nombreSolicitanteIPC) {
-        this.entidadForm.get('nombreSolicitanteIPC')?.setValue(nombreSolicitanteIPC);
+        this.entidadForm?.get('nombreSolicitanteIPC')?.setValue(nombreSolicitanteIPC);
       }
     });
 
     this.cargoSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((cargoSolicitanteIPC) => {
       if (cargoSolicitanteIPC) {
-        this.entidadForm.get('cargoSolicitanteIPC')?.setValue(cargoSolicitanteIPC);
+        this.entidadForm?.get('cargoSolicitanteIPC')?.setValue(cargoSolicitanteIPC);
       }
     });
 
     this.folioOficioSolicitudIPC$.pipe(takeUntil(this.destroy$)).subscribe((folioOficioSolicitudIPC) => {
       if (folioOficioSolicitudIPC) {
-        this.entidadForm.get('folioOficioSolicitudIPC')?.setValue(folioOficioSolicitudIPC);
+        this.entidadForm?.get('folioOficioSolicitudIPC')?.setValue(folioOficioSolicitudIPC);
       }
     });
 
     this.correoSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((correoSolicitanteIPC) => {
       if (correoSolicitanteIPC) {
-        this.entidadForm.get('correoSolicitanteIPC')?.setValue(correoSolicitanteIPC);
+        this.entidadForm?.get('correoSolicitanteIPC')?.setValue(correoSolicitanteIPC);
       }
     });
   }
@@ -177,7 +177,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el nombre del solicitante IPC en el almacén.
    */
-  updateNombreSolicitanteIPC():void {
+  updateNombreSolicitanteIPC(): void {
     const NOMBRESOLICITANTEIPC = this.entidadForm.get('nombreSolicitanteIPC')?.value;
     this.cancelacionesStore.setNombreSolicitanteIPC(NOMBRESOLICITANTEIPC);
   }
@@ -185,7 +185,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el cargo del solicitante IPC en el almacén.
    */
-  updateCargoSolicitanteIPC():void {
+  updateCargoSolicitanteIPC(): void {
     const CARGOSOLICITANTEIPC = this.entidadForm.get('cargoSolicitanteIPC')?.value;
     this.cancelacionesStore.setCargoSolicitanteIPC(CARGOSOLICITANTEIPC);
   }
@@ -193,7 +193,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el folio del oficio de solicitud IPC en el almacén.
    */
-  updateFolioOficioSolicitudIPC():void {
+  updateFolioOficioSolicitudIPC(): void {
     const FOLIOOFICIOSOLICITUDIPC = this.entidadForm.get('folioOficioSolicitudIPC')?.value;
     this.cancelacionesStore.setFolioOficioSolicitudIPC(FOLIOOFICIOSOLICITUDIPC);
   }
@@ -201,17 +201,17 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el correo del solicitante IPC en el almacén.
    */
-  updateCorreoSolicitanteIPC():void {
+  updateCorreoSolicitanteIPC(): void {
     const CORREOSOLICITANTEIPC = this.entidadForm.get('correoSolicitanteIPC')?.value;
     this.cancelacionesStore.setCorreoSolicitanteIPC(CORREOSOLICITANTEIPC);
   }
 
   /**
- * Destruye las suscripciones para evitar fugas de memoria.
- */
+   * Destruye las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-      this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

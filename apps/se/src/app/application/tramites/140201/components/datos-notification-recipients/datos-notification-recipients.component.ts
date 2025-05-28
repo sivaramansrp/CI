@@ -39,17 +39,17 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
   formularioDeNotificacionesForm!: FormGroup;
   /** Subject para manejar la destrucción de las suscripciones */
   private destroy$ = new Subject<void>();
-  
+
   /**
    * Suscripción a los cambios en el formulario react
    */
   private subscription: Subscription = new Subscription();
-  
+
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  esFormularioSoloLectura: boolean = false;
 
   /** Constructor */
   constructor(
@@ -57,18 +57,18 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
     private cancelacionService: CancelacionesService,
     private cancelacionesStore: CancelacionesStore,
     private cancelacionesQuery: CancelacionesQuery,
-     private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-           this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
-    
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+
   }
 
   /** Observable para el nombre */
@@ -90,22 +90,22 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
       apellidoMaterno: [{ value: '', disabled: true }],
       correoElectronico: ['', [Validators.email]],
     });
-   
+
     this.infoDeCarga();
     this.inicializarEstadoFormulario();
   }
 
-  
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+
+  /**
+  * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  * Además, obtiene la información del catálogo de mercancía.
+  */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.estadoActualizacion();
-    }  
+    }
   }
 
   /**
@@ -113,14 +113,14 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-     this.estadoActualizacion();
-      if ( this.formularioDeNotificacionesForm && this.esFormularioSoloLectura) {
-        this.formularioDeNotificacionesForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.formularioDeNotificacionesForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.estadoActualizacion();
+    if (this.formularioDeNotificacionesForm && this.esFormularioSoloLectura) {
+      this.formularioDeNotificacionesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioDeNotificacionesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
 
@@ -133,19 +133,19 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
   estadoActualizacion(): void {
     this.nombre$.pipe(takeUntil(this.destroy$)).subscribe((nombre) => {
       if (nombre) {
-        this.formularioDeNotificacionesForm.get('nombre')?.setValue(nombre);
+        this.formularioDeNotificacionesForm?.get('nombre')?.setValue(nombre);
       }
     });
 
     this.apellidoPaterno$.pipe(takeUntil(this.destroy$)).subscribe((apellidoPaterno) => {
       if (apellidoPaterno) {
-        this.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue(apellidoPaterno);
+        this.formularioDeNotificacionesForm?.get('apellidoPaterno')?.setValue(apellidoPaterno);
       }
     });
 
     this.correoElectronico$.pipe(takeUntil(this.destroy$)).subscribe((correoElectronico) => {
       if (correoElectronico) {
-        this.formularioDeNotificacionesForm.get('correoElectronico')?.setValue(correoElectronico);
+        this.formularioDeNotificacionesForm?.get('correoElectronico')?.setValue(correoElectronico);
       }
     });
   }

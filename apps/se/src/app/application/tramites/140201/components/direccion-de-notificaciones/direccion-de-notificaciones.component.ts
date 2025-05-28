@@ -6,7 +6,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,Subscription, map,takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
@@ -93,17 +93,17 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    */
   municipioAlcaldia: Catalogo[] = [];
 
-   /**
-     * Suscripción a los cambios en el formulario react
-     */
-    private subscription: Subscription = new Subscription();
-    
-     /**
-    * Indica si el formulario está en modo solo lectura.
-    * Cuando es `true`, los campos del formulario no se pueden editar.
+  /**
+    * Suscripción a los cambios en el formulario react
     */
-    esFormularioSoloLectura: boolean = false; 
-    
+  private subscription: Subscription = new Subscription();
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor */
   constructor(
@@ -113,15 +113,15 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
     private cancelacionesQuery: CancelacionesQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-          this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -154,18 +154,18 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
       telefono: ['', [Validators.maxLength(15)]],
       localidad: [null],
     });
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
-    /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+ * Evalúa si se debe inicializar o cargar datos en el formulario.  
+ * Además, obtiene la información del catálogo de mercancía.
+ */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.estadoActualizacion();
-    }  
+      this.estadoActualizacion();
+    }
   }
 
   /**
@@ -174,13 +174,13 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.estadoActualizacion();
-      if (this.direccionNotificacionesForm && this.esFormularioSoloLectura) {
-        this.direccionNotificacionesForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.direccionNotificacionesForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    if (this.direccionNotificacionesForm && this.esFormularioSoloLectura) {
+      this.direccionNotificacionesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.direccionNotificacionesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
 
@@ -190,43 +190,40 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
    * Actualiza el estado del formulario suscribiéndose a los observables de entidad federativa,
    * colonia, localidad, municipio, país, número interior, código postal y teléfono.
    */
-  estadoActualizacion() : void {
+  estadoActualizacion(): void {
     this.entidadFederativa$
       .pipe(takeUntil(this.destroy$))
       .subscribe((entidadFederativa) => {
         if (entidadFederativa) {
-          this.direccionNotificacionesForm
-            .get('entidadFederativa')
-            ?.setValue(entidadFederativa);
+          this.direccionNotificacionesForm?.get('entidadFederativa')?.setValue(entidadFederativa);
         }
       });
     this.colonia$.pipe(takeUntil(this.destroy$)).subscribe((colonia) => {
       if (colonia) {
-        this.direccionNotificacionesForm.get('colonia')?.setValue(colonia);
+        this.direccionNotificacionesForm?.get('colonia')?.setValue(colonia);
       }
     });
     this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
       if (localidad) {
-        this.direccionNotificacionesForm.get('localidad')?.setValue(localidad);
+        this.direccionNotificacionesForm?.get('localidad')?.setValue(localidad);
       }
     });
 
     this.municipio$.pipe(takeUntil(this.destroy$)).subscribe((municipio) => {
       if (municipio) {
-        this.direccionNotificacionesForm.get('municipioAlcaldia')?.setValue(municipio);
+        this.direccionNotificacionesForm?.get('municipioAlcaldia')?.setValue(municipio);
       }
     });
     this.paisInput$.pipe(takeUntil(this.destroy$)).subscribe((pais) => {
       if (pais) {
-        this.direccionNotificacionesForm.get('pais')?.setValue(pais);
+        this.direccionNotificacionesForm?.get('pais')?.setValue(pais);
       }
     });
     this.numeroInterior$
       .pipe(takeUntil(this.destroy$))
       .subscribe((numeroInterior) => {
         if (numeroInterior) {
-          this.direccionNotificacionesForm
-            .get('numeroInterior')
+          this.direccionNotificacionesForm?.get('numeroInterior')
             ?.setValue(numeroInterior);
         }
       });
@@ -234,12 +231,12 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((codigoPostal) => {
         if (codigoPostal) {
-          this.direccionNotificacionesForm.get('codigoPostal')?.setValue(codigoPostal);
+          this.direccionNotificacionesForm?.get('codigoPostal')?.setValue(codigoPostal);
         }
       });
     this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
       if (telefono) {
-        this.direccionNotificacionesForm.get('telefono')?.setValue(telefono);
+        this.direccionNotificacionesForm?.get('telefono')?.setValue(telefono);
       }
     });
   }
