@@ -69,7 +69,7 @@ Este trabajo verifica la correcta construcción del proyecto:
 - Node.js versión: 20
 - NX versión: 16.10.0
 - Registro de Docker: ghcr.io
-- Aplicaciones disponibles: dashboard, login, aga, agriculture, se, semarnat, agace, funcionario, cofepris, amecafe, sener, inbal
+- Aplicaciones disponibles: dashboard, login, aga, agricultura, se, semarnat, agace, funcionario, cofepris, amecafe, sener, inbal
 - Variables para control de NX: NX_SKIP_NX_CACHE=true, NX_NATIVE_BINDINGS=false
 
 ### Trabajos

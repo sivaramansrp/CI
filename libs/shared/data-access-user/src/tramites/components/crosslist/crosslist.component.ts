@@ -6,10 +6,14 @@ import { CommonModule } from '@angular/common';
  * 
  * @property {string} tituluDeLaIzquierda - El título de la izquierda.
  * @property {string} derecha - El valor de la derecha.
+ * @property {boolean} showUnoTitulo - Indica si se muestra el primer título.
+ * @property {boolean} showDosTitulo - Indica si se muestra el segundo título.
  */
 export interface CrossListLable {
   tituluDeLaIzquierda: string;
   derecha: string;
+  showUnoTitulo?: boolean;
+  showDosTitulo?: boolean;
 }
 @Component({
   selector: 'crosslist',
@@ -21,8 +25,8 @@ export interface CrossListLable {
 })
 export class CrosslistComponent implements OnInit, OnChanges {
 
-  @Input() botonField: any;
-  @Input() botones: any;
+  @Input() botonField: { btnNombre: string; class: string; funcion?: () => void }[] | null = null;
+  @Input() botones: { btnNombre: string; class: string; funcion?: () => void }[] | null = null;
 
   @Input() label: CrossListLable | undefined;
   @Input() showSearchInput1: boolean = false;

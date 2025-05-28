@@ -1,6 +1,6 @@
 import {
+  AVISO,
   AccionBoton,
-  Aviso,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
@@ -36,7 +36,7 @@ export class ContenedorDePasosComponent {
      */
     tituloMensaje: string | null =
       'Permiso sanitario de importación de dispositivos médicos destinados a pruebas de laboratorio.';
-      TEXTOS: string = Aviso.Aviso;
+      TEXTOS: string = AVISO.Aviso;
       /**
        *
        * Una cadena que representa la clase CSS para una alerta de información.

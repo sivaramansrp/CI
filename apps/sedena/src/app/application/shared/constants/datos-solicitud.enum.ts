@@ -1,3 +1,5 @@
+import exp from "constants";
+
 /**
  * @constant
  * @name CROSLISTA_DE_PAISES
@@ -118,6 +120,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240407: 240407,
   TRAMITE_240123: 240123,
   TRAMITE_240321: 240321,
+  TRAMITE_240118: 240118,
 }
 
 /**
@@ -169,10 +172,22 @@ export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111];
  *              relacionados con el destinatario proveedor.
  * @type {number[]}
  */
-export const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR = [240117];
 
+/**
+ * @const MOSTRAR_ASTERISCO
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const MOSTRAR_ASTERISCO = [240118];
 
-
+/**
+ * @const MOSTRAR_INFORMACION
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const MOSTRAR_INFORMACION = [240118];
 
 /**
  * Constante que representa los campos obligatorios para el proveedor.
@@ -192,7 +207,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118];
 
 
 /**
@@ -204,7 +219,7 @@ export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112];
  * @const
  * @type {number[]}
  */
-export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
+export const COLONIA_FIELD_FLAG = [240117, 240114, 240122, 240118, 240120];
 
 /**
  * @constant

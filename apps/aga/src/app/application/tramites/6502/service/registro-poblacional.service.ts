@@ -1,4 +1,4 @@
-import { InstalacionesPrincipalesRespuestaTabla, formaRespuestaDatos } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
+import { FormaRespuestaDatos, InstalacionesPrincipalesRespuestaTabla } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -65,8 +65,8 @@ export class RegistroPoblacionalService {
    *     this.formulario.patchValue(formData);
    *   });
    */
-  obtenerFromaDatos(): Observable<formaRespuestaDatos> {
-    return this.http.get<formaRespuestaDatos>(
+  obtenerFromaDatos(): Observable<FormaRespuestaDatos> {
+    return this.http.get<FormaRespuestaDatos>(
       'assets/json/6502/forma-datos.json'
     );
   }

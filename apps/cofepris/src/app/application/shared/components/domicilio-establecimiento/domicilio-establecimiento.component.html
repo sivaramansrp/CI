@@ -93,7 +93,8 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
+        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
+          title="Title" ata-bs-toggle="tooltip"></span></label>
         <input
           class="form-control"
           id="calle"
@@ -149,8 +150,13 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-      [datos]="nicoTablaDatos"></app-tabla-dinamica>
+    <app-tabla-dinamica
+      [configuracionTabla]="nicoTabla"
+      [datos]="nicoTablaDatos"
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+      formControlName="scian">
+    </app-tabla-dinamica>
+
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2">Eliminar</button>
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
@@ -213,11 +219,12 @@
     </div>
 
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
-        Modificar
-      </button>
-      <button class="btn btn-default me-2">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
+     
+      <button
+        class="btn btn-primary me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAddAgentMercancias"
+      >
         Agregar
       </button>
     </div>
@@ -283,13 +290,17 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" (click)="limpiar(formAgente)">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarScianForm()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          data-bs-dismiss="modal" 
+          (click)="guardarScian()" >
           Agregar
         </button>
       </div>
@@ -306,9 +317,10 @@
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
+          <ng-titulo titulo="Datos mercancía"></ng-titulo>
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial:</label>
+            <label for="nombreComercial">Nombre comercial *:</label>
             <input
               type="text"
               id="nombreComercial"
@@ -624,7 +636,7 @@
 
           <div class="form-group">
             <label for="porcentajeConcentracion"
-              >porcentaje de concentración*:</label
+              >Porcentaje de concentración *:</label
             >
             <input
               type="text"
@@ -711,9 +723,13 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
-                  <p class="panel-title">
-                    país donde se produce o fabrica el ingrediente activo
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsable()"
+                  tabindex="0"
+                >
+                  <p class="panel-title fw-bold">
+                    País donde se produce o fabrica el ingrediente activo
                   </p>
                   <button type="button" class="collpase-button collapsed"></button>
                 </div>
@@ -732,9 +748,16 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
-                  <p class="panel-title">país donde se elabora el producto</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsableDuos()"
+                  tabindex="0"
+                >
+                  <p class="panel-title fw-bold">País donde se elabora el producto</p>
+                  <button
+                    type="button"
+                    class="collpase-button collapsed"
+                  ></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -751,9 +774,16 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
-                  <p class="panel-title">país proveedor</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsableTres()"
+                  tabindex="0"
+                >
+                  <p class="panel-title fw-bold">País proveedor</p>
+                  <button
+                    type="button"
+                    class="collpase-button collapsed"
+                  ></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -770,9 +800,13 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
-                  <p class="panel-title">
-                    país de procedencia/país de último puerto de embarque
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsableTres()"
+                  tabindex="0"
+                >
+                  <p class="panel-title fw-bold">
+                    País de procedencia/País del último puerto de embarque
                   </p>
                   <button type="button" class="collpase-button collapsed"></button>
                 </div>
@@ -809,7 +843,7 @@
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarMercancia()">
           Agregar
         </button>
       </div>
