@@ -102,88 +102,37 @@ export const REGISTRO_VEHICULOS = [
     orden: 3,
   },
   {
-    encabezado: 'Caja',
+    encabezado: 'Número de caja',
     clave: (item: RegistroVehiculos): string => item.solicitud.caja,
     orden: 4,
   },
   {
-    encabezado: 'Calle Vehículo',
+    encabezado: 'Domicilio para la verificación del vehículo',
     clave: (item: RegistroVehiculos): string =>
       item.direccionVehiculo.calleVehiculo,
     orden: 5,
   },
+  
   {
-    encabezado: 'Número Exterior',
+    encabezado: 'Aduana',
     clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.numExteriorVehiculo,
+      item.direccionVehiculo.comboAduanaVehiculo,
     orden: 6,
   },
   {
-    encabezado: 'Número Interior',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.numInteriorVehiculo,
+    encabezado: 'Nombre de contacto en la circunscripción de la aduana',
+    clave: (item: RegistroVehiculos): string => item.persona.nombre,
     orden: 7,
   },
   {
-    encabezado: 'Entidad Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.comboEntidadVehiculo,
+    encabezado: 'Correo electrónico',
+    clave: (item: RegistroVehiculos): string => item.persona.apellidoPaterno,
     orden: 8,
   },
   {
-    encabezado: 'Delegación Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.comboDelegacionVehiculo,
-    orden: 9,
-  },
-  {
-    encabezado: 'Colonia Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.comboColoniaVehiculo,
-    orden: 10,
-  },
-  {
-    encabezado: 'Localidad Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.localidadVehiculo,
-    orden: 11,
-  },
-  {
-    encabezado: 'Código Postal Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.codigoPostalVehiculo,
-    orden: 12,
-  },
-  {
-    encabezado: 'Aduana Vehículo',
-    clave: (item: RegistroVehiculos): string =>
-      item.direccionVehiculo.comboAduanaVehiculo,
-    orden: 13,
-  },
-  {
-    encabezado: 'Nombre',
-    clave: (item: RegistroVehiculos): string => item.persona.nombre,
-    orden: 14,
-  },
-  {
-    encabezado: 'Apellido Paterno',
-    clave: (item: RegistroVehiculos): string => item.persona.apellidoPaterno,
-    orden: 15,
-  },
-  {
-    encabezado: 'Apellido Materno',
-    clave: (item: RegistroVehiculos): string => item.persona.apellidoMaterno,
-    orden: 16,
-  },
-  {
-    encabezado: 'Correo Electrónico',
-    clave: (item: RegistroVehiculos): string => item.persona.correoElectronico,
-    orden: 17,
-  },
-  {
-    encabezado: 'Teléfono de Contacto',
+    encabezado: 'Teléfono',
     clave: (item: RegistroVehiculos): string => item.persona.telefonoContacto,
-    orden: 18,
+    orden: 9,
   },
 ];
 

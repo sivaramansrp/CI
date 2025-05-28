@@ -68,7 +68,7 @@
       } @case (4){
       <app-pago-de-derechos 
       [formularioPagoDerechos]="formularioPagoDerechos"
-      [banco]="banco"
+      [banco]="this.solicitudPermisoService.banco"
       (setValoresStoreEvent)="setValoresStore($event)"
       ></app-pago-de-derechos>
       } @case (5){ 
