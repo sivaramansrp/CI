@@ -82,6 +82,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.actualizarEstado()
 ;}
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
@@ -93,6 +98,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }  
   }
 
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
     // Solo intentar deshabilitar si el formulario ya está inicializado
@@ -105,7 +115,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }
   }
 
-actualizarEstado(): void {
+  /**
+   * Inicializa o reinicia el formulario de persona con los campos requeridos y sus validaciones.
+   * @returns {void}
+   */
+  actualizarEstado(): void {
 this.personaForm = this.fb.group({
       rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
@@ -132,7 +146,12 @@ this.personaForm = this.fb.group({
       this.losDatos = data;
     });
   }
- ngOnDestroy(): void {
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.subscription.unsubscribe();

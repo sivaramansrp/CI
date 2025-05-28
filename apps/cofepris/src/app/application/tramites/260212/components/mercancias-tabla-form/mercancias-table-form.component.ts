@@ -118,8 +118,9 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Inicializa el formulario `datosMercanciaForm` con campos requeridos y validaciones.
- */
+   * Inicializa el formulario de mercancías con los campos requeridos y sus validaciones.
+   * @returns {void}
+   */
   datosMercanciaFormInitial(): void {
     this.datosMercanciaForm = this.fb.group({
       clasificacion: ['', Validators.required],
@@ -139,7 +140,12 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     });
   }
 
-   inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -148,6 +154,11 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
       if (this.esFormularioSoloLectura) {
@@ -159,6 +170,11 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       }
   }
 
+  /**
+   * Actualiza los valores del formulario a partir del store y servicios.
+   * Sincroniza los campos con el estado global y adapta los datos de estado físico.
+   * @returns {void}
+   */
   actualizarEstado(): void {
 this.solicitudService.getClave().subscribe((data) => {
       this.especificarClasificacion = data;
@@ -192,9 +208,10 @@ this.solicitudService.getClave().subscribe((data) => {
   }
 
   /**
- * Angular lifecycle hook invoked when the component is destroyed.
- * Cleans up any subscriptions or resources associated with the component.
- */
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

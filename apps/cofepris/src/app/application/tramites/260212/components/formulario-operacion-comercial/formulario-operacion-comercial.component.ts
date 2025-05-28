@@ -88,7 +88,8 @@ this. inicializarEstadoFormulario();
 }
 
   /**
-   * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
+   * Inicializa el formulario de operación comercial con los campos requeridos y sus validaciones.
+   * @returns {void}
    */
   formularioOperacionInitial(): void {
     this.formularioOperacionForm = this.fb.group({
@@ -99,18 +100,27 @@ this. inicializarEstadoFormulario();
     })
   }
 
-   inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
       if (this.formularioOperacionForm) {
         this.guardarDatosFormulario();
       }
     } else {
-      //this.inicializarFormulario();
       this.actualizarEstado();
     }  
   }
 
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
     // Solo intentar deshabilitar si el formulario ya está inicializado
@@ -123,6 +133,11 @@ this. inicializarEstadoFormulario();
     }
   }
 
+  /**
+   * Actualiza los valores del formulario a partir del store y servicios.
+   * Sincroniza los campos 'regimen' y 'entradas' con el estado global.
+   * @returns {void}
+   */
   actualizarEstado(): void {
 this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
@@ -165,9 +180,11 @@ this.solicitudService.getClave().subscribe((data) => {
     this.tramite260212Store.setEntradas(ENTRADAS);
   }
 
-  /*
-  * Método del ciclo de vida de Angular - destruye el componente
- */
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

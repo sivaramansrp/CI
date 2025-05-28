@@ -192,6 +192,15 @@ private subscription: Subscription = new Subscription();
     }
   }
 
+  /**
+   * @method actualizarEstado
+   * @description
+   * Actualiza los valores del formulario `datosEstablecimientoForm` con los datos provenientes de varios observables y servicios.
+   * Obtiene la información de la solicitud y la clave del estado, y suscribe a diferentes observables para actualizar los campos correspondientes del formulario.
+   * Utiliza el operador `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
    actualizarEstado(): void {
 this.solicitudService.getSolicitudes().subscribe((data) => {
       this.solicitudData = data;
@@ -292,46 +301,46 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
   }
 
   /**
- * Alterna el estado de la variable `plegable`.
- * Cambia entre mostrar y ocultar una sección plegable.
- */
-
-  mostrarPlegable():void {
+   * Alterna el estado plegable de la sección de opciones de pre-llenado.
+   * Cambia la variable `plegable` para mostrar u ocultar la sección.
+   * @returns {void}
+   */
+  mostrarPlegable(): void {
     this.plegable = !this.plegable;
   }
 
   /**
- * Muestra el formulario para S.C.I.A.N.
- * Establece la variable `mostrarFormularioScian` en true.
- */
-
-  toggleScianFormulario():void {
+   * Muestra el formulario para agregar una clave S.C.I.A.N.
+   * Cambia la variable `mostrarFormularioScian` a true.
+   * @returns {void}
+   */
+  toggleScianFormulario(): void {
     this.mostrarFormularioScian = true
   }
   /**
-   * Oculta el formulario para S.C.I.A.N.
-   * Establece la variable `mostrarFormularioScian` en false.
+   * Oculta el formulario de clave S.C.I.A.N.
+   * Cambia la variable `mostrarFormularioScian` a false.
+   * @returns {void}
    */
-
-  cerrarScianFormulario():void {
+  cerrarScianFormulario(): void {
     this.mostrarFormularioScian = false;
   }
 
   /**
- * Muestra el formulario para las mercancías.
- * Establece la variable `mostrarFormularioMercancias` en true.
- */
-
-  openMercanciasForm():void {
+   * Muestra el formulario para agregar mercancías.
+   * Cambia la variable `mostrarFormularioMercancias` a true.
+   * @returns {void}
+   */
+  openMercanciasForm(): void {
     this.mostrarFormularioMercancias = true;
   }
 
   /**
- * Oculta el formulario para las mercancías.
- * Establece la variable `mostrarFormularioMercancias` en false.
- */
-
-  closeMercanciasForm():void {
+   * Oculta el formulario de mercancías.
+   * Cambia la variable `mostrarFormularioMercancias` a false.
+   * @returns {void}
+   */
+  closeMercanciasForm(): void {
     this.mostrarFormularioMercancias = false;
   }
 
@@ -416,22 +425,38 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
     this.tramite260212Store.setColonia(COLONIA);
   }
 
+  /**
+   * Actualiza el campo 'calle' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
   updateCalle(): void {
     const CALLE = this.datosEstablecimientoForm.get('calle')?.value;
     this.tramite260212Store.setCalle(CALLE);
   }
 
+  /**
+   * Actualiza el campo 'lada' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
   updateLada(): void {
     const LADA = this.datosEstablecimientoForm.get('lada')?.value;
     this.tramite260212Store.setLada(LADA);
   }
 
-  updateTelefono():void{
+  /**
+   * Actualiza el campo 'telefono' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
+  updateTelefono(): void {
     const TELEFONO = this.datosEstablecimientoForm.get('telefono')?.value;
     this.tramite260212Store.setTelefono(TELEFONO);
   }
 
-  updateCodigoPostal():void{
+  /**
+   * Actualiza el campo 'codigoPostal' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
+  updateCodigoPostal(): void {
     const CODIGO_POSTAL = this.datosEstablecimientoForm.get('codigoPostal')?.value;
     this.tramite260212Store.setCodigoPostal(CODIGO_POSTAL);
   }

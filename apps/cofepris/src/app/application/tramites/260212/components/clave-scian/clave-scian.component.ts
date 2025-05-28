@@ -29,9 +29,99 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   templateUrl: './clave-scian.component.html',
   styleUrl: './clave-scian.component.scss',
 })
+/**
+ * @component
+ * @name ClaveScianComponent
+ * @description
+ * Componente Angular encargado de gestionar el formulario reactivo para la selección y visualización de la clave SCIAN.
+ * Permite la visualización en modo solo lectura o edición, obtiene las claves disponibles desde un servicio y sincroniza el estado con el store.
+ * Además, emite eventos para cancelar la acción y limpia los recursos al destruirse.
+ *
+ * @example
+ * <app-clave-scian (cancel)="onCancel()"></app-clave-scian>
+ *
+ * @export
+ */
+ 
+// Métodos
+
+/**
+ * @method
+ * @desc
+ * Angular lifecycle hook invocado al inicializar el componente.
+ * Configura el formulario, carga los datos iniciales y suscribe a actualizaciones de estado.
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ * @see https://angular.io/api/core/OnInit
+ */
+
+/**
+ * @method
+ * @desc
+ * Configura el formulario reactivo con los campos "clave" y "descripcion".
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Inicializa el estado del formulario según el modo de solo lectura.
+ * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Guarda los datos actuales del formulario y ajusta su estado (habilitado/deshabilitado) según el modo de solo lectura.
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Actualiza los valores del formulario a partir del store y servicios.
+ * Sincroniza los campos con el estado global y adapta los datos de clave y descripción.
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Emite el evento de cancelación para notificar a componentes padres.
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Actualiza la clave seleccionada en el store según el valor del formulario.
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ */
+
+/**
+ * @method
+ * @desc
+ * Angular lifecycle hook invocado al destruir el componente.
+ * Limpia las suscripciones y recursos asociados al componente.
+ * @memberof ClaveScianComponent
+ * @returns {void}
+ * @see https://angular.io/api/core/OnDestroy
+ */
 export class ClaveScianComponent implements OnInit, OnDestroy {
 
   esFormularioSoloLectura: boolean = true;
+  /**
+   * @private
+   * @type {Subscription}
+   * @description
+   * Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
+   * Se recomienda cancelar esta suscripción en el método ngOnDestroy para evitar fugas de memoria.
+   */
   private subscription: Subscription = new Subscription();
   /**
    * Reactive form group managing the "Clave Scian" form fields.
@@ -108,7 +198,12 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
       descripcion: ['']
     });
   }
- inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -116,6 +211,11 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
     }  
   }
 
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
       if (this.esFormularioSoloLectura) {
@@ -127,7 +227,12 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
       }
   }
 
-   actualizarEstado(): void {
+  /**
+   * Actualiza los valores del formulario a partir del store y servicios.
+   * Sincroniza los campos con el estado global y adapta los datos de clave y descripción.
+   * @returns {void}
+   */
+  actualizarEstado(): void {
 this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     });
