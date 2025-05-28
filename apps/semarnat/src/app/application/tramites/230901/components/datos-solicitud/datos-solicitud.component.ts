@@ -236,7 +236,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.estadoSolicitud230901.tipoDeMovimiento,
         Validators.required,
       ],
-      tipoderegimen: [
+      tipoDeRegimen: [
         this.estadoSolicitud230901.tipoDeRegimen,
         Validators.required,
       ],
@@ -336,7 +336,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   manejarCambioTipoMovimiento(): void {
     const TIPO_DE_MOVIMIENTO =
       this.formularioSolicitud.get('tipodemovimiento')?.value;
-    this.tramite230901Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
+      this.tramite230901Store.establecerDatos({ tipoDeMovimiento: TIPO_DE_MOVIMIENTO });
     if (TIPO_DE_MOVIMIENTO === '1') {
       this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(
         this.crosslistComponent
@@ -345,15 +345,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
     }
     this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
-  }
-
-  /**
-   * Maneja el cambio en el tipo de régimen seleccionado.
-   */
-  manejarCambioTipoRegimen(): void {
-    this.tramite230901Store.setTipoDeRegimen(
-      this.formularioSolicitud.get('tipoderegimen')?.value
-    );
   }
 
   /**
@@ -599,6 +590,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite230901Store.setMercanciaTablaDatos(this.datosTablaMercancia);
     this.formularioMercancia.reset();
     this.alternarModalMercancia();
+  }
+
+  /**
+   * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Parámetros:
+   *   - form: Formulario reactivo que contiene los datos.
+   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
+   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230901Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

@@ -1,10 +1,17 @@
-import { DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
+import { CombinacionRequerida, DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * Estado inicial del formulario para el trámite 220403.
+ * 
+ * @constant
+ * @type {FormularioGrupo}
+ * @description Define los valores por defecto para cada sección del formulario, incluyendo datos de realización, combinación requerida, transporte y pago de derechos, así como los indicadores de validación correspondientes.
+ */
 export const INITIAL_STATE: FormularioGrupo = {
   datosRealizar: {
-    certificadoTipo: '',
+    certificadoTipo: 'animal',
     aduanaEmbarque: '',
     numeroContenedor: '',
     parisOrigen: '',
@@ -32,6 +39,10 @@ export const INITIAL_STATE: FormularioGrupo = {
     fechaPago: '',
     importePago: '',
   },
+  datosRealizarValidada: false,
+  combinacionRequeridaValidada: false,
+  transporteValidada: false,
+  pagoDerechosValidada: false,
 };
 
 /**
@@ -63,6 +74,21 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * Establece la combinación requerida en el estado.
+   * 
+   * @param {CombinacionRequerida} combinacionRequerida - La combinación requerida que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setCombinacionRequerida(combinacionRequerida: CombinacionRequerida): void {
+    this.update((state) => ({
+      ...state,
+      combinacionRequerida,
+    }));
+  }
+
+
+  /**
    * Establece el Transporte en el almacén.
    * 
    * @param {Transporte} transporte - El Transporte que se va a establecer en el almacén.
@@ -87,6 +113,64 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
     this.update((state) => ({
       ...state,
       pagoDerechos,
+    }));
+  }
+
+  /**
+   * Establece el estado de validación de la sección "Datos a Realizar".
+   * 
+   * @param {boolean} datosRealizarValidada - Indica si la sección de datos a realizar ha sido validada.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setDatosRealizarValidada(datosRealizarValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      datosRealizarValidada,
+    }));
+  }
+
+  /**
+   * Establece el estado de validación de la sección "Combinación Requerida".
+   * 
+   * @param {boolean} combinacionRequeridaValidada - Indica si la sección de combinación requerida ha sido validada.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setCombinacionRequeridaValidada(combinacionRequeridaValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      combinacionRequeridaValidada,
+    }));
+  }
+
+  /**
+   * Establece el estado de validación de la sección "Transporte".
+   * 
+   * @param {boolean} transporteValidada - Indica si la sección de transporte ha sido validada.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setTransporteValidada(transporteValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      transporteValidada,
+    }));
+  }
+
+  /**
+   * @method setPagoDerechosValidada
+   * @description
+   * Actualiza el estado para indicar si el pago de derechos ha sido validado.
+   * 
+   * @param {boolean} pagoDerechosValidada - Indica si el pago de derechos ha sido validado.
+   * 
+   * @returns {void}
+   */
+  setPagoDerechosValidada(pagoDerechosValidada : boolean): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechosValidada,
     }));
   }
 

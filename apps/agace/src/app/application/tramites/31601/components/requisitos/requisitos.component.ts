@@ -10,7 +10,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { CATALOGOS_ID, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, CatalogoSelectComponent, TableBodyData } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
@@ -101,7 +101,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de tipos de documento (en este caso vacío, se llenará con la carga de datos).
    */
-  public tipoBodyData: unknown = [];
+  public tipoBodyData: TableBodyData[] = [];
 
   /**
    * Catálogo de tipos de documentos.

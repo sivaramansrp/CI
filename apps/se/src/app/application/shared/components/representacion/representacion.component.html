@@ -7,7 +7,6 @@
             [catalogo]="entidadFederativa"
             [label]="'Entidad federativa'"
             [required]="true"
-            [placeholder]="'Seleccione un valor'"
             formControlName="entidad"
             (change)="setValoresStore(frmRepresentacionForm, 'entidad')"
           ></app-catalogo-select>
@@ -23,7 +22,6 @@
             [catalogo]="representacionFederal"
             [label]="'Representación federal'"
             [required]="true"
-            [placeholder]="'Seleccione un valor'"
             formControlName="representacion"
             (change)="setValoresStore(frmRepresentacionForm, 'representacion')"
           ></app-catalogo-select>

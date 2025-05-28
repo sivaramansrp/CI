@@ -59,4 +59,23 @@ export class Tramite260302Query extends Query<Tramite260302State> {
   getOtrasTablaDatos$ = this.select(
     (state) => state.otrosTablaDatos
   );
+
+  /**
+   * @property {Observable<DatosSolicitudFormState>} getDatosSolicitudFormState$
+   * @description
+   * Selecciona el estado del formulario de datos de la solicitud.
+   */
+  public getDestinatarioSeleccionado$ = this.select(
+    (state) => state.seleccionadoDestinatarioDatos
+  )
+
+  /**
+   * @property {Observable<DatosSolicitudFormState>} getDatosSolicitudFormState$
+   * @description
+   * Selecciona el estado del formulario de datos de la solicitud.
+   */
+  public getOtrosSeleccionado$ = this.select(
+    (state) => state.seleccionadoOtrosDatos)
+
+
 }

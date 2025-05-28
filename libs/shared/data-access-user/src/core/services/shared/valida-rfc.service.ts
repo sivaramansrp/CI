@@ -1,7 +1,7 @@
 import { API_GET_VALIDA_RFC, RFC_QUERY } from '../../constants/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { CatalogosBooleanResponse } from '../../models/shared/catalogo.model';
-import { enviroment } from '../../../enviroments/enviroment';
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -15,7 +15,7 @@ export class ValidaRfcService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

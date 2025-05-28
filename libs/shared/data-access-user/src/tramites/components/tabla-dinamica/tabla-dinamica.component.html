@@ -1,18 +1,16 @@
 <div class="table-responsive table-wrapper">
-  <table id="{{tableId}}" class="table table-striped table-bordered ">
+  <table id="{{ tableId }}" class="table table-striped table-bordered">
     <thead>
       <tr>
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <th></th>
-        }
-        @if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
+        } @if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <th></th>
-        }
-        @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
+        } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <th>
           <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
             (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " />
+            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " [disabled]="disableSeleccionTablaCheckBox"/>
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
@@ -22,62 +20,100 @@
         @if(acciones && acciones.length){
         <th>Acciones</th>
         }
-
       </tr>
     </thead>
     <tbody>
       <!-- Crear las filas de manera dinámica -->
-      <tr *ngFor="let fila of datos;let i=index" (click)="onFilaClic(datos[i])">
+      <tr
+        *ngFor="let fila of datos; let i = index"
+        (click)="onFilaClic(datos[i])"
+      >
         <!-- Botón de radio para seleccionar una fila -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <td>
-          <input class="cursor-pointer" type="radio" name="filaSeleccionada" [(ngModel)]="idFilaSeleccionada"
-            [value]="i" (change)="seleccionarFila(i, fila)" [checked]="idFilaSeleccionada === i"
-            aria-label="Seleccionar" />
+          <input
+            class="cursor-pointer"
+            type="radio"
+            name="filaSeleccionada"
+            [(ngModel)]="idFilaSeleccionada"
+            [value]="i"
+            (change)="seleccionarFila(i, fila)"
+            [checked]="idFilaSeleccionada === i"
+            aria-label="Seleccionar"
+            [disabled]="disableSeleccionTablaRadio"
+          />
         </td>
-
-        }
-        @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
+ 
+        } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <td>
-          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada" [value]="i"
-            (change)="cambiarEstadoCheckbox($event,i )" [checked]="filasSeleccionadas.includes(i)"
-            aria-label="Seleccionar" />
+          <input
+            class="cursor-pointer"
+            type="checkbox"
+            name="filaSeleccionada"
+            [value]="i"
+            (change)="cambiarEstadoCheckbox($event, i)"
+            [checked]="filasSeleccionadas.includes(i)"
+            aria-label="Seleccionar"
+            [disabled]="disableSeleccionTablaCheckBox"
+          />
         </td>
-
-        }
-
-        @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
+ 
+        } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
-          <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
-            (click)="cambiarValor(fila)" aria-label="Seleccionar">{{obtenerTextoBoton(fila)}}</button>
+          <button
+            id="button"
+            class="cursor-pointer btn btn-primary"
+            type="button"
+            name="filaSeleccionada"
+            [value]="i"
+            (click)="cambiarValor({ row: fila, column: '' })"
+            aria-label="Seleccionar"
+          >
+            {{ obtenerTextoBoton(fila) }}
+          </button>
         </td>
         }
-
+ 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
+        <td
+          *ngFor="let col of obtenerConfiguracionOrdenada()"
+          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: ''}) : null"
+          [ngClass]="{ 'cursor-pointer': col.hiperenlace }"
+        >
           {{ col.clave(fila) || ' ' }}
         </td>
-         @if(acciones && acciones.length){
+        @if(acciones.length > 0){
         <td class="align-icon">
-            @for(accion of acciones; track $index){
-              @switch(accion){
-                @case(accionesEnum.VER){
-                <i class="bi bi-eye color-icon-eye"></i>
-                }
-                @case(accionesEnum.EDITAR){
-                <i class="bi bi-pencil color-icon-edit"></i>
-                }
-                @case(accionesEnum.ELIMINAR){
-                <i class="bi bi-trash color-icon-trash"></i>
-                }
-                @case(accionesEnum.DESCARGAR){
-                <i class="bi bi-download color-icon-download"></i>
-                }
-                }
-            }
+          @if(acciones.length > 0){ @for(accion of acciones; track $index){
+          @switch(accion){ @case(accionesEnum.VER){
+          <i
+            class="bi bi-eye color-icon-eye"
+            (click)="alternarValor.emit({ row: fila, column: 'VER' })"
+            style="cursor: pointer"
+          ></i>
+          } @case(accionesEnum.EDITAR){
+          <i
+            class="bi bi-pencil color-icon-edit"
+            (click)="alternarValor.emit({ row: fila, column: 'EDITAR' })"
+            style="cursor: pointer"
+          ></i>
+          } @case(accionesEnum.ELIMINAR){
+          <i
+            class="bi bi-trash color-icon-trash"
+            (click)="alternarValor.emit({ row: fila, column: 'ELIMINAR' })"
+            style="cursor: pointer"
+          ></i>
+          } @case(accionesEnum.DESCARGAR){
+          <i
+            class="bi bi-download color-icon-download"
+            (click)="alternarValor.emit({ row: fila, column: 'DESCARGAR' })"
+            style="cursor: pointer"
+          ></i>
+          } } } }
         </td>
-           }
+        }
       </tr>
     </tbody>
   </table>
 </div>
+ 

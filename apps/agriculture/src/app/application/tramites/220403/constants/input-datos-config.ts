@@ -1,3 +1,8 @@
+/**
+ * @desc Configuración de los campos para la sección "Trámite a realizar".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_TRAMITE_REALIZAR = [
     {
         labelNombre: 'Tipo de Certificado',
@@ -6,9 +11,10 @@ export const DATOS_TRAMITE_REALIZAR = [
         radioOptions: [],
         radioSelectedValue: '',
         jsonDataFileName: 'tipo-certificado.json',
+        value: 'animal',
     },
     {
-        labelNombre: 'Aduana de salida/lugar de embarque:',
+        labelNombre: 'Aduana de salida/lugar de embarque',
         campo: 'aduanaEmbarque',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -19,26 +25,24 @@ export const DATOS_TRAMITE_REALIZAR = [
         campo: 'numeroContenedor',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'París origen:',
+        labelNombre: 'París origen',
         campo: 'parisOrigen',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Entidad federativa de origen:',
+        labelNombre: 'Entidad federativa de origen',
         campo: 'entidadFederativaOrigen',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Municipio de origen:',
+        labelNombre: 'Municipio de origen',
         campo: 'municipioOrigen',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -49,12 +53,15 @@ export const DATOS_TRAMITE_REALIZAR = [
         campo: 'paisDestino',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Combinación requerida".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_COMBINACION_REQUERIDA = [
     {
         labelNombre: 'Especie:',
@@ -64,7 +71,7 @@ export const DATOS_COMBINACION_REQUERIDA = [
         catalogos: [],
     },
     {
-        labelNombre: 'País de destino:',
+        labelNombre: 'País de destino',
         campo: 'paisDeDestino',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -77,8 +84,17 @@ export const DATOS_COMBINACION_REQUERIDA = [
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
+    {
+        labelNombre: 'Consultar',
+        required: true,
+    }
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Transporte".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_TRANSPORTE = [
     {
         labelNombre: 'Medio de transporte:',
@@ -92,8 +108,6 @@ export const DATOS_TRANSPORTE = [
         campo: 'identificacionMedioTransporte',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
@@ -101,8 +115,6 @@ export const DATOS_TRANSPORTE = [
         campo: 'numeroDeContenedor',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
@@ -110,8 +122,6 @@ export const DATOS_TRANSPORTE = [
         campo: 'denominacionRazonSocial',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
@@ -119,20 +129,21 @@ export const DATOS_TRANSPORTE = [
         campo: 'numeroFlejes',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
 ];
 
+/**
+ * @desc Configuración de los campos para la sección "Pago de derechos".
+ * @since 2024-06
+ * @author Equipo Agricultura
+ */
 export const DATOS_PAGO_DERECHOS = [
     {
         labelNombre: 'Clave de referencia:',
         campo: 'claveReferencia',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
@@ -140,8 +151,6 @@ export const DATOS_PAGO_DERECHOS = [
         campo: 'cadenaDependencia',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
@@ -156,12 +165,10 @@ export const DATOS_PAGO_DERECHOS = [
         campo: 'llavePago',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Fecha de pago:',
+        labelNombre: 'Fecha de pago',
         campo: 'fechaPago',
         required: true,
         habilitado: true,
@@ -171,8 +178,6 @@ export const DATOS_PAGO_DERECHOS = [
         campo: 'importePago',
         class: 'col-md-12',
         tipo_input: 'text',
-        disabled: true,
-        validators: ['required'],
         placeholder: '',
     },
 ];

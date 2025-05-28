@@ -18,6 +18,7 @@ import {
 import {
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
+  TableBodyData,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Subject,Subscription, map, merge, takeUntil } from 'rxjs';
@@ -99,7 +100,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [{ tbodyData: [] }];
 
   /**
    * Datos de la tabla de mercancías.
