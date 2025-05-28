@@ -36,7 +36,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Formulario de la solicitud.
    */
-  formSolicitud!: FormGroup;
+ public formSolicitud!: FormGroup;
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -51,13 +51,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Constante para configurar el input de fecha.
    */
-  INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+ public INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  esFormularioSoloLectura: boolean = false;
+ public esFormularioSoloLectura: boolean = false;
 
  
   /**
@@ -86,7 +86,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()

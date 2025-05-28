@@ -64,7 +64,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor de la clase `DatosSolicitudComponent`.
@@ -97,7 +97,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
       })
     )
     .subscribe()
@@ -168,13 +167,13 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Grupo de formularios principal.
    * @property {FormGroup} forma
    */
-  forma!: FormGroup;
+ public forma!: FormGroup;
 
   /**
    * Indica si la sección es colapsable.
    * @property {boolean} colapsable
    */
-  colapsable: boolean = true;
+ public colapsable: boolean = true;
 
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.

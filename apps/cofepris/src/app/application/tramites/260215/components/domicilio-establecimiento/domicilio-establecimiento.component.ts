@@ -93,12 +93,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false;
+ public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constante para el mensaje de alerta.
    */
-  INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+ public INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
   /**
    * Constructor del componente.
    * @param fb
@@ -140,7 +140,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState)=>{
             this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
           })
         )
         .subscribe()
@@ -244,32 +243,32 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Grupo de formularios principal.
    * @property {FormGroup} domicilio
    */
-  domicilio!: FormGroup;
+ public domicilio!: FormGroup;
 
   /**
    * Grupo de formularios para el agente aduanal.
    */
-  formAgente!: FormGroup;
+ public formAgente!: FormGroup;
 
   /**
    * Grupo de formularios para las mercancias.
    */
-  formMercancias!: FormGroup;
+public formMercancias!: FormGroup;
 
   /**
    * Control de formulario para la aduanasDeEntradaFecha.
    */
-  aduanasDeEntradaFecha: FormControl = new FormControl('');
+ public aduanasDeEntradaFecha: FormControl = new FormControl('');
 
   /**
    * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
    */
-  aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+ public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
 
   /**
    * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
    */
-  estado: Catalogo[] = [];
+ public estado: Catalogo[] = [];
 
   /**
    * Lista de paises.
@@ -279,70 +278,70 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Tabla de selección de checkbox.
    */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+ public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Tabla de selección de radio.
    */
-  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+ public nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
    * Datos de la tabla de selección de radio.
    */
-  nicoTablaDatos: NicoInfo[] = [];
+ public nicoTablaDatos: NicoInfo[] = [];
 
   /**
    * Tabla de selección de checkbox.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+ public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
    * Datos de la tabla de selección de checkbox.
    */
-  mercanciasTablaDatos: MercanciasInfo[] = [];
+ public mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
    * Lista de aduanas de entrada seleccionadas.
    */
-  aduanasDeEntradaSeleccionadas: string[] = [];
+ public aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
    * Lista de aduanas de entrada seleccionadas.
    */
-  aduanasDeEntradaDatos: string[] = [];
+ public aduanasDeEntradaDatos: string[] = [];
 
   /**
    * Indica si la sección es colapsable.
    * @property {boolean} colapsable
    */
-  colapsable: boolean = false;
+ public colapsable: boolean = false;
 
   /**
    * Indica si la sección es colapsableDuos.
    * @property {boolean} colapsableDuos
    */
-  colapsableDuos: boolean = false;
+public colapsableDuos: boolean = false;
 
   /**
    * Indica si la sección es colapsableTres.
    * @property {boolean} colapsableTres
    */
-  colapsableTres: boolean = false;
+ public colapsableTres: boolean = false;
 
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
-  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+ public seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
 
   /**
    * Lista de rangos de días seleccionarOrigenDelPaisDuos.
    */
-  seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
+ public seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
 
   /**
    * Lista de rangos de días seleccionarOrigenDelPaisTres.
    */
-  seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+ public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
 
   /**
    * Etiqueta de la lista de fechas.

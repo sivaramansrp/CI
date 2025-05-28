@@ -58,14 +58,15 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Estas opciones se utilizan para definir los posibles estados o tipos de cumplimiento
    * dentro del componente de manifiestos y declaraciones.
    */
-  cumplimientoOptions = CumplimientoOptions;
+ public cumplimientoOptions = CumplimientoOptions;
 
   
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false;
+ public esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb
@@ -90,7 +91,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
             takeUntil(this.destroyNotifier$),
             map((seccionState)=>{
               this.esFormularioSoloLectura = seccionState.readonly; 
-              this.inicializarEstadoFormulario();
             })
           )
           .subscribe()
@@ -153,7 +153,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Grupo de formularios principal.
    * @property {FormGroup} manifiestos
    */
-  manifiestos!: FormGroup;
+public manifiestos!: FormGroup;
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se inicializa.

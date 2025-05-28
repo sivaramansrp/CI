@@ -39,7 +39,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  esFormularioSoloLectura: boolean = false;
+ public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -58,7 +58,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -126,7 +125,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Grupo de formularios principal.
    * @property {FormGroup} representante
    */
-  representante!: FormGroup;
+ public representante!: FormGroup;
 
   /**
    * Inicializa el componente.
