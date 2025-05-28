@@ -144,7 +144,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   * Constructor de la clase.
   * @param fb - Instancia de FormBuilder para construir formularios reactivos.
   */
-  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private tramite120602Store: Tramite120602Store,
     private tramite120602Query: Tramite120602Query,
