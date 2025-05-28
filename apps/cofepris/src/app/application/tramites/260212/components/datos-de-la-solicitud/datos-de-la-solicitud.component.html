@@ -122,7 +122,7 @@
         <h5 class="fs-4">S.C.I.A.N.*</h5>
         <div class="table-responsive">
           <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
-            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX">
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
 
@@ -140,7 +140,7 @@
         <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
 
         <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData"
-          [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED">
+          [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
 
         <div class="d-flex justify-content-end">
