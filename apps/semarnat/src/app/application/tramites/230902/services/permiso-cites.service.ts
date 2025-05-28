@@ -179,12 +179,19 @@ export class PermisoCitesService {
     this.Tramite230902Store.setIsPopupClose(DATOS.popupCerrado);
     this.Tramite230902Store.setMercanciaTablaDatos(DATOS.mercanciaTablaDatos);
   }
-
+  
   /**
    * Obtiene los datos de registro de toma de muestras y mercancías desde un archivo JSON.
    * {Observable<Solicitud230902State>} Observable con los datos de la solicitud.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud230902State> {
     return this.http.get<Solicitud230902State>('assets/json/230902/registro_toma_muestras_mercancias.json');
+  }
+ /**
+   * Obtiene los datos del documentos seleccionados.
+   * @returns Observable con los datos del documentos seleccionados.
+   */
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/202/documentos-seleccionados.json');
   }
 }
