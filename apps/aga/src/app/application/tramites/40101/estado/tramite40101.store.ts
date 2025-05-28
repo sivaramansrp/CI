@@ -114,7 +114,33 @@ export class Tramite40101Store extends Store<Tramite40101State> {
       formaValida,
     }));
   }
+  public setNombre(nombre: string) {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+  public setPrimerApellido(primerApellido: string) {
+    this.update((state) => ({
+      ...state,
+      primerApellido,
+    }));
+  }
   
+  /**
+   * Establece el segundo apellido en el estado.
+   * @param segundoApellido El segundo apellido a establecer.
+   */
+  public setSegundoApellido(segundoApellido: string) {
+    this.update((state) => ({
+      ...state,
+      segundoApellido,
+    }));
+  } 
+
+  /**
+   * Resetea el estado del store a su estado inicial.
+   */
   public clearChoferes() {
     this.reset();
   }

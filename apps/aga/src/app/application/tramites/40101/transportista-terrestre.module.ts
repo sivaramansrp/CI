@@ -35,10 +35,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
-    VehiculosComponent,
     PasoTresComponent,
-    DirectorGeneralComponent,
     SolicitanteComponent,
+    DirectorGeneralComponent,
+    ChoferesComponent,
+    VehiculosComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +61,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
-    ChoferesComponent,
   ],
   exports: [PasoUnoComponent, PasoTresComponent, BtnContinuarComponent],
   providers: [

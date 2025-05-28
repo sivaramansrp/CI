@@ -34,14 +34,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-choferes',
   templateUrl: './choferes.component.html',
-  styleUrls: ['./choferes.component.scss'],
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    SharedModule,
-    CatalogoSelectComponent,
-  ],
+  styleUrls: ['./choferes.component.scss']
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
   solicitudTituloChoferExtranjero: string =

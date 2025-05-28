@@ -4,12 +4,21 @@ import {
   ElementRef,
   Input,
   OnDestroy,
+  OnInit,
   ViewChild,
 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import {
+  DatosDelVehículo,
+  DatosDelVehículoPaisEmisor,
+  Emisor2daPlaca,
+  VehiculoColor,
+  VehiculoVEHs,
+} from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReplaySubject, map } from 'rxjs';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
-import { ReplaySubject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { Tramite40101Service } from '../../estado/tramite40101.service';
@@ -17,20 +26,13 @@ import { Tramite40101Store } from '../../estado/tramite40101.store';
 import { VEHICULO_PAGE } from '../enum/transportista-terrestre.enum';
 import { takeUntil } from 'rxjs';
 
-import {
-  DatosDelVehículo,
-  DatosDelVehículoPaisEmisor,
-  Emisor2daPlaca,
-  PaisCatalogo,
-  VehiculoColor,
-  VehiculoVEHs,
-} from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
 })
-export class VehiculosComponent implements AfterViewInit, OnDestroy {
+export class VehiculosComponent implements AfterViewInit, OnDestroy, OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
@@ -92,6 +94,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   botonLimpiar: string = VEHICULO_PAGE.BOTON_LIMPIAR;
   botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
   botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
+  consultaState!: ConsultaioState;
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -114,7 +117,8 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     private toastr: ToastrService,
     private tramite40101Store: Tramite40101Store,
     private tramite40101Service: Tramite40101Service,
-    private tramite40101Query: Tramite40101Query
+    private tramite40101Query: Tramite40101Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -223,6 +227,19 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     this.anioVehiculoveh();
     this.solicitudVehiculoColor();
     this.solicitudVehiculoPaisEmisor2daPlaca();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$), 
+      map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+
+    if (this.consultaState.update) {
+      // this.guardarDatosFormulario();
+    } else {
+      // this.esDatosRespuesta = true;
+    }
   }
   /**
    * Maneja el envío del formulario.
