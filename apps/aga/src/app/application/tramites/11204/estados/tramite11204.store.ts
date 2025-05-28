@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { DatosDelContenedor } from '../models/datos-tramite.model';
 
 /**
  * Interfaz que representa el estado de la solicitud 11204.
@@ -24,7 +25,7 @@ export interface Solicitud11204State {
   /**
    * Datos del contenedor.
    */
-  datosDelContenedor: [];
+  datosDelContenedor: DatosDelContenedor[];
   
   /**
    * Datos del contenedor.
@@ -77,11 +78,6 @@ export interface Solicitud11204State {
   aduanaMenuDesplegable: string;
 
   /**
-   * Fecha de ingreso.
-   */
-  fechaDeIngreso: string;
-
-  /**
    * Archivo seleccionado.
    */
   archivoSeleccionado: string;
@@ -107,7 +103,6 @@ export function createInitialState(): Solicitud11204State {
     fechaIngreso: '',
     vigencia: '',
     aduanaMenuDesplegable: '',
-    fechaDeIngreso: '',
     archivoSeleccionado: ''
   };
 }
@@ -132,17 +127,6 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
     this.update((state) => ({
       ...state,
       aduanaMenuDesplegable,
-    }));
-  }
-
-  /**
-   * Establece la fecha de ingreso.
-   * @param fechaDeIngreso Fecha de ingreso.
-   */
-  public setFechaDeIngreso(fechaDeIngreso: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaDeIngreso,
     }));
   }
 
@@ -183,7 +167,7 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
    * Establece los datos del contenedor.
    * @param datosDelContenedor Datos del contenedor.
    */
-  public setDelContenedor(datosDelContenedor: []): void {
+  public setDelContenedor(datosDelContenedor: DatosDelContenedor[]): void {
     this.update((state) => ({
       ...state,
       datosDelContenedor,

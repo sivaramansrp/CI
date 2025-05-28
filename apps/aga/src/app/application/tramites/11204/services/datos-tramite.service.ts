@@ -1,4 +1,4 @@
-import { RespuestaAduanas } from "../models/datos-tramite.model";
+import { RespuestaAduanas, RespuestaConsulta } from "../models/datos-tramite.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -52,6 +52,18 @@ export class DatosTramiteService {
    */
   getDatosTableData(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11204/datosTabla.json`);
+  }
+
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta_11201.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/11201/consultaDatos.json`);
   }
 
 }

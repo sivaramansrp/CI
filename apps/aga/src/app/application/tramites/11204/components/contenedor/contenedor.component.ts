@@ -14,7 +14,7 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
 
 /**
@@ -207,6 +207,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false; 
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb Constructor de formularios.
    * @param datosTramiteService Servicio de datos del trámite.
@@ -224,22 +237,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarFormulario();
-      })
-    )
-    .subscribe();
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
@@ -266,6 +263,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
               ...seccionState,
             };
           }
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
         })
       )
       .subscribe();
@@ -304,6 +310,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
     });
     this.mostrarCampos();
+    if (this.soloLectura) {
+      this.solicitudForm?.disable();
+    }
   }
 
   onChange(controlName: string, event: any): void {

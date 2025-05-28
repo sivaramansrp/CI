@@ -200,3 +200,22 @@ export interface RespuestaAduanas {
    */
   message: string;
 }
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  tipoBusqueda: string;
+  aduana: string;
+  fechaIngreso: string;
+  vigencia: string;
+  inicialesContenedor: string;
+  numeroContenedor: string;
+  digitoDeControl: string;
+  contenedores: string;
+  aduanaMenuDesplegable: string;
+  datosDelContenedor: DatosDelContenedor[];
+}
