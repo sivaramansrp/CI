@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid px-0">
   <ng-titulo titulo="Datos de la solicitud" />
   <form [formGroup]="formSolicitud">
     <div class="row">
@@ -38,7 +38,7 @@
       <div class="col-md-6">
         <label for="mercancia">Mercancía*:</label>
       </div>
-      <div class="table-container">
+      <div class="container table-container">
         <app-tabla-dinamica
         [configuracionTabla]="configuracionTabla"
         [datos]="tablaDatos"
@@ -52,7 +52,7 @@
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
       </nav>
-      <div class="row" style="padding-bottom: 20px; text-align: right">
+      <div class="row pb-4 text-end">
         <div>
           <button type="button" class="btn btn-default me-2" [disabled]="!enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
           <button type="button" class="btn btn-danger me-2" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>

@@ -1,538 +1,81 @@
-import { CommonModule } from '@angular/common';
-import { ComponentFixture } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
-import { PasoDosComponent } from './paso-dos.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { TestBed } from '@angular/core/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
+import { PasoDosComponent } from './paso-dos.component';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CatalogosService,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { of } from 'rxjs';
-import { throwError } from 'rxjs';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let renovacionesService: jest.Mocked<RenovacionesMuestrasMercanciasService>;
-  let toastrService: jest.Mocked<ToastrService>;
+  let fixture: any;
+  let mockCatalogosService: jest.Mocked<CatalogosService>;
+  let mockRenovacionesService: jest.Mocked<RenovacionesMuestrasMercanciasService>;
 
   beforeEach(async () => {
-    renovacionesService = {
-      obtenerOpcionesDesplegables: jest.fn(),
-    } as unknown as jest.Mocked<RenovacionesMuestrasMercanciasService>;
+    mockCatalogosService = {
+      getCatalogo: jest.fn(() => of([])),
+    } as any;
 
-    toastrService = {
-      error: jest.fn(),
-      success: jest.fn(),
-    } as unknown as jest.Mocked<ToastrService>;
+    mockRenovacionesService = {} as any;
 
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
       imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        ToastrModule.forRoot(),
+        PasoDosComponent,
+        TituloComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+        HttpClientTestingModule
       ],
       providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
+        { provide: CatalogosService, useValue: mockCatalogosService },
         {
           provide: RenovacionesMuestrasMercanciasService,
-          useValue: renovacionesService,
+          useValue: mockRenovacionesService,
         },
-        { provide: ToastrService, useValue: toastrService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerDatosIniciales on ngOnInit', () => {
-    jest.spyOn(component, 'obtenerDatosIniciales');
+  it('should have TEXTOS property set', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
+  });
+
+  it('should call getTiposDocumentos on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    expect(component.obtenerDatosIniciales).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should set tableData correctly when obtenerDatosIniciales succeeds', () => {
-    const MOCKRESPONSE = {
-      importadorExportadorPrevio: {
-        labelNombre:
-          '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      fraccionArancelariaAga: {
-        labelNombre: 'fracción arancelaria',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01022901',
-            id: 1,
-          },
-          {
-            descripcion: '01022902',
-            id: 2,
-          },
-        ],
-      },
-      nico: {
-        labelNombre: 'Nico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01',
-            id: 1,
-          },
-          {
-            descripcion: '02',
-            id: 2,
-          },
-        ],
-      },
-      ideGenerica: {
-        labelNombre: 'Estado físico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Gaseoso',
-            id: 1,
-          },
-        ],
-      },
-      tomaMuestraDespacho: {
-        labelNombre:
-          '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      requisitosObligatoriosTabla: {
-        tableHeader: [],
-        tableBody: [
-          {
-            tbodyData: ['Hoja de Seguridad'],
-          },
-          {
-            tbodyData: [
-              'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-            ],
-          },
-          {
-            tbodyData: ['Pago de Derechos'],
-          },
-        ],
-      },
-      tablaDeTarifasDePago: {
-        tableHeader: ['Linea de captura', 'Monto'],
-        tableBody: [
-          {
-            tbodyData: ['032000Q0GHM1284', '50000'],
-          },
-        ],
-      },
-    };
-
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      of(MOCKRESPONSE)
+  it('should set catalogoDocumentos when getTiposDocumentos receives data', () => {
+    const mockCatalogo = [{ id: 1, descripcion: 'Doc1' }];
+    mockCatalogosService.getCatalogo.mockReturnValue(of(mockCatalogo));
+    component.getTiposDocumentos();
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
     );
+    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
+  });
 
-    component.obtenerDatosIniciales();
-    fixture.detectChanges();
-
-    expect(component.tableData.tableHeader).toEqual(['Header 1']);
-    expect(component.tableData.tableBody).toEqual([
-      { tbodyData: ['Hoja de Seguridad'] },
-      {
-        tbodyData: [
-          'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-        ],
-      },
+  it('should not set catalogoDocumentos when getTiposDocumentos receives empty array', () => {
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' }];
+    mockCatalogosService.getCatalogo.mockReturnValue(of([]));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual([
+      { id: 1, descripcion: 'Doc1' },
     ]);
-  });
-
-  it('should show an error message when obtenerDatosIniciales fails', () => {
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      throwError(() => new Error('Error fetching data'))
-    );
-
-    component.obtenerDatosIniciales();
-
-    expect(toastrService.error).toHaveBeenCalledWith(
-      'Error al obtener datos iniciales',
-      'Error'
-    );
-  });
-
-  it('should correctly handle empty response from obtenerOpcionesDesplegables', () => {
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      of({
-        importadorExportadorPrevio: {
-          labelNombre:
-            '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Sí',
-              id: 1,
-            },
-            {
-              descripcion: 'No',
-              id: 0,
-            },
-          ],
-        },
-        fraccionArancelariaAga: {
-          labelNombre: 'fracción arancelaria',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: '01022901',
-              id: 1,
-            },
-            {
-              descripcion: '01022902',
-              id: 2,
-            },
-          ],
-        },
-        nico: {
-          labelNombre: 'Nico',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: '01',
-              id: 1,
-            },
-            {
-              descripcion: '02',
-              id: 2,
-            },
-          ],
-        },
-        ideGenerica: {
-          labelNombre: 'Estado físico',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Gaseoso',
-              id: 1,
-            },
-          ],
-        },
-        tomaMuestraDespacho: {
-          labelNombre:
-            '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Sí',
-              id: 1,
-            },
-            {
-              descripcion: 'No',
-              id: 0,
-            },
-          ],
-        },
-        requisitosObligatoriosTabla: {
-          tableHeader: [],
-          tableBody: [
-            {
-              tbodyData: ['Hoja de Seguridad'],
-            },
-            {
-              tbodyData: [
-                'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-              ],
-            },
-            {
-              tbodyData: ['Pago de Derechos'],
-            },
-          ],
-        },
-        tablaDeTarifasDePago: {
-          tableHeader: ['Linea de captura', 'Monto'],
-          tableBody: [
-            {
-              tbodyData: ['032000Q0GHM1284', '50000'],
-            },
-          ],
-        },
-      })
-    );
-
-    component.obtenerDatosIniciales();
-
-    expect(component.tableData.tableHeader).toEqual([]);
-    expect(component.tableData.tableBody).toEqual([]);
-  });
-
-  it('should correctly handle undefined response from obtenerOpcionesDesplegables', () => {
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      of(undefined as unknown as ImportanteCatalogoSeleccion)
-    );
-    component.obtenerDatosIniciales();
-
-    expect(component.tableData.tableHeader).toEqual([]);
-    expect(component.tableData.tableBody).toEqual([]);
-  });
-
-  it('should handle an error with an invalid response format', () => {
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      of({
-        importadorExportadorPrevio: {
-          labelNombre:
-            '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Sí',
-              id: 1,
-            },
-            {
-              descripcion: 'No',
-              id: 0,
-            },
-          ],
-        },
-        fraccionArancelariaAga: {
-          labelNombre: 'fracción arancelaria',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: '01022901',
-              id: 1,
-            },
-            {
-              descripcion: '01022902',
-              id: 2,
-            },
-          ],
-        },
-        nico: {
-          labelNombre: 'Nico',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: '01',
-              id: 1,
-            },
-            {
-              descripcion: '02',
-              id: 2,
-            },
-          ],
-        },
-        ideGenerica: {
-          labelNombre: 'Estado físico',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Gaseoso',
-              id: 1,
-            },
-          ],
-        },
-        tomaMuestraDespacho: {
-          labelNombre:
-            '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              descripcion: 'Sí',
-              id: 1,
-            },
-            {
-              descripcion: 'No',
-              id: 0,
-            },
-          ],
-        },
-        requisitosObligatoriosTabla: {
-          tableHeader: [],
-          tableBody: [
-            {
-              tbodyData: ['Hoja de Seguridad'],
-            },
-            {
-              tbodyData: [
-                'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-              ],
-            },
-            {
-              tbodyData: ['Pago de Derechos'],
-            },
-          ],
-        },
-        tablaDeTarifasDePago: {
-          tableHeader: ['Linea de captura', 'Monto'],
-          tableBody: [
-            {
-              tbodyData: ['032000Q0GHM1284', '50000'],
-            },
-          ],
-        },
-      } as ImportanteCatalogoSeleccion)
-    );
-
-    component.obtenerDatosIniciales();
-
-    expect(toastrService.error).toHaveBeenCalledWith(
-      'Error al obtener datos iniciales',
-      'Error'
-    );
-  });
-
-  it('should correctly handle a service returning an empty tableBody array', () => {
-    const MOCKRESPONSE: ImportanteCatalogoSeleccion = {
-      importadorExportadorPrevio: {
-        labelNombre:
-          '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      fraccionArancelariaAga: {
-        labelNombre: 'fracción arancelaria',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01022901',
-            id: 1,
-          },
-          {
-            descripcion: '01022902',
-            id: 2,
-          },
-        ],
-      },
-      nico: {
-        labelNombre: 'Nico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01',
-            id: 1,
-          },
-          {
-            descripcion: '02',
-            id: 2,
-          },
-        ],
-      },
-      ideGenerica: {
-        labelNombre: 'Estado físico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Gaseoso',
-            id: 1,
-          },
-        ],
-      },
-      tomaMuestraDespacho: {
-        labelNombre:
-          '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      requisitosObligatoriosTabla: {
-        tableHeader: [],
-        tableBody: [
-          {
-            tbodyData: ['Hoja de Seguridad'],
-          },
-          {
-            tbodyData: [
-              'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-            ],
-          },
-          {
-            tbodyData: ['Pago de Derechos'],
-          },
-        ],
-      },
-      tablaDeTarifasDePago: {
-        tableHeader: ['Linea de captura', 'Monto'],
-        tableBody: [
-          {
-            tbodyData: ['032000Q0GHM1284', '50000'],
-          },
-        ],
-      },
-    };
-
-    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
-      of(MOCKRESPONSE)
-    );
-
-    component.obtenerDatosIniciales();
-
-    expect(component.tableData.tableHeader).toEqual(['Header 1']);
-    expect(component.tableData.tableBody).toEqual([]);
   });
 });
