@@ -1,9 +1,9 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Notificacion, REGEX_CONTIENE_MAYUSCULA, REGEX_CONTIENE_MINUSCULA, REGEX_CONTIENE_NUMERO_O_OSIMBOLO, REGEX_SIN_ESPACIOS } from '@libs/shared/data-access-user/src';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
-import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PasswordService } from '../../core/service/password.service';
 import { Router } from '@angular/router';
 
@@ -104,11 +104,7 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
       return null;
     }
     const LONGITUDVALIDA = VALUE.length >= 8 && VALUE.length <= 64;
-    const CONTIENEMAYUSCULA = /[A-Z]/.test(VALUE);
-    const CONTIENEMINUSCULA = /[a-z]/.test(VALUE);
-    const CONTIENENUMEROOOSIMBOLO = /[@#$%|°!&/()=?¿+*"']/.test(VALUE);
-    const SINESPACIOS = !/\s/.test(VALUE);
-    const ESVALIDA = LONGITUDVALIDA && CONTIENEMAYUSCULA && CONTIENEMINUSCULA && CONTIENENUMEROOOSIMBOLO && SINESPACIOS;
+    const ESVALIDA = LONGITUDVALIDA && REGEX_CONTIENE_MAYUSCULA.test(VALUE) && REGEX_CONTIENE_MINUSCULA.test(VALUE) && REGEX_CONTIENE_NUMERO_O_OSIMBOLO.test(VALUE) && !REGEX_SIN_ESPACIOS.test(VALUE);
     return ESVALIDA ? null : { contrasenaInvalida: true };
   }
 
