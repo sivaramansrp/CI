@@ -47,6 +47,10 @@ import { TituloComponent } from '../titulo/titulo.component';
 })
 export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   @Input({ required: true }) tabindex!: number;
+  /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * @param esFormularioSoloLectura Si es `true`, el formulario se presenta únicamente para visualización y no permite edición. Si es `false`, el formulario es editable.
+   */
   @Input({ required: false }) esFormularioSoloLectura: boolean = false;
   /**
    * @desc Lista de personas asociadas como terceros.
