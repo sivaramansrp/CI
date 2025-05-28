@@ -34,7 +34,15 @@ export interface DestinoFinal {
   entidadFederativa: string;
   estadoLocalidad: string;
   codigoPostal: string;
+  tipoPersona?: string;
+  denominacionRazon?: string;
+  nombres?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  estado?: string;
+  tableindex?: number;
 }
+
 
 /**
  * Constante que define la configuración de columnas para la tabla de destinatarios finales.
@@ -128,6 +136,7 @@ export interface Proveedor {
   entidadFederativa: string;
   estadoLocalidad: string;
   codigoPostal: string;
+  tableIndex?: number;
 }
 
 /**
