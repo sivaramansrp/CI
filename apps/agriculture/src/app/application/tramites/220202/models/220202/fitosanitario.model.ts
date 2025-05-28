@@ -233,18 +233,6 @@ function getDefaultValue(value: string | undefined, defaultValue: string): strin
 }
 
 /**
- * @function getMercanciasDefault
- * @description Función auxiliar específicamente para la propiedad `mercancias`.
- * 
- * @param {Mercancia[]} value - El valor a verificar para `mercancias`.
- * @param {Mercancia[]} defaultValue - El valor por defecto (array vacío) para `mercancias` si `value` no es un array.
- * @returns {Mercancia[]} - El array de `mercancias` o un array vacío si el valor no es un array.
- */
-function getMercanciasDefault(value: Mercancia[], defaultValue: Mercancia[]): Mercancia[] {
-    return Array.isArray(value) ? value : defaultValue;
-}
-
-/**
  * @function finalEnviar
  * @description Función auxiliar para la propiedad `finalEnviar`.
  * 

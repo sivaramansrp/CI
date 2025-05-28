@@ -137,7 +137,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     // Se suscribe a los cambios de estado del formulario para actualizar su validez
     this.forma.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((changes) => {
+      .subscribe((_changes) => {
         const FORMA_VALIDA_ACTUALIZADA = {
           movilizacionValidacion: false,
         };
@@ -202,7 +202,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @param {string} campo - El nombre del campo cuyo valor se actualizará en el servicio.
    * @returns {void}
    */
-  setValoresStore(form?: FormGroup, campo?: string): void {
+  setValoresStore( _forma?: FormGroup, _campo?: string): void {
     const VALOR = this.forma.value;
     this.agriculturaApiService.updateMovilizacion(VALOR);
   }

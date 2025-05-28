@@ -149,7 +149,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {string} nuevo_valor - Nueva fecha a establecer.
    * @returns {void}
    */
-  cambioFechaInicio(nuevo_valor: string) {
+  cambioFechaInicio(nuevo_valor: string): void {
     this.pagoForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.pagoForm.get('fechaDePago')?.markAsUntouched();
   }
@@ -227,7 +227,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerDetallesDeListaDeOpciones
    * @returns {void}
    */
-  obtenerDetallesDeListaDeOpciones() {
+  obtenerDetallesDeListaDeOpciones(): void {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
   }
@@ -250,7 +250,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerBancoSelectorList
    * @returns {void}
    */
-  obtenerBancoSelectorList() {
+  obtenerBancoSelectorList(): void {
     this.agriculturaApiService.obtenerSelectorList('banco.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -266,7 +266,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerListaDeJustificaciones
    * @returns {void}
    */
-  obtenerListaDeJustificaciones() {
+  obtenerListaDeJustificaciones(): void {
     this.agriculturaApiService.obtenerSelectorList('Justificación.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -284,7 +284,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {string} name - El nombre del control del formulario a actualizar.
    * @returns {void}
    */
-  seleccionarListDatas(e: Catalogo, name: string) {
+  seleccionarListDatas(e: Catalogo, name: string): void {
     this.pagoForm.patchValue({
       [name]: e.id
     });
@@ -307,7 +307,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setValoresStore(
-    form?: FormGroup,
+    _form?: FormGroup,
     campo?: string,
 
   ): void {

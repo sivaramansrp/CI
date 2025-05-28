@@ -156,7 +156,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * @type {FilaSolicitud[]}
  */
   cuerpoTabla: FilaSolicitud[] = [];
-  private destroyNotifier$ = new Subject<void>();
+  public destroyNotifier$ = new Subject<void>();
 
   esFormularioSoloLectura: boolean = true; 
 
@@ -167,9 +167,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
    */
   constructor(
-    private readonly fb: FormBuilder,
-    private readonly agriculturaApiService: AgriculturaApiService,
-    private consultaioQuery: ConsultaioQuery,
+    public fb: FormBuilder,
+    public agriculturaApiService: AgriculturaApiService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
     this.agriculturaApiService.getAllDatosForma()
     .pipe(takeUntil(this.destroyNotifier$))
@@ -197,7 +197,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-   this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
+   this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
     const FORMA_VALIDA_ACTUALIZADA = {
       datosFormaValidacion: false,
     };
@@ -219,51 +219,51 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
  * Método para crear el formulario y sus campos iniciales.
  */
-  createFromFields() {
+  createFromFields():void {
     this.forma = this.fb.group(this.inicializarCamposFormulario());
   }
   /**
    * Método que inicializa los campos del formulario.
    * @returns Un objeto con los campos del formulario.
    */
-  inicializarCamposFormulario() {
+  inicializarCamposFormulario(): Record<string, unknown> {
     return {
       ...this.crearCamposRequeridos(),
       ...this.crearCamposOpcionales(),
     };
   }
 
-  /**
+/**
  * Método para crear campos requeridos del formulario.
  * @param FORMULARIO Datos de formulariodataStore.
  * @returns Objeto con los campos requeridos.
  */
-  crearCamposRequeridos() {
+  crearCamposRequeridos(): Record<string, unknown> {
     const FORMULARIO = this.formulariodataStore;
     return {
-    aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-    numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
-    tipoDeRequisito: [{ value: FORMULARIO.tipoDeRequisito || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    fraccionArancelaria: [{ value: FORMULARIO.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    nico: [{ value: FORMULARIO.nico || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    cantidadUMT: [{ value: FORMULARIO.cantidadUMT || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    umt: [{ value: FORMULARIO.umt || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    cantidadUMC: [{ value: FORMULARIO.cantidadUMC || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    umc: [{ value: FORMULARIO.umc || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    uso: [{ value: FORMULARIO.uso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-    tipoDeProducto: [{ value: FORMULARIO.tipoDeProducto || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
+      numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
+      tipoDeRequisito: [{ value: FORMULARIO.tipoDeRequisito || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      fraccionArancelaria: [{ value: FORMULARIO.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      nico: [{ value: FORMULARIO.nico || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      cantidadUMT: [{ value: FORMULARIO.cantidadUMT || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      umt: [{ value: FORMULARIO.umt || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      cantidadUMC: [{ value: FORMULARIO.cantidadUMC || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      umc: [{ value: FORMULARIO.umc || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      uso: [{ value: FORMULARIO.uso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      tipoDeProducto: [{ value: FORMULARIO.tipoDeProducto || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+    };
   }
-    }
   /**
    * Método para crear campos opcionales del formulario.
    * @param FORMULARIO Datos de formulariodataStore.
    * @returns Objeto con los campos opcionales.
    */
-   crearCamposOpcionales() {
+   crearCamposOpcionales(): Record<string, unknown> {
      const FORMULARIO = this.formulariodataStore;
      return {
        numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
@@ -284,7 +284,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerTodosLosDatosDeLaLista
    * @returns {void}
    */
-  obtenerTodosLosDatosDeLaLista() {
+  obtenerTodosLosDatosDeLaLista(): void {
     this.getaduanaLista();
     this.getagropecuariaLista();
     this.getPuntoLista();
@@ -301,7 +301,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method mostrar_colapsable
    * @returns {void}
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -310,7 +310,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getaduanaLista
    * @returns {void}
    */
-  getaduanaLista() {
+  getaduanaLista():void {
     this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.aduanaList = data as Catalogo[];
     })
@@ -321,7 +321,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getagropecuariaLista
    * @returns {void}
    */
-  getagropecuariaLista() {
+  getagropecuariaLista(): void {
     this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.agropecuariaList = data as Catalogo[];
     })
@@ -332,7 +332,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getPuntoLista
    * @returns {void}
    */
-  getPuntoLista() {
+  getPuntoLista(): void {
     this.agriculturaApiService.obtenerSelectorList('punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.puntoList = data as Catalogo[];
     })
@@ -343,7 +343,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getRegimenLista
    * @returns {void}
    */
-  getRegimenLista() {
+  getRegimenLista(): void {
     this.agriculturaApiService.obtenerSelectorList('regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.regimeList = data as Catalogo[];
     })
@@ -354,7 +354,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getArancelariaLista
    * @returns {void}
    */
-  getArancelariaLista() {
+  getArancelariaLista(): void {
     this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.arancelariaList = data as Catalogo[];
     })
@@ -365,7 +365,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getNicoLista
    * @returns {void}
    */
-  getNicoLista() {
+  getNicoLista():void {
     this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.nicoList = data as Catalogo[];
     })
@@ -376,7 +376,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getUmCLista
    * @returns {void}
    */
-  getUmCLista() {
+  getUmCLista(): void {
     this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.umcList = data as Catalogo[];
     })
@@ -387,7 +387,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getusoLista
    * @returns {void}
    */
-  getusoLista() {
+  getusoLista(): void {
     this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.usoList = data as Catalogo[];
     });
@@ -398,7 +398,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getProductoLista
    * @returns {void}
    */
-  getProductoLista() {
+  getProductoLista(): void {
     this.agriculturaApiService.obtenerSelectorList('nombre.json')
       .pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
         this.productoList = data as Catalogo[];
@@ -408,12 +408,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Actualiza los datos almacenados en el store.
    * @method setValoresStore
-   * @param {FormGroup} form - El formulario a obtener los valores.
-   * @param {string} campo - El nombre del campo del formulario a obtener.
    */
   setValoresStore(
-    form?: FormGroup,
-    campo?: string
+    _forma?: FormGroup,
+    _campo?: string
   ): void {
     const VALOR = this.forma.value;
     (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(VALOR);
