@@ -18,16 +18,31 @@ export class SolicitudService {
     // Lógica de inicialización si es necesario
   }
 
+  /**
+   * Actualiza el estado del formulario de cancelaciones en el store correspondiente.
+   * 
+   * Este método toma un objeto `CancelacionesState` con los datos del formulario y actualiza
+   * los valores en el store de cancelaciones utilizando los métodos setters apropiados.
+   * Solo actualiza los campos de entidad federativa, colonia, localidad y municipio si están presentes.
+   * 
+   * @param DATOS - Objeto que contiene el estado actual del formulario de cancelaciones.
+   */
   actualizarEstadoFormulario(DATOS: CancelacionesState): void {
+    // Actualiza el municipio o alcaldía en el store solo si el dato está presente en el objeto DATOS.
     if (DATOS.entidadFederativa) {
       this.cancelacionesStore.setEntidadFed(DATOS.entidadFederativa);
     }
+    // Actualiza el municipio o alcaldía en el store solo si el dato está presente en el objeto DATOS.
     if (DATOS.colonia) {
       this.cancelacionesStore.setColonia(DATOS.colonia);
     }
+
+    // Actualiza el municipio o alcaldía en el store solo si el dato está presente en el objeto DATOS.
     if (DATOS.localidad) {
       this.cancelacionesStore.setLocalidad(DATOS.localidad);
     }
+
+    // Actualiza el municipio o alcaldía en el store solo si el dato está presente en el objeto DATOS.
     if (DATOS.municipio) {
       this.cancelacionesStore.setMunicipiosAlcaldia(DATOS.municipio);
     }
@@ -47,6 +62,12 @@ export class SolicitudService {
     this.cancelacionesStore.setCorreoSolicitanteIPC(DATOS.correoSolicitanteIPC);
   }
 
+  /**
+   * Obtiene los datos del estado de cancelaciones para el registro de toma de muestras de mercancías.
+   * Realiza una solicitud HTTP GET para recuperar la información desde un archivo JSON local.
+   *
+   * @returns Un observable que emite el estado de cancelaciones (`CancelacionesState`).
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<CancelacionesState> {
     return this.http.get<CancelacionesState>('assets/json/140201/actualizar-datos-estado.json');
   }

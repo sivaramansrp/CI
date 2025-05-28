@@ -44,42 +44,42 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false; 
   
   /**
    * Formulario reactivo para la cancelación de autorizaciones.
    */
-  cancelacionForm!: FormGroup;
+  public cancelacionForm!: FormGroup;
 
   /**
    * Variable para alternar la visibilidad del contenido.
    */
-  mostrarContenido = false;
+  public mostrarContenido = false;
 
   /**
    * Observable para el RFC ingresado.
    */
-  rfcIngresado$ = this.cancelacionesQuery.rfcIngresado$;
+  public rfcIngresado$ = this.cancelacionesQuery.rfcIngresado$;
 
   /**
    * Observable para el motivo de cancelación.
    */
-  motivoCancelacion$ = this.cancelacionesQuery.motivoCancelacion$;
+  public motivoCancelacion$ = this.cancelacionesQuery.motivoCancelacion$;
 
   /**
    * Configuración de las columnas de la tabla.
    */
-  configuracionTabla:ConfiguracionColumna<CancelacionDeAutorizaciones>[] = CANCELACION_DE_AUTORIZACIONES;
+  public configuracionTabla:ConfiguracionColumna<CancelacionDeAutorizaciones>[] = CANCELACION_DE_AUTORIZACIONES;
 
   /**
    * Referencia al componente de selección de tabla.
    */
-  TablaSeleccion = TablaSeleccion;
+  public TablaSeleccion = TablaSeleccion;
 
   /**
    * Datos de cancelación de autorizaciones.
    */
-  cancelacionData: CancelacionDeAutorizaciones[] = [];
+  public cancelacionData: CancelacionDeAutorizaciones[] = [];
 
    /**
    * @ignore
@@ -139,9 +139,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
         this.cancelacionForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.cancelacionForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
 
   /**
