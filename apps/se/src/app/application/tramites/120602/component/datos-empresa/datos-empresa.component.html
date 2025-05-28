@@ -94,6 +94,13 @@
           id="descripcion"
           class="form-control"
           formControlName="descripcion"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'descripcion',
+              'setDescripcion'
+            )
+          "
         ></textarea>
       </div>
     </div>
@@ -110,6 +117,13 @@
           id="País"
           class="form-control"
           formControlName="pais"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'pais',
+              'setPais'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -119,6 +133,13 @@
           id="Código postal"
           class="form-control"
           formControlName="codigoPostal"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'codigoPostal',
+              'setCodigoPostal'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -128,6 +149,13 @@
           id="Estado"
           class="form-control"
           formControlName="estado"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'estado',
+              'setEstadoDomicilio'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -137,6 +165,13 @@
           id="alcaldía:"
           class="form-control"
           formControlName="municipioAlcaldia"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'municipioAlcaldia',
+              'setMunicipioAlcaldia'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -146,6 +181,13 @@
           id="Localidad"
           class="form-control"
           formControlName="localidad"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'localidad',
+              'setLocalidad'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -155,6 +197,13 @@
           id="Colonia"
           class="form-control"
           formControlName="colonia"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'colonia',
+              'setColonia'
+            )
+          "
         />
       </div>
       <div class="col-md-8">
@@ -164,6 +213,13 @@
           id="Calle"
           class="form-control"
           formControlName="calle"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'calle',
+              'setCalle'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -173,6 +229,13 @@
           id="exterior"
           class="form-control"
           formControlName="numeroExterior"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'numeroExterior',
+              'setNumeroExterior'
+            )
+          "
         />
       </div>
       <div class="col-md-4">
@@ -182,6 +245,13 @@
           id="interior"
           class="form-control"
           formControlName="numeroInterior"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'numeroInterior',
+              'setNumeroInterior'
+            )
+          "
         />
       </div>
       <div class="col-md-2">
@@ -191,6 +261,13 @@
           id="Lada"
           class="form-control"
           formControlName="lada"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'lada',
+              'setLada'
+            )
+          "
         />
       </div>
       <div class="col-md-3">
@@ -200,6 +277,13 @@
           id="Teléfono"
           class="form-control"
           formControlName="telefono"
+          (change)="
+            setValoresStore(
+              formularioEmpresa,
+              'telefono',
+              'setTelefono'
+            )
+          "
         />
       </div>
     </div>

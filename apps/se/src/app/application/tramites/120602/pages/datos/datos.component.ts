@@ -78,7 +78,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-          this.consultaState = seccionState;
+        this.consultaState = seccionState;
       })
     ).subscribe();
     if(this.consultaState.update) {
