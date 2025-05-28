@@ -103,8 +103,8 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
     if (!VALUE) {
       return null;
     }
-    const LONGITUDVALIDA = VALUE.length >= 8 && VALUE.length <= 64;
-    const ES_VALIDA = LONGITUDVALIDA && REGEX_CONTIENE_MAYUSCULA.test(VALUE) && REGEX_CONTIENE_MINUSCULA.test(VALUE) && REGEX_CONTIENE_NUMERO_O_OSIMBOLO.test(VALUE) && !REGEX_SIN_ESPACIOS.test(VALUE);
+    const LONGITUD_VALIDA = VALUE.length >= 8 && VALUE.length <= 64;
+    const ES_VALIDA = LONGITUD_VALIDA && REGEX_CONTIENE_MAYUSCULA.test(VALUE) && REGEX_CONTIENE_MINUSCULA.test(VALUE) && REGEX_CONTIENE_NUMERO_O_OSIMBOLO.test(VALUE) && !REGEX_SIN_ESPACIOS.test(VALUE);
     return ES_VALIDA ? null : { contrasenaInvalida: true };
   }
 
