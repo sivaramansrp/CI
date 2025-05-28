@@ -116,7 +116,7 @@ export class PasoUnoComponent implements AfterViewInit {
    * que el usuario ha decidido cancelar la operación.
    */
   cancelar(): void {
-    this.indice = 1; // Optional: reset to first tab
-    this.cancelarEvento.emit(); // Notify parent page
+    this.indice = 1;
+    this.cancelarEvento.emit();
   }
 }

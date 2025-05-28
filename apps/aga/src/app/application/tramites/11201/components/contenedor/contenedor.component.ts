@@ -1,5 +1,5 @@
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -38,6 +38,7 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
+import { ENCABEZADO_TABLA_CONTENEDOR, HEADER_MAP_DATOS } from '../../enum/solicitante.enum';
 
 
 /**
@@ -247,75 +248,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   etiquetaDeArchivo: string = 'Sin archivo seleccionados';
 
+  /**
+   * Indica si el archivo seleccionado no es de tipo CSV.
+   * 
+   * Esta variable se utiliza para validar el tipo de archivo cargado por el usuario.
+   * Si es `true`, significa que el archivo no cumple con el formato CSV requerido.
+   */
   archivoNoEsCSV: boolean = false;
 
   /**
    * Configuración de las columnas de la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    {
-      encabezado: 'Iniciales del equipo',
-      clave: (artículo) => artículo.inicialesEquipo,
-      orden: 1,
-    },
-    {
-      encabezado: 'Número de equipo',
-      clave: (artículo) => artículo.numeroEquipo,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dígito Verificador',
-      clave: (artículo) => artículo.digitoVerificador,
-      orden: 3,
-    },
-    {
-      encabezado: 'Tipo de equipo',
-      clave: (artículo) => artículo.tipoEquipo,
-      orden: 4,
-    },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    {
-      encabezado: 'Fecha Ingreso',
-      clave: (artículo) => artículo.fechaIngreso,
-      orden: 6,
-    },
-    {
-      encabezado: 'Vigencia',
-      clave: (artículo) => artículo.vigencia,
-      orden: 7,
-    },
-    {
-      encabezado: 'Estado de constancia',
-      clave: (artículo) => artículo.estadoConstancia,
-      orden: 8,
-    },
-    {
-      encabezado: 'Existe en VUCEM',
-      clave: (artículo) => artículo.existeEnVUCEM,
-      orden: 9,
-    },
-    {
-      encabezado: 'Id constancia',
-      clave: (artículo) => artículo.idConstancia,
-      orden: 10,
-    },
-    {
-      encabezado: 'Número manifiesto',
-      clave: (artículo) => artículo.numeroManifiesto,
-      orden: 11,
-    },
-    {
-      encabezado: 'Id solicitud',
-      clave: (artículo) => artículo.idSolicitud,
-      orden: 12,
-    },
-    {
-      encabezado: 'Fecha inicio',
-      clave: (artículo) => artículo.fechaInicio,
-      orden: 13,
-    },
-  ];
+  public encabezadoDeTabla = ENCABEZADO_TABLA_CONTENEDOR;
 
   /**
    * Referencia a la clase o enumeración `TablaSeleccion`.
@@ -430,7 +374,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(10),
-          Validators.pattern('^[a-zA-Z0-9]+$'),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         ],
       ],
       numeroContenedor: [
@@ -438,12 +382,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(15),
-          Validators.pattern('^[a-zA-Z0-9]+$'),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         ],
       ],
       digitoDeControl: [
         this.solicitud11201State?.digitoDeControl,
-        [Validators.maxLength(1), Validators.pattern('^[0-9]$')],
+        [Validators.maxLength(1), Validators.pattern(REGEX_SOLO_NÚMERO)],
       ],
       contenedores: [
         this.solicitud11201State?.contenedores,
@@ -730,22 +674,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   analizarGramaticalmenteCSV(csv: string): void {
     const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
-    const HEADER_MAP: { [key: string]: string } = {
-      Id: 'id',
-      Aduana: 'aduana',
-      'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo': 'tipoEquipo',
-      'Número de equipo': 'numeroEquipo',
-      'Dígito Verificador': 'digitoVerificador',
-      'Fecha Ingreso': 'fechaIngreso',
-      Vigencia: 'vigencia',
-      'Estado de constancia': 'estadoConstancia',
-      'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia',
-      'Número manifiesto': 'numeroManifiesto',
-      'Id solicitud': 'idSolicitud',
-      'Fecha inicio': 'fechaInicio',
-    };
+    const HEADER_MAP = HEADER_MAP_DATOS;
     const DATA = LINES.slice(1)
       .map((line) => {
         const VALUES = line.split(',');
@@ -756,7 +685,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         });
         return OBJ;
       })
-      .filter((artículo) => Object.values(artículo).some((valor) => valor));
+      .filter((articulo) => Object.values(articulo).some((valor) => valor));
     this.datosTabla = DATA;
   }
 
@@ -1019,24 +948,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Determina si una opción de radio debe estar deshabilitada según el valor seleccionado en el formulario.
-   *
-   * @param option - La opción de radio a evaluar.
-   * @returns `true` si la opción debe estar deshabilitada, `false` en caso contrario.
-   */
-  isRadioDisabled(option: string): boolean {
-    const value = this.solicitudForm.get('tipoBusqueda')?.value;
-    return value && value !== option;
-  }
-
-  /**
    * Cancela la operación actual.
    * 
    * Este método restablece el formulario de solicitud a su estado inicial
    * y emite un evento para notificar al componente padre que la acción de cancelar ha sido solicitada.
    */
   cancelar(): void {
-    this.solicitudForm.reset(); // Reset the form
-    this.cancelarEvento.emit(); // Notify parent
+    this.solicitudForm.reset();
+    this.cancelarEvento.emit();
   }
 }
