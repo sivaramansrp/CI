@@ -425,6 +425,38 @@ export interface Solicitud31601State {
      * El valor de nombreReprestante.
      */
     nombreReprestante: string;
+    /**
+     * El valor de apellidoPaterno.
+     */
+    apellidoPaterno: string;
+    /**
+     * El valor de apellidoMaterno.
+     */
+    apellidoMaterno: string;
+    /**
+     * El valor de cuidad.
+     */
+    cuidad: string;
+    /**
+     * El valor de cargo.
+     */
+    cargo: string;
+    /**
+     * El valor de telefonoReprestantante.
+     */
+    telefonoReprestantante: string;
+    /**
+     * El valor de correoReprestantante.
+     */
+    correoReprestantante: string;
+    /**
+     * El valor de suplente.
+     */
+    suplente: string;
+    /**
+     * El valor de tipoDocumento.
+     */
+    tipoDocumento: string;
     
 }
 /**
@@ -858,6 +890,44 @@ export function createInitialState(): Solicitud31601State {
          * El valor de nombreReprestante.
          */
         nombreReprestante: '',
+        /**
+         * El valor de apellidoPaterno.
+         */
+        apellidoPaterno: '',
+
+        /**
+         * El valor de apellidoMaterno.
+         */
+        apellidoMaterno: '',
+
+        /**
+         * El valor de cuidad.
+         */
+        cuidad: '',
+
+        /**
+         * El valor de cargo.
+         */
+        cargo: '',
+
+        /**
+         * El valor de telefonoReprestantante.
+         */
+        telefonoReprestantante: '',
+
+        /**
+         * El valor de correoReprestantante.
+         */
+        correoReprestantante: '',
+
+        /**
+         * El valor de suplente.
+         */
+        suplente: '',
+        /**
+         * El valor de tipoDocumento.
+         */
+        tipoDocumento: '',
     };
 }
 
@@ -1823,6 +1893,92 @@ public setNombreReprestante(nombreReprestante: string) {
     this.update((state) => ({
         ...state,
         nombreReprestante,
+    }));
+}
+/**
+ * Establece el estado de apellidoPaterno.
+ * @param apellidoPaterno - El valor de apellidoPaterno.
+ */
+public setApellidoPaterno(apellidoPaterno: string) {
+    this.update((state) => ({
+        ...state,
+        apellidoPaterno,
+    }));
+}
+
+/**
+ * Establece el estado de apellidoMaterno.
+ * @param apellidoMaterno - El valor de apellidoMaterno.
+ */
+public setApellidoMaterno(apellidoMaterno: string) {
+    this.update((state) => ({
+        ...state,
+        apellidoMaterno,
+    }));
+}
+
+/**
+ * Establece el estado de cuidad.
+ * @param cuidad - El valor de cuidad.
+ */
+public setCuidad(cuidad: string) {
+    this.update((state) => ({
+        ...state,
+        cuidad,
+    }));
+}
+
+/**
+ * Establece el estado de cargo.
+ * @param cargo - El valor de cargo.
+ */
+public setCargo(cargo: string) {
+    this.update((state) => ({
+        ...state,
+        cargo,
+    }));
+}
+
+/**
+ * Establece el estado de telefonoReprestantante.
+ * @param telefonoReprestantante - El valor de telefonoReprestantante.
+ */
+public setTelefonoReprestantante(telefonoReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        telefonoReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de correoReprestantante.
+ * @param correoReprestantante - El valor de correoReprestantante.
+ */
+public setCorreoReprestantante(correoReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        correoReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de suplente.
+ * @param suplente - El valor de suplente.
+ */
+public setSuplente(suplente: string) {
+    this.update((state) => ({
+        ...state,
+        suplente,
+    }));
+}
+/**
+ * Establece el estado de tipoDocumento.
+ * @param tipoDocumento - El valor de tipoDocumento.
+ */
+public setTipoDocumento(tipoDocumento: string) {
+    this.update((state) => ({
+        ...state,
+        tipoDocumento,
     }));
 }
 } 

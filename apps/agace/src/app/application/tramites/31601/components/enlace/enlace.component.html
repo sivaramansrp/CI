@@ -102,6 +102,7 @@
                     id="apellidoPaterno"
                     formControlName="apellidoPaterno"
                     type="text"
+                    (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
                   />
                 </div>
               </div>
@@ -115,6 +116,7 @@
                     id="apellidoMaterno"
                     formControlName="apellidoMaterno"
                     type="text"
+                    (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
                   />
                 </div>
               </div>
@@ -130,6 +132,7 @@
                     id="cuidad"
                     formControlName="cuidad"
                     type="text"
+                    (change)="setValoresStore(represtantante,'cuidad', 'setCuidad')"
                   />
                 </div>
               </div>
@@ -141,6 +144,7 @@
                     id="cargo"
                     formControlName="cargo"
                     type="text"
+                    (change)="setValoresStore(represtantante,'cargo', 'setCargo')"
                   />
                 </div>
               </div>
@@ -148,25 +152,27 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="telefono">Teléfono:</label>
+                  <label class="form-label" for="telefonoReprestantante">Teléfono:</label>
                   <input
                     class="form-control"
-                    id="telefono"
-                    formControlName="telefono"
+                    id="telefonoReprestantante"
+                    formControlName="telefonoReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'telefonoReprestantante', 'setTelefonoReprestantante')"
                   />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="correo"
+                  <label class="form-label" for="correoReprestantante"
                     >Correo Electrónico:</label
                   >
                   <input
                     class="form-control"
-                    id="correo"
-                    formControlName="correo"
+                    id="correoReprestantante"
+                    formControlName="correoReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'correoReprestantante', 'setCorreoReprestantante')"
                   />
                 </div>
               </div>
@@ -180,6 +186,7 @@
                       value=""
                       id="suplente"
                       formControlName="suplente"
+                      (change)="setValoresStore(represtantante,'suplente', 'setSuplente')"
                     />
                   </div>
                 </div>

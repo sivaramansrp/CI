@@ -8,17 +8,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CATALOGOS_ID, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { Tipos } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { map, Subscription } from 'rxjs';
+import { map, Subscription,Subject, takeUntil } from 'rxjs';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+
 
 /**
  * Componente `RequisitosComponent`.
@@ -57,10 +60,13 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
     TituloComponent, // Componente para mostrar el título
     TableComponent, // Componente para mostrar tablas
     CatalogoSelectComponent,
+    ReactiveFormsModule, // Módulo para trabajar con formularios reactivos
     TablaDinamicaComponent, // Componente para seleccionar de un catálogo
   ],
 })
 export class RequisitosComponent implements OnInit, OnDestroy {
+  requisitos!: FormGroup; // Formulario reactivo para manejar los requisitos
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
    * Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
@@ -108,6 +114,8 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    */
   public tipocatlog: Catalogo[] = [];
 
+  public solicitudState!: Solicitud31601State;
+
   /**
    * Datos que definen la estructura de la tabla de tipos de documentos.
    */
@@ -135,7 +143,10 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    */
   constructor(
     public http: HttpClient,
-    private pantallaSvc: ServiciosPantallaService
+    private pantallaSvc: ServiciosPantallaService,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query,
+    private fb: FormBuilder
   ) {}
 
   /**
@@ -143,6 +154,17 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * Se encarga de cargar los tipos de documentos desde el archivo JSON.
    */
   ngOnInit(): void {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
+      this.requisitos = this.fb.group({
+        tipoDocumento:[this.solicitudState?.tipoDocumento,Validators.required]
+      })
     this.loadTipos(); // Carga los tipos de documento al inicializar el componente
   }
 
@@ -188,6 +210,16 @@ export class RequisitosComponent implements OnInit, OnDestroy {
     // Suscribe al observable para que la asignación de los datos se ejecute
     this.tiposCatalogSubscription = tiposcatalog$.subscribe();
   }
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 
   /**
    * Método que se ejecuta cuando el componente se destruye.
@@ -195,6 +227,8 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     // Desuscribirse cuando el componente se destruya
     if (this.tiposCatalogSubscription) {
       this.tiposCatalogSubscription.unsubscribe();

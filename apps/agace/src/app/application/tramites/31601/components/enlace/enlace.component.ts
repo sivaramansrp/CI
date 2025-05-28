@@ -113,16 +113,16 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    */
   public getRegistroForm() {
     this.represtantante = this.fb.group({
-      resigtroReprestantante: ['', Validators.required],
-      rfcReprestantante: ['', Validators.required],
-      nombreReprestante: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
-      cargo: ['', Validators.required],
-      cuidad: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correo: ['', Validators.required],
-      suplente: ['', Validators.required],
+      resigtroReprestantante: [this.solicitudState?.resigtroReprestantante ? this.solicitudState?.resigtroReprestantante : this.representativeData.resigtro, Validators.required],
+      rfcReprestantante: [this.solicitudState?.rfcReprestantante ? this.solicitudState?.rfcReprestantante : this.representativeData.rfc, Validators.required],
+      nombreReprestante: [this.solicitudState?.nombreReprestante ? this.solicitudState?.nombreReprestante : this.representativeData.nombre, Validators.required],
+      apellidoPaterno: [this.solicitudState?.apellidoPaterno ? this.solicitudState?.apellidoPaterno : this.representativeData.apellidoPaterno, Validators.required],
+      apellidoMaterno: [this.solicitudState?.apellidoMaterno ? this.solicitudState?.apellidoMaterno : this.representativeData.apellidoMaterno, Validators.required],
+      cargo: [this.solicitudState?.cargo ? this.solicitudState?.cargo : this.representativeData.cargo, Validators.required],
+      cuidad: [this.solicitudState?.cuidad ? this.solicitudState?.cuidad : this.representativeData.cuidad, Validators.required],
+      telefonoReprestantante: [this.solicitudState?.telefonoReprestantante ? this.solicitudState?.telefonoReprestantante : this.representativeData.telefono, Validators.required],
+      correoReprestantante: [this.solicitudState?.correoReprestantante ? this.solicitudState?.correoReprestantante : this.representativeData.correo, Validators.required],
+      suplente: [this.solicitudState?.suplente, Validators.required],
     });
 
     // Rellena el formulario con los datos del representante
@@ -133,19 +133,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Método que parchea los datos en el formulario, cargando la información del representante.
    */
   public patchData() {
-    // Se insertan los valores en los campos del formulario
-    this.represtantante.patchValue({
-      resigtro: this.representativeData.resigtro,
-      rfc: this.representativeData.rfc,
-      nombre: this.representativeData.nombre,
-      apellidoPaterno: this.representativeData.apellidoPaterno,
-      apellidoMaterno: this.representativeData.apellidoMaterno,
-      cuidad: this.representativeData.cuidad,
-      cargo: this.representativeData.cargo,
-      telefono: this.representativeData.telefono,
-      correo: this.representativeData.correo,
-    });
-
+    
     // Deshabilita los campos que no deben ser modificados
     this.represtantante.get('rfc')?.disable();
     this.represtantante.get('nombre')?.disable();
