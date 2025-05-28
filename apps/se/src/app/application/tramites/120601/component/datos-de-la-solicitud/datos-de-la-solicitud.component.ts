@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
@@ -34,20 +34,48 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public tipoDeEmpresa!: Catalogo[];
 
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   *
+   * @type {boolean}
+   * @memberof RegistroParaLaComponent
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+   /**
+   * Suscripción a los cambios en el formulario reactivo.
+   *
+   * @type {Subscription}
+   * @memberof RegistroParaLaComponent
+   */
+  private subscription: Subscription = new Subscription();
 
   /**
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private service: DatosEmpresaService) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private service: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,) {
     // Initialization logic can be added here if needed
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
    * Inicializa el componente.
    */
   ngOnInit(): void {
+
     this.crearFormulario();
     this.getTipoDeEmpresa();
 
@@ -58,6 +86,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         tipoDeEmpresa: data
       })
     });
+
+    this.query.selectActividadEconomicaClave$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
+      this.solicitudForm.patchValue({
+        actividadEconomicaClave: data
+      });
+    });
+
+
+    if(this.esFormularioSoloLectura) {
+      this.solicitudForm.get('tipoDeEmpresa')?.disable();
+        this.solicitudForm.get('actividadEconomicaClave')?.disable();
+    }else{
+      this.solicitudForm.get('tipoDeEmpresa')?.enable();
+        this.solicitudForm.get('actividadEconomicaClave')?.enable();
+    }
   }
 
   /**

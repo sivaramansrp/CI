@@ -73,7 +73,7 @@
                 formControlName="cadenaDependencia"
                 type="text"
                 libUppercase
-                (change)="enCambioCadenaDependencia()"
+                (change)="enCambioCadenaDependencia()"         
               />
             </div>
           </div>
@@ -84,7 +84,7 @@
             <div class="col-md-6 col-sm-6"></div>
             <div class="col-md-6 col-sm-6 text-end">
               <div class="btn-group">
-                <button class="btn btn-primary ms-2 d-flex" type="button">
+                <button class="btn btn-primary ms-2 d-flex" type="button" [disabled]="esFormularioSoloLectura">
                   Agregar
                 </button>
               </div>
@@ -98,6 +98,7 @@
           [configuracionTabla]="configuracionTabla"
           [tipoSeleccionTabla]="tablaCasilla"
           [datos]="datosSocios"
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
   
         <div class="row">
@@ -105,7 +106,7 @@
             <div class="col-md-6 col-sm-6"></div>
             <div class="col-md-6 col-sm-6 text-end">
               <div class="btn-group">
-                <button class="btn btn-primary ms-2 d-flex" type="button">
+                <button class="btn btn-primary ms-2 d-flex" type="button" [disabled]="esFormularioSoloLectura">
                   Eliminar
                 </button>
               </div>
@@ -119,6 +120,7 @@
           [configuracionTabla]="configuracionTabla_Extranjeros"
           [tipoSeleccionTabla]="tablaCasilla"
           [datos]="datosExtranjeros"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
 
         <form [formGroup]="formularioParaConteoTotal">
@@ -140,7 +142,7 @@
             <div class="col-md-6 col-sm-6"></div>
             <div class="col-md-6 col-sm-6 text-end">
               <div class="btn-group">
-                <button class="btn btn-primary ms-2 d-flex" type="button">
+                <button class="btn btn-primary ms-2 d-flex" type="button" [disabled]="esFormularioSoloLectura">
                   Eliminar
                 </button>
               </div>

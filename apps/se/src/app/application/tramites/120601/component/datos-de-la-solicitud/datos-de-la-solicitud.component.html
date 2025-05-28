@@ -4,6 +4,7 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tipoDeEmpresa" [label]="'Tipo de empresa'"
+                    [isDisabled]="esFormularioSoloLectura"
                     name="tipoDeEmpresa" formControlName="tipoDeEmpresa" (change)="docSeleccionado($event)" [required]="true">
                 </app-catalogo-select>
             </div>
@@ -36,7 +37,7 @@
                       id="actividadEconomicaClave"
                       formControlName="actividadEconomicaClave"
                       readonly
-                      placeholder="1122"
+                      placeholder="1122"                  
                     />
                   </div>
             </div>
