@@ -6,6 +6,7 @@ import {
   FETCHA_PAGO,
   FETCHA_SALIDA,
   MANIFIESTOS_DECLARACIONES,
+  OCULTAR_BOTONES,
   OCULTAR_PERMISO_GENERAL,
   PAISE_DENTINO_EITIQUETA,
   PERIODO_DOS_SEMESTRE,
@@ -36,6 +37,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
 import {
   DatosDelTramiteFormState,
   FECHA_DE_PAGO,
@@ -54,6 +56,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -85,6 +88,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
+
+    /**
+  * Indica si el elemento está ocultarBotones o visible.
+  *
+  * @type {boolean}
+  * - `true`: El elemento está ocultarBotones.
+  * - `false`: El elemento está visible.
+  */
+   public ocultarBotones = false;
 
   /**
    * Indica si el elemento está oculto o visible.
@@ -294,6 +306,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
  * Permite personalizar las columnas que se mostrarán en la tabla.
  */
   @Input() configuracionTabla: ConfiguracionColumna<MercanciaDetalle>[] = [];
+      /**
+     * Lista de mercancias seleccionados en la tabla.
+     * Contiene objetos del tipo `MercanciaDetalle`.
+     *
+     * @type {MercanciaDetalle[]}
+     */
+    mercanciaTablaSeleccionada: MercanciaDetalle[] = [];
+    /**
+     * Emite un evento cuando se modifican los datos del mercancia.
+     * El evento contiene un objeto de tipo `MercanciaDetalle`.
+     *
+     * @type {EventEmitter<MercanciaDetalle>}
+     */
+    @Output() modificarMercanciasDatos: EventEmitter<MercanciaDetalle> = new EventEmitter<MercanciaDetalle>(true);
+    /**
+     * @output eliminarMercanciaFinalEvent - Evento que emite cuando se elimina un destinatario final.
+     * Este EventEmitter emite una instancia de `MercanciaDetalle`.
+     */
+    @Output() eliminarMercanciaFinalEvent: EventEmitter<MercanciaDetalle> = new EventEmitter<MercanciaDetalle>(true);
 
   /**
    * Configuración utilizada para construir la tabla dinámica de mercancías.
@@ -305,7 +336,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     datos: MercanciaDetalle[];
   } = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: [],
+    configuracionTabla: MERCANCIA_ENCABEZADO_DE_TABLA,
     datos: [],
   };
 
@@ -342,8 +373,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router // eslint-disable-next-line no-empty-function
-  ) { }
+    private router: Router,
+  ) { 
+    // Constructor vacío, se puede agregar lógica adicional si es necesario.
+  }
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
@@ -351,7 +384,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   crearFormaulario(): void {
     this.form = this.fb.group({
-      permisoGeneral: ['', Validators.required],
+      permisoGeneral: ['', [Validators.required, Validators.maxLength(22), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       paisDestino: [
         { value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true },
       ],
@@ -364,9 +397,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState?.fechaSalida || '',
         Validators.required,
       ],
-      unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null],
-      dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null],
-      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
+      unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null, Validators.required],
+      dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null, Validators.required],
+      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false ],
       informacionConfidencial: [
         this.datosDelTramiteFormState.informacionConfidencial ?? false,
       ],
@@ -412,6 +445,58 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * @method onPermisoGeneralInput
+ * @description
+ * Maneja el evento de entrada del campo "permisoGeneral" para asegurar que solo se permitan caracteres numéricos
+ * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
+ * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
+ * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
+ *
+ * @param {Event} event - El evento de entrada generado por el campo de texto.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  onPermisoGeneralInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    this.form.get('permisoGeneral')?.setValue(INPUT.value, { emitEvent: false });
+  }
+
+
+    /**
+     * @method
+     * @description
+     * Modifica el destinatario seleccionado en la tabla de mercancías. 
+     * Si hay una sola fila seleccionada, emite el evento para modificar los datos de la mercancía,
+     * actualiza la configuración de edición en el store y navega a la pantalla de agregar datos de mercancía.
+     * Si no hay filas seleccionadas o hay más de una, muestra un error en la consola.
+     *
+     * @returns {void}
+     *
+     * @memberof DatosDelTramiteComponent
+     */
+    modificarDestinatario(): void {
+       if (this.mercanciaTablaSeleccionada.length > 0) {
+        this.modificarMercanciasDatos.emit(this.mercanciaTablaSeleccionada[0]);
+      } else {
+        console.error('No row selected for modification.');
+      }
+    }
+    
+    /**
+     * Elimina el destinatario final seleccionado y emite un evento con el destinatario eliminado.
+     * 
+     * @command Eliminar destinatario final seleccionado.
+     */
+    eliminarDestinatarioFinal():void{
+      
+      if (this.mercanciaTablaSeleccionada.length > 0) {
+        this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0]);
+      } else {
+        console.error('No row selected for deletion.');
+      }
+    }
+  /**
    * Inicializa el formulario con los valores actuales del estado del trámite
    * y escucha los cambios para emitir actualizaciones.
    * @method ngOnInit
@@ -424,6 +509,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.mercanciaTablaConfiguracion.configuracionTabla = MERCANCIA_ENCABEZADO_DE_TABLA;      
     }
     this.esJustificacion = PERMISO_JUSTIFICACION.includes(this.idProcedimiento);
+    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
     this.ocultarPermisoGeneral = OCULTAR_PERMISO_GENERAL.includes(
       this.idProcedimiento
     );
@@ -545,7 +631,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       dosSemestre: event,
     });
   }
-
+  
   /**
    * @method ngOnDestroy
    * @description Hook de destrucción del componente. Libera las suscripciones activas.

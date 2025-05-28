@@ -1,139 +1,45 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpTestingController } from '@angular/common/http/testing';
-import { RenovacionesMuestrasMercanciasService } from './renovaciones-muestras-mercancias.service';
 import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+import { RenovacionesMuestrasMercanciasService } from './renovaciones-muestras-mercancias.service';
+import { of } from 'rxjs';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-fdescribe('RenovacionesMuestrasMercanciasService', () => {
+describe('RenovacionesMuestrasMercanciasService', () => {
   let service: RenovacionesMuestrasMercanciasService;
-  let httpMock: HttpTestingController;
+  let httpClientMock: jest.Mocked<HttpClient>;
 
   beforeEach(() => {
+    const mockHttpClient = {
+      get: jest.fn()
+    } as unknown as jest.Mocked<HttpClient>;
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [RenovacionesMuestrasMercanciasService],
+      providers: [
+        RenovacionesMuestrasMercanciasService,
+        { provide: HttpClient, useValue: mockHttpClient }
+      ]
     });
-    service = TestBed.inject(RenovacionesMuestrasMercanciasService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
 
-  afterEach(() => {
-    httpMock.verify();
+    service = TestBed.inject(RenovacionesMuestrasMercanciasService);
+    httpClientMock = TestBed.inject(HttpClient) as jest.Mocked<HttpClient>;
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch dropdown options', () => {
-    const dummyOptions: ImportanteCatalogoSeleccion = {
-      importadorExportadorPrevio: {
-        labelNombre:
-          '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      fraccionArancelariaAga: {
-        labelNombre: 'fracción arancelaria',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01022901',
-            id: 1,
-          },
-          {
-            descripcion: '01022902',
-            id: 2,
-          },
-        ],
-      },
-      nico: {
-        labelNombre: 'Nico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: '01',
-            id: 1,
-          },
-          {
-            descripcion: '02',
-            id: 2,
-          },
-        ],
-      },
-      ideGenerica: {
-        labelNombre: 'Estado físico',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Gaseoso',
-            id: 1,
-          },
-        ],
-      },
-      tomaMuestraDespacho: {
-        labelNombre:
-          '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-        required: true,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: [
-          {
-            descripcion: 'Sí',
-            id: 1,
-          },
-          {
-            descripcion: 'No',
-            id: 0,
-          },
-        ],
-      },
-      requisitosObligatoriosTabla: {
-        tableHeader: [],
-        tableBody: [
-          {
-            tbodyData: ['Hoja de Seguridad'],
-          },
-          {
-            tbodyData: [
-              'Opinión positiva sobre el cumplimiento de las obligaciones tributarias.',
-            ],
-          },
-          {
-            tbodyData: ['Pago de Derechos'],
-          },
-        ],
-      },
-      tablaDeTarifasDePago: {
-        tableHeader: ['Linea de captura', 'Monto'],
-        tableBody: [
-          {
-            tbodyData: ['032000Q0GHM1284', '50000'],
-          },
-        ],
-      },
-    };
+  it('obtenerOpcionesDesplegables should call HttpClient.get with correct URL and return expected data', (done) => {
+    const mockResponse: ImportanteCatalogoSeleccion = {} as ImportanteCatalogoSeleccion;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.obtenerOpcionesDesplegables().subscribe((options) => {
-      expect(options).toEqual(dummyOptions);
+    service.obtenerOpcionesDesplegables().subscribe(result => {
+      expect(result).toEqual(mockResponse);
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        '../../../../../assets/json/30901/registro-muestras-mercancias.json'
+      );
+      done();
     });
-
-    const req = httpMock.expectOne(
-      '../../../../../assets/json/30901/registro-muestras-mercancias.json'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(dummyOptions);
   });
 });
