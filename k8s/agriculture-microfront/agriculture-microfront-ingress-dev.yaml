@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: modulefederation-agriculture-microfront-ingress-dev
+  name: modulefederation-agricultura-microfront-ingress-dev
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -12,11 +12,11 @@ spec:
   - host: front.v30.ultrasist.net
     http:
       paths:
-      - path: /agriculture(/|$)(.*)
+      - path: /agricultura(/|$)(.*)
         pathType: Prefix
         backend:
           service:
-            name: modulefederation-agriculture-microfront-service-dev
+            name: modulefederation-agricultura-microfront-service-dev
             port:
               number: 4204
   tls:

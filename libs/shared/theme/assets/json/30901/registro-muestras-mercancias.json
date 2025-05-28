@@ -1,6 +1,6 @@
 {
     "importadorExportadorPrevio": {
-        "labelNombre": "¿Se han realizado previamente importaciones o exportaciones del product a registrar?",
+        "labelNombre": "¿Se han realizado previamente importaciones o exportaciones del producto a registrar?",
         "required": true,
         "primerOpcion": "Selecciona un valor",
         "catalogos": [
@@ -118,11 +118,11 @@
         "opcionDeImportador": "no",
         "tomaMuestraDespacho": "",
         "descMotivoFaltaMuestra": "no",
-        "comboFraccionConcatenada": "",
+        "comboFraccionConcatenada": 1,
         "fraccionConcatenada": "",
         "fracciondescripcion": "Vacas lecheras.",
-        "comboNicos": "",
-        "nicoDescripcion": "Vacas lecheras.",
+        "comboNicos": 1,
+        "nicoDescripcion": "1 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.",
         "nombreQuimico": "Nombre Quimico",
         "nombreComercial": "Nombre Comercial",
         "numeroCAS": "34524",
