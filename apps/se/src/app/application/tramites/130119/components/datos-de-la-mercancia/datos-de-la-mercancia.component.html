@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="descripcion" class="form-label">Descripción de la mercancía *:</label>
+                    <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
                     <textarea id="descripcion" formControlName="descripcion" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'descripcion')"></textarea>
                     <div
@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="umt" class="form-label">UMT : <span class="bi bi-question-circle-fill" title="UMT"
+                    <label for="umt" class="form-label">UMT: <span class="bi bi-question-circle-fill" title="Unidad de medida de la tarifa (UMT)"
                         data-bs-toggle="tooltip"></span></label>
                     
                     <input type="text" id="umt" formControlName="umt" class="form-control">
@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="cantidad" class="form-label">Cantidad *:</label>
+                    <label for="cantidad" class="form-label">Cantidad*:</label>
                     <input type="text" id="cantidad" formControlName="cantidad" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'cantidad')">
                     <div
@@ -42,8 +42,7 @@
                         <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['required']"
                             class="text-danger">Este campo es obligatorio.</small>
                         <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['pattern']"
-                            class="text-danger">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
-                            dígitos decimales.</small>
+                            class="text-danger">Por favor, escribe un número entero válido</small>
                     </div>
                 </div>
             </div>
@@ -52,7 +51,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *: <span class="bi bi-question-circle-fill" title="Valor factura USD"
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD*: <span class="bi bi-question-circle-fill" title="En caso de no contar con valor factura proporciona el valor estimado"
                         data-bs-toggle="tooltip"></span></label>
                     
                     <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
@@ -62,8 +61,7 @@
                         <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['required']"
                             class="text-danger">Este campo es obligatorio.</small>
                         <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['pattern']"
-                            class="text-danger">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
-                            dígitos decimales.</small>
+                            class="text-danger">Por favor, escribe un número entero válido</small>
                     </div>
                 </div>
             </div>
@@ -85,7 +83,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="numeroFactura" class="form-label">Número de factura *:</label>
+                    <label for="numeroFactura" class="form-label">Número de factura*:</label>
                     <input type="text" id="numeroFactura" formControlName="numeroFactura" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'numeroFactura')">
                     <div
