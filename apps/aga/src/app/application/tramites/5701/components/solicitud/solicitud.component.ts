@@ -103,6 +103,11 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
+//TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -328,6 +333,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Datos de la tabla de pagos.
    */
   public datosTablaPagos: LineaCaptura[] = [];
+
+  /**
+   * TODO: Estas variables se van a eliminar
+   */
+  /**
+   * Arrelgo de patentes de la empresa
+   */
+  radioPatentes = patentes.patentes;
+  rfcs = rfcs.rfcs;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
