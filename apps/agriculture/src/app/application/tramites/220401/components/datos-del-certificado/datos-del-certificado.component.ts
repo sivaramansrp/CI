@@ -18,6 +18,7 @@ import {
   Catalogo,
   CatalogoResponse,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -75,6 +76,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   radioBoton = unidadRadioFields; // import data from Json
   public solicitudState!: solicitud220401State;
   estadoJson: CatalogoResponse[] = [];
+
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente, inyecta los servicios necesarios.
    */
@@ -83,9 +86,21 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery, 
-    private _pantallas220401Service: Pantallas220401Service   
+    private _pantallas220401Service: Pantallas220401Service,
+    private consultaioQuery: ConsultaioQuery,  
    
-) {}
+) {
+  this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLectura = true;
+          // this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+}
 /**
    * Inicialización del componente.
    */
