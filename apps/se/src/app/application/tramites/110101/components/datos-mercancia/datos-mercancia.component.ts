@@ -143,8 +143,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       this.formMercancia.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.formMercancia.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
 }
 

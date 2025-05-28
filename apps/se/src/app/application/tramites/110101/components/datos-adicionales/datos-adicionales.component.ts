@@ -152,8 +152,6 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       this.formulario.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.formulario.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
 }
 

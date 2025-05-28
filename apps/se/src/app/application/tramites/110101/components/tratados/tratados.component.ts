@@ -220,8 +220,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
       this.formularioTratados.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.formularioTratados.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
   /**

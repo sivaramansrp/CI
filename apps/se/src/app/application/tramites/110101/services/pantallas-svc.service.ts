@@ -18,7 +18,7 @@ export class PantallasSvcService {
     private http: HttpClient,
     private tramite110101Store: Tramite110101Store
   ) {
-    // Lógica de inicialización si es necesario
+    
    }
 
     /**
