@@ -132,16 +132,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   forma!: FormGroup;
 
-
   /** 
    * @description Formulario para el transporte. 
    * Este `FormGroup` contiene los controles para los campos del formulario relacionados con la información de transporte.
    */
   formularioDeTransporte?: FormGroup;
 
+  /**
+   * @description Almacena los datos del formulario principal.
+   * @type {DatosForma}
+   */
   formulariodataStore: DatosForma = {} as DatosForma;
+  
+  /**
+   * @description Tipo de selección para la tabla de solicitudes.
+   * @type {TablaSeleccion}
+   */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  
+  /**
+   * @description Tipo de selección para la tabla de mercancías.
+   * @type {TablaSeleccion}
+   */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  
+  /**
+   * @description Configuración de las columnas de la tabla de solicitudes.
+   * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -151,15 +170,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
+
   /**
- * @description Datos de la tabla principal.
- * @type {FilaSolicitud[]}
- */
+   * @description Datos de la tabla principal.
+   * @type {FilaSolicitud[]}
+   */
   cuerpoTabla: FilaSolicitud[] = [];
+
+  /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
   public destroyNotifier$ = new Subject<void>();
-
-  esFormularioSoloLectura: boolean = true; 
-
+  
+  /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = true;
 
   /**
    * @constructor
@@ -208,7 +236,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   }
 
-
   /**
    * @description Crea los campos del formulario y los agrupa en un `FormGroup`.
    * Inicializa el formulario principal (`forma`) con los controles para los datos de la solicitud, 
@@ -216,12 +243,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method createFromFields
    * @returns {void}
    */
-  /**
- * Método para crear el formulario y sus campos iniciales.
- */
   createFromFields():void {
     this.forma = this.fb.group(this.inicializarCamposFormulario());
   }
+
   /**
    * Método que inicializa los campos del formulario.
    * @returns Un objeto con los campos del formulario.
@@ -233,11 +258,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
-/**
- * Método para crear campos requeridos del formulario.
- * @param FORMULARIO Datos de formulariodataStore.
- * @returns Objeto con los campos requeridos.
- */
+  /**
+   * Método para crear campos requeridos del formulario.
+   * @param FORMULARIO Datos de formulariodataStore.
+   * @returns Objeto con los campos requeridos.
+   */
   crearCamposRequeridos(): Record<string, unknown> {
     const FORMULARIO = this.formulariodataStore;
     return {
@@ -258,6 +283,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tipoDeProducto: [{ value: FORMULARIO.tipoDeProducto || '', disabled: this.esFormularioSoloLectura }, Validators.required],
     };
   }
+  
   /**
    * Método para crear campos opcionales del formulario.
    * @param FORMULARIO Datos de formulariodataStore.
@@ -274,9 +300,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        descripcion: [{ value: FORMULARIO.descripcion || '', disabled: this.esFormularioSoloLectura }],
      };
    }
-
-
-
 
   /**
    * @description Obtiene todos los datos para las listas de opciones (selects) del formulario.

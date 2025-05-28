@@ -74,7 +74,13 @@ interface RadioOption {
   ]
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$ = new Subject<void>();
+
   /**
    * Configuración para el input de fecha de pago.
    * Este objeto contiene la configuración para el campo de fecha de inicio del pago.
@@ -122,18 +128,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       "value": "Si"
     }
   ];
-  formularioPagoStore: PagoForm = {} as PagoForm;
-  fechaPagoDate: string = '15/03/2025';
-  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+
   /**
- * @description Valor seleccionado para la exención de pago.
- * @type {string}
- */
+   * @description Almacena los datos del formulario de pago de derechos.
+   * @type {PagoForm}
+   */
+  formularioPagoStore: PagoForm = {} as PagoForm;
+
+  /**
+   * @description Fecha de pago seleccionada en el formulario.
+   * @type {string}
+   */
+  fechaPagoDate: string = '15/03/2025';
+
+  /**
+   * @description Configuración para el input de fecha final de pago.
+   * @type {InputFecha}
+   */
+  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+
+  /**
+   * @description Valor seleccionado para la exención de pago.
+   * @type {string}
+   */
   exentoPagoValor: string = 'Si';
+
+  /**
+   * @description Opciones para el radio button de exención de pago.
+   * @type {OpcionDeRadio[]}
+   */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
+  /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
   esFormularioSoloLectura: boolean = true;
-
 
   /**
    * Valor seleccionado en el radio button de exención de pago.
@@ -231,7 +261,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
   }
-
 
   /**
    * @description Actualiza la fecha de pago en el formulario.
@@ -336,10 +365,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoForm.get('fechaPago')?.disable();
     this.pagoForm.get('importePago')?.disable();
   }
+
   /**
-    * Maneja el evento de cambio para la entrada de fecha.
-    * @param evento - El nuevo valor de la fecha como cadena.
-    */
+   * Maneja el evento de cambio para la entrada de fecha.
+   * @param evento - El nuevo valor de la fecha como cadena.
+   */
   fechaCambiado(evento: string): void {
     // Manejar cambio de fecha
     this.pagoForm.patchValue({
@@ -348,11 +378,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
   }
+
   /**
- * @description Cambia el valor de un campo del formulario.
- * @param {string} nombreControl Nombre del campo del formulario.
- * @param {string} valor Nuevo valor a asignar.
- */
+   * @description Cambia el valor de un campo del formulario.
+   * @param {string} nombreControl Nombre del campo del formulario.
+   * @param {string} valor Nuevo valor a asignar.
+   */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.pagoForm.patchValue({
       [nombreControl]: valor,

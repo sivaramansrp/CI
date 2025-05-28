@@ -68,13 +68,23 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @type {Catalogo[]}
    */
   puntoList: Catalogo[] = [];
+  
   /**
    * @description Subject para manejar la destrucción de las suscripciones.
    * Se utiliza para emitir cuando el componente es destruido, limpiando todas las suscripciones.
    */
   private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * @description Almacena los datos del formulario de movilización nacional.
+   * @type {Movilizacion}
+   */
   formulariodataStore: Movilizacion = {} as Movilizacion;
 
+  /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
   esFormularioSoloLectura: boolean = true;
 
   /**
