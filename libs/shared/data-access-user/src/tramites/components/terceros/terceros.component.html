@@ -34,6 +34,7 @@
       class="btn btn-primary ms-2 d-flex"
       type="button"
       (click)="agregaPersona()"
+      [disabled]="esFormularioSoloLectura"
     >
       Agregar
     </button>
@@ -57,7 +58,7 @@
           <td>{{ item.nombre }}</td>
           <td>{{ item.correo }}</td>
           <td>
-            <button class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
+            <button class="btn btn-link" title="Eliminar" (click)="eliminar(i)" [disabled]="esFormularioSoloLectura">
               <i class="bi bi-trash3"></i>
             </button>
           </td>
