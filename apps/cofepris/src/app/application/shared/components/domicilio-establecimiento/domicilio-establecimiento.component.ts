@@ -430,9 +430,7 @@ modalInstance!: Modal; /**
       )
       .subscribe();
     this.obtenerEstadoList();
-    
-    // this.obtenerTablaDatos();
-    this.obtenerMercanciasDatos();
+  this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -511,32 +509,50 @@ modalInstance!: Modal; /**
     
   }
 
+  /**
+   * @method cerrarModalScian
+   * @description Oculta el modal relacionado con el catálogo SCIAN.
+   * @returns {void}
+   *
+   * @memberof DomicilioEstablecimientoComponent
+   */
   cerrarModalScian(): void {
     this.modalInstance.hide();
   }
 
+  /**
+   * @method limpiarScianForm
+   * @description Limpia y reinicia el formulario asociado al agente SCian.
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
   limpiarScianForm(): void {
     this.formAgente.reset();
   }
 
+  /**
+   * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
+   * 
+   * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
+   * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
+   * limpia el formulario y cierra el modal correspondiente.
+   *
+   * @returns {void}
+   * @memberof DomicilioComponent
+   */
   guardarScian(): void {
     if (this.formAgente.valid) {
       const NUEVO_DATO: NicoInfo = {
         clave_Scian: this.formAgente.get('claveScianModal')?.value,
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
-
-      // Add the new data to the table
-      this.nicoTablaDatos.push(NUEVO_DATO);
-
-      // Clear the form
-      this.formAgente.reset();
-
-      // Close the modal
-      this.cerrarModalScian();
-    }
-
-    this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+this.nicoTablaDatos.push(NUEVO_DATO);
+  this.formAgente.reset();
+   this.cerrarModalScian();
+}
+  
+this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
       const MATCHED = this.fraccionesCatalogo.find(item =>
         item.fraccion.startsWith(valor)
       );
