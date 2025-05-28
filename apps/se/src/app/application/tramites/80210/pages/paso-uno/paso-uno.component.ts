@@ -26,6 +26,11 @@ export class PasoUnoComponent implements OnInit {
 
   /** Subject para notificar la destrucción del componente. */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la consulta obtenido desde el store global.
+   * Contiene la información relevante para el flujo del trámite en este paso.
+   */
   public consultaState!:ConsultaioState;
 
   constructor(

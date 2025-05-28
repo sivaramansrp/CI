@@ -73,7 +73,7 @@ export class Tramite80210Store extends Store<Tramites80210State> {
    * @descripción
    * Actualiza el estado con los valores proporcionados.
    * 
-   * @param {Partial<Tramites30401State>} values - Valores parciales para actualizar el estado.
+   * @param {Partial<Tramites80210State>} values - Valores parciales para actualizar el estado.
    */
   public establecerDatos(values: Partial<Tramites80210State>): void {    
     this.update((state) => ({
