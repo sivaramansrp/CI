@@ -1,48 +1,48 @@
 {
         "formularioPago": {
-            "exentoPago": "llenar",
-            "justificacion": "llenar",
+            "exentoPago": "No",
+            "justificacion": "160",
             "claveReferencia": "llenar",
             "cadenaDependencia": "llenar",
-            "banco": "llenar",
+            "banco": "160",
             "llavePago": "llenar",
             "fechaPago": "llenar",
             "importePago": "llenar"
         },
         "formularioMovilizacion": {
-            "medioDeTransporte": "llenar",
+            "medioDeTransporte": "101",
             "identificacionTransporte": "llenar",
-            "puntoVerificacion": "llenar",
+            "puntoVerificacion": "160",
             "nombreEmpresaTransportista": "llenar"
         },
         "datosMercancia": {
             "realizarGroup": {
-                "aduanaIngreso": "llenar",
-                "oficinaInspeccion": "llenar",
-                "puntoInspeccion": "llenar",
+                "aduanaIngreso": "160",
+                "oficinaInspeccion": "160",
+                "puntoInspeccion": "101",
                 "numeroGuia": "llenar",
-                "regimen": "llenar"
+                "regimen": "101"
             },
             "mercanciaGroup": {
-                "tipoRequisito": "llenar",
+                "tipoRequisito": "160",
                 "requisito": "llenar",
                 "numeroCertificadoInternacional": "llenar",
                 "numeroOficioCasoEspecial": "llenar",
-                "fraccionArancelaria": "llenar",
+                "fraccionArancelaria": "160",
                 "descripcionFraccionArancelaria": "llenar",
-                "nico": "llenar",
+                "nico": "101",
                 "descripcionNico": "llenar",
                 "descripcion": "llenar",
                 "cantidadUMT": "llenar",
                 "umt": "llenar",
                 "cantidadUMC": "llenar",
-                "umc": "llenar",
-                "uso": "llenar",
+                "umc": "101",
+                "uso": "161",
                 "numeroDeLote": "llenar",
                 "faseDeDesarrollo": "llenar",
                 "especie": "llenar",
-                "paisDeOrigen": "llenar",
-                "paisDeProcedencia": "llenar"
+                "paisDeOrigen": "161",
+                "paisDeProcedencia": "161"
             },
             "detalles": {
                 "nombreCientifico": "llenar"
