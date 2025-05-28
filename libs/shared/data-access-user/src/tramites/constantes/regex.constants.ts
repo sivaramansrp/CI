@@ -436,7 +436,7 @@ export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
  * - Válido: "abc123", "ABCDEF", "123456"
  * - Inválido: "abc-123", "abc_123", "abc 123"
  */
-export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO = /^[a-zA-Z0-9]+$/
 
 
 /**
@@ -491,7 +491,7 @@ export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
  * - "12345678901" (más de 10 dígitos)
  * - "12345678a0" (contiene caracteres no numéricos)
  */
-export const REGEX_VALID_UMT=/^\d{1,12}(\.\d{1,5})?$/
+export const REGEX_VALID_UMT = /^\d{1,12}(\.\d{1,5})?$/
 
 /**
  * Expresión regular para validar un número de UMC (Unidad de Medida y Costo).
@@ -507,7 +507,7 @@ export const REGEX_VALID_UMT=/^\d{1,12}(\.\d{1,5})?$/
  * - "1234567890123" (más de 12 dígitos enteros)
  * - "123456789012.12345678901" (más de 10 dígitos decimales)
  */
-export const REGEX_VALID_UMC=/^\d{1,12}(\.\d{1,10})?$/
+export const REGEX_VALID_UMC = /^\d{1,12}(\.\d{1,10})?$/
 
 /**
  * Expresión regular para validar un número decimal.
@@ -584,7 +584,7 @@ export const REGEX_DIGITOS = /^[0-9]+(\.[0-9]*)?$/;
  * - "1234567890123456" (más de 15 dígitos enteros)
  * - "abc" (no es un número)
  */
-export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
+export const REGEX_PERMITE_11_2_DIGITS = /^\d{1,11}(\.\d{1,2})?$/;
 
 /**
  * Expresión regular para validar números con hasta 11 dígitos enteros y 3 decimales.
@@ -599,7 +599,7 @@ export const REGEX_PERMITE_11_2_DIGITS =/^\d{1,11}(\.\d{1,2})?$/;
  * - "1234567890123456" (más de 15 dígitos enteros)
  * - "abc" (no es un número)
  */
-export const REGEX_PERMITE_11_3_DIGITS =/^\d{1,11}(\.\d{1,3})?$/;
+export const REGEX_PERMITE_11_3_DIGITS = /^\d{1,11}(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
  * - Dígitos (0-9)
@@ -633,3 +633,20 @@ export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
  * Ejemplo válido: `ABCD123456M1XYZ98765`
  */
 export const REGEX_LINEA_CAPTURA = /^([A-Z0-9]{10}M1[A-Z0-9]{8}$)/;
+
+/**
+ * Expresión regular para validar contraseñas seguras.
+ *
+ * Requisitos que valida:
+ * - Al menos una letra mayúscula (A-Z)
+ * - Al menos una letra minúscula (a-z)
+ * - Al menos un dígito (0-9)
+ * - Al menos un símbolo especial de la lista: @ # $ % | ° ! & / ( ) = ? ¿ + * " ' `
+ * - No permite espacios en blanco
+ * - Longitud entre 8 y 64 caracteres
+ *
+ * Ejemplos válidos:
+ * - "Abcdef1@"
+ * - "MiClave2024!"
+ */
+export const REGEX_CONRASENIA = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%|°!&/()=?¿+*"'`])[^\s]{8,64}$/;
