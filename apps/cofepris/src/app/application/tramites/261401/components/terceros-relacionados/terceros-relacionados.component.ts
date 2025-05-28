@@ -2,7 +2,7 @@
  * Importaciones necesarias para el componente de terceros relacionados.
  * Incluye módulos y servicios para gestionar la tabla dinámica de destinatarios relacionados.
  */
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
@@ -126,7 +126,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * ID del elemento que se va a eliminar.
      */
-    elementoParaEliminar!: number;
+  elementoParaEliminar!: number;
+
+   /**
+   * Enum expuesto al template para comparar el tipo de persona seleccionado (física o moral)
+   * sin necesidad de hardcodear los valores en la vista.
+   */
+  public TipoPersonaEnum = TipoPersona;
 
   /**
    * Constructor del componente.
@@ -177,7 +183,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
-
+  /**
+   * Crea y configura el formulario reactivo para los datos del destinatario.
+   * Inicializa los controles del formulario con los valores actuales del estado
+   * y aplica las validaciones necesarias para cada campo.
+   * 
+   * Los campos incluyen tipo de persona, nombre, apellidos, denominación, país,
+   * domicilio, estado, código postal, calle, número exterior/interior, lada,
+   * teléfono y correo electrónico.
+   */
    crearFormTransporte(): void {
     this.destinatarioForm = this.fb.group({
      
@@ -271,17 +285,23 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Establece el tipo de persona seleccionado.
-   * @param value Valor seleccionado (cadena o número).
+   * Valor seleccionado (cadena o número).
    */
   setTipoPersona(value: string | number): void {
     this.tipoPersonaSeleccionada = value.toString();
   }
 
-   cancelarFormulario(): void {
+    /**
+   * Cancela la visualización del formulario y lo oculta.
+   */
+  cancelarFormulario(): void {
     this.esFormularioVisible = false;
   }
 
-  limpiarFormulario() :void{
+  /**
+   * Limpia todos los campos del formulario de destinatario.
+   */
+  limpiarFormulario(): void {
     this.destinatarioForm.reset();
   }
    /**

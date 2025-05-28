@@ -71,7 +71,7 @@
                 </app-input-radio>
               </div>
               </div>
-              @if (selectedTipoPersona === 'fisica') {
+              @if (selectedTipoPersona === TipoPersonaEnum.FISICA) {
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="nombre">Nombre(s)*:</label>
@@ -110,7 +110,7 @@
                   </div>
                 </div>
               </div>
-              } @if (selectedTipoPersona === 'moral') {
+              } @if (selectedTipoPersona === TipoPersonaEnum.MORAL) {
               <div class="row">
                 <div class="col-md-8 mb-3">
                   <label class="form-label" for="denominacion">Denominación/razón social*:</label>
@@ -145,7 +145,7 @@
                   (change)="setValoresStore(destinatarioForm, 'estado')"/>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
+                  <label class="form-label" for="codigopostal">Código postal o equivalente:</label>
                   <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
                      (change)="setValoresStore(destinatarioForm, 'codigopostal')" />
                 </div>
@@ -166,7 +166,7 @@
                       </div>
                   </div>
                   <div class="col-md-4">
-                      <label class="form-label" for="numeroexterior">Numero exterior*:</label>
+                      <label class="form-label" for="numeroexterior">Número exterior*:</label>
                       <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior" [maxlength]="55"
                       (change)="setValoresStore(destinatarioForm, 'numeroExterior')"/>
                       <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
@@ -178,7 +178,7 @@
               </div>    
               <div class="row">
                   <div class="col-md-4">
-                      <label class="form-label" for="numerointerior">Numero interior*:</label>
+                      <label class="form-label" for="numerointerior">Número interior*:</label>
                       <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior" [maxlength]="55"
                        (change)="setValoresStore(destinatarioForm, 'numeroInterior')"/>
                      
