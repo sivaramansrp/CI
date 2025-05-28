@@ -196,6 +196,7 @@ export * from './tramites/constantes/120501/participantes.enum'
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
+export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';

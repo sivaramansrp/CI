@@ -6,10 +6,14 @@ import { CommonModule } from '@angular/common';
  * 
  * @property {string} tituluDeLaIzquierda - El título de la izquierda.
  * @property {string} derecha - El valor de la derecha.
+ * @property {boolean} showUnoTitulo - Indica si se muestra el primer título.
+ * @property {boolean} showDosTitulo - Indica si se muestra el segundo título.
  */
 export interface CrossListLable {
   tituluDeLaIzquierda: string;
   derecha: string;
+  showUnoTitulo?: boolean;
+  showDosTitulo?: boolean;
 }
 @Component({
   selector: 'crosslist',
@@ -31,7 +35,11 @@ export class CrosslistComponent implements OnInit, OnChanges {
   @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
 
   @Input() fechasSeleccionadas: string[] = []; 
-  @Input() fechas: string[] = []; 
+  @Input() fechas: string[] = [];
+  /**
+   * Bandera para indicar si el control debe estar deshabilitado.
+   */
+  @Input() isDisabled!: boolean;
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('', [Validators.required]);
   fechasDatos: string[] = [];
@@ -70,6 +78,18 @@ export class CrosslistComponent implements OnInit, OnChanges {
         this.fechasDatos = [...changes['fechas'].currentValue];
         this.fechasSeleccionadas = [];
       }
+    }
+
+    if (changes['isDisabled']) {
+      if (this.isDisabled) {
+        this.fecha.disable();
+        this.fechaSeleccionada.disable();
+      } else {
+        this.fecha.disable();
+        this.fechaSeleccionada.disable();
+      }
+      this.fecha.updateValueAndValidity({ emitEvent: false });
+      this.fechaSeleccionada.updateValueAndValidity({ emitEvent: false });
     }
   }
  
@@ -169,5 +189,14 @@ export class CrosslistComponent implements OnInit, OnChanges {
   isInvalid(): boolean | null {
     const CONTROL = this.fechaSeleccionada;
     return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
+  }
+
+  /**
+   * Establece el estado deshabilitado del control.
+   * @param isDisabled - Indica si el control debe estar deshabilitado.
+   * @returns void
+   */
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
 }
