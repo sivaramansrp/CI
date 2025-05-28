@@ -208,9 +208,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    private seccionState!: Solicitud120501State;
   /**
    * Constructor del componente.
-   *
-   * @param service Servicio para obtener datos de licitaciones disponibles.
-   * @param fb Constructor de formularios.
+   * Servicio para obtener datos de licitaciones disponibles.
    */
   constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,
     private tramite120501Store: Tramite120501Store, 
@@ -241,6 +239,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.obtenerDatosDeTabla();
 
   }
+  /**
+ * Inicializa los formularios principales del componente con los valores actuales del estado.
+ */
   inicializarFormulario(): void {
     this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
       .subscribe((data: Solicitud120501State) => {
@@ -274,6 +275,12 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     })
   } 
 
+  /**
+ * Inicializa el estado de los formularios según el modo de solo lectura.
+ *
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
+ * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
+ */
    inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario(); 
@@ -281,6 +288,12 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
     }
   }
+  /**
+ * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
+ *
+ * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
+ * o los habilita si está en modo edición.
+ */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -324,9 +337,6 @@ getRepresentacionFederal(): void {
 
 /**
  * Verifica si un control del formulario 'adquiriente' es inválido.
- *
- * @param id El nombre del control a verificar.
- * @returns `true` si el control es inválido y ha sido tocado, `null` en caso contrario.
  */
 isInvalid(id: string): boolean | null {
   const CONTROL = this.adquiriente.get(id);
@@ -346,7 +356,7 @@ ngOnDestroy(): void {
 /**
  * Maneja el valor del índice del asistente (wizard) basado en la acción del botón.
  *
- * @param e Objeto que contiene la acción y el valor del botón.
+ * Objeto que contiene la acción y el valor del botón.
  */
 getValorIndice(e: AccionBoton):void{
   if (e.valor > 0 && e.valor < 5) {
