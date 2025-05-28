@@ -6,13 +6,20 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-} from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
+
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -23,7 +30,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Constructor del componente.
    * Inicializa el componente y establece el índice de la pestaña seleccionada.
    */
-  formularioDeshabilitado: boolean = true;
+  formularioDeshabilitado: boolean = false;
   /**
    * @property {number} indice - El índice de la pestaña seleccionada.
    */
@@ -49,7 +56,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private elegibilidadTextilesService: ElegibilidadTextilesService
   ) {}
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
@@ -64,6 +72,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.formularioDeshabilitado = false;
       this.cargarDatosPrevios();
     }
+    if (this.consultaState.readonly) {
+      this.formularioDeshabilitado = true;
+    }
   }
   /**
    * @method onMostrarTabs
@@ -76,7 +87,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-  cargarDatosPrevios(): void {}
+  cargarDatosPrevios(): void {
+    const PREFILL_DATOS = this.elegibilidadTextilesService.getPrefillDatos();
+    PREFILL_DATOS.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.ElegibilidadDeTextilesStore.setTextilesState(datos);
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

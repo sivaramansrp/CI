@@ -7,7 +7,8 @@ import {
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 

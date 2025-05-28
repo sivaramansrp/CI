@@ -1,16 +1,22 @@
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ElegibilidadTextilesService {
   url = '../../../../../assets/json/120301/';
 
-  constructor(private readonly http: HttpClient,private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) { 
+  constructor(
+    private readonly http: HttpClient,
+    private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore
+  ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
@@ -21,9 +27,9 @@ export class ElegibilidadTextilesService {
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
     const BASEURL = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
-      map(response => response.data)
-    );
+    return this.http
+      .get<RespuestaCatalogos>(BASEURL)
+      .pipe(map((response) => response.data));
   }
 
   /**
@@ -33,7 +39,7 @@ export class ElegibilidadTextilesService {
    */
   obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
     const JSONURL = this.url + fileName;
-      return this.http.get<T[]>(JSONURL);
+    return this.http.get<T[]>(JSONURL);
   }
 
   /**
@@ -41,7 +47,7 @@ export class ElegibilidadTextilesService {
    * @returns Observable con el estado actual del formulario.
    */
   getFormData(): Observable<TextilesState> {
-    return this.elegibilidadDeTextilesStore._select(state => state);
+    return this.elegibilidadDeTextilesStore._select((state) => state);
   }
 
   /**
@@ -50,8 +56,11 @@ export class ElegibilidadTextilesService {
    */
   obtenerListaPaises(): Observable<Catalogo[]> {
     const JSONURL = 'assets/json/120301/ano-de-la-constancia.json';
-    return this.http
-      .get<Catalogo[]>(JSONURL);
+    return this.http.get<Catalogo[]>(JSONURL);
   }
- 
+
+  getPrefillDatos(): Observable<TextilesState> {
+    const JSONURL = 'assets/json/120301/datos-prefill.json';
+    return this.http.get<TextilesState>(JSONURL);
+  }
 }
