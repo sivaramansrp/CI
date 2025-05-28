@@ -40,11 +40,11 @@ import {
 
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
-import { Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
 
 
 /**
@@ -221,6 +221,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

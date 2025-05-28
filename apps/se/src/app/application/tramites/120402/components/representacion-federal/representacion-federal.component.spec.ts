@@ -147,13 +147,6 @@ describe('RepresentacionFederalComponent', () => {
     });
   });
 
-  describe('getValorStore', () => {
-    it('should subscribe and set solicitudState', () => {
-      component.getValorStore();
-      expect(component.solicitudState).toBeDefined();
-    });
-  });
-
   describe('setValorStore', () => {
     it('should update store with control value', () => {
       const form = new FormBuilder().group({ test: ['value'] });

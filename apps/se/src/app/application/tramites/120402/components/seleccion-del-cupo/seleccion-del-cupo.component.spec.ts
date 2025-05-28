@@ -3,8 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SeleccionDelCupoComponent } from './seleccion-del-cupo.component';
 import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramite120402.store';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TipoNotificacionEnum, CategoriaMensaje } from '@ng-mf/data-access-user';
 import { TablaAcciones } from '@ng-mf/data-access-user';
@@ -93,7 +93,7 @@ describe('SeleccionDelCupoComponent', () => {
   it('should handle onAccionCupo and set mostrarDescripcionCupo', () => {
     const row = { descripcion: 'Desc', tipoAsignacion: 'Tipo', fracciones: ['001'], tipoCupo: 'Cupo' };
     component.onAccionCupo({ row, column: 'editar' });
-    expect(tramite120402Store.setCupoSeleccionado).toHaveBeenCalledWith(row);
+    expect(tramite120402Store.setTramite120402State).toHaveBeenCalled();
     expect(component.mostrarDescripcionCupo).toBeTruthy();
   });
 

@@ -1,5 +1,5 @@
 import { AlertComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { CLASE_TEXTO_CENTRADO, CONFIGURACION_COLUMNAS_CUPO_CONST, NOTA} from '../../constantes/definiciones.enum';
+import { CLASE_TEXTO_CENTRADO, CONFIGURACION_COLUMNAS_CUPO_CONST, NOTA } from '../../constantes/definiciones.enum';
 import {
   Catalogo,
   CategoriaMensaje,
@@ -13,7 +13,7 @@ import {
 } from '@ng-mf/data-access-user';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
- 
+
 import { CommonModule, NgIf } from '@angular/common';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -27,57 +27,105 @@ import {
 } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
-import {Tramite120402State, Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
 import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
 import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
 
- 
 /**
- * Interfaz para los datos de cupo recibidos del servicio
+ * Representa la información relacionada con un cupo o asignación.
  */
 interface DatoCupo {
+  /**
+   * Descripción detallada del cupo o asignación.
+   */
   description: string;
+
+  /**
+   * Tipo de asignación que se aplica al cupo.
+   */
   assignmentType: string;
+
+  /**
+   * Códigos asociados al cupo, que pueden ser un arreglo de cadenas o una sola cadena.
+   */
   codes: string[] | string;
+
+  /**
+   * Cuota asignada expresada como cadena (por ejemplo, porcentaje o cantidad).
+   */
   quota: string;
 }
- 
+
+
 /**
- * Interfaz para los datos de cupo formateados para la tabla
+ * Interface que representa una fila dentro de la tabla de cupos.
  */
 interface FilaCupo {
+  /**
+   * Descripción detallada de la fila o del cupo.
+   */
   descripcion: string;
+
+  /**
+   * Tipo de asignación asociado a esta fila.
+   */
   tipoAsignacion: string;
+
+  /**
+   * Fracciones relacionadas con la fila, que pueden ser un arreglo de cadenas o una sola cadena.
+   */
   fracciones: string[] | string;
+
+  /**
+   * Tipo de cupo representado en la fila.
+   */
   tipoCupo: string;
 }
- 
+
+
 /**
- * Interfaz para el evento de acción en la tabla
+ * Evento que ocurre al hacer clic en una acción dentro de la tabla.
  */
 interface EventoAccionTabla {
+  /**
+   * Fila de la tabla sobre la cual se realizó la acción.
+   */
   row: FilaCupo;
+
+  /**
+   * Nombre o identificador de la columna donde se hizo clic.
+   */
   column: string;
 }
- 
+
+
 /**
- * Interfaz para la respuesta del servicio getRegimen y getProducto
+ * Representa la respuesta que contiene un arreglo de elementos del catálogo.
  */
 interface RespuestaDataArray {
+  /**
+   * Arreglo de objetos tipo `Catalogo` que contiene los datos de la respuesta.
+   */
   data: Catalogo[];
 }
- 
+
+
 /**
- * Interfaz para la respuesta del servicio getTratado
+ * Representa la respuesta que contiene un arreglo de tratados.
  */
 interface RespuestaTratado {
+  /**
+   * Arreglo de objetos tipo `Catalogo` que representan los tratados.
+   */
   tratado: Catalogo[];
 }
- 
+
+
 /**
- * Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
+ * Componente para la selección del cupo dentro del trámite 120402.
+ * Permite al usuario seleccionar el régimen, tratado, producto y subproducto,
+ * así como visualizar información relacionada con cupos y su descripción.
  */
 @Component({
   selector: 'app-seleccion-del-cupo',
@@ -97,158 +145,80 @@ interface RespuestaTratado {
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
 })
- 
-/**
- * Clase SeleccionDelCupoComponent
- * @class SeleccionDelCupoComponent
- * @description Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
- */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
 
-   
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false;  
+  /** Indica si el formulario debe estar en modo de solo lectura */
+  esFormularioSoloLectura: boolean = false;
 
-    /**
-   * Subject para notificar la destrucción del componente.
-   */
+  /** Notificador para la destrucción de observables */
   private destroyNotifier$: Subject<void> = new Subject();
 
-    
-  /**
-   * Estado seleccionado del trámite 260911.
-   */
+  /** Estado actual del formulario */
   estadoSeleccionado!: Tramite120402State;
 
-
-  /** 
- * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
- * Se emite un valor y se completa cuando el componente se destruye.
- */  
-
+  /** Sujeto de destrucción de componentes */
   private destroy$ = new Subject<void>();
 
-   /**
-   * Suscripción a los cambios en el formulario react
-   */
+  /** Suscripción general a streams */
   private subscription: Subscription = new Subscription();
 
-    /**
-   * Estado de la solicitud de la sección 120402.
-   */
+  /** Estado de la solicitud del trámite */
   public solicitudState!: Tramite120402State;
 
-  /**
-   * Datos del catálogo relacionados con la mercancía.
-   *
-   * @type {Catalogo[]}
-   */
+  /** Lista de mercancías disponibles */
   public mercancia!: Catalogo[];
 
-  /**
-   * Enum de acciones disponibles en la tabla dinámica.
-   */
+  /** Enumeración de acciones disponibles en la tabla */
   accionesEnum = TablaAcciones;
- 
-  /**
-   * Indica si se debe mostrar el componente de descripción del cupo.
-   * @type {boolean}
-   * @default false
-   */
+
+  /** Controla si se muestra el componente de descripción del cupo */
   mostrarDescripcionCupo = false;
- 
-  /**
-   * Define si el diálogo exitoso está habilitado.
-   * @property modalAbierto
-   * @type {boolean}
-   * @default false
-   */
+
+  /** Indica si el modal de notificación está abierto */
   modalAbierto = false;
- 
-  /**
-   * Mensaje de confirmación para campos obligatorios no seleccionados.
-   * @type {string}
-   */
+
+  /** Mensaje de confirmación usado en notificaciones */
   MENSAJE_CONFIRMACION: string = NOTA.CAMPO_OBLIGATORIO_NO_ENCONTRADO;
- 
-  /**
-   * Configuración de columnas para la tabla dinámica de cupo.
-   * @type {ConfiguracionColumna<FilaCupo>[]}
-   */
-  configuracionColumnasCupo: ConfiguracionColumna<FilaCupo>[] =
-    CONFIGURACION_COLUMNAS_CUPO_CONST;
- 
-  /**
-   * Título de la alerta informativa.
-   * @type {string}
-   */
+
+  /** Configuración de columnas para la tabla de cupos */
+  configuracionColumnasCupo: ConfiguracionColumna<FilaCupo>[] = CONFIGURACION_COLUMNAS_CUPO_CONST;
+
+  /** Título para la alerta modal */
   tituloAlerta: string = NOTA.TITULO_ALERTA;
- 
-  /**
-   * Clase CSS para centrar el texto de la alerta.
-   * @type {string}
-   */
+
+  /** Clase para centrar el texto en la alerta */
   infoAlerta: string = CLASE_TEXTO_CENTRADO;
- 
-  /**
-   * Datos que se mostrarán en la tabla dinámica de cupo.
-   * @type {FilaCupo[]}
-   */
+
+  /** Datos que se mostrarán en la tabla de cupos */
   datosTablaCupo: FilaCupo[] = [];
- 
-  /**
-   * Notificación a mostrar en el modal.
-   * @type {Notificacion}
-   */
+
+  /** Objeto de notificación que se muestra en el modal */
   nuevaNotificacion!: Notificacion;
- 
-  /**
-   * Formulario reactivo para la selección del cupo.
-   */
+
+  /** Formulario reactivo del componente */
   seleccionForm!: FormGroup;
- 
-  /**
-   * Lista de opciones para el campo de régimen aduanero.
-   */
+
+  /** Catálogo de opciones para el régimen */
   regimen: Catalogo[] = [];
- 
-  /**
-   * Lista de opciones para el campo de tratado o bloque comercial.
-   */
+
+  /** Catálogo de tratados disponibles */
   tratado: Catalogo[] = [];
- 
-  /**
-   * Lista de opciones para el campo de nombre de producto.
-   */
+
+  /** Catálogo de productos disponibles */
   producto: Catalogo[] = [];
- 
-  /**
-   * Lista de opciones para el campo de nombre de subproducto.
-   */
+
+  /** Catálogo de subproductos disponibles */
   subproducto: Catalogo[] = [];
- 
-  /**
-   * Datos de la selección del cupo obtenidos desde el servicio.
-   */
+
+  /** Cupo seleccionado o lista de cupos seleccionados */
   seleccionDelCupo: DatoCupo | DatoCupo[] = [];
- 
-  /**
-   * Observable para manejar la destrucción del componente y evitar fugas de memoria.
-   */
+
+  /** Sujeto para cancelar subscripciones */
   private destroyed$ = new Subject<void>();
- 
- 
- 
+
   /**
    * Constructor del componente.
-   * @param fb - Servicio de FormBuilder para manejar formularios reactivos.
-   * @param service - Servicio para obtener la selección del cupo desde el backend.
-   * @param tramite120402Store - Store para almacenar datos del trámite.
-   * @param tramite120402Query - Query para obtener datos del store.
+   * Inicializa el estado del formulario según si es de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
@@ -257,78 +227,62 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     private tramite120402Query: Tramite120402Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-     /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
-    /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
+  /**
+   * Inicializa el estado del formulario dependiendo si está en modo de solo lectura.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.initializeForm();
-    }  
-    //this.getMercancia();
+    }
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  /**
+   * Guarda y bloquea o habilita el formulario dependiendo del modo de solo lectura.
    */
   guardarDatosFormulario(): void {
-      this.initializeForm();
-      if (this.esFormularioSoloLectura) {
-        this.seleccionForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.seleccionForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.initializeForm();
+    if (this.esFormularioSoloLectura) {
+      this.seleccionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.seleccionForm.enable();
+    }
   }
- 
- 
+
   /**
-   * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es inicializado.
-   * Inicializa el formulario y carga los datos de la selección del cupo.
+   * Ciclo de vida: se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
- }
- 
+  }
+
   /**
-   * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es destruido.
-   * Libera recursos y evita fugas de memoria.
+   * Ciclo de vida: se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
- 
+
   /**
-   * Inicializa el formulario de selección del cupo con validaciones requeridas.
+   * Inicializa el formulario reactivo y sus valores por defecto desde el store.
    */
   private initializeForm(): void {
-
     this.subscription.add(
       this.tramite120402Query.selectSolicitud$
         .pipe(
@@ -346,9 +300,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       subproducto: [this.solicitudState.subproducto, Validators.required],
     });
   }
- 
+
   /**
-   * Carga las opciones para el campo de régimen aduanero.
+   * Carga el catálogo de regímenes desde el servicio.
    */
   loadRegimen(): void {
     this.service
@@ -359,9 +313,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         this.regimen = RESPUESTA.data;
       }));
   }
- 
+
   /**
-   * Carga las opciones para el campo de tratado o bloque comercial.
+   * Carga el catálogo de tratados desde el servicio.
    */
   loadTratado(): void {
     this.service
@@ -371,9 +325,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         this.tratado = (data as RespuestaTratado).tratado;
       }));
   }
- 
+
   /**
-   * Carga las opciones para los campos de producto y subproducto.
+   * Carga los productos y subproductos desde el servicio.
    */
   loadProducto(): void {
     this.service
@@ -385,10 +339,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         this.subproducto = RESPUESTA.data;
       }));
   }
- 
+
   /**
-   * Carga los datos de la selección del cupo desde el servicio.
-   * Los datos obtenidos se asignan a la variable `seleccionDelCupo`.
+   * Carga los datos del cupo seleccionado desde el servicio y los adapta a la tabla.
    */
   loadSeleccionDelCupo(): void {
     this.service
@@ -403,9 +356,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
             : fila.codes,
           tipoCupo: fila.quota,
         });
- 
+
         const DATOS_CUPO = datos as DatoCupo | DatoCupo[];
- 
+
         if (Array.isArray(DATOS_CUPO)) {
           this.datosTablaCupo = DATOS_CUPO.map(MAPEAR_FILA);
         } else {
@@ -414,34 +367,32 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         this.seleccionDelCupo = DATOS_CUPO;
       }));
   }
- 
+
   /**
    * Cierra el modal de notificación.
    */
   cerrarModal(): void {
     this.modalAbierto = false;
   }
- 
+
   /**
-   * Maneja la acción realizada sobre una fila de la tabla dinámica.
-   * Guarda la fila seleccionada en el store y muestra el componente de descripción del cupo.
-   * @param evento - Objeto que contiene la fila y la columna de la acción.
+   * Maneja la acción de una fila de la tabla de cupos.
+   * @param evento Evento que contiene la fila y columna seleccionadas.
    */
   onAccionCupo(evento: EventoAccionTabla): void {
-    this.tramite120402Store.setCupoSeleccionado(evento.row);
+    this.tramite120402Store.setTramite120402State({ cupoSeleccionado: evento.row });
     this.mostrarDescripcionCupo = true;
   }
- 
+
   /**
-   * Maneja la lógica al hacer clic en el botón Buscar.
-   * Verifica que los campos obligatorios estén seleccionados y muestra una notificación si falta alguno.
-   * Si todos los campos están completos, carga los datos de la tabla.
+   * Ejecuta la lógica al presionar el botón de "Buscar".
+   * Verifica campos requeridos y muestra notificación si es necesario.
    */
   manejarBuscar(): void {
     const VALOR_REGIMEN = this.seleccionForm.get('regimen')?.value;
     const VALOR_ENTIDAD = this.tramite120402Query.getValue().entidad;
-    const VALOR_REPRESENTACION =
-      this.tramite120402Query.getValue().representacion;
+    const VALOR_REPRESENTACION = this.tramite120402Query.getValue().representacion;
+
     if (!VALOR_REGIMEN || !VALOR_ENTIDAD || !VALOR_REPRESENTACION) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -458,33 +409,17 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       this.loadSeleccionDelCupo();
     }
   }
- 
-  
 
   /**
-   * Obtiene el estado actual del trámite desde el store.
+   * Actualiza el valor en el store según el valor actual de un control del formulario.
+   * @param FormGroup Formulario reactivo
+   * @param control Nombre del control a actualizar
    */
-  getValorStore(): void {
-    this.tramite120402Query.selectSolicitud$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
-  }
-
-     /**
-   * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
-   */
-   setValorStore(FormGroup: FormGroup, control: string): void {
+  setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
     this.tramite120402Store.setTramite120402State({
       [control]: VALOR
     });
   }
 }
- 
+

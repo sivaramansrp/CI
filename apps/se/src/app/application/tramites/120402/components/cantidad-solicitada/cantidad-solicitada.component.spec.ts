@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramite120402.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -109,7 +109,6 @@ describe('CantidadSolicitadaComponent', () => {
   it('should get value from store', () => {
     const select$ = new Subject<any>();
     mockTramiteQuery.selectSolicitud$ = select$;
-    component.getValorStore();
     select$.next(solicitudStateMock);
     expect(component.solicitudState).toEqual(solicitudStateMock);
   });
