@@ -8,7 +8,7 @@
  * @property {boolean} activo - Indica si el paso está activo actualmente.
  * @property {boolean} completado - Indica si el paso ha sido completado.
  */
-export const RenovacionesPasos = [
+export const RENOVACIONES_PASOS = [
   {
     indice: 1,
     titulo: 'Capturar solicitud',
