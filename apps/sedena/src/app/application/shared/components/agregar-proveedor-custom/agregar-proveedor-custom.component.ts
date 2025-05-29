@@ -5,13 +5,13 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,PROVEEDOR_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_DESTINATARIO, MOSTRAR_ASTERISCO, MOSTRAR_INFORMACION, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, PROVEEDOR_TITULO_CUSTOM, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
+import { ES_NACIONAL } from '../../constants/datos-del-tramilte.enum';
 import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
 import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
-
 
 /**
  * @component AgregarProveedorComponent
@@ -187,6 +187,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   */
   public esCURP = false;
 
+    /**
+  * @property esNacional
+  * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+  * @type {boolean}
+  * @default false
+  */
+  public esNacional = false;
+
   /**
    * @property {boolean} esRFC
    * @description Indica si el valor actual corresponde a un RFC (Registro Federal de Contribuyentes).
@@ -202,6 +210,21 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
  */
   public campoObligatorioProveedor = false;
 
+  /**
+ * @property mostrarAsterisco
+ * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+ * @type {boolean}
+ * @default true
+ */
+  public mostrarAsterisco = false;
+
+    /**
+ * @property MOSTRAR_INFORMACION
+ * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+ * @type {boolean}
+ * @default true
+ */
+  public mostrarInformacion = false;
 
   /**
    * @constructor
@@ -247,27 +270,42 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
           Validators.maxLength(150),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
       estado: ['', Validators.required],
       codigoPostal: ['', Validators.required],
-      colonia: [''],
+      colonia: ['', Validators.required],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      nacionalidad: [''],
-      rfc: [''],
-      curp: [''],
-      municipio: [''],
-      localidad: [''],
+      numeroInterior: ['', Validators.required],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      nacionalidad: ['', Validators.required],
+      rfc: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      curp: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      municipio: ['', Validators.required],
+      localidad: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
+    this.agregarProveedorForm.get('nacionalidad')?.enable();
   }
   /**
    * @method ngOnInit
@@ -277,8 +315,11 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.Formulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
+    this.esNacional = ES_NACIONAL.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
-    this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO.includes(this.idProcedimiento)
+    this.mostrarAsterisco = MOSTRAR_ASTERISCO.includes(this.idProcedimiento)
+    this.mostrarInformacion = MOSTRAR_INFORMACION.includes(this.idProcedimiento)
     this.isProveedorModificar= PROVEEDOR_TITULO_CUSTOM.includes(this.idProcedimiento);
     if(this.isProveedorModificar) {
       this.titluoMensaje = 'Modificar Proveedor';
@@ -286,6 +327,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.campoObligatorioChange();
     if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
+      this.agregarProveedorForm.enable(); 
     }
     if(this.proveedorTablaDatos.length > 0) {
       this.agregarProveedorForm.patchValue(this.proveedorTablaDatos[0]);
@@ -293,6 +335,8 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       this.terecerosNacionalidadCambioDeValor('Nacional');
     }
     this.nacionalidadOpciones();
+    this.mostrarAsterisco = true;
+    this.mostrarInformacion = true;
   }
 
   /**
@@ -344,6 +388,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }    
     const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim() : `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
@@ -367,7 +415,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    if(this.proveedorTablaDatos.length > 0) {
+    if(this.formaDatos) {
+      if ('tableindex' in this.formaDatos) {
+        this.proveedores[0].tableIndex = (this.formaDatos as Proveedor).tableIndex;
+      }
       this.actualizaExistenteEnProveedorDatos.emit(this.proveedores);
     }
     else{
@@ -384,6 +435,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
+    this.agregarProveedorForm.get('nacionalidad')?.enable();
   }
   /**
    * @method cancelar
@@ -432,6 +486,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       case NUMERO_TRAMITE.TRAMITE_240117:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
+      case NUMERO_TRAMITE.TRAMITE_240118:
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break
       case NUMERO_TRAMITE.TRAMITE_240121:
       case NUMERO_TRAMITE.TRAMITE_240321:
         this.tercerosNacionalidadOpciones =
@@ -462,6 +519,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
     const ESTADO = this.agregarProveedorForm.get('estado');
     const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+    const CURP = this.agregarProveedorForm.get('curp');
 
     if (this.campoObligatorioProveedor) {
       NOMBRES?.setValidators([Validators.required]);
@@ -493,6 +551,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     NUMEROEXTERIOR?.updateValueAndValidity();
     ESTADO?.updateValueAndValidity();
     CODIGOPOSTAL?.updateValueAndValidity();
+    if (!this.esCURP) {
+      CURP?.clearValidators();
+    }
+    CURP?.updateValueAndValidity();
   }
 
 

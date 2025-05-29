@@ -174,5 +174,11 @@ export class PermisoCitesService {
   loadTablaDatos(): Observable<ConfiguracionItem[]> {
     return this.http.get<ConfiguracionItem[]>(this.jsonUrl);
   }
-
+ /**
+   * Obtiene los datos del documentos seleccionados.
+   * @returns Observable con los datos del documentos seleccionados.
+   */
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/202/documentos-seleccionados.json');
+  }
 }
