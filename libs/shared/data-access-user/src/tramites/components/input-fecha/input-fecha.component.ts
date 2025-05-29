@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
@@ -75,6 +76,11 @@ export class InputFechaComponent implements OnChanges {
    * Indica si se debe mostrar un ícono decorativo.
    */
   @Input() icono: boolean = true;
+  /**
+   * Bandera para indicar si el control debe estar deshabilitado.
+   */
+  @Input() isDisabled!: boolean;
+
   constructor(private fb: FormBuilder) {
     moment.locale('es');
     this.generaanios();
