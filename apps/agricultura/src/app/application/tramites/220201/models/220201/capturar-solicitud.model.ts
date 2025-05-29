@@ -108,6 +108,7 @@ export interface ApiSolicitud {
   pagoDeDerechos: PagoDeDerechos;
   datosDeLaSolicitud: DatosDeLaSolicitud;
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
+  tercerosRelacionados: PersonaTerceros[];
 }
 /**
  * Modelo para pago de derechos

@@ -78,6 +78,7 @@ ngOnInit(): void {
    this.certificadoZoosanitarioServices.updatePagoDeDerechos(resp?.pagoDeDerechos || {} as PagoDeDerechos);
    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(resp?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
    this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(resp?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
+   this.certificadoZoosanitarioServices.updateTercerosRelacionados(resp?.tercerosRelacionados || []);
           }
         });
   }

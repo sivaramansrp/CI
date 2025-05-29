@@ -54,6 +54,18 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
   seleccionarMovilizacionNacional$ = this.select(estado => estado.datosParaMovilizacionNacional);
 
 
+
+
+    /**
+   * Selector para obtener los datos de movilización nacional.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof ZoosanitarioQuery
+   */
+  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+
+
   /**
    * Selector para obtener los datos de pago de derechos.
    *

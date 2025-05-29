@@ -296,7 +296,7 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
           (seleccionado) => seleccionado.correo === persona.correo
         )
     );
-
+      this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
   }
 }
