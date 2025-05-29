@@ -9,6 +9,15 @@
         "numeroDeProcedimiento": "301"
     },
     {
+        "id": 230401,
+        "tipoDeTramite": "Solicitud de cs Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230401"
+    },
+    {
         "id": 110102,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
@@ -538,5 +547,14 @@
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
         "numeroDeProcedimiento": "250103"
+    },
+    {
+        "id": 230401,
+        "tipoDeTramite": "Solicitud de cs Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230401"
     }
 ]
