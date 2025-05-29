@@ -11,7 +11,7 @@ import {
   Validators,
 } from '@angular/forms';
 import representanteDatos from 'libs/shared/theme/assets/json/31601/represtantante-data.json';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Store, Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import { Subject } from 'rxjs';
@@ -49,6 +49,12 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
    * @param {Tramite31601Store} tramite31601Store - Store para gestionar el estado del trámite.
@@ -57,8 +63,19 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
-    private tramite31601Query: Tramite31601Query
-  ) {}
+    private tramite31601Query: Tramite31601Query,
+     private consultaioQuery: ConsultaioQuery,
+  ) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -66,7 +83,11 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Inicializa el formulario con las validaciones
-    this.tramite31601Query.selectSolicitud$
+    this.inicializarEstadoFormulario();
+  }
+
+  inicializarEstadoFormulario(): void {
+        this.tramite31601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -76,13 +97,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.represtantante = this.fb.group({
-      resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
+      resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !=='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
       rfc: ['', Validators.required],
       nombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
       apellidoMaterno: ['', Validators.required],
-      telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
-      correo: [this.solicitudState?.correo && this.solicitudState?.correo !='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
+      telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !=='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
+      correo: [this.solicitudState?.correo && this.solicitudState?.correo !=='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
     });
 
     // Deshabilita los campos que no deben ser modificados
@@ -98,8 +119,14 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
       apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
     });
-  }
 
+    if (this.esFormularioSoloLectura && this.represtantante) {
+     this.represtantante.disable();
+    } else {
+        this.represtantante.enable();
+    }  
+
+  }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    *

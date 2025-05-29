@@ -7,8 +7,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { map, Subscription } from 'rxjs';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
 
 import { Personas } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
@@ -50,6 +50,16 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
   styleUrl: './persona.component.scss', // Ruta al archivo de estilos SCSS
 })
 export class PersonaComponent implements OnInit, OnDestroy {
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+   /**
+     * Notificador para destruir las suscripciones.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+    
   /**
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
    * @type {Personas[]}
@@ -103,8 +113,19 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   constructor(
     public http: HttpClient,
-    private pantallaSvc: ServiciosPantallaService
-  ) {}
+    private pantallaSvc: ServiciosPantallaService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.loadPersonas();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta cuando el componente se inicializa.
@@ -137,7 +158,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    this.personaParasSubscription = personaParas$.subscribe();
+    this.personaParasSubscription = personaParas$.subscribe(); 
   }
 
   /**
@@ -147,8 +168,12 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     // Desuscribirse cuando el componente se destruya
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+
     if (this.personaParasSubscription) {
       this.personaParasSubscription.unsubscribe();
     }
+
   }
 }

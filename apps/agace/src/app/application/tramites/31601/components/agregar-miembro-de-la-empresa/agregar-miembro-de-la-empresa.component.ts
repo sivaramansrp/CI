@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
@@ -115,14 +115,29 @@ export class AgregarMiembroDeLaEmpresaComponent
   public solicitudState!: Solicitud31601State;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * @constructor
    * Servicio para construir formularios reactivos.
    */
   constructor(private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -131,7 +146,7 @@ export class AgregarMiembroDeLaEmpresaComponent
    */
   ngOnInit(): void {
     this.getEstablecimiento();
-    
+    this.inicializarEstadoFormulario();
   }
 
   inicializarEstadoFormulario(): void {
@@ -162,6 +177,16 @@ export class AgregarMiembroDeLaEmpresaComponent
         squemaIntegral:[this.solicitudState?.squemaIntegral, Validators.required],
         sidoModificadas: [this.solicitudState?.sidoModificadas, Validators.required]
       })
+
+      if (this.esFormularioSoloLectura) {
+      Object.keys(this.checkBoxesForm.controls).forEach((key) => {
+        this.checkBoxesForm.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.checkBoxesForm.controls).forEach((key) => {
+        this.checkBoxesForm.get(key)?.enable();
+      })
+    } 
   }
 
   /**

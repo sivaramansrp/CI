@@ -3,7 +3,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import {
@@ -163,6 +163,12 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
  * Constructor de la clase DatosPorRegimenComponent.
  * 
  * @param fb - Constructor de formularios.
@@ -178,8 +184,19 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
     private _pantallaSvc: ServiciosPantallaService,
     private tramiteAgaceStore: TramiteAgaceStore,
     private tramite31601Store: Tramite31601Store,
-    private tramite31601Query: Tramite31601Query
-  ){this.crearRegimenForm();}
+    private tramite31601Query: Tramite31601Query,
+    private consultaioQuery: ConsultaioQuery,
+  ){
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.crearRegimenForm();
+      })
+    )
+    .subscribe()
+  }
   /**
    * Gancho de ciclo de vida que se llama después de inicializar las propiedades enlazadas a datos de una directiva.
    * Este método inicializa catálogos, establece valores de control de formularios, prepara los datos de la pestaña del régimen,
@@ -344,6 +361,17 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       recintoEstrategico: [this.solicitudState?.recintoEstrategico, Validators.required],
       cumplimientoLineamientos: [this.solicitudState?.cumplimientoLineamientos, Validators.required],
     });
+
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.regimenForm.controls).forEach((key) => {
+        this.regimenForm.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.regimenForm.controls).forEach((key) => {
+        this.regimenForm.get(key)?.enable();
+      })
+    }  
+
   }
 
   /**
@@ -449,6 +477,12 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       agregarCatalogoDos: [''],
       agregarCatalogoTres: [''],
     });
+
+     if (this.esFormularioSoloLectura && this.agregarForm) {
+        this.agregarForm.disable();
+    } else {
+        this.agregarForm.enable();
+    }  
   }
 
   /**

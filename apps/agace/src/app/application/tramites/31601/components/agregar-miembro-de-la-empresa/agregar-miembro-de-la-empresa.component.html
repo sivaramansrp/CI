@@ -39,7 +39,7 @@
 <div class="container p-3 mt-4 mb-4">
   <form [formGroup]="checkBoxesForm" class="form-group">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="checkbox1" formControlName="squemaIntegral" (change)="setValoresStore(checkBoxesForm,'squemaIntegral', 'setsquemaIntegral')"/>
+      <input class="form-check-input" type="checkbox" id="checkbox1" formControlName="squemaIntegral" (change)="setValoresStore(checkBoxesForm,'squemaIntegral', 'setSquemaIntegral')"/>
       <label class="form-check-label text-justify" for="checkbox1">
         <span class="text-danger">*</span> Una vez manifestado lo anterior, se
         solicita al SAT, a través de AGACE, que realice las inspecciones a que
@@ -50,7 +50,7 @@
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="checkbox2" formControlName="sidoModificadas" (change)="setValoresStore(checkBoxesForm,'sidoModificadas', 'setsidoModificadas')"/>
+      <input class="form-check-input" type="checkbox" id="checkbox2" formControlName="sidoModificadas" (change)="setValoresStore(checkBoxesForm,'sidoModificadas', 'setSidoModificadas')"/>
       <label class="form-check-label text-justify" for="checkbox2">
         <span class="text-danger">*</span> Bajo protesta de decir verdad,
         manifiesto que los datos asentados en el presente documento son ciertos y
