@@ -22,7 +22,7 @@ import {
 } from '@angular/forms';
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
@@ -159,7 +159,7 @@ export class AgregarMiembroDeLaEmpresaComponent
       )
       .subscribe()
       this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
-        ensucarácterde: [this.solicitudState?.ensucarácterde ? this.solicitudState?.ensucarácterde : 1, Validators.required],
+        ensucaracterde: [this.solicitudState?.ensucaracterde ? this.solicitudState?.ensucaracterde : 1, Validators.required],
         rfc: [this.solicitudState?.rfc ? this.solicitudState?.rfc : 'HEJE780514BVA', [Validators.required]],
         obligadoaTributarenMéxico: [this.solicitudState?.obligadoaTributarenMéxico ?this.solicitudState?.obligadoaTributarenMéxico : true, Validators.required],
         nacionalidad: [this.solicitudState?.nacionalidad? this.solicitudState?.nacionalidad : 1, Validators.required],

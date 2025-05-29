@@ -28,11 +28,12 @@
       type="button"
       class="btn btn-default me-md-3"
       (click)="openAgregarModal()"
+      disabled="esFormularioSoloLectura ? true : false"
     >
       Modificar
     </button>
-    <button type="button" class="btn btn-primary me-md-3">Eliminar</button>
-    <button type="button" class="btn btn-primary me-md-3">Agregar</button>
+    <button type="button" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+    <button type="button" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
   </div>
 </div>
 
@@ -76,8 +77,8 @@
                   [label]="'En su carácter de'"
                   [required]="true"
                   [catalogo]="enSuCaracterDeOptions"
-                  formControlName="'ensucarácterde'"
-                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucarácterde', 'setEnsucarácterde')"
+                  formControlName="ensucaracterde"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucaracterde', 'setEnsucaracterde')"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -89,14 +90,14 @@
                   id="rfc"
                   formControlName="rfc"
                   class="form-control"
-                  formControlName="'rfc'"
+                  formControlName="rfc"
                   (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'rfc', 'setRfc')"
                 />
               </div>
             </div>
             <div class="col-4 d-flex align-items-end">
               <div class="form-group">
-                <button type="button" class="btn btn-primary">Buscar</button>
+                <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
               </div>
             </div>
           </div>
@@ -160,13 +161,14 @@
             </div>
           </div>
           <div class="button-group d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-md-3">
+            <button type="submit" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">
               Aceptar
             </button>
             <button
               type="button"
               class="btn btn-default me-md-3"
               (click)="closeAgregarModal()"
+              disabled="esFormularioSoloLectura ? true : false"
             >
               Cancelar
             </button>

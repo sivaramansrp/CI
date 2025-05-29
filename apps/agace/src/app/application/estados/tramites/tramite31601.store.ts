@@ -394,9 +394,9 @@ export interface Solicitud31601State {
      */
     sidoModificadas: string;
     /**
-     * El valor de ensucarácterde.
+     * El valor de ensucaracterde.
      */
-    ensucarácterde: string;
+    ensucaracterde: string;
     /**
      * El valor de rfc.
      */
@@ -855,9 +855,9 @@ export function createInitialState(): Solicitud31601State {
          */
         sidoModificadas: '',
         /**
-         * El valor de ensucarácterde.
+         * El valor de ensucaracterde.
          */
-        ensucarácterde: '',
+        ensucaracterde: '',
         /**
          * El valor de rfc.
          */
@@ -1812,13 +1812,13 @@ public setSidoModificadas(sidoModificadas: string) {
     }));
 }
 /**
- * Establece el estado de ensucarácterde.
- * @param ensucarácterde - El valor de ensucarácterde.
+ * Establece el estado de ensucaracterde.
+ * @param ensucaracterde - El valor de ensucaracterde.
  */
-public setEnsucarácterde(ensucarácterde: string) {
+public setEnsucaracterde(ensucaracterde: string) {
     this.update((state) => ({
         ...state,
-        ensucarácterde,
+        ensucaracterde,
     }));
 }
 /**
