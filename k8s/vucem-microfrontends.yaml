@@ -26,7 +26,7 @@ data:
     {
       "login": "https://front.v30.ultrasist.net/login/remoteAppEntry.js",
       "aga": "https://front.v30.ultrasist.net/aga/remoteAppEntry.js", 
-      "agriculture": "https://front.v30.ultrasist.net/agriculture/remoteAppEntry.js",
+      "agricultura": "https://front.v30.ultrasist.net/agricultura/remoteAppEntry.js",
       "se": "https://front.v30.ultrasist.net/se/remoteAppEntry.js",
       "semarnat": "https://front.v30.ultrasist.net/semarnat/remoteAppEntry.js",
       "agace": "https://front.v30.ultrasist.net/agace/remoteAppEntry.js",
@@ -207,32 +207,32 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
 ---
-# Deployment for agriculture
+# Deployment for agricultura
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: modulefederation-agricultura-microfront-deployment-${ENV}
   namespace: default
   labels:
-    app: agriculture-microfront
+    app: agricultura-microfront
     env: ${ENV}
 spec:
   replicas: ${REPLICAS}
   selector:
     matchLabels:
-      app: agriculture-microfront
+      app: agricultura-microfront
       env: ${ENV}
   template:
     metadata:
       labels:
-        app: agriculture-microfront
+        app: agricultura-microfront
         env: ${ENV}
     spec:
       imagePullSecrets:
         - name: vucem30registrykey
       containers:
-        - name: agriculture
-          image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+        - name: agricultura
+          image: ${REGISTRY}/vucem-front-agricultura:${TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -1051,11 +1051,11 @@ metadata:
   name: modulefederation-agricultura-microfront-service-${ENV}
   namespace: default
   labels:
-    app: agriculture-microfront
+    app: agricultura-microfront
     env: ${ENV}
 spec:
   selector:
-    app: agriculture-microfront
+    app: agricultura-microfront
     env: ${ENV}
   ports:
     - name: http
@@ -1406,8 +1406,8 @@ spec:
             name: modulefederation-aga-microfront-service-${ENV}
             port:
               number: 80
-      # Agriculture microfrontend
-      - path: /agriculture
+      # agricultura microfrontend
+      - path: /agricultura
         pathType: Prefix
         backend:
           service:
@@ -1555,7 +1555,7 @@ spec:
             name: modulefederation-aga-microfront-service-${ENV}
             port:
               number: 80
-      - path: /agriculture/remoteAppEntry.js
+      - path: /agricultura/remoteAppEntry.js
         pathType: Exact
         backend:
           service:
