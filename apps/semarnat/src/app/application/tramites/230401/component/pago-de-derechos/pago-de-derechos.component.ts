@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, InputFecha, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import { FECHA_FACTURA, PagoDerechosState } from '../../models/tramies230401.models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InputFecha, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import {
   delay,
   map,
   takeUntil,
   tap,
 } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PantallasActionService } from '../../services/pantallas-action.service';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
