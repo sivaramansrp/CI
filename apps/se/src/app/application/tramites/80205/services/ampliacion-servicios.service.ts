@@ -51,6 +51,8 @@ export class AmpliacionServiciosService {
     this.tramite80205Store.setNumeroPrograma(DATOS.numeroPrograma);
     this.tramite80205Store.setRfcEmpresa(DATOS.rfcEmpresa);
     this.tramite80205Store.setTiempoPrograma(DATOS.tiempoPrograma);
+    this.tramite80205Store.setDatosImmex(DATOS.tablaDatosIMMEX);
+    this.tramite80205Store.setDatos(DATOS.tablaDatos);
 
   }
   /**

@@ -110,6 +110,8 @@ export interface AduanaDeIngreso {
  * @property {string} rfcEmpresa - RFC (Registro Federal de Contribuyentes) de la empresa.
  * @property {string} numeroPrograma - Número del programa asociado al servicio.
  * @property {string} tiempoPrograma - Duración o tiempo asociado al programa.
+ * @property {ServicioInmex[]} tablaDatos - Lista de servicios IMMEX asociados.
+ * @property {Servicio[]} tablaDatosIMMEX - Lista de servicios IMMEX detallados.
  */
 
 export interface AmpliacionServiciosState {
@@ -118,4 +120,7 @@ export interface AmpliacionServiciosState {
   rfcEmpresa: string;
   numeroPrograma: string;
   tiempoPrograma: string;
+  tablaDatos:ServicioInmex[];
+  tablaDatosIMMEX:Servicio[];
+
 }

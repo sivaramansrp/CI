@@ -10,6 +10,8 @@
   },
     "rfcEmpresa": "rfcEmpresa",
     "numeroPrograma": "123456789",
-    "tiempoPrograma": "tiempoPrograma"
+    "tiempoPrograma": "tiempoPrograma",
+    "tablaDatos":[],
+    "tablaDatosIMMEX": []
   }
   
