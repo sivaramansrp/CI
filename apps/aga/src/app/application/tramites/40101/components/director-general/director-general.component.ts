@@ -73,6 +73,9 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
         if(seccionState.update) {
           this.setFormValues();
         }
+        if(seccionState.readonly) {
+          this.directorGeneralForm.disable();
+        }
       })
     )
     .subscribe();

@@ -41,7 +41,7 @@
                 <thead>
                   <tr>
                     <th>
-                      <input type="checkbox" (change)="toggleAll($event)" />
+                      <input [disabled]="esFormularioSoloLectura" type="checkbox" (change)="toggleAll($event)" />
                     </th>
                     <th>ID222</th>
                     <th>Número de identificación vehicular</th>
@@ -105,17 +105,20 @@
                     class="btn btn-primary btn-Agregar"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
+                    [disabled]="esFormularioSoloLectura"
                   >
                     Agregar
                   </button>
                   <button
                     name="EliminarSPFisica"
                     class="btn btn-danger me-2 btn-Agregar"
+                    [disabled]="esFormularioSoloLectura"
                   >
                     Eliminar
                   </button>
-                  <button class="btn btn-default btn-Agregar" type="button">
-                    Modificar
+                  <button class="btn btn-default btn-Agregar" 
+                    type="button" [disabled]="esFormularioSoloLectura">
+                      Modificar
                   </button>
 
                   <!-- puño modal comienza aquí -->
@@ -796,6 +799,7 @@
                 <div id="acciones">
                   <button
                     class="btn btn-primary btn-Agregar"
+                    [disabled]="esFormularioSoloLectura"
                     (click)="openDialogCapturaSPFisicaValidacion()"
                   >
                     Agregar
@@ -803,11 +807,15 @@
                   <button
                     name="EliminarSPMoral"
                     class="btn btn-danger me-2 btn-Agregar"
+                    [disabled]="esFormularioSoloLectura"
                     (click)="eliminarRegistroSelec('socioPersonaMoralCAAT')"
                   >
                     Eliminar
                   </button>
-                  <button class="btn btn-default btn-Agregar" type="button">
+                  <button class="btn btn-default btn-Agregar" 
+                    type="button"
+                    [disabled]="esFormularioSoloLectura"
+                  >
                     Modificar
                   </button>
 

@@ -1,3 +1,4 @@
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   Component,
   ElementRef,
@@ -9,25 +10,19 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Observable, map } from 'rxjs';
 import { CHOFERES_PAGE } from '../enum/transportista-terrestre.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Extranjero } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
-import { Observable } from 'rxjs';
 import { ReplaySubject } from 'rxjs';
-import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { Tramite40101Service } from '../../estado/tramite40101.service';
-import { Tramite40101State } from '../../estado/tramite40101.store';
 import { Tramite40101Store } from '../../estado/tramite40101.store';
 import { takeUntil } from 'rxjs';
 
@@ -101,6 +96,10 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
+  consultaState!: ConsultaioState;
+  esFormularioSoloLectura: boolean = false;
+  esActualizar: boolean = false;
+
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.
@@ -116,7 +115,8 @@ export class ChoferesComponent implements OnInit, OnDestroy {
     private tramite40101Service: Tramite40101Service,
     private tramite40101Query: Tramite40101Query,
     private cdRef: ChangeDetectorRef,
-    private catalogosService: CatalogosService
+    private catalogosService: CatalogosService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
   /**
    * Inicializa el formulario para chofer nacional.
@@ -193,6 +193,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.estado$ = this.tramite40101Store._select((state) => state.estado);
     this.loadEstados();
     this.estadoSeleccion();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+              this.consultaState = seccionState;
+              this.esFormularioSoloLectura = seccionState.readonly;
+              if(this.esFormularioSoloLectura) {
+                this.formChoferes.disable();
+              }
+          })).subscribe();
+          this.esActualizar = this.consultaState.update;
   }
   /**
    * Obtiene los controles de formulario del formulario choferes.
@@ -282,7 +294,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    */
 
   loadStoredData(): void {
-    let STORED_DATA = sessionStorage.getItem('nacionalData');
+    const STORED_DATA = sessionStorage.getItem('nacionalData');
     this.nacional = STORED_DATA ? JSON.parse(STORED_DATA) : [];
   }
   /**

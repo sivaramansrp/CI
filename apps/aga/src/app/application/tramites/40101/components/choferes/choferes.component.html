@@ -93,13 +93,20 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button">Modificar</button>
-              <button class="btn btn-default" type="button">Eliminar</button>
+              <button 
+                class="btn btn-default" type="button"
+                [disabled]="esFormularioSoloLectura"
+              >Modificar</button>
+              <button 
+                class="btn btn-default" type="button"
+                [disabled]="esFormularioSoloLectura"
+              >Eliminar</button>
               <button
                 class="btn btn-primary ms-2"
                 data-bs-toggle="modal"
                 data-bs-target="#modalMiembros"
                 (click)="agregarMiembro()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Agregar
               </button>
@@ -163,13 +170,22 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button">Modificar</button>
-              <button class="btn btn-default" type="button">Eliminar</button>
+              <button 
+                class="btn btn-default" 
+                type="button"
+                [disabled]="esFormularioSoloLectura"
+                >Modificar</button>
+              <button 
+                class="btn btn-default" 
+                type="button"
+                [disabled]="esFormularioSoloLectura"
+              >Eliminar</button>
               <button
                 type="submit"
                 class="btn btn-primary ms-2"
                 data-bs-toggle="modal"
                 data-bs-target="#modalMiembros2"
+                [disabled]="esFormularioSoloLectura"
                 (click)="abrirModal()"
               >
                 Agregar

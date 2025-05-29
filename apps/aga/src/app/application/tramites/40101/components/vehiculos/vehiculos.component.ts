@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DatosDelVehículo,
   DatosDelVehículoPaisEmisor,
@@ -95,6 +95,8 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy, OnInit {
   botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
   botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
   consultaState!: ConsultaioState;
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -233,6 +235,10 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy, OnInit {
       takeUntil(this.destroyed$), 
       map((seccionState) => {
       this.consultaState = seccionState;
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if(this.esFormularioSoloLectura){
+        this.formVehiculo.disable();
+      }
     })).subscribe();
 
     if (this.consultaState.update) {
