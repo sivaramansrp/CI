@@ -107,7 +107,6 @@ this. inicializarEstadoFormulario();
    */
   inicializarEstadoFormulario(): void {
     if (!this.formularioOperacionForm) {
-      // Form not initialized, nothing to do
       return;
     }
     if (this.esFormularioSoloLectura) {
@@ -124,8 +123,7 @@ this. inicializarEstadoFormulario();
    */
   guardarDatosFormulario(): void {
     if (!this.formularioOperacionForm) {
-      // Form not initialized, nothing to do
-      return;
+     return;
     }
     this.actualizarEstado();
     if (this.esFormularioSoloLectura) {
@@ -200,9 +198,9 @@ this.solicitudService.getClave().subscribe((data) => {
   }
 
   /**
-   * Getter for form controls (for testing).
+   * Getter para los controles del formulario (para pruebas).
    */
-  get formControls() {
+  get formControls(): { [key: string]: import("@angular/forms").AbstractControl } | undefined {
     return this.formularioOperacionForm?.controls;
   }
 

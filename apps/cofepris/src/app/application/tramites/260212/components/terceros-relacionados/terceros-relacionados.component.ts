@@ -263,8 +263,10 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
-    this.tercerosService.getEncabezadoDeTabla().subscribe((data:any) => {
-      this.tablaEncabezadoData = data.columns;
+    this.tercerosService.getEncabezadoDeTabla().subscribe((data: unknown) => {
+      if (typeof data === 'object' && data !== null && 'columns' in data) {
+        this.tablaEncabezadoData = (data as { columns: string[] }).columns;
+      }
     });
 
     /**

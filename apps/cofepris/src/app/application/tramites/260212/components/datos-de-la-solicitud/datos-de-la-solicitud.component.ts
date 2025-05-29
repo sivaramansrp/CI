@@ -463,18 +463,18 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
   /**
    * Opciones de publicación para la solicitud.
    */
-  // losDatos:any[] = [];
+  losDatos: unknown[] = [];
 
-  // /**
-  //  * Obtiene las opciones de publicación de la solicitud.
-  //  */
-  // obtenerOpcionesSolicitud(): void {
-  //   if (typeof this.solicitudService.getOpcionesPublicacion === 'function') {
-  //     this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
-  //       this.losDatos = data;
-  //     });
-  //   }
-  // }
+  /**
+   * Obtiene las opciones de publicación de la solicitud.
+   */
+  obtenerOpcionesSolicitud(): void {
+    if (typeof this.solicitudService.getOpcionesPublicacion === 'function') {
+      this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
+        this.losDatos = data;
+      });
+    }
+  }
   /*
   * Método del ciclo de vida de Angular - destruye el componente
 */

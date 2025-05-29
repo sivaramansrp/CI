@@ -61,7 +61,7 @@ describe('PaisDeOriginComponent', () => {
     component.selectRangoDias = ['2023-01-01'];
     component.fechasSeleccionadas = [];
     component.fechasDatos = [];
-    // Mock the fecha control with a value that is an array (simulate FormControl)
+    
     (component as any).fecha = { value: [] };
     expect(() => component.agregar('x')).not.toThrow();
     expect(component.fechasSeleccionadas).toEqual([]);
@@ -71,7 +71,7 @@ describe('PaisDeOriginComponent', () => {
   it('should do nothing if quitar is called with non "t" value', () => {
     component.fechasSeleccionadas = ['2023-01-01'];
     component.fechasDatos = [];
-    // Mock the fechaSeleccionada control with a value that is an array (simulate FormControl)
+  
     (component as any).fechaSeleccionada = { value: [] };
     expect(() => component.quitar('x')).not.toThrow();
     expect(component.fechasSeleccionadas).toEqual(['2023-01-01']);

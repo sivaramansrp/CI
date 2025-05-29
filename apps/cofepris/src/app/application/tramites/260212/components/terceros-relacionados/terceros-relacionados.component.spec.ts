@@ -252,7 +252,7 @@ describe('TercerosRelacionadosComponent', () => {
     }
   });
 
-  // Validators
+ 
   describe('validators', () => {
     it('requiredPaisValidator should return null for valid value', () => {
       const control = { value: '10' } as any;
@@ -311,7 +311,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFacturadorFormGroup).toBeDefined();
   });
 
-  // Row selection methods
+  
   it('should set showFabricanteButtons on selectedFabricanteRows', () => {
     component.selectedFabricanteRows({ checked: true } as any);
     expect(component.showFabricanteButtons).toBe(true);
@@ -337,7 +337,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.showFacturadorButtons).toBe(false);
   });
 
-  // tercerosInputChecked
+  
   it('should set nacional/extranjero on tercerosInputChecked', () => {
     component.tercerosInputChecked('1');
     expect(component.nacional).toBe(true);
@@ -347,7 +347,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.extranjero).toBe(true);
   });
 
-  // tipoPersonaChecked all branches
+  
   it('should enable correct fields for tipoPersonaChecked: Facturador', () => {
     component.tipoPersonaChecked('1', 'Facturador');
     expect(component.fisica).toBe(true);

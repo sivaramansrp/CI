@@ -174,9 +174,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(unsubSpy).toHaveBeenCalled();
   });
 
-  // Additional coverage for edge cases and branches
-
-  it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => {
+it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => {
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.pagoDerechos = undefined as any;
     component.esFormularioSoloLectura = true;
