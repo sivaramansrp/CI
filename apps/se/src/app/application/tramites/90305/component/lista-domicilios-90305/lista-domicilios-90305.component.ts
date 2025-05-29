@@ -43,17 +43,22 @@ import { Tramite90305Store } from '../../estados/tramite90305.store';
   styleUrl: './lista-domicilios-90305.component.scss',
 })
 export class ListaDomicilios90305Component implements OnInit, OnDestroy {
-  /** Subject para destruir el componente */
-  private destroy$ = new Subject<void>();
   /** Subject para destruir la consulta */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /** Formulario reactivo para la lista de domicilios */
   listaDomiciliosForm!: FormGroup;
 
   /** Consulta: variables para catálogo y formulario */
   estadoJson: CatalogoResponse[] = [];
+  
+  /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
+  
+  /** Observable para el estado seleccionado */
   public estadoCatalogo!: CatalogoResponse[];
+  
+  /** Indica si el formulario es de solo lectura */
   public esFormularioSoloLectura: boolean = false;
 
   /**
@@ -157,7 +162,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   loadDomicilios(): void {
     this.listaDomicilios
       .getListaDomicilios()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         this.personaparas = resp;
       });
@@ -173,8 +178,6 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular - destruye el componente
    */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

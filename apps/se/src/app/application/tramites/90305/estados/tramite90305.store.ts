@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
 
 export interface Tramite90305State {
   selectedEstado: CatalogoResponse | null;

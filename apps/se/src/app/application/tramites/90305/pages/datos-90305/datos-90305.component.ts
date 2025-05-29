@@ -31,6 +31,11 @@ export class Datos90305Component implements OnInit, AfterViewInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+   * Estado de consulta que contiene la información del formulario y su estado.
+   * Se obtiene a través de la consulta ConsultaioQuery.
+   */
   public consultaState!: ConsultaioState;
 
   /**
@@ -38,14 +43,24 @@ export class Datos90305Component implements OnInit, AfterViewInit, OnDestroy {
    */
   indice: number = 1;
 
-  // Descomenta y ajusta si tienes servicios específicos
+  /**
+   * Constructor del componente Datos90305Component.
+   * 
+   * @param solicitud90305Service - Servicio para manejar la lógica de negocio relacionada con el trámite 90305.
+   * @param consultaQuery - Consulta para obtener el estado actual del formulario y su configuración.
+   */
   constructor(
-    // public pantallasSvc: Pantallas90305Service,
     private solicitud90305Service: ProsecModificacionServiceTsService,
     private consultaQuery: ConsultaioQuery
   ) {}
 
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de consulta para obtener la información del formulario.
+   * Si el estado indica que se está actualizando, se llama a `guardarDatosFormulario`.
+   * De lo contrario, se establece `esDatosRespuesta` como verdadero.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -64,11 +79,15 @@ export class Datos90305Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Método para guardar los datos del formulario.
+   * Se suscribe al servicio `getRegistroTomaMuestrasMercanciasData` para obtener los datos del formulario.
+   * Si la respuesta es válida, se actualiza el estado del formulario con los datos obtenidos.
    */
   guardarDatosFormulario(): void {
-    // Descomenta y ajusta si tienes un servicio real
+    /**
+     * Se obtiene la información del formulario a través del servicio `solicitud90305Service`.
+     * Se utiliza `takeUntil` para asegurarse de que la suscripción se cancele cuando el componente se destruya.
+     */
     this.solicitud90305Service
       .getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -98,6 +117,10 @@ export class Datos90305Component implements OnInit, AfterViewInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Cancela las suscripciones activas y libera recursos.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

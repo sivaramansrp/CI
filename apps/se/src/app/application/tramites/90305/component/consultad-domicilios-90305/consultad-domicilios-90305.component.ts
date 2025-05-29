@@ -47,8 +47,6 @@ import { Tramite90305Query } from '../../estados/tramite90305.query';
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
 export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
-  /** Subject para destruir el componente */
-  private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
   selectedEstado$: Observable<CatalogoResponse | null> =
     this.tramite90305Query.selectedEstado$;
@@ -57,7 +55,6 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
 
-  // --- Variables y métodos similares a DeLaMuestraComponent ---
   /** Catálogo de estados para mantener similitud con DeLaMuestraComponent */
   public estadoCatalogo!: CatalogoResponse[];
   /** Notificador de destrucción similar */
@@ -100,14 +97,13 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular - inicializa el componente y configura el formulario
    */
   ngOnInit(): void {
-    // Lógica original
+    // Inicializa el formulario reactivo con un control para el estado
     this.formConsulta = this.fb.group({
       estadoControl: [{ disabled: false }, Validators.required],
     });
 
-    this.selectedEstado$.pipe(takeUntil(this.destroy$)).subscribe((selectedEstado) => {
+    this.selectedEstado$.pipe(takeUntil(this.destroyNotifier$)).subscribe((selectedEstado) => {
       if (selectedEstado) {
-        console.log("selectedEstado" + selectedEstado);
         this.formConsulta.get('estadoControl')?.setValue(selectedEstado);
       }
     });
@@ -175,7 +171,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   loadEstado(): void {
     this.listaDomicilios
       .getEstadoData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: CatalogoResponse[]) => {
         this.estadoJson = resp;
       });
@@ -193,8 +189,6 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
     * Método del ciclo de vida de Angular - destruye el componente
   */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
