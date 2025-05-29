@@ -529,5 +529,15 @@
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
         "numeroDeProcedimiento": "250103"
+    },
+
+        {
+        "id": 230501,
+        "tipoDeTramite": "Solicitud de cs Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2025-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230501"
     }
 ]

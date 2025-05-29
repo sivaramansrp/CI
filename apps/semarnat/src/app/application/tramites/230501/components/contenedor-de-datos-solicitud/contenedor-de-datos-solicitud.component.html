@@ -28,7 +28,7 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="listaDeFraccionesArancelarias"
+                    <app-catalogo-select [catalogo]="listaDeFraccionesArancelarias" [isDisabled]="esFormularioSoloLectura"
                         formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'"
                         name="Fracción arancelaria" (change)="fraccionArancelariaSeleccione()" [required]="true"
                         [tooltipQuestionCircle]="true"></app-catalogo-select>
@@ -58,7 +58,7 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="listaDeNumeroCas" formControlName="numeroCas"
+                    <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeNumeroCas" formControlName="numeroCas"
                         [label]="'Número CAS'" name="Número CAS" (change)="numeroCasSeleccione()"
                         [required]="true"></app-catalogo-select>
                 </div>
@@ -123,7 +123,7 @@
             </div>
 
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="listaDeEstadoFisico" formControlName="estadoFisico"
+                <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeEstadoFisico" formControlName="estadoFisico"
                     [label]="'Estado físico del material'" name="Estado físico del material" [required]="true"
                     (change)="estadoFisicoSeleccione()"></app-catalogo-select>
             </div>
@@ -147,7 +147,7 @@
 
         <div class="row mt-3">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="listaDeUnidadMedida" formControlName="unidadMedida"
+                <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeUnidadMedida" formControlName="unidadMedida"
                     [label]="'Unidad de medida'" name="Unidad de medida" [required]="true"
                     (change)="unidadMedidaSeleccione()"></app-catalogo-select>
             </div>

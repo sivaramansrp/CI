@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA, OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR } from '../../constantes/materiales-peligrosos.enum';
-import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,7 +13,7 @@ import { Tramite230501Query } from '../../estados/queries/tramite230501Query.que
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent,InputCheckComponent,InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent, InputCheckComponent, InputRadioComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
   providers: [MaterialesPeligrososService],
@@ -147,7 +147,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Estas opciones son definidas por la constante `OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR`.
    */
   radioOpcions = OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR;
-
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor de la clase ContenedorDeDatosSolicitudComponent.
    * 
@@ -167,7 +171,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(private tramite230501Query: Tramite230501Query,
     private tramite230501Store: Tramite230501Store, public materialesPeligrososService: MaterialesPeligrososService,
     private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery,
-    public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute
+    public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute, private consultaQuery: ConsultaioQuery
   ) {
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeFraccionesArancelarias', '/230501/fraccionArancelaria.json');
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeNumeroCas', '/230501/numeroCas.json');
@@ -195,9 +199,35 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.tramiteState = seccionState;
         })
       ).subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (!seccionState.create && seccionState.procedureId === '230501') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.fechaDeLaFacturaInput.habilitado = this.esFormularioSoloLectura;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.pestanaValidar();
     this.crearDatosSolicitudForm();
 
+  }
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.datosSolicitudForm) {
+      this.crearDatosSolicitudForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.datosSolicitudForm.disable();
+    } else {
+      this.datosSolicitudForm.enable();
+    }
   }
   /**
 * Establece el estado de validación del formulario de destinatario.
@@ -259,7 +289,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * - Convierte el número a letras si el valor es válido.
    * - Actualiza el formulario y la tienda con el valor convertido.
    */
-  onCambioDeTiempo(value: string | number): void {    
+  onCambioDeTiempo(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     if (VALOR_SELECCIONADO) {
       const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(typeof VALOR_SELECCIONADO === 'number' ? VALOR_SELECCIONADO : parseFloat(VALOR_SELECCIONADO));
