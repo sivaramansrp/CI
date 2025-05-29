@@ -67,7 +67,7 @@ run-all: create-network
 	@echo "Dashboard: http://localhost:4200"
 	@echo "Login: http://localhost:4201"
 	@echo "AGA: http://localhost:4202"
-	@echo "Agriculture: http://localhost:4204"
+	@echo "Agricultura: http://localhost:4204"
 	@echo "SE: http://localhost:4205"
 	@echo "SEMARNAT: http://localhost:4206"
 	@echo "AGACE: http://localhost:4209"

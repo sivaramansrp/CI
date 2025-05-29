@@ -312,7 +312,7 @@
         <div class="mensaje-error">Intervalo de fecha no válido</div>
         } @if (fechaInicioPasadaFechaFinalError()) {
         <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
+          La fecha de inicio no debe ser despues que la fecha final
         </div>
         }
       </div>
@@ -595,7 +595,6 @@
   <div formGroupName="mercancia">
     <div class="row">
       <div class="col-md-4">
-        
         <app-select-paises
           [catalogosPaises]="paisesOrigen"
           formControlName="paisOrigen"
@@ -666,8 +665,8 @@
     (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
   ></lib-transporte>
 
-   <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
-   <lib-transporte
+  <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
+  <lib-transporte
     [catalogoTransporte]="tipoTransporte"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
     [tablaTransporte]="solicitudState.transporteArriboDatos"
@@ -733,7 +732,6 @@
             class="btn btn-primary me-2"
             type="button"
             (click)="consultarLineaCaptura()"
-            [disabled]="!FormSolicitud.get('pagoCaptura')?.valid"
           >
             Consultar
           </button>
@@ -742,12 +740,25 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3 mb-5">
       <p class="p-bold">
         A través del siguiente vinculo puedes ingresar a la página para generar
         la línea de captura de la constancia que se solicita:
       </p>
       <p>Generar línea de captura</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
+          [configuracionTabla]="encabezadoDeTablaPagos"
+          [datos]="datosTablaPagos"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-2"></div>
     </div>
   </div>
   }
