@@ -1,5 +1,5 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { ResponsablesDespacho } from "../../models/5701/tramite5701.model";
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ResponsablesDespacho } from '../../models/5701/tramite5701.model';
 
 /**
  * @description
@@ -13,14 +13,18 @@ export const CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO: Configuracion
      * - Clave: Obtiene el valor de `gafeteRespoDespacho` de la fila.
      * - Orden: 1.
      */
-    { encabezado: 'Gafete', clave: (fila) => fila.gafeteRespoDespacho, orden: 1 },
+    {
+      encabezado: 'Gafete',
+      clave: (fila) => fila.gafeteRespoDespacho,
+      orden: 1,
+    },
 
-   /**
-    * Encabezado de la columna que muestra el nombre de la persona responsable del despacho.
-    * - Encabezado: "Nombre".   
-    * - Clave: Obtiene el valor de `nombre` de la fila.
-    * - Orden: 2.
-    */
+    /**
+     * Encabezado de la columna que muestra el nombre de la persona responsable del despacho.
+     * - Encabezado: "Nombre".
+     * - Clave: Obtiene el valor de `nombre` de la fila.
+     * - Orden: 2.
+     */
     { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 2 },
 
     /**
@@ -29,7 +33,11 @@ export const CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO: Configuracion
      * - Clave: Obtiene el valor de `primerApellido` de la fila.
      * - Orden: 3.
      */
-    { encabezado: 'Apellido Paterno', clave: (fila) => fila.primerApellido, orden: 3 },
+    {
+      encabezado: 'Apellido Paterno',
+      clave: (fila) => fila.primerApellido,
+      orden: 3,
+    },
 
     /**
      * Encabezado de la columna que muestra el apellido materno de la persona responsable del despacho.
@@ -37,5 +45,21 @@ export const CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO: Configuracion
      * - Clave: Obtiene el valor de `segundoApellido` de la fila.
      * - Orden: 4.
      */
-    { encabezado: 'Apellido Materno', clave: (fila) => fila.segundoApellido, orden: 4 },
+    {
+      encabezado: 'Apellido Materno',
+      clave: (fila) => fila.segundoApellido,
+      orden: 4,
+    },
   ];
+
+/**
+ * @description
+ * Titulo del modal de aviso.
+ */
+export const TITULO_MODAL_AVISO = 'Aviso';
+
+/**
+ * @description
+ * Mensaje de error al intentar eliminar un tercero relacionado sin haber seleccionado un registro.
+ */
+export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';

@@ -34,7 +34,11 @@ import { ConsultaResponsableService } from '../../../../core/services/5701/consu
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
-import { CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO } from '../../../../core/enums/5701/responsables-despacho.enum';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
+  MSG_SELECCIONA_REGISTRO,
+  TITULO_MODAL_AVISO,
+} from '../../../../core/enums/5701/responsables-despacho.enum';
 
 @Component({
   selector: 'agrega-personas',
@@ -329,6 +333,9 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     responsable = null;
 
     this.gafeteRespoDespacho.reset();
+    this.personaForm.get('nombreRespoDespacho')?.disable();
+    this.personaForm.get('paternoRespoDespacho')?.disable();
+    this.personaForm.get('maternoRespoDespacho')?.disable();
     this.personaForm.reset();
   }
 
@@ -371,6 +378,36 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  /**
+   * Elimina los terceros seleccionados del arreglo `personas`.
+   * Si no hay terceros seleccionados, muestra una notificación de aviso.
+   * @returns {void}
+   */
+  eliminarResponsables(): void {
+    if (this.responsableSeleccionado.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.personas = this.personas.filter(
+      (persona) =>
+        !this.responsableSeleccionado.some(
+          (seleccionado) =>
+            seleccionado.gafeteRespoDespacho === persona.gafeteRespoDespacho
+        )
+    );
+
+    this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
   /**
