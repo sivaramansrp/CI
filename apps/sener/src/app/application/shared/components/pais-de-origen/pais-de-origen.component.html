@@ -10,6 +10,7 @@
           [catalogo]="elementosDeBloque"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un valor'"
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="bloque"
           (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
         ></app-catalogo-select>      
@@ -17,7 +18,7 @@
       <div 
       class="col-md-4 d-flex  align-items-center mt-5"
       >
-      <button type="button" class="btn-primary btn" name="todos países" (click)="onObtenerCiudades()">Todos los países</button>
+      <button type="button" class="btn-primary btn" [disabled]="esFormularioSoloLectura" name="todos países" (click)="onObtenerCiudades()">Todos los países</button>
       </div>
       <div class="col-md-4"></div>
     </div>
