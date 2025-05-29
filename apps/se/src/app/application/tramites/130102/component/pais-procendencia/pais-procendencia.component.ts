@@ -180,9 +180,7 @@ export class PaisProcendenciaComponent implements OnInit {
         this.paisForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.paisForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
   /**
    * Inicializa el formulario reactivo y sus validaciones.

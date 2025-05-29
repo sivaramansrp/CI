@@ -7,7 +7,10 @@ import { FraccionArancelariaProsec, OctavaTemporal } from "../models/octava-temp
 export const ERROR_DE_REGISTRO_ALERT =
 '<strong>¡Error de registrot</strong>Faltan campos por capturar.';
 
-
+/*
+  * Mensaje de alerta que se muestra cuando hay un error en el registro 
+  * debido a que la mercancía ya ha sido registrada.
+  */
 export const MERCANCIA_TABLA = [
   {
     encabezado: 'Cantidad',
@@ -45,7 +48,10 @@ export const MERCANCIA_TABLA = [
     orden: 7,
   }
 ];
-
+/*
+  * Mensaje de alerta que se muestra cuando hay un error en el registro 
+  * debido a que la mercancía ya ha sido registrada.
+  */
 export const FRACCIONES_ANARCIA_TABLA = [
   {
     encabezado: 'Fracción arancelaria',

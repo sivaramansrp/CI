@@ -160,9 +160,7 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
         this.form.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.form.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
   
   /**
