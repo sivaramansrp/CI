@@ -102,6 +102,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   radioManifesto:boolean = false;
 
+  /**
+   * Evento emitido cuando se solicita la cancelación de la acción actual.
+   * 
+   * Este evento no emite ningún valor y puede ser utilizado por componentes padres
+   * para manejar la lógica de cancelación, como cerrar diálogos o limpiar formularios.
+   */
   @Output() cancelarEvento = new EventEmitter<void>();
   /**
    * Representa la fecha de inicio ingresada por el usuario.
@@ -650,6 +656,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+    /**
+   * Restablece el estado del componente al regresar de la carga de archivos.
+   * 
+   * - Oculta la tabla de carga de archivos.
+   * - Limpia el valor del input de archivo.
+   * - Restablece la etiqueta del archivo a "Sin archivo seleccionados".
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   regresar(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
@@ -658,6 +673,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     FILE_INPUT.value = '';
     this.etiquetaDeArchivo = 'Sin archivo seleccionados';
   }
+  
   /**
    * Método para analizar una cadena CSV y convertirla en una lista de objetos.
    *
@@ -717,12 +733,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   esPago(): void {
     if (this.solicitudForm.valid) {
-      // Implementar lógica de pago y envío del formulario
       this.datosTramiteService
         .submitSolicitud()
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(() => {
-          // Manejar envío exitoso
         });
     } else {
       this.mostrarMensaje = true;
