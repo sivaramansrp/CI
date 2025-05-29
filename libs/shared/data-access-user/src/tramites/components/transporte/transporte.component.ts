@@ -282,6 +282,10 @@ export class TransporteComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * @description Maneja el cambio del tipo de transporte seleccionado.
+   * @returns {void} No retorna ningún valor.
+   */
   onChangeTipoTransporte(): void {
     if (this.bodyTabla.length > 0) {
       this.nuevaNotificacion = {
@@ -760,6 +764,9 @@ export class TransporteComponent implements OnInit, OnChanges {
         tap((response) => {
           if (response.codigo === '00') {
             this.aereoForma.get('guia_valida')?.setValue(true);
+          } else {
+            this.aereoForma.get('guia_master_aereo')?.setValue('');
+            this.aereoForma.get('guia_house_aereo')?.setValue('');
           }
         }),
         takeUntil(this.destroyNotifier$)
