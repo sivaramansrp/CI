@@ -1,12 +1,12 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Catalogo} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-
 /**
  * FabricanteModalComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
