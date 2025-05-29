@@ -56,13 +56,5 @@ export class SolicitudService {
    getClasificacionProducto(){
     return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }
-  /**
-   * Obtiene el estado físico desde un recurso externo.
-   * @returns Un Observable que emite un arreglo de objetos.
-   */
-  // getTestadoFisico(): Observable<any[]> {
-  //   return this.http.get<any[]>('/assets/json/260212/estadoFisico.json')
-  // }
-  
-
+ 
 }
