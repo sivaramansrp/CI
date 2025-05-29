@@ -12,13 +12,13 @@ export interface PagoDerechosState {
   fecha: string;
   importePago: string;
 }
-  /**
- * Constant representing the invoice date field configuration.
- * 
- * @property {string} labelNombre - The label for the invoice date field.
- * @property {boolean} required - Indicates if the invoice date field is required.
- * @property {boolean} habilitado - Indicates if the invoice date field is enabled.
- */
+/**
+* Representa la configuración de la fecha de pago en el sistema.
+* 
+* @property labelNombre - Etiqueta que describe el nombre del campo, en este caso "Fecha de pago:".
+* @property required - Indica si el campo es obligatorio. Valor predeterminado: false.
+* @property habilitado - Determina si el campo está habilitado para su uso. Valor predeterminado: true.
+*/
   export const FECHA_FACTURA = {
     labelNombre: 'Fecha de pago:',
     required: true,
