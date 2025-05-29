@@ -179,7 +179,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       lada: [{ value: this.formularioEmpresaState.lada || '', disabled: true }],
       telefono: [{ value: this.formularioEmpresaState.telefono || '', disabled: true }],
       nacionalidad: [this.formularioEmpresaState?.nacionalidad || '', Validators.required],
-      registroFederal: [this.formularioEmpresaState?.registroFederal || '', Validators.required],
+      registroFederal: [this.formularioEmpresaState?.registroFederal || '', [Validators.required, Validators.minLength(13)]],
       tipoDePersona: [this.formularioEmpresaState?.tipoDePersona || '', Validators.required],
       nombre: [this.formularioEmpresaState.nombre],
       apellidoPaterno: [this.formularioEmpresaState.apellidoPaterno],
@@ -194,6 +194,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     });
   }
 
+  
   /** Método para eliminar un pedimento */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
@@ -202,13 +203,15 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   }
 
   /** Método para abrir un modal */
-  abrirModal(i: number = 0): void {
+  abrirModal(i: number = 0, mensaje: string = ''): void {
+    console.log('Modal Triggered:', mensaje); // Debugging log
+
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'La entidad federativa seleccionada no cuenta con sucursales asociadas a su RFC para tramitar el Registro como Empresa de la Frontera',
+      mensaje: mensaje || 'La entidad federativa seleccionada no cuenta con sucursales asociadas a su RFC para tramitar el Registro como Empresa de la Frontera',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -216,6 +219,23 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     };
 
     this.elementoParaEliminar = i;
+
+    setTimeout(() => {
+      this.nuevaNotificacion = null!;
+    }, 2000);
+    
+  }
+  checkRFCValidation(): void {
+    const RFC_CONTROL = this.formularioEmpresa.get('registroFederal');
+    console.log('RFC Validation Triggered:', RFC_CONTROL?.value); // Log the current value
+    console.log('RFC_CONTROL invalid:', RFC_CONTROL?.invalid); // Log if the field is invalid
+    console.log('RFC_CONTROL errors:', RFC_CONTROL?.errors); // Log the errors object
+  
+    if (RFC_CONTROL?.invalid && RFC_CONTROL?.errors?.['minlength'] && !this.nuevaNotificacion) {
+      console.log('Calling abrirModal'); // Debugging log
+
+      this.abrirModal(0, 'El RFC debe tener al menos 13 caracteres de longitud.');
+    }
   }
 
   /** Getter para obtener la nacionalidad seleccionada */
@@ -340,7 +360,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
         if (REPRESENTACION_FEDERAL) {
           REPRESENTACION_FEDERAL_CONTROL?.setValue(REPRESENTACION_FEDERAL.id);
         } 
+       
         this.abrirModal();
+        
       }
     });
   }

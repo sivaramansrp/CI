@@ -163,10 +163,15 @@
             <label for="registroFederal" class="form-label">Registro federal de contribuyentes*:</label>
             <input type="text" id="registroFederal" class="form-control" formControlName="registroFederal"
             (change)="setValoresStore(formularioEmpresa,'registroFederal', 'setRegistroFederal')"
+            (blur)="checkRFCValidation()"
                >
         </div>
     </div>
   }
+  <section *ngIf="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+    </section>
   
     @if (selectedNacionalidad === 'No' || selectedTipoPersona === 'Persona Moral') {
    <div>
@@ -186,10 +191,10 @@
         </div>
      </div>
     }
-     <div class="row">
-        <div class="col-md-6">
+     <div class="row" >
+        <div class="col-md-6" *ngIf="selectedNacionalidad === 'No' && selectedTipoPersona === 'Persona Moral'">
             <label for="taxId" class="form-label">TAX ID*:</label>
-            <input type="text" id="taxId" class="form-control" formControlName="taxId"
+            <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
                >
         </div>
@@ -204,7 +209,8 @@
             >
         </div>
       </div>
-        <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6" >
             <app-catalogo-select 
               [catalogo]="paisData.catalogos" 
               [label]="'País'" 
@@ -216,6 +222,7 @@
             </app-catalogo-select>
 
         </div>
+    </div>
         <div class="col-md-6">
             <label for="Código postal" class="form-label">Código postal:</label>
             <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal"
@@ -224,17 +231,22 @@
              >
         </div>
         <div class="col-md-6">
-            <label for="Estado" class="form-label">Estado:</label>
+            <label for="Estado" class="form-label">Estado*:</label>
             <input type="text" id="Estado" class="form-control" formControlName="datosEstado"
             (change)="setValoresStore(formularioEmpresa,'datosEstado', 'setDatosEstado')"
 
            >
         </div>
         <div class="col-md-6">
-            <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
+            <label for="Correo electrónico" class="form-label">Correo electrónico*:</label>
             <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico"
             (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')"
          >
+        </div>
+        <div class="col-md-6" *ngIf="selectedNacionalidad === 'No' && selectedTipoPersona === 'Persona Física'">
+            <label for="taxId" class="form-label">TAX ID*:</label>
+            <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
+                (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')">
         </div>
       </div> 
     </div>
