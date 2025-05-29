@@ -1,3 +1,5 @@
+import { deprecate } from 'util';
+
 /**
  * Representa la respuesta de un catálogo básico.
  */
@@ -36,9 +38,9 @@ export interface RespuestaCatalogos {
 
 /**
  * Representa un catálogo genérico utilizado en el sistema.
- * 
+ *
  * @interface Catalogo
- * 
+ *
  * @property {number} id - Identificador único del catálogo.
  * @property {string} descripcion - Descripción del catálogo.
  * @property {string} [clave] - Clave opcional asociada al catálogo pais.
@@ -96,8 +98,20 @@ export interface CatalogoPaises {
   clave: number;
   /** Código ISO del país. */
   codigoIso?: string;
-  /** Nombre del país. */
+
+  /** Descripcion del país. */
   descripcion: string;
+
+  /** Nombre del país. */
+  /**
+   * @deprecated La propiedad 'nombre' está obsoleta, utiliza 'descripcion' en su lugar.
+   */
+  nombre?: string;
+  /** Clave del país. */
+  /**
+   * @deprecated La propiedad 'id' está obsoleta, utiliza 'clave' en su lugar.
+   */
+  id?: number;
 }
 
 /**

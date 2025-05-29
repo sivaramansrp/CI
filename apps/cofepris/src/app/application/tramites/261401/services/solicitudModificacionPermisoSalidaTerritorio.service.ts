@@ -72,4 +72,12 @@ export class SolicitudModificacionPermisoSalidaTerritorioService {
       'assets/json/261401/tramite-asociados.json'
     );
   }
+
+    /**
+   * Obtiene la lista de países desde un archivo JSON local.
+   * Observable con el arreglo de objetos de tipo Catalogo.
+   */
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/261401/pais.json');
+  }
 }
