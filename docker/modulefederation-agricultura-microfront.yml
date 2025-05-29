@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agriculture/Dockerfile.dev
+      dockerfile: apps/agricultura/Dockerfile.dev
       args:
         - NODE_ENV=production
     container_name: modulefederation-agricultura-microfront
