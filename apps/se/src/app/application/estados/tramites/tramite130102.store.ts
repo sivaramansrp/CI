@@ -63,6 +63,8 @@ export interface Solicitud130102State {
 
   /** Lista detallada de los productos incluidos en la solicitud, separados por un delimitador si es necesario. */
   productos: string;
+
+  solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -89,6 +91,7 @@ export function createInitialState(): Solicitud130102State {
     descripcionJustificacion: '', // Justificación vacía.
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
+    solicitud : "", // Indica que la solicitud no está activa por defecto.
   };
 }
 
@@ -311,6 +314,12 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
     this.update((state) => ({
       ...state,
       productos,
+    }));
+  }
+  public setSolicitude(solicitud: string) {
+ this.update((state) => ({
+      ...state,
+      solicitud,
     }));
   }
 

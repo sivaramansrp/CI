@@ -14,8 +14,9 @@ import { TituloComponent } from "libs/shared/data-access-user/src/tramites/compo
 
 import fraccionOptionJson from 'libs/shared/theme/assets/json/130102/fracciónarancelaria-options.json';
 
-import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
@@ -73,16 +74,19 @@ export class UsoEspicificoComponent implements OnInit {
    */
   catalogos: Catalogo[] = fraccionOptionJson;
 
-  /**
-   * Estado actual de la solicitud utilizado para poblar los formularios.
+    /**
+   * Estado actual de la solicitud 130102, obtenido desde el store.
    */
   public solicitudState!: Solicitud130102State;
 
   /**
-   * Notificador para destruir las suscripciones activas al destruir el componente.
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
- esFormularioSoloLectura: boolean = false;
+/*
+   * Indica si el formulario es de solo lectura.
+   */
+   esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -100,7 +104,7 @@ export class UsoEspicificoComponent implements OnInit {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.esFormularioSoloLectura = seccionState.readonly;
-              console.log("uso especifico", this.esFormularioSoloLectura);
+            
              this.inicializarEstadoFormulario();
            })
          )
@@ -117,7 +121,13 @@ this.inicializarEstadoFormulario();
     
     this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
   }
-inicializarEstadoFormulario(): void {
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si es de solo lectura o editable.
+   * @memberof UsoEspicificoComponent
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -125,6 +135,10 @@ inicializarEstadoFormulario(): void {
     }
    
   }
+  /*
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+    * @returns void
+    * */
    guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
@@ -135,6 +149,11 @@ inicializarEstadoFormulario(): void {
         // No se requiere ninguna acción en el formulario
       }
   }
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario reactivo y sus validaciones.
+   * @memberof UsoEspicificoComponent
+   */
   inicializarFormulario():void{
       this.tramite130102Query.selectSolicitud$
     .pipe(

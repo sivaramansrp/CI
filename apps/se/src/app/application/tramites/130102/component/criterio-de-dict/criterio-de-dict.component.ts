@@ -63,9 +63,20 @@ export class CriterioDeDictComponent implements OnInit {
    * Solicitud de mercancía seleccionada.
    */
   seleccionadaSolicitudMercancia: Catalogo = { id: 0, descripcion: '' };
-
+  /**
+   * Estado de la solicitud.
+   * @type {Solicitud130102State}
+   */
   public solicitudState!: Solicitud130102State;
+  /**
+   * Notificador para destruir el componente.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
   esFormularioSoloLectura: boolean = false;
   /**
    * Inicializa el componente CriterioDeDict.
@@ -86,7 +97,6 @@ export class CriterioDeDictComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          console.log("Hello",this.esFormularioSoloLectura);
           this.inicializarEstadoFormulario();
         })
       )
@@ -124,28 +134,15 @@ export class CriterioDeDictComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    // this.tramite130102Query.selectSolicitud$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.solicitudState = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-
-    // this.frmCriterioDictamen = this.fb.group({
-    //   solicitudMercancia: [
-    //     this.solicitudState?.solicitudMercancia,
-    //     Validators.required,
-    //   ],
-    // });
-
     this.formularioRegistroService.registrarFormulario(
       'frmCriterioDictamen',
       this.frmCriterioDictamen
     );
   }
-
+/** 
+    * Inicializa el formulario de criterio de dictamen.
+  */
+  
     inicializarFormulario(): void {
     this.subscription.add(
       this.tramite130102Query.selectSolicitud$
@@ -167,6 +164,11 @@ export class CriterioDeDictComponent implements OnInit {
     this.frmCriterioDictamen.disable();
   }
   }
+  /**
+   * Inicializa el estado del formulario.
+   * @returns void
+   * @description Inicializa el estado del formulario.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -176,6 +178,12 @@ export class CriterioDeDictComponent implements OnInit {
    
   }
 
+  /*
+  **
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+    * @returns void
+    * @description Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no. 
+    */
     guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {

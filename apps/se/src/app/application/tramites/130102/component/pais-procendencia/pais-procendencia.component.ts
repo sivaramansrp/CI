@@ -95,7 +95,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/**
+   * Indica si el formulario es de solo lectura.
+   */
    esFormularioSoloLectura: boolean = false;
 
   /**
@@ -129,7 +131,7 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  // eslint-disable-next-line no-empty-function
+
   constructor(private http: HttpClient, private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
@@ -141,7 +143,7 @@ export class PaisProcendenciaComponent implements OnInit {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.esFormularioSoloLectura = seccionState.readonly;
-              console.log("pais-procendencia",this.esFormularioSoloLectura);
+            
              this.inicializarEstadoFormulario();
            })
          )
@@ -164,6 +166,9 @@ export class PaisProcendenciaComponent implements OnInit {
     }
    
   }
+  /**
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+  */
    guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
@@ -174,6 +179,9 @@ export class PaisProcendenciaComponent implements OnInit {
         // No se requiere ninguna acción en el formulario
       }
   }
+  /**
+   * Inicializa el formulario reactivo y sus validaciones.
+   */
   inicializarFormulario(): void {
    this.tramite130102Query.selectSolicitud$
         .pipe(

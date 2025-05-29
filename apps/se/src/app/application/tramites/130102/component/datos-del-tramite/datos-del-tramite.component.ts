@@ -21,9 +21,9 @@ import {
 } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
@@ -101,8 +101,17 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    * Valor predeterminado en la selección.
    */
   defaultSelect: string = 'Inicial';
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
+  /**
+   * Estado de la solicitud 130102, obtenido desde el store.
+   */
   public solicitudState!: Solicitud130102State;
+  /**
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
@@ -120,8 +129,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.esFormularioSoloLectura = seccionState.readonly;
-            console.log("datos-del-tramite",this.esFormularioSoloLectura);
-             this.inicializarEstadoFormulario();
+            this.inicializarEstadoFormulario();
            })
          )
          .subscribe();
@@ -144,6 +152,9 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
     }
    
   }
+  /**
+   * Guarda los datos del formulario y configura su estado según si es de solo lectura o editable.
+   */
   guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
@@ -154,6 +165,12 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
         // No se requiere ninguna acción en el formulario
       }
   }
+  /**
+   * Inicializa el formulario reactivo y sus validaciones.
+   *
+   * Este método se suscribe a los cambios en el estado de la solicitud y configura el formulario
+   * con los valores iniciales obtenidos del store.
+   */
   inicializarFormulario():void{
 this.tramite130102Query.selectSolicitud$
     .pipe(

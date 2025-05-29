@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map,takeUntil} from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 @Component({
@@ -12,13 +12,28 @@ export class DatosComponent implements OnInit, OnDestroy {
   
     /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+  /*
+  * @description Notificador para destruir el componente y cancelar suscripciones.
+  */
     private destroyNotifier$: Subject<void> = new Subject();
+    /*
+  * @description Estado actual de la consulta, obtenido desde el store.
+    */
   public consultaState!:ConsultaioState;
+  /**
+   * Constructor del componente DatosComponent.
+   * @param consultaQuery ConsultaQuery para obtener el estado de la consulta.
+   * @param formularioRegistroService Servicio para manejar el registro del formulario.
+   */
   constructor( private consultaQuery: ConsultaioQuery,
      private formularioRegistroService: FormularioRegistroService
   ){
 
   }
+  /*
+  * Método de inicialización del componente.
+  * Se suscribe al estado de la consulta y actualiza la variable consultaState.
+  */
    ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
@@ -29,18 +44,21 @@ export class DatosComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
-  // guardarDatosFormulario(): void {
-  //   this.solocitud301Service
-  //     .getRegistroTomaMuestrasMercanciasData().pipe(
-  //       takeUntil(this.destroyNotifier$)
-  //     )
-  //     .subscribe((resp) => {
-  //       if(resp){
-  //       this.esDatosRespuesta = true;
-  //       this.solocitud301Service.actualizarEstadoFormulario(resp);
-  //       }
-  //     });
-  // }
+  /**
+   * Este método inicializa el formulario con validaciones y carga datos de productos.
+   */
+  guardarDatosFormulario(): void {
+    this.formularioRegistroService
+      .getSolicitudData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.formularioRegistroService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
@@ -51,6 +69,10 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  /*
+    * Método que se ejecuta al destruir el componente.
+  */
+
    ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

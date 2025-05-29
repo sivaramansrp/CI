@@ -11,6 +11,8 @@
             [isRequired]="true"
             (valueChange)="onValueChange($event)"
             [layout]="'vertical'"
+            formControlName="solicitude"
+            (change)="setValoresStore(formDelTramite,'solicitude', 'setSolicitude')"
           ></app-input-radio>
         </div>
       </div>

@@ -1,0 +1,21 @@
+{
+  "fraccion": "130102",
+  "descripcion": "valor ficticio",
+  "fraccionArancelaria": "valor ficticio",
+  "unidadMedida": "valor ficticio",
+  "cantidad": "valor ficticio",
+  "valorFacturaUSD": "valor ficticio",
+  "cantidadPartidas": "valor ficticio",
+  "fraccionArancelariaTIGIE": "valor ficticio",
+  "fraccionArancelariaTIGIE_TIGIE": "valor ficticio",
+  "descripcionPartidas": "valor ficticio",
+  "valorPartidaUSD": "valor ficticio",
+  "fraccionArancelariaProsec": "valor ficticio",
+  "solicitudMercancia": "valor ficticio",
+  "entidad": "valor ficticio",
+  "representacion": "valor ficticio",
+  "bloque": "valor ficticio",
+  "descripcionJustificacion": "valor ficticio",
+  "observaciones": "valor ficticio",
+  "productos": "valor ficticio"
+}

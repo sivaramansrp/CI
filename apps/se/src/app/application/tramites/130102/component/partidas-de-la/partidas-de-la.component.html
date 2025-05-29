@@ -131,9 +131,13 @@
         <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_PARA_PARTIDAS"></ng-alert>
         <div>
             <h6>Mercancias</h6>
- 
-            <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="tableBodyData" [enableScrollbar]="true"></ng-table>
- 
+ <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [datos]="datosSocios"
+          [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+
+        ></app-tabla-dinamica>
+          
             <form [formGroup]="formForTotalCount">  
                 <div class="row">
                     <div class="col-md-4">
