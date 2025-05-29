@@ -114,10 +114,10 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="municipioDelegacion.catalogos" formControlName="municipioDelegacion"
-            [label]="'Municipio o delegación'" (change)="setValoresStore(datosDelTramite, 'municipioDelegacion', 'setMunicipioDelegacion')"[required]="true"></app-catalogo-select>
+            [label]="'Municipio o delegación'" (change)="setValoresStore(datosDelTramite, 'municipioDelegacion', 'setMunicipioDelegacion')" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <label class="form-label" for="colonia">Localidad* </label>
+          <label class="form-label" for="localidad">Localidad* </label>
           <input type="text" class="form-control" id="localidad" formControlName="localidad" (change)="setValoresStore(datosDelTramite, 'localidad', 'setlocalidad')"/>
         </div>
         <div class="col-md-4">

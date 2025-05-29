@@ -191,7 +191,6 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.obtenerOperacionesDeLaTienda()
         })
        
       )
@@ -203,16 +202,6 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     
   }
 
-  obtenerOperacionesDeLaTienda(): void {
-    this.query.selectOperaciones$.subscribe((operacione) => {
-      this.operacione = {
-        labelNombre: 'Operaciones',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: operacione ?? [],
-      };
-    })
-  }
 
   crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
@@ -286,7 +275,12 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setOperaciones(RESPONSE);
+         this.operacione = {
+        labelNombre: 'Operaciones',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
       }
     });
   }

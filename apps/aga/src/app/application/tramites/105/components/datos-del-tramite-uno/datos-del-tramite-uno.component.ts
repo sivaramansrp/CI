@@ -160,7 +160,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.obtenerJsonData();
         })
       )
       .subscribe();
@@ -175,48 +174,52 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.crearFormularioAgregar();
   }
 
-  obtenerJsonData(): void {
-    this.query.selectSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((solicitudState) => {
-      this.pais = {
-        labelNombre: 'País',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.pais ?? [],
-      };
-      this.entidadFederativa = {
-        labelNombre: 'Entidad Federativa',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.entidadFederativa ?? [],
-      };
-      this.municipioDelegacion = {
-        labelNombre: 'Municipio o Delegación',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.municipioDelegacion ?? [],
-      };
-      this.colonia = {
-        labelNombre: 'Colonia',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.colonia ?? [],
-      };
-      this.aduana = {
-        labelNombre: 'Aduana',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.aduana ?? [],
-      };
-      this.fraccionArancelaria = {
-        labelNombre: 'Fracción arancelaria',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.fraccionarancelaria ?? [],
-      };
-    });
-  }
+  // obtenerJsonData(): void {
+
+
+
+
+  //   // this.query.selectSolicitud$.pipe(
+  //   //   takeUntil(this.destroyNotifier$)
+  //   // ).subscribe((solicitudState) => {
+  //   //   this.pais = {
+  //   //     labelNombre: 'País',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.pais ?? [],
+  //   //   };
+  //   //   this.entidadFederativa = {
+  //   //     labelNombre: 'Entidad Federativa',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.entidadFederativa ?? [],
+  //   //   };
+  //   //   this.municipioDelegacion = {
+  //   //     labelNombre: 'Municipio o Delegación',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.municipioDelegacion ?? [],
+  //   //   };
+  //   //   this.colonia = {
+  //   //     labelNombre: 'Colonia',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.colonia ?? [],
+  //   //   };
+  //   //   this.aduana = {
+  //   //     labelNombre: 'Aduana',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.aduana ?? [],
+  //   //   };
+  //   //   this.fraccionArancelaria = {
+  //   //     labelNombre: 'Fracción arancelaria',
+  //   //     required: false,
+  //   //     primerOpcion: 'Selecciona un valor',
+  //   //     catalogos: solicitudState.fraccionarancelaria ?? [],
+  //   //   };
+  //   // });
+  // }
 
   crearFormularioAgregar(): void {
     this.agregarForm = this.fb.group({
@@ -434,7 +437,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
-          this.store.setPais(RESPONSE);
+          this.pais = {
+        labelNombre: 'País',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
         }
       });
   }
@@ -448,7 +456,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setEntidadFederativa(RESPONSE);
+         this.entidadFederativa = {
+        labelNombre: 'Entidad Federativa',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
       }
     });
   }
@@ -462,7 +475,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setMunicipioDelegacion(RESPONSE);
+       this.municipioDelegacion = {
+        labelNombre: 'Municipio o Delegación',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
       }
     });
   }
@@ -471,12 +489,17 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @method getColonia
    * @description Obtiene el catálogo de colonias desde el servicio y lo almacena en el store.
    */
-  getColonia(): void {
+    getColonia(): void {
     this.invoCarService.getColonia().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setColonia(RESPONSE);
+       this.colonia = {
+        labelNombre: 'Colonia',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
       }
     });
   }
@@ -490,7 +513,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setAduana(RESPONSE);
+        this.aduana = {
+        labelNombre: 'Aduana',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
       }
     });
   }
@@ -504,7 +532,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setFraccionarancelaria(RESPONSE);
+          this.fraccionArancelaria = {
+        labelNombre: 'Fracción arancelaria',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: RESPONSE ?? [],
+      };
+    
       }
     });
   }
