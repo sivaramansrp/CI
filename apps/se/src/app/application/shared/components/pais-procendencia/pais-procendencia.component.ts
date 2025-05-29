@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,
@@ -30,7 +30,11 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
 })
-export class PaisProcendenciaComponent implements OnChanges {
+export class PaisProcendenciaComponent implements OnInit,OnChanges {
+/**
+ * @description Indica si el formulario debe mostrarse en modo solo lectura.
+*/
+@Input() esFormularioSoloLectura!: boolean;
 /**
  * Referencia al componente CrosslistComponent.
  * @type {CrosslistComponent}
@@ -183,6 +187,18 @@ ngOnChanges(changes: SimpleChanges): void {
     );
   }
 }
+
+  /**
+  * Habilita o deshabilita el formulario según el modo de solo lectura.  
+  * Controla el estado del formulario al iniciar el componente.
+  */
+  ngOnInit(): void {
+      if (this.esFormularioSoloLectura) {
+          this.paisForm.disable();
+      }else if (!this.esFormularioSoloLectura) {
+        this.paisForm.enable();
+      }
+  }
 /**
  * Maneja el cambio de bloque seleccionado.
  * @param {Event} event - El evento de cambio.
