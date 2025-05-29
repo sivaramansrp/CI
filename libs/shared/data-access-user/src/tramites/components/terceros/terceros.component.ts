@@ -9,6 +9,7 @@ import {
 import {
   MSG_CAMPOS_VACIOS,
   MSG_ELIMINA_PERSONA,
+  MSG_SELECCIONA_REGISTRO,
   MSG_SUCCESS,
   MSG_TERCERO_EXISTE,
   TITULO_MODAL_AVISO,
@@ -22,14 +23,16 @@ import {
   TercerosState,
   TercerosStore,
 } from '../../../core/estados/terceros.store';
+import { CONFIGURACION_ENCABEZADO_TABLA_TERCEROS } from '../../../core/enums/terceros.enum';
 import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/110208/modificacion.enum';
 import { TercerosQuery } from '../../../core/queries/terceros.query';
+import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
-import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-terceros',
@@ -42,6 +45,7 @@ import { TituloComponent } from '../titulo/titulo.component';
     TituloComponent,
     UppercaseDirective,
     NotificacionesComponent,
+    TablaDinamicaComponent,
   ],
   styleUrl: './terceros.component.scss',
 })
@@ -98,6 +102,25 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @description
+   * Configuración de la tabla de terceros.
+   */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+   * @description
+   * Encabezado de la tabla de terceros.
+   */
+  encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
+
+
+  /**
+   * @description
+   * Arreglo para almacenar los terceros seleccionados.
+   */
+  tercerosSeleccionados: PersonaTerceros[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -197,7 +220,7 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
       this.personasChange.emit(this.personas);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
-    }    
+    }
   }
 
   /**
@@ -246,5 +269,34 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Elimina los terceros seleccionados del arreglo `personas`.
+   * Si no hay terceros seleccionados, muestra una notificación de aviso.
+   * @returns {void}
+   */
+  eliminarTerceros(): void {
+    if (this.tercerosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.personas = this.personas.filter(
+      (persona) =>
+        !this.tercerosSeleccionados.some(
+          (seleccionado) => seleccionado.correo === persona.correo
+        )
+    );
+
+    this.tercerosStore.setTerceros(this.personas);
   }
 }

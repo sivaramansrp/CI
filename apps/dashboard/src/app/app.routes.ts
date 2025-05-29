@@ -52,11 +52,11 @@ export const appRoutes: Route[] = [
       }).then((m) => m.AppAgaceModule),
   },
   {
-    path: 'agriculture',
+    path: 'agricultura',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.agriculture}/remoteAppEntry.js`,
-        remoteName: 'agriculture',
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.agricultura}/remoteAppEntry.js`,
+        remoteName: 'agricultura',
         exposedModule: './Module',
       }).then((m) => m.AppAgriculturaModule),
   },
