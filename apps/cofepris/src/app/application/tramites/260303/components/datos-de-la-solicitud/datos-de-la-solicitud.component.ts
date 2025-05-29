@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { Subject,map, takeUntil } from 'rxjs';
 import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
