@@ -35,7 +35,7 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
   standalone: true, // Mark the component as standalone.
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent], // Import required modules and components.
   templateUrl: './derechos.component.html', // Path to the HTML template.
-  styleUrls: ['./derechos.component.css'], // Path to the CSS styles.
+  styleUrls: ['./derechos.component.scss'], // Path to the CSS styles.
 })
 export class DerechosComponent implements OnInit, OnDestroy {
   /**

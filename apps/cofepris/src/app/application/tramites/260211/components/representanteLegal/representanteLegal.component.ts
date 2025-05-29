@@ -15,7 +15,7 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './representanteLegal.component.html',
-  styleUrl: './representanteLegal.component.css',
+  styleUrl: './representanteLegal.component.scss',
 })
  
 /**

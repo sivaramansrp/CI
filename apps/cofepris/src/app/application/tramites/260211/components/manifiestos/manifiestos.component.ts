@@ -24,7 +24,7 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
     ReactiveFormsModule,
   ],
   templateUrl: './manifiestos.component.html',
-  styleUrl: './manifiestos.component.css',
+  styleUrl: './manifiestos.component.scss',
 })
  
 /**
