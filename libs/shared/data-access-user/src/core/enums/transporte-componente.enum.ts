@@ -7,6 +7,10 @@ import { ConfiguracionColumna } from '../models/shared/configuracion-columna.mod
 /**
  * @description Enum para definir el header de la tabla del tipo transporte carretero.
  */
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO` en lugar de `HEADER_TABLA_CARRETERO` para definir los encabezados de la tabla de transporte peatonal.
+ */
 export const HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = [
   {
     llave: 'emp_transportista',
@@ -45,6 +49,10 @@ export const HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] = [
 /**
  * @description Enum para definir el header de la tabla del tipo transporte ferroviario.
  */
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_FERROVIARIO` en lugar de `HEADER_TABLA_FERROVIARIO` para definir los encabezados de la tabla de transporte ferroviario.
+ */
 export const HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] = [
   {
     llave: 'numero_bl',
@@ -70,6 +78,10 @@ export const HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] = [
 
 /**
  * @description Enum para definir el header de la tabla del tipo transporte peatonal.
+ */
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL` en lugar de `HEADER_TABLA_PEATONAL` para definir los encabezados de la tabla de transporte peatonal.
  */
 export const HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = [
   {
@@ -97,7 +109,10 @@ export const HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] = [
 /**
  * @description Enum para definir el header de la tabla del tipo transporte otro.
  */
-
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO` en lugar de `HEADER_TABLA_OTRO` para definir los encabezados de la tabla de transporte otro.
+ */
 export const HEADER_TABLA_OTRO: ItemTransporteDespacho[] = [
   {
     llave: 'emp_transportista',
@@ -120,7 +135,10 @@ export const HEADER_TABLA_OTRO: ItemTransporteDespacho[] = [
 /**
  * @description Enum para definir el header de la tabla del tipo transporte marítimo.
  */
-
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_MARITIMO` en lugar de `HEADER_TABLA_MARITIMO` para definir los encabezados de la tabla de transporte marítimo.
+ */
 export const HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = [
   {
     llave: 'guia_bl_Maritimo',
@@ -146,6 +164,10 @@ export const HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = [
 
 /**
  * @description Enum para definir el header de la tabla del tipo transporte aéreo.
+ */
+/**
+ * @deprecated
+ * Se recomienda utilizar `CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO` en lugar de `HEADER_TABLA_AEREO` para definir los encabezados de la tabla de transporte aéreo.
  */
 export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
   {
@@ -177,6 +199,7 @@ export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
     valor: 'Observaciones',
   },
 ];
+
 
 /**
  * @description Constante para el manejo de la etiqueta de la hora de arribo en el componente de transporte.
