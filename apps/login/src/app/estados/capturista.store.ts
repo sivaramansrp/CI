@@ -60,4 +60,11 @@ export class CapturistaStoreService extends Store<CapturistaStore> {
             curp,
         }));
     }
+
+    public setConsultaCapturista(consultaCapturista: Capturista): void {
+            this.update((state) => ({
+                ...state,
+                consultaCapturista,
+            }));
+        }
 }

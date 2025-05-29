@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { Capturista } from '../models/capturista.model';
 import { ConsultaRegistro } from '../models/consuta-registro.model';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 /**
  * Servicio para operaciones relacionadas con trámites de usuario.
@@ -26,14 +27,32 @@ export class UsuariosService {
      * @param curp CURP del usuario (opcional).
      * @returns Observable con los datos del registro consultado.
      */
-    consultaDatosPorRFCoCURP(rfc?: string, curp?: string): Observable<ConsultaRegistro> {
+    consultaDatosPorRFCoCURP(rfc?: string): Observable<ConsultaRegistro> {
         let params = new HttpParams();
         if (rfc) {
             params = params.set('rfc', rfc);
         }
-        if (curp) {
-            params = params.set('curp', curp);
-        }
         return this.http.get<ConsultaRegistro>(`/assets/json/login/consulta-registro.json`, { params });
     }
+
+    /**
+    * Consulta un capturista por RFC o CURP.
+    * Realiza una petición GET para obtener la lista de capturistas y busca el primero que coincida
+    * con el RFC o CURP proporcionados. Si no se proporciona ningún parámetro, retorna el primer capturista.
+    *
+    * @param rfc RFC del capturista (opcional).
+    * @param curp CURP del capturista (opcional).
+    * @returns Observable con el capturista encontrado o undefined si no existe coincidencia.
+    */
+    consultaCapturista(rfc?: string, curp?: string): Observable<Capturista | undefined> {
+        return this.http.get<Capturista[]>(`/assets/json/login/lista-capturista.json`).pipe(
+            map((capturistas) => {
+                return capturistas.find(c =>
+                    (rfc ? c.rfc === rfc : true) ||
+                    (curp ? c.curp === curp : true)
+                );
+            })
+        );
+    }
+
 }
