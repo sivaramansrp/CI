@@ -182,7 +182,7 @@ this.tramite130102Query.selectSolicitud$
     .subscribe();
 
     this.formDelTramite = this.fb.group({
-      solicitud: [''],
+      solicitude: [''],
       tipoDocumento: [''],
       fraccion: [this.solicitudState?.fraccion, [Validators.required]],
     });

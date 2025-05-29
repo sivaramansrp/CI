@@ -1,4 +1,4 @@
-import { OctavaTemporal } from "../models/octava-temporal.model";
+import { FraccionArancelariaProsec, OctavaTemporal } from "../models/octava-temporal.model";
 
 /**
  * Mensaje de alerta que se muestra cuando hay un error en el registro 
@@ -45,3 +45,17 @@ export const MERCANCIA_TABLA = [
     orden: 7,
   }
 ];
+
+export const FRACCIONES_ANARCIA_TABLA = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: FraccionArancelariaProsec): number => ele.fraccionArancelariaProsec,
+    orden: 1,
+  },
+  {
+    encabezado: "Descripción",
+    clave: (ele: FraccionArancelariaProsec): string => ele.descripción,
+    orden: 2,
+  },
+ 
+]

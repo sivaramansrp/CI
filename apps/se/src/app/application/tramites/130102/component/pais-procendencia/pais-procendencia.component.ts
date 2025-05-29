@@ -5,7 +5,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -51,6 +51,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
+  /**
+   * Indica si el componente está deshabilitado.
+   * @type {boolean}
+   */
+  @Input() isDisabled! :boolean;
   /**
    * Formulario reactivo para la gestión de países de procedencia.
    */

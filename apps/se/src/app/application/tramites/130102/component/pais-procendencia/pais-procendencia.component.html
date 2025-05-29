@@ -21,7 +21,7 @@
       <div
         class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4"
       >
-        <button type="button" class="btn-primary btn" name="todos países">Todos los países</button>
+        <button type="button" class="btn-primary btn" name="todos países" disabled="esFormularioSoloLectura? true : false">Todos los países</button>
       </div>
       <div class="col-md-4"></div>
     </div>
@@ -30,6 +30,7 @@
       [showSearchInput1]="true"
       [showSearchInput2]="true"
       [botonField]="botonField"
+      [isDisabled]="true"
     ></crosslist>
   </div>
   <div class="row mt-4">

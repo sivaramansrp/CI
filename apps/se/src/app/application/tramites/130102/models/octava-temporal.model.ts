@@ -8,3 +8,7 @@ export interface OctavaTemporal {
     totalUsd: number
 }
 
+export interface FraccionArancelariaProsec {
+    fraccionArancelariaProsec: number,
+    descripción: string
+}

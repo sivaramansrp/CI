@@ -39,7 +39,7 @@ export class DatosComponent implements OnInit, OnDestroy {
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
-      //this.guardarDatosFormulario();
+      this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
