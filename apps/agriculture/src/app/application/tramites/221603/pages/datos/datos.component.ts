@@ -1,5 +1,7 @@
-import { AfterViewInit ,Component, ViewChild } from '@angular/core';
-import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AfterViewInit ,Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { SolicitanteComponent, TIPO_PERSONA, ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { SanidadService } from '../../service/sanidad.service';
+import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos',
@@ -9,7 +11,15 @@ import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
  * Componente que gestiona la información del solicitante en el trámite 221603.
  * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
  */
-export class DatosComponent implements AfterViewInit {
+export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  consultaState!: ConsultaioState
+  esDatosRespuesta: boolean = false;
+  destroyNotifier$:Subject<void> = new Subject<void>();
+
+  constructor(private consultaQuery: ConsultaioQuery,
+              private consultaStore: ConsultaioStore,
+            private sanidadService: SanidadService) {}  
 
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
@@ -22,6 +32,31 @@ export class DatosComponent implements AfterViewInit {
    * Representa la pestaña activa en la vista.
    */
   indice: number = 1;
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+   guardarDatosFormulario(): void {
+    this.sanidadService
+      .getData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.sanidadService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+ 
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -40,5 +75,10 @@ export class DatosComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

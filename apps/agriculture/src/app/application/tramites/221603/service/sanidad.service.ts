@@ -3,6 +3,7 @@ import { Destinatario, Exportador, FormularioDatos, Mercancia } from '../enum/sa
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Solicitud221603State, Tramite221603Store } from '../estados/tramite221603.store';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,7 @@ export class SanidadService {
    * Inyecta el cliente HTTP para realizar solicitudes a los catálogos y datos necesarios.
    * http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tramite221603Store: Tramite221603Store) { }
 
   /**
    * Inicializa los datos del catálogo de regímenes aduaneros.
@@ -114,6 +115,29 @@ export class SanidadService {
     this.obtenerRespuestaPorUrl(this, 'banco', '/221603/banco.json');
     this.obtenerRespuestaPorUrl(this, 'justificacionCatalogo', '/221603/justificacion.json');
   }
+
+  public getData(): Observable<Solicitud221603State>{
+    return this.http.get<Solicitud221603State>('assets/json/221603/solicitud.json');
+  }
+
+ public actualizarEstadoFormulario(resp: Solicitud221603State): void {
+    this.tramite221603Store.setJustificacion(resp.justificacion)
+    this.tramite221603Store.setAduana(resp.aduana)
+    this.tramite221603Store.setOficina(resp.oficina)
+    this.tramite221603Store.setPunto(resp.punto)
+    this.tramite221603Store.setGuia(resp.guia)
+    this.tramite221603Store.setRegimen(resp.regimen)
+    this.tramite221603Store.setCarro(resp.carro)
+    this.tramite221603Store.setMedio(resp.medio)
+    this.tramite221603Store.setTransporte(resp.transporte)
+    this.tramite221603Store.setExentoDePago(resp.exento)
+    this.tramite221603Store.setClave(resp.clave)
+    this.tramite221603Store.setDependencia(resp.dependencia)
+    this.tramite221603Store.setBanco(resp.banco)
+    this.tramite221603Store.setLlave(resp.llave)
+    this.tramite221603Store.setFecha(resp.fecha)
+    this.tramite221603Store.setImporte(resp.importe)
+ }
 
   /**
    * Método genérico para obtener datos desde una URL y asignarlos a una variable del servicio.
