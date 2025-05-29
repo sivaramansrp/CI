@@ -61,7 +61,7 @@
                         <div class="form-group datepicker-group">
                             <input-fecha [datos]="fechaInicioInput"
                                 [setFecha]="solicitudForm.get('fechaIngreso')?.value"
-                                (valorCambiado)="cambioFechaIngreso($event)" [icono]="!soloLectura"></input-fecha>
+                                (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                             <div class="form-group datepicker-group">
                                 <input-fecha [datos]="fechaInicioInput"
                                     [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"
-                                    (valorCambiado)="cambioFechaDeIngreso($event)" [icono]="!soloLectura"></input-fecha>
+                                    (valorCambiado)="cambioFechaDeIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                             </div>
                         </div>
                     </div>
