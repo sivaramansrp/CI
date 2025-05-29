@@ -41,7 +41,7 @@ echo -e "${YELLOW}Configurando variables de entorno...${NC}"
 export NODE_VERSION=$(node -v)
 export NX_VERSION="19.3.1"
 export DOCKER_REGISTRY="ghcr.io"
-export AVAILABLE_APPS="dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener,inbal,sedena,profepa,crt,inah,bandejas,stps"
+export AVAILABLE_APPS="dashboard,login,aga,agricultura,se,semarnat,agace,funcionario,cofepris,amecafe,sener,inbal,sedena,profepa,crt,inah,bandejas,stps"
 export NX_SKIP_NX_CACHE=true
 export NX_NATIVE_BINDINGS=false
 
@@ -80,7 +80,7 @@ if [[ "${DEPLOYMENT_MODE}" == "selected" ]]; then
         # Process app groups
         if [[ "${TEST_APP_GROUP1}" == "true" ]]; then
             if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
-            SELECTED_APPS+="dashboard,login,aga,agriculture,se"
+            SELECTED_APPS+="dashboard,login,aga,agricultura,se"
         fi
         
         if [[ "${TEST_APP_GROUP2}" == "true" ]]; then
