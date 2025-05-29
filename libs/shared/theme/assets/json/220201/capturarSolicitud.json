@@ -41,5 +41,10 @@
     "nombre": "Luis Fernández",
     "correo": "luis.fernandez@example.com"
   }
-  ]
+  ],
+   "validarEnvio": {
+      "pagoDeformaValida": true,
+      "dataParaMovilizacion": true,
+      "dataDeLaSolicitud": true
+    }
 }

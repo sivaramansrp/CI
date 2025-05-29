@@ -46,6 +46,9 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 
+  updateValidarEnvio(validarEnvio: ValidarEnvio): void {
+    this.zoosanitarioStore.actualizarformaValidas(validarEnvio);
+  }
   updatePagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
     this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }

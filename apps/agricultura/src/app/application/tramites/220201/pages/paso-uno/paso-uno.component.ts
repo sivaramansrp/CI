@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
-import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
+import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos, ValidarEnvio } from '../../models/220201/capturar-solicitud.model';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
@@ -64,9 +64,10 @@ ngOnInit(): void {
   this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
-      if (seccionState.update) {
+if(seccionState.update){
         this.guardarDatosFormulario();
-      } 
+}
+      
     });
 }
   guardarDatosFormulario(): void {
@@ -79,6 +80,7 @@ ngOnInit(): void {
    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(resp?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
    this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(resp?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
    this.certificadoZoosanitarioServices.updateTercerosRelacionados(resp?.tercerosRelacionados || []);
+   this.certificadoZoosanitarioServices.updateTercerosRelacionados(resp?.tercerosRelacionados || {} as ValidarEnvio);
           }
         });
   }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { CapturarSolicitud, DatosDeLaSolicitud, DatosParaMovilizacionNacional, PagoDeDerechos, Solicitante, createDatosState } from '../../models/220201/capturar-solicitud.model';
+import { CapturarSolicitud, DatosDeLaSolicitud, DatosParaMovilizacionNacional, PagoDeDerechos, Solicitante, ValidarEnvio, createDatosState } from '../../models/220201/capturar-solicitud.model';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 /**
  * @description Akita store for managing zoosanitary application data.
@@ -70,6 +70,16 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
                 ...state?.validarEnvio,
                 ...updatedFormaValida,
             }
+        }));
+    }
+       /**
+   * Updates the 'formaValida' field.
+   * @param updatedFormaValida The updated boolean values for 'formaValida'.
+   */
+    public actualizarformaValidas(updatedFormaValida: ValidarEnvio): void {
+         this.update(state => ({
+            ...state,
+            validarEnvio: updatedFormaValida, // No need to wrap in an array
         }));
     }
     /**
