@@ -1,4 +1,12 @@
-import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_DATOS_GUARDADOS, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
+import {
+  ADV_MAXIMO_PERSONAS,
+  ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
+  ERR_CAMPOS_OBLIGATORIOS,
+  ERR_INPUT_BUSQUEDA_VACIO,
+  MSG_DATOS_GUARDADOS,
+  MSG_ELIMINA_ELEMENTO,
+  TITULO_MODAL,
+} from '../../../../core/enums/5701/tramite5701.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,26 +16,59 @@ import {
   Validators,
 } from '@angular/forms';
 import { map, Subject, takeUntil, tap } from 'rxjs';
-import { Notificacion, NotificacionesComponent, UppercaseDirective, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import {
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  UppercaseDirective,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
+  Solicitud5701State,
+  Tramite5701Store,
+} from '../../../../core/estados/tramites/tramite5701.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
+import { CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO } from '../../../../core/enums/5701/responsables-despacho.enum';
 
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, UppercaseDirective, NotificacionesComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    UppercaseDirective,
+    NotificacionesComponent,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
 export class AgregaPersonasComponent implements OnInit, OnDestroy {
   /**
+   * @description
+   * Configuración de la tabla de responsables del despacho.
+   */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+   * @description
+   * Encabezado de la tabla de responsables del despacho.
+   */
+  encabezadoDeTablaResponsablesDespacho: ConfiguracionColumna<ResponsablesDespacho>[] =
+    CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO;
+
+  /**
    * Campo de formulario para el gafete del responsable de despacho.
    */
-  gafeteRespoDespacho: FormControl = new FormControl('', [Validators.maxLength(25)]);
+  gafeteRespoDespacho: FormControl = new FormControl('', [
+    Validators.maxLength(25),
+  ]);
 
   /**
    * Formulario reactivo que contiene los campos de nombre, primer apellido y segundo apellido del responsable de despacho.
@@ -68,13 +109,19 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description
+   * Arreglo para almacenar los terceros seleccionados.
+   */
+  responsableSeleccionado: ResponsablesDespacho[] = [];
+
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
-    private consultaResponsableService: ConsultaResponsableService,
-  ) { }
+    private consultaResponsableService: ConsultaResponsableService
+  ) {}
 
   ngOnInit(): void {
     this.tramite5701Query.selectSolicitud$
@@ -95,7 +142,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    * Verifica si un campo específico en el formulario de persona es válido.
    *
    * @param {string} field - El nombre del campo a validar.
-   * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es, 
+   * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
    * o `null` si no se puede determinar la validez.
    */
   isValid(field: string): boolean | null {
@@ -104,9 +151,9 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
   /**
    * Verifica si el gafete es válido.
-   * 
-   * @returns {boolean | null} - Devuelve `true` si el gafete tiene errores y ha sido tocado, 
-   *                             `false` si no tiene errores o no ha sido tocado, 
+   *
+   * @returns {boolean | null} - Devuelve `true` si el gafete tiene errores y ha sido tocado,
+   *                             `false` si no tiene errores o no ha sido tocado,
    *                             o `null` si no se puede determinar.
    */
   get gafeteIsValid(): boolean | null {
@@ -115,10 +162,10 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
   /**
    * Busca un gafete en un endpoint y maneja los resultados de la búsqueda.
-   * 
+   *
    * - Si el valor del gafete está vacío, muestra un modal con un mensaje de error.
    * - Si no se encuentra una persona asociada al gafete, muestra un modal con un mensaje de error y habilita los campos del formulario.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   buscarGafete(): void {
@@ -134,56 +181,63 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
 
       return;
     }
 
-    this.consultaResponsableService.getGafeteResponsable(GAFETE, TIPO_GAFETE).pipe(
-      tap((response) => {
-        if (response.datos) {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          const { nombre, apellido_paterno, apellido_materno } = response.datos;
+    this.consultaResponsableService
+      .getGafeteResponsable(GAFETE, TIPO_GAFETE)
+      .pipe(
+        tap((response) => {
+          if (response.datos) {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { nombre, apellido_paterno, apellido_materno } =
+              response.datos;
 
-          this.personaForm.get('nombreRespoDespacho')?.enable();
-          this.personaForm.get('nombreRespoDespacho')?.setValue(nombre);
-          this.personaForm.get('nombreRespoDespacho')?.disable();
+            this.personaForm.get('nombreRespoDespacho')?.enable();
+            this.personaForm.get('nombreRespoDespacho')?.setValue(nombre);
+            this.personaForm.get('nombreRespoDespacho')?.disable();
 
-          this.personaForm.get('paternoRespoDespacho')?.enable();
-          this.personaForm.get('paternoRespoDespacho')?.setValue(apellido_paterno);
-          this.personaForm.get('paternoRespoDespacho')?.disable();
+            this.personaForm.get('paternoRespoDespacho')?.enable();
+            this.personaForm
+              .get('paternoRespoDespacho')
+              ?.setValue(apellido_paterno);
+            this.personaForm.get('paternoRespoDespacho')?.disable();
 
-          this.personaForm.get('maternoRespoDespacho')?.enable();
-          this.personaForm.get('maternoRespoDespacho')?.setValue(apellido_materno);
-          this.personaForm.get('maternoRespoDespacho')?.disable();
-        } else {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: '',
-            modo: 'action',
-            titulo: TITULO_MODAL,
-            mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
-            cerrar: false,
-            txtBtnAceptar: 'Cerrar',
-            txtBtnCancelar: '',
+            this.personaForm.get('maternoRespoDespacho')?.enable();
+            this.personaForm
+              .get('maternoRespoDespacho')
+              ?.setValue(apellido_materno);
+            this.personaForm.get('maternoRespoDespacho')?.disable();
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: '',
+              modo: 'action',
+              titulo: TITULO_MODAL,
+              mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
+              cerrar: false,
+              txtBtnAceptar: 'Cerrar',
+              txtBtnCancelar: '',
+            };
+
+            this.habilitarCamposFormulario();
           }
-
-          this.habilitarCamposFormulario();
-
-        }
-      }),
-      takeUntil(this.destroyNotifier$),
-    ).subscribe();
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
   }
 
   /**
    * Habilita todos los campos del formulario `personaForm`.
-   * 
+   *
    * Recorre cada uno de los controles del formulario y les aplica las siguientes configuraciones:
    * - Habilita el control.
    * - Establece los validadores `Validators.required` y `Validators.maxLength(30)`.
    * - Actualiza el estado y la validez del control.
-   * 
+   *
    * @returns {void}
    */
   habilitarCamposFormulario(): void {
@@ -197,17 +251,20 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega una persona a la lista de personas.
-   * 
+   *
    * - Valida que el campo 'gafete' y el formulario 'personaForm' sean válidos.
    * - Si alguno de los campos es inválido, muestra un modal con un mensaje de error y marca todos los campos como tocados.
    * - Si ya hay 5 personas en la lista, muestra un modal con un mensaje de advertencia.
    * - Si todas las validaciones pasan, crea un objeto 'responsable' con los datos del formulario y lo agrega a la lista de personas.
    * - Resetea el campo 'gafete' y el formulario 'personaForm' después de agregar la persona.
-   * 
+   *
    * @returns {void}
    */
   agregarPersona(): void {
-    this.gafeteRespoDespacho.setValidators([Validators.required, Validators.maxLength(25)]);
+    this.gafeteRespoDespacho.setValidators([
+      Validators.required,
+      Validators.maxLength(25),
+    ]);
     this.gafeteRespoDespacho.updateValueAndValidity();
 
     if (this.gafeteRespoDespacho.invalid || this.personaForm.invalid) {
@@ -220,7 +277,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
 
       this.gafeteRespoDespacho.markAllAsTouched();
       this.personaForm.markAllAsTouched();
@@ -238,15 +295,19 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
       return;
     }
 
     let responsable: ResponsablesDespacho | null = {
       gafeteRespoDespacho: this.gafeteRespoDespacho.value,
       nombre: this.personaForm.get('nombreRespoDespacho')?.getRawValue(),
-      primerApellido: this.personaForm.get('paternoRespoDespacho')?.getRawValue(),
-      segundoApellido: this.personaForm.get('maternoRespoDespacho')?.getRawValue(),
+      primerApellido: this.personaForm
+        .get('paternoRespoDespacho')
+        ?.getRawValue(),
+      segundoApellido: this.personaForm
+        .get('maternoRespoDespacho')
+        ?.getRawValue(),
     };
 
     if (responsable !== null) {
@@ -261,7 +322,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
-      }
+      };
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -273,9 +334,9 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina una persona de la lista de personas en la posición especificada.
-   * 
+   *
    * @param {number} i - El índice de la persona a eliminar en la lista.
-   * 
+   *
    * @remarks
    * Esta función actualiza el título y el mensaje del modal, y luego abre el modal
    * para confirmar la eliminación de la persona.
@@ -291,7 +352,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       cerrar: false,
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
-    }
+    };
     this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
@@ -303,7 +364,11 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite5701Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
   }

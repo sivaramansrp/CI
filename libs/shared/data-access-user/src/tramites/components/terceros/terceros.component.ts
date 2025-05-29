@@ -104,7 +104,6 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
    */
   encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
 
-
   /**
    * @description
    * Arreglo para almacenar los terceros seleccionados.

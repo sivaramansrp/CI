@@ -34,6 +34,12 @@ import {
   LISTA_TIPO_TRANSPORTE,
   MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
   MSG_CAMBIO_TIPO_TRANSPORTE,
+  MSG_INGRESA_UNA_GUIA,
+  MSG_NUMERO_BL_INVALIDO,
+  MSG_NUMERO_BL_VACIO,
+  MSG_REGISTRA_UNA_GUIA,
+  MSG_SELECCIONA_ITEM,
+  MSG_SELECCIONA_SOLO_UN_REGISTRO,
 } from '../../../core/enums/transporte-componente.enum';
 import {
   ItemTransporteDespacho,
@@ -129,40 +135,6 @@ export class TransporteComponent implements OnInit, OnChanges {
    * Encabezado de la tabla de terceros.
    */
   encabezadoDeTablaTransporte!: ConfiguracionColumna<TransporteDespacho>[];
-
-  /**
-   * Cabecera de la tabla para el transporte ferroviario.
-   */
-  readonly HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] =
-    HEADER_TABLA_FERROVIARIO;
-
-  /**
-   * Cabecera de la tabla para el transporte carretero.
-   */
-  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] =
-    HEADER_TABLA_CARRETERO;
-
-  /**
-   * Cabecera de la tabla para el transporte peatonal.
-   */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] =
-    HEADER_TABLA_PEATONAL;
-
-  /**
-   * Cabecera de la tabla para el transporte otro.
-   */
-  readonly HEADER_TABLA_OTRO: ItemTransporteDespacho[] = HEADER_TABLA_OTRO;
-
-  /**
-   * Cabecera de la tabla para el transporte aereo.
-   */
-  readonly HEADER_TABLA_AEREO: ItemTransporteDespacho[] = HEADER_TABLA_AEREO;
-
-  /**
-   * Cabecera de la tabla para el transporte maritimo.
-   */
-  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] =
-    HEADER_TABLA_MARITIMO;
 
   /**
    * Etiqueta para la hora de arribo.
@@ -277,6 +249,18 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   checkSeleccionarTodos: boolean = false;
 
+  /**
+   * @property {TransporteDespacho[]} transporteSeleccionado
+   * Almacena la fila seleccionada de la tabla de transportes.
+   */
+  public transporteSeleccionado: TransporteDespacho[] = [];
+
+  /**
+   * @description Registro seleccionado en la tabla de transporte.
+   * @type {TransporteDespacho}
+   */
+  registroSeleccionado!: TransporteDespacho;
+
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
@@ -360,13 +344,13 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
-      emp_transportista: ['', [Validators.maxLength(80)]],
-      numero_porte: ['', [Validators.maxLength(50)]],
-      fecha_porte: ['', [Validators.maxLength(10)]],
-      marca_transporte: ['', [Validators.maxLength(70)]],
-      modelo_transporte: [-1],
-      placas_transporte: ['', [Validators.maxLength(150)]],
-      contenedor_transporte: ['', [Validators.maxLength(150)]],
+      emp_transportista: [this.registroSeleccionado?.emp_transportista, [Validators.maxLength(80)]],
+      numero_porte: [this.registroSeleccionado?.numero_porte, [Validators.maxLength(50)]],
+      fecha_porte: [this.registroSeleccionado?.fecha_porte, [Validators.maxLength(10)]],
+      marca_transporte: [this.registroSeleccionado?.marca_transporte, [Validators.maxLength(70)]],
+      modelo_transporte: [this.registroSeleccionado?.modelo_transporte],
+      placas_transporte: [this.registroSeleccionado?.placas_transporte, [Validators.maxLength(150)]],
+      contenedor_transporte: [this.registroSeleccionado?.contenedor_transporte, [Validators.maxLength(150)]],
     });
   }
 
@@ -377,7 +361,10 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
-      numero_bl: ['', [Validators.maxLength(25)]],
+      numero_bl: [
+        this.registroSeleccionado?.numero_bl,
+        [Validators.maxLength(25)],
+      ],
       tipo_equipo: [{ value: '-1', disabled: true }],
       iniciales_equipo: [
         { value: '', disabled: true },
@@ -551,6 +538,7 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   abrirModal(): void {
+    this.carreteroForma.patchValue(this.registroSeleccionado);
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
   }
@@ -728,7 +716,7 @@ export class TransporteComponent implements OnInit, OnChanges {
                 categoria: '',
                 modo: 'action',
                 titulo: 'Aviso',
-                mensaje: 'Número BL es inválido.',
+                mensaje: MSG_NUMERO_BL_INVALIDO,
                 cerrar: false,
                 txtBtnAceptar: 'Cerrar',
                 txtBtnCancelar: '',
@@ -744,7 +732,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes agregar un número BL.',
+        mensaje: MSG_NUMERO_BL_VACIO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -766,7 +754,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes registar una sola guía.',
+        mensaje: MSG_INGRESA_UNA_GUIA,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -780,7 +768,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes registrar la guía master o la guía house.',
+        mensaje: MSG_REGISTRA_UNA_GUIA,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -834,5 +822,42 @@ export class TransporteComponent implements OnInit, OnChanges {
         .get('tipoTransporte')
         ?.setValue(this.tipoTransporteSeleccionado);
     }
+  }
+
+  modificaItem(): void {
+    console.log(this.transporteSeleccionado);
+    if (
+      !this.transporteSeleccionado ||
+      this.transporteSeleccionado.length === 0
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: MSG_SELECCIONA_ITEM,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.transporteSeleccionado.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: MSG_SELECCIONA_SOLO_UN_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.registroSeleccionado = this.transporteSeleccionado[0];
+    this.abrirModal();
   }
 }

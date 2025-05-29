@@ -34,34 +34,15 @@
 
 <div class="row mt-5">
   <div class="col-md-12">
-    <table class="table table-responsive">
-      <thead>
-        <tr>
-          <th>Gafete</th>
-          <th>Nombre</th>
-          <th>Apellido paterno</th>
-          <th>Apellido materno</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+     <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+      [configuracionTabla]="encabezadoDeTablaResponsablesDespacho"
+      [datos]="personas"
+      (listaDeFilaSeleccionada)="responsableSeleccionado = $event"
+    >
+    </app-tabla-dinamica>
 
-      <tbody>
-        @for (persona of personas; let i = $index; track i) {
-        <tr>
-          <td>{{persona.gafeteRespoDespacho}}</td>
-          <td>{{persona.nombre}}</td>
-          <td>{{persona.primerApellido}}</td>
-          <td>{{persona.segundoApellido}}</td>
-          <td>
-            <button type="button" class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
-              <i class="bi bi-trash3 bi-c"></i>
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
 
-    </table>
   </div>
 </div>
 

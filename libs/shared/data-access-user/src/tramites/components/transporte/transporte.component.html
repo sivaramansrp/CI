@@ -17,6 +17,7 @@
       [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
       [configuracionTabla]="encabezadoDeTablaTransporte"
       [datos]="bodyTabla"
+      (listaDeFilaSeleccionada)="transporteSeleccionado = $event"
     >
     </app-tabla-dinamica>
   </div>
@@ -31,7 +32,7 @@
       type="button"
       class="btn btn-default me-2"
       *ngIf="bodyTabla.length > 0"
-      (click)="limpiarFormulario()"
+      (click)="modificaItem()"
     >
       Modificar
     </button>

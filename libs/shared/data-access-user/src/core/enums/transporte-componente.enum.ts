@@ -200,7 +200,6 @@ export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
   },
 ];
 
-
 /**
  * @description Constante para el manejo de la etiqueta de la hora de arribo en el componente de transporte.
  */
@@ -221,6 +220,37 @@ export const MSG_CAMBIO_TIPO_TRANSPORTE =
  * @description Constante para el manejo del mensaje de éxito al agregar un tipo de transporte a la tabla.
  */
 export const MSG_AGREGA_TRANSPORTE_EXITOSAMENTE = `El ${DESCRIPCION_TIPO_TRANSPORTE} fue agregado correctamente.`;
+
+/**
+ * @description Constante de aviso  para el mensaje cuando se intenta hacer una búsqueda de un número BL y no se ha iingresado el valor.
+ */
+export const MSG_NUMERO_BL_VACIO = 'Debes agregar un número BL.';
+
+/**
+ * @description Mensaje de error cuando se seleeciona más de una guía para hacer la validación.
+ */
+export const MSG_INGRESA_UNA_GUIA = 'Debes registar una sola guía.';
+
+/**
+ * @description Mensaje de error cuando no se ha registrado la guía master o la guía house.
+ */
+export const MSG_REGISTRA_UNA_GUIA =
+  'Debes registrar la guía master o la guía house.';
+
+/**
+ * @description Mensaje de error cuando el número BL es inválido.
+ */
+export const MSG_NUMERO_BL_INVALIDO = 'Número BL es inválido.';
+
+/**
+ *@description Constante para el manjejo del mensaje de aviso cuando quiere modificar un trasnporte y no hay fila seleccionada.
+ */
+export const MSG_SELECCIONA_ITEM = 'Selecciona un registro';
+
+/**
+ * @description Mensaje de error cuando se intenta modificar un registro y se ha seleccionado más de uno.
+ */
+export const MSG_SELECCIONA_SOLO_UN_REGISTRO = 'Selecciona solo un registro.';
 
 /**
  * @description Lista de tipos de transporte disponibles en el sistema.
