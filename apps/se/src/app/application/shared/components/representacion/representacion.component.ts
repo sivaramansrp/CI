@@ -7,7 +7,7 @@
  * @imports TituloComponent, CatalogoSelectComponent, CommonModule, ReactiveFormsModule, AlertComponent
  * @templateUrl ./representacion.component.html
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule
@@ -31,7 +31,11 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   ],
   templateUrl: './representacion.component.html',
 })
-export class RepresentacionComponent {
+export class RepresentacionComponent implements OnInit {
+  /**
+  * @description Indica si el formulario debe mostrarse en modo solo lectura.
+  */
+  @Input() esFormularioSoloLectura!: boolean;
   /**
    * Formulario reactivo para la representación.
    * @type {FormGroup}
@@ -68,6 +72,19 @@ export class RepresentacionComponent {
   constructor() {
     // 
   }
+
+   /**
+  * Habilita o deshabilita el formulario según el modo de solo lectura.  
+  * Controla el estado del formulario al iniciar el componente.
+  */
+  ngOnInit(): void {
+    if (this.esFormularioSoloLectura) {
+        this.frmRepresentacionForm.disable();
+    }else if (!this.esFormularioSoloLectura) {
+       this.frmRepresentacionForm.enable();
+    }
+  }
+
   /**
    * Establece valores en el store.
    * @param {FormGroup} form - El formulario reactivo.

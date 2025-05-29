@@ -3,7 +3,7 @@ import {
   InputRadioComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
@@ -25,7 +25,11 @@ import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
-export class DatosDeLaMercanciaComponent {
+export class DatosDeLaMercanciaComponent implements OnInit {
+  /**
+  * @description Indica si el formulario debe mostrarse en modo solo lectura.
+  */
+  @Input() esFormularioSoloLectura!: boolean;
   /**
    * @description El grupo de formulario reactivo para capturar los detalles.
    */
@@ -51,6 +55,18 @@ export class DatosDeLaMercanciaComponent {
     campo: string;
    
   }>();
+
+  /**
+    * Habilita o deshabilita el formulario según el modo de solo lectura.  
+    * Controla el estado del formulario al iniciar el componente.
+  */
+  ngOnInit(): void {
+    if (this.esFormularioSoloLectura) {
+        this.form.disable();
+    }else if (!this.esFormularioSoloLectura) {
+       this.form.enable();
+    }
+  }
 
   /**
    * @description Verifica si un control del formulario es inválido.

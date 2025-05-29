@@ -19,24 +19,6 @@
         "numeroDeProcedimiento": "110102"
     },
     {
-        "id": 110102,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "SE",
-        "numeroDeProcedimiento": "110102"
-    },
-    {
-        "id": 120402,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "SE",
-        "numeroDeProcedimiento": "120402"
-    },
-    {
         "id": 120402,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
@@ -107,15 +89,6 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "130109"
-    },
-    {
-        "id": 130110,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "SE",
-        "numeroDeProcedimiento": "130110"
     },
     {
         "id": 130110,
@@ -478,21 +451,12 @@
         "numeroDeProcedimiento": "221603"
     },
     {
-        "id": 221603,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "AGRICULTURE",
-        "numeroDeProcedimiento": "221603"
-    },
-    {
         "id": 220103,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
-        "departamento": "AGRICULTURE",
+        "departamento": "AGRICULTURA",
         "numeroDeProcedimiento": "220103"
     },
     {
