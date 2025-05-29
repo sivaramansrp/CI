@@ -1,5 +1,5 @@
 export const FECHA_INGRESO = {
-    labelNombre: 'Fecha de ingreso',
+    labelNombre: 'Fecha Ingreso',
     required: true,
     habilitado: true,
 };
