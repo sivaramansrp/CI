@@ -103,15 +103,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     private tramite260212Query: Tramite260212Query,
       private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroy$),
-              map((seccionState)=>{
-                this.esFormularioSoloLectura = seccionState.readonly;
-                this.inicializarEstadoFormulario();
-              })
-            )
-            .subscribe()
+    
   }
 
   /**
@@ -144,6 +136,15 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       UMC: ['', Validators.required],
       tipoDeEnvase: ['', Validators.required]
     });
+     this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe()
   }
 
   /**

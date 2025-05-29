@@ -160,15 +160,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly;
-            
-          })
-        )
-        .subscribe()
+    
   }
 
   
@@ -323,6 +315,15 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
       lada: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
     });
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            
+          })
+        )
+        .subscribe()
   }
 
   /**

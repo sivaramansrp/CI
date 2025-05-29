@@ -84,15 +84,7 @@ clave: CatalogoResponse[] = [];
     // eslint-disable-next-line no-empty-function
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery) { 
-       this.consultaioQuery.selectConsultaioState$
-              .pipe(
-                takeUntil(this.destroy$),
-                map((seccionState)=>{
-                  this.esFormularioSoloLectura = seccionState.readonly;
-                  this.inicializarEstadoFormulario();
-                })
-              )
-              .subscribe()
+     
     }
  /**
    * Método del ciclo de vida de Angular invocado en la inicialización del componente.
@@ -110,6 +102,15 @@ clave: CatalogoResponse[] = [];
       clave: ['', Validators.required],
       descripcion: ['']
     });
+      this.consultaioQuery.selectConsultaioState$
+              .pipe(
+                takeUntil(this.destroy$),
+                map((seccionState)=>{
+                  this.esFormularioSoloLectura = seccionState.readonly;
+                  this.inicializarEstadoFormulario();
+                })
+              )
+              .subscribe()
   }
   /**
    * Inicializa el estado del formulario según el modo de solo lectura.

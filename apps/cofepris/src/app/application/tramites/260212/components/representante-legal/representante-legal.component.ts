@@ -67,15 +67,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService,
   private consultaioQuery: ConsultaioQuery) {
-    this.consultaioQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroy$),
-              map((seccionState)=>{
-                this.esFormularioSoloLectura = seccionState.readonly;
-                
-              })
-            )
-            .subscribe()
+   
    }
 
   /**
@@ -133,6 +125,15 @@ this.personaForm = this.fb.group({
       primerApellido: [{ value: '', disabled: true }],
       segundoApellido: [{ value: '', disabled: true }],
     });
+     this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly;
+                
+              })
+            )
+            .subscribe()
   }
 
   /**

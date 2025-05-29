@@ -70,15 +70,7 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly;
-            
-          })
-        )
-        .subscribe()
+     
   }
 
   /**
@@ -103,6 +95,15 @@ this. inicializarEstadoFormulario();
       entradas: []
 
     })
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            
+          })
+        )
+        .subscribe()
   }
 
   /**

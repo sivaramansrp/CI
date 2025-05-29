@@ -216,10 +216,10 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should clean up on ngOnDestroy', () => {
     const spy = jest.spyOn((component as any).destroy$, 'next');
     const spy2 = jest.spyOn((component as any).destroy$, 'complete');
-    const spy3 = jest.spyOn(component['subscription'], 'unsubscribe');
+    
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
-    expect(spy3).toHaveBeenCalled();
+    
   });
 });

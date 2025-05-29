@@ -108,15 +108,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          
-        })
-      )
-      .subscribe()
+   
   }
 
   /**
@@ -131,6 +123,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fechaDePago: ['', [Validators.required]],
       importeDePago: ['', [Validators.required]],
     });
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          
+        })
+      )
+      .subscribe()
 
     this.inicializarEstadoFormulario();
   }
