@@ -98,11 +98,21 @@ export class registroSolicitudImmexService implements OnDestroy {
     }
   }
 
-
-   actualizarEstadoFormulario(datos: Tramites80210State): void {
+  /**
+   * Actualiza el estado del formulario en el store global.
+   *
+   * @param datos - Objeto de tipo Tramites80210State con los datos a establecer en el store.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(datos: Tramites80210State): void {
       this.tramite80210Store.establecerDatos(datos);
   }
 
+  /**
+   * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
+   *
+   * @returns {Observable<Tramites80210State>} Un observable que emite los datos del trámite 80210.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramites80210State> {
     return this.http.get<Tramites80210State>('assets/json/80210/registro_immex_ampliacion.json');
   }
