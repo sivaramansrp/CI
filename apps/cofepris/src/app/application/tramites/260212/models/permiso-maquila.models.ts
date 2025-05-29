@@ -72,6 +72,14 @@ export interface DatosSeleccionados extends TablaDatos {
   checked: boolean;
 }
 
+/**
+ * @interface EstadoFisico
+ * @description
+ * Representa el estado físico de un objeto o entidad dentro del sistema.
+ *
+ * @property {number} id - Identificador único del estado físico.
+ * @property {string} descripcíon - Descripción detallada del estado físico.
+ */
 export interface EstadoFisico {
   id: number;
   descripcíon: string;

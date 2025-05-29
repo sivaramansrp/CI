@@ -74,7 +74,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
  */
 export class TercerosRelacionadosComponent implements OnInit {
 
-  esFormularioSoloLectura: boolean = true;
+ public esFormularioSoloLectura: boolean = true;
 
   /**
    * Indicador de visibilidad para la sección de la tabla.

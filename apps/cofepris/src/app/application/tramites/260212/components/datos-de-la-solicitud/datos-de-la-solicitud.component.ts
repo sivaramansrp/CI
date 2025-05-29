@@ -47,8 +47,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-esFormularioSoloLectura: boolean = true;
-private subscription: Subscription = new Subscription();
+ public esFormularioSoloLectura: boolean = true;
+
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
@@ -169,6 +169,12 @@ private subscription: Subscription = new Subscription();
     this.fomInitialize();
     this.inicializarEstadoFormulario();
   }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
@@ -180,6 +186,11 @@ private subscription: Subscription = new Subscription();
     }  
   }
 
+  /**
+   * Guarda los datos del formulario y actualiza su estado.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+   * @returns {void}
+   */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
     // Solo intentar deshabilitar si el formulario ya está inicializado
@@ -481,7 +492,6 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
-  }
+   }
 
 }

@@ -41,7 +41,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = true;
+ public esFormularioSoloLectura: boolean = true;
 
   /**
    * Maneja las suscripciones internas del componente.

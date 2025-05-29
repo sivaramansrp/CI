@@ -27,7 +27,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 })
 export class FormularioOperacionComercialComponent implements OnInit, OnDestroy {
 
-  esFormularioSoloLectura: boolean = true;
+   public esFormularioSoloLectura: boolean = true;
   private subscription: Subscription = new Subscription();
 
   /** Subject para destruir el componente */
@@ -93,6 +93,7 @@ this. inicializarEstadoFormulario();
    */
   formularioOperacionInitial(): void {
     this.formularioOperacionForm = this.fb.group({
+      avisoclave: [''],
       noLicenciaSanitaria: [''],
       regimen: ['', Validators.required],
       entradas: []

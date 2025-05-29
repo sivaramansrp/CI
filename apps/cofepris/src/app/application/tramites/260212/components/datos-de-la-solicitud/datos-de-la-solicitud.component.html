@@ -28,7 +28,7 @@
         </div>
         <ng-titulo titulo="Datos del establecimiento" />
         <div class="d-flex justify-content-end mt-3">
-          <button class="btn btn-primary">Seleccionar establecimiento</button>
+          <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
         </div>
 
         <div class="row">
@@ -144,7 +144,7 @@
         </app-tabla-dinamica>
 
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" (click)="openMercanciasForm()">
+          <button class="btn btn-primary" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
           <button class="btn btn-default ms-2">Modificar</button>

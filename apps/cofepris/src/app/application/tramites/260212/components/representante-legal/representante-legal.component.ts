@@ -31,7 +31,7 @@ import { Subscription} from 'rxjs';
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
-   esFormularioSoloLectura: boolean = true;
+    public esFormularioSoloLectura: boolean = true;
     private subscription: Subscription = new Subscription();
     private destroy$ = new Subject<void>();
 
@@ -80,6 +80,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   ngOnInit():void {
     this.obtenerOpcionesSolicitud()
     this.actualizarEstado()
+    this. inicializarEstadoFormulario()
 ;}
 
   /**
@@ -106,14 +107,13 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.actualizarEstado();
     // Solo intentar deshabilitar si el formulario ya está inicializado
-    if (this.personaForm) {
+    
       if (this.esFormularioSoloLectura) {
         this.personaForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.personaForm.enable();
       }
     }
-  }
 
   /**
    * Inicializa o reinicia el formulario de persona con los campos requeridos y sus validaciones.
@@ -121,6 +121,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   actualizarEstado(): void {
 this.personaForm = this.fb.group({
+  losDatos: ['', Validators.required],
       rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
       primerApellido: [{ value: '', disabled: true }],

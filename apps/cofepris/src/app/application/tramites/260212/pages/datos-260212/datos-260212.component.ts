@@ -31,6 +31,17 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
     private service260212Service:Service260212Service){}
 
   
+  /**
+   * @inheritdoc
+   * @method ngOnInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y actualiza la propiedad `consultaState` con el estado recibido.
+   * Si el estado indica que se debe actualizar (`update` es verdadero), guarda los datos del formulario.
+   * En caso contrario, establece la bandera `esDatosRespuesta` en verdadero.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
@@ -64,6 +75,16 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+    /**
+     * @method
+     * @description
+     * Obtiene los datos del registro de toma de muestras de mercancías a través del servicio,
+     * y si la respuesta es válida, actualiza el estado del formulario y marca que se recibió una respuesta.
+     * 
+     * @returns {void}
+     * 
+     * @memberof Datos260212Component
+     */
     guardarDatosFormulario(): void {
     this.service260212Service
       .getRegistroTomaMuestrasMercanciasData().pipe(
@@ -76,7 +97,11 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
- 
+ /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
     ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

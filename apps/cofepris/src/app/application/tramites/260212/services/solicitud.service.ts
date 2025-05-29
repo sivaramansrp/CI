@@ -53,6 +53,13 @@ export class SolicitudService {
     return this.http.get<EstadoFisico[]>('/assets/json/260212/estadoFisico.json')
   }
 
+  /**
+   * @method getClasificacionProducto
+   * @description
+   * Obtiene la clasificación de productos realizando una petición HTTP GET al archivo JSON local.
+   * 
+   * @returns Observable<[]> Un observable que emite la lista de clasificaciones de productos.
+   */
    getClasificacionProducto(){
     return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }

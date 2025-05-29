@@ -7,8 +7,6 @@ import { SolicitudService } from '../../services/solicitud.service';
 
 import { map, takeUntil} from 'rxjs';
 import {Observable} from 'rxjs';
-import {Subscription} from 'rxjs';
-
 import {Subject} from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
@@ -32,7 +30,7 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 export class ClaveScianComponent implements OnInit, OnDestroy {
 
-  esFormularioSoloLectura: boolean = true;
+ public esFormularioSoloLectura: boolean = true;
   /**
    * @private
    * @type {Subscription}
@@ -40,7 +38,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
    * Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
    * Se recomienda cancelar esta suscripción en el método ngOnDestroy para evitar fugas de memoria.
    */
-  private subscription: Subscription = new Subscription();
+  
   /**
    * Reactive form group managing the "Clave Scian" form fields.
    */
@@ -71,7 +69,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Array to store the list of "clave" options fetched from the service.
    */
-  clave: CatalogoResponse[] = [];
+clave: CatalogoResponse[] = [];
 
   /**
    * Constructor to initialize dependencies and services.
@@ -102,7 +100,6 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.claveScianForm();
-    this.inicializarEstadoFormulario()
   }
 
   /**
