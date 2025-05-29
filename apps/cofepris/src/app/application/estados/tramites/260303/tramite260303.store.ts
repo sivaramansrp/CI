@@ -616,10 +616,10 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de aduanasEntradas.
      * @param aduanasEntradas - El valor de aduanasEntradas.
      */
-    public setAduanasEntradas(aduanasEntradas: string) {
+    public setAduanasEntradas(aduana: string) {
         this.update((state) => ({
             ...state,
-            aduanasEntradas,
+            aduana,
         }));
     }
     /**

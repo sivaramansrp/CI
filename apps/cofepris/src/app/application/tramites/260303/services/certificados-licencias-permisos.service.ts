@@ -23,7 +23,7 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.setDenominacionRazon(DATOS.denominacionRazon);
     this.tramite260303Store.setCodigoPostal(DATOS.codigoPostal);
     this.tramite260303Store.setEstado(DATOS.estado);
-    this.tramite260303Store.setMuncipio(DATOS.municipio);
+    this.tramite260303Store.SetMunicipio(DATOS.municipio);
     this.tramite260303Store.setLocalidad(DATOS.localidad);
     this.tramite260303Store.setColonia(DATOS.colonia);
     this.tramite260303Store.SetCalleYNumero(DATOS.calleYNumero);
@@ -38,6 +38,7 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.setLicenciaSanitaria(DATOS.licenciaSanitaria);
     this.tramite260303Store.setRegimen(DATOS.regimen);
     this.tramite260303Store.setRegimenDestinara(DATOS.regimenDestinara);
+    this.tramite260303Store.setAduanasEntradas(DATOS.aduana);
     this.tramite260303Store.setNumeroPermiso(DATOS.numeroPermiso);
     this.tramite260303Store.setLosDatosNo(DATOS.losDatosNo);
     this.tramite260303Store.setLosDatosYes(DATOS.losDatosYes);
