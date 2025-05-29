@@ -4,20 +4,42 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Servicio encargado de manejar la lógica relacionada con la solicitud del trámite 31601.
+ * Se encarga de actualizar el estado de la solicitud en el store y de obtener datos precargados desde archivos JSON.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class Solocitud31601Service {
   /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   * URL base del servidor principal.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
+
+  /**
+   * URL base del servidor que contiene los catálogos auxiliares en formato JSON.
+   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient, private tramite31601Store: Tramite31601Store,) {
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar solicitudes a servicios o archivos locales.
+   * @param tramite31601Store Store personalizado para el manejo del estado del trámite 31601.
+   */
+  constructor(
+    private http: HttpClient,
+    private tramite31601Store: Tramite31601Store
+  ) {
     // Lógica de inicialización si es necesario
   }
 
+  /**
+   * Actualiza el estado del formulario de la solicitud en el store con la información proporcionada.
+   * Cada propiedad del objeto recibido es asignada al store correspondiente.
+   * 
+   * @param DATOS Objeto con la estructura completa del estado del formulario del trámite 31601.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud31601State): void {
     this.tramite31601Store.setAutorizacionIVAIEPS(DATOS.autorizacionIVAIEPS);
     this.tramite31601Store.setRegimen_0(DATOS.regimen_0);
@@ -65,7 +87,7 @@ export class Solocitud31601Service {
     this.tramite31601Store.setSuplente(DATOS.suplente);
     this.tramite31601Store.setTipoDocumento(DATOS.tipoDocumento);
     this.tramite31601Store.setResigtro(DATOS.resigtro);
-    this.tramite31601Store.setTelefono(DATOS.telefono); 
+    this.tramite31601Store.setTelefono(DATOS.telefono);
     this.tramite31601Store.setCorreo(DATOS.correo);
     this.tramite31601Store.setImportaciones(DATOS.importaciones);
     this.tramite31601Store.setInfraestructuraIndique(DATOS.infraestructuraIndique);
@@ -105,8 +127,13 @@ export class Solocitud31601Service {
     this.tramite31601Store.setEnCasoIva(DATOS.enCasoIva);
   }
 
+  /**
+   * Obtiene los datos precargados desde un archivo JSON relacionado con el registro de toma de muestras de mercancías.
+   * Este archivo contiene información que se puede utilizar para precargar el estado del formulario.
+   * 
+   * @returns Observable con la estructura del estado de la solicitud.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {
     return this.http.get<Solicitud31601State>('assets/json/31601/registro_toma_muestras_mercancias.json');
   }
-
 }

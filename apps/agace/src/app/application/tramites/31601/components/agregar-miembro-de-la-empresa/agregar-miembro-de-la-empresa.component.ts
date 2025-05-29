@@ -28,8 +28,22 @@ import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json
 
 /**
  * @component
- * @selector app-agregar-miembro-de-la-empresa
- *  Componente que gestiona la adición de miembros de la empresa mediante un formulario reactivo y una tabla con paginación.
+ * @name AgregarMiembroDeLaEmpresaComponent
+ * @description
+ * Componente que gestiona la adición de miembros de la empresa mediante un formulario reactivo, una tabla paginada y un modal de Bootstrap.
+ * Utiliza catálogos cargados desde archivos JSON y mantiene estado usando un store personalizado.
+ *
+ * @usage
+ * ```html
+ * <app-agregar-miembro-de-la-empresa></app-agregar-miembro-de-la-empresa>
+ * ```
+ *
+ * @dependencies
+ * - FormBuilder
+ * - Tramite31601Store
+ * - Tramite31601Query
+ * - ConsultaioQuery
+ * - Modal de Bootstrap
  */
 @Component({
   selector: 'app-agregar-miembro-de-la-empresa',
@@ -47,100 +61,121 @@ import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json
 export class AgregarMiembroDeLaEmpresaComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
-   * @property {FormGroup} agregarMiembroDeLaEmpresaForm
-   *  Formulario reactivo para agregar miembros de la empresa.
+   * Notificador para completar observables al destruir el componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Formulario principal del componente para agregar miembros.
    */
   agregarMiembroDeLaEmpresaFrom!: FormGroup;
 
+  /**
+   * Formulario para checkbox adicionales.
+   */
   checkBoxesForm!: FormGroup;
 
   /**
-   * @property {ElementRef} AgregarMOdel
-   *  Referencia al modal de Bootstrap para agregar miembros.
+   * Referencia al modal de Bootstrap para agregar miembros.
    */
   @ViewChild('Agregar', { static: false }) AgregarMOdel!: ElementRef;
 
   /**
-   * @property {Modal} AgregarModelInstance
-   *  Instancia del modal de Bootstrap.
+   * Instancia del modal de Bootstrap.
    */
   AgregarModelInstance!: Modal;
 
   /**
-   * @property {number} totalItems
-   *  Número total de elementos en la tabla.
+   * Total de elementos en la tabla.
    */
   totalItems: number = 0;
 
   /**
-   * @property {number} currentPage
-   *  Página actual de la tabla paginada.
+   * Página actual en la tabla paginada.
    */
   currentPage: number = 1;
 
   /**
-   * @property {number} itemsPerPage
-   *  Cantidad de elementos por página.
+   * Elementos por página mostrados en la tabla.
    */
   itemsPerPage: number = 5;
 
   /**
-   * @property {Catalogo[]} radioOptions
-   *  Opciones del radio button obtenidas desde preOperativo.json.
+   * Opciones para el input radio de "preoperativo".
    */
   radioOptions = preOperativo;
 
   /**
-   * @property {Catalogo[]} enSuCaracterDeOptions
-   *  Opciones del catálogo "En su carácter de".
+   * Opciones del catálogo "En su carácter de".
    */
   enSuCaracterDeOptions: Catalogo[] = enSuCaracterDe;
 
   /**
-   * @property {Catalogo[]} nacionalidadOptions
-   *  Opciones de nacionalidad.
+   * Opciones del catálogo de nacionalidades.
    */
   nacionalidadOptions: Catalogo[] = nacionalidad;
 
+  /**
+   * Estado de la solicitud obtenido desde el store.
+   */
   public solicitudState!: Solicitud31601State;
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
-   * @constructor
-   * Servicio para construir formularios reactivos.
+   * Encabezados de la tabla de miembros.
    */
-  constructor(private fb: FormBuilder,
+  public miembroDeLaEmpresaHeaderData: string[] = [];
+
+  /**
+   * Cuerpo de datos de la tabla de miembros.
+   */
+  public miembroDeLaEmpresaBodyData: unknown[] = [];
+
+  /**
+   * Datos de tabla obtenidos del archivo JSON correspondiente.
+   */
+  public getEstablecimientoTableData = miembrodelaempresaTable;
+
+  /**
+   * Constructor que inyecta los servicios necesarios.
+   * @param fb Constructor de formularios
+   * @param tramite31601Store Store de estado
+   * @param tramite31601Query Query del store
+   * @param consultaioQuery Consulta para estado de solo lectura
+   */
+  constructor(
+    private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * @method ngOnInit
-   *  Método de ciclo de vida de Angular. Inicializa el formulario y obtiene los datos de la tabla.
+   * Ciclo de vida de Angular: Inicializa el componente.
    */
   ngOnInit(): void {
     this.getEstablecimiento();
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa los formularios y carga el estado desde el store.
+   */
   inicializarEstadoFormulario(): void {
     this.tramite31601Query.selectSolicitud$
       .pipe(
@@ -149,66 +184,66 @@ export class AgregarMiembroDeLaEmpresaComponent
           this.solicitudState = seccionState;
         })
       )
-      .subscribe()
-      this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
-        ensucaracterde: [this.solicitudState?.ensucaracterde ? this.solicitudState?.ensucaracterde : 1, Validators.required],
-        rfc: [this.solicitudState?.rfc ? this.solicitudState?.rfc : 'HEJE780514BVA', [Validators.required]],
-        obligadoaTributarenMéxico: [this.solicitudState?.obligadoaTributarenMéxico ?this.solicitudState?.obligadoaTributarenMéxico : true, Validators.required],
-        nacionalidad: [this.solicitudState?.nacionalidad? this.solicitudState?.nacionalidad : 1, Validators.required],
-        registroFederaldeContribuyentes: [
-          { value: 'HEJE780514BVA', disabled: true },
-          Validators.required,
-        ],
-        nombreCompleto: [
-          { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
-          Validators.required,
-        ],
-      });
+      .subscribe();
 
-      this.checkBoxesForm = this.fb.group({
-        squemaIntegral:[this.solicitudState?.squemaIntegral, Validators.required],
-        sidoModificadas: [this.solicitudState?.sidoModificadas, Validators.required]
-      })
+    this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
+      ensucaracterde: [
+        this.solicitudState?.ensucaracterde ?? 1,
+        Validators.required,
+      ],
+      rfc: [
+        this.solicitudState?.rfc ?? 'HEJE780514BVA',
+        [Validators.required],
+      ],
+      obligadoaTributarenMéxico: [
+        this.solicitudState?.obligadoaTributarenMéxico ?? true,
+        Validators.required,
+      ],
+      nacionalidad: [
+        this.solicitudState?.nacionalidad ?? 1,
+        Validators.required,
+      ],
+      registroFederaldeContribuyentes: [
+        { value: 'HEJE780514BVA', disabled: true },
+        Validators.required,
+      ],
+      nombreCompleto: [
+        { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
+        Validators.required,
+      ],
+    });
 
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.checkBoxesForm.controls).forEach((key) => {
-        this.checkBoxesForm.get(key)?.disable();
-        })
-     } else {
-      Object.keys(this.checkBoxesForm.controls).forEach((key) => {
-        this.checkBoxesForm.get(key)?.enable();
-      })
-    } 
+    this.checkBoxesForm = this.fb.group({
+      squemaIntegral: [
+        this.solicitudState?.squemaIntegral,
+        Validators.required,
+      ],
+      sidoModificadas: [
+        this.solicitudState?.sidoModificadas,
+        Validators.required,
+      ],
+    });
 
-    
+    // Modo solo lectura
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.checkBoxesForm.controls).forEach((key) =>
+        this.checkBoxesForm.get(key)?.disable()
+      );
+    } else {
+      Object.keys(this.checkBoxesForm.controls).forEach((key) =>
+        this.checkBoxesForm.get(key)?.enable()
+      );
+    }
+
     if (this.esFormularioSoloLectura && this.agregarMiembroDeLaEmpresaFrom) {
-        this.agregarMiembroDeLaEmpresaFrom.disable();
-     } else {
-        this.agregarMiembroDeLaEmpresaFrom.enable();
-      }
+      this.agregarMiembroDeLaEmpresaFrom.disable();
+    } else {
+      this.agregarMiembroDeLaEmpresaFrom.enable();
+    }
   }
 
   /**
-   * @property {string[]} miembroDeLaEmpresaHeaderData
-   *  Encabezados de la tabla de miembros de la empresa.
-   */
-  public miembroDeLaEmpresaHeaderData: string[] = [];
-
-  /**
-   * @property {unknown[]} miembroDeLaEmpresaBodyData
-   *  Datos del cuerpo de la tabla de miembros de la empresa.
-   */
-  public miembroDeLaEmpresaBodyData: unknown[] = [];
-
-  /**
-   * @property {any} getEstablecimientoTableData
-   *  Datos de la tabla obtenidos desde el JSON.
-   */
-  public getEstablecimientoTableData = miembrodelaempresaTable;
-
-  /**
-   * @method getEstablecimiento
-   *  Obtiene los datos de la tabla de miembros de la empresa.
+   * Obtiene los datos y encabezados para la tabla.
    */
   public getEstablecimiento(): void {
     this.miembroDeLaEmpresaHeaderData =
@@ -218,8 +253,7 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method updatePagination
-   *  Actualiza los datos mostrados en la tabla según la paginación.
+   * Actualiza la paginación de la tabla.
    */
   updatePagination(): void {
     const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
@@ -230,9 +264,8 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method onPageChange
-   * Número de la nueva página seleccionada.
-   *  Cambia la página actual y actualiza la paginación.
+   * Cambia la página seleccionada en la tabla.
+   * @param page Número de la nueva página
    */
   onPageChange(page: number): void {
     this.currentPage = page;
@@ -240,9 +273,8 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method onItemsPerPageChange
-   *  Número de elementos por página seleccionados.
-   *  Cambia la cantidad de elementos por página y actualiza la paginación.
+   * Cambia la cantidad de elementos por página en la tabla.
+   * @param itemsPerPage Nueva cantidad de elementos por página
    */
   onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
@@ -251,8 +283,7 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method ngAfterViewInit
-   *  Método del ciclo de vida de Angular. Inicializa el modal de Bootstrap.
+   * Ciclo de vida de Angular: Inicializa el modal Bootstrap.
    */
   ngAfterViewInit(): void {
     if (this.AgregarMOdel?.nativeElement) {
@@ -261,8 +292,7 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method openAgregarModal
-   *  Abre el modal de agregar miembro de la empresa.
+   * Muestra el modal de agregar miembro.
    */
   openAgregarModal(): void {
     if (this.AgregarModelInstance) {
@@ -271,24 +301,32 @@ export class AgregarMiembroDeLaEmpresaComponent
   }
 
   /**
-   * @method closeAgregarModal
-   *  Cierra el modal de agregar miembro de la empresa.
+   * Cierra el modal de agregar miembro.
    */
   closeAgregarModal(): void {
     if (this.AgregarModelInstance) {
       this.AgregarModelInstance.hide();
     }
   }
+
   /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * Establece valores en el store.
+   * @param form FormGroup de origen
+   * @param campo Campo cuyo valor se establece
+   * @param metodoNombre Método del store para actualizar el campo
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite31601Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Ciclo de vida de Angular: Limpia suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

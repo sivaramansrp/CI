@@ -11,114 +11,142 @@ import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
 
 /**
- * Componente para gestionar el enlace de un representante, incluyendo su información en un formulario.
+ * @component EnlaceComponent
+ * @description Componente para gestionar el enlace de un representante, incluyendo su información en un formulario reactivo. Forma parte del trámite 31601.
+ * 
+ * Este componente:
+ * - Muestra una tabla con datos precargados.
+ * - Muestra y gestiona un formulario reactivo con datos del representante.
+ * - Permite edición si no está en modo solo lectura.
+ * - Usa datos precargados desde archivos JSON.
+ * - Maneja el estado mediante un store y un query personalizados.
+ * - Controla un modal para ingresar o editar información del representante.
+ * 
+ * @example
+ * <app-enlace></app-enlace>
+ * 
+ * @imports
+ * - TableComponent
+ * - TituloComponent
+ * - ReactiveFormsModule
+ * - FormsModule
+ * 
+ * @author Equipo Angular
  */
 @Component({
-  selector: 'app-enlace', // Selector del componente en la plantilla HTML
-  standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
+  selector: 'app-enlace',
+  standalone: true,
   imports: [
-    TableComponent, // Componente para mostrar tablas
-    TituloComponent, // Componente para mostrar un título
-    ReactiveFormsModule, // Módulo para trabajar con formularios reactivos
-    FormsModule, // Módulo para trabajar con formularios
+    TableComponent,
+    TituloComponent,
+    ReactiveFormsModule,
+    FormsModule,
   ],
-  templateUrl: './enlace.component.html', // Ruta a la plantilla HTML
-  styleUrl: './enlace.component.scss', // Ruta al archivo de estilos SCSS
+  templateUrl: './enlace.component.html',
+  styleUrl: './enlace.component.scss',
 })
 export class EnlaceComponent implements OnInit, OnDestroy {
+  /**
+   * Notificador para anular suscripciones y evitar fugas de memoria.
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Encabezados de la tabla de enlace.
    */
   public enlaceHeaderData: string[] = [];
 
   /**
-   * Cuerpo de la tabla de enlace, donde se almacenan los datos.
+   * Cuerpo de la tabla de enlace (actualmente no usado directamente).
    */
   public enlanceBodyData: unknown = [];
 
   /**
-   * Datos de la tabla de enlace que se cargan desde un archivo JSON.
+   * Datos de la tabla precargados desde un archivo JSON.
    */
   public enlaceTableData = enlace;
 
   /**
-   * Formulario reactivo para el representante.
+   * Formulario reactivo del representante.
    */
   public represtantante!: FormGroup;
 
   /**
-   * Datos predefinidos de un representante, que se cargan en el formulario.
+   * Datos precargados del representante, desde archivo JSON.
    */
-  representativeData = enlaceData;
+  public representativeData = enlaceData;
+
+  /**
+   * Estado actual del trámite.
+   */
   public solicitudState!: Solicitud31601State;
 
   /**
-   * Constructor del componente.
-   * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
+   * Controla la visibilidad del modal.
    */
-  constructor(private fb: FormBuilder,
+  public modal: string = 'modal';
+
+  /**
+   * Referencia al botón o elemento de cierre del modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb Instancia de FormBuilder para creación de formularios.
+   * @param tramite31601Store Store personalizado para manejar el estado.
+   * @param tramite31601Query Query para leer el estado del trámite.
+   * @param consultaioQuery Query para obtener estado de la sección "consultaio".
+   */
+  constructor(
+    private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.getRegistroForm();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.getRegistroForm();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario reactivo y carga los encabezados de la tabla.
    */
   ngOnInit(): void {
-    this.getRegistroForm()
-
-    // Carga los datos de la tabla
+    this.getRegistroForm();
     this.getEnlace();
   }
 
   /**
-   * Método que obtiene los encabezados de la tabla de enlace.
+   * Obtiene y asigna los encabezados de la tabla desde el JSON.
    */
   public getEnlace(): void {
     this.enlaceHeaderData = this.enlaceTableData.tableHeader;
   }
 
   /**
-   * Variable que controla la visibilidad del modal.
-   */
-  public modal: string = 'modal';
-
-  /**
-   * Referencia al elemento de cierre del modal.
-   */
-  @ViewChild('closeModal') closeModal!: ElementRef;
-
-  /**
-   * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
+   * Abre el modal y carga los datos del formulario.
    */
   public abrirModal(): void {
-    this.modal = 'show'; // Muestra el modal
-    this.getRegistroForm(); // Carga los datos en el formulario
+    this.modal = 'show';
+    this.getRegistroForm();
   }
 
   /**
-   * Método que configura el formulario con los datos del representante.
+   * Crea y configura el formulario del representante, usando datos del estado o valores por defecto.
    */
   public getRegistroForm(): void {
     this.tramite31601Query.selectSolicitud$
@@ -128,58 +156,93 @@ export class EnlaceComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe()
+      .subscribe();
+
     this.represtantante = this.fb.group({
-      resigtroReprestantante: [this.solicitudState?.resigtroReprestantante ? this.solicitudState?.resigtroReprestantante : this.representativeData.resigtro, Validators.required],
-      rfcReprestantante: [this.solicitudState?.rfcReprestantante ? this.solicitudState?.rfcReprestantante : this.representativeData.rfc, Validators.required],
-      nombreReprestante: [this.solicitudState?.nombreReprestante ? this.solicitudState?.nombreReprestante : this.representativeData.nombre, Validators.required],
-      apellidoPaterno: [this.solicitudState?.apellidoPaterno ? this.solicitudState?.apellidoPaterno : this.representativeData.apellidoPaterno, Validators.required],
-      apellidoMaterno: [this.solicitudState?.apellidoMaterno ? this.solicitudState?.apellidoMaterno : this.representativeData.apellidoMaterno, Validators.required],
-      cargo: [this.solicitudState?.cargo ? this.solicitudState?.cargo : this.representativeData.cargo, Validators.required],
-      cuidad: [this.solicitudState?.cuidad ? this.solicitudState?.cuidad : this.representativeData.cuidad, Validators.required],
-      telefonoReprestantante: [this.solicitudState?.telefonoReprestantante ? this.solicitudState?.telefonoReprestantante : this.representativeData.telefono, Validators.required],
-      correoReprestantante: [this.solicitudState?.correoReprestantante ? this.solicitudState?.correoReprestantante : this.representativeData.correo, Validators.required],
-      suplente: [this.solicitudState?.suplente, Validators.required],
+      resigtroReprestantante: [
+        this.solicitudState?.resigtroReprestantante ?? this.representativeData.resigtro,
+        Validators.required,
+      ],
+      rfcReprestantante: [
+        this.solicitudState?.rfcReprestantante ?? this.representativeData.rfc,
+        Validators.required,
+      ],
+      nombreReprestante: [
+        this.solicitudState?.nombreReprestante ?? this.representativeData.nombre,
+        Validators.required,
+      ],
+      apellidoPaterno: [
+        this.solicitudState?.apellidoPaterno ?? this.representativeData.apellidoPaterno,
+        Validators.required,
+      ],
+      apellidoMaterno: [
+        this.solicitudState?.apellidoMaterno ?? this.representativeData.apellidoMaterno,
+        Validators.required,
+      ],
+      cargo: [
+        this.solicitudState?.cargo ?? this.representativeData.cargo,
+        Validators.required,
+      ],
+      cuidad: [
+        this.solicitudState?.cuidad ?? this.representativeData.cuidad,
+        Validators.required,
+      ],
+      telefonoReprestantante: [
+        this.solicitudState?.telefonoReprestantante ?? this.representativeData.telefono,
+        Validators.required,
+      ],
+      correoReprestantante: [
+        this.solicitudState?.correoReprestantante ?? this.representativeData.correo,
+        Validators.required,
+      ],
+      suplente: [
+        this.solicitudState?.suplente,
+        Validators.required,
+      ],
     });
 
     if (this.esFormularioSoloLectura) {
-      Object.keys(this.represtantante.controls).forEach((key) => {
-        this.represtantante.get(key)?.disable();
-      })
+      Object.keys(this.represtantante.controls).forEach((key) =>
+        this.represtantante.get(key)?.disable()
+      );
     } else {
-      Object.keys(this.represtantante.controls).forEach((key) => {
-        this.represtantante.get(key)?.enable();
-      })
-    }  
+      Object.keys(this.represtantante.controls).forEach((key) =>
+        this.represtantante.get(key)?.enable()
+      );
+    }
 
-    // Rellena el formulario con los datos del representante
     this.patchData();
   }
 
   /**
-   * Método que parchea los datos en el formulario, cargando la información del representante.
+   * Parchea ciertos campos del formulario como solo lectura.
    */
   public patchData(): void {
-    
-    // Deshabilita los campos que no deben ser modificados
     this.represtantante.get('rfc')?.disable();
     this.represtantante.get('nombre')?.disable();
     this.represtantante.get('apellidoPaterno')?.disable();
     this.represtantante.get('apellidoMaterno')?.disable();
     this.represtantante.get('cuidad')?.disable();
   }
+
   /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * Establece un valor en el store de Tramite31601 desde el formulario.
+   * 
+   * @param form Formulario del cual se toma el valor.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Nombre del método del store al que se enviará el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Método de limpieza que se ejecuta al destruir el componente. Cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 }
+
