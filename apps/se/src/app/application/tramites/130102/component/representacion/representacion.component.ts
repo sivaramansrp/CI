@@ -18,7 +18,9 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { Catalogo, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.

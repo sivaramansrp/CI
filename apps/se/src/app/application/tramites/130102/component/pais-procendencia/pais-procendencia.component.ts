@@ -33,7 +33,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
