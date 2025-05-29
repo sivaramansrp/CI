@@ -51,6 +51,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
+
+  esFormularioSoloLectura:boolean = false;
   constructor(private readonly seccionStore: SeccionLibStore,private readonly httpServicios: HttpClient,private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private consultaQuery: ConsultaioQuery
   ) {
@@ -61,6 +63,7 @@ ngOnInit(): void {
   this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
+      this.esFormularioSoloLectura=seccionState.readonly;
       if (seccionState.update) {
         this.guardarDatosFormulario();
       } 
