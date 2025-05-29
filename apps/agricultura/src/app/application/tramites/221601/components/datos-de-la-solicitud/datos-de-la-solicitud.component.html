@@ -102,7 +102,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [required]="false"
-            name="establecimiento" formControlName="establecimiento"
+            name="establecimiento" formControlName="establecimiento" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'establecimiento', 'setEstablecimiento')"
             data-bs-toggle="modal"
                     data-bs-target="#modalAgregarMercancias">
@@ -113,7 +113,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [required]="true"
-            name="veterinario" formControlName="veterinario"
+            name="veterinario" formControlName="veterinario" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'veterinario', 'setVeterinario')">
           </app-catalogo-select>
         </div>
@@ -131,7 +131,7 @@
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen"
+          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
             formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')">
           </app-catalogo-select>
         </div>
@@ -156,7 +156,7 @@
 
     <div class="row m-0">
       <h6>Mercancías</h6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias"
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
         [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
 
       <nav aria-label="Page navigation example">

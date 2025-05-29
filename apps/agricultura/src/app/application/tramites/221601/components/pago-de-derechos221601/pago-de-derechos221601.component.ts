@@ -1,4 +1,4 @@
-import { Catalogo,CatalogoSelectComponent,InputFechaComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,ConsultaioQuery,InputFechaComponent,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
@@ -86,7 +86,9 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+ esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    * 
@@ -97,8 +99,20 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
-    private tramite221601Query: Tramite221601Query
+    private tramite221601Query: Tramite221601Query,
+     private consultaioQuery: ConsultaioQuery,
+         private validacionesService: ValidacionesFormularioService, 
   ) { // Constructor que inyecta las dependencias necesarias
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLectura = true;
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
     }
 
   /**
@@ -107,16 +121,24 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+   this.inicializarCertificadoFormulario();
   }
-
-  /**
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
-   * Configura el formulario para gestionar los campos relacionados con el pago de derechos, como clave, 
-   * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
    */
-  private inicializarFormulario(): void {
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
     this.tramite221601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -125,7 +147,6 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.pagoDerechosForm = this.fb.group({
       claves: [this.solicitudState.claves, Validators.required],
       dependencia: [this.solicitudState.dependencia, Validators.required],
@@ -142,6 +163,35 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('dependencia')?.setValue(realizar.formData.dependencia);
     this.pagoDerechosForm.get('importe')?.setValue(realizar.formData.importe);
     this.updateStoreWithFormData();
+  }
+   /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechosForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.pagoDerechosForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  /**
+* Verifica si un campo específico del formulario `formCombinacion` no es válido
+* y ha sido tocado (modificado por el usuario).
+*
+* @param field - El nombre del campo dentro del formulario que se desea validar.
+* @returns Retorna `true` si el campo tiene errores y ha sido tocado, de lo contrario `false`.
+*/
+  public isValid(field: string): boolean | null {
+    return this.validacionesService.isValid(this.pagoDerechosForm, field);
   }
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
