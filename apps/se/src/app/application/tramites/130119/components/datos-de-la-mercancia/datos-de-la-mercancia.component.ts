@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha } from "@ng-mf/data-access-user";
+import { Catalogo, ConsultaioQuery, InputFecha } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { FECHA } from '../../constants/aviso-importacion-maquinas.enum';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
@@ -30,8 +31,11 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
  */
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
 
-
-   esSoloLectura!: boolean;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esSoloLectura!: boolean;
   /**
    * Fecha final de entrada.
    */
@@ -70,7 +74,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * @param {Tramite130119Store} tramite130119Store - El store del trámite 130119.
    * @param {Tramite130119Query} tramite130119Query - La consulta del trámite 130119.
    */
-  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query,private consultaQuery: ConsultaioQuery,) {
+  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query,private consultaQuery: ConsultaioQuery) {
   
   }
 
@@ -80,7 +84,6 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormulario()
-    // Suscripción para manejar el estado de la consulta
   this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((estadoConsulta) => {
@@ -90,6 +93,10 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
 
    
     }
+  /**
+   * Inicializa el formulario para "Datos de la Mercancía" con sus controles y validadores.
+   * También dispara la carga de fracciones arancelarias, países y valores desde el store.
+   */
   inicializarFormulario(): void {
     this.datosDeLaMercanciaForm = this.fb.group({
       descripcion: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
@@ -108,6 +115,11 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     this.getValoresStore();
   }
 
+  /**
+   * Habilita o deshabilita el formulario según el estado de solo lectura.
+   * Si es solo lectura, deshabilita todos los campos del formulario.
+   * Si no, habilita todos los campos del formulario.
+   */
   habilitarDeshabilitarFormulario(): void {
     if (this.esSoloLectura) {
       this.datosDeLaMercanciaForm.disable();

@@ -3,7 +3,7 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119State } from '../../estados/store/tramite130119.store';
@@ -21,15 +21,15 @@ import { Tramite130119State } from '../../estados/store/tramite130119.store';
 export class PasoUnoComponent implements OnInit, OnDestroy {
 
 
-   /**
-   * Indica si los datos de respuesta del servidor están disponibles.
-   */
+  /**
+  * Indica si los datos de respuesta del servidor están disponibles.
+  */
   public datosRespuestaDisponibles: boolean = false;
 
-    /**
   /**
-   * Subject para notificar la destrucción del componente y desuscribirse de observables.
-   */
+/**
+ * Subject para notificar la destrucción del componente y desuscribirse de observables.
+ */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
@@ -47,19 +47,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   indice: number = 1;
-
   /**
-   * Selecciona una pestaña y actualiza el índice.
-   * @param {number} i - El índice de la pestaña seleccionada.
+   * Constructor del componente.
+   * @param servicio Servicio para obtener datos de la solicitud.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
   constructor(
     private servicio: DatosDeLaSolicitudService,
     private consultaQuery: ConsultaioQuery
-  ) {}
+  ) { }
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
@@ -72,12 +68,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.estadoConsulta = estadoSeccion;
       });
 
-      if (this.estadoConsulta.update) {
+    if (this.estadoConsulta.update) {
       this.obtenerDatosBandejaSolicitudes();
     } else {
       this.datosRespuestaDisponibles = true;
     }
-}
+  }
 
   /**
    * Obtiene los datos de la bandeja de solicitudes desde el servidor.
@@ -93,7 +89,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-    ngOnDestroy(): void {
+  /**
+ * Selecciona una pestaña y actualiza el índice.
+ * @param {number} i - El índice de la pestaña seleccionada.
+ */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+  /**
+   * Hook del ciclo de vida que se llama cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
     this.notificadorDestruccion$.next();
     this.notificadorDestruccion$.complete();
   }

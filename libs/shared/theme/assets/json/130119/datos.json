@@ -3,15 +3,15 @@
         "regimen": "1",
         "clasificacionDeRegimen": "1",
         "descripcion": "Descripción del producto",
-        "fraccionArancelaria": "1234.56",
+        "fraccionArancelaria": "1",
         "umt": "kg",
         "cantidad": "100",
         "valorFacturaUSD": "1000",
-        "paisOrigen": "México",
-        "paisExportador": "Estados Unidos",
+        "paisOrigen": "1",
+        "paisExportador": "1",
         "numeroFactura": "ABC123",
         "fechaExpedicionFactura": "2023-01-01",
         "observaciones": "Ninguna",
         "estado": "1",
-        "representacionFederal": "1"
+        "representacionFederal": "33"
     }
