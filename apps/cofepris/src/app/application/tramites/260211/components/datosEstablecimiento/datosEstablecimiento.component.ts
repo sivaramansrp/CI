@@ -98,6 +98,7 @@ constructor(
    * @returns {void}
    */
   ngOnInit(): void {
+     this.inicializarEstadoFormulario();
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -110,12 +111,12 @@ constructor(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        console.log(this.esFormularioSoloLectura);
+       
         this.inicializarEstadoFormulario();
       })
     )
-    .subscribe()
-   
+    .subscribe();
+
   }
    /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.  

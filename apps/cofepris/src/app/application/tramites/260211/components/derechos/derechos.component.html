@@ -23,7 +23,7 @@
                 <div class="form-group">
                   <app-catalogo-select
                     [catalogo]="derechosList"
-                   
+                    [isDisabled]="esFormularioSoloLectura ? true : false"
                     [label]="'banco'"
                     [placeholder]="'Seleccione una aduana'"
                     formControlName="banco"
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-4">
               <div class="btn-group">
-                <button type="button" class="btn btn-primary">Borrar datos del pago</button>
+                <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
               </div>
             </div>
           </div>   

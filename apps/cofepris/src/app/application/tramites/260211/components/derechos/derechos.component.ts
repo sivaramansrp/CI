@@ -9,7 +9,7 @@ import { map, Subject, takeUntil } from 'rxjs'; // Import RxJS operators for rea
 import { Solicitud260211State } from '../../../../estados/tramites/sanitario260211.store'; // Import state interface for the application.
 import { Sanitario260211Store } from '../../../../estados/tramites/sanitario260211.store'; // Import store for managing application state.
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query'; // Import query for fetching data from the store.
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * compondoc
@@ -38,6 +38,12 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
   styleUrls: ['./derechos.component.scss'], // Path to the CSS styles.
 })
 export class DerechosComponent implements OnInit, OnDestroy {
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+  /**
   /**
    * compodoc
    *@ property {FormGroup} derechosForm
@@ -88,7 +94,8 @@ export class DerechosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder, // Inject FormBuilder for creating reactive forms.
     private service: SanitarioService, // Inject SanitarioService for API calls.
     private sanitario260211Store: Sanitario260211Store, // Inject store for managing state.
-    private permiso260211Query: Permiso260211Query // Inject query for fetching data from the store.
+    private permiso260211Query: Permiso260211Query,// Inject query for fetching data from the store.
+    private consultaioQuery: ConsultaioQuery 
   ) {}
 
   /**
@@ -99,6 +106,60 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
   ngOnInit(): void {
+ this.inicializarEstadoFormulario();
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+       
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+
+
+    // Carga de datos iniciales
+    this.loadComboUnidadMedida(); // Llamar al método para cargar los datos iniciales.
+  }
+ /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.derechosForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.derechosForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  /* * compodoc
+   * Inicializa el formulario con los valores del estado de la solicitud.
+   */
+  inicializarFormulario():void{
+    
     // Suscripción al estado de la solicitud
     this.permiso260211Query.selectSolicitud$ // Observable para obtener el estado actual de la aplicación.
       .pipe(
@@ -118,11 +179,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
       tipoFetch: [this.solicitudState?.tipoFetch], 
       importe: [this.solicitudState?.importe], 
     });
-
-    // Carga de datos iniciales
-    this.loadComboUnidadMedida(); // Llamar al método para cargar los datos iniciales.
   }
-
  /**
    * compodoc
    * method setValoresStore

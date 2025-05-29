@@ -97,7 +97,7 @@ export interface MercanciasTabla {
     InputFechaComponent
   ],
   templateUrl: './domicillo.component.html',
-  styleUrl: './domicillo.component.css',
+  styleUrl: './domicillo.component.scss',
 })
 export class DomicilloComponent implements OnInit,OnDestroy {
   /**
@@ -136,6 +136,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query,
     private service: SanitarioService,
+        private consultaioQuery: ConsultaioQuery 
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -259,6 +260,24 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  * Método que se ejecuta al inicializar el componente.
  */
 ngOnInit(): void {
+   this.inicializarEstadoFormulario();
+       /**
+       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+       *
+       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+       */
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+         
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   this.tramite260211Query
     .selectSolicitud$
     .pipe(
