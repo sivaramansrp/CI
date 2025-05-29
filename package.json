@@ -3,9 +3,14 @@
   "version": "1.1.5",
   "license": "MIT",
   "scripts": {
-    "dashboard": "npx nx serve dashboard --port 5200",
+    "setup:local": "npm ci -f --legacy-peer-deps --prefer-offline --no-package-lock --no-audit --no-fund --progress=false",
+    "start:local": "npx nx serve dashboard --publicHost http://localhost",
+    "setup:pnpm:local": "npm install -g pnpm && pnpm install --prefer-offline --no-lockfile && pnpm add webpack@5.91.0",
+    "start:pnpm:local": "pnpm nx serve dashboard --publicHost http://localhost",
     "compodoc": "npx compodoc -p tsconfig.doc.json",
-    "reset": "npx nx reset"
+    "reset": "npx nx reset",
+    "lint": "npx nx lint",
+    "test": "npx nx test"
   },
   "private": true,
   "dependencies": {
@@ -82,7 +87,7 @@
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.4.2",
-    "webpack": "^5.91.0",
+    "webpack": "5.91.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^4.0.0"
   },
