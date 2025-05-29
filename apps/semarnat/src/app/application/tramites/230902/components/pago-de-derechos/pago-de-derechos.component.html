@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="col-md-4" [ngClass]="{ 'disabled-field': esFormularioSoloLectura }">
-          <input-fecha [setFecha]="formPagoDerechos.get('fecPago')?.value" [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"  [class.is-invalid]="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
+          <input-fecha [setFecha]="formPagoDerechos.get('fecPago')?.value" [isDisabled]="esFormularioSoloLectura"  [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"  [class.is-invalid]="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>
           
           <div class="invalid-feedback"
