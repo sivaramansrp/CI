@@ -9,6 +9,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
 
@@ -27,7 +28,7 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     PasoDosComponent,
     PasoUnoComponent,
     ZoosanitarioPageComponent,
-        
+    TercerospageComponent
   ],
   providers: [
     ToastrService

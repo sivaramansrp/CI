@@ -89,15 +89,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.movilizacionForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        dataParaMovilizacion: false, // Example boolean to update
-      };
-      if (this.movilizacionForm.valid) {
-        FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
        this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
         this.movilizacionForm.patchValue(datosDeLaSolicitud);
@@ -107,6 +98,15 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+        this.movilizacionForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      const FORMA_VALIDA_ACTUALIZADA = {
+        dataParaMovilizacion: false, // Example boolean to update
+      };
+      if (this.movilizacionForm.valid) {
+        FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
+      }
+      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    });
      this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
