@@ -103,7 +103,7 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
    * Este estado se utiliza para gestionar la lógica del formulario y las interacciones del usuario.
    */
   public solicitudState!: Expedicion120204State;
-
+   
    
   constructor(private service:ExpedicionCertificadoService,private fb: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
@@ -202,9 +202,11 @@ getDetallesDelalicitacion():void{
     takeUntil(this.destroyed$)
   ).subscribe(
     (data:DetalledelaLicitacion)=>{
-      this.expedicion120204Store.setNumeraDelicitacion(data?.numeraDelicitacion);
-      this.expedicion120204Store.setFechaDelEventoDelicitacion(data?.fechaDelEventoDelicitacion);
-      this.expedicion120204Store.setDescripcionDelProducto(data?.descripcionDelProducto);
+      this.detalledelaLicitacionForm.patchValue({
+      numeraDelicitacion: data.numeraDelicitacion,
+      fechaDelEventoDelicitacion: data.fechaDelEventoDelicitacion,
+      descripcionDelProducto: data.descripcionDelProducto,
+      });
     })
 }
  
@@ -243,10 +245,11 @@ getDistribucionSaldo():void{
   this.service.getDistribucionSaldo().pipe(
     takeUntil(this.destroyed$)
   ).subscribe(
-        (data:DistribucionSaldo) => {
-      this.expedicion120204Store.setMontoDisponsible(data?.montoDisponible);
+        (data:DistribucionSaldo) => { 
+      this.distribucionSaldoForm.patchValue({
+      montoDisponible: data.montoDisponible,
     })
-  
+        })
 }
 
 /**
@@ -335,7 +338,7 @@ this.expedicion120204Query.selectSolicitud$
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
-
+            
            })
 
           ).subscribe()

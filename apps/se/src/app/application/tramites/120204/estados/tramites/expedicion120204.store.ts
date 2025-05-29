@@ -2,9 +2,6 @@ import { Store, StoreConfig } from '@datorama/akita';
   
 import { Injectable } from '@angular/core';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
-
-
 /**
  * Representa el estado de la expedición 120204.
  */

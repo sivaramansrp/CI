@@ -57,7 +57,7 @@ export class DatosComponent implements OnInit, OnDestroy{
  * Al inicializar el componente, se establece la consulta inicial en el store de consultas
  * con los parámetros correspondientes al trámite 120204.
  */
-constructor(private consultaQuery: ConsultaioQuery,private expedicionService: ExpedicionCertificadoService,private tramiteStore:Expedicion120204Store) {
+constructor(private consultaQuery: ConsultaioQuery,private consultaStore:ConsultaioStore,private expedicionService: ExpedicionCertificadoService,private tramiteStore:Expedicion120204Store) {
   }
 
    /**
@@ -69,7 +69,17 @@ constructor(private consultaQuery: ConsultaioQuery,private expedicionService: Ex
    * @returns {void}
    */
    ngOnInit(): void {
-
+    this.consultaStore.establecerConsultaio(
+      '120204',
+      'BANDEJA_SOLICITUDES',
+      'se',
+      '03039399393939393',
+      'tipoTramite',
+      'tipoTramite',
+      false,
+      false,
+      false
+    );
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
