@@ -1,21 +1,18 @@
-import moment from 'moment';
-import { Modal } from 'bootstrap';
-import { map, takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
-
-import { CommonModule } from '@angular/common';
+import { Aduanas, DatosDelContenedor, datosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TablaDinamicaComponent, TEXTOS, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-
-import { Aduanas, DatosDelContenedor, datosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import { map, Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { Modal } from 'bootstrap';
 import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
-
-import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import moment from 'moment';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -326,6 +323,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     if (this.soloLectura) {
       this.solicitudForm?.disable();
+    } else {
+      this.solicitudForm?.enable();
     }
   }
 

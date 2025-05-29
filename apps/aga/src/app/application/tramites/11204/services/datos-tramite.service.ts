@@ -63,7 +63,7 @@ export class DatosTramiteService {
    * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
-    return this.http.get<RespuestaConsulta>(`assets/json/11201/consultaDatos.json`);
+    return this.http.get<RespuestaConsulta>(`assets/json/11204/consultaDatos.json`);
   }
 
 }

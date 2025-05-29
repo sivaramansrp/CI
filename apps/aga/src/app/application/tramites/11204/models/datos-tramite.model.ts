@@ -238,5 +238,7 @@ export interface ConsultaDatos {
   digitoDeControl: string;
   contenedores: string;
   aduanaMenuDesplegable: string;
+  estado: string;
+  existe: string;
   datosDelContenedor: DatosDelContenedor[];
 }
