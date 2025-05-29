@@ -16,6 +16,8 @@ import { NO_VISIBILIDAD_UMC } from '../../constants/datos-del-tramilte.enum';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
+import { REGEX_NUMEROS } from '@ng-mf/data-access-user';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -68,6 +70,37 @@ export class DatosMercanciaComponent implements OnInit {
  * @decorador @Input
  */
   @Input() public idProcedimiento!: number;
+
+
+  /**
+   * Datos de la mercancía que se reciben desde el componente padre para ser editados o visualizados.
+   * Puede ser un objeto de tipo `MercanciaDetalle`, `null` o `undefined`.
+   * 
+   * @type {MercanciaDetalle | null | undefined}
+   * @memberof DatosMercanciaComponent
+   * @input
+   */
+  @Input() formaDatos!: MercanciaDetalle | null | undefined;
+
+  /**
+   * Evento que se emite cuando se actualiza una mercancía existente en la lista.
+   * Envía un arreglo de objetos `MercanciaDetalle` al componente padre.
+   *
+   * @type {EventEmitter<MercanciaDetalle[]>}
+   * @memberof DatosMercanciaComponent
+   * @output
+   */
+  @Output() actualizaExistenteEnDatosMercancias = new EventEmitter<MercanciaDetalle[]>();
+
+  /**
+   * Evento que se emite cuando el usuario cancela la operación.
+   * Envía un valor booleano al componente padre para indicar la acción de cancelación.
+   *
+   * @type {EventEmitter<boolean>}
+   * @memberof DatosMercanciaComponent
+   * @output
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
 
   /**
    * Indica si se puede mostrar la lista cruzada.
@@ -143,9 +176,8 @@ export class DatosMercanciaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService // eslint-disable-next-line no-empty-function
+    private datosSolicitudService: DatosSolicitudService,
   ) {}
-
   /**
    * Carga los catálogos necesarios para llenar los selectores del formulario.
    * @method cargarDatos
@@ -205,6 +237,10 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   guardar(): void {
+      if (this.datosMercancia.invalid) {
+        this.datosMercancia.markAllAsTouched();
+        return;
+      }
     const DATOS_MERCANCIA: MercanciaDetalle = {
       fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')
         ?.value,
@@ -219,7 +255,15 @@ export class DatosMercanciaComponent implements OnInit {
     };
 
     this.datosMercancias.push(DATOS_MERCANCIA);
-    this.updateMercanciaDetalle.emit(this.datosMercancias);
+    if(this.formaDatos) {
+      if ('tableIndex' in this.formaDatos) {
+        this.datosMercancias[0].tableIndex = (this.formaDatos as MercanciaDetalle).tableIndex;
+      }
+      this.actualizaExistenteEnDatosMercancias.emit(this.datosMercancias);
+    }
+    else {
+      this.updateMercanciaDetalle.emit(this.datosMercancias);
+    }
     this.datosMercancia.reset();
     this.ubicaccion.back();
   }
@@ -235,6 +279,30 @@ export class DatosMercanciaComponent implements OnInit {
     this.visibilidadCampoUMC = NO_VISIBILIDAD_UMC.includes(this.idProcedimiento) ? false : true;
     this.campoObligatorioChange();
     this.puedeMostrarLaListaCruzada = PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(this.idProcedimiento);
+
+    // Escuche los cambios en el campo fraccionArancelaria
+    this.datosMercancia.get('fraccionArancelaria')?.valueChanges.subscribe((value) => {
+      if (value === '1') {
+        this.datosMercancia.get('descFraccion')?.setValue('Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.');
+        this.datosMercancia.get('descFraccion')?.disable();
+        this.datosMercancia.get('umt')?.setValue('Kilogramo');
+        this.datosMercancia.get('umt')?.enable();
+      } else if (value === '2') {
+        this.datosMercancia.get('descFraccion')?.setValue('Otra descripción para 25030003.');
+        this.datosMercancia.get('descFraccion')?.disable();
+        this.datosMercancia.get('umt')?.setValue('Tonelada');
+        this.datosMercancia.get('umt')?.enable();
+      } else {
+        this.datosMercancia.get('descFraccion')?.setValue(null);
+        this.datosMercancia.get('descFraccion')?.disable();
+        this.datosMercancia.get('umt')?.setValue(null);
+        this.datosMercancia.get('umt')?.disable();
+      }
+    });
+    if (this.formaDatos) {
+      this.datosMercancia.patchValue(this.formaDatos);
+      this.datosMercancia.enable();
+    }
   }
 
   /**
@@ -245,17 +313,17 @@ export class DatosMercanciaComponent implements OnInit {
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
-      fraccionArancelaria: ['25030002', Validators.required],
+      fraccionArancelaria: ['', Validators.required],
       descFraccion: [
+        '',
         {
-          value:
-            'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.',
-          disabled: true,
+          value: null, 
+          disabled: true, 
         },
         Validators.required,
       ],
-      cantidadUMT: [null, Validators.required],
-      umt: [{ value: 'Kilogramo', disabled: true }, Validators.required],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      umt: [{ value: null, disabled: true }, Validators.required],
       valorComercial: [null, Validators.required],
       umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
@@ -263,12 +331,15 @@ export class DatosMercanciaComponent implements OnInit {
     });
     this.cargarDatos();
 
-
     if (this.idProcedimiento === 240122) {
       this.datosMercancia.get('umc')?.disable();
     }
   }
-
+    onCantidadUMTInput(event: Event): void {
+      const INPUT = event.target as HTMLInputElement;
+      INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
+      this.datosMercancia.get('cantidadUMT')?.setValue(INPUT.value, { emitEvent: false });
+    }
     /**
      * @method campoObligatorioChange
      * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
@@ -302,6 +373,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   cancelar(): void {
+    this.cancelarEventListener.emit(true);
     this.ubicaccion.back();
   }
 }
