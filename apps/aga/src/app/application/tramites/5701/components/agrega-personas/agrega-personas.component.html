@@ -1,13 +1,28 @@
 <div class="row">
   <div class="col-md-4 form-group">
     <label class="form-label" for="gafeteRespoDespacho">Gafete:</label>
-    <input class="form-control" id="gafeteRespoDespacho" [formControl]="gafeteRespoDespacho" placeholder="" type="text"
-      [ngClass]="gafeteIsValid ? 'required' : ''" libUppercase>
+    <input
+      class="form-control"
+      id="gafeteRespoDespacho"
+      [formControl]="gafeteRespoDespacho"
+      placeholder=""
+      type="text"
+      [ngClass]="gafeteIsValid ? 'required' : ''"
+      libUppercase
+    />
   </div>
   <div class="col-md-4 d-flex align-items-end">
     <div class="btn-group">
-      <button class="btn btn-default" type="button" (click)="buscarGafete()">Buscar</button>
-      <button class="btn btn-primary ms-2" type="button" (click)="agregarPersona()">Agregar</button>
+      <button class="btn btn-default" type="button" (click)="buscarGafete()">
+        Buscar
+      </button>
+      <button
+        class="btn btn-primary ms-2"
+        type="button"
+        (click)="agregarPersona()"
+      >
+        Agregar
+      </button>
     </div>
   </div>
 </div>
@@ -16,25 +31,47 @@
   <div class="row mt-5">
     <div class="col-md-4 form-group">
       <label class="form-label" for="nombreRespoDespacho">Nombre(s):</label>
-      <input class="form-control" id="nombreRespoDespacho" placeholder="" type="text"
-        formControlName="nombreRespoDespacho" [ngClass]="isValid('nombreRespoDespacho') ? 'required' : ''">
+      <input
+        class="form-control"
+        id="nombreRespoDespacho"
+        placeholder=""
+        type="text"
+        formControlName="nombreRespoDespacho"
+        [ngClass]="isValid('nombreRespoDespacho') ? 'required' : ''"
+      />
     </div>
     <div class="col-md-4 form-group">
-      <label class="form-label" for="paternoRespoDespacho">Apellido paterno:</label>
-      <input class="form-control" id="paternoRespoDespacho" placeholder="" type="text"
-        formControlName="paternoRespoDespacho" [ngClass]="isValid('paternoRespoDespacho') ? 'required' : ''">
+      <label class="form-label" for="paternoRespoDespacho"
+        >Apellido paterno:</label
+      >
+      <input
+        class="form-control"
+        id="paternoRespoDespacho"
+        placeholder=""
+        type="text"
+        formControlName="paternoRespoDespacho"
+        [ngClass]="isValid('paternoRespoDespacho') ? 'required' : ''"
+      />
     </div>
     <div class="col-md-4 form-group">
-      <label class="form-label" for="maternoRespoDespacho">Apellido materno:</label>
-      <input class="form-control" id="maternoRespoDespacho" placeholder="" type="text"
-        formControlName="maternoRespoDespacho" [ngClass]="isValid('maternoRespoDespacho') ? 'required' : ''">
+      <label class="form-label" for="maternoRespoDespacho"
+        >Apellido materno:</label
+      >
+      <input
+        class="form-control"
+        id="maternoRespoDespacho"
+        placeholder=""
+        type="text"
+        formControlName="maternoRespoDespacho"
+        [ngClass]="isValid('maternoRespoDespacho') ? 'required' : ''"
+      />
     </div>
   </div>
 </form>
 
 <div class="row mt-5">
   <div class="col-md-12">
-     <app-tabla-dinamica
+    <app-tabla-dinamica
       [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
       [configuracionTabla]="encabezadoDeTablaResponsablesDespacho"
       [datos]="personas"

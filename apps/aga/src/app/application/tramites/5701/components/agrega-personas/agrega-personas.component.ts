@@ -5,17 +5,15 @@ import {
   ERR_INPUT_BUSQUEDA_VACIO,
   MSG_DATOS_GUARDADOS,
   MSG_ELIMINA_ELEMENTO,
+  MSJ_ERROR_GAFETE_EXISTE,
   TITULO_MODAL,
 } from '../../../../core/enums/5701/tramite5701.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { map, Subject, takeUntil, tap } from 'rxjs';
+  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
+  MSG_SELECCIONA_REGISTRO,
+  TITULO_MODAL_AVISO,
+} from '../../../../core/enums/5701/responsables-despacho.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   Notificacion,
@@ -26,20 +24,22 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
-import {
-  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
-  MSG_SELECCIONA_REGISTRO,
-  TITULO_MODAL_AVISO,
-} from '../../../../core/enums/5701/responsables-despacho.enum';
-
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 @Component({
   selector: 'agrega-personas',
   standalone: true,
@@ -314,19 +314,27 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         ?.getRawValue(),
     };
 
-    if (responsable !== null) {
+    const EXISTE_RESPONSABLE = this.personas.some(
+      (persona) =>
+        persona.gafeteRespoDespacho === this.gafeteRespoDespacho.value
+    );
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL,
+      mensaje: EXISTE_RESPONSABLE
+        ? MSJ_ERROR_GAFETE_EXISTE
+        : MSG_DATOS_GUARDADOS,
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
+
+    if (responsable !== null && !EXISTE_RESPONSABLE) {
       this.personas.push(responsable);
       this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: TITULO_MODAL,
-        mensaje: MSG_DATOS_GUARDADOS,
-        cerrar: false,
-        txtBtnAceptar: 'Cerrar',
-        txtBtnCancelar: '',
-      };
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -337,30 +345,6 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     this.personaForm.get('paternoRespoDespacho')?.disable();
     this.personaForm.get('maternoRespoDespacho')?.disable();
     this.personaForm.reset();
-  }
-
-  /**
-   * Elimina una persona de la lista de personas en la posición especificada.
-   *
-   * @param {number} i - El índice de la persona a eliminar en la lista.
-   *
-   * @remarks
-   * Esta función actualiza el título y el mensaje del modal, y luego abre el modal
-   * para confirmar la eliminación de la persona.
-   */
-  eliminar(i: number): void {
-    this.personas.splice(i, 1);
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: TITULO_MODAL,
-      mensaje: MSG_ELIMINA_ELEMENTO,
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
-    };
-    this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
   /**
@@ -407,6 +391,16 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         )
     );
 
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL,
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
     this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
