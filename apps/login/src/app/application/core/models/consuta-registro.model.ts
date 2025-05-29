@@ -15,6 +15,4 @@ export interface ConsultaRegistro {
     rfc: string;
       /** CURP del usuario */
     curp?: string
-    /** seleccionado del usuario */
-    seleccionado?: boolean;
 }

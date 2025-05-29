@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
+import { CONFIGURACION_ENCABEZADO_NOTIFICADORES } from '../../core/constantes/notificadores.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
 import { Router } from '@angular/router';
@@ -14,7 +16,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-registro-persona-notificaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TablaDinamicaComponent],
   templateUrl: './registro-persona-notificaciones.component.html',
   styleUrl: './registro-persona-notificaciones.component.scss',
 })
@@ -40,14 +42,26 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   personasNotificaciones: ConsultaRegistro[] = [];
 
   /**
-   * Indica si la persona está seleccionada para alguna acción.
-   */
-  seleccionado?: boolean;
-
-  /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * @description
+  * Configuración de la tabla de notificadore.
+  */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+  * @description
+  * Encabezado de la tabla de notificadores.
+  */
+  encabezadoDeTablaNotificadores = CONFIGURACION_ENCABEZADO_NOTIFICADORES;
+  /**
+   * @description
+   * Lista de notificadores seleccionados para eliminar.
+   */
+  notificadoresSeleccionados: ConsultaRegistro[] = [];
 
   /**
    * Constructor del componente.
@@ -79,6 +93,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
       )
       .subscribe();
     this.confirmarDatos();
+    this.personasNotificaciones= this.registroState.personasNotificaciones;
   }
 
   /**
@@ -94,6 +109,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Si no existen personas, inicializa la lista y actualiza la visualización de la tabla.
    */
   confirmarDatos() {
+
     this.personasNotificaciones = this.registroState.personasNotificaciones;
     if (this.registroState.regustrarDatos) {
       if (this.personasNotificaciones.length === 0) {
@@ -137,7 +153,12 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Elimina las personas seleccionadas de la lista de notificaciones y actualiza el store.
    */
   eliminarSeleccionados() {
-    this.personasNotificaciones = this.personasNotificaciones.filter(p => !p['seleccionado']);
+    this.personasNotificaciones = this.personasNotificaciones.filter(
+      (notificador) =>
+        !this.notificadoresSeleccionados.some(
+          (seleccionado) => seleccionado.rfc === notificador.rfc
+        )
+    );
     this.registroStore.setListaNotificadores(this.personasNotificaciones);
   }
 
