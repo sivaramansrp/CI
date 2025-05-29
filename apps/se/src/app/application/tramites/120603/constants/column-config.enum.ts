@@ -157,8 +157,8 @@ export const RADIO_OPCION = [
  * Contiene las opciones "Persona Física" y "Persona Moral".
  */
 export const TIPO_DE_PERSONA = [
-   { "label": "Persona Física", "value": "Persona Física" },
-   { "label": "Persona Moral", "value": "Persona Moral" }
+   { "label": "Persona física", "value": "Persona Física" },
+   { "label": "Persona moral", "value": "Persona Moral" }
 ];
 
 /** Configuración de datos del estado */
