@@ -1353,6 +1353,49 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
+   * Cancela el formulario de Fabricante y regresa a la tabla.
+   */
+  cancelFabricante(): void {
+    this.showFabricante = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Destinatario y regresa a la tabla.
+   */
+  cancelDestinatario(): void {
+    this.showDestinatario = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Proveedor y regresa a la tabla.
+   */
+  cancelProveedor(): void {
+    this.showProveedor = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Facturador y regresa a la tabla.
+   */
+  cancelFacturador(): void {
+    this.showFacturador = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Muestra la tabla principal y oculta todos los formularios.
+   */
+  showTable(): void {
+    this.showTableDiv = true;
+    this.showFabricante = false;
+    this.showDestinatario = false;
+    this.showProveedor = false;
+    this.showFacturador = false;
+  }
+
+  /**
    * Validador personalizado para verificar que el país seleccionado no esté vacío ni sea '-1'.
    *
    * @param control Control del formulario a validar.

@@ -460,6 +460,21 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
     const CODIGO_POSTAL = this.datosEstablecimientoForm.get('codigoPostal')?.value;
     this.tramite260212Store.setCodigoPostal(CODIGO_POSTAL);
   }
+  /**
+   * Opciones de publicación para la solicitud.
+   */
+  // losDatos:any[] = [];
+
+  // /**
+  //  * Obtiene las opciones de publicación de la solicitud.
+  //  */
+  // obtenerOpcionesSolicitud(): void {
+  //   if (typeof this.solicitudService.getOpcionesPublicacion === 'function') {
+  //     this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
+  //       this.losDatos = data;
+  //     });
+  //   }
+  // }
   /*
   * Método del ciclo de vida de Angular - destruye el componente
 */

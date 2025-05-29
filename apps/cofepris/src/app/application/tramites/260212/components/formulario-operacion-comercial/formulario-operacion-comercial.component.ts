@@ -106,11 +106,12 @@ this. inicializarEstadoFormulario();
    * @returns {void}
    */
   inicializarEstadoFormulario(): void {
+    if (!this.formularioOperacionForm) {
+      // Form not initialized, nothing to do
+      return;
+    }
     if (this.esFormularioSoloLectura) {
-      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
-      if (this.formularioOperacionForm) {
-        this.guardarDatosFormulario();
-      }
+      this.guardarDatosFormulario();
     } else {
       this.actualizarEstado();
     }  
@@ -122,14 +123,15 @@ this. inicializarEstadoFormulario();
    * @returns {void}
    */
   guardarDatosFormulario(): void {
+    if (!this.formularioOperacionForm) {
+      // Form not initialized, nothing to do
+      return;
+    }
     this.actualizarEstado();
-    // Solo intentar deshabilitar si el formulario ya está inicializado
-    if (this.formularioOperacionForm) {
-      if (this.esFormularioSoloLectura) {
-        this.formularioOperacionForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.formularioOperacionForm.enable();
-      }
+    if (this.esFormularioSoloLectura) {
+      this.formularioOperacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioOperacionForm.enable();
     }
   }
 
@@ -146,11 +148,15 @@ this.solicitudService.getClave().subscribe((data) => {
     this.selectedRegimen$.subscribe((regimen) => {
       if (regimen) {
         this.formularioOperacionForm.get('regimen')?.setValue(regimen);
+      } else {
+        this.formularioOperacionForm.get('regimen')?.setValue('');
       }
     });
     this.selectedEntradas$.subscribe((entradas) => {
       if (entradas) {
         this.formularioOperacionForm.get('entradas')?.setValue(entradas);
+      } else {
+        this.formularioOperacionForm.get('entradas')?.setValue('');
       }
     });
   }
@@ -188,6 +194,22 @@ this.solicitudService.getClave().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
+    if (this.subscription && !this.subscription.closed) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Getter for form controls (for testing).
+   */
+  get formControls() {
+    return this.formularioOperacionForm?.controls;
+  }
+
+  /**
+   * Expose clave for testing.
+   */
+  getClaveCatalog(): CatalogoResponse[] {
+    return this.clave;
   }
 }

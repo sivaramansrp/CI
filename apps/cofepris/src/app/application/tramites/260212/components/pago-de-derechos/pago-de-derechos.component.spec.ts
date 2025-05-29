@@ -1,41 +1,56 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { of } from 'rxjs';
+import { Tramite260212Store } from '../../estados/tramite260212.store';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let pagoDeDerechosMockService: any;
+  let mockPagoDeDerechosService: any;
+  let mockTramite260212Store: any;
+  let mockTramite260212Query: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    pagoDeDerechosMockService = {
-      getData: jest.fn().mockReturnValue(of([
-        { id: "Banco1", descripcion: "Banco1" },
-        { id: "Banco2", descripcion: "Banco2" },
-        { id: "Banco3", descripcion: "Banco3" },
-      ])),
+    mockPagoDeDerechosService = {
+      getData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco 1' }]))
+    };
+    mockTramite260212Store = {
+      setClaveDeReferncia: jest.fn(),
+      setCadenaDeLaDependencia: jest.fn(),
+      setLlaveDePago: jest.fn(),
+      setFechaDePago: jest.fn(),
+      setImporteDePago: jest.fn(),
+      setBanco: jest.fn()
+    };
+    mockTramite260212Query = {
+      selectedBanco$: of('Banco 1'),
+      selectedClaveDeReferncia$: of('clave123'),
+      selectedCadenaDeLaDependencia$: of('cadenaABC'),
+      selectedLlaveDePago$: of('llaveXYZ'),
+      selectedFechaDePago$: of('2024-06-01'),
+      selectedImporteDePago$: of('1000')
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: true })
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, PagoDeDerechosComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, PagoDeDerechosComponent],
       providers: [
-        { provide: PagoDeDerechosService, useValue: pagoDeDerechosMockService }
+        FormBuilder,
+        { provide: PagoDeDerechosService, useValue: mockPagoDeDerechosService },
+        { provide: Tramite260212Store, useValue: mockTramite260212Store },
+        { provide: Tramite260212Query, useValue: mockTramite260212Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ]
+    }).compileComponents();
 
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -45,12 +60,231 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form', () => {
-    expect(component.pagoDerechos).toBeDefined();
-    expect(component.pagoDerechos.controls['claveDeReferncia']).toBeDefined();
+  it('should initialize form with required controls', () => {
+    expect(component.pagoDerechos.contains('claveDeReferncia')).toBe(true);
+    expect(component.pagoDerechos.contains('cadenaDeLaDependencia')).toBe(true);
+    expect(component.pagoDerechos.contains('banco')).toBe(true);
+    expect(component.pagoDerechos.contains('llaveDePago')).toBe(true);
+    expect(component.pagoDerechos.contains('fechaDePago')).toBe(true);
+    expect(component.pagoDerechos.contains('importeDePago')).toBe(true);
   });
 
-  it('should call getData on init', () => {
-    expect(pagoDeDerechosMockService.getData).toHaveBeenCalled();
+  it('should set esFormularioSoloLectura from consultaioQuery', () => {
+    expect(component.esFormularioSoloLectura).toBe(true);
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.pagoDerechos = component['fb'].group({
+      claveDeReferncia: [''],
+      cadenaDeLaDependencia: [''],
+      banco: [''],
+      llaveDePago: [''],
+      fechaDePago: [''],
+      importeDePago: ['']
+    });
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call actualizarEstado if esFormularioSoloLectura is false', () => {
+    const spy = jest.spyOn(component, 'actualizarEstado');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should disable form in guardarDatosFormulario when readonly', () => {
+    component.pagoDerechos.enable();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.pagoDerechos.disabled).toBe(true);
+  });
+
+  it('should enable form in guardarDatosFormulario when not readonly', () => {
+    component.pagoDerechos.disable();
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.pagoDerechos.enabled).toBe(true);
+  });
+
+  it('should update dropdownData and form values in actualizarEstado', () => {
+    component.pagoDerechos.patchValue({
+      banco: '',
+      claveDeReferncia: '',
+      cadenaDeLaDependencia: '',
+      llaveDePago: '',
+      fechaDePago: '',
+      importeDePago: ''
+    });
+    component.actualizarEstado();
+    expect(component.dropdownData.length).toBeGreaterThan(0);
+    expect(component.pagoDerechos.get('banco')?.value).toBe('Banco 1');
+    expect(component.pagoDerechos.get('claveDeReferncia')?.value).toBe('clave123');
+    expect(component.pagoDerechos.get('cadenaDeLaDependencia')?.value).toBe('cadenaABC');
+    expect(component.pagoDerechos.get('llaveDePago')?.value).toBe('llaveXYZ');
+    expect(component.pagoDerechos.get('fechaDePago')?.value).toBe('2024-06-01');
+    expect(component.pagoDerechos.get('importeDePago')?.value).toBe('1000');
+  });
+
+  it('should call setClaveDeReferncia on actualizarClaveDeReferncia', () => {
+    component.pagoDerechos.get('claveDeReferncia')?.setValue('testClave');
+    component.actualizarClaveDeReferncia();
+    expect(mockTramite260212Store.setClaveDeReferncia).toHaveBeenCalledWith('testClave');
+  });
+
+  it('should call setCadenaDeLaDependencia on actualizarCadenaDeLaDependencia', () => {
+    component.pagoDerechos.get('cadenaDeLaDependencia')?.setValue('testCadena');
+    component.actualizarCadenaDeLaDependencia();
+    expect(mockTramite260212Store.setCadenaDeLaDependencia).toHaveBeenCalledWith('testCadena');
+  });
+
+  it('should call setLlaveDePago on actualizarLlaveDePago', () => {
+    component.pagoDerechos.get('llaveDePago')?.setValue('testLlave');
+    component.actualizarLlaveDePago();
+    expect(mockTramite260212Store.setLlaveDePago).toHaveBeenCalledWith('testLlave');
+  });
+
+  it('should call setFechaDePago on actualizarFechaDePago', () => {
+    component.pagoDerechos.get('fechaDePago')?.setValue('2024-06-01');
+    component.actualizarFechaDePago();
+    expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('2024-06-01');
+  });
+
+  it('should call setImporteDePago on actualizarImporteDePago', () => {
+    component.pagoDerechos.get('importeDePago')?.setValue('2000');
+    component.actualizarImporteDePago();
+    expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('2000');
+  });
+
+  it('should call setBanco on getMunicipios', () => {
+    component.pagoDerechos.get('banco')?.setValue('Banco 2');
+    component.getMunicipios();
+    expect(mockTramite260212Store.setBanco).toHaveBeenCalledWith('Banco 2');
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+    const unsubSpy = jest.spyOn(component['subscription'], 'unsubscribe');
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+    expect(unsubSpy).toHaveBeenCalled();
+  });
+
+  // Additional coverage for edge cases and branches
+
+  it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.pagoDerechos = undefined as any;
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should not set form values if observable emits falsy', () => {
+    mockTramite260212Query.selectedBanco$ = of('');
+    mockTramite260212Query.selectedClaveDeReferncia$ = of(null);
+    mockTramite260212Query.selectedCadenaDeLaDependencia$ = of(undefined);
+    mockTramite260212Query.selectedLlaveDePago$ = of('');
+    mockTramite260212Query.selectedFechaDePago$ = of(null);
+    mockTramite260212Query.selectedImporteDePago$ = of(undefined);
+    component = new PagoDeDerechosComponent(
+      TestBed.inject(FormBuilder),
+      mockPagoDeDerechosService,
+      mockTramite260212Store,
+      mockTramite260212Query,
+      mockConsultaioQuery
+    );
+    component.pagoDerechos = component['fb'].group({
+      claveDeReferncia: [''],
+      cadenaDeLaDependencia: [''],
+      banco: [''],
+      llaveDePago: [''],
+      fechaDePago: [''],
+      importeDePago: ['']
+    });
+    component.actualizarEstado();
+    expect(component.pagoDerechos.get('banco')?.value).toBe('');
+    expect(component.pagoDerechos.get('claveDeReferncia')?.value).toBe('');
+    expect(component.pagoDerechos.get('cadenaDeLaDependencia')?.value).toBe('');
+    expect(component.pagoDerechos.get('llaveDePago')?.value).toBe('');
+    expect(component.pagoDerechos.get('fechaDePago')?.value).toBe('');
+    expect(component.pagoDerechos.get('importeDePago')?.value).toBe('');
+  });
+
+  it('should handle actualizarClaveDeReferncia with empty value', () => {
+    component.pagoDerechos.get('claveDeReferncia')?.setValue('');
+    component.actualizarClaveDeReferncia();
+    expect(mockTramite260212Store.setClaveDeReferncia).toHaveBeenCalledWith('');
+  });
+
+  it('should handle actualizarCadenaDeLaDependencia with empty value', () => {
+    component.pagoDerechos.get('cadenaDeLaDependencia')?.setValue('');
+    component.actualizarCadenaDeLaDependencia();
+    expect(mockTramite260212Store.setCadenaDeLaDependencia).toHaveBeenCalledWith('');
+  });
+
+  it('should handle actualizarLlaveDePago with empty value', () => {
+    component.pagoDerechos.get('llaveDePago')?.setValue('');
+    component.actualizarLlaveDePago();
+    expect(mockTramite260212Store.setLlaveDePago).toHaveBeenCalledWith('');
+  });
+
+  it('should handle actualizarFechaDePago with empty value', () => {
+    component.pagoDerechos.get('fechaDePago')?.setValue('');
+    component.actualizarFechaDePago();
+    expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('');
+  });
+
+  it('should handle actualizarImporteDePago with empty value', () => {
+    component.pagoDerechos.get('importeDePago')?.setValue('');
+    component.actualizarImporteDePago();
+    expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('');
+  });
+
+  it('should handle getMunicipios with empty value', () => {
+    component.pagoDerechos.get('banco')?.setValue('');
+    component.getMunicipios();
+    expect(mockTramite260212Store.setBanco).toHaveBeenCalledWith('');
+  });
+
+  it('should call actualizarEstado even if pagoDerechos is undefined', () => {
+    component.pagoDerechos = undefined as any;
+    expect(() => component.actualizarEstado()).not.toThrow();
+  });
+
+  it('should call guardarDatosFormulario and enable/disable form correctly', () => {
+    component.pagoDerechos = component['fb'].group({
+      claveDeReferncia: [''],
+      cadenaDeLaDependencia: [''],
+      banco: [''],
+      llaveDePago: [''],
+      fechaDePago: [''],
+      importeDePago: ['']
+    });
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.pagoDerechos.enabled).toBe(true);
+
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.pagoDerechos.disabled).toBe(true);
+  });
+
+  it('should construct with readonly false and call actualizarEstado', () => {
+    mockConsultaioQuery.selectConsultaioState$ = of({ readonly: false });
+    const spy = jest.spyOn(PagoDeDerechosComponent.prototype, 'inicializarEstadoFormulario');
+    const cmp = new PagoDeDerechosComponent(
+      TestBed.inject(FormBuilder),
+      mockPagoDeDerechosService,
+      mockTramite260212Store,
+      mockTramite260212Query,
+      mockConsultaioQuery
+    );
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });
