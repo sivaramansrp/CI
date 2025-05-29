@@ -3,6 +3,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { Expedicion120204State, Expedicion120204Store } from '../estados/tramites/expedicion120204.store';
 
 /**
  * Servicio para la gestión de datos relacionados con la expedición de certificados.
@@ -17,7 +18,7 @@ export class ExpedicionCertificadoService {
    * Constructor del servicio.
    * @param http Cliente HTTP utilizado para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramiteStore: Expedicion120204Store) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -59,5 +60,21 @@ export class ExpedicionCertificadoService {
    */
   obtenerDatosTabla(): Observable<LicitacionesDisponibles> {
     return this.http.get<LicitacionesDisponibles>('assets/json/120204/datos-de-la-tabla.json');
+  }
+
+  getExpedienteCertificado(): Observable<Expedicion120204State> {
+    return this.http.get<Expedicion120204State>('assets/json/120204/expedicion-certificado.json');
+  }
+
+  setDatosFormulario(datos: Expedicion120204State): void {
+   this.tramiteStore.setEntidadFederativa(datos.entidadFederativa);
+   this.tramiteStore.setRepresentacionFederal(datos.representacionFederal);
+    this.tramiteStore.setMontoExpedir(datos.montoAExpedir);
+    this.tramiteStore.setMontoExpedirCheck(datos.montoAExpedirCheck);
+    this.tramiteStore.setMontoDisponsible(datos.montoDisponible);
+    this.tramiteStore.setTotalExpedir(datos.totalAExpedir);
+    this.tramiteStore.setNumeraDelicitacion(datos.numeraDelicitacion);
+    this.tramiteStore.setFechaDelEventoDelicitacion(datos.fechaDelEventoDelicitacion);
+    this.tramiteStore.setDescripcionDelProducto(datos.descripcionDelProducto);
   }
 }

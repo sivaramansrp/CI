@@ -529,5 +529,14 @@
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
         "numeroDeProcedimiento": "250103"
+    },
+    {
+        "id": 120204,
+        "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120204"
     }
 ]

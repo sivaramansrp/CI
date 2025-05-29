@@ -13,13 +13,13 @@ export interface Expedicion120204State {
    * Entidad federativa seleccionada.
    * Puede ser un catálogo o `null` si no se ha seleccionado ninguna.
    */
-  entidadFederativa: Catalogo | null;
+  entidadFederativa: string;
 
   /**
    * Representación federal seleccionada.
    * Puede ser un catálogo o `null` si no se ha seleccionado ninguna.
    */
-  representacionFederal: Catalogo | null;
+  representacionFederal: string;
 
   /**
    * Monto a expedir en formato de cadena.
@@ -35,6 +35,13 @@ export interface Expedicion120204State {
    * Total a expedir en formato de cadena.
    */
   totalAExpedir: string;
+
+  montoDisponible: string;
+
+   numeraDelicitacion: string;
+   fechaDelEventoDelicitacion: string;
+    descripcionDelProducto: string;
+
 }
 
 
@@ -52,11 +59,16 @@ export interface Expedicion120204State {
  */
 export function createInitialState(): Expedicion120204State {
   return{
-      entidadFederativa:null,
-      representacionFederal:null,
+      entidadFederativa:'',
+      representacionFederal:'',
       montoAExpedir: '',
       montoAExpedirCheck:false,
-      totalAExpedir: ''
+      totalAExpedir: '',
+      montoDisponible: '',
+      numeraDelicitacion: '',
+      fechaDelEventoDelicitacion: '',
+      descripcionDelProducto: ''
+
 
   }
 }
@@ -97,7 +109,7 @@ export class Expedicion120204Store extends Store<Expedicion120204State> {
    * 
    * @param entidadFederativa - Objeto de tipo `Catalogo` que representa la entidad federativa a establecer.
    */
-  public setEntidadFederativa(entidadFederativa: Catalogo): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -109,7 +121,7 @@ export class Expedicion120204Store extends Store<Expedicion120204State> {
    * 
    * @param representacionFederal - Objeto de tipo `Catalogo` que representa la representación federal a establecer.
    */
-  public setRepresentacionFederal(representacionFederal: Catalogo): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
@@ -150,5 +162,34 @@ export class Expedicion120204Store extends Store<Expedicion120204State> {
       ...state,
       totalAExpedir,
     }));
+  }
+
+  public setMontoDisponsible(montoDisponible: string): void {
+    this.update((state) => ({
+      ...state,
+      montoDisponible,
+    }));
+  }
+  public setFechaDelEventoDelicitacion(fechaDelEventoDelicitacion: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaDelEventoDelicitacion,
+    }));
+  }
+  public setDescripcionDelProducto(descripcionDelProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionDelProducto,
+    }));
+  }
+
+  public setNumeraDelicitacion(numeraDelicitacion: string): void {
+    this.update((state) => ({
+      ...state,
+      numeraDelicitacion,
+    }));
+  }
+  public resetState(): void {
+    this.update(createInitialState());
   }
 }

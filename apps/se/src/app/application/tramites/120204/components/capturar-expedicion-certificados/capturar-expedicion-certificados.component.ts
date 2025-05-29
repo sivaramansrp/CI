@@ -5,10 +5,10 @@ import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/f
 import {Observable,Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent,Catalogo,CatalogoSelectComponent,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,ConsultaioQuery,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
 import {CONFIGURACION_ACCIONISTAS_TABLA,DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles} from '../../../../shared/models/expedicion-certificado.model';
 import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
-import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
+import { Expedicion120204State, Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 import {REGEX_ALTO} from '@ng-mf/data-access-user'
  
@@ -30,108 +30,42 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
   /**
    * Configuración para la tabla de accionistas.
    */
-  configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
+  public configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
   /**
    * Datos de ejemplo para la tabla.
    */
   
-  datos:LicitacionesDisponibles[]=[];
+  public datos:LicitacionesDisponibles[]=[];
 
   /**
    * Formulario principal.
    */
-  formulario: FormGroup;
+  public formulario!: FormGroup;
   /**
    * Formulario para el detalle de la licitación.
    */
-  detalledelaLicitacionForm!: FormGroup;
+  public detalledelaLicitacionForm!: FormGroup;
   /**
    * Formulario para el adquiriente.
    */
-  distribucionSaldoForm!:FormGroup;
+  public distribucionSaldoForm!:FormGroup;
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativaOptions: Catalogo[] = [];
+  public entidadFederativaOptions: Catalogo[] = [];
   /**
    * Catálogo de representaciones federales.
    */
-  representacionFederalOptions: Catalogo[] = [];
+  public representacionFederalOptions: Catalogo[] = [];
   /**
    * Datos de la tabla.
    */
   public tableData!: TableData;
-
-    
-
-
-    /**
-     * Arreglo que contiene el catálogo de entidades federativas.
-     * Cada elemento del arreglo es de tipo `Catalogo`.
-     */
-    entidadFederativa: Catalogo[] = [];
-
-
-    
-    
-    /**
-     * Arreglo que contiene elementos del tipo `Catalogo`, representando 
-     * la información relacionada con la representación federal.
-     */
-    representacionFederal: Catalogo[] = [];
   
   /**
    * Subject para la destrucción del componente.
    */
   private destroyed$ = new Subject<void>();
-
-  
-
-  /**
-   * Observable que emite el catálogo de la entidad federativa o null.
-   * Este observable está vinculado a la consulta `entidadFederativa$` 
-   * del servicio `expedicion120204Query`.
-   */
-  entidadFederativa$: Observable<Catalogo | null> = this.expedicion120204Query.entidadFederativa$;
-
-  
-
-  /**
-   * Observable que representa la representación federal asociada.
-   * Este observable emite un objeto de tipo `Catalogo` o `null`.
-   * 
-   * @observable
-   * @type {Observable<Catalogo | null>}
-   */
-  representacionFederal$: Observable<Catalogo | null> = this.expedicion120204Query.representacionFederal$;
-
-
-
-  /**
-   * Observable que representa el monto a expedir.
-   * Este observable emite un valor de tipo `string` o `null`,
-   * y está vinculado a la consulta `expedicion120204Query.montoAExpedir$`.
-   */
-  montoAExpedir$: Observable<string | null> = this.expedicion120204Query.montoAExpedir$;
-
-
-
-  /**
-   * Observable que representa el estado del chequeo de "monto a expedir".
-   * 
-   * Este observable emite un valor booleano que indica si el chequeo de 
-   * "monto a expedir" está activado (true) o desactivado (false). También 
-   * puede emitir `null` si el estado no está definido.
-   * 
-   * @observable
-   */
-  montoAExpedirCheck$ : Observable<boolean | null> = this.expedicion120204Query.montoAExpedirCheck$;
-
-  /**
-   * Observable que emite el valor total a expedir en forma de cadena o null.
-   * Este observable está vinculado a la consulta `totalAExpedir$` del servicio `expedicion120204Query`.
-   */
-  totalAExpedir$ : Observable<string | null> = this.expedicion120204Query.totalAExpedir$;
 
   /**
    * Constructor del componente.
@@ -158,88 +92,52 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
    */
    public destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+/**
+   * Estado de la solicitud para el componente.
+   * Este estado se utiliza para gestionar la lógica del formulario y las interacciones del usuario.
+   */
+  public solicitudState!: Expedicion120204State;
+
    
   constructor(private service:ExpedicionCertificadoService,private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
     private expedicion120204Store: Expedicion120204Store, 
     private expedicion120204Query: Expedicion120204Query
   ) {
-    this.formulario = this.fb.group({
-      entidadFederativa: ["", Validators.required],
-      representacionFederal: ["", Validators.required],
-    });
-    this.detalledelaLicitacionForm = this.fb.group({
-      numeraDelicitacion: [{value:"",disabled: true}, Validators.required],
-      fechaDelEventoDelicitacion: [{value:"",disabled: true}, Validators.required],
-      descripcionDelProducto:[{value:"",disabled: true}, Validators.required],
-    })
-    this.distribucionSaldoForm = this.fb.group({
-      montoDisponible: [{value:"",disabled: true}, Validators.required],
-      montoAExpedir: ["", [Validators.required,Validators.pattern(REGEX_ALTO)],],
-      montoAExpedirCheck: ["", Validators.required],
-      totalAExpedir:[{value:"",disabled: true}, [Validators.required,
-        Validators.pattern(REGEX_ALTO)],]
-    })
-
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
   /**
-   * Método de inicialización del componente.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   *
+   * Este método se encarga de realizar las siguientes acciones:
+   * - Obtener la lista de entidades federativas.
+   * - Obtener la lista de representaciones federales.
+   * - Obtener los detalles de la licitación.
+   * - Obtener la distribución del saldo.
+   * - Inicializar el formulario.
+   *
+   * @returns {void} No retorna ningún valor.
    */
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getDistribucionSaldo();
-    this.obtenerDatosTabla();
+    this.obtenerDatosTabla(); 
     this.inicializarFormulario();
-  }
-
-  /**
-   * Inicializa el formulario con datos del estado.
-   */
-    inicializarFormulario(){
-
-    this.entidadFederativa$.pipe(
-              takeUntil(this.destroyNotifier$),
-              map((entidadFederativa) => {
-      if (entidadFederativa) {
-        this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
-      }
-    })).subscribe();
-
-    this.representacionFederal$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((representacionFederal) => {
-      if (representacionFederal) {
-        this.formulario.get('representacionFederal')?.setValue(representacionFederal);
-      }
-    })).subscribe();
-
-    this.montoAExpedir$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((montoAExpedir) => {
-      if (montoAExpedir) {
-        this.distribucionSaldoForm.get('montoAExpedir')?.setValue(montoAExpedir);
-      }
-
-    })).subscribe();
-
-    this.montoAExpedirCheck$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((montoAExpedirCheck) => {
-      if (montoAExpedirCheck) {
-        this.distribucionSaldoForm.get('montoAExpedirCheck')?.setValue(montoAExpedirCheck);
-      }
-
-    })).subscribe();
-
-    this.totalAExpedir$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((totalAExpedir) => {
-      if (totalAExpedir) {
-        this.distribucionSaldoForm.get('totalAExpedir')?.setValue(totalAExpedir);
-      }
-
-    })).subscribe();
   }
 
   /**
@@ -249,7 +147,7 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
       this.service.getEntidadFederativa().pipe(
         takeUntil(this.destroyed$)
       ).subscribe(
-        (data:Catalogo) => {
+        (data) => {
           this.entidadFederativaOptions = Array.isArray(data) ? data : [data];
         }
       );
@@ -304,11 +202,9 @@ getDetallesDelalicitacion():void{
     takeUntil(this.destroyed$)
   ).subscribe(
     (data:DetalledelaLicitacion)=>{
-      this.detalledelaLicitacionForm.patchValue({
-        numeraDelicitacion:data.numeraDelicitacion,
-        fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
-        descripcionDelProducto:data.descripcionDelProducto,
-      })
+      this.expedicion120204Store.setNumeraDelicitacion(data?.numeraDelicitacion);
+      this.expedicion120204Store.setFechaDelEventoDelicitacion(data?.fechaDelEventoDelicitacion);
+      this.expedicion120204Store.setDescripcionDelProducto(data?.descripcionDelProducto);
     })
 }
  
@@ -347,11 +243,9 @@ getDistribucionSaldo():void{
   this.service.getDistribucionSaldo().pipe(
     takeUntil(this.destroyed$)
   ).subscribe(
-          (data:DistribucionSaldo) => {
-      this.distribucionSaldoForm.patchValue({
-        montoDisponible: data.montoDisponible,
+        (data:DistribucionSaldo) => {
+      this.expedicion120204Store.setMontoDisponsible(data?.montoDisponible);
     })
-  })
   
 }
 
@@ -425,4 +319,55 @@ AgregarMontoExpedir():void{
   
   this.expedicion120204Store.setTotalExpedir(totalAExpedir);
 }
+
+/**
+ * Inicializa el formulario y sus valores a partir del estado de la solicitud.
+ *
+ * Este método se suscribe al observable `selectSolicitud$` del `expedicion120204Query`
+ * para obtener el estado actual de la solicitud y luego inicializa el formulario
+ * con los valores correspondientes.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+inicializarFormulario(): void {
+this.expedicion120204Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+
+           })
+
+          ).subscribe()
+  this.inicializarExpedicionCertificadoFormulario();
+}
+
+    
+
+
+
+  inicializarExpedicionCertificadoFormulario(): void {  
+     this.formulario = this.fb.group({
+      entidadFederativa: [this.solicitudState?.entidadFederativa, Validators.required],
+      representacionFederal: [this.solicitudState?.representacionFederal, Validators.required],
+    });
+    this.detalledelaLicitacionForm = this.fb.group({
+      numeraDelicitacion: [{value:this.solicitudState?.numeraDelicitacion,disabled: true}, Validators.required],
+      fechaDelEventoDelicitacion: [{value:this.solicitudState?.fechaDelEventoDelicitacion,disabled: true}, Validators.required],
+      descripcionDelProducto:[{value:this.solicitudState?.descripcionDelProducto,disabled: true}, Validators.required],
+    })
+    this.distribucionSaldoForm = this.fb.group({
+      montoDisponible: [{value:this.solicitudState?.montoDisponible,disabled: true}, Validators.required],
+      montoAExpedir: [this.solicitudState?.montoAExpedir, [Validators.required,Validators.pattern(REGEX_ALTO)],],
+      montoAExpedirCheck: [this.solicitudState?.montoAExpedirCheck, Validators.required],
+      totalAExpedir:[{value:this.solicitudState?.totalAExpedir,disabled: true}, [Validators.required,
+        Validators.pattern(REGEX_ALTO)]]
+    })
+
+    if(this.esFormularioSoloLectura){
+      this.formulario.disable();
+      this.detalledelaLicitacionForm.disable();
+      this.distribucionSaldoForm.disable();
+    }
+  }
 }
