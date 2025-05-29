@@ -430,7 +430,7 @@ export const DESCRIPCION_DEL_CUPO = [
   {
     id: 'fraccionArancelaria',
     labelNombre: 'Fraccion arancelaria',
-    campo: 'fraccionArancelaria',
+    campo: 'fraccionArancelariaDescripcion',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
@@ -666,7 +666,7 @@ export const BIEN_FINAL = [
   {
     id: 'descripcion',
     labelNombre: 'Descripción del bien final',
-    campo: 'descripcion',
+    campo: 'descripcionBienFinal',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,

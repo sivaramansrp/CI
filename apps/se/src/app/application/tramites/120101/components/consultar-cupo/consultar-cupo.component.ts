@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModeloDeFormaDinamica, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -6,12 +6,12 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_TABLA } from '../../../120201/constantes/cupos-constantes.enum';
 import { CONSULTAR_CUPO } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
-
 /**
  * @component ConsultarCupoComponent
  * @description
@@ -45,6 +45,13 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
 })
 
 export class ConsultarCupoComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
 
   /**
  * @property emitirFilaClicControlador
@@ -122,12 +129,12 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el encabezado de la tabla.
    */
-  configuracionParaEncabezadoDeTabla = CONFIGURACION_PARA_ENCABEZADO_DE_TABLA;
+  public configuracionParaEncabezadoDeTabla = CONFIGURACION_PARA_ENCABEZADO_DE_TABLA;
 
   /**
    * Configuración de la tabla dinámica.
    */
-  cuerpoTabla: InstrumentoCupoTPLForm[] = [];
+  public cuerpoTabla: InstrumentoCupoTPLForm[] = [];
 
   /**
  * @constructor
@@ -149,7 +156,7 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     //
   }
@@ -196,9 +203,13 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.servicioDeFormularioService.registerForm('consultarCupoForm', this.ninoFormGroup)
+    this.servicioDeFormularioService.registerForm('consultarCupoForm', this.ninoFormGroup);
     this.obtenerClasificacionRegimenDatos();
     this.obtenerPaisDatos();
+    if (this.consultaState.readonly) {
+      this.mostrarCampoDeDescripcion();
+      this.obtenerTablaDatos();
+    }
   }
 
   /**
@@ -279,8 +290,12 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   buscar(): void {
     if (this.ninoFormGroup.valid) {
       this.mostrarCampoDeDescripcion();
-      
-      this.solicitudDeRegistroTplService
+      this.obtenerTablaDatos();
+    }
+  }
+
+  obtenerTablaDatos(): void {
+    this.solicitudDeRegistroTplService
         .obtenerTablaDatos()
         .pipe(takeUntil(this.destroy$))
         .subscribe((resp) => {
@@ -306,8 +321,10 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
           );
           this.cuerpoTabla = NUEVO_CUERPO_TABLA;
           this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
+          if (this.consultaState.readonly) {
+            this.controladorDeClicsArchivo(NUEVO_CUERPO_TABLA?.[0]);
+          }
         });
-    }
   }
 
   /**

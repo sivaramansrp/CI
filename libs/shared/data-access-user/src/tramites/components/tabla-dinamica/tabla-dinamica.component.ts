@@ -85,6 +85,8 @@ export class TablaDinamicaComponent<T> {
    */
   @Input() acciones: TablaAcciones[] = [];
 
+  @Input() desactivarEmitirEvento: boolean = true;
+
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
    * Este evento envía la fila seleccionada (objeto completo) al componente padre.
@@ -224,7 +226,9 @@ export class TablaDinamicaComponent<T> {
    * @param data - Los datos de la fila que fue clickeada.
    */
   onFilaClic(data: T): void {
-    this.filaClic.emit(data);
+    if (this.desactivarEmitirEvento) {
+      this.filaClic.emit(data);
+    }
   }
 
   /**

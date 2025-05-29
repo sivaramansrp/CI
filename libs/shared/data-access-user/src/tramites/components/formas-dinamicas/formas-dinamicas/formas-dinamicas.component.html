@@ -113,7 +113,7 @@
                           [label]="item.labelNombre" 
                           [required]="seRequiere(item.campo)"
                           [placeholder]="item.marcadorDePosicion || ''" 
-                          [isDisabled]="item.desactivado"
+                          [isDisabled]="item.desactivado || soloLectura"
                           [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
                           name=""
                           (change)="eventoDeCambioDeValor($event, item.campo)"

@@ -7,9 +7,10 @@ import {
   WizardComponent,
   WizardService,
 } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-
 /**
  * @component PantallasComponent
  * @description
@@ -28,7 +29,7 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
 })
-export class PantallasComponent{
+export class PantallasComponent implements OnInit, OnDestroy {
   /**
    *
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -141,6 +142,16 @@ export class PantallasComponent{
  */
   public pestanaDosFormularioValido: boolean = false;
 
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
   /**
  * @constructor
  * @description
@@ -148,9 +159,25 @@ export class PantallasComponent{
  * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
  */
   constructor(
-    public servicioDeFormularioService: ServicioDeFormularioService
+    public servicioDeFormularioService: ServicioDeFormularioService,
+    private consultaQuery: ConsultaioQuery
   ) {
     //
+  }
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            // this.consultaState = seccionState;
+            this.consultaState = {...seccionState, update: true, readonly: true };
+            // this.consultaState.readonly= true;
+            if (this.consultaState.readonly) {
+              this.pestanaDosFormularioValido = true
+            }
+          })
+        ).subscribe();
   }
 
   /**
@@ -250,18 +277,29 @@ export class PantallasComponent{
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = this.verificarLaValidezDelFormulario();
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-        if (e.accion === 'cont') {
-            this.continuar(e);
-        } else if (e.accion === 'ant' && this.esFormaValido) {
-            this.indice = e.valor - 1;
-            this.datosPasos.indice = e.valor - 1;
-            this.wizardComponent.atras();
-        } else if (!this.esFormaValido) {
-            this.indice = e.valor;
-            this.datosPasos.indice = e.valor;
-        }
+    if (!this.consultaState.readonly) {
+      this.esFormaValido = this.verificarLaValidezDelFormulario();
+      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+          if (e.accion === 'cont') {
+              this.continuar(e);
+          } else if (e.accion === 'ant' && this.esFormaValido) {
+              this.indice = e.valor - 1;
+              this.datosPasos.indice = e.valor - 1;
+              this.wizardComponent.atras();
+          } else if (!this.esFormaValido) {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+          }
+      }
+    } else {
+      if (e.valor > 0 && this.pantallasPasos.length) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
     }
 }
 
@@ -294,5 +332,18 @@ export class PantallasComponent{
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

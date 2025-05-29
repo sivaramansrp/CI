@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h3>
+      <h2>
         Registro TPL Solicitud de inscipción en el Registro de bienes textiles y
         prendas de vestir no originarios elegibles para recibir trato de
         preferencia arancelaria conforme al Tratado entre los Estados Unidos
         Mexicanos, los Estados Unidos de América y Canadá
-      </h3>
+      </h2>
     </div>
     @if (mostrarAplicacionRegistradaAlerta) {
       <div class="col-md-12">
@@ -22,14 +22,14 @@
   </div>
   <div class="row">
     @switch (indice) { @case (1) {
-    <paso-uno [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
+    <paso-uno [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
     } @case (2) {
     <paso-dos></paso-dos>
     } }
   </div>
   <btn-continuar
     [datos]="datosPasos"
-    [dePadre]="true"
+    [dePadre]="consultaState.readonly ? false : true"
     (continuarEvento)="getValorIndice($event)"
   >
   </btn-continuar>

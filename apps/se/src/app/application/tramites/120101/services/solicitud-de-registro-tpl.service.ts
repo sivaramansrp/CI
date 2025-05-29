@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { InsumosTabla } from '../models/insumos.model';
 import { Observable } from 'rxjs';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
+import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
 
 /**
  * @Injectable
@@ -29,7 +30,10 @@ export class SolicitudDeRegistroTplService {
    * Inicializa el servicio con una instancia de HttpClient para realizar solicitudes HTTP.
    * @param {HttpClient} http - Cliente HTTP para realizar las solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite120101Store: Tramite120101Store
+  ) {
     //
   }
 
@@ -209,5 +213,13 @@ export class SolicitudDeRegistroTplService {
  */
   obtenerTablaInsumos(): InsumosTabla[] {
     return this.tablaInsumosTemp;
+  }
+
+  getSolicitudRegistroData(): Observable<SolicitudDeRegistroTpl120101State> {
+    return this.http.get<SolicitudDeRegistroTpl120101State>('assets/json/120101/solicitud-de-registro-tpl.json');
+  }
+
+  actualizarEstadoFormulario(campo: string, valor: unknown) {
+    this.tramite120101Store.setDynamicFieldValue(campo, valor);
   }
 }
