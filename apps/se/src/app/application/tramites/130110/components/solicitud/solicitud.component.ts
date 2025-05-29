@@ -1,7 +1,8 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite130110State, Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionNeumaticosComercializarService } from '../../services/importacion-neumaticos-comercializar.service';
@@ -12,7 +13,6 @@ import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptad
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130110Query } from '../../../../estados/queries/tramite130110.query';
-import { Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import fractionValues from '@libs/shared/theme/assets/json/130110/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130110/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130110/unidad_da.json';
@@ -28,7 +28,7 @@ import unidadOptions from '@libs/shared/theme/assets/json/130110/unidad_da.json'
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-    /**
+   /**
    * form
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
@@ -36,8 +36,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     /**
      * jest.spyOnFormulario reactivo para los datos del trámite.
      */
-    formDelTramite!: FormGroup;
-   
+    formDelTramite!: FormGroup;   
     /**
      * jest.spyOnFormulario reactivo para los detalles de la mercancía.
      */
@@ -156,7 +155,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
      */
     TEXTOS = TEXTOS;
-  
+
+    /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    esFormularioSoloLectura: boolean = false;
+
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+   */
+    private seccionState!: Tramite130110State;
+
     /**
      * Constructor del componente.
      */
@@ -165,10 +177,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       private http: HttpClient,
       private tramite130110Store: Tramite130110Store,
       private tramite130110Query: Tramite130110Query,
-      private importacionNeumaticosComercializarService: ImportacionNeumaticosComercializarService
+      private importacionNeumaticosComercializarService: ImportacionNeumaticosComercializarService,
+      private consultaioQuery: ConsultaioQuery,
     ) {
-      //constructor
-    }
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+          this.inicializarFormularios();
+        })
+      )
+      .subscribe()
+  }
     /**
      * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
      */
@@ -190,14 +211,41 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
    
     /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      } else {
+        this.inicializarFormularios();
+      }
+    }
+
+      /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+    }
+
+    /**
      * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
      */
     
-       inicializarFormularios(): void {
+    inicializarFormularios(): void {
+      this.tramite130110Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite130110State) => {
+        this.seccionState = data;
+      });
       this.formDelTramite = this.fb.group({
         solicitud: ['', Validators.required],
-        regimen: ['', Validators.required],
-        clasificacion: ['', Validators.required],
+        regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
+        clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
       });
    
       this.mercanciaForm = this.fb.group({
