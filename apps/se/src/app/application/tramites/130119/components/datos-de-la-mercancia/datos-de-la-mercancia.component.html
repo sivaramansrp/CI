@@ -20,7 +20,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <app-catalogo-select (change)="onFraccionArancelariaChange()" [label]="'Fracción arancelaria'"
-                        [required]="true" formControlName="fraccionArancelaria" [catalogo]="opcionesFraccionArancelaria">
+                        [required]="true" formControlName="fraccionArancelaria" [catalogo]="opcionesFraccionArancelaria" [isDisabled]="esSoloLectura" >
                     </app-catalogo-select>
                 </div>
             </div>
@@ -69,14 +69,14 @@
                 <div class="form-group">
                     <app-catalogo-select [label]="'País origen'" [required]="true" [catalogo]="pasises"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'paisOrigen')"
-                        formControlName="paisOrigen"></app-catalogo-select>
+                        formControlName="paisOrigen" [isDisabled]="esSoloLectura"></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <app-catalogo-select [label]="'País exportador'" [required]="true" [catalogo]="pasises"
                         formControlName="paisExportador"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisExportador')"></app-catalogo-select>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'paisExportador')" [isDisabled]="esSoloLectura"></app-catalogo-select>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                             <input-fecha [setFecha]="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.value" [datos]="fechaFinalInput"
-                                (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+                                (valorCambiado)="cambioFechaFinal($event)" [Disabled]="esSoloLectura"></input-fecha>
                 </div>
             </div>
         </div>

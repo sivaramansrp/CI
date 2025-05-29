@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, InputFecha } from "@ng-mf/data-access-user";
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha } from "@ng-mf/data-access-user";
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { FECHA } from '../../constants/aviso-importacion-maquinas.enum';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
@@ -30,6 +30,8 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
  */
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
 
+
+   esSoloLectura!: boolean;
   /**
    * Fecha final de entrada.
    */
@@ -68,7 +70,27 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * @param {Tramite130119Store} tramite130119Store - El store del trámite 130119.
    * @param {Tramite130119Query} tramite130119Query - La consulta del trámite 130119.
    */
-  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query) {
+  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query,private consultaQuery: ConsultaioQuery,) {
+  
+  }
+
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Obtiene las opciones de fracción arancelaria, países y los valores del store.
+   */
+  ngOnInit(): void {
+    this.inicializarFormulario()
+    // Suscripción para manejar el estado de la consulta
+  this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+
+   
+    }
+  inicializarFormulario(): void {
     this.datosDeLaMercanciaForm = this.fb.group({
       descripcion: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
       fraccionArancelaria: ['', Validators.required],
@@ -81,18 +103,20 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       fechaExpedicionFactura: ['', Validators.required],
       observaciones: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)]
     });
-  }
-
-  /**
-   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
-   * Obtiene las opciones de fracción arancelaria, países y los valores del store.
-   */
-  ngOnInit(): void {
     this.getFraccionArancelaria();
     this.getPasises();
     this.getValoresStore();
   }
 
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosDeLaMercanciaForm.disable();
+    } else {
+      this.datosDeLaMercanciaForm.enable();
+    }
+  }
+ 
+  
   /**
    * Obtiene las opciones de fracción arancelaria desde el servicio.
    */
