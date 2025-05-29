@@ -181,12 +181,19 @@ export class AgregarMiembroDeLaEmpresaComponent
       if (this.esFormularioSoloLectura) {
       Object.keys(this.checkBoxesForm.controls).forEach((key) => {
         this.checkBoxesForm.get(key)?.disable();
-      })
-    } else {
+        })
+     } else {
       Object.keys(this.checkBoxesForm.controls).forEach((key) => {
         this.checkBoxesForm.get(key)?.enable();
       })
     } 
+
+    
+    if (this.esFormularioSoloLectura && this.agregarMiembroDeLaEmpresaFrom) {
+        this.agregarMiembroDeLaEmpresaFrom.disable();
+     } else {
+        this.agregarMiembroDeLaEmpresaFrom.enable();
+      }
   }
 
   /**

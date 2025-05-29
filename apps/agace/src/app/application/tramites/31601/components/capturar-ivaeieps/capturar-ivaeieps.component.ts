@@ -123,15 +123,15 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
     private tramite31601Query: Tramite31601Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    //  this.consultaioQuery.selectConsultaioState$
-    // .pipe(
-    //   takeUntil(this.destroyNotifier$),
-    //   map((seccionState)=>{
-    //     this.esFormularioSoloLectura = seccionState.readonly; 
-    //     this.inicializarForms();
-    //   })
-    // )
-    // .subscribe()
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarForms();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -229,15 +229,21 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
     });
 
     
-// if (this.esFormularioSoloLectura) {
-//       Object.keys(this.ivaForm.controls).forEach((key) => {
-//         this.ivaForm.get(key)?.disable();
-//       })
-//     } else {
-//       Object.keys(this.ivaForm.controls).forEach((key) => {
-//         this.ivaForm.get(key)?.enable();
-//       })
-//     }  
+if (this.esFormularioSoloLectura) {
+      Object.keys(this.ivaForm.controls).forEach((key) => {
+        this.ivaForm.get(key)?.disable();
+      })
+      Object.keys(this.formularioDePago.controls).forEach((key) => {
+        this.formularioDePago.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.ivaForm.controls).forEach((key) => {
+        this.ivaForm.get(key)?.enable();
+      })
+      Object.keys(this.formularioDePago.controls).forEach((key) => {
+        this.formularioDePago.get(key)?.enable();
+      })
+    }  
 
   }
 

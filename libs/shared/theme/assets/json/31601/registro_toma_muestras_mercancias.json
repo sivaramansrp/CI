@@ -48,6 +48,10 @@
       "telefonoReprestantante": "telefonoReprestantante",
       "correoReprestantante": "correoReprestantante",
       "suplente": "suplente",
-      "tipoDocumento": "tipoDocumento"
+      "tipoDocumento": "tipoDocumento",
+      "resigtro": "resigtro",
+      "telefono": "telefono",
+      "correo": "correo"
+
 }
 

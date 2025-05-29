@@ -66,6 +66,9 @@ export class Solocitud31601Service {
     this.tramite31601Store.setCorreoReprestantante(DATOS.correoReprestantante);
     this.tramite31601Store.setSuplente(DATOS.suplente);
     this.tramite31601Store.setTipoDocumento(DATOS.tipoDocumento);
+    this.tramite31601Store.setResigtro(DATOS.resigtro);
+    this.tramite31601Store.setTelefono(DATOS.telefono); 
+    this.tramite31601Store.setCorreo(DATOS.correo);
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {

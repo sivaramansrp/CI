@@ -159,6 +159,7 @@
           name="tipoDe"
           class="fw-bold"
           formControlName="tipoDe"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(ivaForm,'tipoDe', 'setTipoDe')"
         ></app-catalogo-select>
       </div>
@@ -305,6 +306,7 @@
             [required]="true"
             name="banco"
             formControlName="banco"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(formularioDePago,'banco', 'setBanco')"
           ></app-catalogo-select>
         </div>
