@@ -456,7 +456,17 @@ export const REGEX_PATRON_DECIMAL_12_3 = /^\d{1,12}(\.\d{1,3})?$/;
  * - Válido: "abc123", "ABCDEF", "123456"
  * - Inválido: "abc-123", "abc_123", "abc 123"
  */
-export const REGEX_LLAVE_DE_PAGO_DE_DERECHO = /^[a-zA-Z0-9]+$/
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/;
+
+/**
+ * Expresión regular que valida si una cadena contiene únicamente un solo dígito numérico (0-9).
+ * 
+ * @ejemplo
+ * REGEX_SOLO_NÚMERO.test('5'); // true
+ * REGEX_SOLO_NÚMERO.test('12'); // false
+ * REGEX_SOLO_NÚMERO.test('a'); // false
+ */
+export const REGEX_SOLO_NÚMERO =/^[0-9]$/;
 
 
 /**
