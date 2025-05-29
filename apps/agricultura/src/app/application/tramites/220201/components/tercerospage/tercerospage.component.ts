@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
     TercerosComponent
   ],
   templateUrl: './tercerospage.component.html',
-  styleUrl: './tercerospage.component.css',
+  styleUrl: './tercerospage.component.scss',
 })
 export class TercerospageComponent implements OnInit,OnDestroy {
     private destroyNotifier$ = new Subject<void>();
