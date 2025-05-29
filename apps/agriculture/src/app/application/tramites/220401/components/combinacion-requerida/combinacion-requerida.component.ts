@@ -305,7 +305,7 @@ this.inicializarCombinacionFormulario();
    * Carga los datos de mercancía desde el servicio y los asigna a la propiedad `mercancia`.
    */
   loadMercancia(): void {
-    this._pantallas220401Service.getMercancia().subscribe((data) => {
+    this._pantallas220401Service.getMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.mercancia = data;
     });
   }
@@ -314,7 +314,7 @@ this.inicializarCombinacionFormulario();
    * Carga los datos del país de destino desde el servicio y los asigna a la propiedad `paisDestino`.
    */
   laodPaisDestino(): void {
-    this._pantallas220401Service.getlaodPaisDestino().subscribe((data) => {
+    this._pantallas220401Service.getlaodPaisDestino().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.paisDestino = data;
     });
   }
@@ -323,7 +323,7 @@ this.inicializarCombinacionFormulario();
    * Carga los nombres de establecimientos desde el servicio y los asigna a la propiedad `nombreEstablecimiento`.
    */
   loadNombreEstablecimiento(): void {
-    this._pantallas220401Service.getNombreEstablecimiento().subscribe((data) => {
+    this._pantallas220401Service.getNombreEstablecimiento().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.nombreEstablecimiento = data;
     });
   }
@@ -332,7 +332,7 @@ this.inicializarCombinacionFormulario();
    * Carga los tipos de actividad desde el servicio y los asigna a la propiedad `tipoActividad`.
    */
   loadTipoActividad(): void {
-    this._pantallas220401Service.getTipoActividad().subscribe((data) => {
+    this._pantallas220401Service.getTipoActividad().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.tipoActividad = data;
     });
   }
@@ -341,7 +341,7 @@ this.inicializarCombinacionFormulario();
    * Carga los datos de aduanas de salida desde el servicio y los asigna a la propiedad `aduanaSalida`.
    */
   loadAduanaSalida(): void {
-    this._pantallas220401Service.getAduanaSalida().subscribe((data) => {
+    this._pantallas220401Service.getAduanaSalida().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.aduanaSalida = data;
     });
   }
@@ -350,7 +350,7 @@ this.inicializarCombinacionFormulario();
    * Carga los datos de OISA de salida desde el servicio y los asigna a la propiedad `oisaSalida`.
    */
   loadOisaSalida(): void {
-    this._pantallas220401Service.getOisaSalida().subscribe((data) => {
+    this._pantallas220401Service.getOisaSalida().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.oisaSalida = data;
     });
   }
@@ -359,7 +359,7 @@ this.inicializarCombinacionFormulario();
    * Carga los regímenes de mercancía desde el servicio y los asigna a la propiedad `regimenMercancia`.
    */
   loadRegimenMercancia(): void {
-    this._pantallas220401Service.getRegimenMercancia().subscribe((data) => {
+    this._pantallas220401Service.getRegimenMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.regimenMercancia = data;
     });
   }
@@ -368,7 +368,7 @@ this.inicializarCombinacionFormulario();
    * Carga los países de origen desde el servicio y los asigna a la propiedad `paisOrigen`.
    */
   loadPaisOrigen(): void {
-    this._pantallas220401Service.getPaisOrigen().subscribe((data) => {
+    this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.paisOrigen = data;
     });
   }

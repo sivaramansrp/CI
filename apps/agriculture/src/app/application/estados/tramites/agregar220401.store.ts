@@ -15,7 +15,7 @@ import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que define el estado de la solicitud 220401.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export interface solicitud220401State {
   /** Certificación asociada a la solicitud. */
   certificada: string;
@@ -113,7 +113,9 @@ export interface solicitud220401State {
   regimenMercancia:string;
   paisOrigen:string;
   exentoPago:string;
-  tipoDeTransporte:string
+  
+  /** Tipo de transporte utilizado para la mercancía o animales. */
+  tipoDeTransporte: string;
 }
 
 /**
