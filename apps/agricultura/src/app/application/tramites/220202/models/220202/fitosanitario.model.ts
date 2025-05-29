@@ -1,3 +1,4 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
 /**
  * @interface ListaPasosWizard
  * @description 
@@ -79,6 +80,8 @@ export interface ListaDeDatosFinal {
     movilizacion: Movilizacion;
     pago: PagoForm;
     finalEnviar: FinalEnviar;
+    tablaDatos: FilaSolicitud[];
+    personas: PersonaTerceros[];
 }
 
 /**
@@ -204,6 +207,11 @@ export interface DatosForma {
     uso: string;
     tipoDeProducto: string;
 }
+/**
+ * @interface FilaSolicitud
+ * @description 
+ * Interfaz que representa una fila de la tabla de solicitudes.
+ */
 export interface FilaSolicitud {
     noPartida: string;
     tipoRequisito: string;
@@ -214,6 +222,11 @@ export interface FilaSolicitud {
     nico: string;
 }
 
+/**
+ * @interface ConsultaioSolicitante
+ * @description 
+ * Interfaz que representa los datos de consulta de un solicitante.
+ */
 export interface ConsultaioSolicitante {
   folioDelTramite: string;
   fechaDeInicio: string;
@@ -298,6 +311,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
             movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
             validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
-        }
-    };
+        },
+        tablaDatos: params.tablaDatos || [],
+        personas: params.personas || []
+    }
 }

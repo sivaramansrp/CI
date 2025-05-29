@@ -29,7 +29,11 @@
       }
       } @case (4) {
       @if(esDatosRespuesta){
-      <lib-terceros [tabindex]="4"></lib-terceros>
+      <lib-terceros 
+        [tabindex]="4"
+        [esFormularioSoloLectura]="esFormularioSoloLectura"
+        [personas]="personas"
+      ></lib-terceros>
       }
       } @case (5) {
       @if(esDatosRespuesta){

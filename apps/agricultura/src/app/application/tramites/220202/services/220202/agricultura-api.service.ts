@@ -157,6 +157,7 @@ export class AgriculturaApiService {
     this.fitosanitarioStore.actualizarDatosForma(DATOS.datos);
     this.fitosanitarioStore.actualizarMovilizacion(DATOS.movilizacion);
     this.fitosanitarioStore.actualizarPago(DATOS.pago);
+    this.fitosanitarioStore.tablaDatosFinal(DATOS.tablaDatos);
   }
 
   /**

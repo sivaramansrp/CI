@@ -38,5 +38,22 @@
         "fechaDePago": "2024-06-15",
         "fechaInicioInput": "2024-06-10",
         "fechaPago": "2024-06-15"
-    }
+    },
+    "tablaDatos": [
+        {
+            "noPartida": "abc",
+            "tipoRequisito": "abc",
+            "requisito": "abc",
+            "numeroCertificadoInternacional": "abc",
+            "fraccionArancelaria": "abc",
+            "descripcionFraccion": "abc",
+            "nico": "abc"
+        }
+    ],
+    "personas": [
+        {
+            "nombre": "abc",
+            "correo": "abc"
+        }
+    ]
 }

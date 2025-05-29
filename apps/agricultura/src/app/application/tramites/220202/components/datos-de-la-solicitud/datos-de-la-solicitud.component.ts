@@ -175,7 +175,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Datos de la tabla principal.
    * @type {FilaSolicitud[]}
    */
-  cuerpoTabla: FilaSolicitud[] = [];
+    cuerpoTabla: FilaSolicitud[] = [];
 
   /**
    * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
@@ -203,6 +203,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((datos) => {
       this.formulariodataStore = datos.datos;
+      this.cuerpoTabla = datos.tablaDatos;      
       this.createFromFields(); 
     });
 

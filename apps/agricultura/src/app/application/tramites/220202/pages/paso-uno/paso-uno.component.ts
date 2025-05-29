@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
@@ -38,11 +38,36 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   * @type {boolean}
+   */
   public esDatosRespuesta: boolean = false;
 
-  public consultaState!:ConsultaioState;
+  /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
 
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Lista de personas relacionadas con el trámite.
+   * @type {PersonaTerceros[]}
+   */
+  public personas: PersonaTerceros[] = [];
 
   /**
    * @description 
@@ -84,6 +109,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.consultaState = seccionState;
+        this.esFormularioSoloLectura = seccionState.readonly;
         if (this.consultaState.update) {
           this.guardarDatosFormulario();
         } else {
@@ -102,6 +128,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         .subscribe((resp) => {
           if(resp){
           this.esDatosRespuesta = true;
+          this.personas = resp.personas;
           this.agriculturaApiService.actualizarEstadoFormulario(resp);
           }
         });
