@@ -7,20 +7,6 @@ import { DatosDelContenedor } from '../models/datos-tramite.model';
  * Utilizamos esta interfaz para definir la estructura del estado de la solicitud.
  */
 export interface Solicitud11204State {
-  /**
-   * Menu desplegable.
-   */
-  menuDesplegable: string;
-
-  /**
-   * RFC.
-   */
-  rfc: string;
-
-  /**
-   * Denominación.
-   */
-  denominacion: string;
 
   /**
    * Datos del contenedor.
@@ -89,9 +75,6 @@ export interface Solicitud11204State {
  */
 export function createInitialState(): Solicitud11204State {
   return {
-    menuDesplegable: '',
-    rfc: '',
-    denominacion: '',
     datosDelContenedor: [],
     datosDelCsvArchivo: [],
     tipoBusqueda: '',
@@ -138,28 +121,6 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
     this.update((state) => ({
       ...state,
       Vigencia,
-    }));
-  }
-
-  /**
-   * Establece el RFC.
-   * @param rfc RFC.
-   */
-  public setRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc,
-    }));
-  }
-
-  /**
-   * Establece la denominación.
-   * @param denominacion Denominación.
-   */
-  public setDenominacion(denominacion: string): void {
-    this.update((state) => ({
-      ...state,
-      denominacion,
     }));
   }
 

@@ -532,9 +532,9 @@
     },
     {
         "id": 11204,
-        "tipoDeTramite": "Contenedores de importación Permiso",
-        "fecha": "2025-04-01",
-        "fechaActualizacion": "2025-04-05",
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGA",
         "numeroDeProcedimiento": "11204"
