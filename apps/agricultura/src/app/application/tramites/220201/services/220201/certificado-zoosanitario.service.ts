@@ -6,7 +6,6 @@ import {
   DatosParaMovilizacionNacional,
   PagoDeDerechos,
   Solicitante,
-  TercerosRelacionados,
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
@@ -16,7 +15,7 @@ import { Observable, map, } from 'rxjs';
 
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { PersonaTerceros, SeccionLibStore } from '@libs/shared/data-access-user/src';
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
  * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
@@ -43,7 +42,7 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarDatosParaMovilizacionNacional(datosParaMovilizacionNacional);
   }
 
-  updateTercerosRelacionados(tercerosRelacionados: TercerosRelacionados): void {
+  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 

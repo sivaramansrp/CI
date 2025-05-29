@@ -1,3 +1,5 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+
 /**
  * Modelo de datos de la solicitud
  * @export
@@ -12,6 +14,7 @@ export interface CapturarSolicitud {
   datosDeLaSolicitud: DatosDeLaSolicitud;
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
   pagoDeDerechos: PagoDeDerechos;
+  tercerosRelacionados:PersonaTerceros[];
   validarEnvio: ValidarEnvio;
 }
 
@@ -163,15 +166,9 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       pagoDeformaValida: false,
       dataParaMovilizacion: false,
       dataDeLaSolicitud: false,
-    }
+    },
+    tercerosRelacionados: params.tercerosRelacionados || [] ,
 
   };
 }
-/**
- * Interface TercerosRelacionados
- * @export
- * @interface TercerosRelacionados
- */
-export interface TercerosRelacionados {
-  terceros: []
-}
+

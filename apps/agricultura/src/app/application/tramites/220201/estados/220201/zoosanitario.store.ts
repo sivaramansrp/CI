@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { CapturarSolicitud, DatosDeLaSolicitud, DatosParaMovilizacionNacional, PagoDeDerechos, Solicitante, TercerosRelacionados, createDatosState } from '../../models/220201/capturar-solicitud.model';
+import { CapturarSolicitud, DatosDeLaSolicitud, DatosParaMovilizacionNacional, PagoDeDerechos, Solicitante, createDatosState } from '../../models/220201/capturar-solicitud.model';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 /**
  * @description Akita store for managing zoosanitary application data.
  */
@@ -47,18 +48,6 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
             datosParaMovilizacionNacional: datosParaMovilizacionNacional, // No need to wrap in an array
         }));
     }
-
-    /**
-     * @description Updates the store with related third parties information.
-     * @param tercerosRelacionados Related third parties information.
-     */
-    public actualizarTercerosRelacionados(tercerosRelacionados: TercerosRelacionados): void {
-        this.update(state => ({
-            ...state,
-            tercerosRelacionados: tercerosRelacionados, // No need to wrap in an array
-        }));
-    }
-
     /**
      * @description Updates the store with payment details.
      * @param pagoDeDerechos Payment details.
@@ -83,6 +72,17 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
             }
         }));
     }
+    /**
+ * @description Updates the store with related third parties.
+ * @param tercerosRelacionados Array of related third-party persons.
+ */
+public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+  this.update(state => ({
+    ...state,
+    tercerosRelacionados: tercerosRelacionados,
+  }));
+}
+
     /**
      * @description Resets the store to its initial state.
      */
