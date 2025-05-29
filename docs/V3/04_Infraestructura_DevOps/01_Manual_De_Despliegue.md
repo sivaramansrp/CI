@@ -36,7 +36,7 @@ El sistema gestiona las siguientes aplicaciones:
 - dashboard
 - login
 - aga
-- agriculture
+- agricultura
 - se
 - semarnat
 - agace
