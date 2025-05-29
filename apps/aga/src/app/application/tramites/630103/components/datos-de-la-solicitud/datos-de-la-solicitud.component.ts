@@ -3,16 +3,18 @@
  * @description Componente que gestiona los datos de la solicitud para el trámite 630103.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
-
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+
+import { map, takeUntil } from 'rxjs';
+import { Subject} from 'rxjs';
+import { Subscription} from 'rxjs';
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { Subject, takeUntil } from 'rxjs';
 import { FORMULARIO_DATOS_SOLICITUD } from '../../enum/autorizacion-importacion-temporal.enum';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 
@@ -35,11 +37,6 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
-   * Indica si se deben mostrar los datos de prórroga.
-   */
-  showDatosRetornoProrroga = false;
-
-  /**
    * Modelo dinámico del formulario con estructura definida por el trámite.
    */
   formularioDatosSolicitud: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_SOLICITUD;
@@ -58,6 +55,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual del trámite cargado desde el store.
    */
   estadoSeleccionado!: Tramite630103State;
+  private subscription: Subscription = new Subscription();
+  esFormularioSoloLectura: boolean = false;
+  public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
@@ -68,18 +68,56 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param tramite630103Query Query para observar el estado del trámite.
    */
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService,
     private tramite630103Store: Tramite630103Store,
-    private tramite630103Query: Tramite630103Query
-  ) { }
+    private tramite630103Query: Tramite630103Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+      this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+    }
+  
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+      this.guardarDatosFormulario();
+    } else {
+      this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+      this.inizializarFormulario();
+    }
+  }
+  
+  guardarDatosFormulario(): void {
+    this.inizializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosImportacionTemporalFormulario.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosImportacionTemporalFormulario.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
 
   /**
    * Ciclo de vida: Inicializa el formulario y carga datos de catálogos al iniciar el componente.
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inizializarFormulario();
+    this.inicializarEstadoFormulario();
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
   }
@@ -88,7 +126,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
    */
   inizializarFormulario(): void {
-    this.datosImportacionTemporalFormulario = this.fb.group({});
+    this.datosImportacionTemporalFormulario = this.formBuilder.group({});
   }
 
   /**
@@ -118,6 +156,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         }
       });
   }
+  
 
   /**
    * Obtiene las opciones para el campo Cuenta Prórroga.
@@ -149,12 +188,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    
   }
 
- 
-
   /**
    * Ciclo de vida: Libera recursos al destruir el componente.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

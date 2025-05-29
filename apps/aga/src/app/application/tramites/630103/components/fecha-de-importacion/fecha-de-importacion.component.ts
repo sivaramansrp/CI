@@ -7,11 +7,15 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 
 import { FORMULARIO_FECHA_IMPORTACION } from '../../enum/autorizacion-importacion-temporal.enum';
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+
+
+import { Subject} from 'rxjs';
+import { Subscription} from 'rxjs';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 
 import { Tramite630103State, Tramite630103Store } from '../../estados/tramite630103.store';
@@ -49,6 +53,9 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Formulario reactivo para gestionar los datos de la prórroga.
    */
   FechaDeImportacionTemporalFormulario!: FormGroup;
+  private subscription: Subscription = new Subscription();
+  esFormularioSoloLectura: boolean = false;
+  public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
@@ -60,16 +67,52 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite630103Store: Tramite630103Store,
-    private tramite630103Query: Tramite630103Query
-  ) {}
-
+    private tramite630103Query: Tramite630103Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+        this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              this.inicializarEstadoFormulario();
+            })
+          )
+          .subscribe();
+      }
+  inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
+          ...campo,
+          desactivado: true
+        }));
+        this.guardarDatosFormulario();
+      } else {
+        this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
+          ...campo,
+          desactivado: false
+        }));
+        this.inicializarFormulario();
+      }
+  }
+  
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.FechaDeImportacionTemporalFormulario.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.FechaDeImportacionTemporalFormulario.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
    * Inicializa el formulario y obtiene el estado del trámite.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.getValorStore();
-    this.inicializarFormulario();
   }
 
   /**
@@ -81,14 +124,7 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
-   */
-  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
-  }
+  
 
   /**
    * Obtiene el estado actual del trámite desde el store.
@@ -102,10 +138,19 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   */
+  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
+  }
+  /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

@@ -6,7 +6,11 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs';
+import { Subject} from 'rxjs';
+import { Subscription} from 'rxjs';
 
 import { InputCheckComponent, TituloComponent } from '@ng-mf/data-access-user';
 
@@ -39,6 +43,9 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    * Estado seleccionado del trámite 630103.
    */
   estadoSeleccionado!: Tramite630103State;
+  private subscription: Subscription = new Subscription();
+  esFormularioSoloLectura: boolean = false;
+  public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
@@ -50,8 +57,38 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite630103Store: Tramite630103Store,
-    private tramite630103Query: Tramite630103Query
-  ) {}
+    private tramite630103Query: Tramite630103Query,
+     private consultaioQuery: ConsultaioQuery,
+  ) {
+      this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+    }
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inizializarFormulario();
+    }
+  }
+  
+  guardarDatosFormulario(): void {
+    this.inizializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.manifiestoFormulario.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.manifiestoFormulario.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+  
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -59,7 +96,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inizializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -100,6 +137,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

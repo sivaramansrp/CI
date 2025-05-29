@@ -3,11 +3,15 @@
  * Componente que gestiona los datos del tipo de propietario para el trámite 630103.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
+
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Subject} from 'rxjs';
+import { Subscription} from 'rxjs';
 
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -86,6 +90,9 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+  private subscription: Subscription = new Subscription();
+  esFormularioSoloLectura: boolean = false;
+  public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
@@ -99,8 +106,53 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite630103Store: Tramite630103Store,
     private tramite630103Query: Tramite630103Query,
-    private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService
-  ) {}
+    private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService,
+    private consultaioQuery: ConsultaioQuery
+) {
+      this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+    }
+  inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+          ...campo,
+          desactivado: true
+        }));
+         this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+          ...campo,
+          desactivado: true
+        }));
+        this.guardarDatosFormulario();
+      } else {
+        this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+          ...campo,
+          desactivado: false
+        }));
+        this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+          ...campo,
+          desactivado: false
+        }));
+        this.inicializarFormulario();
+      }
+  }
+  
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }  
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -108,7 +160,9 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario()
+    
+    
     this.getPropietario();
     this.getTipoDePropietario();
     this.getPais();
@@ -215,12 +269,13 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+    /**
+     * Método del ciclo de vida que se ejecuta al destruir el componente.
+     * Libera las suscripciones activas para evitar fugas de memoria.
+     */
+    ngOnDestroy(): void {
+      this.subscription.unsubscribe();
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 }

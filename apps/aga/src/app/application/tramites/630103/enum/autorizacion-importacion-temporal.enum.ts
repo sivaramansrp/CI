@@ -30,6 +30,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
+        
         marginTop: 4
     },
     {
