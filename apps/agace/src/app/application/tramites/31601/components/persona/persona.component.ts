@@ -1,20 +1,13 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
-
-import { Personas } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-
+import { Persona, Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Subject, Subscription, map,takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 
 /**
  * Componente `PersonaComponent`.
@@ -68,20 +61,20 @@ export class PersonaComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de las columnas para la tabla dinámica.
-   * @type {ConfiguracionColumna<any>[]}
+   * @type {ConfiguracionColumna<unknown>[]}
    */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
-    { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
-    { encabezado: 'Nombre', clave: (item: any) => item.Nombre, orden: 3 },
+  configuracionTabla: ConfiguracionColumna<Persona>[] = [
+    { encabezado: 'RFC', clave: (item: Persona) => item.RFC, orden: 1 },
+    { encabezado: 'CURP', clave: (item: Persona) => item.CURP, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: Persona) => item.Nombre, orden: 3 },
     {
       encabezado: 'Apellido Paterno',
-      clave: (item: any) => item.Apellido_paterno,
+      clave: (item: Persona) => item.Apellido_paterno,
       orden: 4,
     },
     {
       encabezado: 'Apellido Materno',
-      clave: (item: any) => item.Apellido_materno,
+      clave: (item: Persona) => item.Apellido_materno,
       orden: 5,
     },
   ];
@@ -148,7 +141,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   loadPersonas(): void {
     // Realiza la solicitud HTTP para obtener los datos de personas desde el archivo JSON
-    const personaParas$ = this.pantallaSvc
+    const PERSONAPARAS$ = this.pantallaSvc
       .getPersonapara() // Llama al servicio para obtener el array de personas
       .pipe(
         map((resp) => {
@@ -158,7 +151,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    this.personaParasSubscription = personaParas$.subscribe(); 
+    this.personaParasSubscription = PERSONAPARAS$.subscribe(); 
   }
 
   /**

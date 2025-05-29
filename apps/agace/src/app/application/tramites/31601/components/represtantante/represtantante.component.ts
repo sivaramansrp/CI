@@ -1,8 +1,5 @@
-/* eslint-disable sort-imports */
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -10,12 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import representanteDatos from 'libs/shared/theme/assets/json/31601/represtantante-data.json';
-import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite31601Store, Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
-import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { map, takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import representanteDatos from '@libs/shared/theme/assets/json/31601/represtantante-data.json';
 
 /**
  * Componente para gestionar la información del representante del importador/exportador.

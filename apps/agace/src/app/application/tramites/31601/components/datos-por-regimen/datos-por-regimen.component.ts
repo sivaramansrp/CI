@@ -1,31 +1,27 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import regimenTable from 'libs/shared/theme/assets/json/31601/datos-por-regimen.json';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { TableBodyData } from '@ng-mf/data-access-user';
-
-import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
-import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { TableBodyData } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import regimenTable from '@libs/shared/theme/assets/json/31601/datos-por-regimen.json';
+
 /**
  * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
  *
@@ -204,7 +200,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    *
    * @memberof DatosPorRegimenComponent
    */
-  ngOnInit() {
+  ngOnInit():void {
     this.crearRegimenForm();
     this.inicializaCatalogos();
     this.regimenTabData();
@@ -243,7 +239,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
      *
      * @constant {Observable<any>} bimestreUnoCatalogo$
      */
-    const bimestreUnoCatalogo$ = this._pantallaSvc
+    const BIMESTRE_UNO_CATALOGO$ = this._pantallaSvc
       .getBimestreUnoCatalogo(CATALOGOS_ID.CAT_BIMESTRE_UNO)
       .pipe(
         map((resp) => {
@@ -260,7 +256,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
      * @observable bimestreDosCatalogo$
      * @returns {Observable<any>} Un observable que emite los datos del catálogo para el segundo bimestre.
      */
-    const bimestreDosCatalogo$ = this._pantallaSvc
+    const BIMESTRE_DOS_CATALOGO$ = this._pantallaSvc
       .getBimestreDosCatalogo(CATALOGOS_ID.CAT_BIMESTRE_DOS)
       .pipe(
         map((resp) => {
@@ -277,7 +273,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
      *
      * @constant {Observable<any>} bimestreTresCatalogo$
      */
-    const bimestreTresCatalogo$ = this._pantallaSvc
+    const BIMESTRE_TRES_CATALOGO$ = this._pantallaSvc
       .getBimestreTresCatalogo(CATALOGOS_ID.CAT_BIMESTRE_TRES)
       .pipe(
         map((resp) => {
@@ -286,9 +282,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       );
 
     merge(
-      bimestreUnoCatalogo$,
-      bimestreDosCatalogo$,
-      bimestreTresCatalogo$
+      BIMESTRE_UNO_CATALOGO$,
+      BIMESTRE_DOS_CATALOGO$,
+      BIMESTRE_TRES_CATALOGO$
     ).subscribe();
   }
 
@@ -323,7 +319,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
  * - `recintoEstrategico`: Un campo requerido para recinto estratégico.
  * - `cumplimientoLineamientos`: Un campo requerido para cumplimiento de lineamientos.
  */
-  public crearRegimenForm() {
+  public crearRegimenForm():void {
     this.tramite31601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -401,7 +397,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Este método asigna los datos de cabecera de la tabla a `regimenTableHeaderData`
    * y los datos del cuerpo de la tabla a `regimenTableBodyData`.
    */
-  public regimenTabData() {
+  public regimenTabData():void {
     this.regimenTableHeaderData = this.getRegimenTableData.tableHeader;
     this.regimenTableBodyData = this.getRegimenTableData.tableBody;
   }
@@ -411,9 +407,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Recupera el valor seleccionado del control 'comboBimestresUno' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
-  public bimestreUnoSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresUno')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
+  public bimestreUnoSeleccion():void {
+    const BIMESTRES = this.regimenForm.get('comboBimestresUno')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(BIMESTRES);
   }
 
   /**
@@ -425,9 +421,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Este método se utiliza para sincronizar el valor del bimestre seleccionado del formulario
    * con la tienda de gestión de estado de la aplicación.
    */
-  public bimestreDosSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresDos')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresDos(bimestres);
+  public bimestreDosSeleccion():void {
+    const BIMESTRES = this.regimenForm.get('comboBimestresDos')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresDos(BIMESTRES);
   }
 
   /**
@@ -435,9 +431,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Recupera el valor seleccionado del control 'comboBimestresTres' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
-  public bimestreTresSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresTres')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresTres(bimestres);
+  public bimestreTresSeleccion():void {
+    const BIMESTRES = this.regimenForm.get('comboBimestresTres')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresTres(BIMESTRES);
   }
 
   /**
@@ -446,7 +442,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Este método establece el estado del modal en 'show' y llama al método `getAgregarForm`
    * para inicializar el formulario para agregar datos.
    */
-  public abrirModal() {
+  public abrirModal():void {
     this.modal = 'show';
     this.getAgregarForm();
   }
@@ -465,7 +461,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * - `agregarCatalogoDos`: Una entrada de texto para la segunda entrada del catálogo.
    * - `agregarCatalogoTres`: Una entrada de texto para la tercera entrada del catálogo.
    */
-  public getAgregarForm() {
+  public getAgregarForm():void {
     this.agregarForm = this.fb.group({
       rfc: [''],
       registroInput: [{ value: '', disabled: true }],
@@ -490,9 +486,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Recupera el valor de 'agregarCatalogoUno' del formulario de régimen
    * y lo establece en el tramiteAgaceStore utilizando el método setcomboBimestresUno.
    */
-  public modalBimestreUno() {
-    const bimestres = this.regimenForm.get('agregarCatalogoUno')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
+  public modalBimestreUno():void {
+    const BIMESTRES = this.regimenForm.get('agregarCatalogoUno')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(BIMESTRES);
   }
 
   /**
@@ -500,9 +496,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Recupera el valor de 'agregarCatalogoDos' del formulario de régimen
    * y lo establece en el comboBimestresUno del tramiteAgaceStore.
    */
-  public modalBimestreDos() {
-    const bimestres = this.regimenForm.get('agregarCatalogoDos')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
+  public modalBimestreDos():void {
+    const BIMESTRES = this.regimenForm.get('agregarCatalogoDos')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(BIMESTRES);
   }
 
   /**
@@ -512,9 +508,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Este método recupera el valor de 'agregarCatalogoTres' del grupo de formularios 'regimenForm'
    * y lo utiliza para actualizar el 'comboBimestresUno' en el 'tramiteAgaceStore'.
    */
-  public modalBimestreTres() {
-    const bimestres = this.regimenForm.get('agregarCatalogoTres')?.value;
-    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
+  public modalBimestreTres():void {
+    const BIMESTRES = this.regimenForm.get('agregarCatalogoTres')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(BIMESTRES);
   }
 
   /**
@@ -522,10 +518,10 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    *  Actualiza los datos mostrados en la tabla según la paginación.
    */
   public updatePagination(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
     );
   }
 
@@ -557,8 +553,8 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
  * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
  */
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
-  const valor = form.get(campo)?.value;
-  (this.tramite31601Store[metodoNombre] as (value: string) => void)(valor);
+  const VALOR = form.get(campo)?.value;
+  (this.tramite31601Store[metodoNombre] as (value: string) => void)(VALOR);
 }
 
 /**

@@ -1,15 +1,3 @@
-/* eslint-disable sort-imports */
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
-/**
- * @module AduaneroComponent
- * Componente para agregar un miembro de la empresa.
- * Maneja un formulario reactivo y la paginación de una tabla.
- */
-
 import {
   AfterViewInit,
   Component,
@@ -19,38 +7,38 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-
-import { Catalogo, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
-import { REGEX_RFC } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import applicantRegistrados from 'libs/shared/theme/assets/json/31601/applicantRegistrados.json';
-import comboBimestres from 'libs/shared/theme/assets/json/31601/comboBimestres.json';
-import comboIMMEXJson from 'libs/shared/theme/assets/json/31601/comboIMMEX.json';
-import controlInventarios from 'libs/shared/theme/assets/json/31601/controlInventarios.json';
-import destinatarioTable from 'libs/shared/theme/assets/json/220401/destinatario-table.json';
-import empleadosSubcontratacion from 'libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
-import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
-import establecimientoTable from 'libs/shared/theme/assets/json/220401/establecimiento-table.json';
-import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
-import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
-import productivo from 'libs/shared/theme/assets/json/31601/productivo.json';
-import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.json';
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { Modal } from 'bootstrap';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import applicantRegistrados from '@libs/shared/theme/assets/json/31601/applicantRegistrados.json';
+import comboBimestres from '@libs/shared/theme/assets/json/31601/comboBimestres.json';
+import comboIMMEXJson from '@libs/shared/theme/assets/json/31601/comboIMMEX.json';
+import controlInventarios from '@libs/shared/theme/assets/json/31601/controlInventarios.json';
+import destinatarioTable from '@libs/shared/theme/assets/json/220401/destinatario-table.json';
+import empleadosSubcontratacion from '@libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
+import entidadFederativa from '@libs/shared/theme/assets/json/31601/entidadFederative.json';
+import establecimientoTable from '@libs/shared/theme/assets/json/220401/establecimiento-table.json';
+import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json';
+import prejson from '@libs/shared/theme/assets/json/31601/prejson.json';
+import productivo from '@libs/shared/theme/assets/json/31601/productivo.json';
+import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.json';
+
 
 /**
  * @class AduaneroComponent
@@ -119,7 +107,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Contiene los datos del cuerpo de la tabla de establecimientos.
    */
-  public establecimientoBodyData: any = [];
+  public establecimientoBodyData: unknown = [];
 
   /**
    * Lista de sectores productivos obtenidos desde un archivo JSON.
@@ -149,7 +137,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde un JSON.
    */
-  controlInventarios: any = controlInventarios;
+  controlInventarios: unknown = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde un archivo JSON.
@@ -164,7 +152,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos completos de los establecimientos.
    */
-  public fullEstablecimientoBodyData: any[] = [];
+  public fullEstablecimientoBodyData: unknown[] = [];
 
   /**
    * Datos de la tabla de establecimientos obtenidos desde un JSON.
@@ -194,7 +182,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos paginados de los establecimientos.
    */
-  public paginatedEstablecimientoBodyData: any[] = [];
+  public paginatedEstablecimientoBodyData: unknown[] = [];
 
   /**
    * Ruta base para peticiones al servidor.
@@ -224,7 +212,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados.
    */
-  public empleadosBodyData: any[] = [];
+  public empleadosBodyData: unknown[] = [];
 
   /**
    * Encabezados de la tabla de domicilios.
@@ -234,7 +222,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios.
    */
-  public domiciliosBodyData: any[] = [];
+  public domiciliosBodyData: unknown[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones.
@@ -244,7 +232,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones.
    */
-  public InstalacionesBodyData: any[] = [];
+  public InstalacionesBodyData: unknown[] = [];
 
   /**
    * Estado de la solicitud.
@@ -305,7 +293,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
    */
-  ngOnInit() {
+  ngOnInit():void {
     this.inicializarEstadoFormulario();
     this.getEstablecimiento();
     this.getEmpleadosData();
@@ -433,7 +421,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista se ha inicializado.
    * Inicializa los modales de modificación e instalaciones.
    */
-  ngAfterViewInit() {
+  ngAfterViewInit():void {
     // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
@@ -450,7 +438,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Método para abrir el modal de modificación.
    */
-  openModifyModal() {
+  openModifyModal():void {
     if (this.modalInstance) {
       this.modalInstance.show();
     }
@@ -459,7 +447,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Método para cerrar el modal de modificación.
    */
-  closeModifyModal() {
+  closeModifyModal():void {
     if (this.modalInstance) {
       this.modalInstance.hide();
     }
@@ -468,7 +456,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Método para abrir el modal de instalaciones.
    */
-  openInstalacionesModal() {
+  openInstalacionesModal():void {
     if (this.modalInstanceInstalaciones) {
       this.modalInstanceInstalaciones.show();
     }
@@ -477,7 +465,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de empleados desde el JSON.
    */
-  public getEmpleadosData() {
+  public getEmpleadosData():void {
     this.empleadosHeaderData = this.empleadosSubcontratacion.tableHeader;
     this.empleadosBodyData = this.empleadosSubcontratacion.tableBody;
   }
@@ -485,7 +473,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de domicilios desde el JSON.
    */
-  public getDomiciliosData() {
+  public getDomiciliosData():void {
     this.domiciliosHeaderData = this.applicantRegistrados.tableHeader;
     this.domiciliosBodyData = this.applicantRegistrados.tableBody;
   }
@@ -493,7 +481,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de instalaciones desde el JSON.
    */
-  public getInstalaciones() {
+  public getInstalaciones():void {
     this.InstalacionesHeaderData = this.Instalaciones.tableHeader;
     this.InstalacionesBodyData = this.Instalaciones.tableBody;
   }
@@ -501,7 +489,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de establecimientos desde el JSON.
    */
-  public getEstablecimiento() {
+  public getEstablecimiento():void {
     this.establecimientoHeaderData =
       this.getEstablecimientoTableData.tableHeader;
     this.establecimientoBodyData = this.getEstablecimientoTableData.tableBody;
@@ -511,11 +499,11 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Actualiza la paginación de la tabla de establecimientos.
    * Corta los datos de la tabla según la página actual y el número de elementos por página.
    */
-  updatePagination() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  updatePagination():void {
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
     );
   }
 
@@ -523,7 +511,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Método que se ejecuta cuando se cambia de página en la paginación.
    * @param {number} page - Número de la página seleccionada.
    */
-  onPageChange(page: number) {
+  onPageChange(page: number):void {
     this.currentPage = page;
     this.updatePagination();
   }
@@ -532,7 +520,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Método que se ejecuta cuando cambia el número de elementos por página.
    * @param {number} itemsPerPage - Número de elementos a mostrar por página.
    */
-  onItemsPerPageChange(itemsPerPage: number) {
+  onItemsPerPageChange(itemsPerPage: number):void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
@@ -545,8 +533,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   subirArchivo(template: TemplateRef<void>): void {

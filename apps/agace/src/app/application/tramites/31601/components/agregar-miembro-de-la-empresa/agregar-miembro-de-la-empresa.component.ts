@@ -1,11 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @nx/enforce-module-boundaries */
-/**
- * @module AgregarMiembroDeLaEmpresaComponent
- *  Componente para agregar un miembro de la empresa.
- * Maneja un formulario reactivo y la paginación de una tabla.
- */
-
 import {
   AfterViewInit,
   Component,
@@ -14,25 +6,25 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import enSuCaracterDe from 'libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
-import miembrodelaempresaTable from 'libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
-import nacionalidad from 'libs/shared/theme/assets/json/31601/nacionalidad.json';
-import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import enSuCaracterDe from '@libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
+import miembrodelaempresaTable from '@libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
+import nacionalidad from '@libs/shared/theme/assets/json/31601/nacionalidad.json';
+import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json';
 
 /**
  * @component
@@ -230,10 +222,10 @@ export class AgregarMiembroDeLaEmpresaComponent
    *  Actualiza los datos mostrados en la tabla según la paginación.
    */
   updatePagination(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
     );
   }
 

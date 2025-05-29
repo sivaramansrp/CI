@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import enlace from 'libs/shared/theme/assets/json/31601/enlace.json';
-import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
+import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
 
 /**
  * Componente para gestionar el enlace de un representante, incluyendo su información en un formulario.
@@ -98,7 +95,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Método que obtiene los encabezados de la tabla de enlace.
    */
-  public getEnlace() {
+  public getEnlace(): void {
     this.enlaceHeaderData = this.enlaceTableData.tableHeader;
   }
 
@@ -115,7 +112,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
    */
-  public abrirModal() {
+  public abrirModal(): void {
     this.modal = 'show'; // Muestra el modal
     this.getRegistroForm(); // Carga los datos en el formulario
   }
@@ -123,7 +120,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Método que configura el formulario con los datos del representante.
    */
-  public getRegistroForm() {
+  public getRegistroForm(): void {
     this.tramite31601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -162,7 +159,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Método que parchea los datos en el formulario, cargando la información del representante.
    */
-  public patchData() {
+  public patchData(): void {
     
     // Deshabilita los campos que no deben ser modificados
     this.represtantante.get('rfc')?.disable();

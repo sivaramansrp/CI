@@ -1,27 +1,19 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-multi-spaces */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { CATALOGOS_ID, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import {Subject,Subscription,map, takeUntil } from 'rxjs';
+import { TipoDocumento, Tipos } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { Tipos } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { map, Subscription,Subject, takeUntil } from 'rxjs';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 
 /**
@@ -81,14 +73,14 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
    * 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
    */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
+  configuracionTabla: ConfiguracionColumna<TipoDocumento>[] = [
     {
       // 'encabezado' es el nombre de la columna que se mostrará en el encabezado de la tabla.
       encabezado: 'Tipo de Documento',
 
       // 'clave' es una función que toma un objeto (en este caso un item de tipo 'any')
       // y devuelve el valor que se mostrará en la celda de esa columna para cada fila.
-      clave: (item: any) => item.tiposdata,
+      clave: (item: TipoDocumento) => item.tiposdata,
 
       // 'orden' define el orden de la columna en la tabla.
       orden: 1,
@@ -134,7 +126,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   /**
    * Método que alterna la visibilidad del contenido.
    */
-  toggleContent() {
+  toggleContent():void {
     this.showContent = !this.showContent;
   }
 
@@ -216,7 +208,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    */
   loadTipos(): void {
     // Realiza la solicitud para obtener los tipos de documentos desde el servicio
-    const tipos$ = this.pantallaSvc
+    const TIPOS$ = this.pantallaSvc
       .getTiposCatalog() // Llama al servicio para obtener los tipos de documento
       .pipe(
         map((resp) => {
@@ -226,13 +218,13 @@ export class RequisitosComponent implements OnInit, OnDestroy {
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    this.tiposCatalogSubscription = tipos$.subscribe();
+    this.tiposCatalogSubscription = TIPOS$.subscribe();
 
     // Asigna los encabezados de la tabla desde 'tipoTableData'
     this.tipoHeaderData = this.tipoTableData.tableHeader;
 
     // Realiza la solicitud para obtener el catálogo de tipos de documento
-    const tiposcatalog$ = this.pantallaSvc
+    const TIPOSCATALOG$ = this.pantallaSvc
       .getTipoCatalog(CATALOGOS_ID.CAT_TIPO_DOCUMENTO) // Llama al servicio con el ID de catálogo para obtener los tipos
       .pipe(
         map((resp) => {
@@ -242,7 +234,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    this.tiposCatalogSubscription = tiposcatalog$.subscribe();
+    this.tiposCatalogSubscription = TIPOSCATALOG$.subscribe();
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.

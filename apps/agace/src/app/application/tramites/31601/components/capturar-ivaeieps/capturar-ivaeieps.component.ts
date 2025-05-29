@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { ConsultaioQuery, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
