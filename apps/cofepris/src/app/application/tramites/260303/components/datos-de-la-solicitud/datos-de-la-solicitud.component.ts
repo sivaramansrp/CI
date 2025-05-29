@@ -308,12 +308,19 @@ ngOnInit(): void {
   this.cerrarMercanciasForm();
 }
 
+  /**
+   * Inicializa el formulario suscribiéndose al observable selectSolicitud$ del store.
+   * Actualiza la propiedad solicitudState con el estado más reciente de la sección.
+   * 
+   * Este método se asegura de que la información del formulario esté sincronizada con el estado global.
+   */
   inicializarFormulario(): void {
     this.tramite260211Query
       .selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
+          // Actualiza el estado local de la solicitud con los datos recibidos del store
           this.solicitudState = seccionState;
         })
       )
