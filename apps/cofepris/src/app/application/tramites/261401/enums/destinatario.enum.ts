@@ -5,6 +5,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
  * Contiene los datos personales y de contacto del destinatario, así como su dirección.
  */
 export interface Destinatario {
+  id: number;
   /** Nombre completo del destinatario. */
   nombre: string;
 
@@ -49,6 +50,14 @@ export interface Destinatario {
 
   /** Código postal del domicilio del destinatario. */
   codigo: string;
+  primerApellido: string;
+  segundoApellido: string;
+  denominacion: string;
+  domicilio: string;
+  codigopostal: string;
+  lada: number;
+  tipoPersona: string;
+
 }
 
 /**
