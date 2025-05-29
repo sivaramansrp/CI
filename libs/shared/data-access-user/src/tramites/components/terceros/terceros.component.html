@@ -34,6 +34,7 @@
       class="btn btn-primary ms-2 d-flex"
       type="button"
       (click)="agregaPersona()"
+      [disabled]="esFormularioSoloLectura"
     >
       Agregar
     </button>
@@ -43,30 +44,32 @@
 <div class="row mt-4">
   <div class="col-md-2"></div>
   <div class="col-md-8">
-    <table class="table table-responsive">
-      <thead>
-        <tr>
-          <th>Nombre/Razón social</th>
-          <th>Correo electrónico</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of personas; let i = $index; track item.nombre;) {
-        <tr>
-          <td>{{ item.nombre }}</td>
-          <td>{{ item.correo }}</td>
-          <td>
-            <button class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
-              <i class="bi bi-trash3"></i>
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+      [configuracionTabla]="encabezadoDeTablaTerceros"
+      [datos]="personas"
+      (listaDeFilaSeleccionada)="tercerosSeleccionados = $event"
+    >
+    </app-tabla-dinamica>
   </div>
   <div class="col-md-2"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="pull-right">
+      @if(personas.length > 0){
+      <button
+        type="button"
+        name="Eliminar"
+        class="btn btn-danger ms-2"
+        (click)="eliminarTerceros()"
+      >
+        Eliminar
+      </button>
+      }
+    </div>
+  </div>
 </div>
 
 @if (nuevaNotificacion) {

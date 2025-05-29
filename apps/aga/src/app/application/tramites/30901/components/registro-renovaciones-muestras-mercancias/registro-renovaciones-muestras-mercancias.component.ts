@@ -1,22 +1,25 @@
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Importante } from '@ng-mf/data-access-user';
+import { IMPORTANTE } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
-import {
-  Solicitud30901State,
-} from '../../estados/tramites30901.store';
-import {
-  Solicitud30901Store,
-} from '../../estados/tramites30901.store';
+import { Solicitud30901State } from '../../estados/tramites30901.store';
+import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -31,6 +34,19 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-registro-renovaciones-muestras-mercancias',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    AlertComponent,
+  ],
+  providers: [
+    RenovacionesMuestrasMercanciasService,
+    ToastrService,
+    BsModalService,
+  ],
   templateUrl: './registro-renovaciones-muestras-mercancias.component.html',
   styleUrl: './registro-renovaciones-muestras-mercancias.component.scss',
 })
@@ -44,7 +60,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
   /**
    * Constante que contiene los textos importantes.
    */
-  TEXTOS = Importante;
+  TEXTOS = IMPORTANTE;
   /**
    * Variable que contiene las opciones del importador.
    */
@@ -100,7 +116,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * Se inicializa como un objeto vacío con la estructura de `Solicitud30901State`.
    */
   solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
-
 
   /**
    * Constructor de RegistroRenovacionesMuestrasMercanciasComponent.
@@ -179,8 +194,10 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
           this.formRegistroMuestras.patchValue({
             opcionDeImportador: this.solicitud30901State.opcionDeImportador,
             tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
-            descMotivoFaltaMuestra: this.solicitud30901State.descMotivoFaltaMuestra,
-            comboFraccionConcatenada: this.solicitud30901State.comboFraccionConcatenada,
+            descMotivoFaltaMuestra:
+              this.solicitud30901State.descMotivoFaltaMuestra,
+            comboFraccionConcatenada:
+              this.solicitud30901State.comboFraccionConcatenada,
             fraccionConcatenada: this.solicitud30901State.fraccionConcatenada,
             fracciondescripcion: this.solicitud30901State.fracciondescripcion,
             comboNicos: this.solicitud30901State.comboNicos,
@@ -229,9 +246,17 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
           this.solicitud30901Store.setNumeroCAS(
             res.registroMuestrasDatos.numeroCAS
           );
-          this.solicitud30901Store.setIdeGenerica(res.registroMuestrasDatos.ideGenerica);
+          this.solicitud30901Store.setIdeGenerica(
+            res.registroMuestrasDatos.ideGenerica
+          );
           this.solicitud30901Store.setDescClobGenerica(
             res.registroMuestrasDatos.descClobGenerica
+          );
+          this.solicitud30901Store.setComboFraccionConcatenada(
+            res.registroMuestrasDatos.comboFraccionConcatenada
+          );
+          this.solicitud30901Store.setComboNicos(
+            res.registroMuestrasDatos.comboNicos
           );
         },
       });
@@ -247,12 +272,16 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    */
   mostrarDescFraccArancelaria(valor: Catalogo): void {
     let descripcion = '';
-    if (valor) {
+    if (valor?.id === 1) {
       const PARTS = valor.descripcion.split(' - ');
       if (PARTS.length >= 2) {
         descripcion = PARTS[1];
       }
+      descripcion = 'Vacas lecheras.';
+    } else {
+      descripcion = 'Federal';
     }
+
     this.formRegistroMuestras.patchValue({
       fraccionConcatenada: valor.descripcion,
       fracciondescripcion: descripcion,
@@ -305,7 +334,9 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * Actualiza la descripción del motivo de falta de muestra en el estado.
    */
   setDescMotivoFaltaMuestra(): void {
-    const VALUE = this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.value;
+    const VALUE = this.formRegistroMuestras.get(
+      'descMotivoFaltaMuestra'
+    )?.value;
     this.solicitud30901Store.setDescMotivoFaltaMuestra(VALUE);
   }
 
@@ -321,8 +352,20 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * Actualiza el valor del combo de Nicos en el estado.
    * @param event - Evento que contiene el ID del Nico seleccionado.
    */
-  setNino(event: Catalogo): void {
-    this.solicitud30901Store.setComboNicos(event.id);
+  setNino(valor: Catalogo): void {
+    let descripcion = '';
+    if (valor?.id === 1) {
+      const PARTS = valor.descripcion.split(' - ');
+      if (PARTS.length >= 2) {
+        descripcion = PARTS[1];
+      }
+      descripcion = 'Vacas lecheras.';
+    } else {
+      descripcion =
+        '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.';
+    }
+    this.solicitud30901Store.setNicoDescripcion(descripcion);
+    this.solicitud30901Store.setComboNicos(valor.id);
   }
 
   /**
@@ -349,6 +392,16 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
     this.solicitud30901Store.setNombreComercial(VALUE); // Corregido aquí
   }
 
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.formRegistroMuestras.invalid) {
+      this.formRegistroMuestras.markAllAsTouched();
+    }
+    return this.formRegistroMuestras.valid;
+  }
 
   /**
    * Hook del ciclo de vida que se invoca cuando se destruye el componente.
