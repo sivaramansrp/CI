@@ -48,12 +48,12 @@ export const SELECCION_DE_SUCURSAL_DATA: ConfiguracionColumna<SeleccionDeSucursa
       orden: 8
     },
     {
-      encabezado: 'Localidada',
+      encabezado: 'Localidad',
       clave: (fila) => fila.localidad,
       orden: 9
     },
     {
-      encabezado: 'Telefono',
+      encabezado: 'Teléfono',
       clave: (fila) => fila.telefono,
       orden: 9
     }

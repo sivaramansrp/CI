@@ -76,9 +76,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /** Valor seleccionado para el tipo de persona */
   public valorSeleccionadoPersona: string = '';
 
-  /** Notificación nueva */
-  public nuevaNotificacion!: Notificacion;
-
   /** Índice del elemento para eliminar */
   elementoParaEliminar!: number;
 
@@ -96,6 +93,16 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
 
  /** Datos del país */
  public paisData: CatalogosSelect = PAIS_DATA;
+
+  /** Filas seleccionadas en la tabla */
+   selectedRows: any;
+
+  /** Indica si el formulario es visible */
+   esFormularioVisible = false;
+   
+  /** Notificación nueva */
+  public nuevaNotificacion: Notificacion | null = null;
+
 
   /** Constructor del componente */
   constructor(
@@ -125,7 +132,6 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     this.getSociosYAccionistasExtranjerosData();
     this.getPaisData();
     this.subscribeToEstadoDataChanges();
-
     this.registroComoEmpresa.getRepresentacionFederalData().pipe(takeUntil(this.destroyed$)).subscribe(() => {
       this.subscribeToEstadoDataChanges();
     });
@@ -135,12 +141,17 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   private subscribeToTipoEmpresaChanges(): void {
     const TIPO_EMPRESA_CONTROL = this.formularioEmpresa.get('tipoEmpresa');
     const ACTIVIDAD_ECONOMICA_CONTROL = this.formularioEmpresa.get('actividadEconomicaPreponderante');
+    const ESPECIFIQUE_CONTROL = this.formularioEmpresa.get('especifique');
 
     TIPO_EMPRESA_CONTROL?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
       if (value) {
         ACTIVIDAD_ECONOMICA_CONTROL?.enable();
+        ESPECIFIQUE_CONTROL?.enable(); 
+
       } else {
         ACTIVIDAD_ECONOMICA_CONTROL?.disable();
+        ESPECIFIQUE_CONTROL?.disable();
+
       }
     });
   }
@@ -161,7 +172,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.formularioEmpresa = this.fb.group({
       estado: [this.formularioEmpresaState?.estado],
-      representacionFederal: [this.formularioEmpresaState?.representacionFederal],
+      representacionFederal: [this.formularioEmpresaState?.representacionFederal,Validators.required],
       tipoEmpresa: [this.formularioEmpresaState?.tipoEmpresa || '', Validators.required],
       especifique: [{ value: this.formularioEmpresaState?.especifique || '', disabled: true }, Validators.maxLength(20)],
       actividadEconomicaPreponderante: [{ value: this.formularioEmpresaState?.actividadEconomicaPreponderante || '', disabled: true }],
@@ -182,30 +193,20 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       registroFederal: [this.formularioEmpresaState?.registroFederal || '', [Validators.required, Validators.minLength(13)]],
       tipoDePersona: [this.formularioEmpresaState?.tipoDePersona || '', Validators.required],
       nombre: [this.formularioEmpresaState.nombre],
-      apellidoPaterno: [this.formularioEmpresaState.apellidoPaterno],
+      apellidoPaterno: [this.formularioEmpresaState.apellidoPaterno,Validators.maxLength(200)],
       apellidoMaterno: [this.formularioEmpresaState.apellidoMaterno],
       // Detalles de la empresa
       taxId: [this.formularioEmpresaState.taxId, Validators.required],
       razonSocial: [this.formularioEmpresaState.razonSocial],
       datosPais: [this.formularioEmpresaState.datosPais, Validators.required],
-      datosCodigoPostal: [this.formularioEmpresaState.datosCodigoPostal],
+      datosCodigoPostal: [this.formularioEmpresaState.datosCodigoPostal,Validators.maxLength(12)],
       datosEstado: [this.formularioEmpresaState.datosEstado],
       correoElectronico: [this.formularioEmpresaState.correoElectronico],
     });
   }
-
-  
-  /** Método para eliminar un pedimento */
-  eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
-  }
-
+ 
   /** Método para abrir un modal */
   abrirModal(i: number = 0, mensaje: string = ''): void {
-    console.log('Modal Triggered:', mensaje); // Debugging log
-
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -219,21 +220,18 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     };
 
     this.elementoParaEliminar = i;
-
-    setTimeout(() => {
-      this.nuevaNotificacion = null!;
-    }, 2000);
-    
   }
+  /** Método para eliminar un pedimento de la lista */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    this.nuevaNotificacion = null;
+  }
+  /** Método para validar el RFC ingresado en el formulario */
   checkRFCValidation(): void {
-    const RFC_CONTROL = this.formularioEmpresa.get('registroFederal');
-    console.log('RFC Validation Triggered:', RFC_CONTROL?.value); // Log the current value
-    console.log('RFC_CONTROL invalid:', RFC_CONTROL?.invalid); // Log if the field is invalid
-    console.log('RFC_CONTROL errors:', RFC_CONTROL?.errors); // Log the errors object
-  
+    const RFC_CONTROL = this.formularioEmpresa.get('registroFederal')
     if (RFC_CONTROL?.invalid && RFC_CONTROL?.errors?.['minlength'] && !this.nuevaNotificacion) {
-      console.log('Calling abrirModal'); // Debugging log
-
       this.abrirModal(0, 'El RFC debe tener al menos 13 caracteres de longitud.');
     }
   }
@@ -333,6 +331,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       correoElectronico: this.formularioEmpresa.get('correoElectronico')?.value,
       nombre: this.formularioEmpresa.get('nombre')?.value,
       apellidoPaterno: this.formularioEmpresa.get('apellidoPaterno')?.value,
+      id: 0
     };
 
     this.datosTablaExtranjeros.push(NEW_ENTRY);
@@ -365,6 +364,28 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
         
       }
     });
+  }
+  /** Método para manejar el cambio de filas seleccionadas en la tabla */
+  onSelectedRowsChange(selectedRows: (SociosYAccionistasData | SociosYAccionistasExtranjerosData)[]): void {
+    this.selectedRows = new Set(selectedRows.map((row) => row.id));
+    this.esFormularioVisible = false;
+  }
+
+  /** Método para eliminar filas seleccionadas de la tabla de datos generales */
+  onDelete(): void{
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      this.datosGenerales = this.datosGenerales.filter((fila) => !this.selectedRows.has(fila.id));
+      this.selectedRows.clear();
+      this.esFormularioVisible = false;
+    }
+  }
+  /** Método para eliminar filas seleccionadas de la tabla de datos extranjeros */
+  onEliminar(): void{
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      this.datosTablaExtranjeros = this.datosTablaExtranjeros.filter((fila) => !this.selectedRows.has(fila.id));
+      this.selectedRows.clear();
+      this.esFormularioVisible = false;
+    }
   }
 
   /** Método para establecer valores en el store de la solicitud */

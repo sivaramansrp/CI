@@ -23,7 +23,7 @@
         </div>
     </div>
     @if (nuevaNotificacion) {
-        <section >
+        <section>
         <lib-notificaciones 
         [notificacionInput]="nuevaNotificacion" 
         (confirmacionModal)="eliminarPedimento($event)">
@@ -185,7 +185,7 @@
         </div>
         <div class="col-md-6">
             <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
-            <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno"
+            <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno" maxlength="200"
             (change)="setValoresStore(formularioEmpresa,'apellidoPaterno', 'setApellidoPaterno')"
                >
         </div>
@@ -225,7 +225,7 @@
     </div>
         <div class="col-md-6">
             <label for="Código postal" class="form-label">Código postal:</label>
-            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal"
+            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'datosCodigoPostal', 'setDatosCodigoPostal')"
 
              >
@@ -262,10 +262,12 @@
     <app-tabla-dinamica 
     [tipoSeleccionTabla]="tipoSeleccionTabla" 
     [configuracionTabla]="sociosYAccionistasData"
-    [datos]="datosGenerales"></app-tabla-dinamica>
+    [datos]="datosGenerales"
+    (listaDeFilaSeleccionada)="onSelectedRowsChange($event)">
+   </app-tabla-dinamica>
 
     <div class=" text-end">
-        <button type="button" class="btn btn-primary">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onDelete()">Eliminar</button>
     </div>
 
     <h6 class="margin-header">Socios y Accionistas Extranjeros</h6>
@@ -275,9 +277,10 @@
         [tipoSeleccionTabla]="tipoSeleccionTabla" 
         [configuracionTabla]="socioYAccionistasExtranjerosData"
         [datos]="datosTablaExtranjeros"
+        (listaDeFilaSeleccionada)="onSelectedRowsChange($event)">
         ></app-tabla-dinamica>
 
     <div class="text-end mt-5">
-        <button type="button" class="btn btn-primary">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onEliminar()">Eliminar</button>
     </div>
 </div>
