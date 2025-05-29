@@ -153,8 +153,9 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
       private consultaQuery: ConsultaioQuery
   ) {
-    this.crearFormulario();
-    this.initActionFormBuild();
+     this.obtenerListasDesplegables();
+
+       
   }
 
   /**
@@ -172,20 +173,23 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
+        this.crearFormulario();
+    this.initActionFormBuild();
+ 
+
+
+  }
+
+   ngAfterViewInit(): void {
+       this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
-        dataDeLaSolicitud: false, // Example boolean to update
+        dataDeLaSolicitud: false, 
       };
       if (this.datosDelaSolicitud.valid) {
         FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
       }
       this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
-
-    this.obtenerListasDesplegables();
-  }
-
-   ngAfterViewInit(): void {
      this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
