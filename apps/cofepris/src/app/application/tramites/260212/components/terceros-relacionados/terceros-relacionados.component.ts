@@ -73,7 +73,12 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit {
-
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * Inicialmente establecido en `true`.
+   *
+   * @description Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
  public esFormularioSoloLectura: boolean = true;
 
   /**

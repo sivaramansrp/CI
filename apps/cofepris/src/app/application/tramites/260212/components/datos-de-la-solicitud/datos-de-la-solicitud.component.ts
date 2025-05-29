@@ -19,7 +19,7 @@ import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancia
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -27,6 +27,13 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
+ */
+/**
+ * @var {boolean} esFormularioSoloLectura
+ * @description
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ * Cuando es verdadero, los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+ * Este valor se actualiza dinámicamente según el estado de la sección consultada.
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -47,6 +54,13 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+/**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
  public esFormularioSoloLectura: boolean = true;
 
   /** Subject para destruir el componente */
@@ -151,7 +165,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$),
           map((seccionState)=>{
             this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
+            
           })
         )
         .subscribe()

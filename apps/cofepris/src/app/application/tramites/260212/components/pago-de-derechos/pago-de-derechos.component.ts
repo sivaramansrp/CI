@@ -17,7 +17,7 @@ import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
@@ -42,13 +42,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    */
  public esFormularioSoloLectura: boolean = true;
-
-  /**
-   * Maneja las suscripciones internas del componente.
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
+/**
    * Subject para limpiar recursos y cancelar suscripciones al destruir el componente.
    */
   private destroy$ = new Subject<void>();
@@ -119,7 +113,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          
         })
       )
       .subscribe()
@@ -264,6 +258,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
+   
   }
 }

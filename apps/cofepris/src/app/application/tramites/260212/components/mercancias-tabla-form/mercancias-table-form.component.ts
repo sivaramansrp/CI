@@ -11,7 +11,7 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject,map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -35,9 +35,15 @@ import { EstadoFisico } from '../../models/permiso-maquila.models';
   styleUrl: './mercancias-table-form.component.scss',
 })
 export class MercanciasTableFormComponent implements OnInit, OnDestroy {
-
+/**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
   esFormularioSoloLectura: boolean = true;
-    private subscription: Subscription = new Subscription();
+   
   /**
    * Evento de salida que emite una acción de Cancelaración.
    */
@@ -215,6 +221,6 @@ this.solicitudService.getClave().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
+    
   }
 }

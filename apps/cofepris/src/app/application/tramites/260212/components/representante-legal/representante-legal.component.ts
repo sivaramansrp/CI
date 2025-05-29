@@ -12,7 +12,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { map,takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
-import { Subscription} from 'rxjs';
+
 
 /**
  * Componente RepresentanteLegalComponent
@@ -30,9 +30,15 @@ import { Subscription} from 'rxjs';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
-
+/**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
     public esFormularioSoloLectura: boolean = true;
-    private subscription: Subscription = new Subscription();
+    
     private destroy$ = new Subject<void>();
 
   /**
@@ -66,7 +72,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
               takeUntil(this.destroy$),
               map((seccionState)=>{
                 this.esFormularioSoloLectura = seccionState.readonly;
-                this.inicializarEstadoFormulario();
+                
               })
             )
             .subscribe()
@@ -155,7 +161,7 @@ this.personaForm = this.fb.group({
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
+   
   }
 
 }

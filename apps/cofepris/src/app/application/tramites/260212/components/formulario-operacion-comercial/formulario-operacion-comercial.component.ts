@@ -8,7 +8,7 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente FormularioOperacionComercialComponent
@@ -26,11 +26,15 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrl: './formulario-operacion-comercial.component.scss',
 })
 export class FormularioOperacionComercialComponent implements OnInit, OnDestroy {
-
+/**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
    public esFormularioSoloLectura: boolean = true;
-  private subscription: Subscription = new Subscription();
-
-  /** Subject para destruir el componente */
+ /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
   selectedRegimen$: Observable<string> =
@@ -71,7 +75,7 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
           takeUntil(this.destroy$),
           map((seccionState)=>{
             this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
+            
           })
         )
         .subscribe()
@@ -193,9 +197,7 @@ this.solicitudService.getClave().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    if (this.subscription && !this.subscription.closed) {
-      this.subscription.unsubscribe();
-    }
+    
   }
 
   /**
