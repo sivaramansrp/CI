@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+
+import { AVISO, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -23,6 +24,19 @@ export class PlaguicidasComponent {
    * Se obtiene de una constante definida en otro archivo.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+   /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+   public infoAlert = 'alert-info';
+
+   /**
+    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+    */
+
+  TEXTOS = AVISO.Aviso;
 
   /**
    * Indice actual del paso en el asistente.
