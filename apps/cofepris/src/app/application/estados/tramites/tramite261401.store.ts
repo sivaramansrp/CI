@@ -46,6 +46,63 @@ export interface Solicitud261401State {
    * El importe del pago realizado.
    */
   impPago?: string;
+
+  /**
+ * Tipo de persona (física o moral) asociada a la solicitud.
+ * Puede ser 'fisica' o 'moral'.
+ */
+  tipoPersona: string;
+  /**
+ * Nombre(s) de la persona física destinataria.
+ */
+  nombre: string;
+
+  /**
+ * Primer apellido de la persona física destinataria.
+ */
+  primerApellido: string;
+
+  /** Segundo apellido de la persona */
+  segundoApellido: string;
+
+  /** País de residencia */
+  pais: string;
+
+  /** Domicilio de la persona o entidad */
+  domicilio: string;
+
+  /** Número exterior del domicilio */
+  numeroExterior: string;
+
+  /** Número interior del domicilio */
+  numeroInterior: string;
+
+  /** Correo electrónico de contacto */
+  correoElectronico: string;
+    /**
+   * Estado o provincia de residencia.
+   */
+  estado: string;
+    /**
+   * Código postal o equivalente del domicilio.
+   */
+  codigopostal: string;
+    /**
+   * Calle del domicilio.
+   */
+  calle: string;
+    /**
+   * Lada telefónica nacional o internacional.
+   */
+  lada: number;
+  /**
+   * Número de teléfono de contacto.
+   */
+  telefono: string;
+    /**
+   * Denominación o razón social de la persona moral.
+   */
+  denominacion: string;
 }
 
 /**
@@ -54,15 +111,122 @@ export interface Solicitud261401State {
  */
 export function createInitialState(): Solicitud261401State {
   return {
-    observaciones: '',
-    destinatarioDatos: [],
-    claveDeReferencia: '',
-    cadenaPagoDependencia: '',
-    bancoClave: '',
-    llaveDePago: '',
-    fecPago: '',
-    impPago: '',
-  };
+          /**
+         * Observaciones relacionadas con la solicitud.
+         */
+        observaciones: '',
+
+        /**
+         * Lista de destinatarios asociados a la solicitud.
+         */
+        destinatarioDatos: [],
+
+        /**
+         * La clave de referencia asociada con la solicitud.
+         */
+        claveDeReferencia: '',
+
+        /**
+         * La cadena de pago proporcionada por la dependencia.
+         */
+        cadenaPagoDependencia: '',
+
+        /**
+         * La clave del banco utilizada para el pago.
+         */
+        bancoClave: '',
+
+        /**
+         * La llave de pago única asociada con la transacción.
+         */
+        llaveDePago: '',
+
+        /**
+         * La fecha en que se realizó el pago.
+         */
+        fecPago: '',
+
+        /**
+         * El importe del pago realizado.
+         */
+        impPago: '',
+
+        /**
+         * Tipo de persona (física o moral) asociada a la solicitud.
+         * Puede ser 'fisica' o 'moral'.
+         */
+        tipoPersona: '',
+
+        /**
+         * Nombre(s) de la persona física destinataria.
+         */
+        nombre: '',
+
+        /**
+         * Primer apellido de la persona física destinataria.
+         */
+        primerApellido: '',
+
+        /**
+         * Segundo apellido de la persona.
+         */
+        segundoApellido: '',
+
+        /**
+         * País de residencia.
+         */
+        pais: '',
+
+        /**
+         * Domicilio de la persona o entidad.
+         */
+        domicilio: '',
+
+        /**
+         * Número exterior del domicilio.
+         */
+        numeroExterior: '',
+
+        /**
+         * Número interior del domicilio.
+         */
+        numeroInterior: '',
+
+        /**
+         * Correo electrónico de contacto.
+         */
+        correoElectronico: '',
+
+        /**
+         * Estado o provincia de residencia.
+         */
+        estado: '',
+
+        /**
+         * Código postal o equivalente del domicilio.
+         */
+        codigopostal: '',
+
+        /**
+         * Calle del domicilio.
+         */
+        calle: '',
+
+        /**
+         * Lada telefónica nacional o internacional.
+         */
+        lada: 0,
+
+        /**
+         * Número de teléfono de contacto.
+         */
+        telefono: '',
+
+        /**
+         * Denominación o razón social de la persona moral.
+         */
+        denominacion: '',
+    };
 }
 
 @Injectable({

@@ -147,6 +147,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public Vigencia: InputFecha = VIGENCIA;
 
+  /** 
+   * Desactiva el radio de "Contenedor" cuando se selecciona "Archivo CSV"
+   */
+  radioContenedor:boolean = false;
+
+  /**
+   * Desactiva el radio de "Archivo CSV" cuando se selecciona "Contenedor"
+   */
+  radioArchivoCsv:boolean = false;
+
   /**
    * Configuración de las columnas de la tabla.
    */
@@ -155,10 +165,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
-    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
-    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
+    { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
   ];
 
   /**
@@ -169,10 +181,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
-    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
-    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
+    { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
   ];
 
   /**
@@ -224,7 +238,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.contenedores = {
       catalogos: [],
-      labelNombre: 'Tipo de Documento',
+      labelNombre: 'Tipo de equipos',
       primerOpcion: 'Seleccione un valor',
     };
   }
@@ -271,7 +285,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
       inicialesContenedor: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
-      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
+      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required,Validators.minLength(6), Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
       aduanaMenuDesplegable: [
@@ -354,9 +368,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       case 'Contenedor':
         this.mostrarSeccionContenedor = true;
         this.mostrarSeccionAduanaaFecha = true;
+        this.radioContenedor = false;
+        this.radioArchivoCsv = true;
         break;
       case 'Archivo CSV':
         this.mostrarSeccionArchivoCsv = true;
+        this.radioArchivoCsv = false;
+        this.radioContenedor = true;
+        this.mostrarArchivoSeleccionadoTable = true;
         break;
       default:
         break;
@@ -368,6 +387,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
+    this.radioContenedor = false;
+    this.radioArchivoCsv = false;
     this.mostrarSeccionArchivoCsv = false;
     this.mostrarSeccionAduanaaFecha = false;
     this.mostrarSeccionContenedor = false;
@@ -387,12 +408,25 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar modal de captura de datos.
    */
   datosCapturaModal(): void {
-    this.solicitudForm.markAllAsTouched();
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.solicitudForm.value.aduana && this.solicitudForm.value.inicialesContenedor && this.solicitudForm.value.numeroContenedor) {
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+        this.mostrarButtons = false;
+        this.solicitudForm.reset();
+      }
+    } else {
+      this.solicitudForm.markAllAsTouched();
     }
-    this.mostrarButtons = false;
+  }
+
+  /** 
+  * Cierra el modal manualmente desde el componente
+  */
+  hideModal(): void {
+    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+    MODAL_INSTANCE.hide();
+    this.mostrarButtons = true;
   }
 
   /**
@@ -406,6 +440,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       field
     );
     return VALIDATIONRESULT === null ? false : VALIDATIONRESULT;
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean | undefined {
+    const CONTROL = this.solicitudForm.get(id);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
   }
 
   /**
@@ -509,6 +553,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             numeroContenedor: '',
             contenedores: ''
           });
+          this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
         }
