@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA_PAGO } from '../../services/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
