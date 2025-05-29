@@ -22,4 +22,11 @@
       (continuarEvento)="getValorIndice($event)"
     ></btn-continuar>
   </div>
+     @if(indice === 1) {
+    <div class="mt-5">
+      <div class="mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
+    </div>
+    }
 </div>

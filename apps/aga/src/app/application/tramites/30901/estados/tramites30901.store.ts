@@ -234,16 +234,14 @@ export class Solicitud30901Store extends Store<Solicitud30901State> {
       const NEW_ITEMS = pagoDerechosLista.filter(
         (newItem) =>
           !EXISTING_LIST.some(
-            (existingItem) =>
-              existingItem.linea === newItem.linea &&
-              existingItem.monto === newItem.monto
+            (existingItem) => existingItem.linea === newItem.linea
           )
       );
 
       // Si hay elementos nuevos, actualiza el estado
       return NEW_ITEMS.length > 0
         ? { ...state, pagoDerechosLista: [...EXISTING_LIST, ...NEW_ITEMS] }
-        : state;
+        : { ...state, pagoDerechosLista: pagoDerechosLista };
     });
   }
 
