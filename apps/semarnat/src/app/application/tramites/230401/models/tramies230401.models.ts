@@ -21,7 +21,7 @@ export interface PagoDerechosState {
  */
   export const FECHA_FACTURA = {
     labelNombre: 'Fecha de pago:',
-    required: false,
+    required: true,
     habilitado: true,
   };
 

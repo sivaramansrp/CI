@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, InputFecha, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, InputFecha, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import { FECHA_FACTURA, PagoDerechosState } from '../../models/tramies230401.models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import {
   delay,
   map,
