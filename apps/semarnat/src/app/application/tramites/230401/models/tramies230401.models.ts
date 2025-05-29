@@ -1,5 +1,5 @@
-import { AbstractControl, ValidatorFn } from "@angular/forms";
-import { REGEX_FECHA_VALIDA } from "@libs/shared/data-access-user/src";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { REGEX_FECHA_VALIDA, REGEX_PATRON_DECIMAL_12_3 } from "@libs/shared/data-access-user/src";
 /**
  * Representa el estado de Pago de Derechos.
  * Esta interfaz se utiliza para el FormGroup del componente de pago de derechos.
@@ -36,3 +36,22 @@ export function validadorDeFecha(): ValidatorFn {
     return IS_VALID ? null : { 'invalidDate': { value: control.value } };
   };
 }
+
+/**
+ * Representa la información de una sustancia sensible.
+ *
+ * @interface SustanciaSensible
+ * @property {string} [numeroCAS] - Número CAS.
+ * @property {string} [cas] - Código C.A.S.
+ * @property {string} [descripcionNoArancelaria] - Descripción no arancelaria.
+ * @property {string} [nombreQuimico] - Nombre químico.
+ */
+export interface SustanciaSensible {
+  numeroCAS?: string;
+  cas?: string;
+  descripcionNoArancelaria?: string;
+  nombreQuimico?: string;
+}
+
+
+

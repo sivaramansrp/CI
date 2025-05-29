@@ -4,10 +4,14 @@ import {
   CatalogoPaises,
   ConsultaioQuery,
   CrossListLable,
+  MaxDigitsValidator,
+  REGEX_SOLO_DIGITOS,
   SeccionLibQuery,
-  ValidacionesFormularioService,
+  TablaSeleccion,
+  ValidacionesFormularioService
 } from '@ng-mf/data-access-user';
 import {
+  CONFIGURACION_SUSTANCIAS_SENSIBLES,
   CONTINUAR,
   CROSLISTA_DE_PAISES,
   LISTA_DE_ENTRADA_PERSONALIZADA,
@@ -34,13 +38,14 @@ import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
-
+import { SustanciaSensible } from '../../models/tramies230401.models';
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+
   FormSolicitud!: FormGroup;
   tipoSolicitudSeleccionada!: number;
   paisesOrigen!: CatalogoPaises[];
@@ -54,16 +59,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud230401State;
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    derecha: 'País(es) seleccionados *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
   public paisDelProductoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
+    derecha: 'País(es) seleccionado(s) *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
   public aduanasDeEntradaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas',
+    derecha: 'Aduanas de entrada seleccionadas *:',
+    showUnoTitulo: false,
+    showDosTitulo: false
   };
+
+  /**
+   * Define el tipo de selección que se utilizará en la tabla.
+   * En este caso, se utiliza un tipo de selección basado en casillas de verificación (CHECKBOX).
+   */
+  public tablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de la tabla de sustancias sensibles.
+   * 
+   * Esta propiedad almacena la configuración utilizada para mostrar y gestionar
+   * la tabla de sustancias sensibles en el componente. La configuración se define
+   * en la constante `CONFIGURACION_SUSTANCIAS_SENSIBLES`.
+   */
+  public configuracionSustanciasTabla = CONFIGURACION_SUSTANCIAS_SENSIBLES;
+
+  /**
+   * Arreglo que almacena los datos de sustancias sensibles.
+   * 
+   * Este arreglo contiene objetos de tipo `SustanciaSensible` que representan
+   * las sustancias sensibles asociadas a la solicitud. Se utiliza para gestionar
+   * y mostrar la información relevante en la tabla de datos correspondiente.
+   */
+  public sustanciasSensiblesTablaDatos: SustanciaSensible[] = [];
+
+  /**
+   * Lista de sustancias sensibles seleccionadas por el usuario.
+   * Esta propiedad almacena un arreglo de objetos del tipo `SustanciaSensible`,
+   * que representan las sustancias que han sido marcadas como seleccionadas
+   * en el contexto de la aplicación.
+   */
+  public sustanciasSensiblesSeleccionadas: SustanciaSensible[] = [];
 
   /**
    * Lista de fechas paisDeProcedenciaSeleccionadas.
@@ -267,6 +310,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.sustanciasSensiblesTablaDatos = seccionState.sustanciasSensiblesTablaDatos;
         })
       ).subscribe();
 
@@ -337,12 +381,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    for (const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.FormSolicitud.controls, NOMBRE_DEL_CONTROL)) {
-        const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
-        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-          return false;
-        }
+    for(const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+      if(!NOMBRE_DEL_CONTROL){
+        continue;
+      }
+      const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
+      if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+        return false;
       }
     }
     return true;
@@ -484,14 +529,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a pantallas con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALRO = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.tramite230401Store as any)[metodoNombre](VALRO);
-        if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
+    if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
       const NUMERO_ACTIVO = Number(VALRO);
-      const VALOR_FORMATEDO = String.fromCharCode(NUMERO_ACTIVO);
-      this.tramite230401Store.setCantidadLetra(VALOR_FORMATEDO);
+      this.tramite230401Store.setCantidad(NUMERO_ACTIVO);
     }
   }
 
@@ -529,9 +571,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const FRACCION_ARANCELARIA = this.FormSolicitud.get(
       'fraccionArancelaria'
     )?.value;
+    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.FormSolicitud.get('fraccionArancelaria')?.value}`;
+    this.FormSolicitud.patchValue({
+      descripcionDeLaFraccion: DESCRIPCION_DE_LA_FRACCION,
+    })
+    this.tramite230401Store.setDescripcionDeLaFraccion(DESCRIPCION_DE_LA_FRACCION);
     this.tramite230401Store.setFraccionArancelaria(FRACCION_ARANCELARIA);
   }
 
+  
   /**
    * Selecciona la autorización y actualiza el estado correspondiente.
    */
@@ -545,6 +593,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   numeroCasSeleccione(): void {
     const NUMERO_CAS = this.FormSolicitud.get('numeroCas')?.value;
+    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`;
+    const NOMBRE_QUIMICO = `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`;
+    this.FormSolicitud.patchValue({
+      descripcionNoArancelaria: DESCRIPCION_NO_ARANCELARIA,
+      nombreQuimico: NOMBRE_QUIMICO,
+    })
+    this.tramite230401Store.setDescripcionNoArancelaria(DESCRIPCION_NO_ARANCELARIA);
+    this.tramite230401Store.setNombreQuimico(NOMBRE_QUIMICO);
     this.tramite230401Store.setNumeroCas(NUMERO_CAS);
   }
 
@@ -624,7 +680,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       unNumero: [
         this.solicitudState?.unNumero,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       datosNombreComercial: [
         this.solicitudState?.datosNombreComercial,
@@ -636,11 +692,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       datosPorcentaje: [
         this.solicitudState?.datosPorcentaje,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.maxLength(100)],
       ],
       datosComponentes: [
         this.solicitudState?.datosComponentes,
-        [Validators.maxLength(50)],
+        [Validators.required, Validators.maxLength(250)],
       ],
       clasificacion: [
         this.solicitudState?.clasificacion,
@@ -650,15 +706,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       datosObjecto: [this.solicitudState?.datosObjecto, [Validators.required]],
       especifique: [
         this.solicitudState?.especifique,
-        [Validators.maxLength(50)],
+        [Validators.maxLength(200)],
       ],
       especifiqueDos: [
         this.solicitudState?.especifiqueDos,
-        [Validators.maxLength(50)],
+        [Validators.maxLength(250)],
       ],
       cantidad: [
         this.solicitudState?.cantidad,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
+        [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
       ],
       cantidadLetra: [
         { value: this.solicitudState?.cantidadLetra, disabled: true },
@@ -668,6 +724,87 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
+  }
+
+  /**
+   * Agrega una sustancia sensible a la lista de datos en la tabla.
+   * 
+   * Este método crea un objeto `SustanciaSensible` con los valores del formulario
+   * y lo agrega a la lista de sustancias sensibles. Si el número CAS ya existe en
+   * la lista, se actualiza el elemento existente. Luego, se actualiza el estado
+   * del store `tramite230401Store` con la nueva lista de sustancias sensibles.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  agregarListaDeNumeros(): void {
+    const SUSTANCIA_SENSIBLE: SustanciaSensible = {
+      numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
+      cas: '',
+      descripcionNoArancelaria: `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
+      nombreQuimico: `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
+    };
+    const EXISTING_INDEX = this.sustanciasSensiblesTablaDatos.findIndex(
+      (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
+    );
+    const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
+    if (EXISTING_INDEX !== -1) {
+      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.splice(EXISTING_INDEX, 1, SUSTANCIA_SENSIBLE);
+    } else {
+      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+    }
+    this.tramite230401Store.setSustanciasSensiblesTablaDatos(UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS);
+  }
+
+  /**
+   * Elimina una sustancia sensible de la lista de datos en la tabla.
+   * 
+   * Este método filtra la lista de sustancias sensibles en la tabla, eliminando
+   * aquellas que coinciden con los números CAS seleccionados. Luego, actualiza el
+   * estado del store `tramite230401Store` con la lista filtrada y limpia la lista
+   * de sustancias sensibles seleccionadas.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  eliminarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      return;
+    }
+    const LISTA_FILTRADA = this.sustanciasSensiblesTablaDatos.filter((elemento) => {
+      return !this.sustanciasSensiblesSeleccionadas.some((elementoSeleccionado) => elementoSeleccionado.numeroCAS === elemento.numeroCAS);
+    });
+    if (LISTA_FILTRADA) {
+      this.tramite230401Store.update((state) => ({
+        ...state,
+        sustanciasSensiblesTablaDatos: LISTA_FILTRADA,
+      }));
+      this.sustanciasSensiblesSeleccionadas = [];
+    }
+  }
+
+  /**
+   * Modifica los valores del formulario "FormSolicitud" con los datos
+   * seleccionados de la lista "sustanciasSensiblesSeleccionadas".
+   * 
+   * Si la lista "sustanciasSensiblesSeleccionadas" está vacía, no realiza
+   * ninguna acción y retorna inmediatamente.
+   * 
+   * Los campos actualizados en el formulario incluyen:
+   * - `numeroCas`: Número CAS de la sustancia seleccionada.
+   * - `cas`: Código CAS de la sustancia seleccionada.
+   * - `descripcionNoArancelaria`: Descripción no arancelaria de la sustancia seleccionada.
+   * - `nombreQuimico`: Nombre químico de la sustancia seleccionada.
+   */
+  modificarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      return;
+    }
+    const DATOS_SELECCIONADOS = this.sustanciasSensiblesSeleccionadas[0];
+    this.FormSolicitud.patchValue({
+      numeroCas: DATOS_SELECCIONADOS.numeroCAS,
+      cas: DATOS_SELECCIONADOS.cas,
+      descripcionNoArancelaria: DATOS_SELECCIONADOS.descripcionNoArancelaria,
+      nombreQuimico: DATOS_SELECCIONADOS.nombreQuimico,
+    })
   }
 
   /**

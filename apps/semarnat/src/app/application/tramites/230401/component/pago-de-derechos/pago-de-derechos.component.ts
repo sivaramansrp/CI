@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, InputFecha, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { FECHA_FACTURA, PagoDerechosState } from '../../models/tramies230401.models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, SeccionLibQuery, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import {
   delay,
   map,
@@ -150,12 +151,12 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
     */
   createPagoDerechos(): void {
     this.pagoDerechos = this.fb.group({
-      clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
-      dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],
+      clave:  [this.pagoDerechosState.clave, [Validators.required, Validators.maxLength(50)]],
+      dependencia: [this.pagoDerechosState.dependencia, [Validators.required, Validators.maxLength(50)]],
       banco: [this.pagoDerechosState.banco, [Validators.required]],
-      llavePago: [{ value: this.pagoDerechosState.llavePago, disabled: true }],
-      fecha: [this.pagoDerechosState.fecha, [Validators.required]],
-      importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
+      llavePago: [ this.pagoDerechosState.llavePago, [Validators.required, Validators.pattern(REGEX_LLAVE_DE_PAGO)]],
+      fecha: [this.pagoDerechosState.fecha, [Validators.required, dateLessThanOrEqualToday]],
+      importePago: [ this.pagoDerechosState.importePago, [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_IMPORTE_PAGO)]],
     });
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
     if (FETCHA_CONTROL) {
