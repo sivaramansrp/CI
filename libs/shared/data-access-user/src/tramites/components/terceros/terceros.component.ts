@@ -196,26 +196,6 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina una persona de la lista en el índice especificado.
-   * @param i - Índice de la persona a eliminar.
-   * @returns void
-   */
-  eliminar(i: number): void {
-    this.personas.splice(i, 1);
-    this.tercerosStore.setTerceros(this.personas);
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: TITULO_MODAL_AVISO,
-      mensaje: MSG_ELIMINA_PERSONA,
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
-    };
-  }
-
-  /**
    * Verifica si un campo específico en el formulario de persona es válido.
    *
    * @param {string} field - El nombre del campo a validar.
