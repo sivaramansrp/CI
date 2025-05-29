@@ -416,6 +416,7 @@
             formControlName="comboBimestresUno"
             [label]="'Bimestre'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(regimenForm,'comboBimestresUno', 'setComboBimestresUno')"
           >
           </app-catalogo-select>
@@ -424,6 +425,7 @@
             formControlName="comboBimestresDos"
             [label]="'Bimestre'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(regimenForm,'comboBimestresDos', 'setComboBimestresDos')"
           >
           </app-catalogo-select>
@@ -432,6 +434,7 @@
             formControlName="comboBimestresTres"
             [label]="'Bimestre'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(regimenForm,'comboBimestresTres', 'setComboBimestresTres')"
           >
           </app-catalogo-select>
@@ -937,6 +940,7 @@
                   formControlName="agregarCatalogoUno"
                   [label]="'1er Bimestre'"
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="modalBimestreUno()"
                 >
                 </app-catalogo-select>
@@ -945,6 +949,7 @@
                   formControlName="agregarCatalogoDos"
                   [label]="'2do Bimestre'"
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="modalBimestreDos()"
                 >
                 </app-catalogo-select>
@@ -953,6 +958,7 @@
                   formControlName="agregarCatalogoTres"
                   [label]="'3re Bimestre'"
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="modalBimestreTres()"
                 >
                 </app-catalogo-select>

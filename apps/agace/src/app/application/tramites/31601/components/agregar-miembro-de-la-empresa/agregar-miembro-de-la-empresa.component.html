@@ -142,6 +142,7 @@
                   [required]="true"
                   [catalogo]="nacionalidadOptions"
                   formControlName="nacionalidad"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'nacionalidad', 'setNacionalidad')"
                 ></app-catalogo-select>
               </div>

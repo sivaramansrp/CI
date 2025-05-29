@@ -86,6 +86,19 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * @method inicializarEstadoFormulario
+   * @description
+   * Inicializa el estado del formulario del representante, estableciendo los valores predeterminados
+   * a partir del estado de la solicitud o de los datos representativos proporcionados.
+   * Deshabilita los campos que no deben ser modificados por el usuario y rellena el formulario
+   * con los datos correspondientes. Si el formulario está en modo solo lectura, deshabilita
+   * todos los campos.
+   *
+   * @returns {void}
+   *
+   * @memberof ReprestantanteComponent
+   */
   inicializarEstadoFormulario(): void {
         this.tramite31601Query.selectSolicitud$
       .pipe(
