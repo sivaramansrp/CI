@@ -380,6 +380,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * @param evento Evento que contiene la fila y columna seleccionadas.
    */
   onAccionCupo(evento: EventoAccionTabla): void {
+    if (this.esFormularioSoloLectura) {
+
+      return;
+    }
     this.tramite120402Store.setTramite120402State({ cupoSeleccionado: evento.row });
     this.mostrarDescripcionCupo = true;
   }

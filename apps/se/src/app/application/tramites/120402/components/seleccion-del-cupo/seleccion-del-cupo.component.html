@@ -31,7 +31,7 @@
       <div class="col-md-8"></div>
       <div class="col-md-4 text-end">
         <div class="btn-group">
-          <button class="btn btn-primary me-2" type="button" (click)="manejarBuscar()">
+          <button class="btn btn-primary me-2" type="button"  [disabled]="esFormularioSoloLectura" (click)="manejarBuscar()">
             Buscar
           </button>
         </div>
