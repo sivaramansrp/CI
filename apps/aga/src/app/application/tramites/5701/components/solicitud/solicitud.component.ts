@@ -411,7 +411,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     //
     this.obtenerPatente();
 
-    this.obtenerMontoAPagar();
+    this.calcularMontoTotal();
     this.verificarDatosExistentesStore();
   }
 
@@ -1774,7 +1774,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Consulta si la línea de captura es válida y actualiza el store correspondiente.
    * @returns {void} No retorna ningún valor.
    */
-  public consultarLineaCaptura(): void {
+  public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
 
@@ -1843,7 +1843,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Obtiene el monto a pagar desde el servicio de parámetros y lo establece en el formulario.
    * @returns {void} No retorna ningún valor.
    */
-  public obtenerMontoAPagar(): void {
+  public calcularMontoTotal(): void {
     this.parametroMontoService
       .getParametroMonto()
       .pipe(
