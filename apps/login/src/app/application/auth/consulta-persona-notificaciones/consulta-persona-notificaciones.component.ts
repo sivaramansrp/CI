@@ -67,7 +67,6 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
   ngOnInit(): void {
     this.registroQuery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.registroState = seccionState;
         }),

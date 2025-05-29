@@ -85,7 +85,6 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
     this.crearFormConsulta()
     this.registroQuery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.registroState = seccionState;
         }),
@@ -109,7 +108,6 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Si no existen personas, inicializa la lista y actualiza la visualización de la tabla.
    */
   confirmarDatos() {
-
     this.personasNotificaciones = this.registroState.personasNotificaciones;
     if (this.registroState.regustrarDatos) {
       if (this.personasNotificaciones.length === 0) {
@@ -134,7 +132,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Navega a la pantalla para agregar una persona para oír/recibir notificaciones.
    */
-  AgregarPersonas() {
+  agregarPersonas() {
     this.router.navigate(['login/consulta-registro-notificador']);
   }
 
