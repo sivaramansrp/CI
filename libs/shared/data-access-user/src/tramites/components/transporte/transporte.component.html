@@ -13,50 +13,12 @@
 @if(tipoTransporteForma.get('tipoTransporte')?.value !== -1) {
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="main-table">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>
-              <div class="form-check">
-                <input
-                  class="form-check"
-                  type="checkbox"
-                  [(ngModel)]="checkSeleccionarTodos"
-                  (change)="seleccionarTodos($event)"
-                />
-              </div>
-            </th>
-            @for (item of headerTabla; track $index) {
-            <th>{{ item.valor }}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of bodyTabla; let i= $index; track i) {
-          <tr>
-            <td>
-              <div class="form-check check-transporte">
-                <input
-                  class="form-check"
-                  type="checkbox"
-                  title="Seleccionar todos"
-                  [(ngModel)]="row.seleccionado"
-                  (change)="seleccionarItemTabla(i)"
-                />
-              </div>
-            </td>
-            @for (item of headerTabla; track $index) { @if (item.llave ===
-            'fecha_porte') {
-            <td>{{ row[item.llave] | date : 'dd/MM/yyyy' }}</td>
-            } @else {
-            <td>{{ row[item.llave] }}</td>
-            } }
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+      [configuracionTabla]="encabezadoDeTablaTransporte"
+      [datos]="bodyTabla"
+    >
+    </app-tabla-dinamica>
   </div>
 </div>
 
@@ -479,9 +441,7 @@
     </div>
 
     <div class="col-md-6">
-      <label for="fecha_arribo_aereo" class="form-label"
-        >Fecha llegada:</label
-      >
+      <label for="fecha_arribo_aereo" class="form-label">Fecha llegada:</label>
       <input
         class="form-control"
         type="date"

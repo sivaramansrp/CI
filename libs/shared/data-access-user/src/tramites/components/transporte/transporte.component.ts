@@ -18,6 +18,12 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_FERROVIARIO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_MARITIMO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL,
   HEADER_TABLA_AEREO,
   HEADER_TABLA_CARRETERO,
   HEADER_TABLA_FERROVIARIO,
@@ -41,13 +47,17 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { ICatalogo } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
 import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
 import { ValidaTransporteService } from '../../../core/services/shared/api-validaciones/valida-transporte.service';
+import { CONFIGURACION_ENCABEZADO_TABLA_TERCEROS } from '../../../core/enums/terceros.enum';
 
 @Component({
   selector: 'lib-transporte',
@@ -62,6 +72,7 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
     InputHoraComponent,
     NotificacionesComponent,
     ReactiveFormsModule,
+    TablaDinamicaComponent,
   ],
 })
 export class TransporteComponent implements OnInit, OnChanges {
@@ -106,6 +117,18 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   @Output() seleccionTipoTransporte: EventEmitter<string> =
     new EventEmitter<string>();
+
+  /**
+   * @description
+   * Configuración de la tabla de terceros.
+   */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+   * @description
+   * Encabezado de la tabla de terceros.
+   */
+  encabezadoDeTablaTransporte!: ConfiguracionColumna<TransporteDespacho>[];
 
   /**
    * Cabecera de la tabla para el transporte ferroviario.
@@ -314,7 +337,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       10
     );
     this.seleccionTipoTransporte.emit(TIPO_TRANSPORTE.toString());
-    this.headerTabla = this.tipoTabla(TIPO_TRANSPORTE);
+    this.encabezadoDeTablaTransporte = this.tipoTabla(TIPO_TRANSPORTE);
   }
 
   /**
@@ -429,21 +452,23 @@ export class TransporteComponent implements OnInit, OnChanges {
    *
    * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
-  tipoTabla(tipoTransporte: number): ItemTransporteDespacho[] {
+  tipoTabla(
+    tipoTransporte: number
+  ): ConfiguracionColumna<TransporteDespacho>[] {
     switch (tipoTransporte) {
-      case 1:
+      case LISTA_TIPO_TRANSPORTE[0].id: // Carretero
         this.anios = TransporteComponent.obtenerAniosModelo();
-        return this.HEADER_TABLA_CARRETERO;
-      case 2:
-        return this.HEADER_TABLA_FERROVIARIO;
-      case 3:
-        return this.HEADER_TABLA_AEREO;
-      case 4:
-        return this.HEADER_TABLA_MARITIMO;
-      case 5:
-        return this.HEADER_TABLA_PEATONAL;
-      default:
-        return this.HEADER_TABLA_OTRO;
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO;
+      case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_FERROVIARIO;
+      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO;
+      case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_MARITIMO;
+      case LISTA_TIPO_TRANSPORTE[4].id: // Peatonal
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL;
+      default: // Otro
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO;
     }
   }
 
@@ -570,7 +595,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       10
     );
     switch (TIPO_TRANSPORTE) {
-      case 1: {
+      case LISTA_TIPO_TRANSPORTE[0].id: {
+        // Carretero
         const TRANSPORTE: TransporteDespacho = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -579,7 +605,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         break;
       }
 
-      case 2: {
+      case LISTA_TIPO_TRANSPORTE[1].id: {
+        // Ferroviario
         const TRANSPORTE: TransporteDespacho =
           this.ferroviarioForma.getRawValue();
         TRANSPORTE.tipo_equipo =
@@ -592,7 +619,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         break;
       }
 
-      case 3: {
+      case LISTA_TIPO_TRANSPORTE[2].id: {
+        // Aéreo
         const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -602,7 +630,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         break;
       }
 
-      case 4: {
+      case LISTA_TIPO_TRANSPORTE[3].id: {
+        // Marítimo
         const TRANSPORTE: TransporteDespacho = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -611,7 +640,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         this.maritimoForma.reset();
         break;
       }
-      case 5: {
+      case LISTA_TIPO_TRANSPORTE[4].id: {
+        // Peatonal
         const TRANSPORTE: TransporteDespacho = this.peatonalForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -622,6 +652,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       default: {
+        // Otro
         const TRANSPORTE: TransporteDespacho = this.otroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -797,7 +828,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         this.tipoTransporteForma.get('tipoTransporte')?.value,
         10
       );
-      this.headerTabla = this.tipoTabla(TIPO_TRANSPORTE);
+      this.encabezadoDeTablaTransporte = this.tipoTabla(TIPO_TRANSPORTE);
     } else {
       this.tipoTransporteForma
         .get('tipoTransporte')
