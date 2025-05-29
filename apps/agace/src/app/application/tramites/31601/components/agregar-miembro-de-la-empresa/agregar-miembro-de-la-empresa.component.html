@@ -78,6 +78,7 @@
                   [required]="true"
                   [catalogo]="enSuCaracterDeOptions"
                   formControlName="ensucaracterde"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucaracterde', 'setEnsucaracterde')"
                 ></app-catalogo-select>
               </div>

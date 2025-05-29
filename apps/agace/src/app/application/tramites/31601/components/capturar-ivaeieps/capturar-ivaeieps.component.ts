@@ -5,9 +5,9 @@ import { ConsultaioQuery, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { TableComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';

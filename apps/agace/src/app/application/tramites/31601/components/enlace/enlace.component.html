@@ -21,11 +21,12 @@
         data-bs-toggle="modal"
         data-bs-target="#modalAgregar"
         (click)="abrirModal()"
+        disabled="esFormularioSoloLectura ? true : false"
       >
         Agregar
       </button>
-      <button type="button" class="btn btn-default me-3">Modificar</button>
-      <button type="button" class="btn btn-danger">Eliminar</button>
+      <button type="button" class="btn btn-default me-3" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button type="button" class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
   </div>
 </div>
@@ -75,7 +76,7 @@
 
               <div class="col-md-4 d-flex align-items-center">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button">Buscar</button>
+                  <button class="btn btn-default" type="button" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
                 </div>
               </div>
             </div>
@@ -195,12 +196,13 @@
           </form>
         </div>
         <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary">Agregar</button>
+          <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
           <button
             type="button"
             class="btn btn-default"
             data-bs-dismiss="modal"
             #closeModal
+            disabled="esFormularioSoloLectura ? true : false"
           >
             Cerrar
           </button>

@@ -59,13 +59,14 @@
           [label]="'Tipo de Documento'"
           [required]="true"
           formControlName="tipoDocumento"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(requisitos, 'tipoDocumento', 'setTipoDocumento')"
         >
         </app-catalogo-select>
   
         <div class="row" style="padding-top: 20px; text-align: right">
           <div>
-            <button type="button" class="btn btn-primary btn-space">
+            <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">
               Agregar
             </button>
           </div>

@@ -334,11 +334,11 @@
             <input
               class="form-check-input"
               type="radio"
-              formControlName="empleadosPropios"
-              name="empleadosPropios"
+              formControlName="empleadosPropiosRegimen"
+              name="empleadosPropiosRegimen"
               id="empleadosPropios-si"
               value="Yes"
-              (change)="setValoresStore(regimenForm,'empleadosPropios', 'setEmpleadosPropios')"
+              (change)="setValoresStore(regimenForm,'empleadosPropiosRegimen', 'setEmpleadosPropiosRegimen')"
             />
             <label class="form-check-label" for="empleadosPropios-si">Sí</label>
           </div>
@@ -348,17 +348,17 @@
             <input
               class="form-check-input"
               type="radio"
-              formControlName="empleadosPropios"
-              name="empleadosPropios"
+              formControlName="empleadosPropiosRegimen"
+              name="empleadosPropiosRegimen"
               id="empleadosPropios-no"
               value="No"
-              (change)="setValoresStore(regimenForm,'empleadosPropios', 'setEmpleadosPropios')"
+              (change)="setValoresStore(regimenForm,'empleadosPropiosRegimen', 'setEmpleadosPropiosRegimen')"
             />
             <label class="form-check-label" for="empleadosPropios-no">No</label>
           </div>
         </div>
-        @if (regimenForm.get('empleadosPropios')?.invalid &&
-        regimenForm.get('empleadosPropios')?.touched) {
+        @if (regimenForm.get('empleadosPropiosRegimen')?.invalid &&
+        regimenForm.get('empleadosPropiosRegimen')?.touched) {
         <div class="mensaje-error">
           {{ MENSAJE_REQUERIDO }}
         </div>
@@ -370,19 +370,19 @@
           últimos tres bimestres anteriores a su solicitud?
         </p>
         <div class="col-md-6">
-          <label class="form-label" for="numeroEmpleados"
+          <label class="form-label" for="numeroEmpleadosUno"
             > Número de empleados <span>*</span>:</label
           >
           <input
             type="number"
             class="form-control"
-            formControlName="numeroEmpleados"
-            id="numeroEmpleados"
+            formControlName="numeroEmpleadosUno"
+            id="numeroEmpleadosUno"
             placeholder="1"
-            (change)="setValoresStore(regimenForm,'numeroEmpleados', 'setNumeroEmpleados')"
+            (change)="setValoresStore(regimenForm,'numeroEmpleadosUno', 'setNumeroEmpleadosUno')"
           />
-          @if (regimenForm.get('numeroEmpleados')?.invalid &&
-          regimenForm.get('numeroEmpleados')?.touched) {
+          @if (regimenForm.get('numeroEmpleadosUno')?.invalid &&
+          regimenForm.get('numeroEmpleadosUno')?.touched) {
           <div class="mensaje-error">
             {{ MENSAJE_REQUERIDO }}
           </div>
@@ -474,13 +474,14 @@
               data-bs-toggle="modal"
               data-bs-target="#modalAgregar"
               (click)="abrirModal()"
+              disabled="esFormularioSoloLectura ? true : false"
             >
               Agregar
             </button>
-            <button class="btn btn-default ms-2" type="button">
+            <button class="btn btn-default ms-2" type="button" disabled="esFormularioSoloLectura ? true : false">
               Modificar
             </button>
-            <button class="btn btn-default ms-2" type="button">Eliminar</button>
+            <button class="btn btn-default ms-2" type="button" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
           </div>
         </div>
       </div>
@@ -859,7 +860,7 @@
                       formControlName="rfc"
                       placeholder="Ingrese RFC"
                     />
-                    <button class="btn btn-secondary ms-2" type="button">
+                    <button class="btn btn-secondary ms-2" type="button" disabled="esFormularioSoloLectura ? true : false">
                       Buscar
                     </button>
                   </div>
@@ -967,12 +968,13 @@
           </form>
         </div>
         <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary">Agregar</button>
+          <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
           <button
             type="button"
             class="btn btn-default"
             data-bs-dismiss="modal"
             #closeModal
+            disabled="esFormularioSoloLectura ? true : false"
           >
             Cerrar
           </button>

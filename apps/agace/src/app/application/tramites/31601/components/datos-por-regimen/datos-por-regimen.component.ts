@@ -4,7 +4,7 @@
 /* eslint-disable sort-imports */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import {
   FormBuilder,
@@ -346,8 +346,8 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       constanciasDe: [this.solicitudState?.constanciasDe, Validators.maxLength(7)],
       total: [{ value: '', disabled: true }],
       totals: [{ value: '', disabled: true }],
-      empleadosPropios: [this.solicitudState?.empleadosPropios, Validators.required],
-      numeroEmpleados: [this.solicitudState?.numeroEmpleados, Validators.required],
+      empleadosPropiosRegimen: [this.solicitudState?.empleadosPropiosRegimen, Validators.required],
+      numeroEmpleadosUno: [this.solicitudState?.numeroEmpleadosUno, Validators.required],
       numeroEmpleadosDos: [this.solicitudState?.numeroEmpleadosDos, Validators.required],
       numeroEmpleadosTres: [this.solicitudState?.numeroEmpleadosTres, Validators.required],
       comboBimestresUno: [this.solicitudState?.comboBimestresUno],

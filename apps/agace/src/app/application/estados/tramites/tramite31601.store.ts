@@ -317,14 +317,14 @@ export interface Solicitud31601State {
     constanciasDe: number;
     
     /**
-     * El valor de empleadosPropios.
+     * El valor de empleadosPropiosRegimen.
      */
-    empleadosPropios: string;
+    empleadosPropiosRegimen: string;
     
     /**
-     * El valor de numeroEmpleados.
+     * El valor de numeroEmpleadosUno.
      */
-    numeroEmpleados: number;
+    numeroEmpleadosUno: number;
     
     /**
      * El valor de numeroEmpleadosDos.
@@ -776,14 +776,14 @@ export function createInitialState(): Solicitud31601State {
         constanciasDe: 0,
         
         /**
-         * El valor de empleadosPropios.
+         * El valor de empleadosPropiosRegimen.
          */
-        empleadosPropios: '',
+        empleadosPropiosRegimen: '',
         
         /**
-         * El valor de numeroEmpleados.
+         * El valor de numeroEmpleadosUno.
          */
-        numeroEmpleados: 1,
+        numeroEmpleadosUno: 1,
         
         /**
          * El valor de numeroEmpleadosDos.
@@ -1637,24 +1637,24 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Establece el estado de empleadosPropios.
-     * @param empleadosPropios - El valor de empleadosPropios.
+     * Establece el estado de empleadosPropiosRegimen.
+     * @param empleadosPropiosRegimen - El valor de empleadosPropiosRegimen.
      */
-    public setEmpleadosPropios(empleadosPropios: string) {
+    public setEmpleadosPropiosRegimen(empleadosPropiosRegimen: string) {
         this.update((state) => ({
             ...state,
-            empleadosPropios,
+            empleadosPropiosRegimen,
         }));
     }
 
     /**
- * Establece el estado de numeroEmpleados.
- * @param numeroEmpleados - El valor de numeroEmpleados.
+ * Establece el estado de numeroEmpleadosUno.
+ * @param numeroEmpleadosUno - El valor de numeroEmpleadosUno.
  */
-public setNumeroEmpleados(numeroEmpleados: number) {
+public setNumeroEmpleadosUno(numeroEmpleadosUno: number) {
     this.update((state) => ({
         ...state,
-        numeroEmpleados,
+        numeroEmpleadosUno,
     }));
 }
 

@@ -53,8 +53,6 @@ export class Solocitud31601Service {
     this.tramite31601Store.setRmfRadio(DATOS.rmfRadio);
     this.tramite31601Store.setVinculacionRegistroCancelado(DATOS.vinculacionRegistroCancelado);
     this.tramite31601Store.setProveedoresListadoSAT(DATOS.proveedoresListadoSAT);
-    this.tramite31601Store.setNumeroEmpleados(DATOS.numeroEmpleados);
-    this.tramite31601Store.setEmpleadosPropios(DATOS.empleadosPropios);
     this.tramite31601Store.setResigtroReprestantante(DATOS.resigtroReprestantante);
     this.tramite31601Store.setRfcReprestantante(DATOS.rfcReprestantante);
     this.tramite31601Store.setNombreReprestante(DATOS.nombreReprestante);
@@ -69,6 +67,42 @@ export class Solocitud31601Service {
     this.tramite31601Store.setResigtro(DATOS.resigtro);
     this.tramite31601Store.setTelefono(DATOS.telefono); 
     this.tramite31601Store.setCorreo(DATOS.correo);
+    this.tramite31601Store.setImportaciones(DATOS.importaciones);
+    this.tramite31601Store.setInfraestructuraIndique(DATOS.infraestructuraIndique);
+    this.tramite31601Store.setUltimosMeses(DATOS.ultimosMeses);
+    this.tramite31601Store.setOperacionesmeses(DATOS.operacionesmeses);
+    this.tramite31601Store.setValor(DATOS.valor);
+    this.tramite31601Store.setTransferencias(DATOS.transferencias);
+    this.tramite31601Store.setTransferenciasVir(DATOS.transferenciasVir);
+    this.tramite31601Store.setRetornos(DATOS.retornos);
+    this.tramite31601Store.setRetornosSe(DATOS.retornosSe);
+    this.tramite31601Store.setConstancias(DATOS.constancias);
+    this.tramite31601Store.setConstanciasDe(DATOS.constanciasDe);
+    this.tramite31601Store.setEmpleadosPropiosRegimen(DATOS.empleadosPropiosRegimen);
+    this.tramite31601Store.setNumeroEmpleadosUno(DATOS.numeroEmpleadosUno);
+    this.tramite31601Store.setNumeroEmpleadosDos(DATOS.numeroEmpleadosDos);
+    this.tramite31601Store.setNumeroEmpleadosTres(DATOS.numeroEmpleadosTres);
+    this.tramite31601Store.setComboBimestresUno(DATOS.comboBimestresUno);
+    this.tramite31601Store.setComboBimestresDos(DATOS.comboBimestresDos);
+    this.tramite31601Store.setComboBimestresTres(DATOS.comboBimestresTres);
+    this.tramite31601Store.setProveedorCumplimiento(DATOS.proveedorCumplimiento);
+    this.tramite31601Store.setDeclaracionISR(DATOS.declaracionISR);
+    this.tramite31601Store.setCancelacion(DATOS.cancelacion);
+    this.tramite31601Store.setCumplimientoReglas(DATOS.cumplimientoReglas);
+    this.tramite31601Store.setRecintoFiscalizado(DATOS.recintoFiscalizado);
+    this.tramite31601Store.setRecintoEstrategico(DATOS.recintoEstrategico);
+    this.tramite31601Store.setCumplimientoLineamientos(DATOS.cumplimientoLineamientos);
+    this.tramite31601Store.setManifieste(DATOS.manifieste);
+    this.tramite31601Store.setIndiqueIva(DATOS.indiqueIva);
+    this.tramite31601Store.setEmpleados(DATOS.empleados);
+    this.tramite31601Store.setInfraestructura(DATOS.infraestructura);
+    this.tramite31601Store.setMonto(DATOS.monto);
+    this.tramite31601Store.setAntiguedad(DATOS.antiguedad);
+    this.tramite31601Store.setTipoDe(DATOS.tipoDe);
+    this.tramite31601Store.setValorPesos(DATOS.valorPesos);
+    this.tramite31601Store.setDescripcion(DATOS.descripcion);
+    this.tramite31601Store.setHaContado(DATOS.haContado);
+    this.tramite31601Store.setEnCasoIva(DATOS.enCasoIva);
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {
