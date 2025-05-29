@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { DomicilioTabla, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
  import { DomicilioTablaService } from '@ng-mf/data-access-user';
@@ -22,7 +22,7 @@ import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
   templateUrl: './domicilio-tabla.component.html',
   styleUrl: './domicilio-tabla.component.scss',
 })
-export class DomicilioTablaComponent implements OnInit, OnDestroy {
+export class DomicilioTablaComponent<T> implements OnInit, OnDestroy {
 
   /**
    * Configuración de la tabla que se utilizará en el componente.
@@ -38,10 +38,9 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy {
 
   /**
    * Datos que se mostrarán en la tabla.
-   * @type {any}
+   * @type {DomicilioTabla[]}
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public datosTabla!:any;
+  datosTabla!: DomicilioTabla[];
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
@@ -66,7 +65,7 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: string[]) => {
+      (data: DomicilioTabla[]) => {
         this.datosTabla = data;
       }
     );

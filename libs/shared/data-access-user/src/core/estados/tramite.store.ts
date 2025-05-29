@@ -110,4 +110,12 @@ export class TramiteStore extends Store<TramiteState> {
   public limpiarTramite(): void {
     this.reset();
   }
+
+  /**
+     * Guarda el id de tramite seleccionado
+     * @param idTramite parametro del id de tramite
+     */
+    setTramiteValue(idTramite: string): void {
+      this.update(state => ({ ...state, idTramite }));
+    }
 }

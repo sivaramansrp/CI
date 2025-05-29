@@ -79,13 +79,13 @@
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila"
       >
         <div class="form-group">
-          <label class="form-label" for="denominacionRazon"
+          <label class="form-label municipio-label" for="denominacionRazon"
             >Denominación o razón social</label
           >
-          <span class="form-label" *ngIf="esCampoRequerido('denominacionRazon')"
-            >&nbsp;*</span
+          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"
+            >*</span
           >
-          <span class="form-label"> :</span>
+          <span class="form-label municipio-labe"> :</span>
           <input
             class="form-control"
             id="denominacionRazon"
@@ -164,8 +164,8 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="municipioAlcaldia"
-            >{{ etiquetaMunicipio }}&nbsp; * :</label
+          <label class="form-label municipio-label" for="municipioAlcaldia"
+            >{{ etiquetaMunicipio }} * :</label
           >
           <input
             class="form-control"
@@ -421,9 +421,9 @@
     <div class="row mt-5">
       <div class="col-md-3 my-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">S. C. I. A. N </label>
+          <label class="form-label municipio-label" for="telefono">S. C. I. A. N </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')"
-            >&nbsp; *</span
+            > *</span
           >
           <span class="form-label"> :</span>
         </div>
@@ -809,8 +809,8 @@
         <label class="form-label" for="correoElectronico"
           >Correo electrónico</label
         >
-        <span class="form-label" *ngIf="esCampoRequerido('correoElectronico')"
-          >&nbsp;* </span
+        <span class="form-label municipio-label" *ngIf="esCampoRequerido('correoElectronico')"
+          > </span
         >
         <span class="form-label mx-1"> :</span>
         <span
