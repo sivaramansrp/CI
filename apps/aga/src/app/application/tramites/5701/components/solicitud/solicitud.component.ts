@@ -1,74 +1,72 @@
 import {
-  AduanaService,
-  ALFANUMERICO_ESPACIO,
-  Catalogo,
-  CatalogoPaises,
-  CATALOGOS_ID,
-  CatalogosService,
-  DatosAgregarFormulario,
-  FechasService,
-  FormulariosService,
-  ICatalogo,
-  Notificacion,
-  PaisesService,
-  PROGRAMA_FOMENTO,
-  PROGRAMA_IMMEX,
-  Recinto,
-  RecintoService,
-  REGEX_RFC,
-  RFC_GENERICO,
-  SeccionAduanaService,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
-  TIPO_SOLICITUD,
-  TipoDespachoService,
-  TipoOperacionService,
-  TipoPedimentoService,
-  TipoPersona,
-  TipoSolicitudService,
-  TipoTransporteService,
-  ValidacionesFormularioService,
-  ValidaRfcService,
-} from '@ng-mf/data-access-user';
-import {
   ADV_LIMPIA_CAMPOS,
+  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
-  FUNCION_STORE_DD,
-  FUNCION_STORE_LDA,
   ID_NAME_DD,
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSJ_ERROR_FECHA,
+  MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   PATENTES_ID,
   SIN_VALOR,
   TRANSPORTE,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
+  ALFANUMERICO_ESPACIO,
+  AduanaService,
+  Catalogo,
+  CatalogoPaises,
+  DatosAgregarFormulario,
+  FechasService,
+  FormulariosService,
+  ICatalogo,
+  Notificacion,
+  PROGRAMA_FOMENTO,
+  PROGRAMA_IMMEX,
+  PaisesService,
+  REGEX_RFC,
+  RFC_GENERICO,
+  Recinto,
+  RecintoService,
+  SeccionAduanaService,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TIPO_SOLICITUD,
+  TablaSeleccion,
+  TipoDespachoService,
+  TipoOperacionService,
+  TipoPedimentoService,
+  TipoPersona,
+  TipoSolicitudService,
+  TipoTransporteService,
+  ValidaRfcService,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
   Component,
-  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {
   DatosComponentePedimento,
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
-  delay,
   EMPTY,
+  Observable,
+  Subject,
+  delay,
   first,
   map,
   merge,
-  Observable,
-  Subject,
   switchMap,
   takeUntil,
   tap,
@@ -91,7 +89,7 @@ import { CertificacionService } from '../../../../core/services/5701/certificaci
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
-import { Modal } from 'bootstrap';
+import { LineaCaptura } from '../../../../core/models/5701/linea-captura.model';
 import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 import { ParametroMontoService } from '../../../../core/services/5701/pago/parametro-monto.service';
 import { Patente } from '../../../../core/models/5701/Patente.model';
@@ -100,15 +98,16 @@ import { PatenteEmpresaService } from '../../../../core/services/5701/patente-em
 import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
+import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
+
+//TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
-import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
-
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -126,9 +125,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @required
    */
   @Input() folioSolicitud!: string;
-
-  @ViewChild('modalAviso') modalAviso!: ElementRef;
-  @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
    * Catalogo tipos de solicitud disponibles.
@@ -234,11 +230,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   masDeUnaEmpresa: boolean = false;
 
   /**
-   * Arrelgo de patentes de la empresa
-   */
-  patentes = patentes;
-
-  /**
    * Pedimento -crea una señal para validar
    */
   validacionPedimento?: boolean;
@@ -249,10 +240,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * idAduanaDespacho: Número de aduana elegida
    */
   datosPedimentoComponente!: DatosComponentePedimento;
-
-  modal: string = '';
-  tituloModal!: string;
-  mensajeModal!: string;
 
   /**
    * Variable que toma el valor true si el tipo de despacho LDA o DD ha sido seleccionado, de lo contrario es false.
@@ -283,10 +270,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Opciones disponibles para empresas certificadas.
    */
   radioOpciones = EMPRESAS_CERTIFICADAS;
-
-  radioPatentes = patentes.patentes;
-
-  rfcs = rfcs.rfcs;
 
   /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
@@ -326,9 +309,37 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public muestraCertificaciones: boolean = true;
 
+  /**
+   * Tipo de despacho seleccionado por el usuario.
+   */
   public tipoDespacho!: string;
 
+  /**
+   * GUarda el tipo de proceso que se eligió y de acuerdo a lo elegido se tomá decision en el modal.
+   */
   public procesoModal!: string;
+
+  /**
+   * Tabla de selección para los pagos.
+   */
+  public tablaSeleccionPagos = TablaSeleccion;
+
+  /**
+   * Encabezado de la tabla de pagos.
+   */
+  public encabezadoDeTablaPagos = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+
+  /**
+   * Datos de la tabla de pagos.
+   */
+  public datosTablaPagos: LineaCaptura[] = [];
+
+  //TODO: Estas variables se van a eliminar
+  /**
+   * Arrelgo de patentes de la empresa
+   */
+  radioPatentes = patentes.patentes;
+  rfcs = rfcs.rfcs;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -336,7 +347,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private tramite5701Store: Tramite5701Store,
     private tramite5701Query: Tramite5701Query,
     private fb: FormBuilder,
-    private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService,
     private tipoSolicitudService: TipoSolicitudService,
@@ -400,8 +410,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    // this.tipoSolicitudSeleccion();
 
+    this.obtenerMontoAPagar();
     this.verificarDatosExistentesStore();
   }
 
@@ -1240,15 +1250,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+    
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
-      this.tituloModal = TITULO_MODAL_ERROR;
-      this.mensajeModal = MSJ_ERROR_FECHA;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: 'Avisos',
-        mensaje: MSG_ADUANA_PEDIMENTO,
+        mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -1292,24 +1301,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Abre el modal para eliminar un documento.
-   * @param {number} i - El índice del documento.
-   */
-  abrirModal(): void {
-    const MODAL_AVISO = new Modal(this.modalAviso.nativeElement);
-    MODAL_AVISO.show();
-  }
-
-  /**
-   * Cierra el modal.
-   */
-  cerrarModal(tipo: string, acepta: boolean): void {
-    if (tipo === 'fecha') {
-      this.datosServicio.reset();
-    }
   }
 
   /**
@@ -1393,7 +1384,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
-   *
    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
    */
@@ -1416,7 +1406,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Actualiza los valores del campo IMMEX y almacena los cambios en el store.
-   *    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
+   * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
    */
   checkImmex(valores: DatosCheckInputText): void {
@@ -1438,7 +1428,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Actualiza los valores del campo automutriz y almacena los cambios en el store.
-   *
    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
    */
@@ -1463,7 +1452,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Verifica y actualiza el estado de los campos de un formulario según el valor de un campo específico.
-   *
    * @param campoId - Identificador del campo a verificar.
    * @param campoDescripcion - Identificador del campo de descripción asociado.
    * @param form - Formulario reactivo que contiene los campos.
@@ -1784,10 +1772,25 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
    */
   public consultarLineaCaptura(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
+
+    if (!LINEA_PAGO || !MONTO) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_ERROR,
+        mensaje: MSJ_ERROR_LINEA_CAPTURA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
 
     this.validaLineaPagoService
       .getLineaPagoValidacion(LINEA_PAGO)
@@ -1795,7 +1798,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         switchMap((responseValidaPago) => {
           if (responseValidaPago.codigo !== '00') {
-            // TODO: Implementar mensaje de error para línea de captura no válida.
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
             return EMPTY;
           }
           return this.parametroMontoService.getParametroMonto();
@@ -1825,8 +1839,25 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
   }
 
-  // #Seccion Modal
+  /**
+   * Obtiene el monto a pagar desde el servicio de parámetros y lo establece en el formulario.
+   * @returns {void} No retorna ningún valor.
+   */
+  public obtenerMontoAPagar(): void {
+    this.parametroMontoService
+      .getParametroMonto()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((montoResponse) => {
+          this.pagoCaptura.get('montoAPagar')?.enable();
+          this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
+          this.pagoCaptura.get('montoAPagar')?.disable();
+        })
+      )
+      .subscribe();
+  }
 
+  // #Seccion Modal
   /**
    * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
    */
@@ -1872,9 +1903,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Muestra un cuadro de diálogo de confirmación para la selección de tipo de despacho (LDA o DD).
-   *
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
-   *
    * @returns {void} No retorna ningún valor.
    */
   showConfirmDialogLDA_DD(tipo: string): void {
@@ -1947,7 +1976,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Limpia los campos del formulario de despacho y actualiza el store correspondiente.
-   *
    * @returns {void} No retorna ningún valor.
    */
   limpiaCamposDdaLda(): void {

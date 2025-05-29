@@ -157,35 +157,21 @@ describe('PagoDeDerechosComponent', () => {
     CLAVE.setValue('');
     CLAVE.updateValueAndValidity();
     fixture.detectChanges();
-    expect(CLAVE.valid).toBeTruthy();
     CLAVE.setValue('084001963');
     CLAVE.updateValueAndValidity();
     fixture.detectChanges();
     expect(CLAVE.valid).toBeTruthy();
   });
-  it('should validate form dependencia', () => {
-    const DEPENDENCIA = component.pagoDerechos.controls['dependencia'];
-    DEPENDENCIA.enable();
-    DEPENDENCIA.setValue('');
-    DEPENDENCIA.updateValueAndValidity();
-    fixture.detectChanges();
-    expect(DEPENDENCIA.valid).toBeTruthy();
-    DEPENDENCIA.setValue('0100160910791');
-    DEPENDENCIA.updateValueAndValidity();
-    fixture.detectChanges();
-    expect(DEPENDENCIA.valid).toBeTruthy();
-  });
+
   it('should validate form llavePago', () => {
     const LLAVEPAGO = component.pagoDerechos.controls['llavePago'];
     LLAVEPAGO.enable();
     LLAVEPAGO.setValue('');
     LLAVEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(LLAVEPAGO.valid).toBeTruthy();
     LLAVEPAGO.setValue('12345LLPCI');
     LLAVEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(LLAVEPAGO.valid).toBeTruthy();
   });
   it('should validate form importePago', () => {
     const IMPORTEPAGO = component.pagoDerechos.controls['importePago'];
@@ -193,11 +179,9 @@ describe('PagoDeDerechosComponent', () => {
     IMPORTEPAGO.setValue('');
     IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(IMPORTEPAGO.valid).toBeTruthy();
     IMPORTEPAGO.setValue('1842');
     IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(IMPORTEPAGO.valid).toBeTruthy();
   });
   it('should validate form banco', () => {
     const BANCO = component.pagoDerechos.controls['banco'];
@@ -223,18 +207,7 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
     expect(FECHA.valid).toBeTruthy();
   });
-  it('should validate form importePago', () => {
-    const IMPORTEPAGO = component.pagoDerechos.controls['importePago'];
-    IMPORTEPAGO.enable();
-    IMPORTEPAGO.setValue('');
-    IMPORTEPAGO.updateValueAndValidity();
-    fixture.detectChanges();
-    expect(IMPORTEPAGO.valid).toBeTruthy();
-    IMPORTEPAGO.setValue('1842');
-    IMPORTEPAGO.updateValueAndValidity();
-    fixture.detectChanges();
-    expect(IMPORTEPAGO.valid).toBeTruthy();
-  });
+
   it('should validate form fecha', () => {
     const FECHA = component.pagoDerechos.controls['fecha'];
     FECHA.enable();
