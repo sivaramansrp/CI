@@ -23,10 +23,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
-  public consultaState!:ConsultaioState;
-    private destroyNotifier$: Subject<void> = new Subject();
-  
+  /**
+   * Estado de la consulta.
+   */
+  public consultaState!: ConsultaioState;
 
+   /**
+   * Notificador para destruir las suscripciones al destruir el componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * Constructor del componente.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la consulta.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery
 ) {}
@@ -38,6 +48,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 seleccionaTab(i: number): void {
   this.indice = i;
 }
+/**
+   * Método que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la consulta.
+   */
 ngOnInit(): void {
   this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -49,6 +63,10 @@ ngOnInit(): void {
     .subscribe();
 }
 
+/**
+   * Método que se ejecuta al destruir el componente.
+   * Completa el notificador para evitar fugas de memoria.
+   */
 ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();
