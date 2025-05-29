@@ -21,7 +21,7 @@ import {
 
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 
-import { RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { PersonaTerceros, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 
 
 /**
@@ -146,6 +146,10 @@ export class ImportacionDeAcuiculturaService {
     this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
     this.actualizarDatosMercancia(DATOS.datosMercancia);
     
+  }
+
+  public updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+    this.acuiculturaStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 
 }

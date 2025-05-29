@@ -29,8 +29,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-
 import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
 
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -40,12 +38,12 @@ import { DatosParaMovilizacionComponent } from './components/datos-para-moviliza
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 
 
 @NgModule({
   declarations: [
-    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
     SanidadCertificadoComponent
@@ -57,6 +55,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionComponent,
     PagoDeDerechosComponent,
+    PasoUnoComponent,
 
     // UI Components from data-access-user
     TablaDinamicaComponent,

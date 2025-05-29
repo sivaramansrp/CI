@@ -53,16 +53,18 @@
             "dataParaMovilizacion": false,
             "dataDeLaSolicitud": false
         },
-        "consulta": {
-            "procedureId": "llenar",
-            "parameter": "llenar",
-            "department": "llenar",
-            "folioTramite": "llenar",
-            "tipoDeTramite": "llenar",
-            "estadoDeTramite": "llenar",
-            "readonly": false,
-            "create": true,
-            "update": false,
-            "consultaioSolicitante": "llenar"
+        "tercerosRelacionados":[
+         {
+            "nombre": "Carlos Rodríguez",
+            "correo": "carlos.rodriguez@example.com"
+        },
+        {
+            "nombre": "Ana Martínez",
+            "correo": "ana.martinez@example.com"
+        },
+        {
+            "nombre": "Luis Fernández",
+            "correo": "luis.fernandez@example.com"
         }
-    }
+    ]
+}

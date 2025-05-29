@@ -2,13 +2,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
-import { Consulta, FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
+import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
@@ -79,12 +79,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   private destroyNotifier$ = new Subject<void>();
   formularioPagoStore: FormularioPago = {} as FormularioPago;
 
-   /**
-   * @description Almacena la información de consulta, incluyendo el estado de solo lectura.
-   * @type {Consulta}
-   */
-  consultaStore: Consulta = {} as Consulta
-
   /**
    * @description Indica si el formulario está en modo solo lectura.
    * @type {boolean}
@@ -98,11 +92,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
+    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
-      this.consultaStore = datos.consulta;
     })
 
   }
@@ -127,15 +121,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
         }
       );
 
-    if(this.consultaStore.readonly) {
-      this.esFormularioSoloLectura = this.consultaStore.readonly;
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
+  }
+
+  inicializarEstadoFormulario(): void {
+    if(this.esFormularioSoloLectura) {
       this.formularioPago.disable();
     }
     else {
       this.formularioPago.enable();
     }
-  }
 
+  }
   /**
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */

@@ -1,12 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { Consulta } from '../../models/220203/importacion-de-acuicultura.module';
+import { ConsultaioQuery, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+
+
+
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [
+    SolicitanteComponent, TercerospageComponent, ReactiveFormsModule, DatosDeLaSolicitudComponent, DatosParaMovilizacionComponent, PagoDeDerechosComponent, CommonModule
+  ]
 })
 export class PasoUnoComponent implements OnInit {
   /**
@@ -39,11 +52,6 @@ export class PasoUnoComponent implements OnInit {
  */
 private destroyNotifier$ = new Subject<void>();
 
-  /**
-   * Almacena la información de la consulta actual.
-   * @property {Consulta} consultaStore - Objeto que contiene los datos de la consulta.
-   */
-  consultaStore: Consulta = {} as Consulta;
 
   /**
    * @constructor
@@ -52,10 +60,8 @@ private destroyNotifier$ = new Subject<void>();
    * @description
    * Inyecta el servicio `ImportacionDeAcuiculturaService` para manejar la lógica de negocio relacionada con los trámites de importación de acuicultura en el componente.
    */
-  constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService) {
-    this.importacionDeAcuiculturaService.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      this.consultaStore = datos.consulta;
-    })
+  constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
+
   }
 
   /**
@@ -72,9 +78,16 @@ private destroyNotifier$ = new Subject<void>();
    * Aquí se puede inicializar datos o suscribirse a servicios necesarios para el componente.
    */
   ngOnInit(): void {
-    if(this.consultaStore.update){
-      this.guardarDatosFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(seccionState.update){
+            this.guardarDatosFormulario();
+          }
+        }
+      )
+    ).subscribe();
   }
 
   /**

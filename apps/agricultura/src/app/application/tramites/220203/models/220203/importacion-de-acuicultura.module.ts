@@ -1,3 +1,5 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+
 /**
  * @interface ListaPasosWizard220203
  * @description
@@ -186,7 +188,7 @@ export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     datosMercancia: DatosMercancia220203;
     formaValida: EnviarDatos;
-    consulta: Consulta;
+    tercerosRelacionados:PersonaTerceros[];
 }
 
 /**
@@ -247,22 +249,12 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
                 nombreCientifico: ''
             },
         },
+        tercerosRelacionados: params.tercerosRelacionados || [] ,
         formaValida: params?.formaValida || {
             pagoDeformaValida: false,
             dataParaMovilizacion: false,
             dataDeLaSolicitud: false
         },
-        consulta: {
-            procedureId: '',
-            parameter: '',
-            department: '',
-            folioTramite: '',
-            tipoDeTramite: '',
-            estadoDeTramite: '',
-            readonly: false,
-            create: false,
-            update: false,
-            consultaioSolicitante: ''
-        }
+        
     };
 }

@@ -2,15 +2,15 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-import { Consulta, DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
+import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 
@@ -224,17 +224,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   myScrollbarValue: boolean = true;
 
   /**
-   * @desc Almacena la información de la consulta actual.
-   * @type {Consulta}
-   * @memberof DatosDeLaSolicitudComponent
-   * @see Consulta
-   *
-   * @description
-   * [Compodoc] Objeto utilizado para gestionar y almacenar los datos relacionados con la consulta en el componente de datos de la solicitud.
-   */
-  consultaStore: Consulta = {} as Consulta;
-
-  /**
    * @description Indica si el formulario está en modo solo lectura.
    * @type {boolean}
    */
@@ -245,10 +234,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @param {FormBuilder} fb Servicio para construir formularios.
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
    */
-  constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
+  constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.datosMercanciaStore = datos.datosMercancia;
-      this.consultaStore = datos.consulta;
     })
   }
 
@@ -322,7 +310,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
 
   ngOnInit(): void {
-    
      this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
@@ -339,10 +326,16 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
       }, (error) => {
         console.error(error);
       });
-  if(this.consultaStore.readonly){
-    this.esFormularioSoloLectura = this.consultaStore.readonly; 
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
         this.inicializarEstadoFormulario();
-      }
+        }
+      )
+    ).subscribe();
     
   }
 

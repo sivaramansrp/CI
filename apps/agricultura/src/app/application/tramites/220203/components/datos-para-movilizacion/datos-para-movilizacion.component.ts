@@ -1,14 +1,14 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Consulta, FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 
@@ -63,12 +63,6 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterVi
 
   private destroyNotifier$ = new Subject<void>();
 
-   /**
-   * @description Almacena la información de consulta, incluyendo el estado de solo lectura.
-   * @type {Consulta}
-   */
-  consultaStore: Consulta = {} as Consulta
-
   /**
    * @description Indica si el formulario está en modo solo lectura.
    * @type {boolean}
@@ -82,11 +76,11 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterVi
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService
+    private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioMovilizacionStore = datos.formularioMovilizacion
-      this.consultaStore = datos.consulta;
     })
   }
 
@@ -114,13 +108,26 @@ ngAfterViewInit(): void {
         console.error('Error en cambios de formulario:', error);
       });
 
-    if(this.consultaStore.readonly){
-        this.esFormularioSoloLectura = this.consultaStore.readonly;
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
+
+}
+
+inicializarEstadoFormulario(): void {
+  if(this.esFormularioSoloLectura){
       this.formularioMovilizacion.disable();
     }
     else{
       this.formularioMovilizacion.enable();
     }
+
 }
   /**
    * @description Obtiene los datos del catálogo de transporte y los asigna a la lista de transportes.
