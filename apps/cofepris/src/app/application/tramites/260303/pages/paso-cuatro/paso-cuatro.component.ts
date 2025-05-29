@@ -15,7 +15,9 @@ export class PasoCuatroComponent {
   * @param ev - La cadena de texto que representa la firma obtenida.
   * @return {void}
   */
+  // eslint-disable-next-line class-methods-use-this
   public obtieneFirma(ev: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const FIRMA: string = ev;
   }
 }
