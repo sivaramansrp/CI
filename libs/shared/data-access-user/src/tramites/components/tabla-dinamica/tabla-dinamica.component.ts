@@ -111,6 +111,13 @@ export class TablaDinamicaComponent<T> {
    */
   @Input() acciones: TablaAcciones[] = [];
 
+  /**
+ * @input desactivarEmitirEvento
+ * @description
+ * Indica si se debe desactivar la emisión del evento al hacer clic en una fila de la tabla.
+ * @type {boolean}
+ * @default true
+ */
   @Input() desactivarEmitirEvento: boolean = true;
 
   /**

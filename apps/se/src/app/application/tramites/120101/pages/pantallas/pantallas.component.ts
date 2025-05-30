@@ -165,6 +165,21 @@ export class PantallasComponent implements OnInit, OnDestroy {
     //
   }
 
+  /**
+ * @method ngOnInit
+ * @description
+ * Método de inicialización del componente `PantallasComponent`.
+ * 
+ * Detalles:
+ * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * - Actualiza la propiedad `consultaState` con el estado recibido.
+ * - Si el estado está en modo solo lectura (`readonly`), marca la pestaña dos como válida (`pestanaDosFormularioValido = true`).
+ * 
+ * @example
+ * this.ngOnInit();
+ * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
+ */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
         .pipe(

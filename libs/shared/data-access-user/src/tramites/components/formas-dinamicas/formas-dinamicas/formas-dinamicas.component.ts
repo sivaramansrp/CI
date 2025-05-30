@@ -331,6 +331,13 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
     return VALIDATORS;
   }
 
+  /**
+ * @method establecerDesactivar
+ * @description
+ * Determina si un campo del formulario debe estar deshabilitado.
+ * @param {boolean} desactivado - Indica si el campo debe estar deshabilitado por configuración individual.
+ * @returns {boolean} `true` si el campo debe estar deshabilitado, `false` en caso contrario.
+ */
   public establecerDesactivar(desactivado: boolean): boolean {
     if (desactivado || this.soloLectura) {
       return true;

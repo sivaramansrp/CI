@@ -294,6 +294,21 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+ * @method obtenerTablaDatos
+ * @description
+ * Método que obtiene los datos para la tabla dinámica de cupos desde el servicio `SolicitudDeRegistroTplService`.
+ * 
+ * Detalles:
+ * - Realiza una petición al servicio para obtener los datos de la tabla.
+ * - Mapea la respuesta para estructurar cada elemento según el modelo `InstrumentoCupoTPLForm`.
+ * - Asigna el resultado al arreglo `cuerpoTabla` y actualiza el estado global en el store.
+ * - Si el estado de consulta es solo lectura (`readonly`), selecciona automáticamente la primera fila de la tabla.
+ * 
+ * @example
+ * this.obtenerTablaDatos();
+ * // Obtiene y muestra los datos de la tabla de cupos.
+ */
   obtenerTablaDatos(): void {
     this.solicitudDeRegistroTplService
         .obtenerTablaDatos()
