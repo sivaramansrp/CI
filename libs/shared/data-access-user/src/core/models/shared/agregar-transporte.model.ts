@@ -77,7 +77,6 @@ export interface TransporteDespacho {
   modelo_transporte?: string;
   placas_transporte?: string;
   contenedor_transporte?: string;
-  observaciones?: string;
 
   numero_bl?: string;
   tipo_equipo?: string;
@@ -107,5 +106,6 @@ export interface TransporteDespacho {
   tipo_transporte_des?: string;
   datos_transporte?: string;
 
+  observaciones?: string;
   mismosDatosTransporte?: boolean;
 }

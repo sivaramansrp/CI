@@ -38,7 +38,7 @@ export const ERR_CAMPOS_OBLIGATORIOS =
   'Debes capturar todos los datos marcados como obligatorios.';
 
 /**
- * @description Mensaje de eeror cuando se hace una busqueda sin datos.
+ * @description Mensaje de error cuando se hace una busqueda sin datos.
  */
 export const ERR_INPUT_BUSQUEDA_VACIO =
   'No has proporcionado información que es requerida.';
@@ -109,6 +109,12 @@ export const MSJ_ERROR_LINEA_CAPTURA =
  */
 export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
   'Línea de captura no es válida, favor de verificar.';
+
+/**
+ * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
+ */
+export const MSJ_ERROR_GAFETE_EXISTE =
+  'El número de gafete ya se encuentra registrado, intenta de nuevo';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
