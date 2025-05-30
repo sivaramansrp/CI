@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud302Service } from '../../services/service302.service';
 
 
 /**
@@ -61,7 +62,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Al inicializar el componente, se establece la consulta inicial en el store de consultas
  * con los parámetros correspondientes al trámite 120204.
  */
-constructor(private consultaQuery: ConsultaioQuery) {
+  constructor(private consultaQuery: ConsultaioQuery,private consultaStore: ConsultaioStore,private solicitudService: Solicitud302Service) {
+    // Inicializa el estado de la consulta
   }
 
    /**
@@ -100,16 +102,16 @@ constructor(private consultaQuery: ConsultaioQuery) {
    * @returns {void} No retorna ningún valor.
    */
   guardarDatosFormulario(): void {
-    // this.expedicionService
-    //   .getExpedienteCertificado().pipe(
-    //     takeUntil(this.destroyNotifier$)
-    //   )
-    //   .subscribe((resp) => {
-    //     if(resp){
-    //     this.esDatosRespuesta = true;
-    //     this.expedicionService.setDatosFormulario(resp);
-    //     }
-    //   });
+    this.solicitudService
+      .getCertiRegistroDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solicitudService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
