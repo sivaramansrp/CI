@@ -6,27 +6,26 @@
         <app-catalogo-select
           [catalogo]="sectorCatalogo"
           formControlName="sector"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="'Sector'"
           name="sector"
           (change)="
             sectorSeleccion();
-            setValoresStore(sectoresForm, 'sector', 'setSector')
-          "
-        >
+            setValoresStore(sectoresForm, 'sector', 'setSector')">
         </app-catalogo-select>
       </div>
     </div>
     <div class="row mb-3 mt-3">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-danger me-3" type="button">
+        <button class="btn btn-danger me-3" type="button" [disabled]="esFormularioSoloLectura">
           Eliminar sector
         </button>
-        <button type="button" class="btn btn-primary">Agregar sector</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar sector</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5>Solicitud PROSEC sector plural":</h5>
+        <h5>Solicitud PROSEC sector plural:</h5>
       </div>
     </div>
     <div class="row">
@@ -34,6 +33,7 @@
         [configuracionTabla]="configuracionTabla"
         [datos]="sectores"
         [tipoSeleccionTabla]="radio"
+        [disableSeleccionTablaRadio]="esFormularioSoloLectura"
       >
       </app-tabla-dinamica>
     </div>
@@ -55,8 +55,8 @@
       </div>
 
       <div class="d-flex justify-content-end">
-        <button class="btn btn-danger me-2">Eliminar</button>
-        <button class="btn btn-primary">Agregar</button>
+        <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
   </form>
